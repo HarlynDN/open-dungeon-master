@@ -15,6 +15,8 @@ import { getCurrentLocation } from "@/lib/db/locations";
 import { listNpcs } from "@/lib/db/npcs";
 import { resolveReference, translatedReferenceNames, type ReferenceCandidate } from "@/lib/i18n/references";
 import type { ReferenceKind } from "@/lib/i18n/reference-names";
+import { RESOURCE_DEFS } from "@/lib/srd/class-resources";
+import { heldResourceDefinitions, resolveResourceReference, resourceEngineName } from "@/lib/dm/resource-references";
 
 type Outcome = { args: string } | { result: Record<string, unknown> };
 type Context = { campaign: Campaign; sheets: CharacterSheet[]; sheetsById: Map<string, CharacterSheet> };
@@ -78,12 +80,32 @@ export function canonicalizeToolReferences(name: string, sentArguments: string, 
     // Unknown/invented names retain the engine's existing validation; a
     // homebrew canonical name may itself be Chinese.
   };
-  const sheetRef = args.characterId;
+  const sheetRef = typeof args.characterId === "string" ? args.characterId.trim() : undefined;
   const snapshot = typeof sheetRef === "string"
     ? context.sheetsById.get(sheetRef) ?? context.sheets.find(sheet => sheet.name.toLowerCase() === sheetRef.toLowerCase())
     : undefined;
   const fresh = snapshot ? getSheetById(snapshot.id) ?? snapshot : undefined;
   const equipment = fresh?.campaignId === campaign.id ? candidates(fresh.equipment.map(item => item.name)) : [];
+
+  if (name === "use_resource" && fresh?.campaignId === campaign.id) {
+    const field = args.resource !== undefined && args.resource !== null ? "resource" : "name";
+    const term = args[field];
+    if (typeof term === "string" && term.trim()) {
+      const found = resolveResourceReference(term, heldResourceDefinitions(fresh), locale);
+      if (found.kind === "matched") put(args, field, resourceEngineName(found.entry));
+      else if (found.kind === "ambiguous") {
+        failure = {
+          error: `Ambiguous resource reference "${term}"; choose a resource ID from this character's Resources list.`,
+          retry: true,
+          choices: found.choices.map(({ id, name, displayName }) => ({ id, name, displayName })),
+        };
+      } else if (resolveResourceReference(term, RESOURCE_DEFS, locale).kind !== "unknown") {
+        failure = { error: `"${term}" is not a tracked resource available to this character. Use a canonical name or ID from their Resources list.`, retry: true };
+      }
+      // Untracked named feature spends still enter their dedicated handlers.
+      // Unknown terms retain ordinary engine validation, never fuzzy CJK matches.
+    }
+  }
 
   if (SPELL_TOOLS.has(name)) {
     const fields = name === "use_spell_slot" || name === "learn_spell" ? ["spell", "name"] : ["spell"];

@@ -27,10 +27,10 @@ flow remains incomplete; the review-repair checkpoint is a separate scoped task.
 | Unit | Implemented checkpoint | Remaining gate |
 | --- | --- | --- |
 | Locale foundation | Registry, persistence, browser fallback, typed complete catalogs, model locale policy, classified token proxy, chapter budget, CJK retrieval, IME protection | Real prompt-usage calibration; keep legacy campaign/history regressions |
-| DM safety | Per-event engine conclusions with English/Chinese renderers; AI prose separated; one text-only correction and safe fallback; shared localized enemy names in roster/initiative/prose/guard; real Codex combat acceptance | Broader spell/condition/pack coverage; conservative regex coverage is not full language understanding |
+| DM safety | Per-event engine conclusions with English/Chinese renderers; AI prose separated; one text-only correction and safe fallback; shared localized enemy names and held-resource names/IDs; scoped resource aliases and ambiguity retries; real Codex combat/resource acceptance | Untracked feature/reaction options and broader spell/condition/pack coverage; conservative regex coverage is not full language understanding |
 | Embeddings | Original English deployment default retained; explicit multilingual opt-in; fixed bilingual calibration/holdout and hard-negative policy | Broader pack quality; opt-in affects English campaigns and rebuilds indexes |
 | UI | **125/437** covered files, **3262** pending literal sites, **6691** message keys; scoped AST gate; pending checks, initiative controls, encounter roster, board conditions, structured attack/area/death/check/save/special/initiative/social captions and cinematic owned UI | Remaining play/action/combat/inventory/rest/level-up/save/resume surfaces, full sheet/party dialogs and native feature/reaction names; file fraction is not overall completion or an effort estimate |
-| Character creation/material | Identity, ancestry, class introductions, ability allocation, gear, spell book/preparation and finish preview; 517 spell and 228 equipment names; 257-entry contextual terminology policy and lint gate; 415/415 static registered resource names and guidance; original-source review records | Resource names in DM prompts/tool inputs, remaining feature/feat and magic-item material; dynamic free-cast resources and user-authored/pack text remain outside the static resource review |
+| Character creation/material | Identity, ancestry, class introductions, ability allocation, gear, spell book/preparation and finish preview; 517 spell and 228 equipment names; 257-entry contextual terminology policy and lint gate; 415/415 static registered resource names and guidance shared with DM references; original-source review records | Remaining feature/feat and magic-item material; dynamic free-cast resources and user-authored/pack text remain outside the static resource review |
 | Player system logs | Structured rule diagnostics and engine-generated combat conclusions retain English protocol semantics with localized presentation | General player-visible log templates; model-facing English tool results remain independent |
 | Resource delivery | UI vs content namespaces; character/campaign boundaries; generated resources checked by lint; production Turbopack build and anonymous bilingual browser switch/reload succeed; home/character/campaign SSR and initial-script payloads measured | Hydrated/lazy network totals, authenticated campaign switching and active-play browser acceptance; route-level JS payload remains large |
 | Local Chinese TTS | Locale capability/voice preferences planned | Service not configured; implement/validate Unicode segmentation, voice discovery, locale-sensitive cache, numbers/units/names and real playback |
@@ -229,20 +229,38 @@ Chinese display avoids that claim, and the real spell planner still rejects a
 first-level slot. Its original English reminder and innate-casting data are
 unchanged, so this is not acceptance of that separate legacy casting path.
 
-Root UI bytes, 12,418 prior bilingual values, 29 prior baselines and original
-resource/refill sources remain unchanged. Focused dialog (16), party (12), custom
-resource (8), cast-rule (25) and prior-review (5) checks pass. All **530** script
-suites pass (322.70 seconds), as do TypeScript, lint and the default production
-Turbopack build. The language-specific content chunks are about 333/335 KB
-uncompressed (88/96 KB gzip); hydrated browser totals remain unmeasured. No real
-model, browser journey or audio acceptance ran here. DM prompts and `use_resource`
-still rely on English resource names; feature/feat material, magic-item names and
-the wider play flow also remain pending.
+Tracked resources now also reach the DM as localized display names paired with
+canonical names and IDs. Tool resolution uses the acting character's freshly
+loaded counters. Same-named counters require an explicit ID before mutation;
+dedicated effect handlers still receive their required English names. Engine
+conclusions localize resource names and IDs; unknown authored names stay literal.
+The shared resolver accepts locale alias adapters for future languages. An empty
+ASCII-normalized fragment can no longer make an unknown Chinese/numeric resource
+name select the first counter. This source-only matching repair retains the prior
+condition-review fingerprint and leaves definitions, guidance and refill data intact.
 
-1. Connect localized resource names to DM prompts and tool-input resolution,
-   providing canonical IDs and rejecting ambiguous names before mutation. Finish
-   native feature/reaction names, authored paired-damage frames and full sheet/party
-   material, preserving proper/authored names and English render parity.
+All 13,382 existing bilingual values, root UI bytes and 29 frozen baselines remain
+unchanged. The resource-reference checks enforce 17 cases, including the actual
+DM loop's ambiguity/retry path, one real counter spend, canonical wire-history
+retention, Second Wind healing and Holy Nimbus's dedicated effect. Class-resource
+(22), resource-spend (25), condition (6), prior-review (5), combat narration and
+localized-prompt checks pass. TypeScript, lint and the default production Turbopack
+build pass; the final consolidated run passes all **530** script suites (294.93
+seconds). The earlier run's only failure was the prior condition-source
+fingerprint; it was refreshed after reviewing the matching-only diff, with the
+old fingerprint and frozen renders retained.
+
+[Real resource acceptance](validation/chinese-resource-runtime.json) used the
+current Codex subscription default, `gpt-6-astra` / CLI `0.162.1`. From a Chinese
+request in combat, it selected `second_wind`; the engine rolled one d10, spent one
+use and restored HP from 1 to 8. Final prose/conclusions used “回气” and “哥布林”.
+This single case does not accept every resource, an authenticated browser journey
+or audio. The language-specific content chunks remain about 333/335 KB
+uncompressed (88/96 KB gzip); hydrated browser totals remain unmeasured.
+
+1. Finish native feature/reaction names and options, dynamic free-cast text,
+   authored paired-damage frames and full sheet/party material, preserving
+   proper/authored names, canonical tool arguments and English render parity.
 2. Continue the remaining main play UI and parameterized player logs in bounded
    commits, each with relevant English regression and translation-source review.
 3. Complete configured Codex Chinese combat/tools/compaction/save-resume and

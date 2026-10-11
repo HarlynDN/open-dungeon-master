@@ -2,6 +2,7 @@ import { collectExchanges, type GuardMessage, type LiveState } from "./engine-bo
 import { normalizeLocale, type AppLocale } from "../i18n/locales.ts";
 import { referenceAliases } from "../i18n/reference-names.ts";
 import { referenceDisplayName } from "../i18n/references.ts";
+import { resourceNameForProse } from "../i18n/resource-names.ts";
 
 export type CombatReference = { id?: string; name: string; kind?: "monster" | "proper" };
 export type CombatFactSource = { exchange: number; tool: string; path: string };
@@ -157,7 +158,7 @@ export function renderCombatFacts(facts: readonly CombatFact[], locale: AppLocal
     if (fact.kind === "damage" || fact.kind === "healing") return renderer[fact.kind](name(fact.target, renderer.target), fact.amount);
     if (fact.kind === "state") return renderer.state(name(fact.target, renderer.target), fact.state, fact.unconscious);
     if (fact.kind === "spell") return renderer.spell(name(fact.actor, renderer.actor), referenceAliases("spell", fact.spell.toLowerCase(), selected)[0] ?? fact.spell, fact.resolution);
-    if (fact.kind === "resource") return renderer.resource(name(fact.actor, renderer.actor), fact.resource, fact.level);
+    if (fact.kind === "resource") return renderer.resource(name(fact.actor, renderer.actor), resourceNameForProse(fact.resource, selected), fact.level);
     return renderer.refused(name(fact.actor, renderer.actor), name(fact.target, renderer.target), fact.reason);
   }).join("\n");
 }

@@ -72,6 +72,7 @@ const cases = [
   { id: "nonlethal", count: 1, hp: 3, faces: [15, 4], hit: true, downed: true },
   { id: "second-identical-enemy", count: 2, hp: 40, faces: [15, 4], hit: true },
   { id: "spell-slot", count: 1, hp: 40, faces: [2, 2, 2], spell: true },
+  { id: "second-wind-resource", count: 1, hp: 40, faces: [6], resource: true },
 ];
 try {
  for (const scenario of cases.filter(row => !process.env.ACCEPT_CASES || process.env.ACCEPT_CASES.split(",").includes(row.id))) {
@@ -86,11 +87,14 @@ try {
   kit.place(hero.id, 5, 5);
   if (actor.id !== hero.id) kit.place(actor.id, 4, 5);
   kit.setEnemy(enemy.id, { currentHp: scenario.hp });
+  if (scenario.resource) world.patch(actor.id, { currentHp: 1, resources: { ...world.sheet(actor.id).resources, second_wind: { max: 1, used: 0 } } });
+  const beforeResource = scenario.resource ? world.sheet(actor.id) : null;
   world.clearDice(); world.dice(...scenario.faces);
   const playerSeq = allocateSeq(world.campaignId);
   const previousDm = listRecentMessages(world.campaignId, 5).filter(row => row.authorType === "dm").at(-1);
   insertCampaignMessage({ campaignId: world.campaignId, seq: playerSeq, authorType: "player", userId: actor.userId, characterId: actor.id,
-    content: scenario.spell ? `我向 ${enemy.displayName} 施放一次一环魔法飞弹（Magic Missile）。请调用 cast_at_enemy，让引擎扣除法术位并判定伤害。只施放一次，随后用中文描写，不要结束我的回合。` : `我用长剑攻击 ${enemy.displayName} 一次${scenario.downed ? "，选择非致命攻击（nonlethal=true），击倒而不杀死" : ""}。请调用 pc_attack，由引擎判定，随后用中文描写动作。只攻击一次，不替我选择其他行动，也不要结束我的回合。` });
+    content: scenario.resource ? "我使用回气一次。请先调用 use_resource，让引擎扣除次数、掷骰并恢复生命值，再用中文描写。只使用一次，不攻击，也不要结束我的回合。"
+      : scenario.spell ? `我向 ${enemy.displayName} 施放一次一环魔法飞弹（Magic Missile）。请调用 cast_at_enemy，让引擎扣除法术位并判定伤害。只施放一次，随后用中文描写，不要结束我的回合。` : `我用长剑攻击 ${enemy.displayName} 一次${scenario.downed ? "，选择非致命攻击（nonlethal=true），击倒而不杀死" : ""}。请调用 pc_attack，由引擎判定，随后用中文描写动作。只攻击一次，不替我选择其他行动，也不要结束我的回合。` });
   const started = Date.now();
   await startDmTurn(world.campaignId);
   const message = listRecentMessages(world.campaignId, 5).filter(row => row.authorType === "dm").at(-1);
@@ -108,7 +112,17 @@ try {
   assert.equal(turn.status, "done");
   const exchanges = collectExchanges(turn.conversation);
   const attacks = exchanges.filter(entry => entry.name === "pc_attack" && typeof entry.result?.hit === "boolean");
-  if (scenario.spell) {
+  if (scenario.resource) {
+    const spends = exchanges.filter(entry => entry.name === "use_resource" && entry.result?.ok === true);
+    assert.equal(spends.length, 1, "must resolve one resource use");
+    assert.equal(attacks.length, 0, "resource use must not choose an attack");
+    assert.equal(JSON.parse(spends[0].arguments).characterId, actor.id);
+    assert.ok(["Second Wind", "second_wind", "回气"].includes(JSON.parse(spends[0].arguments).resource));
+    const after = world.sheet(actor.id);
+    assert.equal(after.resources.second_wind.used, 1);
+    assert.equal(after.currentHp, Math.min(after.maxHp, beforeResource.currentHp + 7));
+    assert.equal(kit.enemy(enemy.id).currentHp, scenario.hp);
+  } else if (scenario.spell) {
     const cast = exchanges.filter(entry => entry.name === "cast_at_enemy" && entry.result?.ok === true);
     assert.equal(cast.length, 1, "must resolve one casting");
     assert.equal(JSON.parse(cast[0].arguments).targetEnemyId, enemy.id);
@@ -124,6 +138,10 @@ try {
   const conclusions = renderCombatFacts(facts, "zh-CN");
   assert.ok(message.content.includes(conclusions));
   if (scenario.spell) assert.match(conclusions, /1 个 1 环法术位/);
+  if (scenario.resource) {
+    assert.match(conclusions, /使用了回气/);
+    assert.doesNotMatch(message.content, /Second Wind|second_wind/);
+  }
   assert.match(message.content, /战斗结果/);
   assert.doesNotMatch(turn.narrationParts.join("\n\n"), /\bGoblin\b|地精/u, "AI prose must use the canonical localized creature name");
   assert.doesNotMatch(message.content, /\bGoblin\b|地精/u, "final player/TTS text must use the localized creature name");
@@ -133,7 +151,10 @@ try {
   }
   assert.deepEqual(checkNarration({ conversation: turn.conversation, narration: turn.narrationParts.join("\n\n"), locale: "zh-CN", partyNames: [hero.name] }), []);
   assert.equal(activeBridgeSessions(), 0);
-  report.cases.push({ id: scenario.id, seconds: +((Date.now()-started)/1000).toFixed(2), calls: turn.callIndex, facts, narration: turn.narrationParts.join("\n\n"), finalText: message.content, rolls: world.diceLog(), passed: true });
+  const rolls = world.diceLog();
+  if (scenario.resource) assert.deepEqual(rolls.map(row => [row.sides, row.face]), [[10, 6]], "resource resolution must roll only once");
+  report.cases.push({ id: scenario.id, seconds: +((Date.now()-started)/1000).toFixed(2), calls: turn.callIndex, facts, narration: turn.narrationParts.join("\n\n"), finalText: message.content, rolls,
+    ...(scenario.resource ? { resource: { beforeHp: beforeResource.currentHp, afterHp: world.sheet(actor.id).currentHp, used: world.sheet(actor.id).resources.second_wind.used, arguments: exchanges.find(row => row.name === "use_resource" && row.result?.ok === true).arguments } } : {}), passed: true });
   fs.writeFileSync(output, JSON.stringify(report, null, 2)+"\n");
   console.log(`${scenario.id}: PASS (${report.cases.at(-1).seconds}s)\n${message.content}`);
   if (scenario.id === "miss") {

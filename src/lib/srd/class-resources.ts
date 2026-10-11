@@ -750,7 +750,8 @@ function freeCastDef(id: string): ResourceDef {
 // own apostrophe-free fragment.
 function containsWord(haystack: string, fragment: string): boolean {
   const clean = (value: string) => value.replace(/[^a-z ]/g, "");
-  return new RegExp(`(^|[^a-z])${clean(fragment)}([^a-z]|$)`).test(clean(haystack));
+  const cleanedFragment = clean(fragment).trim();
+  return !!cleanedFragment && new RegExp(`(^|[^a-z])${cleanedFragment}([^a-z]|$)`).test(clean(haystack));
 }
 
 // Fuzzy find by id or display/feature name ("rage", "Ki", "sorcery

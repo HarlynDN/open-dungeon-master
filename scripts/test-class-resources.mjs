@@ -80,6 +80,9 @@ test("matchResource is fuzzy", () => {
   assert.equal(matchResource("sorcery_points").id, "sorcery_points");
   assert.equal(matchResource("Channel Divinity").id, "channel_divinity");
   assert.equal(matchResource("nonsense"), null);
+  for (const name of ["未知资源", "狂暴", "12345", "！？", "_", "  "]) {
+    assert.equal(matchResource(name), null, `unknown terms cannot become empty fuzzy fragments: ${name}`);
+  }
 });
 
 test("refillResources: long refills all, short only short-recharge", () => {

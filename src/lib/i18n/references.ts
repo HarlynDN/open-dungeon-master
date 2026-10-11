@@ -39,11 +39,10 @@ export function referencePresentation(kind: ReferenceKind, entry: ReferenceCandi
 
 // Callers supply only their own allowed catalog/inventory. This helper
 // never loads another author's data or fuzzy-matches a translated name.
-export function resolveReference<T extends ReferenceCandidate>(
-  kind: ReferenceKind,
+export function resolveNamedReference<T extends ReferenceCandidate>(
   term: string,
   candidates: readonly T[],
-  locale: AppLocale,
+  localizedAliases: (entry: T) => readonly string[] = () => [],
 ): ReferenceResolution<T> {
   const wanted = key(term);
   if (!wanted) return { kind: "unknown" };
@@ -57,7 +56,16 @@ export function resolveReference<T extends ReferenceCandidate>(
   if (names.length) return choose(names);
   const canonicalAliases = unique(candidates.filter(row => row.aliases?.some(alias => key(alias) === wanted)));
   if (canonicalAliases.length) return choose(canonicalAliases);
-  return choose(unique(candidates.filter(row => localizedReferenceAliases(kind, row.name, locale).some(alias => key(alias) === wanted))));
+  return choose(unique(candidates.filter(row => localizedAliases(row).some(alias => key(alias) === wanted))));
+}
+
+export function resolveReference<T extends ReferenceCandidate>(
+  kind: ReferenceKind,
+  term: string,
+  candidates: readonly T[],
+  locale: AppLocale,
+): ReferenceResolution<T> {
+  return resolveNamedReference(term, candidates, row => localizedReferenceAliases(kind, row.name, locale));
 }
 
 export function translatedReferenceNames(kind: ReferenceKind, term: string, locale: AppLocale): string[] {

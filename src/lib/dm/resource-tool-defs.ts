@@ -84,7 +84,7 @@ export const resourceTools: ToolDef[] = [
           characterId: { type: "string", description: "Exact characterId from GAME STATE." },
           resource: {
             type: "string",
-            description: "Resource name from their Resources list, e.g. 'Rage' or 'Ki Points'.",
+            description: "Canonical English resource name or resource ID from their Resources list, e.g. 'Rage', 'Ki Points' or 'second_wind'. Use the ID to distinguish same-named counters; localized display names are for narration.",
           },
           amount: {
             type: "integer",

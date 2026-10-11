@@ -8,6 +8,8 @@ import { computeSheetDerived, findSkill, formatModifier, sizeForRace, speedFor, 
 import { encumbranceFor } from "@/lib/srd/encumbrance";
 import { classFeatureDescription, findCustomClass } from "@/lib/classes";
 import { resourceDef } from "@/lib/srd/class-resources";
+import { resourceReference } from "@/lib/dm/resource-references";
+import type { AppLocale } from "@/lib/i18n/locales";
 import { featEngineTag } from "@/lib/srd/feat-combat";
 import { featFactsFor } from "@/lib/characters/catalog";
 import { spellAuthorsFor } from "@/lib/dm/spell-authors";
@@ -351,7 +353,7 @@ export function describeSheet(
   // the load penalty in it and a carried-weight line is added, so the model
   // never has to work the pounds out itself.
   // The table owner's id, for the feats they brewed themselves.
-  options: { encumbrance?: boolean; ownerUserId?: string; authors?: string[] } = {},
+  options: { encumbrance?: boolean; ownerUserId?: string; authors?: string[]; locale?: AppLocale } = {},
 ): string {
   const derived = computeSheetDerived(sheet);
   // A workshop or pack subclass's features carry their own text.
@@ -457,7 +459,11 @@ export function describeSheet(
   if (resourceEntries.length) {
     const parts = resourceEntries.map(([id, state]) => {
       const def = resourceDef(id);
-      return `${def?.displayName ?? id} ${state.max - state.used}/${state.max}${
+      const reference = def ? resourceReference(def, options.locale ?? "en") : null;
+      const label = reference && reference.displayName !== reference.name
+        ? `${reference.displayName} (canonical name: ${reference.name}; resource ID: ${id})`
+        : def?.displayName ?? id;
+      return `${label} ${state.max - state.used}/${state.max}${
         def?.recharge === "short" ? " (refills on any rest)" : ""
       }`;
     });
@@ -901,7 +907,7 @@ export function buildGameStateBlock(state: DmGameState): string {
             : usernamesById.get(sheet.userId) ?? "unknown",
           !sheet.isCompanion && physicalDiceUsers.has(sheet.userId),
           // Optional all the way down: test doubles build partial campaigns.
-          { encumbrance: state.campaign.gameSettings?.variantRules?.encumbrance ?? false, ownerUserId: state.campaign.ownerUserId, authors: spellAuthorsFor(state.campaign) },
+          { encumbrance: state.campaign.gameSettings?.variantRules?.encumbrance ?? false, ownerUserId: state.campaign.ownerUserId, authors: spellAuthorsFor(state.campaign), locale: state.campaign.gameSettings.locale },
         );
         const events = state.recentEventsByCharacter?.get(sheet.id);
         const between = state.betweenBySheet?.get(sheet.id);

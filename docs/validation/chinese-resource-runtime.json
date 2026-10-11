@@ -1,0 +1,64 @@
+{
+  "model": "gpt-6-astra",
+  "cliVersion": "0.162.1",
+  "locale": "zh-CN",
+  "backend": "codex subscription",
+  "forcedDice": true,
+  "cases": [
+    {
+      "id": "second-wind-resource",
+      "seconds": 36.42,
+      "calls": 3,
+      "facts": [
+        {
+          "kind": "healing",
+          "target": {
+            "id": "57c345bf-6806-467e-863c-47c5fb06013e",
+            "name": "阿明",
+            "kind": "proper"
+          },
+          "amount": 7,
+          "id": "0:result:healing",
+          "source": {
+            "exchange": 0,
+            "tool": "use_resource",
+            "path": "result"
+          }
+        },
+        {
+          "kind": "resource",
+          "actor": {
+            "id": "57c345bf-6806-467e-863c-47c5fb06013e",
+            "name": "阿明",
+            "kind": "proper"
+          },
+          "resource": "second_wind",
+          "id": "0:resource:resource",
+          "source": {
+            "exchange": 0,
+            "tool": "use_resource",
+            "path": "resource"
+          }
+        }
+      ],
+      "narration": "阿明，你调整呼吸，在疼痛中重新聚起力量，伤势有所缓解。哥布林仍在你面前，手握木棒。\n\n这次回气已消耗，你的回合仍在继续，尚可移动或采取动作。接下来你打算怎么做？",
+      "finalText": "**战斗结果**\n阿明获得 7 点治疗。\n阿明使用了回气。\n\n阿明，你调整呼吸，在疼痛中重新聚起力量，伤势有所缓解。哥布林仍在你面前，手握木棒。\n\n这次回气已消耗，你的回合仍在继续，尚可移动或采取动作。接下来你打算怎么做？",
+      "rolls": [
+        {
+          "sides": 10,
+          "face": 6,
+          "forced": true
+        }
+      ],
+      "resource": {
+        "beforeHp": 1,
+        "afterHp": 8,
+        "used": 1,
+        "arguments": "{\"characterId\":\"57c345bf-6806-467e-863c-47c5fb06013e\",\"resource\":\"second_wind\",\"amount\":1,\"reason\":\"阿明在近身对峙中使用回气，恢复体力。\"}"
+      },
+      "passed": true
+    }
+  ],
+  "correction": null,
+  "tts": "not configured; only final text contract tested elsewhere"
+}
