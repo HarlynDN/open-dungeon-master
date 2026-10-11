@@ -3,6 +3,7 @@ import { dmRoll } from "@/lib/dm/roll-card";
 import { allocateSeq, type Campaign } from "@/lib/db/campaigns";
 import { getSheetById } from "@/lib/db/sheets";
 import { insertRoll } from "@/lib/db/rolls";
+import { checkRoll, specialRoll } from "@/lib/roll-labels";
 import { insertCharacterEvent } from "@/lib/db/character-events";
 import { insertFact } from "@/lib/db/facts";
 import { getNpcByName, setNpcAttitude, type Npc } from "@/lib/db/npcs";
@@ -361,7 +362,7 @@ export function handleRelationshipBeat(
       characterId: sheet.id,
       requestedBy: "dm",
       kind: "skill_check",
-      detail: `${sheet.name}: ${spec.skill} toward ${subject.name}`,
+      ...checkRoll(`${sheet.name}: ${spec.skill} toward ${subject.name}`, "skill", spec.skill, { kind: "relationship", target: { name: subject.name, kind: "proper" } }, { name: sheet.name, kind: "proper" }),
       dc,
       result: rolled,
     });
@@ -530,7 +531,7 @@ export function handleRomanceAdvance(
     args.to,
     warmth,
     // The NPC's own mind: the DM sees the die, the table the answer.
-    dmRoll(campaign.id, null, "custom", `${subject.name}: whether they agree`, "1d20").total,
+    dmRoll(campaign.id, null, "custom", specialRoll(`${subject.name}: whether they agree`, { kind: "agreement", target: { name: subject.name, kind: "proper" } }), "1d20").total,
   );
   if (!consent.accepted) {
     const approval = applyApproval(relationship.approval, REFUSAL_COST);

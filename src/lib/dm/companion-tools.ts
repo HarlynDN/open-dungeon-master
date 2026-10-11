@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { initiativeRoll } from "@/lib/roll-labels";
 import { rollCard } from "@/lib/dm/roll-card";
 import { allocateSeq, campaignSeats, countPartySlots, type Campaign } from "@/lib/db/campaigns";
 import { createSheet, listSheets, markSheetAsCompanion } from "@/lib/db/sheets";
@@ -425,7 +426,7 @@ export function finalizeNewCompanion(
   // exactly like add_enemies does for the other side.
   const encounter = getActiveEncounter(campaign.id);
   if (encounter) {
-    const initiative = rollCard(campaign, null, sheet.id, "initiative", "initiative", characterInitiativeExpression(campaign, sheet, abilityMod(sheet.abilities.dex)), null).total;
+    const initiative = rollCard(campaign, null, sheet.id, "initiative", initiativeRoll("initiative"), characterInitiativeExpression(campaign, sheet, abilityMod(sheet.abilities.dex)), null).total;
     const entry: OrderEntry = {
       kind: "pc",
       characterId: sheet.id,

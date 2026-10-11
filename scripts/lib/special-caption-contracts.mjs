@@ -4,7 +4,7 @@ import ts from 'typescript';
 export function specialCallContracts(files,sourceOf){
  const rows=[],printer=ts.createPrinter({removeComments:true});
  for(const file of files){const source=ts.createSourceFile(file,sourceOf(file),ts.ScriptTarget.Latest,true);
- const caption=node=>ts.isCallExpression(node)&&['specialRoll','saveRoll','saveCaption','checkRoll'].includes(node.expression.getText(source));
+ const caption=node=>ts.isCallExpression(node)&&['specialRoll','saveRoll','saveCaption','checkRoll','initiativeRoll'].includes(node.expression.getText(source));
  const normalize=root=>{const result=ts.transform(root,[ctx=>{const visit=node=>{
   if(ts.isShorthandPropertyAssignment(node)&&node.name.text==='detail')return ts.factory.createPropertyAssignment('detail',node.name);
   if(ts.isPropertyAssignment(node)&&node.name.getText(source)==='detail'&&file==='src/lib/dm/endurance.ts'&&ts.isConditionalExpression(node.initializer))return ts.factory.createPropertyAssignment('detail',ts.factory.createCallExpression(ts.factory.createPropertyAccessExpression(ts.factory.createIdentifier('input'),'detail'),undefined,[ts.factory.createIdentifier('hour')]));

@@ -1,6 +1,7 @@
 import { fieldedSheets } from "@/lib/dm/roster";
 import { spellAuthorsFor } from "@/lib/dm/spell-authors";
 import { z } from "zod";
+import { initiativeRoll } from "@/lib/roll-labels";
 import {
   allocateSeq,
   getCampaignById,
@@ -294,7 +295,7 @@ function handleStartEncounter(
       displayName: names[index],
       // Enemy initiative rolls silently at spawn; players roll on request.
       // A record for the DM alone, as an enemy's save is.
-      initiative: dmRoll(campaign.id, null, "initiative", `${names[index]}: initiative`, d20Expression(entry.stats.dexMod)).total,
+      initiative: dmRoll(campaign.id, null, "initiative", initiativeRoll(`${names[index]}: initiative`, { name: names[index], kind: "enemy" }), d20Expression(entry.stats.dexMod)).total,
       stats: entry.stats,
     }),
   );
@@ -716,7 +717,7 @@ export function ensureInitiativeProgress(campaign: Campaign): string | null {
       characterId: sheet.id,
       requestedBy: "dm",
       kind: "initiative",
-      detail: "initiative",
+      ...initiativeRoll("initiative"),
       result: outcome,
     });
     publishWithSeq(campaign.id, allocateSeq(campaign.id), "roll_result", {

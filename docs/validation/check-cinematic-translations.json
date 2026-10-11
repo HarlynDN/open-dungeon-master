@@ -19,7 +19,7 @@
     "src/lib/dm/jump-move.ts": "bab6fa077b1a3f5ecc6ef49fcaa661548235fd1292b7bb8b68e99a98c426ae1c"
   },
   "catalogSha256": {
-    "src/lib/i18n/check-roll-messages.ts": "4661a030c9959c12c073a06d52006e0c67a1b3973b35a3dd7e9a2c131a5c19ad",
+    "src/lib/i18n/check-roll-messages.ts": "22c2f41bd26ab8aa4c9f198e42e530c37e0adab54ad8227f878ee4ce766353a4",
     "src/lib/i18n/cinematic-messages.ts": "a667bae07e2befe43a5d5d5696b205113515fd85fc10246eda43a7f714bb50fd"
   },
   "englishGolden": {
@@ -44,5 +44,19 @@
       "src/lib/i18n/check-roll-messages.ts": "4e9aa45a4d27c0100077742d04b0c94da8eb896a98dc06326bcd452a1e2b4441"
     },
     "review": "Inspected additive direct-save and special-purpose caption diffs. All 10936 prior bilingual resource values and 23 prior compressed baselines are unchanged. Original English details, dice, DCs, result inputs and visibility match 94 new immutable original call contracts. This refresh does not expand the older review scope; special captions have their own review."
-  }
+  },
+  "integrations": [
+    {
+      "date": "2026-10-11",
+      "checkpoint": "initiative/social captions",
+      "review": "Additive public caption fields and new complete bilingual templates only; original English renders, previous catalog values and prior compressed baselines retained.",
+      "changed": [
+        {
+          "file": "src/lib/i18n/check-roll-messages.ts",
+          "previousSha256": "4661a030c9959c12c073a06d52006e0c67a1b3973b35a3dd7e9a2c131a5c19ad",
+          "currentSha256": "22c2f41bd26ab8aa4c9f198e42e530c37e0adab54ad8227f878ee4ce766353a4"
+        }
+      ]
+    }
+  ]
 }

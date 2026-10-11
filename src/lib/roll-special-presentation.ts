@@ -4,7 +4,7 @@ import type { RollDisplayName } from "./roll-presentation";
 export type RollSpecialContext =
   | { kind: "named" | "healing" | "temporary-hp" | "hp-pool" | "item-hours" | "poison-damage" | "charges" | "last-charge" | "dawn-charges"; name: string; literalName?: true; dice?: string }
   | { kind: "hp-max" | "healing-target"; name: string; target: RollDisplayName; dice?: string; literalName?: true }
-  | { kind: "ray" | "npc-reaction"; target: RollDisplayName }
+  | { kind: "ray" | "npc-reaction" | "agreement"; target: RollDisplayName }
   | { kind: "healer-kit"; target: RollDisplayName; hitDice: number }
   | { kind: "short-rest"; count: number; songDie?: string; chefDie?: string }
   | { kind: "mirror"; threshold: number }
@@ -35,7 +35,7 @@ export function parseRollSpecialContext(raw: unknown): RollSpecialContext | unde
   }
   const target = c.target === undefined ? undefined : name(c.target);
   if (c.target !== undefined && !target) return;
-  if (["ray", "npc-reaction"].includes(c.kind) && target) return { kind: c.kind, target } as RollSpecialContext;
+  if (["ray", "npc-reaction", "agreement"].includes(c.kind) && target) return { kind: c.kind, target } as RollSpecialContext;
   if (c.kind === "healer-kit" && target && finite(c.hitDice)) return { kind: "healer-kit", target, hitDice: c.hitDice };
   if (c.literalName !== undefined && c.literalName !== true) return;
   const literal = c.literalName ? { literalName: true as const } : {};

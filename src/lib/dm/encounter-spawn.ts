@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { initiativeRoll } from "@/lib/roll-labels";
 import { spellAuthorsFor } from "@/lib/dm/spell-authors";
 import type { Campaign } from "@/lib/db/campaigns";
 import {
@@ -226,7 +227,7 @@ export function handleAddEnemies(
       displayName: names[index],
       // Enemy initiative rolls silently at spawn, like start_encounter.
       // A record for the DM alone, as an enemy's save is.
-      initiative: dmRoll(campaign.id, null, "initiative", `${names[index]}: initiative`, d20Expression(entry.stats.dexMod)).total,
+      initiative: dmRoll(campaign.id, null, "initiative", initiativeRoll(`${names[index]}: initiative`, { name: names[index], kind: "enemy" }), d20Expression(entry.stats.dexMod)).total,
       stats: entry.stats,
     }),
   );

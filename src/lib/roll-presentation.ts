@@ -5,8 +5,10 @@ import { parseRollSpecialContext, type RollSpecialContext } from "./roll-special
 export type { RollSpecialContext } from "./roll-special-presentation.ts";
 export type RollDisplayName = { name: string; kind: "enemy" | "proper" };
 export type RollCheckContext =
-  | { kind: "group" | "contest" | "hide" | "search" | "hold-grapple" | "land-jump" | "land-feet" | "keep-concentration" | "recuperation" | "half-water" | "madness-save" | "madness-confusion" | "fever-laughter" }
-  | { kind: "grapple" | "shove" | "insight-deception" | "stabilize"; target: RollDisplayName }
+  | { kind: "group" | "contest" | "hide" | "search" | "hold-grapple" | "land-jump" | "land-feet" | "keep-concentration" | "recuperation" | "half-water" | "madness-save" | "madness-confusion" | "fever-laughter" | "ambush" }
+  | { kind: "grapple" | "shove" | "insight-deception" | "deception-insight" | "stabilize" | "influence" | "relationship"; target: RollDisplayName }
+  | { kind: "haggle"; shop: string }
+  | { kind: "counterspell-dc"; name: string; difficulty: number; literalName?: true }
   | { kind: "dispel" | "counterspell" | "escape-spell" | "save-against" | "concentration" | "concentration-slayer" | "feature-save" | "feature-reroll" | "concentration-zone" | "fissure" | "violet" | "save-after-damage" | "end-condition" | "avoid-condition"; name: string; literalName?: true }
   | { kind: "save-from"; name: string; from: RollDisplayName; literalName?: true }
   | { kind: "after-rest" | "at-midnight" | "daily" | "scroll-reading"; name: string; literalName?: true }
@@ -21,6 +23,7 @@ export type RollPresentation = (
   | { kind: "stable-recovery"; name: string }
   | { kind: "check"; term: { kind: "skill" | "ability"; key: string }; owner?: RollDisplayName; context?: RollCheckContext }
   | { kind: "special"; context: RollSpecialContext; owner?: RollDisplayName }
+  | { kind: "initiative"; owner?: RollDisplayName }
 ) & { physical?: true };
 export type RollDetail = { detail: string; presentation: RollPresentation };
 
@@ -54,6 +57,11 @@ export function parseRollPresentation(raw: unknown): RollPresentation | undefine
     return physical({ kind: "death-save", notes: [...p.notes] });
   }
   if (p.kind === "stable-recovery" && typeof p.name === "string") return physical({ kind: "stable-recovery", name: p.name });
+  if (p.kind === "initiative") {
+    const owner = p.owner === undefined ? undefined : name(p.owner);
+    if (p.owner !== undefined && !owner) return;
+    return physical({ kind: "initiative", ...(owner ? { owner } : {}) });
+  }
   if (p.kind === "special") {
     const context = parseRollSpecialContext(p.context), owner = p.owner === undefined ? undefined : name(p.owner);
     if (context && (p.owner === undefined || owner)) return physical({ kind: "special", context, ...(owner ? { owner } : {}) });
@@ -69,15 +77,20 @@ export function parseRollPresentation(raw: unknown): RollPresentation | undefine
       if (!p.context || typeof p.context !== "object") return;
       const c = p.context as Record<string, unknown>;
       if (typeof c.kind !== "string") return;
-      if (c.kind === "escape-grapple") {
+      if (c.kind === "haggle" && typeof c.shop === "string") {
+        context = { kind: "haggle", shop: c.shop };
+      } else if (c.kind === "counterspell-dc" && typeof c.name === "string" && typeof c.difficulty === "number" && Number.isFinite(c.difficulty)) {
+        if (c.literalName !== undefined && c.literalName !== true) return;
+        context = { kind: "counterspell-dc", name: c.name, difficulty: c.difficulty, ...(c.literalName ? { literalName: true } : {}) };
+      } else if (c.kind === "escape-grapple") {
         const target = c.target === undefined ? undefined : name(c.target);
         if ((c.target !== undefined && !target) || (c.difficulty !== undefined && (typeof c.difficulty !== "number" || !Number.isFinite(c.difficulty) || !target))) return;
         context = { kind: "escape-grapple", ...(target ? { target } : {}), ...(typeof c.difficulty === "number" ? { difficulty: c.difficulty } : {}) };
       } else if (c.kind === "hourly-endurance" && typeof c.activity === "string" && ["forced-march", "heat", "cold"].includes(c.activity) && typeof c.hour === "number" && Number.isFinite(c.hour)) {
         context = { kind: "hourly-endurance", activity: c.activity as "forced-march" | "heat" | "cold", hour: c.hour };
-      } else if (["group", "contest", "hide", "search", "hold-grapple", "land-jump", "land-feet", "keep-concentration", "recuperation", "half-water", "madness-save", "madness-confusion", "fever-laughter"].includes(c.kind)) {
+      } else if (["group", "contest", "hide", "search", "hold-grapple", "land-jump", "land-feet", "keep-concentration", "recuperation", "half-water", "madness-save", "madness-confusion", "fever-laughter", "ambush"].includes(c.kind)) {
         context = { kind: c.kind } as RollCheckContext;
-      } else if (["grapple", "shove", "insight-deception", "stabilize"].includes(c.kind)) {
+      } else if (["grapple", "shove", "insight-deception", "deception-insight", "stabilize", "influence", "relationship"].includes(c.kind)) {
         const target = name(c.target);
         if (!target) return;
         context = { kind: c.kind, target } as RollCheckContext;

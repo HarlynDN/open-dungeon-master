@@ -10,6 +10,7 @@
 
 import { getEnemy, listEnemies, patchEnemyConditions, saveEncounter, type Encounter, type EncounterEnemy } from "@/lib/db/encounters";
 import type { DmTurn } from "@/lib/db/dm-turns";
+import { checkRoll } from "@/lib/roll-labels";
 import { canEnemyAct } from "@/lib/dm/can-act";
 import { conditionBlocksReactions } from "@/lib/srd/condition-effects";
 import { enemyAttackProfile } from "@/lib/dm/enemy-profile";
@@ -145,7 +146,7 @@ export function enemyCounterspell(
       const score = enemy.stats.abilities?.[ability] ?? 10;
       const mod = Math.floor((score - 10) / 2);
       const dc = 10 + level;
-      const rolled = dmRoll(campaignId, turn, "ability_check", `${enemy.displayName}: Counterspell against ${spell} (${ability.toUpperCase()} check, DC ${dc})`, `1d20${mod >= 0 ? "+" : ""}${mod}`);
+      const rolled = dmRoll(campaignId, turn, "ability_check", checkRoll(`${enemy.displayName}: Counterspell against ${spell} (${ability.toUpperCase()} check, DC ${dc})`, "ability", ability, { kind: "counterspell-dc", name: spell, difficulty: dc }, { name: enemy.displayName, kind: "enemy" }), `1d20${mod >= 0 ? "+" : ""}${mod}`);
       countered = rolled.total >= dc;
       check = ` (${ability.toUpperCase()} check ${rolled.total} against DC ${dc})`;
     }

@@ -1,5 +1,11 @@
 import { defineMessages } from './catalog.ts';
 export const CHECK_ROLL_MESSAGES = /*#__PURE__*/ defineMessages({
+  'combatCheck.ambush': { en: '{term}, lying in wait', 'zh-CN': '{term}检定以设伏' },
+  'combatCheck.influence': { en: '{term} on {target}', 'zh-CN': '{term}检定以影响{target}' },
+  'combatCheck.relationship': { en: '{term} toward {target}', 'zh-CN': '与{target}互动时的{term}检定' },
+  'combatCheck.haggle': { en: '{term} check, haggling at {shop}', 'zh-CN': '在{shop}议价时的{term}检定' },
+  'combatCheck.deception-insight': { en: '{term} against {target}’s Insight', 'zh-CN': '{term}检定以对抗{target}的洞悉' },
+  'combatCheck.counterspell-dc': { en: 'Counterspell against {name} ({term} check, DC {difficulty})', 'zh-CN': '{term}检定以反制{name}（难度 {difficulty}）' },
   'combatCheck.group': { en: 'group {term} check', 'zh-CN': '群体{term}检定' },
   'combatCheck.contest': { en: '{term} (contest)', 'zh-CN': '{term}（对抗检定）' },
   'combatCheck.hide': { en: '{term} to hide', 'zh-CN': '{term}检定以躲藏' },

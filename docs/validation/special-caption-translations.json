@@ -15,7 +15,7 @@
     "src/lib/dm/afflictions.ts": "786b02ccd13fc0128dd04b221c9eafa24729421bd778b71cfb677ca86d9ae3e8",
     "src/lib/dm/authored-mote.ts": "a6a3ad4bc41fe73fce5d3fd2a6c004519aac3c3b19adb22b6477297f3cd08f54",
     "src/lib/dm/authored-reactions.ts": "cdc60d1a84f608723dab25fe73b70b65ed6ea9553a96b3fbe382c44dee8e7363",
-    "src/lib/dm/authored-spend-effects.ts": "f9cd0d4c04db9fdecf2cf07c31cdd51c26d3195a5a9724ec717a344b89da3c9e",
+    "src/lib/dm/authored-spend-effects.ts": "be3b7b2ec04036e78ce0f57cc0c1f2d9a87c30dbc30c4c1fd2708b0d86f0b031",
     "src/lib/dm/authored-turns.ts": "7f73d33c2660311ca7b05df3b551bdc1bb919b8cf9ab7926ccd14634f6d48373",
     "src/lib/dm/between-io.ts": "c768657a92a5937954d3156393b9a410a36c9e19a6f4aaad8fa7f7367c04db1a",
     "src/lib/dm/cast-buff.ts": "e236fe799281b432927f647433ea58d435fc6450b6c83181794faf30b6fdf565",
@@ -36,7 +36,7 @@
     "src/lib/dm/reaction-tools.ts": "26c2757847d12896d9b574ae1e98734ee4d93f318a4c8c17663c06800ccf70df",
     "src/lib/dm/resource-tools.ts": "0c9967e16dbcaaf7d722c1565e0ea224ea299275c51d30bf6709bb9811c238c4",
     "src/lib/dm/roll-card.ts": "4b725b841ecb0c48ebe8b4f9c08dae1bdfa9a05b2aba06851c421d9e15e937d2",
-    "src/lib/dm/social-tools.ts": "ef9a80c7f466de5bfd29c1b401283ae2e7b7eb34c4e3641da52b63c1fa96a76b",
+    "src/lib/dm/social-tools.ts": "1b3352d035d09570bb9da470d1bf24e8f0f510929d63485768668a1c452c903a",
     "src/lib/dm/spell-aura.ts": "34fdbbf21344fff431171614a1709149ef295b4d98d7905e5cf03c5164808905",
     "src/lib/dm/spell-defenses.ts": "c25de40abced057c53bc6cde8d7190de7ee19075953084a1da7c51019ec1425f",
     "src/lib/dm/spell-escape.ts": "0fa553cf567513cb5adecdb9e09feea64454f9398fc83c3bb9dc047818866d64",
@@ -46,17 +46,17 @@
     "src/lib/dm/stabilize.ts": "111bb63f987512b892581bf240803633f1082ff218e4bb1341f0f1246c106f92",
     "src/lib/dm/supplies.ts": "1c5b46c9e2420aa38e8b96a97ea3ae50cbb6165390d20748a497c472f959aae5",
     "src/lib/dm/world-tools.ts": "a193468f124d31c49319fbbb26bd594607ff923b2ea66b92ee1f90e5f3c19d3f",
-    "src/lib/roll-labels.ts": "6ad615fc3af2ec64d7472f5727248f733dd7f3a0afbaaa939f610df09921aaa2",
-    "src/lib/roll-presentation.ts": "7a12637295f13bc667f6d050337279dac7447932ada02d9f9862ff75cc57956f",
-    "src/lib/roll-special-presentation.ts": "074451f9c89b4afb75c86b685160b151e2582653a5dc681a6ac87891d86ad1d3",
-    "src/lib/i18n/roll-presentations.ts": "b5c77d729f4ebf36c10ebaa229fc9177becad8d2de874383d539bcc3c880c725",
-    "src/lib/i18n/check-roll-messages.ts": "4661a030c9959c12c073a06d52006e0c67a1b3973b35a3dd7e9a2c131a5c19ad",
-    "src/lib/i18n/special-roll-messages.ts": "67161192330116c8cdc839fe0620d8f8b7ca48b9d993c17f39265d9e1c86fba4",
+    "src/lib/roll-labels.ts": "afe57bc08299f5edf94827b8d55ae13cd7b07c2e0f5660ba36f9770e6a3dd865",
+    "src/lib/roll-presentation.ts": "644383d124542129ea03d71baeb4d0547c4e52d9957dbb8e453f94fdd6137267",
+    "src/lib/roll-special-presentation.ts": "952205a98b1353ff922cac43321586e9f2c149a23a49f6902dd594c39c5628bc",
+    "src/lib/i18n/roll-presentations.ts": "e9473f0c953f02d8659577933b35613fb9896564b3ccd3a411a3daf67928c29e",
+    "src/lib/i18n/check-roll-messages.ts": "22c2f41bd26ab8aa4c9f198e42e530c37e0adab54ad8227f878ee4ce766353a4",
+    "src/lib/i18n/special-roll-messages.ts": "1a37654791606e845730744f6c4de4e3045df873284213e1f44c016a4d346992",
     "src/lib/i18n/glossary.zh-CN.ts": "356a38e27c23d45dbb0318802b35b7e928158f0a3888ea040976a217ed2d1f4d",
     "src/lib/i18n/resource-scope.ts": "721a075d152d876cc6977dac2f251217d375ba57b7eb5c260c54600c6142e929",
     "src/lib/i18n/messages.ts": "478f742e28a0c154a3e9e8eade3390fde63d121bf21c6c4eb747cf3d4890ac79",
     "scripts/lib/special-caption-fixtures.mjs": "8c37932032e361c72af04e557a71c6383a8d86c2f4651834b4a9077a454e815a",
-    "scripts/lib/special-caption-contracts.mjs": "dd7dfb9b1237b2cfc3a58da4bbca23dc0c58870a11afb4bd66e2251b3cae7544"
+    "scripts/lib/special-caption-contracts.mjs": "68ab118a2d22851acb3c52065c74f90759619f9efa9fb1151f6310f631c8db3d"
   },
   "remaining": "Other action/social/initiative/feature-name captions, broader UI and player logs, authenticated save/resume journey and local Chinese TTS remain outside this checkpoint.",
   "validation": {
@@ -68,5 +68,59 @@
     "terminology": "257 entries, 0 errors, 72 context warnings",
     "productionBuild": "passed, default Next 16.3.8 Turbopack, 24 existing dynamic filesystem warnings",
     "browserAndRealModelAndTts": "not exercised by this checkpoint"
-  }
+  },
+  "integrations": [
+    {
+      "date": "2026-10-11",
+      "checkpoint": "initiative/social captions",
+      "review": "Additive public caption fields and new complete bilingual templates only; original English renders, previous catalog values and prior compressed baselines retained.",
+      "changed": [
+        {
+          "file": "src/lib/dm/authored-spend-effects.ts",
+          "previousSha256": "f9cd0d4c04db9fdecf2cf07c31cdd51c26d3195a5a9724ec717a344b89da3c9e",
+          "currentSha256": "be3b7b2ec04036e78ce0f57cc0c1f2d9a87c30dbc30c4c1fd2708b0d86f0b031"
+        },
+        {
+          "file": "src/lib/dm/social-tools.ts",
+          "previousSha256": "ef9a80c7f466de5bfd29c1b401283ae2e7b7eb34c4e3641da52b63c1fa96a76b",
+          "currentSha256": "1b3352d035d09570bb9da470d1bf24e8f0f510929d63485768668a1c452c903a"
+        },
+        {
+          "file": "src/lib/roll-labels.ts",
+          "previousSha256": "6ad615fc3af2ec64d7472f5727248f733dd7f3a0afbaaa939f610df09921aaa2",
+          "currentSha256": "afe57bc08299f5edf94827b8d55ae13cd7b07c2e0f5660ba36f9770e6a3dd865"
+        },
+        {
+          "file": "src/lib/roll-presentation.ts",
+          "previousSha256": "7a12637295f13bc667f6d050337279dac7447932ada02d9f9862ff75cc57956f",
+          "currentSha256": "644383d124542129ea03d71baeb4d0547c4e52d9957dbb8e453f94fdd6137267"
+        },
+        {
+          "file": "src/lib/roll-special-presentation.ts",
+          "previousSha256": "074451f9c89b4afb75c86b685160b151e2582653a5dc681a6ac87891d86ad1d3",
+          "currentSha256": "952205a98b1353ff922cac43321586e9f2c149a23a49f6902dd594c39c5628bc"
+        },
+        {
+          "file": "src/lib/i18n/roll-presentations.ts",
+          "previousSha256": "b5c77d729f4ebf36c10ebaa229fc9177becad8d2de874383d539bcc3c880c725",
+          "currentSha256": "e9473f0c953f02d8659577933b35613fb9896564b3ccd3a411a3daf67928c29e"
+        },
+        {
+          "file": "src/lib/i18n/check-roll-messages.ts",
+          "previousSha256": "4661a030c9959c12c073a06d52006e0c67a1b3973b35a3dd7e9a2c131a5c19ad",
+          "currentSha256": "22c2f41bd26ab8aa4c9f198e42e530c37e0adab54ad8227f878ee4ce766353a4"
+        },
+        {
+          "file": "src/lib/i18n/special-roll-messages.ts",
+          "previousSha256": "67161192330116c8cdc839fe0620d8f8b7ca48b9d993c17f39265d9e1c86fba4",
+          "currentSha256": "1a37654791606e845730744f6c4de4e3045df873284213e1f44c016a4d346992"
+        },
+        {
+          "file": "scripts/lib/special-caption-contracts.mjs",
+          "previousSha256": "dd7dfb9b1237b2cfc3a58da4bbca23dc0c58870a11afb4bd66e2251b3cae7544",
+          "currentSha256": "68ab118a2d22851acb3c52065c74f90759619f9efa9fb1151f6310f631c8db3d"
+        }
+      ]
+    }
+  ]
 }

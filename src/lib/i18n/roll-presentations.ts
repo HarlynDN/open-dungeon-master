@@ -81,6 +81,7 @@ export function rollPresentationLabel(raw: unknown, locale: AppLocale): string |
   const t = createTranslator(locale);
   let detail = "";
   switch (p.kind) {
+    case "initiative": detail = t("combatUi.roll.initiative"); break;
     case "against": detail = t("combatUi.roll.against", { what: rollActionLabel(p.what, locale),
       target: p.target.kind === "enemy" ? referenceDisplayName("monster", p.target.name, locale) : p.target.name }); break;
     case "area": {
@@ -109,6 +110,7 @@ export function rollPresentationLabel(raw: unknown, locale: AppLocale): string |
       }
       if ("from" in c) values.from = c.from.kind === "enemy" ? referenceDisplayName("monster", c.from.name, locale).replace(/(\d)$/, "$1 ") : c.from.name;
       if ("text" in c) values.text = c.text;
+      if ("shop" in c) values.shop = c.shop;
       if ("hour" in c) values.hour = c.hour;
       if ("round" in c) values.round = c.round;
       const frame = c.kind === "hourly-endurance" ? `${c.kind}.${c.activity}`
@@ -142,7 +144,7 @@ export function rollPresentationLabel(raw: unknown, locale: AppLocale): string |
 
 export function rollPresentationActor(presentation: RollPresentation | undefined, locale: AppLocale): string | undefined {
   const p = parseRollPresentation(presentation);
-  if ((p?.kind === "check" || p?.kind === "special") && p.owner) return p.owner.kind === "enemy" ? referenceDisplayName("monster", p.owner.name, locale) : p.owner.name;
+  if ((p?.kind === "check" || p?.kind === "special" || p?.kind === "initiative") && p.owner) return p.owner.kind === "enemy" ? referenceDisplayName("monster", p.owner.name, locale) : p.owner.name;
   return p?.kind === "area" && p.actorUnseen ? createTranslator(locale)("combatRoll.someoneUnseen") : undefined;
 }
 

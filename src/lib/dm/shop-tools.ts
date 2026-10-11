@@ -6,6 +6,7 @@ import { getClock } from "@/lib/db/clock";
 import { getCurrentLocation } from "@/lib/db/locations";
 import { getNpcById, getNpcByName } from "@/lib/db/npcs";
 import { insertRoll } from "@/lib/db/rolls";
+import { checkRoll } from "@/lib/roll-labels";
 import { insertSheetAudit } from "@/lib/db/sheet-audit";
 import { getSheetById, listSheets, patchSheet } from "@/lib/db/sheets";
 import { findShopNear, getShop, insertShop, listShopsAt, updateShop } from "@/lib/db/shops";
@@ -379,7 +380,7 @@ export function handleHaggle(campaign: Campaign, rawArguments: string): Record<s
   spendRollCarriers(campaign.id, sheet.id, resolved.spendInspiration);
   const dc = haggleDc(shop.size);
   const rolled = rollExpression(resolved.expression);
-  const roll = insertRoll({ campaignId: campaign.id, characterId: sheet.id, requestedBy: "dm", kind: "skill_check", detail: `${sheet.name}: haggling at ${shop.name}`, dc, result: rolled });
+  const roll = insertRoll({ campaignId: campaign.id, characterId: sheet.id, requestedBy: "dm", kind: "skill_check", ...checkRoll(`${sheet.name}: haggling at ${shop.name}`, "skill", "persuasion", { kind: "haggle", shop: shop.name }, { name: sheet.name, kind: "proper" }), dc, result: rolled });
   publishWithSeq(campaign.id, allocateSeq(campaign.id), "roll_result", { roll, source: "digital" });
   const success = rolled.total >= dc;
   const markup = haggleStep(shop.markup, success);

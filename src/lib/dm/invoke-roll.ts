@@ -9,7 +9,7 @@
 // can decide the roll outright, an inspiration die is spent whether the
 // dice are physical or digital, an initiative roll feeds the encounter, and
 // a damage roll aimed at an enemy applies itself.
-import { checkRoll } from "@/lib/roll-labels";
+import { checkRoll, initiativeRoll } from "@/lib/roll-labels";
 import { claimedAdvantage } from "@/lib/dm/pc-attack-options";
 import { rollExpression } from "@/lib/dice";
 import { getActiveEncounter } from "@/lib/db/encounters";
@@ -140,6 +140,7 @@ export function handleRequestRoll(
 
   const caption = args.kind === "saving_throw" && resolved.detail === "death"
     ? { kind: "death-save" as const, notes: resolved.conditionNotes ?? [] }
+    : args.kind === "initiative" ? initiativeRoll(resolved.detail).presentation
     : ["skill_check", "ability_check", "saving_throw"].includes(args.kind)
     ? checkRoll(resolved.detail, args.kind === "skill_check" ? "skill" : "ability", resolved.detail).presentation : undefined;
 

@@ -29,7 +29,7 @@ flow remains incomplete; the review-repair checkpoint is a separate scoped task.
 | Locale foundation | Registry, persistence, browser fallback, typed complete catalogs, model locale policy, classified token proxy, chapter budget, CJK retrieval, IME protection | Real prompt-usage calibration; keep legacy campaign/history regressions |
 | DM safety | Per-event engine conclusions with English/Chinese renderers; AI prose separated; one text-only correction and safe fallback; shared localized enemy names in roster/initiative/prose/guard; real Codex combat acceptance | Broader spell/condition/pack coverage; conservative regex coverage is not full language understanding |
 | Embeddings | Original English deployment default retained; explicit multilingual opt-in; fixed bilingual calibration/holdout and hard-negative policy | Broader pack quality; opt-in affects English campaigns and rebuilds indexes |
-| UI | **123/437** covered files, **3436** pending literal sites, **5545** message keys; scoped AST gate; pending checks, initiative controls, encounter roster, board conditions, structured attack/area/death/check/save captions and cinematic owned UI | Remaining play/action/combat/inventory/rest/level-up/save/resume surfaces, sheet/party condition notes, other native feature/reaction names and initiative/social captions; file fraction is not overall completion or an effort estimate |
+| UI | **123/437** covered files, **3436** pending literal sites, **5552** message keys; scoped AST gate; pending checks, initiative controls, encounter roster, board conditions, structured attack/area/death/check/save/special/initiative/social captions and cinematic owned UI | Remaining play/action/combat/inventory/rest/level-up/save/resume surfaces, sheet/party condition notes, native feature/reaction names and level-up HP-die captions; file fraction is not overall completion or an effort estimate |
 | Character creation/material | Identity, ancestry, class introductions, ability allocation, gear, spell book/preparation and finish preview; 517 spell and 228 equipment names; 257-entry contextual terminology policy and lint gate; original-source review records | Remaining material beyond reviewed names/creator snippets; authored/pack text retains original language |
 | Player system logs | Structured rule diagnostics and engine-generated combat conclusions retain English protocol semantics with localized presentation | General player-visible log templates; model-facing English tool results remain independent |
 | Resource delivery | UI vs content namespaces; character/campaign boundaries; generated resources checked by lint; production Turbopack build and anonymous bilingual browser switch/reload succeed; home/character/campaign SSR and initial-script payloads measured | Hydrated/lazy network totals, authenticated campaign switching and active-play browser acceptance; route-level JS payload remains large |
@@ -159,8 +159,18 @@ file coverage remains 123/437; broad play/browser/TTS acceptance is still pendin
 All 526 script suites pass (273.27 seconds), as do independent TypeScript, lint
 and the default production Turbopack build.
 
-1. Complete native initiative/ambush/social/shop and counterspell-DC captions,
-   other native feature/reaction names and authored paired-damage frames. Carry
+The [initiative and social caption checkpoint](validation/chinese-initiative-social.md)
+adds typed captions for initiative (including physical dice and arrivals), both
+ambush sides, social/relationship/shop checks and enemy Counterspell. It retains
+22 original producer call contracts and 27 original English component renders;
+all 11,090 existing bilingual resource values and 25 previous compressed English
+baselines remain unchanged. There are now 5,552 message keys. Static UI coverage
+remains 123/437, because this checkpoint fixes dynamic engine captions.
+All 527 script suites pass (270.56 seconds), as do independent TypeScript, lint
+and the default production Turbopack build.
+
+1. Complete native feature/reaction names, authored paired-damage frames and
+   level-up HP-die captions. Carry
    structured condition notes into the remaining sheet/party surfaces, preserving
    proper/authored names, canonical IDs and English render parity.
 2. Continue the remaining main play UI and parameterized player logs in bounded

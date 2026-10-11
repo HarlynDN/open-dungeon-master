@@ -1,4 +1,4 @@
-import { specialRoll } from "@/lib/roll-labels";
+import { checkRoll, specialRoll } from "@/lib/roll-labels";
 import { z } from "zod";
 import { reactionBias } from "@/lib/dm/safety-logic";
 import { reputationDcOffset } from "@/lib/dm/faction-logic";
@@ -363,7 +363,7 @@ export function handleSocialCheck(
     characterId: sheet.id,
     requestedBy: "dm",
     kind: "skill_check",
-    detail: `${sheet.name}: ${skill} on ${npc.name}`,
+    ...checkRoll(`${sheet.name}: ${skill} on ${npc.name}`, "skill", skill, { kind: "influence", target: { name: npc.name, kind: "proper" } }, { name: sheet.name, kind: "proper" }),
     dc,
     result: rolled,
   });

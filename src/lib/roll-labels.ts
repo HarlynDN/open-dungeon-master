@@ -48,6 +48,10 @@ export function specialRoll(detail: string, context: RollSpecialContext, owner?:
   return { detail, presentation: { kind: "special", context, ...(owner ? { owner } : {}) } };
 }
 
+export function initiativeRoll(detail: string, owner?: RollDisplayName): RollDetail {
+  return { detail, presentation: { kind: "initiative", ...(owner ? { owner } : {}) } };
+}
+
 // Who made the roll: its attacker, else the sheet it concerns.
 export function rollerName(roll: Pick<StoredRoll, "attacker">, sheetName: string | undefined): string | undefined {
   return roll.attacker ? roll.attacker.name : sheetName;

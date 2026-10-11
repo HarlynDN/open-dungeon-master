@@ -11,6 +11,7 @@
 // companion-tools.ts (each of them reaches those two).
 
 import { dmRoll, rollCard } from "@/lib/dm/roll-card";
+import { initiativeRoll } from "@/lib/roll-labels";
 import type { Campaign } from "@/lib/db/campaigns";
 import { getDatabase } from "@/lib/db/core";
 import {
@@ -167,7 +168,7 @@ function placeInFight(
     const initiative =
       mode !== "group" && casterAt >= 0
         ? casterInitiative
-        : rollCard(campaign, null, created[0].id, "initiative", `${form.name}: initiative`, d20Expression(mod(form.abilities.dex)), null).total;
+        : rollCard(campaign, null, created[0].id, "initiative", initiativeRoll(`${form.name}: initiative`, { name: form.name, kind: "enemy" }), d20Expression(mod(form.abilities.dex)), null).total;
     const entries: OrderEntry[] = created.map((sheet) => ({
       kind: "pc",
       characterId: sheet.id,
@@ -272,7 +273,7 @@ function turnHostile(campaign: Campaign, sheet: CharacterSheet): string | null {
   const stats = enemyStatsFromSummon(sheet);
   const entryAt = encounter.order.findIndex((entry) => entry.kind === "pc" && entry.characterId === sheet.id);
   // Now a foe: its roll is the DM's, as an enemy's initiative is.
-  const initiative = entryAt >= 0 ? encounter.order[entryAt].initiative : dmRoll(campaign.id, null, "initiative", `${sheet.summon.form}: initiative`, d20Expression(stats.dexMod)).total;
+  const initiative = entryAt >= 0 ? encounter.order[entryAt].initiative : dmRoll(campaign.id, null, "initiative", initiativeRoll(`${sheet.summon.form}: initiative`, { name: sheet.summon.form, kind: "enemy" }), d20Expression(stats.dexMod)).total;
   const taken = new Set(listEnemies(encounter.id).map((enemy) => enemy.displayName));
   const displayName = taken.has(sheet.summon.form) ? `${sheet.summon.form} (unbound)` : sheet.summon.form;
   const enemy = insertEnemy({

@@ -1,4 +1,5 @@
 import type { Campaign } from "@/lib/db/campaigns";
+import { initiativeRoll } from "@/lib/roll-labels";
 import { allocateSeq, setFloor } from "@/lib/db/campaigns";
 import {
   getActiveEncounter,
@@ -124,7 +125,7 @@ export function resetInitiative(campaign: Campaign): InitiativeResult {
     if (enemy.status === "alive") {
       setEnemyInitiative(
         enemy.id,
-        dmRoll(campaign.id, null, "initiative", `${enemy.displayName}: initiative`, d20Expression(enemy.stats.dexMod)).total,
+        dmRoll(campaign.id, null, "initiative", initiativeRoll(`${enemy.displayName}: initiative`, { name: enemy.displayName, kind: "enemy" }), d20Expression(enemy.stats.dexMod)).total,
       );
     }
   }

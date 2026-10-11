@@ -10,7 +10,7 @@
     "src/lib/dm/aoe-damage.ts": "816d8ea3b229c763d25b8354a11ee58547a6712b24997e3de92485228887c4e0",
     "src/lib/dm/authored-mote.ts": "a6a3ad4bc41fe73fce5d3fd2a6c004519aac3c3b19adb22b6477297f3cd08f54",
     "src/lib/dm/authored-reactions.ts": "cdc60d1a84f608723dab25fe73b70b65ed6ea9553a96b3fbe382c44dee8e7363",
-    "src/lib/dm/authored-spend-effects.ts": "f9cd0d4c04db9fdecf2cf07c31cdd51c26d3195a5a9724ec717a344b89da3c9e",
+    "src/lib/dm/authored-spend-effects.ts": "be3b7b2ec04036e78ce0f57cc0c1f2d9a87c30dbc30c4c1fd2708b0d86f0b031",
     "src/lib/dm/authored-spend-more.ts": "5aeca4a00ec9e2cefa377d23accc4ee1b5456e9082f5ed3ca5c8dd0ed5db5283",
     "src/lib/dm/cast-at-enemy.ts": "d4c7413db511f85bab3ef2c1cda842ceb06da2f7f70b4462871b4aab6900be00",
     "src/lib/dm/condition-tick.ts": "f7f4306f01a36c01afcaff8a7a1dd1d6d0c1a2fbe0cffb1aea2bb68798f90a13",
@@ -36,11 +36,11 @@
     "src/lib/dm/srd-feature-spends.ts": "04ac445bad91609d26679780329a552601f002e9ce62e0d4042b8dfdfabe76ec",
     "src/lib/dm/zone-quake.ts": "114eaaffd226a95746c24bfc56b5d6748c1c15592215ae74ab20e21ce4707827",
     "src/lib/dm/zone-triggers.ts": "dad0437d98e4de4502c6a6cbf3b9ddc3e4bead40454707e178652bbc011b963b",
-    "src/lib/i18n/check-roll-messages.ts": "4661a030c9959c12c073a06d52006e0c67a1b3973b35a3dd7e9a2c131a5c19ad",
+    "src/lib/i18n/check-roll-messages.ts": "22c2f41bd26ab8aa4c9f198e42e530c37e0adab54ad8227f878ee4ce766353a4",
     "src/lib/i18n/glossary.zh-CN.ts": "356a38e27c23d45dbb0318802b35b7e928158f0a3888ea040976a217ed2d1f4d",
-    "src/lib/i18n/roll-presentations.ts": "b5c77d729f4ebf36c10ebaa229fc9177becad8d2de874383d539bcc3c880c725",
-    "src/lib/roll-labels.ts": "6ad615fc3af2ec64d7472f5727248f733dd7f3a0afbaaa939f610df09921aaa2",
-    "src/lib/roll-presentation.ts": "7a12637295f13bc667f6d050337279dac7447932ada02d9f9862ff75cc57956f"
+    "src/lib/i18n/roll-presentations.ts": "e9473f0c953f02d8659577933b35613fb9896564b3ccd3a411a3daf67928c29e",
+    "src/lib/roll-labels.ts": "afe57bc08299f5edf94827b8d55ae13cd7b07c2e0f5660ba36f9770e6a3dd865",
+    "src/lib/roll-presentation.ts": "644383d124542129ea03d71baeb4d0547c4e52d9957dbb8e453f94fdd6137267"
   },
   "englishGolden": {
     "baselineCommit": "3db1642e",
@@ -70,5 +70,39 @@
       "src/lib/roll-presentation.ts": "f4404f396ecd4e182fe401dd318ec02455ca91a07d2bdbd220b6a79abafd7610"
     },
     "review": "Inspected additive direct-save and special-purpose caption diffs. All 10936 prior bilingual resource values and 23 prior compressed baselines are unchanged. Original English details, dice, DCs, result inputs and visibility match 94 new immutable original call contracts. This refresh does not expand the older review scope; special captions have their own review."
-  }
+  },
+  "integrations": [
+    {
+      "date": "2026-10-11",
+      "checkpoint": "initiative/social captions",
+      "review": "Additive public caption fields and new complete bilingual templates only; original English renders, previous catalog values and prior compressed baselines retained.",
+      "changed": [
+        {
+          "file": "src/lib/dm/authored-spend-effects.ts",
+          "previousSha256": "f9cd0d4c04db9fdecf2cf07c31cdd51c26d3195a5a9724ec717a344b89da3c9e",
+          "currentSha256": "be3b7b2ec04036e78ce0f57cc0c1f2d9a87c30dbc30c4c1fd2708b0d86f0b031"
+        },
+        {
+          "file": "src/lib/i18n/check-roll-messages.ts",
+          "previousSha256": "4661a030c9959c12c073a06d52006e0c67a1b3973b35a3dd7e9a2c131a5c19ad",
+          "currentSha256": "22c2f41bd26ab8aa4c9f198e42e530c37e0adab54ad8227f878ee4ce766353a4"
+        },
+        {
+          "file": "src/lib/i18n/roll-presentations.ts",
+          "previousSha256": "b5c77d729f4ebf36c10ebaa229fc9177becad8d2de874383d539bcc3c880c725",
+          "currentSha256": "e9473f0c953f02d8659577933b35613fb9896564b3ccd3a411a3daf67928c29e"
+        },
+        {
+          "file": "src/lib/roll-labels.ts",
+          "previousSha256": "6ad615fc3af2ec64d7472f5727248f733dd7f3a0afbaaa939f610df09921aaa2",
+          "currentSha256": "afe57bc08299f5edf94827b8d55ae13cd7b07c2e0f5660ba36f9770e6a3dd865"
+        },
+        {
+          "file": "src/lib/roll-presentation.ts",
+          "previousSha256": "7a12637295f13bc667f6d050337279dac7447932ada02d9f9862ff75cc57956f",
+          "currentSha256": "644383d124542129ea03d71baeb4d0547c4e52d9957dbb8e453f94fdd6137267"
+        }
+      ]
+    }
+  ]
 }

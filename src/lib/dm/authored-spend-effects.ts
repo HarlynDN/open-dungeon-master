@@ -1,4 +1,4 @@
-import { specialRoll } from "@/lib/roll-labels";
+import { checkRoll, specialRoll } from "@/lib/roll-labels";
 // What an authored spend does once it is paid for (src/lib/dm/authored-spends.ts
 // has checked the gate, the pool and the turn). Each resolver refuses before
 // it writes; the caller then spends the pool and the turn.
@@ -369,7 +369,7 @@ export function resolveSpendEffect(ctx: SpendContext, does: SpendDoes): Resoluti
       const skills = enemy.stats.skills as Record<string, number> | undefined;
       const deceptionMod = Number(skills?.deception ?? Math.floor(((enemy.stats.abilities?.cha ?? 10) - 10) / 2));
       // A contest the table sees, as every enemy's contest roll is (action-common.ts).
-      const deception = rollCard(ctx.campaign, ctx.turn, null, "skill_check", `${enemy.displayName}: Deception against ${sheet.name}'s Insight`, `1d20${deceptionMod >= 0 ? "+" : ""}${deceptionMod}`, null).total;
+      const deception = rollCard(ctx.campaign, ctx.turn, null, "skill_check", checkRoll(`${enemy.displayName}: Deception against ${sheet.name}'s Insight`, "skill", "deception", { kind: "deception-insight", target: { name: sheet.name, kind: "proper" } }, { name: enemy.displayName, kind: "enemy" }), `1d20${deceptionMod >= 0 ? "+" : ""}${deceptionMod}`, null).total;
       if (insight.total <= deception) {
         return { result: { insight: insight.total, deception, read: `${enemy.displayName} gives nothing away; no Sneak Attack edge.` } };
       }
