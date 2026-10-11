@@ -368,22 +368,22 @@
     {
       "path": "src/app/campaigns/[campaignId]/Hand.tsx",
       "state": "pending",
-      "review": "Owned hand labels and campaign-locale sentences reviewed; structured intent unchanged. Native waiting/refusal/network messages remain pending."
+      "review": "Owned labels, campaign-locale sentences and common engine/network refusals reviewed; structured intent unchanged. Uncommon casting/material/feature refusal frames remain pending."
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandAimBar.tsx",
       "state": "pending",
-      "review": "Owned aim/area/target/send controls reviewed; target callbacks preserve native IDs. Choice variants, option notes/refusals, health notes and preview material remain pending."
+      "review": "Owned aim/area/target/send/rider controls, native previews, health notes and common option rules reviewed; callbacks preserve native IDs/choice values. Remaining native choice variants and uncommon refusal frames remain pending."
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandCardFace.tsx",
       "state": "pending",
-      "review": "Card type/cost labels and known names reviewed; native card callbacks retained. Composite feature names, rules, roll/resource/condition facts, previews and refusals remain pending."
+      "review": "Type/cost labels, known/composite names, native facts/previews, basic/reaction rules and matching registered resource guidance reviewed; native card callbacks retained. Spell/rider notes, uncommon subclass names and casting/refusal frames remain pending."
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandMoreSheet.tsx",
       "state": "pending",
-      "review": "Owned sheet labels and known card names/types/costs reviewed. Native waiting reasons, rules/facts, previews and refusals remain pending."
+      "review": "Owned labels, known names/types/costs, native facts/previews, waiting/common refusals and basic/reaction/registered-resource rules reviewed. Remaining spell/rider/subclass/casting material keeps this file pending."
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandPips.tsx",
@@ -392,7 +392,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandReactPrompt.tsx",
-      "state": "pending"
+      "state": "pending",
+      "review": "Owned reaction strip, current-record hit/fall prompts, known names/resource counters, native reaction rules and common refusals reviewed; native card callbacks preserved. Uncommon subclass reaction names and casting/material refusal frames remain pending."
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandSpells.tsx",

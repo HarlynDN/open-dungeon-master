@@ -4,6 +4,7 @@ import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { createTranslator } from "@/lib/i18n/translator";
 import type { AppLocale } from "@/lib/i18n/locales";
 import { handCardName, handAimName } from "@/lib/i18n/hand-presentations";
+import { handCardMaterial, handPreviewRow } from "@/lib/i18n/hand-material-presentations";
 import * as RadixTooltip from "@radix-ui/react-tooltip";
 import { memo, useMemo } from "react";
 import type { CSSProperties } from "react";
@@ -47,18 +48,22 @@ export function typeTone(type: HandCardType): string {
 }
 
 export function HandPreviewRows({ rows }: { rows: PreviewRow[] }) {
+  const { locale } = useLocale();
   return (
     <span className="hand-rows">
-      {rows.map((row, index) => (
-        <span key={row.key} className="hand-row" style={{ "--i": index } as CSSProperties}>
-          <span className="hand-row-key">{row.key}</span>
-          {/* Keyed by what it says, so a number that changes with the target
-              arrives as a new one (hand-motion.css) instead of cutting. */}
-          <span key={row.value} className="hand-row-value" data-tone={row.tone}>
-            {row.value}
+      {rows.map((row, index) => {
+        const display = handPreviewRow(row, locale);
+        return (
+          <span key={row.key} className="hand-row" style={{ "--i": index } as CSSProperties}>
+            <span className="hand-row-key">{display.key}</span>
+            {/* Keyed by what it says, so a number that changes with the target
+                arrives as a new one (hand-motion.css) instead of cutting. */}
+            <span key={row.value} className="hand-row-value" data-tone={row.tone}>
+              {display.value}
+            </span>
           </span>
-        </span>
-      ))}
+        );
+      })}
     </span>
   );
 }
@@ -68,18 +73,19 @@ export function HandPreviewRows({ rows }: { rows: PreviewRow[] }) {
 // the fan's own card is the one a screen reader hears about.
 export function HandPlayedCard({ card }: { card: HandCard }) {
   const { locale, t } = useLocale();
+  const material = handCardMaterial(card, locale);
   return (
     <div className="hand-played" aria-hidden="true">
       <span className="hand-played-top">
         <span className="hand-cost" data-cost={card.cost}>
           {t(`handUi.cost.${card.cost}`)}
         </span>
-        <span className="hand-range">{card.range}</span>
+        <span className="hand-range">{material.range}</span>
       </span>
       <span className="hand-played-name">{handCardName(card, locale)}</span>
       {card.dice ? (
         <span className="hand-dice" data-heals={card.heals ? "true" : undefined}>
-          {card.dice}
+          {material.dice}
         </span>
       ) : null}
     </div>
@@ -120,6 +126,7 @@ function HandCardFaceInner({
 }) {
   const { locale, t } = useLocale();
   const displayName = handCardName(card, locale);
+  const material = handCardMaterial(card, locale);
   const rows = useMemo(() => previewRows(card, aim, conditions), [card, aim, conditions]);
   const aimName = aim && card.target === "enemy" && aim.kind === "enemy" ? handAimName(aim, locale) : "";
   const slotStyle = {
@@ -140,7 +147,7 @@ function HandCardFaceInner({
       // hover, which is how it says why it cannot be played.
       aria-disabled={card.disabled ? "true" : undefined}
       aria-pressed={card.type === "rider" ? attached : undefined}
-      aria-label={`${displayName}, ${t(`handUi.cost.${card.cost}`)}${card.disabled ? `. ${card.disabled}` : ""}`}
+      aria-label={`${displayName}, ${t(`handUi.cost.${card.cost}`)}${card.disabled ? `. ${material.disabled}` : ""}`}
       onClick={() => onPick(card)}
     >
       <span className="hand-card-frame" />
@@ -154,7 +161,7 @@ function HandCardFaceInner({
           <span className="hand-cost" data-cost={card.cost}>
             {t(`handUi.cost.${card.cost}`)}
           </span>
-          <span className="hand-range">{card.range}</span>
+          <span className="hand-range">{material.range}</span>
         </span>
         <span className="hand-art">
           <GameIcon icon={card.icon} size="size-[52px] max-sm:size-9" className="hand-art-icon" />
@@ -163,15 +170,15 @@ function HandCardFaceInner({
         <span className="hand-numbers">
           {card.dice ? (
             <span className="hand-dice" data-heals={card.heals ? "true" : undefined}>
-              {card.dice}
+              {material.dice}
             </span>
           ) : null}
-          <span className="hand-roll">{card.roll}</span>
+          <span className="hand-roll">{material.roll}</span>
         </span>
-        <span className="hand-rules">{card.rules}</span>
+        <span className="hand-rules">{material.rules}</span>
         <span className="hand-foot">
-          <span className="hand-resource">{card.resource}</span>
-          <span className="hand-cond">{card.condition}</span>
+          <span className="hand-resource">{material.resource}</span>
+          <span className="hand-cond">{material.condition}</span>
         </span>
       </span>
     </button>
@@ -194,7 +201,7 @@ function HandCardFaceInner({
                 collisionPadding={8}
                 className="z-[70] max-w-60 rounded-md border border-stone-600/60 bg-stone-950 px-2.5 py-1.5 text-xs leading-snug text-stone-300 shadow-elev-2"
               >
-                {card.disabled}
+                {material.disabled}
               </RadixTooltip.Content>
             </RadixTooltip.Portal>
           ) : null}

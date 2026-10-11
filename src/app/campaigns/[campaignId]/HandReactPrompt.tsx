@@ -1,6 +1,9 @@
 "use client";
 
 import { Zap } from "lucide-react";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { handCardName } from "@/lib/i18n/hand-presentations";
+import { handCardMaterial, handReactionPrompt, type HandReactionContext } from "@/lib/i18n/hand-material-presentations";
 import type { CSSProperties } from "react";
 import { cn } from "@/lib/cn";
 import { Tooltip } from "@/components/ui/Tooltip";
@@ -16,22 +19,26 @@ export function HandReactPrompt({
   cards,
   pickedId,
   onPick,
+  context,
 }: {
   cards: HandCard[];
   pickedId: string | null;
   onPick: (card: HandCard) => void;
+  context?: HandReactionContext;
 }) {
+  const { locale, t } = useLocale();
   if (!cards.length) return null;
   // One line per attack answered: the reason is the same for its reactions.
-  const prompt = cards[0].prompt ?? "";
+  const prompt = handReactionPrompt(cards[0], locale, context);
   return (
-    <div className="hand-react mt-1.5 flex flex-wrap items-center gap-1.5 rounded-xl border border-sky-500/35 bg-sky-950/40 px-2.5 py-1.5" role="group" aria-label="Reactions">
+    <div className="hand-react mt-1.5 flex flex-wrap items-center gap-1.5 rounded-xl border border-sky-500/35 bg-sky-950/40 px-2.5 py-1.5" role="group" aria-label={t("handMaterial.react.label")}>
       <span className="hand-react-title flex min-w-0 items-center gap-1.5 text-xs text-sky-100">
         <Zap className="size-3.5 shrink-0 text-sky-300" aria-hidden="true" />
-        <span className="truncate">{prompt}. React?</span>
+        <span className="truncate">{t("handMaterial.react.ask", { prompt })}</span>
       </span>
       <span className="ml-auto flex flex-wrap gap-1.5">
         {cards.map((card, index) => {
+          const material = handCardMaterial(card, locale);
           const chip = (
             <button
               key={card.id}
@@ -47,12 +54,12 @@ export function HandReactPrompt({
                   : "border-sky-400/60 bg-sky-500/15 text-sky-50 hover:border-sky-300",
               )}
             >
-              {card.name}
-              {card.resource ? <span className="font-mono text-[10px] text-sky-300/80">{card.resource}</span> : null}
+              {handCardName(card, locale)}
+              {card.resource ? <span className="font-mono text-[10px] text-sky-300/80">{material.resource}</span> : null}
             </button>
           );
           return card.disabled || card.rules ? (
-            <Tooltip key={card.id} content={card.disabled ?? card.rules}>
+            <Tooltip key={card.id} content={material.disabled ?? material.rules}>
               {chip}
             </Tooltip>
           ) : (

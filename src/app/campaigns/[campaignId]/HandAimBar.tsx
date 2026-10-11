@@ -2,6 +2,7 @@
 
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { handCardName, handAimName, handTermLabel, handAreaDescription, handAreaHintText } from "@/lib/i18n/hand-presentations";
+import { handChoiceLabel, handFactText, handRefusalText, handRuleText, handTargetNote } from "@/lib/i18n/hand-material-presentations";
 import { ArrowLeft, Loader2, PencilLine, X } from "lucide-react";
 import { isComposingInput } from "@/lib/input-composition";
 import { useRef, type CSSProperties } from "react";
@@ -37,7 +38,7 @@ function HandOptionChip({
   const { locale } = useLocale();
   const ref = useRef<HTMLButtonElement>(null);
   return (
-    <Tooltip content={option.disabled ?? option.note}>
+    <Tooltip content={option.disabled ? handRefusalText(option.disabled, locale) : handRuleText(option.note, locale)}>
       <button
         ref={ref}
         type="button"
@@ -181,7 +182,7 @@ export function HandAimBar({
                   {target.kind === "self" ? t("handUi.aim.you", { name: target.name }) : handAimName(target, locale)}
                 </span>
                 {target.note ? (
-                  <span className="font-mono text-[10px] leading-tight text-stone-500">{target.note}</span>
+                  <span className="font-mono text-[10px] leading-tight text-stone-500">{handTargetNote(target.note, locale)}</span>
                 ) : null}
               </button>
             ))
@@ -238,8 +239,8 @@ export function HandAimBar({
           pick (src/lib/motion/pill.ts), and a second press takes it back. */}
       {grouped.length ? (
         <div className="mt-2 flex flex-wrap items-center gap-1.5">
-          <span className="text-[11px] uppercase tracking-wider text-stone-500">Open Hand</span>
-          <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label="Open Hand Technique" data-pill-group>
+          <span className="text-[11px] uppercase tracking-wider text-stone-500">{t("handMaterial.term.openHand")}</span>
+          <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label={t("handMaterial.term.openHandTechnique")} data-pill-group>
             {grouped.map((option, index) => (
               <HandOptionChip
                 key={option.id}
@@ -256,12 +257,12 @@ export function HandAimBar({
 
       {card.choice ? (
         <div className="hand-choice mt-2 flex flex-wrap items-center gap-1.5">
-          <span className="text-[11px] uppercase tracking-wider text-stone-500">{card.choice.label}</span>
-          <div className="flex flex-wrap items-center gap-1.5" role="radiogroup" aria-label={card.choice.label} data-pill-group>
+          <span className="text-[11px] uppercase tracking-wider text-stone-500">{handChoiceLabel(card, card.choice.label, locale)}</span>
+          <div className="flex flex-wrap items-center gap-1.5" role="radiogroup" aria-label={handChoiceLabel(card, card.choice.label, locale)} data-pill-group>
             {card.choice.options.map((option, index) => {
               const on = option.value === (choice ?? card.choice?.fallback ?? card.choice?.options[0]?.value);
               return (
-                <Tooltip key={option.value || "none"} content={option.note || option.label}>
+                <Tooltip key={option.value || "none"} content={option.note ? handTargetNote(option.note, locale) : handChoiceLabel(card, option.label, locale)}>
                   <button
                     type="button"
                     role="radio"
@@ -274,7 +275,7 @@ export function HandAimBar({
                       on ? "border-amber-400/70 bg-amber-500/20 text-amber-100" : "border-stone-600 text-stone-300 hover:border-amber-500/60",
                     )}
                   >
-                    {handTermLabel(option.label, locale)}
+                    {handChoiceLabel(card, option.label, locale)}
                   </button>
                 </Tooltip>
               );
@@ -307,16 +308,16 @@ export function HandAimBar({
 
       {riders.length ? (
         <div className="mt-2 flex flex-wrap items-center gap-1.5">
-          <span className="text-[11px] uppercase tracking-wider text-stone-500">Riding it</span>
+          <span className="text-[11px] uppercase tracking-wider text-stone-500">{t("handMaterial.rider.title")}</span>
           {riders.map((rider) => (
             <button
               key={rider.id}
               type="button"
               onClick={() => onDropRider(rider)}
-              aria-label={`Take ${rider.name} off this attack`}
+              aria-label={t("handMaterial.rider.remove", { name: handCardName(rider, locale) })}
               className="hand-rider inline-flex min-h-8 items-center gap-1 rounded-full border border-amber-500/50 bg-amber-500/10 px-2.5 text-xs text-amber-100"
             >
-              {rider.name} {rider.dice}
+              {handCardName(rider, locale)} {handFactText(rider.dice, locale)}
               <X className="size-3" />
             </button>
           ))}
@@ -343,7 +344,7 @@ export function HandAimBar({
             </Tooltip>
             <Tooltip
               content={
-                blocked ??
+                (blocked ? handRefusalText(blocked, locale) : null) ??
                 (ready
                   ? t("handUi.aim.sendHint")
                   : needsTrigger

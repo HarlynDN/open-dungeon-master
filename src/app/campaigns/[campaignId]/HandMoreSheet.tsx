@@ -2,6 +2,7 @@
 
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { handCardName, handCostLabel } from "@/lib/i18n/hand-presentations";
+import { handCardMaterial, handRefusalText } from "@/lib/i18n/hand-material-presentations";
 import type { CSSProperties } from "react";
 import { GameIcon } from "@/components/ui/GameIcon";
 import { Sheet } from "@/components/ui/Sheet";
@@ -48,7 +49,7 @@ export function HandMoreSheet({
     <Sheet open={open} onOpenChange={onOpenChange} title={t("handUi.more.title")}>
       {waitingNote ? (
         <p role="status" className="reveal mb-3 rounded-lg border border-amber-500/25 bg-amber-500/5 px-3 py-2 text-sm text-amber-100/90">
-          {waitingNote}{t("handUi.more.wait")}
+          {handRefusalText(waitingNote, locale)}{t("handUi.more.wait")}
         </p>
       ) : (
         <p className="mb-3 text-sm text-stone-400">{t("handUi.more.pick")}</p>
@@ -59,7 +60,8 @@ export function HandMoreSheet({
           // line is not spent repeating what the note above already said.
           const waiting = isWaiting(card);
           const rows = previewRows(card, card.intent.card === "reaction" ? null : aim, conditions);
-          const facts = [card.dice, card.roll, card.range].filter(Boolean).join(" · ");
+          const material = handCardMaterial(card, locale);
+          const facts = [material.dice, material.roll, material.range].filter(Boolean).join(" · ");
           return (
             <li key={card.id} className="hand-more-row" style={{ "--i": index } as CSSProperties}>
               <button
@@ -81,10 +83,10 @@ export function HandMoreSheet({
                     </span>
                   </span>
                   {facts ? <span className="block font-mono text-[11px] text-stone-400">{facts}</span> : null}
-                  {card.rules ? <span className="mt-1 block text-xs leading-snug text-stone-300">{card.rules}</span> : null}
+                  {card.rules ? <span className="mt-1 block text-xs leading-snug text-stone-300">{material.rules}</span> : null}
                   {card.resource || card.condition ? (
                     <span className="mt-0.5 block text-[11px] text-stone-500">
-                      {[card.resource, card.condition].filter(Boolean).join(" · ")}
+                      {[material.resource, material.condition].filter(Boolean).join(" · ")}
                     </span>
                   ) : null}
                   {rows.length ? (
@@ -92,7 +94,7 @@ export function HandMoreSheet({
                       <HandPreviewRows rows={rows} />
                     </span>
                   ) : null}
-                  {card.disabled && !waiting ? <span className="mt-1 block text-xs text-amber-300/90">{card.disabled}</span> : null}
+                  {card.disabled && !waiting ? <span className="mt-1 block text-xs text-amber-300/90">{material.disabled}</span> : null}
                 </span>
               </button>
             </li>

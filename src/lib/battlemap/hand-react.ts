@@ -71,7 +71,7 @@ function base(
   };
 }
 
-function what(hit: PublicLastHit, whom: string): string {
+export function reactionHitText(hit: PublicLastHit, whom: string): string {
   if (hit.source === "fall") return `${whom} fell for ${hit.damage}`;
   return `${hit.attacker}'s ${hit.attack} hit ${whom}${hit.damage ? ` for ${hit.damage}${hit.type ? ` ${hit.type}` : ""}` : ""}`;
 }
@@ -136,7 +136,7 @@ export function reactionCards(
 
   const mine = hits.find((hit) => hit.characterId === sheet.id && hit.hit);
   if (mine) {
-    const prompt = what(mine, "you");
+    const prompt = reactionHitText(mine, "you");
     if (mine.source === "attack") {
       const shield = !answered(mine, "Shield")
         ? spellReaction(sheet, turn, "Shield", prompt, "+5 AC against the attack that hit: a swing the +5 beats misses.", "none")
@@ -176,7 +176,7 @@ export function reactionCards(
     if (hit.characterId === sheet.id || !hit.hit || hit.source !== "attack") continue;
     const ally = party.find((entry) => entry.id === hit.characterId);
     if (!ally) continue;
-    const prompt = what(hit, ally.name);
+    const prompt = reactionHitText(hit, ally.name);
     if (holds(sheet, "cutting words") && (sheet.resources.bardic_inspiration?.max ?? 0) > (sheet.resources.bardic_inspiration?.used ?? 0)) {
       feature(hit, "Cutting Words", prompt, "Spend a Bardic Inspiration die off the roll or the damage.", "ally");
     }

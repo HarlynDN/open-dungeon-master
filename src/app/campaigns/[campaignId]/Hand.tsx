@@ -3,6 +3,7 @@
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import type { AppLocale } from "@/lib/i18n/locales";
 import { handSentence, handCardName } from "@/lib/i18n/hand-presentations";
+import { handRefusalText, HAND_SEND_FAILURE, HAND_NETWORK_FAILURE } from "@/lib/i18n/hand-material-presentations";
 import { ChevronDown, CircleHelp } from "lucide-react";
 import { isComposingInput } from "@/lib/input-composition";
 import { memo, useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
@@ -293,7 +294,7 @@ function HandInner({
         // The engine's own reason (the actions route asks canAct and the
         // cast guard before anything is posted); the card stays playable.
         const data = (await response.json().catch(() => ({}))) as { error?: string };
-        say(data.error || "Could not send your action.");
+        say(data.error || HAND_SEND_FAILURE);
         return;
       }
       // Nothing is marked spent: the engine's count arrives with the
@@ -315,7 +316,7 @@ function HandInner({
       window.clearTimeout(playedTimer.current);
       playedTimer.current = window.setTimeout(() => setPlayed(null), PLAYED_MS);
     } catch {
-      say("Could not reach the server.");
+      say(HAND_NETWORK_FAILURE);
     } finally {
       setSending(false);
     }
@@ -424,6 +425,7 @@ function HandInner({
           once the turn moves on. */}
       <HandReactPrompt
         cards={reactions}
+        context={{ hits: hits ?? [], viewerId: sheet.id, party: sheets, enemies: encounter.enemies }}
         pickedId={picked?.id ?? null}
         onPick={(card) => {
           // The aim bar that sends it lives in the fan's space: a put-away
@@ -505,7 +507,7 @@ function HandInner({
         </>
       )}
       <p ref={noticeRef} role="status" className={cn("mt-1 text-xs text-amber-300", notice ? "" : "hidden")}>
-        {notice}
+        {handRefusalText(notice, locale)}
       </p>
       <HandMoreSheet
         open={moreOpen}
