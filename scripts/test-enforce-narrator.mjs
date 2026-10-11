@@ -667,7 +667,8 @@ await test("The narration guard's rewrite has one reserved call outside the four
   world.clearDice();
   assert.equal(kit.enemy(enemy.id).currentHp, kit.enemy(enemy.id).maxHp, "the swing was meant to miss");
   assert.equal(model.served(), 5, "the correction had no call left");
-  assert.equal(message?.content.replace(/\[roll:[^\]]*\]\s*/g, "").trim(), rewrite);
+  assert.ok(message?.content.endsWith(rewrite));
+  assert.match(message.content, /Combat results[\s\S]*misses/);
 });
 
 // ---- the Hand's intent ----

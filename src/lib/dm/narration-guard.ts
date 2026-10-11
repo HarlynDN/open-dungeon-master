@@ -11,7 +11,10 @@ import {
   normalizeSpellName,
   type LiveState,
 } from "@/lib/dm/engine-boundary";
-import { getActiveEncounter, listEnemies } from "@/lib/db/encounters";
+import { getActiveEncounter, getEnemy, listEnemies } from "@/lib/db/encounters";
+import { combatConclusions, combatFallback, combatNarrationPrompt, COMBAT_PRESENTATIONS } from "@/lib/dm/combat-narration";
+import { resolveNarration } from "@/lib/dm/narration-policy";
+import { normalizeLocale } from "@/lib/i18n/locales";
 import spellManifest from "@/lib/srd/manifest/spells.json";
 
 // The DB/model rim of the engine-boundary guard. All the matching lives in
@@ -28,8 +31,8 @@ import spellManifest from "@/lib/srd/manifest/spells.json";
 // Never touches mechanical state. The dice, the hit points, and the slots
 // already resolved through their tools before the narration existed; a
 // contradiction is a prose bug, so only prose is ever changed. When the
-// rewrite is no better, the original narration stands and the contradiction
-// is logged rather than papered over.
+// rewrite is invalid or unavailable, only engine-confirmed conclusions are
+// published. Incorrect prose must never become the final text or TTS input.
 
 export const GUARD_RESERVED_CALLS = 1;
 
@@ -79,105 +82,52 @@ export async function enforceEngineBoundary(
   sheets: readonly CharacterSheet[],
 ): Promise<void> {
   const narration = turn.narrationParts.join("\n\n").trim();
-  if (!narration) {
-    return;
-  }
-  // A line crossed is refused the same way a hit written on a miss is
-  // (docs/vtt-parity-implementation-plan.md 9.1), whether or not the
-  // outcome check is on: safety is not a setting.
+  const locale = normalizeLocale(campaign.gameSettings.locale);
   const lines = campaign.gameSettings.safety?.lines ?? [];
-  const crossed = lineViolations(narration, lines);
-  const partyNames = sheets.map((sheet) => sheet.name);
+  const partyNames = sheets.map(sheet => sheet.name);
   const live = liveStateFor(campaign.id);
   const leveledSpells = leveledSpellNames();
-  const contradictions = campaign.gameSettings.narrationGuard
-    ? checkNarration({
-        locale: campaign.gameSettings.locale,
-        conversation: turn.conversation,
-        narration,
-        partyNames,
-        live,
-        leveledSpells,
-      })
+  const factsOptions = { names: Object.fromEntries(sheets.map(sheet => [sheet.id, sheet.name])), live, resolveName: (id: string) => getEnemy(id)?.displayName };
+  const conclusions = combatConclusions(turn.conversation, locale, factsOptions);
+  if (!narration && !conclusions) return;
+  const contradictionsFor = (text: string) => campaign.gameSettings.narrationGuard
+    ? checkNarration({ locale, conversation: turn.conversation, narration: text, partyNames, live, leveledSpells })
     : [];
-  if (!contradictions.length && !crossed.length) {
-    return;
-  }
-
-  const summary = [...contradictions.map((entry) => entry.detail), ...crossed.map((line) => `line crossed: ${line}`)].join("; ");
-
-  // The narration is echoed back explicitly: a turn that ended on a pure
-  // narration call never pushed that assistant message into the conversation,
-  // so without this the model would be asked to rewrite prose it cannot see and
-  // would invent a fresh scene instead.
-  const { message, error } = await requestDmMessage(
-    campaign.settings,
-    [
-      ...turn.conversation,
-      { role: "assistant", content: narration },
-      {
-        role: "user",
-        content: [contradictions.length ? buildCorrectionPrompt(contradictions, campaign.gameSettings.locale) : "", crossed.length ? buildLinePrompt(crossed) : ""]
-          .filter(Boolean)
-          .join("\n\n"),
-      },
-    ],
-    // No tools: this call exists to rewrite prose, and a tool call here would
-    // resolve mechanics a second time. It is the reserved call, so it is
-    // made whatever the turn's budget has left.
-    { locale: campaign.gameSettings.locale, tools: [], toolChoice: "none", thinking: false },
-  );
-  turn.callIndex += 1;
-  if (error) {
-    console.warn(`[engine-boundary] turn ${turn.id}: correction call failed (${summary})`);
-    return;
-  }
-
-  // Tool text the rewrite wrote out (a call it was not offered, as brackets,
-  // XML or bare JSON) is stripped like every other narration path does;
-  // stripToolText also drops hand-written roll markers.
-  const corrected = stripToolText(extractStoryText(message?.content)).trim();
-  // A stub reply ("Understood.") technically contradicts nothing; the table
-  // would rather have the flawed paragraph it already watched stream in.
-  if (corrected.length < Math.min(120, Math.floor(narration.length / 3))) {
-    console.warn(
-      `[engine-boundary] turn ${turn.id}: correction came back too short to use (${summary})`,
-    );
-    return;
-  }
-  // A rewrite is only an improvement if it actually removes contradictions. A
-  // model that swapped one wrong claim for another keeps its original text,
-  // which at least the table already saw streaming.
-  const remaining = campaign.gameSettings.narrationGuard
-    ? checkNarration({
-        locale: campaign.gameSettings.locale,
-        conversation: turn.conversation,
-        narration: corrected,
-        partyNames,
-        live,
-        leveledSpells,
-      })
-    : [];
-  const stillCrossed = lineViolations(corrected, lines);
-  if (remaining.length + stillCrossed.length >= contradictions.length + crossed.length) {
-    console.warn(
-      `[engine-boundary] turn ${turn.id}: correction did not resolve the contradiction (${summary})`,
-    );
-    return;
-  }
-  // finalize() renders the turn's dice cards between the last narration part
-  // and the ones before it, so a multi-part turn keeps that shape: the rewrite
-  // splits back at its final paragraph break rather than collapsing to one
-  // block and pushing every roll card above the whole message.
+  const contradictions = contradictionsFor(narration);
+  const crossed = lineViolations(narration, lines);
+  const fallback = () => {
+    const content = combatFallback(turn.conversation, locale, factsOptions);
+    // A player-supplied name may itself cross a table's line.
+    return lineViolations(content, lines).length ? COMBAT_PRESENTATIONS[locale].fallback : content;
+  };
+  const resolved = !narration ? { narration: fallback(), status: "fallback" as const } : await resolveNarration({
+    narration,
+    valid: text => !contradictionsFor(text).length && !lineViolations(text, lines).length,
+    fallback,
+    rewrite: async () => {
+      turn.callIndex += 1;
+      const { message, error } = await requestDmMessage(campaign.settings, [
+        ...turn.conversation,
+        { role: "assistant", content: narration },
+        { role: "user", content: [
+          contradictions.length ? buildCorrectionPrompt(contradictions, locale) : "",
+          crossed.length ? buildLinePrompt(crossed) : "",
+          combatNarrationPrompt(turn.conversation, locale, factsOptions),
+        ].filter(Boolean).join("\n\n") },
+      ], { locale, tools: [], toolChoice: "none", thinking: false });
+      return error ? null : stripToolText(extractStoryText(message?.content)).trim();
+    },
+  });
+  if (resolved.status === "fallback") console.warn(`[engine-boundary] turn ${turn.id}: using engine conclusions (${"reason" in resolved ? resolved.reason : "empty narration"})`);
+  // The immutable conclusions are composed by the final message writer, not
+  // stored as AI prose; alternative takes can preserve them byte for byte.
+  const content = resolved.narration;
   const multiPart = turn.narrationParts.length > 1;
-  const paragraphs = corrected.split(/\n{2,}/).map((part) => part.trim()).filter(Boolean);
+  const paragraphs = content.split(/\n{2,}/).map(part => part.trim()).filter(Boolean);
   turn.narrationParts.length = 0;
   if (multiPart && paragraphs.length > 1) {
-    turn.narrationParts.push(
-      paragraphs.slice(0, -1).join("\n\n"),
-      paragraphs[paragraphs.length - 1],
-    );
-    return;
+    turn.narrationParts.push(paragraphs.slice(0, -1).join("\n\n"), paragraphs[paragraphs.length - 1]);
+  } else {
+    turn.narrationParts.push(content);
   }
-  turn.narrationParts.push(corrected);
 }

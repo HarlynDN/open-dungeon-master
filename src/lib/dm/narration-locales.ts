@@ -17,7 +17,7 @@ const HEDGE = /仿佛|好像|似乎|差点|几乎|险些|可能|也许|或许|�
 const NEGATED = /没有|并未|未曾|未能|没能|不会|不能|不要|并不|不曾|不再|不是|并非|未命中|没命中|未击中|没有击中|未死|没死|未死亡|没死亡/u;
 const HIT = "击中|命中|刺中|砍中|咬中|砸中|打中|击伤|刺伤|砍伤";
 const MISS = "未命中|没命中|没有命中|未击中|没有击中|没击中";
-const DEAD = "死亡|死去|死了|死掉|被杀死|被斩杀|倒地身亡|倒地死亡|断了气|断气|失去生命|已经身亡";
+const DEAD = "死亡|死去|死了|死掉|被杀死|被斩杀|倒地身亡|倒地死亡|断了气|断气|失去生命|已经身亡|当场毙命|一命呜呼";
 const DOWNED = "昏迷|失去意识|不省人事|倒地不起|生命值降至\\s*0|生命值降为\\s*0";
 const OBJECT_PREFIX = "(?:那只|这只|那名|这名|那个|这个|一只|一名|一个)?";
 const AFTER_NAME = "(?=$|[\\s，。！？；：,.!?;:]|[的了后并而])";
@@ -42,7 +42,7 @@ function claims(kind: "hit" | "miss" | "death" | "downed", names: readonly strin
     const who = subject(name);
     let pattern: string;
     if (kind === "hit") {
-      pattern = `(?:${HIT})(?:了)?\\s*${target}|${who}\\s*(?:被|遭到|遭受)(?:[^，。！？；]{0,12}?)(?:${HIT})`;
+      pattern = `(?:${HIT})(?:了)?\\s*${target}|${who}\\s*(?:被|遭到|遭受)(?:[^，。！？；]{0,12}?)(?:${HIT})|(?:刺入|刺进|扎入|贯穿|穿透)(?:了)?\\s*${OBJECT_PREFIX}${escaped(name)}(?:的)?(?:胸膛|胸口|身体|腹部|肩膀|喉咙|咽喉)`;
     } else if (kind === "miss") {
       pattern = `(?:${MISS})(?:了)?\\s*${target}|(?:对|朝|向)\\s*${escaped(name)}(?:的攻击|的这一击|挥出的一击)\\s*(?:落空|失手|没有命中)|${who}\\s*(?:避开了|躲开了)(?:这一击|攻击)`;
     } else if (kind === "death") {

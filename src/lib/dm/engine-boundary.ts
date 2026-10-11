@@ -49,7 +49,7 @@ If a tool result has not come back, the thing it decides has NOT happened yet: c
 
 // Appended to the contract only when the table leaves the guard on, so the
 // prompt never promises a check that is switched off.
-export const ENGINE_BOUNDARY_CHECK = ` The server compares your finished narration against the results it actually returned before the table sees it, so prose that contradicts a tool result comes straight back to you for a rewrite.`;
+export const ENGINE_BOUNDARY_CHECK = ` The server compares your finished narration against resolved tool results. In combat it presents localized hit/miss, damage, downing and death conclusions itself. Describe actions, atmosphere and dialogue consistently with those facts; do not repeat the result list. Use explicit target names for mechanical assertions. Each swing is a separate event: a hit is not necessarily damage, and downed does not mean dead. Contradictory prose is sent back for a text-only rewrite; unresolved contradictions fall back to engine conclusions.`;
 
 // ---------------------------------------------------------------------------
 // Part 2: reading the turn's ground truth
@@ -305,7 +305,7 @@ function walkCreatures(value: unknown, creatures: Map<string, CreatureFact>) {
   }
   const record = value as Record<string, unknown>;
   const dead = record.dead === true || record.slain === true;
-  const downed = record.dropped === true || record.downed === true;
+  const downed = record.dropped === true || record.downed === true || record.down === true || record.knockedOut === true;
   const name = typeof record.name === "string" ? record.name : "";
   const target = typeof record.target === "string" ? record.target : "";
   const ownHp = hpPair(record.hp);
@@ -313,7 +313,7 @@ function walkCreatures(value: unknown, creatures: Map<string, CreatureFact>) {
   // `hp` belongs to the target when the row names nobody else.
   const targetHp = hpPair(record.targetHp) ?? (name ? null : hpPair(record.hp));
 
-  if (name && (ownHp || dead)) {
+  if (name && (ownHp || dead || downed)) {
     recordCreature(creatures, name, {
       hp: ownHp?.hp ?? null,
       maxHp: ownHp?.maxHp ?? null,
@@ -737,10 +737,10 @@ export function findNarrationContradictions(
     // 2. A death or a drop claimed against live, resolved hit points.
     if (!assertionNegated) {
       for (const [key, creature] of outcomes.creatures) {
-        if (creature.ambiguous || creature.dead || creature.downed) {
+        if (creature.ambiguous || creature.dead) {
           continue;
         }
-        if (creature.hp === null || creature.hp <= 0) {
+        if (creature.hp === null || (creature.hp <= 0 && !creature.downed)) {
           continue;
         }
         const hpLabel = `${creature.hp}${creature.maxHp === null ? "" : `/${creature.maxHp}`}`;
@@ -752,7 +752,7 @@ export function findNarrationContradictions(
             clause,
           });
         }
-        if (downedClaimPatterns(key).some((rx) => rx.test(clause)) || adapter?.claim("downed", names, clause)) {
+        if (!creature.downed && (downedClaimPatterns(key).some((rx) => rx.test(clause)) || adapter?.claim("downed", names, clause))) {
           add({
             kind: "death",
             detail: `${creature.display} is still up at ${hpLabel} HP, but the narration drops it`,

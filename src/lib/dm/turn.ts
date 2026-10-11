@@ -65,6 +65,8 @@ import { intentAnswered, intentCorrection, intentNeedsTool, type MessageIntent }
 import { handleCompleteBeat } from "@/lib/dm/arc";
 import { tickWaypointsFromCalls } from "@/lib/dm/waypoint-tick";
 import { enforceEngineBoundary } from "@/lib/dm/narration-guard";
+import { combatNarrationPrompt, combatNarrationContent } from "@/lib/dm/combat-narration";
+import { lineViolations } from "@/lib/dm/safety-logic";
 import {
   buildDmMessages,
   type DmGameState,
@@ -177,7 +179,7 @@ import {
   COMPANION_TOOL_NAMES,
   companionTools,
 } from "@/lib/dm/companion-tools";
-import { getActiveEncounter, listEnemies, type Encounter } from "@/lib/db/encounters";
+import { getActiveEncounter, getEnemy, listEnemies, type Encounter } from "@/lib/db/encounters";
 import { getBattleMapForEncounter, getTokenByRef, listTokens } from "@/lib/db/battle-maps";
 import { pcMoveBudget } from "@/lib/battlemap/view";
 import { serializeMapForPrompt } from "@/lib/battlemap/serialize";
@@ -769,10 +771,20 @@ async function runAdvance(context: TurnContext, turn: DmTurn) {
     // Fresh reasoning-artifact filter per model call; each call is its own
     // stream. Withheld trailing text is flushed after the call completes.
     const filter = createStreamingArtifactFilter();
+    const combatPrompt = combatNarrationPrompt(turn.conversation, campaign.gameSettings.locale, {
+      names: Object.fromEntries(sheets.map(sheet => [sheet.id, sheet.name])),
+      resolveName: id => getEnemy(id)?.displayName,
+    });
     const batcher = createDeltaBatcher((text) => {
+      // Combat prose is provisional until the guard has checked it. Publish
+      // only the final message, which is also the sole source for its audio.
+      if (inEncounter || combatPrompt || getActiveEncounter(campaignId)) return;
       narrationShown(campaignId, turn.id);
       publishEphemeral(campaignId, "dm_delta", { text });
     });
+    // Preserve the conversation's identity: the harness owns its live session
+    // by this array and releases it when the turn finishes or parks.
+    if (combatPrompt) turn.conversation.push({ role: "user", content: combatPrompt });
     const { message, error, finishReason } = await requestDmMessage(campaign.settings, turn.conversation, {
       locale: campaign.gameSettings.locale,
       tools,
@@ -1466,6 +1478,7 @@ async function narrateAfterToolLeak(context: TurnContext, turn: DmTurn) {
   const campaignId = campaign.id;
   const filter = createStreamingArtifactFilter();
   const batcher = createDeltaBatcher((text) => {
+    if (getActiveEncounter(campaignId) || combatNarrationPrompt(turn.conversation, campaign.gameSettings.locale)) return;
     narrationShown(campaignId, turn.id);
     publishEphemeral(campaignId, "dm_delta", { text });
   });
@@ -1912,6 +1925,14 @@ function finalize(context: TurnContext, turn: DmTurn, failed: string) {
   } else if (turn.rollIds.length) {
     content = `${turn.rollIds.map((id) => `[roll:${id}]`).join("\n")}\n\n${content}`;
   }
+
+  // These player-facing conclusions come from the engine, not model text.
+  // The same persisted content is handed to TTS below.
+  content = combatNarrationContent(content, turn.conversation, context.campaign.gameSettings.locale, {
+    names: Object.fromEntries(context.sheets.map(sheet => [sheet.id, sheet.name])),
+    resolveName: id => getEnemy(id)?.displayName,
+    allowText: text => !lineViolations(text, context.campaign.gameSettings.safety?.lines ?? []).length,
+  });
 
   const imageEnabled =
     context.campaign.settings.imageGenerationEnabled && context.campaign.settings.autoImages;

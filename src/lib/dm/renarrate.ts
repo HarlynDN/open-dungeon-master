@@ -11,6 +11,13 @@ import { setDmStatus } from "@/lib/dm/status";
 import { stripToolText } from "@/lib/dm/tool-text";
 import { enqueueNarrationAudio } from "@/lib/tts";
 import { extractStoryText } from "@/lib/story-prompt";
+import { checkNarration } from "@/lib/dm/engine-boundary";
+import { combatNarrationContent, combatNarrationPrompt, combatFallback, COMBAT_PRESENTATIONS } from "@/lib/dm/combat-narration";
+import { normalizeLocale } from "@/lib/i18n/locales";
+import { resolveNarration } from "@/lib/dm/narration-policy";
+import { lineViolations } from "@/lib/dm/safety-logic";
+import { getEnemy } from "@/lib/db/encounters";
+import { listSheets } from "@/lib/db/sheets";
 import {
   appendVariant,
   assembleVariantContent,
@@ -93,6 +100,10 @@ export async function runRenarrate(input: {
     // moving away from what the table just read.
     extractFinalTake(turn.narrationParts, turn.rollIds, message.content),
   );
+  const sheets = listSheets(campaign.id);
+  const factOptions = { names: Object.fromEntries(sheets.map(sheet => [sheet.id, sheet.name])), resolveName: (id: string) => getEnemy(id)?.displayName };
+  const factsPrompt = combatNarrationPrompt(turn.conversation, campaign.gameSettings.locale, factOptions);
+  if (factsPrompt) prompt.push({ role: "user", content: factsPrompt });
   let narration = "";
   let failure = "";
   // Queued behind any live narration so the single model server never
@@ -132,7 +143,24 @@ export async function runRenarrate(input: {
     return { error: "The DM returned nothing; try again.", status: 502 };
   }
 
-  const content = assembleVariantContent(turn.narrationParts, turn.rollIds, narration);
+  const assembled = assembleVariantContent(turn.narrationParts, turn.rollIds, narration);
+  const lines = campaign.gameSettings.safety?.lines ?? [];
+  const checked = await resolveNarration({
+    narration: assembled,
+    valid: text => !lineViolations(text, lines).length && (!campaign.gameSettings.narrationGuard || !checkNarration({
+      conversation: turn.conversation, narration: text, locale: campaign.gameSettings.locale, partyNames: sheets.map(sheet => sheet.name),
+    }).length),
+    // An alternative take already used its one text-only call. Never replay
+    // mechanics or publish a contradictory variant, even for an old turn.
+    rewrite: async () => null,
+    fallback: () => {
+      const fallback = combatFallback(turn.conversation, campaign.gameSettings.locale, factOptions);
+      return lineViolations(fallback, lines).length ? COMBAT_PRESENTATIONS[normalizeLocale(campaign.gameSettings.locale)].fallback : fallback;
+    },
+  });
+  const content = combatNarrationContent(checked.status === "fallback"
+    ? assembleVariantContent([], turn.rollIds, checked.narration) : checked.narration,
+    turn.conversation, campaign.gameSettings.locale, { ...factOptions, allowText: text => !lineViolations(text, lines).length });
   // Re-read after the model call: the message may have moved on while the
   // model was working (a lore-check rewrite, or a double-tapped reroll).
   const current = getCampaignMessage(input.messageId);
