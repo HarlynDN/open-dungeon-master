@@ -6,6 +6,8 @@
 // read Draconic?", "how does grappling work?". Before this the only options
 // were a `do` that derailed the scene or an `ooc` the DM never answers.
 
+import type { AppLocale } from "../i18n/locales.ts";
+
 export const ASK_SCOPES = ["story", "rules", "sheet"] as const;
 export type AskScope = (typeof ASK_SCOPES)[number];
 
@@ -43,13 +45,33 @@ const RULES_HINT =
 const SHEET_HINT =
   /\b(my|mine|i have|do i|can i|am i|my character|my sheet|my spells?|my inventory|my gold|my hp|my ac|my level|know how to|proficient|trained in)\b/i;
 
-export function inferScope(question: string): AskScope {
+type AskLocaleProfile = {
+  sheet: RegExp;
+  rules: RegExp;
+  recall: RegExp;
+  // Names in scripts without capitalization cannot use the English proper
+  // noun heuristic. Search story questions conservatively, within the same
+  // bounded archive pass; rules/sheet questions still skip that expense.
+  unmarkedNames: RegExp | null;
+};
+const ASK_LOCALE_PROFILES: Record<AppLocale, AskLocaleProfile> = {
+  en: { sheet: /$^/, rules: /$^/, recall: /$^/, unmarkedNames: null },
+  "zh-CN": {
+    sheet: /我的|我(?:能否|能不能|可以|会不会|还(?:能|有)|是否(?:会|有|能)|有(?:哪些|多少|几个|什么))|我(?:当前|目前)?的|我(?:懂|会|掌握|熟练)/u,
+    rules: /规则|机制|优势|劣势|擒抱|借机攻击|专注|豁免|熟练|先攻|力竭|掩护|抗性|同调|短休|长休|法术位|仪式施法|反制法术|难度等级|护甲等级|附赠动作|反应|怎么(?:判定|计算|掷骰)|如何(?:判定|计算|掷骰)/u,
+    recall: /之前|以前|先前|过去|历史|记得|回忆|上次|当时|发生|是谁|谁的|哪里|在哪|何时|什么时候|章节|承诺|欠|说过/u,
+    unmarkedNames: /\p{Script=Han}/u,
+  },
+};
+
+export function inferScope(question: string, locale: AppLocale = "en"): AskScope {
+  const profile = ASK_LOCALE_PROFILES[locale] ?? ASK_LOCALE_PROFILES.en;
   // Sheet wins over rules: "how does my Bardic Inspiration work" is best
   // answered from the character who actually has it.
-  if (SHEET_HINT.test(question)) {
+  if (SHEET_HINT.test(question) || profile.sheet.test(question)) {
     return "sheet";
   }
-  if (RULES_HINT.test(question)) {
+  if (RULES_HINT.test(question) || profile.rules.test(question)) {
     return "rules";
   }
   return "story";
@@ -66,15 +88,16 @@ const QUESTION_WORDS = new Set([
   "may", "did", "the", "and", "but", "my", "our", "their", "his", "her",
 ]);
 
-export function shouldSearchArchive(question: string, force = false): boolean {
+export function shouldSearchArchive(question: string, force = false, locale: AppLocale = "en"): boolean {
   if (force) {
     return true;
   }
-  if (RECALL_HINT.test(question)) {
+  const profile = ASK_LOCALE_PROFILES[locale] ?? ASK_LOCALE_PROFILES.en;
+  if (RECALL_HINT.test(question) || profile.recall.test(question)) {
     return true;
   }
   // A capitalized word that is not just the sentence opener suggests a name.
-  return (question.match(/\b[A-Z][a-z]{2,}\b/g) ?? []).some(
+  return (profile.unmarkedNames?.test(question) === true && inferScope(question, locale) === "story") || (question.match(/\b[A-Z][a-z]{2,}\b/g) ?? []).some(
     (word) => !QUESTION_WORDS.has(word.toLowerCase()),
   );
 }

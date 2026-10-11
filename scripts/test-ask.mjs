@@ -51,6 +51,27 @@ test("shouldSearchArchive spends retrieval only when there is something to find"
   assert.ok(shouldSearchArchive("how does grappling work", true));
 });
 
+test("Chinese auto scope uses the campaign locale and retains English questions", () => {
+  for (const question of ["我的护甲等级是多少？", "我还有几个法术位？", "我能否施放这个法术？", "我的吟游激励如何运作？"]) {
+    assert.equal(inferScope(question, "zh-CN"), "sheet", question);
+  }
+  for (const question of ["擒抱规则是什么？", "优势怎么计算？", "专注豁免如何判定？", "借机攻击会消耗反应吗？"]) {
+    assert.equal(inferScope(question, "zh-CN"), "rules", question);
+    assert.ok(!shouldSearchArchive(question, false, "zh-CN"), question);
+  }
+  for (const question of ["祭坛旁的女人是谁？", "阿明答应了什么？", "雾港", "我想知道城堡在哪里"]) {
+    assert.equal(inferScope(question, "zh-CN"), "story", question);
+    assert.ok(shouldSearchArchive(question, false, "zh-CN"), question);
+  }
+  assert.equal(inferScope("what is my AC?", "zh-CN"), "sheet");
+  assert.equal(inferScope("how does grappling work?", "zh-CN"), "rules");
+  assert.ok(!shouldSearchArchive("how does grappling work", false, "zh-CN"));
+  assert.ok(shouldSearchArchive("优势怎么计算？", true, "zh-CN"));
+  // Existing callers default to the unchanged English heuristic.
+  assert.equal(inferScope("我的护甲等级是多少？"), "story");
+  assert.ok(!shouldSearchArchive("雾港"));
+});
+
 test("parseAskJson reads a clean reply", () => {
   const parsed = parseAskJson(
     '{"answer":"Marla is the steward.","citations":[{"kind":"fact","ref":"fact:ab12","quote":"Marla holds the vault key."}]}',

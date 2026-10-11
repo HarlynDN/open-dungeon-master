@@ -37,7 +37,7 @@ export async function POST(
   if (isErrorResponse(context)) {
     return context;
   }
-  const { user } = context;
+  const { user, campaign } = context;
 
   const raw = await request.json().catch(() => ({}));
   const parsed = askSchema.safeParse(raw);
@@ -47,7 +47,7 @@ export async function POST(
 
   const question = clampQuestion(parsed.data.question);
   const scope =
-    parsed.data.scope === "auto" ? inferScope(question) : parsed.data.scope;
+    parsed.data.scope === "auto" ? inferScope(question, campaign.gameSettings.locale) : parsed.data.scope;
 
   const result = await runAsk({ campaignId, userId: user.id, question, scope });
   const sheet = getSheetForUser(campaignId, user.id);

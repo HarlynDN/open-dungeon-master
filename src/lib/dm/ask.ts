@@ -17,6 +17,7 @@ import { extractToolCalls } from "@/lib/dm/rolls";
 import { searchScenes } from "@/lib/dm/memory-index";
 import { scoreChaptersByKeywords } from "@/lib/dm/recall-logic";
 import { describeSheet } from "@/lib/dm/prompt";
+import type { AppLocale } from "@/lib/i18n/locales";
 import {
   clampQuestion,
   parseAskJson,
@@ -178,6 +179,7 @@ async function retrieveArchive(campaignId: string, query: string): Promise<strin
 async function assembleEvidence(
   request: AskRequest,
   ownedCharacterIds: string[],
+  locale: AppLocale,
 ): Promise<string[]> {
   const { campaignId, question, scope } = request;
   const evidence: string[] = [];
@@ -273,7 +275,7 @@ async function assembleEvidence(
 
     // Archive retrieval is the expensive part, so it is gated: a question
     // with no recall hint and no proper noun has nothing to find back there.
-    if (shouldSearchArchive(question)) {
+    if (shouldSearchArchive(question, false, locale)) {
       evidence.push(...(await retrieveArchive(campaignId, question)));
     }
 
@@ -333,10 +335,11 @@ export async function runAsk(
   const evidence = await assembleEvidence(
     { ...request, question },
     sheet ? [sheet.id] : [],
+    campaign.gameSettings.locale,
   );
   // Mirrors the gate inside assembleEvidence; decides whether the model is
   // offered a follow-up search below.
-  const searchedArchive = request.scope === "story" && shouldSearchArchive(question);
+  const searchedArchive = request.scope === "story" && shouldSearchArchive(question, false, campaign.gameSettings.locale);
 
   const messages: ChatMessage[] = [
     { role: "system", content: ASK_SYSTEM },
