@@ -339,7 +339,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/FactionsPanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned quest/faction display, status/attitude/reputation labels, editor, confirmation and load/native mutation errors localized. Authored titles, goals, members and tags preserved; canonical enum/ID/request bodies unchanged. Refused writes retain drafts/rows, and later failed reads remain visible. Imported children keep independent scope; focused display/interaction check uses fake transport only."
     },
     {
       "path": "src/app/campaigns/[campaignId]/FactsPanel.tsx",
@@ -649,7 +650,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/QuestsPanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned quest/faction display, status/attitude/reputation labels, editor, confirmation and load/native mutation errors localized. Authored titles, goals, members and tags preserved; canonical enum/ID/request bodies unchanged. Refused writes retain drafts/rows, and later failed reads remain visible. Imported children keep independent scope; focused display/interaction check uses fake transport only."
     },
     {
       "path": "src/app/campaigns/[campaignId]/RelationGraph.tsx",
