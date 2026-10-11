@@ -204,7 +204,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/ContextPanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned facts/categories/editor/secrets, pin controls/budget and context-trace headings/native reasons localized. Authored facts, excerpts, subjects and diagnostic IDs stay raw; enum/ID/request protocol and budgets unchanged. Failed edits/unpins retain content, later pin-load failures expose retry, and open secret lists explicitly refetch after editing. Dictation/shared child owners retain independent scope; focused UI/callback check uses mock transport only."
     },
     {
       "path": "src/app/campaigns/[campaignId]/DiceOverlay.tsx",
@@ -344,7 +345,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/FactsPanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned facts/categories/editor/secrets, pin controls/budget and context-trace headings/native reasons localized. Authored facts, excerpts, subjects and diagnostic IDs stay raw; enum/ID/request protocol and budgets unchanged. Failed edits/unpins retain content, later pin-load failures expose retry, and open secret lists explicitly refetch after editing. Dictation/shared child owners retain independent scope; focused UI/callback check uses mock transport only."
     },
     {
       "path": "src/app/campaigns/[campaignId]/FightSummaryCard.tsx",
@@ -633,7 +635,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/PinsPanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned facts/categories/editor/secrets, pin controls/budget and context-trace headings/native reasons localized. Authored facts, excerpts, subjects and diagnostic IDs stay raw; enum/ID/request protocol and budgets unchanged. Failed edits/unpins retain content, later pin-load failures expose retry, and open secret lists explicitly refetch after editing. Dictation/shared child owners retain independent scope; focused UI/callback check uses mock transport only."
     },
     {
       "path": "src/app/campaigns/[campaignId]/PregenPicker.tsx",

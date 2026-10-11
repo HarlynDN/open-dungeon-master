@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { createTranslator } from "@/lib/i18n/translator";
+import { contextKindLabel, contextReasonText, memoryText } from "@/lib/i18n/memory-presentations";
 import { EmptyState } from "@/components/EmptyState";
 import { RefreshCw } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
@@ -15,21 +18,6 @@ import type { BlockKind, ContextTrace } from "@/lib/dm/context-budget";
 // The point of this panel is answering one question after a bad turn: was the
 // thing the DM forgot even in the prompt? A dropped block with a reason is a
 // far better answer than guessing at the model.
-
-const KIND_LABEL: Record<BlockKind, string> = {
-  safety: "Lines and veils",
-  contract: "Engine boundary",
-  rules: "Rules",
-  sky: "Sky and hour",
-  state: "Game state",
-  factions: "Factions",
-  quests: "Quests",
-  shop: "Shop",
-  retrieval: "Lore and house rules",
-  chapters: "Chapters",
-  history: "Transcript",
-  tools: "Tool definitions",
-};
 
 // Palette is stone, amber and ember only (src/app/globals.css remaps the
 // Tailwind names); anything outside it renders as raw Tailwind and clashes
@@ -50,6 +38,7 @@ const KIND_COLOR: Record<BlockKind, string> = {
 };
 
 export function ContextPanel({ campaignId }: { campaignId: string }) {
+  const { locale, t } = useLocale();
   const [trace, setTrace] = useState<ContextTrace | null>(null);
   const [at, setAt] = useState<string>("");
   const [loading, setLoading] = useState(true);
@@ -70,7 +59,7 @@ export function ContextPanel({ campaignId }: { campaignId: string }) {
           return;
         }
         if (!response.ok) {
-          setError(response.status === 403 ? "Party lead only." : "Could not load the context.");
+          setError(response.status === 403 ? createTranslator("en")("memoryUi.error.leadOnly") : createTranslator("en")("memoryUi.error.context"));
           setLoading(false);
           return;
         }
@@ -83,7 +72,7 @@ export function ContextPanel({ campaignId }: { campaignId: string }) {
         setAt(data.at ?? "");
       } catch {
         if (!cancelled) {
-          setError("Could not load the context.");
+          setError(createTranslator("en")("memoryUi.error.context"));
         }
       } finally {
         if (!cancelled) {
@@ -102,22 +91,22 @@ export function ContextPanel({ campaignId }: { campaignId: string }) {
   return (
     <div className="space-y-3 p-3">
       <SectionHead
-        title="What the DM was sent"
+        title={t("memoryUi.context.title")}
         glyph="tab-context"
         aside={
-          <button type="button" onClick={load} className={cn(ui.iconAction, "pk-tap pk-always -my-1 inline-flex items-center justify-center")} aria-label="Refresh">
+          <button type="button" onClick={load} className={cn(ui.iconAction, "pk-tap pk-always -my-1 inline-flex items-center justify-center")} aria-label={t("memoryUi.context.refresh")}>
             <RefreshCw className={cn("size-3.5", loading && "animate-spin")} />
           </button>
         }
       />
       <p className="-mt-1 text-xs text-stone-500">
-        Last turn{at ? `, ${new Date(at).toLocaleTimeString()}` : ""}. Token counts are estimates.
+        {at ? t("memoryUi.context.lastAt", { time: new Date(at).toLocaleTimeString(locale === "en" ? undefined : locale) }) : t("memoryUi.context.last")}
       </p>
 
-      {error ? <p className="motion-shake text-xs text-red-400">{error}</p> : null}
+      {error ? <p className="motion-shake text-xs text-red-400">{memoryText(error, locale)}</p> : null}
 
       {!error && !loading && !trace ? (
-        <EmptyState size="sm" art="scrolls" title="No turn has been taken yet. Play a round and this will show every block the DM received, what it cost, and anything the budget cut." />
+        <EmptyState size="sm" art="scrolls" title={t("memoryUi.context.empty")} />
       ) : null}
 
       {trace ? (
@@ -125,7 +114,7 @@ export function ContextPanel({ campaignId }: { campaignId: string }) {
           <div>
             <div className="mb-1 flex justify-between font-mono text-[11px] text-stone-400">
               <span>
-                {trace.promptTokens.toLocaleString()} / {trace.limitTokens.toLocaleString()} tokens
+                {t("memoryUi.context.tokens", { used: trace.promptTokens.toLocaleString(locale === "en" ? undefined : locale), limit: trace.limitTokens.toLocaleString(locale === "en" ? undefined : locale) })}
               </span>
               <span className={over ? "text-red-400" : "text-stone-500"}>{pct}%</span>
             </div>
@@ -148,7 +137,7 @@ export function ContextPanel({ campaignId }: { campaignId: string }) {
               >
                 <div className="flex items-baseline justify-between gap-2">
                   <span className={cn("font-medium", KIND_COLOR[block.kind])}>
-                    {KIND_LABEL[block.kind]}
+                    {contextKindLabel(block.kind, locale)}
                     <span className="ml-1 font-normal text-stone-500">{block.id}</span>
                   </span>
                   <span className="shrink-0 font-mono text-[11px] text-stone-400">
@@ -161,7 +150,7 @@ export function ContextPanel({ campaignId }: { campaignId: string }) {
                     block.included ? "text-stone-500" : "text-red-300",
                   )}
                 >
-                  {block.included ? block.reason : `dropped: ${block.reason}`}
+                  {block.included ? contextReasonText(block.reason, locale) : t("memoryUi.context.dropped", { reason: contextReasonText(block.reason, locale) })}
                 </p>
               </li>
             ))}
