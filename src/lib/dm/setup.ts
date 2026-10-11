@@ -50,7 +50,7 @@ export async function runStorySetup(campaignId: string) {
         content: `Difficulty: ${campaign.difficulty}. Party:\n${party}\n\n${worldHints}`,
       },
     ],
-    {},
+    { locale: campaign.gameSettings.locale,},
   );
 
   if (error) {

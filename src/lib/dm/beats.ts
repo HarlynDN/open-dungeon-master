@@ -164,7 +164,7 @@ export async function draftBeat(
         { role: "system", content: DRAFT_SYSTEM },
         { role: "user", content: `The record of play:\n${beatSourceText(lines)}` },
       ],
-      { timeoutMs: arcTextTimeoutMs() },
+      { locale: campaign.gameSettings.locale, timeoutMs: arcTextTimeoutMs() },
     ),
   );
   if (error) {

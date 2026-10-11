@@ -59,6 +59,7 @@ import { summonStateLine } from "@/lib/dm/summon-rules";
 import { dmSystemText, encounterRulesText, tracksAmmunition } from "@/lib/dm/prompt-rules";
 import { rollerName } from "@/lib/roll-labels";
 import { tableHazards } from "@/lib/srd/table-hazards";
+import { generationLocaleRule } from "@/lib/i18n/generation";
 
 export { DM_SYSTEM, dmSystemText, ENCOUNTER_RULES, encounterRulesText } from "@/lib/dm/prompt-rules";
 
@@ -74,6 +75,7 @@ export function buildDmSystem(campaign: Campaign): string {
   // as every rule under it.
   const parts = [
     renderSafetyBlock(normalizeSafety(campaign.gameSettings.safety)),
+    generationLocaleRule(campaign.gameSettings.locale),
     campaign.gameSettings.narrationGuard
       ? `${ENGINE_BOUNDARY_RULES}${ENGINE_BOUNDARY_CHECK}`
       : ENGINE_BOUNDARY_RULES,

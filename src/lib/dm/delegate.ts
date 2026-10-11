@@ -108,7 +108,7 @@ async function decideMonsterTurn(
           content: `The monster:\n${describeEnemy(enemy)}\n\nThe party it can see:\n${party}`,
         },
       ],
-      { timeoutMs: arcTextTimeoutMs() },
+      { locale: campaign.gameSettings.locale, timeoutMs: arcTextTimeoutMs() },
     ),
   );
   if (error) {
@@ -320,6 +320,7 @@ export async function expandBeat(
     setDmStatus(campaign.id, "narrating");
     try {
       const { message: reply, error } = await requestDmMessage(campaign.settings, prompt, {
+        locale: campaign.gameSettings.locale,
         // No tools at all, on top of toolChoice "none": an expansion that
         // called a tool would invent mechanics the DM already resolved by
         // hand at the table.

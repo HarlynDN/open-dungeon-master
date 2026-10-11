@@ -61,6 +61,7 @@ import { handleGenerateImage } from "@/lib/dm/images";
 import { handleRequestRoll } from "@/lib/dm/invoke-roll";
 import { handleSplitDamage } from "@/lib/dm/split-damage";
 import { strictBooleanArgs } from "@/lib/dm/arg-coerce";
+import { canonicalizeToolReferences } from "@/lib/dm/tool-references";
 import { gateAiCall } from "@/lib/dm/ai-gate";
 import { characterCallUnasked } from "@/lib/dm/player-word";
 import { EXPLORE_TOOL_NAMES, handleExploreCall } from "@/lib/dm/explore-tools";
@@ -85,8 +86,10 @@ export async function dispatchAdjudication(
   context: DispatchContext,
 ): Promise<Record<string, unknown>> {
   const { campaign, turn, sheets, sheetsById } = context;
+  const referenced = canonicalizeToolReferences(name, sentArguments, context);
+  if ("result" in referenced) return referenced.result;
   // "false" sent as a string is false (src/lib/dm/arg-coerce.ts).
-  const coerced = strictBooleanArgs(sentArguments);
+  const coerced = strictBooleanArgs(referenced.args);
   // The model's damage, healing and binding conditions are the server's to
   // roll (src/lib/dm/ai-gate.ts); the console keeps its free hand.
   const gated = gateAiCall(name, coerced, { campaign, turn, sheetsById });

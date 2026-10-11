@@ -1,4 +1,4 @@
-// Local CPU embeddings: MiniLM by default (384-dim, EMBEDDING_MODEL picks
+// Local CPU embeddings: multilingual MiniLM by default (384-dim, EMBEDDING_MODEL picks
 // another) via @huggingface/transformers ONNX, weights cached under
 // models/embeddings so the app stays fully on-device. CPU-only by design:
 // the iGPU belongs to the DM model. The pipeline loads lazily on first use
@@ -8,6 +8,7 @@
 import path from "node:path";
 import type { DataType } from "@huggingface/transformers";
 import { serverEnv } from "./server-env.ts";
+import { embeddingProfile } from "./embedding-profiles.ts";
 
 export const EMBEDDING_DIM = 384;
 
@@ -34,13 +35,16 @@ export function resolveEmbeddingDtype(raw: string): DataType {
   return "fp32";
 }
 
-export const MODEL_ID = serverEnv("EMBEDDING_MODEL", "Xenova/all-MiniLM-L6-v2").trim();
-const DTYPE = resolveEmbeddingDtype(serverEnv("EMBEDDING_DTYPE", "fp32"));
+export const DEFAULT_EMBEDDING_MODEL = "Xenova/all-MiniLM-L6-v2";
+export const MULTILINGUAL_EMBEDDING_MODEL = "Xenova/paraphrase-multilingual-MiniLM-L12-v2";
+export const MODEL_ID = serverEnv("EMBEDDING_MODEL", DEFAULT_EMBEDDING_MODEL).trim();
+const DTYPE = resolveEmbeddingDtype(serverEnv("EMBEDDING_DTYPE", MODEL_ID === MULTILINGUAL_EMBEDDING_MODEL ? "q8" : "fp32"));
 
 // Vectors from two models compare without error but rank at random, so the
 // database records which model and dtype built its vectors (src/lib/dm/
 // embedding-reindex.ts) and re-embeds everything when this key changes.
 export const EMBEDDING_KEY = `${MODEL_ID}@${DTYPE}`;
+export const ACTIVE_EMBEDDING_PROFILE = embeddingProfile(EMBEDDING_KEY);
 // Every database indexed before the key was recorded was built by the
 // original hard-coded model at its default fp32 weights.
 export const LEGACY_EMBEDDING_KEY = "Xenova/all-MiniLM-L6-v2@fp32";

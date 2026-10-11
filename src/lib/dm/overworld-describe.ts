@@ -49,7 +49,7 @@ export async function describeOverworld(
         ].join("\n"),
       },
     ],
-    { timeoutMs: arcTextTimeoutMs() },
+    { locale: campaign.gameSettings.locale, timeoutMs: arcTextTimeoutMs() },
   );
   if (error) {
     return { error: "The model could not be reached." };

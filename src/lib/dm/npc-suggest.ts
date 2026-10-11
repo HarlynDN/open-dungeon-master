@@ -84,7 +84,7 @@ export async function suggestNpcField(
           .join("\n"),
       },
     ],
-    { timeoutMs: arcTextTimeoutMs() },
+    { locale: campaign.gameSettings.locale, timeoutMs: arcTextTimeoutMs() },
   );
   if (error) {
     return { text: "", error: "The model could not be reached." };

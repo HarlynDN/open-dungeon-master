@@ -3,7 +3,7 @@ import { getQuest } from "@/lib/db/quests";
 import { listMessagesInSeqRange } from "@/lib/db/messages";
 import { latestSeq } from "@/lib/db/campaigns";
 import { publishEphemeral } from "@/lib/events";
-import { cosine, embed } from "@/lib/embeddings";
+import { ACTIVE_EMBEDDING_PROFILE, cosine, embed } from "@/lib/embeddings";
 import { narratorIsAi } from "@/lib/dm/viewer";
 import { requestDmMessage } from "@/lib/dm/model";
 import { arcTextTimeoutMs } from "@/lib/model-client";
@@ -30,9 +30,9 @@ import {
 // against "the drowned cathedral"), so the DM's naming can drift without
 // the beat sticking.
 
-// Cosine at which two short names are taken as the same thing. MiniLM puts
-// paraphrases of one place well above this and different places well below.
-const EMBED_MATCH = 0.62;
+// null disables only the semantic shortcut. The multilingual calibration
+// could not separate paraphrases from distinct targets (east/west gates).
+const EMBED_MATCH = ACTIVE_EMBEDDING_PROFILE.waypointMatch;
 
 type ToolCall = { name: string; rawArguments: string };
 
@@ -97,7 +97,7 @@ async function embeddingMatches(
       pairs.push(...open.filter((entry) => entry.waypoint.kind === signal.kind).map((entry) => ({ index: entry.index, kind: signal.kind, name })));
     }
   }
-  if (!pairs.length) {
+  if (!pairs.length || EMBED_MATCH === null) {
     return [];
   }
   try {
@@ -190,7 +190,7 @@ export async function judgeWaypoints(campaignId: string, sinceSeq: number): Prom
             .join("\n")}\n\nRecent play:\n${recent}`,
         },
       ],
-      { timeoutMs: arcTextTimeoutMs() },
+      { locale: campaign.gameSettings.locale, timeoutMs: arcTextTimeoutMs() },
     );
     if (error) {
       return [];

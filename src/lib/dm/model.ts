@@ -10,6 +10,10 @@ import { requestHarnessMessage } from "@/lib/harness/bridge";
 import { paidAiAllowedNow, paidAiRefusalResponse } from "@/lib/shared-host";
 import { recordUsage } from "@/lib/usage/ledger";
 import type { StorySettings } from "@/lib/types";
+import type { AppLocale } from "@/lib/i18n/locales";
+import { withGenerationLocale } from "@/lib/i18n/generation";
+
+export type CampaignChatRequestOptions = ChatRequestOptions & { locale: AppLocale };
 
 // Every DM-side model call passes through here, which makes it the one
 // place for two pieces of shared-host bookkeeping (src/lib/shared-host.ts):
@@ -45,22 +49,26 @@ function paidAndRefused(baseUrl: string, apiKey: string): boolean {
 export function requestDmMessage(
   settings: StorySettings,
   messages: ChatMessage[],
-  options: ChatRequestOptions,
+  options: CampaignChatRequestOptions,
 ): Promise<UpstreamResult> {
+  const { locale, ...requestOptions } = options;
+  // JS callers from older integrations can omit locale; typed application
+  // callers must supply it. Leave those legacy conversations untouched.
+  if (locale !== undefined) messages = withGenerationLocale(messages, locale);
   if (settings.textProvider === "harness") {
     // The agent policy (src/lib/harness/policy.ts) answers for the agent
     // program, inside the bridge.
     return metered("story", () =>
-      requestHarnessMessage(messages, options, {
+      requestHarnessMessage(messages, requestOptions, {
         role: "story",
-        campaignId: options.harness?.campaignId,
-        catalogue: options.harness?.catalogue,
-        turn: options.harness?.turn,
+        campaignId: requestOptions.harness?.campaignId,
+        catalogue: requestOptions.harness?.catalogue,
+        turn: requestOptions.harness?.turn,
       }),
     );
   }
   if (settings.textProvider === "local") {
-    return metered("story", () => requestLocalMessage(settings.localTextModel, messages, options));
+    return metered("story", () => requestLocalMessage(settings.localTextModel, messages, requestOptions));
   }
   if (paidAndRefused(settings.customBaseUrl, settings.customApiKey)) {
     return Promise.resolve({ error: paidAiRefusalResponse("story") });
@@ -71,7 +79,7 @@ export function requestDmMessage(
       settings.customModel,
       settings.customApiKey,
       messages,
-      options,
+      requestOptions,
     ),
   );
 }
@@ -88,8 +96,10 @@ export function requestDmMessage(
 export async function requestUtilityMessage(
   settings: StorySettings,
   messages: ChatMessage[],
-  options: ChatRequestOptions,
+  options: CampaignChatRequestOptions,
 ): Promise<UpstreamResult> {
+  const { locale, ...requestOptions } = options;
+  if (locale !== undefined) messages = withGenerationLocale(messages, locale);
   const model = (settings.utilityModel ?? "").trim();
   // The server's agent program has its own utility model (chosen beside its
   // story model in the admin panel), so a harness table does its bookkeeping
@@ -98,7 +108,7 @@ export async function requestUtilityMessage(
     settings.utilityProvider === "harness" ||
     (settings.textProvider === "harness" && !model)
   ) {
-    return metered("utility", () => requestHarnessMessage(messages, options, { role: "utility" }));
+    return metered("utility", () => requestHarnessMessage(messages, requestOptions, { role: "utility" }));
   }
   if (!model) {
     return requestDmMessage(settings, messages, options);
@@ -106,7 +116,7 @@ export async function requestUtilityMessage(
 
   const result =
     settings.utilityProvider === "local"
-      ? await metered("utility", () => requestLocalMessage(model, messages, options))
+      ? await metered("utility", () => requestLocalMessage(model, messages, requestOptions))
       : paidAndRefused(settings.utilityBaseUrl, settings.utilityApiKey)
         ? { error: paidAiRefusalResponse("utility") }
         : await metered("utility", () =>
@@ -115,7 +125,7 @@ export async function requestUtilityMessage(
               model,
               settings.utilityApiKey,
               messages,
-              options,
+              requestOptions,
             ),
           );
   if (!result.error) {

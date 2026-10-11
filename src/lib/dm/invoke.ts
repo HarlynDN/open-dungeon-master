@@ -155,7 +155,16 @@ export function normalizeArgs(
       continue;
     }
     if (key === "enemies") {
-      out.enemies = parseRoster(value);
+      // The typed tool shape also carries in-world names and an invented
+      // creature's CR. The shorthand parser deliberately keeps only the
+      // template's monster/count pair; do not lose the other fields when
+      // an agent or console already supplied structured enemy requests.
+      out.enemies = Array.isArray(value) ? value.flatMap(row => {
+        const parsed = parseRoster([row])[0];
+        if (!parsed) return [];
+        const extra = row && typeof row === "object" ? row as Record<string, unknown> : {};
+        return [{ ...parsed, ...(typeof extra.name === "string" ? { name: extra.name } : {}), ...(typeof extra.cr === "number" ? { cr: extra.cr } : {}) }];
+      }) : parseRoster(value);
       continue;
     }
     if (key === "targets" && entry.name === "split_damage") {

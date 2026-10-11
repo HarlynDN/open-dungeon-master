@@ -75,7 +75,7 @@ export async function runResumeRecap(campaignId: string) {
           .join("\n\n"),
       },
     ],
-    {},
+    { locale: campaign.gameSettings.locale,},
   );
   if (error) {
     return;

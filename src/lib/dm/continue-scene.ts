@@ -93,6 +93,7 @@ export async function runContinueScene(input: {
     setDmStatus(input.campaignId, "narrating");
     try {
       const { message: reply, error } = await requestDmMessage(campaign.settings, prompt, {
+        locale: campaign.gameSettings.locale,
         // No tools at all on top of toolChoice "none": a continuation that
         // called a tool would resolve mechanics outside any turn.
         toolChoice: "none",

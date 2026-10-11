@@ -181,21 +181,36 @@ export type LobbySeat = { userId: string; ready: boolean; hasSheet: boolean };
 //
 // Readiness still counts every seat, DM included: the DM readies up to say the
 // table is set, which is the whole point of their ready button.
-export function lobbyBlocker(seats: DmSeats, lobby: LobbySeat[]): string {
+export type LobbyBlockerReason = "empty" | "no_player" | "no_character" | "not_ready";
+export const LOBBY_BLOCKER_MESSAGES: Record<LobbyBlockerReason, string> = {
+  empty: "The table is empty.",
+  no_player: "Waiting for a player to join.",
+  no_character: "Every player needs a character before the adventure starts.",
+  not_ready: "Waiting for everyone to ready up.",
+};
+
+// A stable reason lets the interface translate the same gate the server
+// enforces. The English wrapper remains compatible with existing callers.
+export function lobbyBlockerReason(seats: DmSeats, lobby: LobbySeat[]): LobbyBlockerReason | null {
   if (!lobby.length) {
-    return "The table is empty.";
+    return "empty";
   }
   // A DM alone at the table has nobody to run the game for.
   if (lobby.every((seat) => isDmSeat(seats, seat.userId))) {
-    return "Waiting for a player to join.";
+    return "no_player";
   }
   if (lobby.some((seat) => !isDmSeat(seats, seat.userId) && !seat.hasSheet)) {
-    return "Every player needs a character before the adventure starts.";
+    return "no_character";
   }
   if (lobby.some((seat) => !seat.ready)) {
-    return "Waiting for everyone to ready up.";
+    return "not_ready";
   }
-  return "";
+  return null;
+}
+
+export function lobbyBlocker(seats: DmSeats, lobby: LobbySeat[]): string {
+  const reason = lobbyBlockerReason(seats, lobby);
+  return reason ? LOBBY_BLOCKER_MESSAGES[reason] : "";
 }
 
 // ---- roll visibility ----

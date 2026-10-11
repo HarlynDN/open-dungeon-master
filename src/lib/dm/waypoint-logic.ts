@@ -92,6 +92,13 @@ export function stems(text: string): string[] {
 // matches "speak with Brisca Hale", while "the ferry" does not match
 // "reach the drowned cathedral".
 export function lexicalMatch(waypointText: string, name: string): boolean {
+  // A complete CJK name occurring verbatim in the objective is a lexical
+  // signal. Do not infer identity from shared characters or bigrams: 东门
+  // and 西门 are different places even if their embeddings are close.
+  const normalizedName = name.normalize("NFKC").trim().toLowerCase();
+  if (/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u.test(normalizedName)) {
+    return [...normalizedName].length >= 2 && waypointText.normalize("NFKC").toLowerCase().includes(normalizedName);
+  }
   const target = new Set(stems(waypointText));
   const given = stems(name);
   if (!target.size || !given.length) {

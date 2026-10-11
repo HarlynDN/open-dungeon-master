@@ -1,4 +1,6 @@
 import { createCampaign, setDmOutline, type Campaign } from "@/lib/db/campaigns";
+import { getUserSettings } from "@/lib/db/users";
+import { normalizeLocale } from "@/lib/i18n/locales";
 
 // The starter one-shot: a table that opens in ten minutes for people who
 // have never played. One evening, level 1, a village, a crypt, a twist.
@@ -36,6 +38,7 @@ export function createStarterCampaign(userId: string, options: { solo: boolean }
     startingLevel: 1,
     difficulty: "normal",
     gameSettings: {
+      locale: normalizeLocale(getUserSettings(userId).uiLocale),
       dmMode: "ai",
       genre: "high_fantasy",
       campaignLength: "short",

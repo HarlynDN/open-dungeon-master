@@ -267,7 +267,7 @@ export async function generateStoryArc(
         { role: "system", content: sagaGenerateSystem(profile) },
         { role: "user", content: context },
       ],
-      { timeoutMs: arcTextTimeoutMs() },
+      { locale: campaign.gameSettings.locale, timeoutMs: arcTextTimeoutMs() },
     );
     if (error) {
       if (process.env.DM_DEBUG) {
@@ -480,7 +480,7 @@ export async function judgeBeatCompleted(campaignId: string, sinceSeq: number): 
         { role: "system", content: JUDGE_SYSTEM },
         { role: "user", content: `Beat: ${beat.text}\n\nRecent play:\n${recent}` },
       ],
-      { timeoutMs: arcTextTimeoutMs() },
+      { locale: campaign.gameSettings.locale, timeoutMs: arcTextTimeoutMs() },
     );
     if (error) {
       return false;
@@ -606,7 +606,7 @@ async function arcModelCall(
       { role: "system", content: system },
       { role: "user", content: user },
     ],
-    { timeoutMs: arcTextTimeoutMs() },
+    { locale: campaign.gameSettings.locale, timeoutMs: arcTextTimeoutMs() },
   );
   if (error) {
     if (process.env.DM_DEBUG) {
@@ -1062,7 +1062,7 @@ async function writeActRecap(
             }\n\nIts chapters:\n${source}`,
           },
         ],
-        { timeoutMs: arcTextTimeoutMs() },
+        { locale: campaign.gameSettings.locale, timeoutMs: arcTextTimeoutMs() },
       ),
     );
     if (error) {

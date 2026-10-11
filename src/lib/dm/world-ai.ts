@@ -22,7 +22,7 @@ import { typeFor } from "@/lib/worldforge/model";
 type Failure = { error: string };
 
 async function ask(campaign: Campaign, messages: Array<{ role: "system" | "user"; content: string }>): Promise<string | Failure> {
-  const { message, error } = await requestUtilityMessage(campaign.settings, messages, { timeoutMs: arcTextTimeoutMs() });
+  const { message, error } = await requestUtilityMessage(campaign.settings, messages, { locale: campaign.gameSettings.locale, timeoutMs: arcTextTimeoutMs() });
   if (error) return { error: "The model could not be reached." };
   const text = stripReasoningArtifacts(String(message?.content ?? "")).trim();
   return text || { error: "The model returned nothing usable." };

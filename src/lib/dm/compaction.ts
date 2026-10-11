@@ -187,7 +187,7 @@ export async function maybeCompactHistory(campaignId: string): Promise<boolean> 
             .join("\n\n"),
         },
       ],
-      {},
+      { locale: campaign.gameSettings.locale,},
     ),
   );
 
@@ -234,7 +234,7 @@ async function extractCharacterEvents(campaign: Campaign, transcript: string) {
           content: `Characters: ${sheets.map((sheet) => sheet.name).join(", ")}\n\nTranscript:\n${transcript}`,
         },
       ],
-      {},
+      { locale: campaign.gameSettings.locale,},
     ),
   );
   if (error) {

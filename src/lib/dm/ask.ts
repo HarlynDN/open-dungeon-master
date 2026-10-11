@@ -369,6 +369,7 @@ export async function runAsk(
     // search over the same text would cost a model call to learn nothing.
     const offerSearch = !searchedArchive;
     const first = await requestUtilityMessage(campaign.settings, messages, {
+      locale: campaign.gameSettings.locale,
       timeoutMs: arcTextTimeoutMs(),
       ...(offerSearch ? { tools: [ASK_SEARCH_TOOL] } : {}),
     });
@@ -421,7 +422,7 @@ export async function runAsk(
         },
       ],
       // No tools on the final call: one hop, then answer.
-      { timeoutMs: arcTextTimeoutMs() },
+      { locale: campaign.gameSettings.locale, timeoutMs: arcTextTimeoutMs() },
     );
     if (second.error) {
       result = { error: await modelFailure(second.error) };

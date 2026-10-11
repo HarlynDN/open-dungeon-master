@@ -24,6 +24,7 @@ import {
 import { DM_HALTED_PREFIX } from "@/lib/campaign-types";
 import { PC_ATTACK_PARKED } from "@/lib/dm/pc-attack";
 import { normalizeEventKind, strictBooleanArgs } from "@/lib/dm/arg-coerce";
+import { canonicalizeToolReferences } from "@/lib/dm/tool-references";
 import { insertCampaignMessage, listRecentMessages } from "@/lib/db/messages";
 import { narrationShown, takeNarrationSeq } from "@/lib/dm/narration-slot";
 import { getRoll, listRecentRolls } from "@/lib/db/rolls";
@@ -52,7 +53,7 @@ import { fakeRollMarkerRegex, stripToolText } from "@/lib/dm/tool-text";
 import {
   announcesEncounterStart,
   collectExchanges,
-  FAKE_ENCOUNTER_PROMPT,
+  fakeEncounterPrompt,
   statesUnrolledDamage,
   unrolledDamagePrompt,
 } from "@/lib/dm/engine-boundary";
@@ -773,6 +774,7 @@ async function runAdvance(context: TurnContext, turn: DmTurn) {
       publishEphemeral(campaignId, "dm_delta", { text });
     });
     const { message, error, finishReason } = await requestDmMessage(campaign.settings, turn.conversation, {
+      locale: campaign.gameSettings.locale,
       tools,
       harness: {
         campaignId,
@@ -1177,7 +1179,7 @@ async function runAdvance(context: TurnContext, turn: DmTurn) {
         !inEncounter &&
         narration &&
         turn.narrationParts[turn.narrationParts.length - 1] === narration &&
-        announcesEncounterStart(narration)
+        announcesEncounterStart(narration, campaign.gameSettings.locale)
       ) {
         encounterNudged = true;
         turn.narrationParts.pop();
@@ -1187,7 +1189,7 @@ async function runAdvance(context: TurnContext, turn: DmTurn) {
           tool_calls: echoedToolCalls,
         });
         answerRanAbove(fightOwnsFloor(campaignId), false);
-        turn.conversation.push({ role: "user", content: FAKE_ENCOUNTER_PROMPT });
+        turn.conversation.push({ role: "user", content: fakeEncounterPrompt(campaign.gameSettings.locale) });
         // Saved again: the save above still carried the withheld announcement.
         saveDmTurn(turn);
         continue;
@@ -1197,7 +1199,7 @@ async function runAdvance(context: TurnContext, turn: DmTurn) {
       // 91). Hold it back and send the model to the tool that resolves it.
       const unrolled =
         !finalCall && !damageNudged && narration && turn.narrationParts[turn.narrationParts.length - 1] === narration
-          ? statesUnrolledDamage(narration, turn.conversation)
+          ? statesUnrolledDamage(narration, turn.conversation, campaign.gameSettings.locale)
           : null;
       if (unrolled) {
         damageNudged = true;
@@ -1208,7 +1210,7 @@ async function runAdvance(context: TurnContext, turn: DmTurn) {
           tool_calls: echoedToolCalls,
         });
         answerRanAbove(fightOwnsFloor(campaignId), false);
-        turn.conversation.push({ role: "user", content: unrolledDamagePrompt(unrolled) });
+        turn.conversation.push({ role: "user", content: unrolledDamagePrompt(unrolled, campaign.gameSettings.locale) });
         saveDmTurn(turn);
         continue;
       }
@@ -1365,8 +1367,10 @@ async function resolveModelCall(
 ): Promise<Record<string, unknown>> {
   const { campaign, sheets, sheetsById, realDiceUserIds } = context;
   const { name } = toolCall;
+  const referenced = canonicalizeToolReferences(name, toolCall.rawArguments, context);
+  if ("result" in referenced) return referenced.result;
   // "false" sent as a string is false (src/lib/dm/arg-coerce.ts).
-  const rawArguments = strictBooleanArgs(toolCall.rawArguments);
+  const rawArguments = strictBooleanArgs(referenced.args);
   if (ENCOUNTER_NAMES.has(name)) {
     if (turn.encounterCount >= ENCOUNTER_CAP_PER_TURN) {
       return { error: "Encounter action limit reached for this turn." };
@@ -1469,6 +1473,7 @@ async function narrateAfterToolLeak(context: TurnContext, turn: DmTurn) {
     campaign.settings,
     [...turn.conversation, { role: "user", content: TOOLS_CLOSED_PROMPT }],
     {
+      locale: campaign.gameSettings.locale,
       tools: [],
       toolChoice: "none",
       harness: { campaignId, turn: true },
@@ -1533,7 +1538,7 @@ async function ensureWhisperReplies(context: TurnContext, turn: DmTurn) {
         content: `[System] You have not yet privately answered these player messages. Reply to each one now using the send_whisper tool addressed to that character. Refuse any out-of-character request for levels, XP, perks, items, or abilities in-fiction, but resolve legitimate secret actions. Do not narrate anything to the shared table.\n${owed}`,
       },
     ],
-    { tools: [sendWhisperTool], toolChoice: "auto", thinking: true },
+    { locale: campaign.gameSettings.locale, tools: [sendWhisperTool], toolChoice: "auto", thinking: true },
   );
   const xmlSalvage = salvageXmlToolCalls(extractReplyText(message?.content));
   const jsonSalvage = salvageJsonToolCalls(xmlSalvage.text, [sendWhisperTool]);

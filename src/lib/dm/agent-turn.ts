@@ -15,7 +15,7 @@ import { getDatabase } from "@/lib/db/core";
 import { createDmTurn, getDmTurn, saveDmTurn, type DmTurn } from "@/lib/db/dm-turns";
 import { listSheets } from "@/lib/db/sheets";
 import type { Campaign } from "@/lib/db/campaigns";
-import { checkNarration } from "@/lib/dm/engine-boundary";
+import { announcesEncounterStart, buildCorrectionPrompt, checkNarration, fakeEncounterPrompt } from "@/lib/dm/engine-boundary";
 import { leveledSpellNames, liveStateFor } from "@/lib/dm/narration-guard";
 
 // Every request an agent program sends carries this header
@@ -78,16 +78,22 @@ export function agentNarrationProblem(campaign: Campaign, narration: string): st
   if (!campaign.gameSettings.narrationGuard) {
     return null;
   }
+  const live = liveStateFor(campaign.id);
+  if (!live && announcesEncounterStart(narration, campaign.gameSettings.locale)) {
+    return fakeEncounterPrompt(campaign.gameSettings.locale);
+  }
   const found = checkNarration({
+    locale: campaign.gameSettings.locale,
     conversation: findAgentTurn(campaign.id)?.conversation ?? [],
     narration,
     partyNames: listSheets(campaign.id).map((sheet) => sheet.name),
-    live: liveStateFor(campaign.id),
+    live,
     leveledSpells: leveledSpellNames(),
   });
   if (!found.length) {
     return null;
   }
+  if (campaign.gameSettings.locale !== "en") return buildCorrectionPrompt(found, campaign.gameSettings.locale);
   return `The narration contradicts what the engine resolved: ${found
     .slice(0, 4)
     .map((entry) => `${entry.detail} ("${entry.clause}")`)

@@ -151,7 +151,7 @@ export async function runLoreCheck(
               ].join("\n\n"),
             },
           ],
-          { timeoutMs: arcTextTimeoutMs() },
+          { locale: campaign.gameSettings.locale, timeoutMs: arcTextTimeoutMs() },
         ),
     );
     if (error) {

@@ -1,6 +1,6 @@
 import { getDatabase } from "@/lib/db/core";
 import { listLoreWithEmbeddings } from "@/lib/db/lore";
-import { embed, similarityOf } from "@/lib/embeddings";
+import { ACTIVE_EMBEDDING_PROFILE, embed, similarityOf } from "@/lib/embeddings";
 import { searchScenes } from "@/lib/dm/memory-index";
 import { computeIdf, fuseRanked, lexicalScore } from "@/lib/dm/fusion-logic";
 import { hasWorldDoc, worldView } from "@/lib/db/world-forge";
@@ -50,7 +50,7 @@ export const searchLoreTool = {
 
 const RESULT_LIMIT = 8;
 const TEXT_CLIP = 400;
-const VECTOR_FLOOR = 0.28;
+const VECTOR_FLOOR = ACTIVE_EMBEDDING_PROFILE.loreFloor;
 
 // Fact categories that a tool-call category filter maps onto.
 const FACT_CATEGORY_MAP: Record<string, string[]> = {

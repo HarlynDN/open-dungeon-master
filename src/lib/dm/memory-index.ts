@@ -13,7 +13,7 @@ import {
   setSceneChunkEmbedding,
 } from "@/lib/db/scene-chunks";
 import { getDatabase, nowIso } from "@/lib/db/core";
-import { bufferToVector, cosine, embed, similarityOf, vectorToBuffer } from "@/lib/embeddings";
+import { ACTIVE_EMBEDDING_PROFILE, bufferToVector, cosine, embed, similarityOf, vectorToBuffer } from "@/lib/embeddings";
 import { chunkScenes } from "@/lib/dm/scene-logic";
 import {
   applyMmr,
@@ -233,7 +233,7 @@ export type RecalledScene = {
 
 const PHASE1_CHAPTERS = 3;
 const PHASE2_SCENES = 3;
-const SCENE_FLOOR = 0.25;
+const SCENE_FLOOR = ACTIVE_EMBEDDING_PROFILE.sceneFloor;
 // Scene chunks are cut from a continuous transcript, so pull a wider fused
 // set and let MMR thin it: without that, the three best matches for "the
 // vault" are routinely three overlapping windows onto the same conversation.
@@ -345,7 +345,7 @@ export async function indexClosedChapters(campaignId: string, chapters: Chapter[
   }
 }
 
-const FACT_DUP_SIMILARITY = 0.92;
+const FACT_DUP_SIMILARITY = ACTIVE_EMBEDDING_PROFILE.factDuplicate;
 
 // Embeds every active fact that lacks a vector. Facts are written without
 // one; this runs from the dedup below and from the re-embed pass.
@@ -377,6 +377,11 @@ export async function embedPendingFacts(campaignId: string): Promise<number> {
 // the chapter-close heartbeat, so drift never accumulates for long.
 export async function dedupFactsSemantically(campaignId: string): Promise<void> {
   await embedPendingFacts(campaignId);
+  // Indexing still serves recall; similarity is not proof that two facts
+  // assert the same numbers, person or polarity. The multilingual profile
+  // failed the supplemental hard-negative gate and never retires a fact.
+  const threshold = FACT_DUP_SIMILARITY;
+  if (threshold === null) return;
   const db = getDatabase();
   const rows = db
     .prepare(
@@ -408,7 +413,7 @@ export async function dedupFactsSemantically(campaignId: string): Promise<void> 
       row.pinned !== 1 &&
       kept.some(
         (entry) =>
-          entry.category === row.category && cosine(entry.vector, vector) >= FACT_DUP_SIMILARITY,
+          entry.category === row.category && cosine(entry.vector, vector) >= threshold,
       );
     if (duplicate) {
       retire.run(nowIso(), row.id);

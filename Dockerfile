@@ -45,8 +45,8 @@ RUN node scripts/copy-dice-assets.mjs
 # version's GitHub release asset; only an unreleased build rebuilds it from
 # api.open5e.com, which goes down often enough to have failed a publish.
 RUN node scripts/fetch-content-pack.mjs
-# The default model is always baked. A table that plays in another language
-# can bake its model too with --build-arg EMBEDDING_MODEL=... (and
+# The bilingual default model is always baked. A deployment using another
+# model can bake it too with --build-arg EMBEDDING_MODEL=... (and
 # EMBEDDING_DTYPE), so its containers never download it; the runtime
 # EMBEDDING_MODEL setting still picks which one is used.
 ARG EMBEDDING_MODEL=

@@ -48,7 +48,7 @@ export async function generateWorldArcs(
             .join("\n\n"),
         },
       ],
-      { timeoutMs: arcTextTimeoutMs() },
+      { locale: campaign.gameSettings.locale, timeoutMs: arcTextTimeoutMs() },
     ),
   );
   if (error) {

@@ -92,6 +92,7 @@ export async function enforceEngineBoundary(
   const leveledSpells = leveledSpellNames();
   const contradictions = campaign.gameSettings.narrationGuard
     ? checkNarration({
+        locale: campaign.gameSettings.locale,
         conversation: turn.conversation,
         narration,
         partyNames,
@@ -116,7 +117,7 @@ export async function enforceEngineBoundary(
       { role: "assistant", content: narration },
       {
         role: "user",
-        content: [contradictions.length ? buildCorrectionPrompt(contradictions) : "", crossed.length ? buildLinePrompt(crossed) : ""]
+        content: [contradictions.length ? buildCorrectionPrompt(contradictions, campaign.gameSettings.locale) : "", crossed.length ? buildLinePrompt(crossed) : ""]
           .filter(Boolean)
           .join("\n\n"),
       },
@@ -124,7 +125,7 @@ export async function enforceEngineBoundary(
     // No tools: this call exists to rewrite prose, and a tool call here would
     // resolve mechanics a second time. It is the reserved call, so it is
     // made whatever the turn's budget has left.
-    { tools: [], toolChoice: "none", thinking: false },
+    { locale: campaign.gameSettings.locale, tools: [], toolChoice: "none", thinking: false },
   );
   turn.callIndex += 1;
   if (error) {
@@ -149,6 +150,7 @@ export async function enforceEngineBoundary(
   // which at least the table already saw streaming.
   const remaining = campaign.gameSettings.narrationGuard
     ? checkNarration({
+        locale: campaign.gameSettings.locale,
         conversation: turn.conversation,
         narration: corrected,
         partyNames,

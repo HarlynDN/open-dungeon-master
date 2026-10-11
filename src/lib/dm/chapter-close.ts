@@ -342,7 +342,7 @@ export async function maybeCloseChapter(
                   .join("\n\n"),
               },
             ],
-            { timeoutMs: arcTextTimeoutMs() },
+            { locale: campaign.gameSettings.locale, timeoutMs: arcTextTimeoutMs() },
           ),
         );
     if (!error) {

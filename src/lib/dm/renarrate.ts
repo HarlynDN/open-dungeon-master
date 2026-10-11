@@ -104,6 +104,7 @@ export async function runRenarrate(input: {
     setDmStatus(input.campaignId, "narrating");
     try {
       const { message: reply, error } = await requestDmMessage(campaign.settings, prompt, {
+        locale: campaign.gameSettings.locale,
         // No tools at all, on top of toolChoice "none": a variant that called
         // a tool would re-run mechanics that already resolved.
         toolChoice: "none",

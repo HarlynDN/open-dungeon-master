@@ -10,7 +10,11 @@
 // used to throw it away the moment the narration was assembled. Nothing here
 // mutates mechanical state; a detection at most costs one corrective model call.
 
-import { LEVELED_SPELL_NAMES } from "./leveled-spells";
+import { LEVELED_SPELL_NAMES } from "./leveled-spells.ts";
+import { normalizeLocale, type AppLocale } from "../i18n/locales.ts";
+import { referenceAliases, type ReferenceKind } from "../i18n/reference-names.ts";
+import { NARRATION_LOCALE_ADAPTERS } from "./narration-locales.ts";
+import { GUARD_MESSAGES } from "../i18n/guard-messages.ts";
 
 // ---------------------------------------------------------------------------
 // Part 1: the contract block
@@ -193,7 +197,7 @@ export function normalizeSpellName(raw: string): string {
     .toLowerCase()
     .replace(/[‘’]/g, "'")
     .replace(/\([^)]*\)/g, " ")
-    .replace(/[^a-z' ]+/g, " ")
+    .replace(/[^\p{L}\p{N}' ]+/gu, " ")
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -247,13 +251,17 @@ function walkNumbers(value: unknown, numbers: Set<number>, damage: number[], key
   }
 }
 
+function checkableName(name: string): boolean {
+  return name.length >= 3 || (name.length >= 2 && /\p{Script=Han}/u.test(name));
+}
+
 function recordCreature(
   creatures: Map<string, CreatureFact>,
   display: string,
   update: { hp?: number | null; maxHp?: number | null; dead?: boolean; downed?: boolean },
 ) {
   const key = normalizeCreatureName(display);
-  if (key.length < 3) {
+  if (!checkableName(key)) {
     return;
   }
   const existing = creatures.get(key);
@@ -390,7 +398,7 @@ export function resolveOutcomes(
             ? result.name
             : "";
       const key = normalizeCreatureName(display);
-      if (key.length >= 3) {
+      if (checkableName(key)) {
         // A Multiattack routine resolves several swings inside one call; when
         // they disagree, no single clause about "the blow" can be checked.
         const swings = Array.isArray(result.swings) ? result.swings : [];
@@ -431,7 +439,7 @@ export function resolveOutcomes(
     for (const id of refusedTargets) {
       const enemy = live.enemies.find((entry) => entry.id === id);
       const key = enemy ? normalizeCreatureName(enemy.name) : "";
-      if (enemy && key.length >= 3 && !attacks.has(key)) {
+      if (enemy && checkableName(key) && !attacks.has(key)) {
         attacks.set(key, { display: enemy.name, hit: false, ambiguous: (perKey.get(key) ?? 0) > 1 });
       }
     }
@@ -484,13 +492,14 @@ export function resolveOutcomes(
 // oaths about deaths that never happened. Every matcher runs on prose with the
 // dialogue cut out, which is what makes "It's dead, I swear it!" safe.
 export function stripQuotedSpeech(text: string): string {
-  const paired = text.replace(/"[^"\n]*"/g, " ").replace(/“[^”\n]*”/g, " ");
+  const paired = text.replace(/"[^"\n]*"/g, " ").replace(/“[^”\n]*”/g, " ")
+    .replace(/「[^」\n]*」|『[^』\n]*』|‘[^’\n]*’/g, " ");
   // An unbalanced quote means the dialogue runs to the end of its line; drop
   // the rest of that line rather than guess where the speech ended.
   return paired
     .split("\n")
     .map((line) => {
-      const opener = line.search(/["“”]/);
+      const opener = line.search(/["“”「」『』]/);
       return opener === -1 ? line : line.slice(0, opener);
     })
     .join("\n");
@@ -501,7 +510,7 @@ export function stripQuotedSpeech(text: string): string {
 // the subject of the next.
 export function narrationClauses(narration: string): string[] {
   return stripQuotedSpeech(narration.replace(/\[roll:[^\]]*\]/g, " "))
-    .split(/\n+|(?<=[.!?…;:])\s+|\s+—\s*|\s*—\s+|\s+--\s+/)
+    .split(/\n+|(?<=[。！？；：])\s*|(?<=[.!?…;:])\s+|\s+—\s*|\s*—\s+|\s+--\s+/)
     .map((clause) => clause.trim())
     .filter(Boolean);
 }
@@ -652,6 +661,23 @@ function allowedNumbers(outcomes: ResolvedOutcomes): Set<number> {
 const CAST_VERBS = "casts|unleashes|hurls|calls down|conjures|looses";
 const CAST_VERB = new RegExp(`\\b(?:${CAST_VERBS})\\b`, "i");
 
+export type NarrationCheckOptions = {
+  locale?: AppLocale;
+  // Scoped aliases supplied by the content layer for custom/pack references.
+  // The built-in terminology is shared with display and tool-name resolution.
+  nameAliases?: Readonly<Record<string, readonly string[]>>;
+  spellAliases?: Readonly<Record<string, readonly string[]>>;
+};
+
+function proseNames(kind: ReferenceKind, key: string, display: string, locale: AppLocale, aliases?: NarrationCheckOptions["nameAliases"]): string[] {
+  const translated = referenceAliases(kind, key, locale);
+  const suffix = display.toLowerCase().startsWith(key) ? display.slice(key.length).trim() : "";
+  const indexed = kind === "monster" && /^(?:#\s*)?\d+$/u.test(suffix)
+    ? translated.flatMap(name => [`${name}${suffix}`, `${name} ${suffix}`])
+    : [];
+  return [...new Set([key, display, ...translated, ...indexed, ...(aliases?.[key] ?? []), ...(aliases?.[display] ?? [])])];
+}
+
 export function findNarrationContradictions(
   narration: string,
   outcomes: ResolvedOutcomes,
@@ -659,8 +685,11 @@ export function findNarrationContradictions(
   // Every leveled spell the table's spell data knows, normalized; the short
   // built-in list stands in when the caller has none.
   leveledSpells: readonly string[] = LEVELED_SPELLS,
+  options: NarrationCheckOptions = {},
 ): Contradiction[] {
-  const clauses = narrationClauses(narration);
+  const locale = normalizeLocale(options.locale);
+  const adapter = NARRATION_LOCALE_ADAPTERS[locale];
+  const clauses = adapter?.clauses(narrationClauses(narration)) ?? narrationClauses(narration);
   if (!clauses.length) {
     return [];
   }
@@ -674,27 +703,29 @@ export function findNarrationContradictions(
     }
   };
   const allowed = outcomes.numbers.size || outcomes.liveFight ? allowedNumbers(outcomes) : null;
-  const casters = partyNames.map((name) => name.trim()).filter((name) => name.length >= 3);
+  const casters = partyNames.map((name) => name.trim()).filter(checkableName);
 
   for (const clause of clauses) {
-    if (hedged(clause)) {
+    if (hedged(clause) || adapter?.hedged(clause)) {
       continue;
     }
     const negated = NEGATION.test(clause);
+    const assertionNegated = negated || Boolean(adapter?.negated(clause));
 
     // 1. A hit claimed on a resolved miss, a miss claimed on a resolved hit.
     for (const [key, attack] of outcomes.attacks) {
       if (attack.ambiguous) {
         continue;
       }
-      if (!attack.hit && !negated && hitClaimPatterns(key).some((rx) => rx.test(clause))) {
+      const names = proseNames("monster", key, attack.display, locale, options.nameAliases);
+      if (!attack.hit && !assertionNegated && (hitClaimPatterns(key).some((rx) => rx.test(clause)) || adapter?.claim("hit", names, clause))) {
         add({
           kind: "hit",
           detail: `the attack on ${attack.display} MISSED, but the narration lands it`,
           clause,
         });
       }
-      if (attack.hit && !negated && missClaimPatterns(key).some((rx) => rx.test(clause))) {
+      if (attack.hit && !negated && ((!assertionNegated && missClaimPatterns(key).some((rx) => rx.test(clause))) || adapter?.claim("miss", names, clause))) {
         add({
           kind: "miss",
           detail: `the attack on ${attack.display} HIT, but the narration has it miss`,
@@ -704,7 +735,7 @@ export function findNarrationContradictions(
     }
 
     // 2. A death or a drop claimed against live, resolved hit points.
-    if (!negated) {
+    if (!assertionNegated) {
       for (const [key, creature] of outcomes.creatures) {
         if (creature.ambiguous || creature.dead || creature.downed) {
           continue;
@@ -713,14 +744,15 @@ export function findNarrationContradictions(
           continue;
         }
         const hpLabel = `${creature.hp}${creature.maxHp === null ? "" : `/${creature.maxHp}`}`;
-        if (deathClaimPatterns(key).some((rx) => rx.test(clause))) {
+        const names = proseNames("monster", key, creature.display, locale, options.nameAliases);
+        if (deathClaimPatterns(key).some((rx) => rx.test(clause)) || adapter?.claim("death", names, clause)) {
           add({
             kind: "death",
             detail: `${creature.display} is alive at ${hpLabel} HP, but the narration kills it`,
             clause,
           });
         }
-        if (downedClaimPatterns(key).some((rx) => rx.test(clause))) {
+        if (downedClaimPatterns(key).some((rx) => rx.test(clause)) || adapter?.claim("downed", names, clause)) {
           add({
             kind: "death",
             detail: `${creature.display} is still up at ${hpLabel} HP, but the narration drops it`,
@@ -734,7 +766,7 @@ export function findNarrationContradictions(
     // when the turn produced numbers or a fight is running: with no ground
     // truth there is nothing to contradict, and in a fight a figure no roll
     // produced is invented whether or not a tool ran.
-    if (allowed) {
+    if (allowed && !assertionNegated) {
       NUMBER_CLAIM.lastIndex = 0;
       let match = NUMBER_CLAIM.exec(clause);
       while (match) {
@@ -748,17 +780,25 @@ export function findNarrationContradictions(
         }
         match = NUMBER_CLAIM.exec(clause);
       }
+      for (const claim of adapter?.numbers(clause) ?? []) {
+        if (!allowed.has(claim.value)) add({
+          kind: "number",
+          detail: `the narration states ${claim.value} ${claim.kind}, which no roll this turn produced`,
+          clause,
+        });
+      }
     }
 
     // 4. A party character casting a leveled spell the turn never accounted
     // for. Enemy casters are excluded (their spells run through other tools and
     // spend nothing), and only the present tense counts, so a recap of an
     // earlier casting is left alone.
-    if (casters.length && CAST_VERB.test(clause)) {
+    if (casters.length && !assertionNegated && (CAST_VERB.test(clause) || adapter?.hasCasting(clause))) {
       const lowered = clause.toLowerCase().replace(/[‘’]/g, "'");
       for (const caster of casters) {
         for (const spell of leveledSpells) {
-          if (outcomes.spells.has(spell) || !lowered.includes(spell)) {
+          const names = proseNames("spell", spell, spell, locale, options.spellAliases);
+          if (names.some(name => outcomes.spells.has(normalizeSpellName(name)))) {
             continue;
           }
           // Either apostrophe spelling reads as the same spell in prose.
@@ -767,7 +807,7 @@ export function findNarrationContradictions(
             `\\b${namePattern(caster)}\\b[^.;]{0,30}?\\b(?:${CAST_VERBS})\\s+(?:the\\s+|a\\s+|an\\s+)?(?:spell\\s+)?${spellInProse}\\b`,
             "i",
           );
-          if (pattern.test(clause)) {
+          if ((lowered.includes(spell) && pattern.test(clause)) || adapter?.casts(caster, names, clause)) {
             add({
               kind: "spell",
               detail: `${caster} casts ${spell}, but no spell slot or resource was spent for it this turn`,
@@ -791,7 +831,7 @@ export function checkNarration(input: {
   live?: LiveState | null;
   // Every leveled spell the spell data knows, already normalized.
   leveledSpells?: readonly string[];
-}): Contradiction[] {
+} & NarrationCheckOptions): Contradiction[] {
   const narration = (input.narration ?? "").trim();
   if (!narration) {
     return [];
@@ -802,19 +842,18 @@ export function checkNarration(input: {
     outcomes,
     input.partyNames ?? [],
     input.leveledSpells?.length ? input.leveledSpells : LEVELED_SPELLS,
+    input,
   );
 }
 
 // The correction the model is asked to make. Kept here so the wording is
 // testable without a model call.
-export function buildCorrectionPrompt(contradictions: readonly Contradiction[]): string {
+export function buildCorrectionPrompt(contradictions: readonly Contradiction[], locale: AppLocale = "en"): string {
   const lines = contradictions
     .slice(0, 6)
     .map((entry) => `- ${entry.detail}. You wrote: "${entry.clause}"`)
     .join("\n");
-  return `[System] Your narration contradicts what the dice and tools actually resolved this turn. The tool results are the truth; the prose is what is wrong.
-${lines}
-Rewrite the whole narration so it matches the real results exactly. Keep everything else: the same scene, the same length, the same voice, the same closing beat. Change only what contradicts the results. Do not call any tool, do not mention this correction, and reply with the corrected narration only.`;
+  return GUARD_MESSAGES[normalizeLocale(locale)].correction.replace("{lines}", () => lines);
 }
 
 // ---------------------------------------------------------------------------
@@ -828,24 +867,29 @@ Rewrite the whole narration so it matches the real results exactly. Keep everyth
 // to swing at. The matchers are deliberately narrow, in the spirit of the
 // rest of this file: an announcement header, a call for initiative, or a
 // stat-block style enemy roster; never mere talk of fighting.
-export function announcesEncounterStart(narration: string): boolean {
-  const clauses = narrationClauses(narration);
+export function announcesEncounterStart(narration: string, locale: AppLocale = "en"): boolean {
+  const adapter = NARRATION_LOCALE_ADAPTERS[normalizeLocale(locale)];
+  const clauses = adapter?.clauses(narrationClauses(narration)) ?? narrationClauses(narration);
   const phrase =
     /\bstart(?:s|ing|ed)?\s+(?:the\s+|an?\s+)?encounter\b|\bencounter\s+(?:start(?:s|ed)?|begins|began)\b|\broll\s+(?:for\s+)?initiative\b/i;
-  if (clauses.some((clause) => !hedged(clause) && phrase.test(clause))) {
+  if (clauses.some((clause) => !hedged(clause) && !adapter?.hedged(clause) && phrase.test(clause))) {
     return true;
   }
   // A roster line ("**Enemies:** 1x ...") only counts alongside another
   // stat-block field, so a shopping list or a scouting report never fires.
   const text = stripQuotedSpeech(narration);
   const roster = /(?:^|[\n*#>-])\s*\**enemies\**\s*:/i.test(text);
-  return roster && /\bCR\s*\d|\(\s*CR\b|\**surprise\**\s*:|\binitiative\b/i.test(text);
+  return (roster && /\bCR\s*\d|\(\s*CR\b|\**surprise\**\s*:|\binitiative\b/i.test(text)) || Boolean(adapter?.encounter(text, clauses));
 }
 
 // What the turn loop sends back when a fight was announced with no
 // start_encounter behind it. Kept beside the other correction text so the
 // wording is testable without a model call.
-export const FAKE_ENCOUNTER_PROMPT = `[System] Your narration announced a fight starting, but you never called start_encounter, so no encounter exists: no enemies, no initiative, no hit points. Combat runs only on server-tracked enemies. Call start_encounter now with the enemies you announced, then narrate the fight breaking out from the tool results. Do not restate enemy counts, CR, or stat-block details in prose; the encounter panel shows the table those.`;
+export const FAKE_ENCOUNTER_PROMPT = GUARD_MESSAGES.en.encounter;
+
+export function fakeEncounterPrompt(locale: AppLocale): string {
+  return GUARD_MESSAGES[normalizeLocale(locale)].encounter;
+}
 
 // ---------------------------------------------------------------------------
 // Part 6: blows landed in prose alone
@@ -864,7 +908,8 @@ const BARE_NUMBER = /(?<![\w.-])\d{1,3}(?![\w-])/g;
 // damage or healing figure on a turn whose tools rolled none, that nothing
 // the model was shown carries either (a table note for a blow the server
 // dealt itself, an earlier line being recalled). Returns the clause, or null.
-export function statesUnrolledDamage(narration: string, conversation: readonly GuardMessage[]): string | null {
+export function statesUnrolledDamage(narration: string, conversation: readonly GuardMessage[], locale: AppLocale = "en"): string | null {
+  const adapter = NARRATION_LOCALE_ADAPTERS[normalizeLocale(locale)];
   const outcomes = resolveOutcomes(collectExchanges(conversation));
   // The turn rolled damage: a figure that misquotes it is the rewrite's to
   // fix, and sending the model back to the tools would land the blow twice.
@@ -879,9 +924,10 @@ export function statesUnrolledDamage(narration: string, conversation: readonly G
     for (const match of message.content.matchAll(BARE_NUMBER)) {
       shown.add(Number(match[0]));
     }
+    for (const claim of adapter?.numbers(message.content) ?? []) shown.add(claim.value);
   }
-  for (const clause of narrationClauses(narration)) {
-    if (hedged(clause)) {
+  for (const clause of adapter?.clauses(narrationClauses(narration)) ?? narrationClauses(narration)) {
+    if (hedged(clause) || adapter?.hedged(clause) || adapter?.negated(clause)) {
       continue;
     }
     for (const match of clause.matchAll(NUMBER_CLAIM)) {
@@ -889,12 +935,13 @@ export function statesUnrolledDamage(narration: string, conversation: readonly G
         return clause;
       }
     }
+    if ((adapter?.numbers(clause) ?? []).some(claim => !shown.has(claim.value))) return clause;
   }
   return null;
 }
 
 // What the turn loop sends back for it. Kept beside the other correction
 // text so the wording is testable without a model call.
-export function unrolledDamagePrompt(clause: string): string {
-  return `[System] Your narration states a damage or healing figure that no tool rolled this turn ("${clause}"), so it has not happened: no hit points changed, and the sheets the table reads do not show it. If that blow belongs in the story, resolve it now with its tool and narrate from the result: start_encounter first when no fight is running, then the attack or spell tool on the turn of whoever acts; apply_hazard or apply_damage for a trap, a fall or anything outside a fight. Otherwise write the moment again without it. Never state a hit, a miss or a figure the server did not return.`;
+export function unrolledDamagePrompt(clause: string, locale: AppLocale = "en"): string {
+  return GUARD_MESSAGES[normalizeLocale(locale)].unrolled.replace("{clause}", () => clause);
 }

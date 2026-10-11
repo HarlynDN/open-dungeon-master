@@ -82,7 +82,7 @@ export async function suggestAdjudication(
           .join("\n\n"),
       },
     ],
-    { timeoutMs: arcTextTimeoutMs() },
+    { locale: campaign.gameSettings.locale, timeoutMs: arcTextTimeoutMs() },
   );
   if (error) {
     return { suggestions, picked: null };
@@ -219,7 +219,7 @@ export async function generateRollTable(
           .join("\n"),
       },
     ],
-    { timeoutMs: arcTextTimeoutMs() },
+    { locale: campaign.gameSettings.locale, timeoutMs: arcTextTimeoutMs() },
   );
   if (error) {
     return { entries: [], error: "The model could not be reached." };
