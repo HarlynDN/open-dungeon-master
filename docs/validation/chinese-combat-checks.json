@@ -1,0 +1,35 @@
+{
+  "fullRegression": {
+    "scriptSuites": 518,
+    "passed": 518,
+    "seconds": 275.03
+  },
+  "finalTargetedRegression": {
+    "scriptSuites": 9,
+    "passed": 9,
+    "reason": "final actor metadata and spell wording refinements"
+  },
+  "typescript": "passed",
+  "lint": {
+    "errors": 0,
+    "existingWarnings": 12
+  },
+  "factsAndPolicyCases": 8,
+  "controlledFullTurnCases": 4,
+  "realCodexCombatCases": 6,
+  "realCodexCorrectionCalls": 1,
+  "newDiceInCorrection": 0,
+  "productionRecallMeasured": false,
+  "chineseTtsAudioAcceptance": "not configured; controlled speech input only",
+  "productionBuild": "not rerun; previous blockers tracked separately",
+  "sourceSha256": {
+    "src/lib/dm/combat-narration.ts": "4e0028cb533d93bbb97d1b32d76de5ca295d8fc71171a9e73e0fef77cf1f2a27",
+    "src/lib/dm/narration-policy.ts": "2f0a908f8db1b57d1c4d691613c650ed37ceb9cd925d8abff83c6f4a816c2d2c",
+    "src/lib/dm/narration-guard.ts": "fcce32883283ad0b7662c5d634958ce4a3fad814b8bab3b6aa6011fea0b3c21d",
+    "src/lib/dm/turn.ts": "7fb306027d7dd3e7769a1f75ef20f8ef292564ebc89563d7f28262e9bd035c7e",
+    "src/lib/dm/renarrate.ts": "7f44702bb62def1f29d2c04d111730d5eab05a19ed2e11a882f64b7a5e120656",
+    "src/lib/dm/engine-boundary.ts": "389d62a56cb4a43805ca66e54d856c6d974f082cd09274482b0939c2f6f63275",
+    "src/lib/dm/narration-locales.ts": "1529a5bac91c4952706f428a230aeb41f9fb1686b475be68a4b05ca60056a1cc"
+  },
+  "implementationCommit": "fc762683"
+}

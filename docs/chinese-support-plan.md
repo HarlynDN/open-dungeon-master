@@ -24,14 +24,14 @@ flow remains incomplete; the review-repair checkpoint is a separate scoped task.
 | Unit | Implemented checkpoint | Remaining gate |
 | --- | --- | --- |
 | Locale foundation | Registry, persistence, browser fallback, typed complete catalogs, model locale policy, classified token proxy, chapter budget, CJK retrieval, IME protection | Real prompt-usage calibration; keep legacy campaign/history regressions |
-| DM safety | Chinese adapter/corrections, scoped tool aliases and canonical protocol instructions | Full combat/tool/correction flow on configured Codex; conservative regex coverage is not full language understanding |
+| DM safety | Per-event engine conclusions with English/Chinese renderers; AI prose separated; one text-only correction and safe fallback; scoped aliases; real Codex combat acceptance | Broader spell/condition/pack coverage; conservative regex coverage is not full language understanding |
 | Embeddings | Original English deployment default retained; explicit multilingual opt-in; fixed bilingual calibration/holdout and hard-negative policy | Broader pack quality; opt-in affects English campaigns and rebuilds indexes |
 | UI | **117/437** covered files, **3596** pending literal sites, **4563** message keys; scoped AST gate | Remaining play/action/combat/inventory/rest/level-up/save/resume surfaces and dynamic import warnings; file fraction is not overall completion or an effort estimate |
 | Character creation/material | Identity, ancestry, class introductions, ability allocation, gear, spell book/preparation and finish preview; 517 spell and 228 equipment names; original-source review records | Remaining material beyond reviewed names/creator snippets; authored/pack text retains original language |
-| Player system logs | Structured rule diagnostics retain English semantics and add presentation metadata | General player-visible log templates; model-facing English tool results remain independent |
+| Player system logs | Structured rule diagnostics and engine-generated combat conclusions retain English protocol semantics with localized presentation | General player-visible log templates; model-facing English tool results remain independent |
 | Resource delivery | UI vs content namespaces; character/campaign boundaries; locale chunks loaded before switching; generated resources checked by lint | Full production page payload/first-load measurement and browser switching smoke test |
 | Local Chinese TTS | Locale capability/voice preferences planned | Service not configured; implement/validate Unicode segmentation, voice discovery, locale-sensitive cache, numbers/units/names and real playback |
-| Final play flow | Recorded two Chinese Codex exploration/social turns plus utility call | Complete Chinese journey, English regression and real local TTS acceptance |
+| Final play flow | Recorded Chinese exploration/social/utility and combat/slot/correction acceptance on Codex | Complete Chinese journey, English regression and real local TTS acceptance |
 
 The concrete UI scope and deferred areas are in
 [ui-localization.json](validation/ui-localization.json). The checker rejects new
@@ -86,8 +86,10 @@ to hide regressions. The 17 compressed baselines preserve exact original bytes
 and verify SHA-256 when loaded.
 
 Runtime evidence names Codex CLI 0.162.1 and current `gpt-6-astra` subscription
-configuration. It proves basic Chinese exploration/social/tool/utility operation,
-not complete play, combat guard recall, English parity or local-model capability.
+configuration. It proves bounded Chinese exploration/social/tool/utility and combat operation,
+not complete play, production guard recall, full English UI parity or local-model capability.
+[Combat acceptance](validation/chinese-combat-narration.md) records engine conclusions,
+correction fallback, speech-input checks and the actual Codex narratives.
 A local-model comparison is future compatibility work, not this user's release
 backend. Chinese TTS is still unconfigured; discover installed voices before
 assuming `zf_xiaobei`, `lang_code=z` and `misaki[zh]` are available. Test actual

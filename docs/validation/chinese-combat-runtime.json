@@ -1,0 +1,350 @@
+{
+  "model": "gpt-6-astra",
+  "cliVersion": "0.162.1",
+  "locale": "zh-CN",
+  "backend": "codex subscription",
+  "forcedDice": true,
+  "cases": [
+    {
+      "id": "miss",
+      "seconds": 26.09,
+      "calls": 3,
+      "facts": [
+        {
+          "kind": "attack",
+          "actor": {
+            "id": "a0dfc743-cba7-47b6-8c3e-3cfc436f89ea",
+            "name": "阿明"
+          },
+          "target": {
+            "id": "ba27d979-428a-4625-b10f-4863adcdcbd5",
+            "name": "Goblin"
+          },
+          "hit": false,
+          "critical": false,
+          "id": "0:result:attack",
+          "source": {
+            "exchange": 0,
+            "tool": "pc_attack",
+            "path": "result"
+          }
+        }
+      ],
+      "narration": "阿明，你挥动长剑，剑锋呼啸着掠过 Goblin 身旁，未能触及它。\n\n这一剑之后，你还要做什么？",
+      "finalText": "**战斗结果**\n阿明对哥布林的这次攻击未命中。\n\n[roll:69e561b1-ab2f-4fb0-aa08-76d6c42d6b7c]\n\n阿明，你挥动长剑，剑锋呼啸着掠过 Goblin 身旁，未能触及它。\n\n这一剑之后，你还要做什么？",
+      "rolls": [
+        {
+          "sides": 20,
+          "face": 1,
+          "forced": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "id": "hit-survives",
+      "seconds": 35.51,
+      "calls": 3,
+      "facts": [
+        {
+          "kind": "attack",
+          "actor": {
+            "id": "a0dfc743-cba7-47b6-8c3e-3cfc436f89ea",
+            "name": "阿明"
+          },
+          "target": {
+            "id": "e58f9aaa-dfd3-44d1-baee-7513242ed4e3",
+            "name": "Goblin"
+          },
+          "hit": true,
+          "damage": 7,
+          "critical": false,
+          "id": "0:result:attack",
+          "source": {
+            "exchange": 0,
+            "tool": "pc_attack",
+            "path": "result"
+          }
+        }
+      ],
+      "narration": "阿明，你挥剑斩向 Goblin，锋刃划开它的皮肉，带起一道血痕。它仍握着木棒，与你对峙。\n\n这一剑之后，你还要做什么？",
+      "finalText": "**战斗结果**\n阿明对哥布林的这次攻击命中。 哥布林受到7点伤害。\n\n[roll:7690acc2-e171-44e6-a75e-836a77acfce2]\n[roll:b2bc34c0-577f-42c1-ac72-dae99d902819]\n\n阿明，你挥剑斩向 Goblin，锋刃划开它的皮肉，带起一道血痕。它仍握着木棒，与你对峙。\n\n这一剑之后，你还要做什么？",
+      "rolls": [
+        {
+          "sides": 20,
+          "face": 15,
+          "forced": true
+        },
+        {
+          "sides": 8,
+          "face": 4,
+          "forced": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "id": "death",
+      "seconds": 17.94,
+      "calls": 2,
+      "facts": [
+        {
+          "kind": "attack",
+          "actor": {
+            "id": "a0dfc743-cba7-47b6-8c3e-3cfc436f89ea",
+            "name": "阿明"
+          },
+          "target": {
+            "id": "5cc4cd32-a6af-4894-a735-3f1edcd697a8",
+            "name": "Goblin"
+          },
+          "hit": true,
+          "damage": 7,
+          "critical": false,
+          "id": "0:result:attack",
+          "source": {
+            "exchange": 0,
+            "tool": "pc_attack",
+            "path": "result"
+          }
+        },
+        {
+          "kind": "state",
+          "target": {
+            "id": "5cc4cd32-a6af-4894-a735-3f1edcd697a8",
+            "name": "Goblin"
+          },
+          "state": "dead",
+          "id": "0:result:state",
+          "source": {
+            "exchange": 0,
+            "tool": "pc_attack",
+            "path": "result"
+          }
+        }
+      ],
+      "narration": "阿明，你挥动长剑，锋刃划过 Goblin 的身躯。它手中的木棒滑落，随即倒地，再无声息。这场战斗结束了。",
+      "finalText": "**战斗结果**\n阿明对哥布林的这次攻击命中。 哥布林受到7点伤害。\n哥布林已经死亡。\n\n[roll:b301072b-66ba-4102-b66e-31a8b9c6a6da]\n[roll:c4151021-21df-47e7-afb2-add479303760]\n\n阿明，你挥动长剑，锋刃划过 Goblin 的身躯。它手中的木棒滑落，随即倒地，再无声息。这场战斗结束了。",
+      "rolls": [
+        {
+          "sides": 20,
+          "face": 15,
+          "forced": true
+        },
+        {
+          "sides": 8,
+          "face": 4,
+          "forced": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "id": "nonlethal",
+      "seconds": 18.91,
+      "calls": 2,
+      "facts": [
+        {
+          "kind": "attack",
+          "actor": {
+            "id": "a0dfc743-cba7-47b6-8c3e-3cfc436f89ea",
+            "name": "阿明"
+          },
+          "target": {
+            "id": "b1c488b7-4c84-4efd-925e-6e7179e6cee8",
+            "name": "Goblin"
+          },
+          "hit": true,
+          "damage": 7,
+          "critical": false,
+          "id": "0:result:attack",
+          "source": {
+            "exchange": 0,
+            "tool": "pc_attack",
+            "path": "result"
+          }
+        },
+        {
+          "kind": "state",
+          "target": {
+            "id": "b1c488b7-4c84-4efd-925e-6e7179e6cee8",
+            "name": "Goblin"
+          },
+          "state": "downed",
+          "id": "0:result:state",
+          "source": {
+            "exchange": 0,
+            "tool": "pc_attack",
+            "path": "result"
+          }
+        }
+      ],
+      "narration": "阿明，你挥转长剑，以避开要害的一击将 Goblin 击倒。它瘫倒在地，失去了知觉，胸口仍微微起伏。你留下了它的性命。",
+      "finalText": "**战斗结果**\n阿明对哥布林的这次攻击命中。 哥布林受到7点伤害。\n哥布林倒地，尚未被判定死亡。\n\n[roll:3eb33a6e-4cb5-4a1c-b133-6b2fd6c1698f]\n[roll:d596a250-324c-41a5-915f-0b5ec84fadf0]\n\n阿明，你挥转长剑，以避开要害的一击将 Goblin 击倒。它瘫倒在地，失去了知觉，胸口仍微微起伏。你留下了它的性命。",
+      "rolls": [
+        {
+          "sides": 20,
+          "face": 15,
+          "forced": true
+        },
+        {
+          "sides": 8,
+          "face": 4,
+          "forced": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "id": "second-identical-enemy",
+      "seconds": 22.93,
+      "calls": 3,
+      "facts": [
+        {
+          "kind": "attack",
+          "actor": {
+            "name": "阿明"
+          },
+          "target": {
+            "id": "1d667db3-59f6-4257-9128-d7de3ba46f37",
+            "name": "Goblin 2"
+          },
+          "hit": true,
+          "damage": 7,
+          "critical": false,
+          "id": "0:result:attack",
+          "source": {
+            "exchange": 0,
+            "tool": "pc_attack",
+            "path": "result"
+          }
+        }
+      ],
+      "narration": "阿明，长剑划出一道寒光，剑锋掠过 Goblin 2，留下鲜红的伤口；它仍握着木棒，与你对峙。\n\n这一剑之后，你还要做什么？你的回合尚未结束。",
+      "finalText": "**战斗结果**\n阿明对哥布林 2的这次攻击命中。 哥布林 2受到7点伤害。\n\n[roll:c1d98567-7237-409b-b7f3-4037bddc75a4]\n[roll:337925c4-a1a1-4812-a4ad-720e4542475e]\n\n阿明，长剑划出一道寒光，剑锋掠过 Goblin 2，留下鲜红的伤口；它仍握着木棒，与你对峙。\n\n这一剑之后，你还要做什么？你的回合尚未结束。",
+      "rolls": [
+        {
+          "sides": 20,
+          "face": 15,
+          "forced": true
+        },
+        {
+          "sides": 8,
+          "face": 4,
+          "forced": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "id": "spell-slot",
+      "seconds": 19.91,
+      "calls": 3,
+      "facts": [
+        {
+          "kind": "resource",
+          "actor": {
+            "id": "c138bfd3-b53c-455d-9aed-0213097160fe",
+            "name": "米拉"
+          },
+          "resource": "spellSlot",
+          "level": 1,
+          "id": "0:slot:resource",
+          "source": {
+            "exchange": 0,
+            "tool": "cast_at_enemy",
+            "path": "slot"
+          }
+        },
+        {
+          "kind": "damage",
+          "target": {
+            "id": "fc92ed92-d8a6-4dce-b1c3-d155e46f0454",
+            "name": "Goblin"
+          },
+          "amount": 9,
+          "id": "0:result:damage",
+          "source": {
+            "exchange": 0,
+            "tool": "cast_at_enemy",
+            "path": "result"
+          }
+        },
+        {
+          "kind": "spell",
+          "actor": {
+            "id": "c138bfd3-b53c-455d-9aed-0213097160fe",
+            "name": "米拉"
+          },
+          "spell": "Magic Missile",
+          "id": "0:spell:spell",
+          "source": {
+            "exchange": 0,
+            "tool": "cast_at_enemy",
+            "path": "spell"
+          }
+        }
+      ],
+      "narration": "米拉，三道闪亮的魔法飞弹划过短短的距离，在 Goblin 身上迸出奥术光芒；它仍然站立着，紧握木棒。\n\n你的回合尚未结束。你还要移动或采取其他可用的行动吗？",
+      "finalText": "**战斗结果**\n米拉消耗了一个1环法术位。\n哥布林受到9点伤害。\n米拉的魔法飞弹施法已登记。\n\n[roll:0ef0e3a0-bf8a-42de-9be8-ef2d4c466d96]\n\n米拉，三道闪亮的魔法飞弹划过短短的距离，在 Goblin 身上迸出奥术光芒；它仍然站立着，紧握木棒。\n\n你的回合尚未结束。你还要移动或采取其他可用的行动吗？",
+      "rolls": [
+        {
+          "sides": 4,
+          "face": 2,
+          "forced": true
+        },
+        {
+          "sides": 4,
+          "face": 2,
+          "forced": true
+        },
+        {
+          "sides": 4,
+          "face": 2,
+          "forced": true
+        }
+      ],
+      "passed": true
+    }
+  ],
+  "correction": {
+    "injectedWrongNarration": true,
+    "realCodexRewrite": true,
+    "finalText": "阿明的长剑从哥布林身旁划过，剑锋破空作响。哥布林龇牙发出一声低吼，仍然挡在阿明面前。阿明，接下来你还要做什么？",
+    "additionalCalls": 1,
+    "additionalRolls": 0,
+    "hpUnchanged": true
+  },
+  "tts": "not configured; only final text contract tested elsewhere",
+  "manualNarrationReview": {
+    "reviewer": "implementation agent",
+    "method": "read the five actual narratives against individual engine events; separate from regex checks",
+    "contradictionsFound": 0,
+    "sampleSize": 6,
+    "productionRecallMeasured": false
+  },
+  "runs": [
+    {
+      "cases": [
+        "miss",
+        "hit-survives",
+        "death",
+        "nonlethal"
+      ],
+      "setupFailureAfterPassedCases": "two goblins exceeded single level-1 character budget"
+    },
+    {
+      "cases": [
+        "second-identical-enemy"
+      ],
+      "fixture": "second level-1 party member added; engine difficulty checks retained"
+    },
+    {
+      "cases": [
+        "spell-slot"
+      ],
+      "fixture": "a third-level wizard casts once; actual server spell slot and damage read back"
+    }
+  ],
+  "passed": true
+}
