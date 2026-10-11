@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { Check, Loader2, MoreVertical, RotateCw, TriangleAlert } from "lucide-react";
 import { Children, Fragment, type ButtonHTMLAttributes, type LabelHTMLAttributes, type ReactNode } from "react";
@@ -60,13 +62,15 @@ const menuItem =
 // The visible door to the menu a row also answers a right-click or a long
 // press with: both take the same item list, so neither can drift.
 export function RowMenu({ items, label, className }: { items: ContextMenuItem[]; label: string; className?: string }) {
+  const { t } = useLocale();
+
   if (!items.length) {
     return null;
   }
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
-        <button type="button" aria-label={`Actions for ${label}`} className={cn(TONE.icon, "pk-always shrink-0", className)}>
+        <button type="button" aria-label={t("voicePicker.actions", { label })} className={cn(TONE.icon, "pk-always shrink-0", className)}>
           <MoreVertical className="size-4" aria-hidden="true" />
         </button>
       </DropdownMenu.Trigger>
@@ -184,6 +188,8 @@ export function PanelLoading({ label, rows = 3 }: { label: string; rows?: number
 // colour the parchment theme keeps, and the stone ramp flips with the theme,
 // so the sentence reads on night and day alike (red text does not on cream).
 export function LoadFailed({ error, onRetry, className }: { error: string; onRetry: () => void; className?: string }) {
+  const { t } = useLocale();
+
   return (
     <div
       role="alert"
@@ -193,9 +199,9 @@ export function LoadFailed({ error, onRetry, className }: { error: string; onRet
       )}
     >
       <TriangleAlert className="size-4 shrink-0 text-ember-500" aria-hidden="true" />
-      <p className="min-w-0 flex-1 text-xs leading-5 text-stone-200">{error}</p>
+      <p className="min-w-0 flex-1 whitespace-pre-line break-words text-xs leading-5 text-stone-200">{error}</p>
       <button type="button" onClick={onRetry} className={cn(ui.btnSmall, "pk-tap shrink-0 px-2.5 py-1 text-xs")}>
-        <RotateCw className="size-3.5" aria-hidden="true" /> Try again
+        <RotateCw className="size-3.5" aria-hidden="true" /> {t("voicePicker.retry")}
       </button>
     </div>
   );

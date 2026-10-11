@@ -1,15 +1,11 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { useRef, type CSSProperties } from "react";
 import { cn } from "@/lib/cn";
 import { InfoButton } from "@/components/ui/InfoDialog";
 import { replayAnimation } from "@/lib/motion/replay";
-import {
-  BONDS_INFO,
-  LIVING_WORLD_INFO,
-  NARRATION_GUARD_INFO,
-  ROMANCE_INFO,
-} from "@/app/campaigns/[campaignId]/GameSettingsPanel";
+import { tableInfo } from "@/lib/i18n/settings-presentations";
 import { NarratorFields } from "@/app/create-campaign/NarratorFields";
 import { SafetyFields } from "@/app/create-campaign/SafetyFields";
 import type { StepProps } from "@/app/create-campaign/draft";
@@ -18,19 +14,12 @@ import {
   featuresOn,
   flipRow,
   tableSheet,
-  type SheetInfo,
   type SheetRow,
 } from "@/app/create-campaign/table-sheet";
 
 // The count lives with the rows it counts; the review step still finds it here.
 export { featuresOn };
 
-const INFO: Record<SheetInfo, { label: string; text: string }> = {
-  livingWorld: { label: "What does Living World do?", text: LIVING_WORLD_INFO },
-  bonds: { label: "What are Bonds?", text: BONDS_INFO },
-  romance: { label: "How does Romance work?", text: ROMANCE_INFO },
-  narrationGuard: { label: "What is the outcome check?", text: NARRATION_GUARD_INFO },
-};
 
 // Step 4, the table sheet: the switches in four groups with a running total,
 // then the AI allies, the narrator voice, and safety and tone. Voice
@@ -39,9 +28,10 @@ const INFO: Record<SheetInfo, { label: string; text: string }> = {
 // this install can never have; the AI-only rows hide when a human narrates.
 // Which rows exist, and what a press does, is table-sheet.ts.
 export function FeelStep(props: StepProps & { active: boolean }) {
+  const { locale, t } = useLocale();
   const { draft, patch, gates, active } = props;
   const counter = useRef<HTMLSpanElement>(null);
-  const groups = tableSheet(draft, gates);
+  const groups = tableSheet(draft, gates, locale);
 
   const flip = (row: SheetRow) => {
     patch(flipRow(draft, row.key));
@@ -53,15 +43,15 @@ export function FeelStep(props: StepProps & { active: boolean }) {
     <div className={cn("space-y-4 text-sm", active && "cc-live")}>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="cc-note min-w-0 flex-1 basis-32 leading-relaxed">
-          The gold dot marks a switch the total counts.
+          {t("table.counterHint")}
         </p>
         <div className="cc-counter" aria-live="polite">
           <span ref={counter} className="cc-count">
             {featuresOn(draft, gates)}
           </span>
           <span className="flex flex-col">
-            <span className="cc-eyebrow text-amber-300">features on</span>
-            <span className="cc-note">of {countableRows(gates)} counted</span>
+            <span className="cc-eyebrow text-amber-300">{t("table.featuresOn")}</span>
+            <span className="cc-note">{t("table.counted", { count: countableRows(gates) })}</span>
           </span>
         </div>
       </div>
@@ -101,8 +91,9 @@ export function FeelStep(props: StepProps & { active: boolean }) {
                 {row.counted && row.on ? <span className="cc-dot" aria-hidden="true" /> : null}
                 {row.info ? (
                   <InfoButton
-                    label={INFO[row.info].label}
-                    text={INFO[row.info].text}
+                    label={tableInfo(row.info, locale).label}
+                    ariaLabel={tableInfo(row.info, locale).label}
+                    text={tableInfo(row.info, locale).text}
                     className="absolute right-1.5 top-1.5"
                   />
                 ) : null}
@@ -113,8 +104,7 @@ export function FeelStep(props: StepProps & { active: boolean }) {
       ))}
 
       <p className="cc-note leading-relaxed">
-        Theatre inserts, drawing on the board, enemy intent and characters per player are choices
-        too, but they are left out of the total.
+        {t("table.uncounted")}
       </p>
 
       <NarratorFields {...props} className={cn(!gates.aiNarrates && !draft.ttsEnabled && "hidden")} />

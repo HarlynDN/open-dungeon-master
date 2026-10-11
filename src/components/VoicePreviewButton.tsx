@@ -6,6 +6,8 @@ import { registerOutput, releaseOutput } from "@/lib/audio-devices";
 import { cn } from "@/lib/cn";
 import { ui } from "@/lib/ui";
 import { Tooltip } from "@/components/ui/Tooltip";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { apiErrorText, type ApiUiError } from "@/lib/i18n/api-errors";
 
 // Plays a short sample of a narrator voice next to the voice pickers. The
 // first play for a voice waits on the speech server rendering it (about a
@@ -13,10 +15,12 @@ import { Tooltip } from "@/components/ui/Tooltip";
 // A sample that cannot be made says why, where it can be read without a
 // hover (issue 88).
 export function VoicePreviewButton({ voice, className }: { voice: string; className?: string }) {
+  const { locale, t } = useLocale();
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [loading, setLoading] = useState(false);
   const [playing, setPlaying] = useState(false);
-  const [failed, setFailed] = useState("");
+  const [failure, setFailure] = useState<ApiUiError | null>(null);
+  const failed = failure ? apiErrorText(locale, failure, "voice.previewFailed") : "";
 
   // Stops the clip and lets the output router forget it; the next play
   // builds a fresh element, so nothing is kept between plays.
@@ -40,7 +44,7 @@ export function VoicePreviewButton({ voice, className }: { voice: string; classN
       stop();
       return;
     }
-    setFailed("");
+    setFailure(null);
     setLoading(true);
     const source = `/api/tts/preview?voice=${encodeURIComponent(voice)}`;
     // Built and configured before it reaches the ref: the clip element is
@@ -60,9 +64,9 @@ export function VoicePreviewButton({ voice, className }: { voice: string; classN
       // The element only knows that it failed; the route knows why.
       const reason = await fetch(source)
         .then((response) => (response.ok ? null : response.json()))
-        .then((data: { error?: string } | null) => data?.error ?? "")
-        .catch(() => "");
-      setFailed(reason || "This voice could not be played.");
+        .then((data: ApiUiError | null) => data ?? {})
+        .catch(() => ({}));
+      setFailure(reason);
       releaseOutput(audio);
     } finally {
       setLoading(false);
@@ -72,11 +76,11 @@ export function VoicePreviewButton({ voice, className }: { voice: string; classN
   const Icon = loading ? Loader2 : playing ? Square : Play;
   return (
     <>
-      <Tooltip content={failed || "Hear a sample of this voice"}>
+      <Tooltip content={failed || t("voice.sampleHint")}>
         <button
           type="button"
           onClick={toggle}
-          aria-label="Preview this voice"
+          aria-label={t("voice.preview")}
           className={cn(ui.btnSmall, "shrink-0 px-2", failed && "border-red-800/70", className)}
         >
           <Icon className={cn("size-4", loading && "animate-spin")} />

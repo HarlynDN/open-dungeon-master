@@ -1,6 +1,7 @@
 "use client";
 
 import { rowIcon } from "@/app/workshop/kit";
+import { isComposingInput } from "@/lib/input-composition";
 import { Plus, X } from "lucide-react";
 import { useState } from "react";
 import { AddFromList, type AddOption } from "@/components/ui/AddFromList";
@@ -246,6 +247,7 @@ export function ChipList({
             aria-label={placeholder}
             onChange={(event) => setTyped(event.target.value)}
             onKeyDown={(event) => {
+              if (isComposingInput(event)) return;
               if (event.key === "Enter") {
                 event.preventDefault();
                 add(typed);

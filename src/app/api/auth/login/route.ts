@@ -19,14 +19,14 @@ export async function POST(request: Request) {
   const raw = await request.json().catch(() => ({}));
   const parsed = loginSchema.safeParse(raw);
   if (!parsed.success) {
-    return Response.json({ error: "Invalid input." }, { status: 400 });
+    return Response.json({ error: "Invalid input.", errorCode: "invalid_input" }, { status: 400 });
   }
 
   const ip = clientIp(request);
   const gate = checkPasswordAttempt(parsed.data.username, ip);
   if (gate.blocked) {
     return Response.json(
-      { error: `Too many attempts. Try again in ${gate.retryAfterSec}s.` },
+      { error: `Too many attempts. Try again in ${gate.retryAfterSec}s.`, errorCode: "rate_limited", retryAfterSec: gate.retryAfterSec },
       { status: 429, headers: { "Retry-After": String(gate.retryAfterSec) } },
     );
   }
@@ -37,7 +37,7 @@ export async function POST(request: Request) {
     : verifyPassword(parsed.data.password, DUMMY_HASH) && false;
   if (!user || !valid) {
     recordPasswordFailure(parsed.data.username, ip);
-    return Response.json({ error: "Wrong username or password." }, { status: 401 });
+    return Response.json({ error: "Wrong username or password.", errorCode: "wrong_credentials" }, { status: 401 });
   }
 
   recordPasswordSuccess(parsed.data.username, ip);

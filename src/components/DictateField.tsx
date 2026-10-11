@@ -1,6 +1,7 @@
 "use client";
 
 import { Loader2, Mic, Square, X } from "lucide-react";
+import { isComposingInput } from "@/lib/input-composition";
 import { useRef, type ReactNode } from "react";
 import { cn } from "@/lib/cn";
 import { DICTATION_MAX_MS, DICTATION_WARN_MS, formatElapsed } from "@/lib/dictation";
@@ -87,6 +88,7 @@ export function DictateField({
             }}
             onClick={toggle}
             onKeyDown={(event) => {
+              if (isComposingInput(event)) return;
               if (event.key === "Escape" && busy) {
                 event.preventDefault();
                 event.stopPropagation();

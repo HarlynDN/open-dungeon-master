@@ -1,6 +1,7 @@
 "use client";
 
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
+import { isComposingInput } from "@/lib/input-composition";
 import { area as areaPath, outline, TONE } from "@/app/campaigns/[campaignId]/BoardZoneLayer";
 import {
   HAND_AIM_ASK_EVENT,
@@ -83,6 +84,7 @@ export function useAreaAim(view: PlayerMapView, canDirect: boolean, hover: { x: 
     if (aim?.source !== "console") return;
     const requestId = aim.request.requestId;
     const onKey = (event: KeyboardEvent) => {
+      if (isComposingInput(event)) return;
       if (event.key !== "Escape") return;
       window.dispatchEvent(new CustomEvent<SquarePickedDetail>(SQUARE_PICKED_EVENT, { detail: { requestId, square: null } }));
       setAim(null);

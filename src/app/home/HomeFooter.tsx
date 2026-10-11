@@ -1,17 +1,22 @@
+"use client";
+
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+
 // The legal links and the source, at the foot of home.
 export function HomeFooter() {
+  const { t } = useLocale();
   return (
     <footer className="ts-footer">
       <a href="/licenses" className="ts-footer-link">
-        Licenses and attribution
+        {t("legal.attribution")}
       </a>
       <span className="ts-footer-dot" aria-hidden="true">&middot;</span>
       <a href="/privacy" className="ts-footer-link">
-        Privacy policy
+        {t("legal.privacyPolicy")}
       </a>
       <span className="ts-footer-dot" aria-hidden="true">&middot;</span>
       <a href="/terms" className="ts-footer-link">
-        Terms of service
+        {t("legal.termsOfService")}
       </a>
       <span className="ts-footer-dot" aria-hidden="true">&middot;</span>
       <a

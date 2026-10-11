@@ -1,6 +1,9 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+
 import { Hand, Mic, MicOff, ShieldBan, Volume1, Volume2, VolumeX } from "lucide-react";
+import { voiceChannelLabel } from "@/lib/i18n/voice-presentations";
 import { cn } from "@/lib/cn";
 import { ui } from "@/lib/ui";
 import { Select } from "@/components/ui/Select";
@@ -50,6 +53,7 @@ export function VoicePeerRow({
   onReset: () => void;
   onMove: (channelId: string) => void;
 }) {
+  const { locale, t } = useLocale();
   // You have no consumer for yourself, so there is nothing to turn down.
   const adjustable = !isMe;
   const untouched = isDefaultPeer(volume);
@@ -80,24 +84,24 @@ export function VoicePeerRow({
           )}
         >
           {peer.username}
-          {isMe ? " (you)" : ""}
+          {isMe ? t("voice.you") : ""}
         </span>
         {peer.handRaisedAt ? (
-          <Hand className="size-3.5 shrink-0 text-amber-300" aria-label="Wants to speak" />
+          <Hand className="size-3.5 shrink-0 text-amber-300" aria-label={t("voice.wantsSpeak")} />
         ) : null}
         {/* Joined but not yet publishing: their browser is still asking for the
             microphone, which is worth saying so the silence does not read as a
             fault. */}
-        {!peer.producing ? <span className="text-xs text-stone-600">connecting</span> : null}
+        {!peer.producing ? <span className="text-xs text-stone-600">{t("voice.connecting")}</span> : null}
         {adjustable ? (
           <button
             type="button"
             onClick={onToggleVolume}
-            aria-label={`How loud ${peer.username} is for you`}
+            aria-label={t("voice.peerVolume", { name: peer.username })}
             title={
               volume.muted
-                ? `${peer.username} is muted for you`
-                : `${peer.username} plays at ${percent}% for you`
+                ? t("voice.peerMuted", { name: peer.username })
+                : t("voice.peerPercent", { name: peer.username, percent })
             }
             aria-expanded={expanded}
             className={cn(
@@ -117,11 +121,11 @@ export function VoicePeerRow({
           <Select
             value={peer.channelId}
             onChange={onMove}
-            label={`Move ${peer.username} to another room`}
+            label={t("voice.movePeer", { name: peer.username })}
             size="sm"
             align="end"
             className={cn("w-24 shrink-0", !adjustable && "ml-auto")}
-            options={channels.map((channel) => ({ value: channel.id, label: channel.name }))}
+            options={channels.map((channel) => ({ value: channel.id, label: voiceChannelLabel(channel, locale) }))}
           />
         ) : null}
       </div>
@@ -131,8 +135,8 @@ export function VoicePeerRow({
           <button
             type="button"
             onClick={onToggleMute}
-            aria-label={volume.muted ? `Unmute ${peer.username}` : `Mute ${peer.username} for you`}
-            title={volume.muted ? `Unmute ${peer.username}` : `Mute ${peer.username} for you`}
+            aria-label={volume.muted ? t("voice.unmutePeer", { name: peer.username }) : t("voice.mutePeer", { name: peer.username })}
+            title={volume.muted ? t("voice.unmutePeer", { name: peer.username }) : t("voice.mutePeer", { name: peer.username })}
             className={cn(ui.btnSmall, "session-voice-mini", volume.muted && "border-red-800 text-red-400")}
           >
             {volume.muted ? <VolumeX className="size-3.5" /> : <Volume2 className="size-3.5" />}
@@ -144,7 +148,7 @@ export function VoicePeerRow({
             value={volume.volume}
             disabled={volume.muted}
             onChange={onVolume}
-            label={`How loud ${peer.username} is for you`}
+            label={t("voice.peerVolume", { name: peer.username })}
             className="min-w-0 flex-1"
           />
           {/* Doubles as the way back to default, because a slider is hard to
@@ -153,10 +157,10 @@ export function VoicePeerRow({
             type="button"
             onClick={onReset}
             disabled={untouched}
-            title="Back to normal"
+            title={t("voice.resetVolume")}
             className={cn(ui.btnSmall, "session-voice-mini w-auto min-w-11 px-1.5 text-[11px] tabular-nums disabled:cursor-default")}
           >
-            {volume.muted ? "off" : `${percent}%`}
+            {volume.muted ? t("voice.volumeOff") : `${percent}%`}
           </button>
         </div>
       ) : null}

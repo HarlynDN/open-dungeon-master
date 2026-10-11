@@ -1,4 +1,7 @@
+"use client";
+
 import { cn } from "@/lib/cn";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 // The standing notice on any world pack built on somebody else's setting.
 //
@@ -23,15 +26,16 @@ export function UnofficialPackNotice({
   variant?: "block" | "inline";
   className?: string;
 }) {
+  const { t } = useLocale();
   const holder = rightsHolder.trim();
   const body = holder
-    ? `This campaign is a fan-created work and is not affiliated with, sponsored by, or endorsed by ${holder}.`
-    : "This campaign is community-created content and does not ship with Open Dungeon Master.";
+    ? t("pack.fanDisclaimer", { holder })
+    : t("pack.communityDisclaimer");
 
   if (variant === "inline") {
     return (
       <p className={cn("text-[11px] italic leading-4 text-stone-500", className)}>
-        {holder ? "Unofficial community campaign. " : ""}
+        {holder ? t("pack.unofficialPrefix") : ""}
         {body}
       </p>
     );
@@ -45,7 +49,7 @@ export function UnofficialPackNotice({
       )}
     >
       <p className="font-medium uppercase tracking-wide text-stone-300">
-        Unofficial community campaign
+        {t("pack.unofficial")}
       </p>
       <p className="mt-1">{body}</p>
       {inspiredBy ? <p className="reveal mt-1 text-stone-500">{inspiredBy}</p> : null}

@@ -160,7 +160,7 @@ export function SystemView({
         ) : null}
         {system === "lore" ? (
           <>
-            <LorePanel campaignId={workshop.id} steersStory isDm layout="rows" />
+            <LorePanel campaignId={workshop.id} campaignLocale={workshop.gameSettings.locale} steersStory isDm layout="rows" />
             <MarketPanel campaignId={workshop.id} steersStory isDm mySheet={null} />
           </>
         ) : null}

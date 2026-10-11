@@ -1,6 +1,7 @@
 "use client";
 
 import { Loader2, Quote, Send } from "lucide-react";
+import { isComposingInput } from "@/lib/input-composition";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
 import { ui } from "@/lib/ui";
@@ -109,6 +110,7 @@ export function DeskPanel() {
           maxLength={DESK_QUESTION_MAX}
           onChange={(event) => setQuestion(event.target.value)}
           onKeyDown={(event) => {
+            if (isComposingInput(event)) return;
             if (event.key === "Enter") {
               void ask();
             }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { isComposingInput } from "@/lib/input-composition";
 import { Search } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { MonsterTile, ui } from "@/lib/ui";
@@ -95,6 +96,7 @@ export function MonsterBuildControls({
               value={query}
               onChange={(event) => onQuery(event.target.value)}
               onKeyDown={(event) => {
+                if (isComposingInput(event)) return;
                 if (event.key === "Enter") {
                   onFind();
                 }

@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+
 import Link from "next/link";
 import { PregenPicker } from "@/app/campaigns/[campaignId]/PregenPicker";
 import { Check, Loader2, Pencil, Play, Trash2, UserRound } from "lucide-react";
@@ -21,23 +23,21 @@ function CharacterActions({
   busy: boolean;
   onRemove: () => void;
 }) {
+  const { t } = useLocale();
   return (
     <div className="flex flex-wrap items-center justify-center gap-2 text-xs">
       <span className="text-stone-500">{sheet.name}:</span>
       <Link href={`/campaigns/${campaignId}/character?mode=edit`} className={ui.btnSmall}>
-        <Pencil className="size-3" /> Edit
-      </Link>
+        <Pencil className="size-3" /> {t("lobby.edit")}</Link>
       <Link href={`/campaigns/${campaignId}/character?mode=replace`} className={ui.btnSmall}>
-        <UserRound className="size-3" /> Switch
-      </Link>
+        <UserRound className="size-3" /> {t("lobby.switch")}</Link>
       <button
         type="button"
         onClick={onRemove}
         disabled={busy}
         className={cn(ui.btnSmall, "text-red-300")}
       >
-        <Trash2 className="size-3" /> Remove
-      </button>
+        <Trash2 className="size-3" /> {t("lobby.remove")}</button>
     </div>
   );
 }
@@ -61,11 +61,11 @@ function StartBlock({
   blocker: string;
   onStart: () => void;
 }) {
+  const { t } = useLocale();
   if (!canStart) {
     return (
       <p className="text-center text-sm text-stone-500">
-        The owner or the DM starts the adventure once everyone is ready.
-      </p>
+        {t("lobby.startByOwner")}</p>
     );
   }
   return (
@@ -77,8 +77,7 @@ function StartBlock({
         disabled={busy || Boolean(blocker)}
         className={cn(ui.btnPrimary, "h-14 w-full text-[15px]", !busy && !blocker && "motion-foil begin-glow")}
       >
-        <Play className="size-5" /> Begin the adventure
-      </button>
+        <Play className="size-5" /> {t("lobby.begin")}</button>
       {blocker ? <p className="reveal text-center text-sm text-stone-500">{blocker}</p> : null}
     </>
   );
@@ -125,30 +124,26 @@ export function LobbyActions({
   onRemoveCharacter: () => void;
   onDelete: () => void;
 }) {
+  const { t } = useLocale();
   return (
     <section className="space-y-3">
       {isDm ? (
         <div className={cn(ui.card, "ornate flex flex-col items-center gap-2 px-6 py-6 text-center")}>
           <p className="font-display text-lg tracking-wide text-amber-50">
-            You are running this game.
-          </p>
+            {t("lobby.running")}</p>
           <p className="max-w-sm text-balance text-sm text-stone-400">
-            No character, no party slot. Ready up when the table is set and the adventure is
-            yours to open.
-          </p>
+            {t("lobby.dmHint")}</p>
           <button type="button" onClick={onToggleReady} className={cn(ui.btnPrimary, "mt-1 px-6")}>
-            {myMember?.ready ? "Not ready" : "Ready"}
+            {myMember?.ready ? t("lobby.notReadyAction") : t("lobby.readyAction")}
           </button>
         </div>
       ) : isSolo ? (
         !mySheet ? (
           <div className={cn(ui.card, "ornate flex flex-col items-center gap-3 px-6 py-8 text-center")}>
             <p className="max-w-sm text-balance font-display text-xl tracking-wide text-amber-50">
-              Your adventure needs a hero.
-            </p>
+              {t("lobby.needsHero")}</p>
             <Link href={`/campaigns/${campaign.id}/character`} className={cn(ui.btnPrimary, "px-6")}>
-              Create your character
-            </Link>
+              {t("lobby.createCharacter")}</Link>
             <PregenPicker campaignId={campaign.id} />
           </div>
         ) : (
@@ -161,8 +156,7 @@ export function LobbyActions({
             />
             {(campaign.gameSettings?.multiCharacter ?? "off") !== "off" ? (
               <Link href={`/campaigns/${campaign.id}/character`} className="block text-center text-xs text-amber-300/80 hover:text-amber-200">
-                Add another character
-              </Link>
+                {t("lobby.addCharacter")}</Link>
             ) : null}
             <button
               type="button"
@@ -171,15 +165,13 @@ export function LobbyActions({
               className={cn(ui.btnPrimary, "w-full py-2.5")}
             >
               {busy ? <Loader2 className="size-4 animate-spin" /> : <Play className="size-4" />}
-              Begin the adventure
-            </button>
+              {t("lobby.begin")}</button>
           </>
         )
       ) : !mySheet ? (
         <>
           <Link href={`/campaigns/${campaign.id}/character`} className={cn(ui.btnPrimary, "w-full")}>
-            Create your character
-          </Link>
+            {t("lobby.createCharacter")}</Link>
           <PregenPicker campaignId={campaign.id} />
         </>
       ) : (
@@ -197,7 +189,7 @@ export function LobbyActions({
             )}
           >
             {busy ? <Loader2 className="size-4 animate-spin" /> : <Check className="size-4" />}
-            {myMember?.ready ? "Un-ready" : "Ready up"}
+            {myMember?.ready ? t("lobby.unready") : t("lobby.readyUp")}
           </button>
           <CharacterActions
             campaignId={campaign.id}
@@ -207,12 +199,10 @@ export function LobbyActions({
           />
           {(campaign.gameSettings?.multiCharacter ?? "off") !== "off" ? (
             <Link href={`/campaigns/${campaign.id}/character`} className="block text-center text-xs text-amber-300/80 hover:text-amber-200">
-              Add another character
-            </Link>
+              {t("lobby.addCharacter")}</Link>
           ) : null}
           <p className="text-center text-xs text-stone-600">
-            Changing your character clears your ready status.
-          </p>
+            {t("lobby.characterClearsReady")}</p>
         </>
       )}
 
@@ -232,8 +222,7 @@ export function LobbyActions({
           disabled={busy}
           className="mx-auto flex items-center gap-1.5 pt-2 text-xs text-stone-600 transition-colors hover:text-red-400 disabled:opacity-60"
         >
-          <Trash2 className="size-3.5" /> Delete this campaign
-        </button>
+          <Trash2 className="size-3.5" /> {t("lobby.delete")}</button>
       ) : null}
     </section>
   );

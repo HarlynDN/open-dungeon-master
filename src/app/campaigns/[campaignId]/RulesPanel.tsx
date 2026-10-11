@@ -1,5 +1,8 @@
 "use client";
 
+import { loadErrorText, readUiResponse, requestErrorText, uiRequestError, type UiRequestError } from "@/lib/i18n/api-errors";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+
 import { readLoad, useLoadStatus } from "@/lib/load-state";
 import { EmptyState } from "@/components/EmptyState";
 import { Pin, Save } from "lucide-react";
@@ -21,58 +24,8 @@ type RuleChunkView = {
   pinned: boolean;
 };
 
-export const VARIANT_TOGGLES: Array<{
-  key: keyof GameSettings["variantRules"] & string;
-  label: string;
-  tip: string;
-}> = [
-  {
-    key: "flanking",
-    label: "Flanking",
-    tip: "Two allies on opposite sides of a creature give each other advantage on melee attacks against it.",
-  },
-  {
-    key: "criticalFumbles",
-    label: "Critical fumbles (narrated)",
-    tip: "A natural 1 on an attack roll comes with a minor mishap the DM describes. Narration only: the server changes no numbers.",
-  },
-  {
-    key: "encumbrance",
-    label: "Encumbrance",
-    tip: "Carrying more than 5 times Strength in pounds slows a character by 10 feet.",
-  },
-  {
-    key: "lingeringInjuries",
-    label: "Lingering injuries (narrated)",
-    tip: "A critical hit or dropping to 0 HP can leave a lasting injury the DM describes. Narration only: the server tracks no injury and changes no numbers.",
-  },
-  {
-    key: "powerfulCritical",
-    label: "Powerful critical",
-    tip: "On a critical hit the extra weapon dice are dealt as their maximum instead of being rolled.",
-  },
-  {
-    key: "criticalDamageMods",
-    label: "Crit damage mods",
-    tip: "On a critical hit the flat damage modifiers double along with the dice.",
-  },
-  {
-    key: "ammunition",
-    label: "Ammunition",
-    tip: "Arrows, bolts and bullets are spent when they are fired and half are recovered after the fight.",
-  },
-  {
-    key: "supplies",
-    label: "Food and water",
-    tip: "Each dawn every character eats a ration from their pack and drinks; going without costs exhaustion on the SRD's schedule, and that exhaustion stays until they eat. Off: the party is assumed supplied.",
-  },
-];
-
-export const REST_LABELS: Record<GameSettings["variantRules"]["restVariant"], string> = {
-  standard: "Standard rests (1h short, 8h long)",
-  gritty: "Gritty realism (8h short, 7-day long)",
-  heroic: "Heroic (5min short, 1h long)",
-};
+import { VARIANT_TOGGLES, REST_LABELS } from "@/lib/i18n/variant-metadata";
+export { VARIANT_TOGGLES, REST_LABELS } from "@/lib/i18n/variant-metadata";
 
 // The variant-rule controls on their own, so the campaign-creation dialog can
 // offer the same choices this panel does without the lead having to open the
@@ -87,12 +40,13 @@ const REST_OPTIONS = (Object.keys(REST_LABELS) as RestVariant[]).map((variant) =
 // One variant rule: the kit switch, its name, and the word that says which
 // way it is set (a player reads "on" or "off", not the knob's position).
 function VariantSwitch({ label, tip, on, onChange }: { label: string; tip: string; on: boolean; onChange: (next: boolean) => void }) {
+  const { t } = useLocale();
   return (
     <Tooltip content={tip}>
       <span className="flex min-h-9 items-center gap-2 text-xs text-stone-300">
         <Switch on={on} onChange={onChange} label={label} />
         <span className="min-w-0 flex-1">{label}</span>
-        <span className={on ? "text-amber-200" : "text-stone-500"}>{on ? "on" : "off"}</span>
+        <span className={on ? "text-amber-200" : "text-stone-500"}>{t(on ? "common.on" : "common.off")}</span>
       </span>
     </Tooltip>
   );
@@ -105,19 +59,20 @@ export function VariantRulesFields({
   value: GameSettings["variantRules"];
   onChange: (next: GameSettings["variantRules"]) => void;
 }) {
+  const { t } = useLocale();
   return (
     <div>
-      <SectionHead title="Variant rules" glyph="system-rules" level="h4" />
+      <SectionHead title={t("variant.heading")} glyph="system-rules" level="h4" />
       <div className="stagger-pop grid gap-x-4 gap-y-0.5 sm:grid-cols-2">
         {VARIANT_TOGGLES.map((toggle) => (
-          <VariantSwitch key={toggle.key} label={toggle.label} tip={toggle.tip} on={Boolean(value[toggle.key])} onChange={(next) => onChange({ ...value, [toggle.key]: next })} />
+          <VariantSwitch key={toggle.key} label={t(`variant.${toggle.key}.label`)} tip={t(`variant.${toggle.key}.tip`)} on={Boolean(value[toggle.key])} onChange={(next) => onChange({ ...value, [toggle.key]: next })} />
         ))}
       </div>
       <Select<RestVariant>
         value={value.restVariant}
         onChange={(restVariant) => onChange({ ...value, restVariant })}
-        options={REST_OPTIONS}
-        label="Rest lengths"
+        options={REST_OPTIONS.map(option => ({ ...option, label: t(`variant.rest.${option.value}`) }))}
+        label={t("variant.restHeading")}
         className="mt-2 w-full"
       />
     </div>
@@ -141,6 +96,7 @@ export function RulesPanel({
   // campaign's lead steers the story but does not get the almanac.
   isDm: boolean;
 }) {
+  const { locale, t } = useLocale();
   const [loading, setLoading] = useState(true);
   // A refused or failed read is shown in the server's words with a way to
   // ask again, never as "nothing here yet" (issue 140).
@@ -152,7 +108,8 @@ export function RulesPanel({
   const [saving, setSaving] = useState(false);
   const [settingsBusy, setSettingsBusy] = useState(false);
   // A refused change says why, instead of the switch quietly snapping back.
-  const [settingsError, setSettingsError] = useState("");
+  const [settingsError, setSettingsError] = useState<UiRequestError | null>(null);
+  const [ruleError, setRuleError] = useState<UiRequestError | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -175,55 +132,27 @@ export function RulesPanel({
   }, [campaignId, reloads, settle]);
 
   async function saveText() {
-    setSaving(true);
+    setSaving(true); setRuleError(null);
     try {
-      const response = await fetch(`/api/campaigns/${campaignId}/rules`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text }),
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setSavedText(String(data.text ?? text));
-        setChunks(Array.isArray(data.chunks) ? data.chunks : []);
-      }
-    } finally {
-      setSaving(false);
-    }
+      const data = await readUiResponse<{ text?: string; chunks?: RuleChunkView[] }>(fetch(`/api/campaigns/${campaignId}/rules`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text }) }), "rules.saveError");
+      setSavedText(String(data.text ?? text));
+      setChunks(Array.isArray(data.chunks) ? data.chunks : []);
+    } catch (failure) { setRuleError(uiRequestError(failure, "rules.saveError")); }
+    finally { setSaving(false); }
   }
-
   async function patchChunk(chunkId: string, flags: { enabled?: boolean; pinned?: boolean }) {
-    const response = await fetch(`/api/campaigns/${campaignId}/rules`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ chunkId, ...flags }),
-    });
-    if (response.ok) {
-      const data = await response.json();
-      setChunks((current) =>
-        current.map((chunk) => (chunk.id === chunkId ? { ...chunk, ...data.chunk } : chunk)),
-      );
-    }
-  }
-
-  async function patchVariant(update: Partial<GameSettings["variantRules"]>) {
-    setSettingsBusy(true);
-    setSettingsError("");
+    setRuleError(null);
     try {
-      const response = await fetch(`/api/campaigns/${campaignId}/settings`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ variantRules: { ...settings.variantRules, ...update } }),
-      });
-      if (!response.ok) {
-        const data = (await response.json().catch(() => ({}))) as { error?: string };
-        setSettingsError(data.error ?? "That rule could not be changed.");
-      }
-    } catch {
-      setSettingsError("Could not reach the server.");
-    } finally {
-      setSettingsBusy(false);
-    }
+      const data = await readUiResponse<{ chunk?: Partial<RuleChunkView> }>(fetch(`/api/campaigns/${campaignId}/rules`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ chunkId, ...flags }) }), "rules.chunkError");
+      setChunks(current => current.map(chunk => chunk.id === chunkId ? { ...chunk, ...data.chunk } : chunk));
+    } catch (failure) { setRuleError(uiRequestError(failure, "rules.chunkError")); }
+  }
+  async function patchVariant(update: Partial<GameSettings["variantRules"]>) {
+    setSettingsBusy(true); setSettingsError(null);
+    try {
+      await readUiResponse(fetch(`/api/campaigns/${campaignId}/settings`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ variantRules: { ...settings.variantRules, ...update } }) }), "rules.variantError");
+    } catch (failure) { setSettingsError(uiRequestError(failure, "rules.variantError")); }
+    finally { setSettingsBusy(false); }
   }
 
   const variant = settings.variantRules;
@@ -231,27 +160,27 @@ export function RulesPanel({
   return (
     <div className="space-y-3">
       <div className="panel rounded-lg p-3" data-tour="rules-variants">
-        <SectionHead title="Variant rules" glyph="system-rules" />
+        <SectionHead title={t("variant.heading")} glyph="system-rules" />
         {steersStory ? (
           <div className={cn("reveal space-y-0.5", settingsBusy && "opacity-70")}>
             {VARIANT_TOGGLES.map((toggle) => (
-              <VariantSwitch key={toggle.key} label={toggle.label} tip={toggle.tip} on={Boolean(variant[toggle.key])} onChange={(next) => patchVariant({ [toggle.key]: next })} />
+              <VariantSwitch key={toggle.key} label={t(`variant.${toggle.key}.label`)} tip={t(`variant.${toggle.key}.tip`)} on={Boolean(variant[toggle.key])} onChange={(next) => patchVariant({ [toggle.key]: next })} />
             ))}
-            <Tooltip content="How long short and long rests take at this table. The DM's rest tool follows it.">
+            <Tooltip content={t("variant.restHint")}>
               <span className="block pt-1.5">
                 <Select<RestVariant>
                   size="sm"
                   value={variant.restVariant}
                   onChange={(restVariant) => patchVariant({ restVariant })}
-                  options={REST_OPTIONS}
-                  label="Rest lengths"
+                  options={REST_OPTIONS.map(option => ({ ...option, label: t(`variant.rest.${option.value}`) }))}
+                  label={t("variant.restHeading")}
                   className="w-full"
                 />
               </span>
             </Tooltip>
             {settingsError ? (
               <p role="alert" className="motion-shake pt-1 text-[11px] text-red-300">
-                {settingsError}
+                {requestErrorText(locale, settingsError)}
               </p>
             ) : null}
           </div>
@@ -259,71 +188,68 @@ export function RulesPanel({
           <p className="text-xs leading-5 text-stone-400">
             {[
               ...VARIANT_TOGGLES.filter((toggle) => variant[toggle.key]).map(
-                (toggle) => toggle.label,
+                (toggle) => t(`variant.${toggle.key}.label`),
               ),
-              ...(variant.restVariant !== "standard" ? [REST_LABELS[variant.restVariant]] : []),
-            ].join(" · ") || "No variant rules in effect."}
+              ...(variant.restVariant !== "standard" ? [t(`variant.rest.${variant.restVariant}`)] : []),
+            ].join(" · ") || t("variant.none")}
           </p>
         )}
       </div>
 
       <div className="panel rounded-lg p-3" data-tour="rules-house">
-        <SectionHead title="House rules" glyph="system-homebrew" />
+        <SectionHead title={t("rules.house")} glyph="system-homebrew" />
+        {loadError ? <LoadFailed error={loadErrorText(locale, loadError, "rules.loadError")} onRetry={() => { setLoading(true); setReloads(current => current + 1); }} /> : null}
+        {ruleError ? <p role="alert" className="text-xs text-red-300">{requestErrorText(locale, ruleError)}</p> : null}
         {loading ? (
-          <PanelLoading label="Loading..." rows={2} />
-        ) : steersStory ? (
+          <PanelLoading label={t("prep.loading")} rows={2} />
+        ) : steersStory && loaded ? (
           <>
             <textarea
               value={text}
               onChange={(event) => setText(event.target.value)}
               rows={8}
               maxLength={20_000}
-              placeholder={
-                "Write your table's house rules. Use headings to group them, e.g.\n\nDrinking potions:\nDrinking a potion is a bonus action at this table.\n\nThe DM retrieves only the relevant rules each turn."
-              }
-              aria-label="House rules"
+              placeholder={t("rules.placeholder")}
+              aria-label={t("rules.house")}
               className={cn(panelField, "leading-5")}
             />
             <div className="mt-1.5 flex items-center gap-2">
               <KitButton tone="primary" onClick={saveText} disabled={saving || text === savedText} busy={saving}>
                 {saving ? null : <Save className="size-3.5" />}
-                Save rules
-              </KitButton>
+                 {t("rules.save")} </KitButton>
               {text !== savedText ? (
-                <span className="live-in text-xs text-amber-300/80">Unsaved changes</span>
+                <span className="live-in text-xs text-amber-300/80">{t("prep.unsaved")}</span>
               ) : null}
             </div>
           </>
         ) : savedText ? (
           <p className="reveal whitespace-pre-wrap text-xs leading-5 text-stone-400">{savedText}</p>
         ) : (
-          (loadError ? <LoadFailed error={loadError} onRetry={() => { setLoading(true); setReloads((current) => current + 1); }} /> : loaded ? <EmptyState size="sm" art="board" title="No house rules set." /> : null)
+          (loaded && !loadError ? <EmptyState size="sm" art="board" title={t("rules.empty")} /> : null)
         )}
       </div>
 
       {steersStory && chunks.length ? (
         <div className="panel reveal rounded-lg p-3">
-          <SectionHead title="Rule sections" glyph="system-rulesets" aside={chunks.length} />
+          <SectionHead title={t("rules.sections")} glyph="system-rulesets" aside={chunks.length} />
           <p className="mb-2 text-xs leading-5 text-stone-500">
-            The DM sees only the sections relevant to each turn. Pin one to include it every turn;
-            switch one off to silence it without deleting the text.
-          </p>
+             {t("rules.sectionsHint")} </p>
           <ul className="stagger space-y-1.5">
             {chunks.map((chunk) => (
               <li
                 key={chunk.id}
                 className={cn("flex items-start gap-2 rounded-md border border-stone-700/50 bg-stone-950/40 p-2", !chunk.enabled && "opacity-60")}
               >
-                <span className="mt-0.5 shrink-0" title={chunk.enabled ? "Switch this section off" : "Switch this section on"}>
-                  <Switch on={chunk.enabled} onChange={(enabled) => patchChunk(chunk.id, { enabled })} label={chunk.enabled ? "Switch this section off" : "Switch this section on"} />
+                <span className="mt-0.5 shrink-0" title={t(chunk.enabled ? "rules.sectionOff" : "rules.sectionOn")}>
+                  <Switch on={chunk.enabled} onChange={(enabled) => patchChunk(chunk.id, { enabled })} label={t(chunk.enabled ? "rules.sectionOff" : "rules.sectionOn")} />
                 </span>
                 <KitButton
                   tone="icon"
                   always
                   onClick={() => patchChunk(chunk.id, { pinned: !chunk.pinned })}
                   aria-pressed={chunk.pinned}
-                  aria-label={chunk.pinned ? "Unpin: retrieved only when relevant" : "Pin: included in every DM turn"}
-                  title={chunk.pinned ? "Unpin: retrieved only when relevant" : "Pin: included in every DM turn"}
+                  aria-label={t(chunk.pinned ? "prep.unpinHint" : "prep.pinHint")}
+                  title={t(chunk.pinned ? "prep.unpinHint" : "prep.pinHint")}
                   className={cn("shrink-0", chunk.pinned && "text-amber-300")}
                 >
                   <Pin className={cn("size-3.5", chunk.pinned && "fill-current")} />
@@ -340,7 +266,7 @@ export function RulesPanel({
         </div>
       ) : null}
 
-      {isDm ? <CalendarSection campaignId={campaignId} /> : null}
+      {isDm ? <CalendarSection campaignId={campaignId} campaignLocale={settings.locale} /> : null}
     </div>
   );
 }

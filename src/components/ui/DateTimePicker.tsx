@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { CalendarDays, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
@@ -12,7 +14,7 @@ import { cn } from "@/lib/cn";
 // month (arrows step the month, today is ringed, the chosen day wears the
 // gold foil) over an hour and minute pair. With `dateOnly` it is a date
 // picker and the string is "YYYY-MM-DD".
-const WEEKDAYS = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
+const WEEKDAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"] as const;
 const pad = (value: number) => String(value).padStart(2, "0");
 
 function parse(value: string): Date | null {
@@ -34,7 +36,7 @@ export function DateTimePicker({
   dateOnly = false,
   min,
   disabled = false,
-  placeholder = "Pick a date",
+  placeholder,
   className,
 }: {
   value: string;
@@ -47,6 +49,7 @@ export function DateTimePicker({
   placeholder?: string;
   className?: string;
 }) {
+  const { locale, t } = useLocale();
   const chosen = parse(value);
   const earliest = min ? parse(min) : null;
   const [shown, setShown] = useState(() => {
@@ -74,8 +77,8 @@ export function DateTimePicker({
     !!a && a.getFullYear() === year && a.getMonth() === month && a.getDate() === day;
 
   const reads = chosen
-    ? chosen.toLocaleString(undefined, dateOnly ? { dateStyle: "medium" } : { dateStyle: "medium", timeStyle: "short" })
-    : placeholder;
+    ? chosen.toLocaleString(locale, dateOnly ? { dateStyle: "medium" } : { dateStyle: "medium", timeStyle: "short" })
+    : placeholder ?? t("datePicker.placeholder");
 
   return (
     <DropdownMenu.Root>
@@ -90,7 +93,7 @@ export function DateTimePicker({
           <div className="kit-date-head">
             <button
               type="button"
-              aria-label="Earlier month"
+              aria-label={t("datePicker.earlier")}
               className="kit-date-nav"
               onClick={() => {
                 setTurn("prev");
@@ -99,10 +102,10 @@ export function DateTimePicker({
             >
               <ChevronLeft className="size-4" aria-hidden="true" />
             </button>
-            <span className="kit-date-month">{shown.toLocaleString(undefined, { month: "long", year: "numeric" })}</span>
+            <span className="kit-date-month">{shown.toLocaleString(locale, { month: "long", year: "numeric" })}</span>
             <button
               type="button"
-              aria-label="Later month"
+              aria-label={t("datePicker.later")}
               className="kit-date-nav"
               onClick={() => {
                 setTurn("next");
@@ -114,7 +117,7 @@ export function DateTimePicker({
           </div>
           <div className="kit-date-week" aria-hidden="true">
             {WEEKDAYS.map((day) => (
-              <span key={day}>{day}</span>
+              <span key={day}>{t(`datePicker.${day}`)}</span>
             ))}
           </div>
           <div key={`${shown.getFullYear()}-${shown.getMonth()}`} className="kit-date-grid" data-turn={turn ?? undefined}>
@@ -138,9 +141,9 @@ export function DateTimePicker({
           </div>
           {dateOnly ? null : (
             <div className="kit-date-time">
-              <NumberStepper label="Hour" size="sm" min={0} max={23} value={chosen?.getHours() ?? 19} onChange={(hours) => setTime(hours, chosen?.getMinutes() ?? 0)} />
+              <NumberStepper label={t("datePicker.hour")} size="sm" min={0} max={23} value={chosen?.getHours() ?? 19} onChange={(hours) => setTime(hours, chosen?.getMinutes() ?? 0)} />
               <span className="text-stone-500">:</span>
-              <NumberStepper label="Minute" size="sm" min={0} max={55} step={5} value={chosen?.getMinutes() ?? 0} onChange={(minutes) => setTime(chosen?.getHours() ?? 19, minutes)} />
+              <NumberStepper label={t("datePicker.minute")} size="sm" min={0} max={55} step={5} value={chosen?.getMinutes() ?? 0} onChange={(minutes) => setTime(chosen?.getHours() ?? 19, minutes)} />
             </div>
           )}
         </DropdownMenu.Content>

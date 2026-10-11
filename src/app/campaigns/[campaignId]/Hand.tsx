@@ -1,6 +1,7 @@
 "use client";
 
 import { ChevronDown, CircleHelp } from "lucide-react";
+import { isComposingInput } from "@/lib/input-composition";
 import { memo, useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import type { CSSProperties, Dispatch, RefObject, SetStateAction } from "react";
 import { cn } from "@/lib/cn";
@@ -341,6 +342,7 @@ function HandInner({
       data-tutorial={showTutorial ? "true" : undefined}
       aria-label="Your hand"
       onKeyDown={(event) => {
+        if (isComposingInput(event)) return;
         if (event.key === "Escape" && picked) {
           event.stopPropagation();
           clearAim();

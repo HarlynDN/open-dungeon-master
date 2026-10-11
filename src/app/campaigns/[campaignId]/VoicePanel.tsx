@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+
 import {
   HeadphoneOff,
   Hand,
@@ -14,6 +16,9 @@ import {
   WifiOff,
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import { readUiResponse, requestErrorText, type UiRequestError } from "@/lib/i18n/api-errors";
+import { VOICE_FLOOR_KEYS, VOICE_BLOCK_KEYS, parseVoiceChannels, voiceRequestError, voiceWarningText } from "@/lib/i18n/voice-presentations";
+import { LoadFailed, PanelLoading } from "./PanelKit";
 import { cn } from "@/lib/cn";
 import { ui } from "@/lib/ui";
 import { GameIcon } from "@/components/ui/GameIcon";
@@ -23,8 +28,6 @@ import { VoiceRooms, VoiceSettings } from "@/app/campaigns/[campaignId]/VoicePan
 import { useVoiceRoom } from "@/app/campaigns/[campaignId]/useVoiceRoom";
 import { VoicePeerRow } from "@/app/campaigns/[campaignId]/VoicePeerRow";
 import {
-  FLOOR_VOICE_LABELS,
-  TRANSMIT_BLOCK_LABELS,
   mayTransmit,
   type TurnEnforcement,
   type VoiceFloorMode,
@@ -73,8 +76,13 @@ export function VoicePanel({
   // The table's transcription switch (13.3).
   transcribe?: boolean;
 }) {
+  const { locale, t } = useLocale();
   const voice = useVoiceRoom(campaignId, roster, meUserId, audibilityVersion, meshSignal, { transcribe });
   const [channels, setChannels] = useState<VoiceChannelView[]>([]);
+  const [channelsError, setChannelsError] = useState<UiRequestError | null>(null);
+  const [channelWriteError, setChannelWriteError] = useState<UiRequestError | null>(null);
+  const [channelPending, setChannelPending] = useState(false);
+  const [channelAttempt, setChannelAttempt] = useState(0);
   const [showSettings, setShowSettings] = useState(false);
   // Whose volume slider is open. One at a time, so a busy table does not turn
   // the roster into a mixing desk.
@@ -85,47 +93,55 @@ export function VoicePanel({
   // promise chain rather than an awaited helper so the state update plainly
   // happens in a callback rather than in the effect body.
   useEffect(() => {
+    if (!voice.available || voice.availabilityStatus !== "ready") return;
     let cancelled = false;
-    fetch(`/api/campaigns/${campaignId}/voice/channels`)
-      .then((response) => (response.ok ? response.json() : null))
+    readUiResponse<{ channels: VoiceChannelView[] }>(fetch(`/api/campaigns/${campaignId}/voice/channels`), "voice.channelsLoadError")
       .then((data) => {
-        if (!cancelled && data) {
-          setChannels(data.channels ?? []);
+        if (!cancelled) {
+          setChannels(parseVoiceChannels(data));
+          setChannelsError(null);
         }
       })
-      .catch(() => {
-        // transient; the next roster change retries
+      .catch((cause) => {
+        if (!cancelled) setChannelsError(voiceRequestError(cause, "voice.channelsLoadError"));
       });
-    return () => {
-      cancelled = true;
-    };
-  }, [campaignId, roster]);
+    return () => { cancelled = true; };
+  }, [campaignId, roster, channelAttempt, voice.available, voice.availabilityStatus]);
 
   const channelAction = useCallback(
-    async (body: Record<string, unknown>) => {
-      const response = await fetch(`/api/campaigns/${campaignId}/voice/channels`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setChannels(data.channels ?? []);
-      }
+    async (body: Record<string, unknown>): Promise<boolean> => {
+      setChannelPending(true);
+      setChannelWriteError(null);
+      try {
+        const data = await readUiResponse<{ channels: VoiceChannelView[] }>(fetch(`/api/campaigns/${campaignId}/voice/channels`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        }), "voice.channelsWriteError");
+        setChannels(parseVoiceChannels(data));
+        setChannelsError(null);
+        return true;
+      } catch (cause) {
+        setChannelWriteError(voiceRequestError(cause, "voice.channelsWriteError"));
+        return false;
+      } finally { setChannelPending(false); }
     },
     [campaignId],
   );
+
+  if (voice.availabilityStatus === "loading") return <div className="panel rounded-xl p-4"><PanelLoading label={t("voice.loading")} rows={1} /></div>;
+  if (voice.availabilityStatus === "error") return <div className="panel rounded-xl p-4"><LoadFailed error={requestErrorText(locale, voice.availabilityError)} onRetry={voice.retryAvailability} /></div>;
 
   if (!voice.available) {
     return (
       <div className="panel flex items-start gap-3 rounded-xl px-4 py-3">
         <GameIcon icon={{ kind: "glyph", key: "cue-turn" }} size="size-9" className="opacity-60 grayscale" />
         <div className="min-w-0">
-          <p className="font-display text-sm tracking-wide text-stone-300">Voice chat is off</p>
+          <p className="font-display text-sm tracking-wide text-stone-300">{t("voice.off")}</p>
           <p className="mt-0.5 text-xs text-stone-500">
             {voice.unavailableReason === "server"
-              ? "This server has voice chat switched off."
-              : "Turn it on in campaign settings to talk at this table."}
+              ? t("voice.serverOff")
+              : t("voice.campaignOff")}
           </p>
         </div>
       </div>
@@ -147,20 +163,20 @@ export function VoicePanel({
     turnEnforcement,
   );
   const floorNote =
-    turnEnforcement === "off" || floorMode === "open" ? "" : FLOOR_VOICE_LABELS[floorMode];
+    turnEnforcement === "off" || floorMode === "open" ? "" : t(VOICE_FLOOR_KEYS[floorMode]);
   const control = cn(ui.btnSmall, "session-voice-btn");
 
   return (
     <div className={cn("panel rounded-xl", compact ? "p-3" : "p-4")}>
       <SectionHead
-        title="Voice"
+        title={t("voice.title")}
         glyph="cue-turn"
         level="h3"
         className="mb-2"
         aside={
           voice.peers.length ? (
             <span key={voice.peers.length} className="count-pop text-xs text-stone-400">
-              {voice.peers.length} on the call
+              {t("voice.onCall", { count: voice.peers.length })}
             </span>
           ) : null
         }
@@ -175,8 +191,8 @@ export function VoicePanel({
               <button
                 type="button"
                 onClick={() => void voice.toggleHand()}
-                aria-label={voice.handRaised ? "Lower your hand" : "Ask to speak"}
-                title={voice.handRaised ? "Lower your hand" : "Ask to speak"}
+                aria-label={voice.handRaised ? t("voice.lowerHand") : t("voice.askSpeak")}
+                title={voice.handRaised ? t("voice.lowerHand") : t("voice.askSpeak")}
                 data-tone={voice.handRaised ? "on" : undefined}
                 className={control}
               >
@@ -190,14 +206,14 @@ export function VoicePanel({
               <Select
                 value={voice.sayRange}
                 onChange={(next) => void voice.setSayRange(next)}
-                label="How far your voice carries"
+                label={t("voice.range")}
                 size="sm"
                 align="end"
                 className="w-28"
                 options={[
-                  { value: "whisper", label: "Whisper" },
-                  { value: "normal", label: "Normal" },
-                  { value: "shout", label: "Shout" },
+                  { value: "whisper", label: t("voice.whisper") },
+                  { value: "normal", label: t("voice.normal") },
+                  { value: "shout", label: t("voice.shout") },
                 ]}
               />
             ) : null}
@@ -208,11 +224,11 @@ export function VoicePanel({
             <button
               type="button"
               onClick={voice.toggleDeafen}
-              aria-label={voice.deafened ? "Turn the call back on" : "Silence the call"}
+              aria-label={voice.deafened ? t("voice.undeafen") : t("voice.deafen")}
               title={
                 voice.deafened
-                  ? "Turn the call back on"
-                  : "Silence everyone (you keep transmitting)"
+                  ? t("voice.undeafen")
+                  : t("voice.deafenHint")
               }
               data-tone={voice.deafened ? "off" : undefined}
               className={control}
@@ -232,19 +248,19 @@ export function VoicePanel({
                 onPointerUp={() => voice.setTalking(false)}
                 onPointerLeave={() => voice.setTalking(false)}
                 onContextMenu={(event) => event.preventDefault()}
-                title="Hold to talk (or hold the ` key)"
+                title={t("voice.holdHint")}
                 data-tone={voice.talking ? "live" : undefined}
                 className={cn(control, "select-none touch-none gap-1 px-3 text-xs")}
               >
                 <Radio className={cn("size-3.5", voice.talking && "animate-pulse")} />
-                {voice.talking ? "Talking" : "Hold"}
+                {voice.talking ? t("voice.talking") : t("voice.hold")}
               </button>
             ) : (
               <button
                 type="button"
                 onClick={() => void voice.toggleMute()}
-                aria-label={voice.muted ? "Unmute" : "Mute"}
-                title={voice.muted ? "Unmute" : "Mute"}
+                aria-label={voice.muted ? t("voice.unmute") : t("voice.mute")}
+                title={voice.muted ? t("voice.unmute") : t("voice.mute")}
                 data-tone={voice.muted ? "off" : undefined}
                 className={control}
               >
@@ -254,8 +270,8 @@ export function VoicePanel({
             <button
               type="button"
               onClick={() => setShowSettings((open) => !open)}
-              aria-label="Microphone settings"
-              title="Microphone settings"
+              aria-label={t("voice.micSettings")}
+              title={t("voice.micSettings")}
               aria-expanded={showSettings}
               data-tone={showSettings ? "on" : undefined}
               className={control}
@@ -265,8 +281,8 @@ export function VoicePanel({
             <button
               type="button"
               onClick={() => void voice.leave()}
-              aria-label="Leave voice"
-              title="Leave voice"
+              aria-label={t("voice.leave")}
+              title={t("voice.leave")}
               className={control}
             >
               <PhoneOff className="size-4" />
@@ -284,7 +300,7 @@ export function VoicePanel({
             ) : (
               <Mic className="size-4" />
             )}
-            Join
+            {t("voice.join")}
           </button>
         )}
       </div>
@@ -297,7 +313,7 @@ export function VoicePanel({
           {floorNote}
           {voice.connected && !myVerdict.mayTransmit && myVerdict.block ? (
             <span className="text-stone-500">
-              · {turnEnforcement === "strict" ? "you are muted" : TRANSMIT_BLOCK_LABELS[myVerdict.block]}
+              · {turnEnforcement === "strict" ? t("voice.forceMuted") : t(VOICE_BLOCK_KEYS[myVerdict.block])}
             </span>
           ) : null}
         </p>
@@ -308,11 +324,12 @@ export function VoicePanel({
       {voice.reconnecting ? (
         <p className="live-in mt-2 flex items-center gap-1.5 text-xs text-amber-300">
           <WifiOff className="size-3.5 shrink-0" />
-          Connection dropped, reconnecting
+          {t("voice.reconnecting")}
         </p>
       ) : null}
 
-      {voice.error ? <p className="motion-shake mt-2 text-xs text-red-400">{voice.error}</p> : null}
+      {voice.availabilityWarning ? <p role="status" className="mt-2 text-xs text-amber-300">{voiceWarningText(voice.availabilityWarning, locale)}</p> : null}
+      {voice.error ? <p role="alert" className="motion-shake mt-2 text-xs text-ember-600">{requestErrorText(locale, voice.error)}</p> : null}
 
       {showSettings && voice.connected ? (
         <VoiceSettings
@@ -330,18 +347,21 @@ export function VoicePanel({
       {/* Breakout rooms. Everyone can see the list and who is in each: a side
           room nobody can see reads as a bug rather than a secret. Only story
           authority can open one or move anybody. */}
+      {channelsError ? <LoadFailed error={requestErrorText(locale, channelsError)} onRetry={() => setChannelAttempt((attempt) => attempt + 1)} /> : null}
+      {channelWriteError ? <p role="alert" className="mt-2 text-xs text-ember-600">{requestErrorText(locale, channelWriteError)}</p> : null}
       {channels.length > 1 || steersStory ? (
         <VoiceRooms
           channels={channels}
           occupants={(channelId) => voice.peers.filter((peer) => peer.channelId === channelId).length}
           steersStory={steersStory}
-          onAction={(body) => void channelAction(body)}
+          onAction={channelAction}
+          pending={channelPending}
         />
       ) : null}
 
       {transcribe && voice.connected ? (
         <p className="reveal mt-2 flex items-center gap-1 text-[11px] text-amber-300/80">
-          <Radio className="size-3" /> This table is being transcribed while you are on the call.
+          <Radio className="size-3" /> {t("voice.transcribing")}
         </p>
       ) : null}
       {voice.peers.length ? (
@@ -372,7 +392,7 @@ export function VoicePanel({
           ))}
         </ul>
       ) : (
-        <p className="mt-2 text-xs text-stone-500">Nobody is on the call yet.</p>
+        <p className="mt-2 text-xs text-stone-500">{t("voice.empty")}</p>
       )}
     </div>
   );

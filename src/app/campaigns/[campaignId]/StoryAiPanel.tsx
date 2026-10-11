@@ -1,6 +1,7 @@
 "use client";
 
 import { AlignLeft, Bot, Image as ImageIcon, Wrench } from "lucide-react";
+import { isComposingInput } from "@/lib/input-composition";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
 import { ImagesNote } from "@/app/campaigns/[campaignId]/NarrationNote";
@@ -236,6 +237,7 @@ export function StoryAiPanel({
   const inputClass = cn(selectClass, "w-64 max-w-full");
   const labelClass = "w-20 shrink-0 text-stone-500";
   const blurOnEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (isComposingInput(event)) return;
     if (event.key === "Enter") {
       event.currentTarget.blur();
     }

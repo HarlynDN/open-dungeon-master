@@ -2,6 +2,7 @@ import type { CampaignDifficulty } from "@/lib/campaign-types";
 import type { LoreDraft } from "@/app/WorldSetupFields";
 import { EMPTY_SELECTION, type ImportSelection } from "@/app/workshop/ContentImportPicker";
 import type { WorldPackSummary } from "@/lib/worlds/types";
+import type { AppLocale } from "@/lib/i18n/locales";
 import type {
   CampaignLengthSetting,
   DicePolicy,
@@ -16,6 +17,7 @@ import type {
 // leaves for POST /api/campaigns is assembled in CreateCampaignDialog, not
 // here, so scripts/test-create-campaign-options.mjs keeps one file to audit.
 export type CampaignDraft = {
+  locale: AppLocale;
   dmMode: DmModeSetting;
   title: string;
   description: string;
@@ -80,6 +82,7 @@ export type CampaignDraft = {
 };
 
 export const DEFAULT_DRAFT: CampaignDraft = {
+  locale: "en",
   dmMode: "ai",
   title: "",
   description: "",

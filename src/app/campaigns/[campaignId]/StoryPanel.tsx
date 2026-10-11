@@ -1,6 +1,7 @@
 "use client";
 
 import { readLoad, useLoadStatus } from "@/lib/load-state";
+import { isComposingInput } from "@/lib/input-composition";
 import { EmptyState } from "@/components/EmptyState";
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import { ArrowDown, ArrowUp, Check, ChevronDown, ChevronRight, Crosshair, Loader2, Pencil, Plus, RefreshCw, Rewind, Scissors, SkipForward, X } from "lucide-react";
@@ -430,6 +431,7 @@ function ArcCard({ campaignId }: { campaignId: string }) {
                                 maxLength={MAX_BEAT_TEXT}
                                 onChange={(event) => setDraft(event.target.value)}
                                 onKeyDown={(event) => {
+                                  if (isComposingInput(event)) return;
                                   if (event.key === "Enter") {
                                     void submitDraft();
                                   } else if (event.key === "Escape") {
@@ -608,6 +610,7 @@ function ArcCard({ campaignId }: { campaignId: string }) {
                           placeholder="What happens in this beat"
                           onChange={(event) => setDraft(event.target.value)}
                           onKeyDown={(event) => {
+                            if (isComposingInput(event)) return;
                             if (event.key === "Enter") {
                               void submitDraft();
                             } else if (event.key === "Escape") {

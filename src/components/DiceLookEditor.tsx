@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { diceLookLabel } from "@/lib/i18n/account-presentations";
+
 import { Switch } from "@/components/ui/Switch";
 import { Loader2, RotateCcw } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -21,7 +24,7 @@ import {
   type DiceMaterial,
   type DiceTexture,
 } from "@/lib/dice/dice-look";
-import { hydrateDiceLook, useDiceLook, writeDiceLook } from "@/lib/dice/dice-look-store";
+import { hydrateDiceLook, useDiceLook, writeDiceLook, useDiceLookSyncStatus, retryDiceLookSync } from "@/lib/dice/dice-look-store";
 
 // The player's own dice: a live 3D tray showing the current look, presets
 // to start from, and the colours, outline, texture and finish to tweak.
@@ -47,6 +50,7 @@ let previewCounter = 0;
 // changes. One WebGL context for the dialog's lifetime, torn down on close
 // (Firefox caps live contexts, see DiceOverlay).
 function DiceLookPreview({ look }: { look: DiceLook }) {
+  const { t } = useLocale();
   const [id] = useState(() => `dice-look-preview-${++previewCounter}`);
   const hostRef = useRef<HTMLDivElement | null>(null);
   const boxRef = useRef<PreviewBox | null>(null);
@@ -136,7 +140,7 @@ function DiceLookPreview({ look }: { look: DiceLook }) {
       ) : null}
       {state === "failed" ? (
         <div className="absolute inset-0 flex items-center justify-center px-4 text-center text-xs text-stone-500">
-          The 3D preview needs WebGL. Your choices still apply at the table.
+          {t("diceLook.previewError")}
         </div>
       ) : null}
     </div>
@@ -204,6 +208,8 @@ function Swatch({ look, className }: { look: DiceLook; className?: string }) {
 // The editor proper. Mounted on the account settings page and inside the
 // table's dice dialog; both draw the preview.
 export function DiceLookEditor({ className }: { className?: string }) {
+  const { locale, t } = useLocale();
+  const syncStatus = useDiceLookSyncStatus();
   const look = useDiceLook();
   useEffect(() => {
     hydrateDiceLook();
@@ -217,9 +223,13 @@ export function DiceLookEditor({ className }: { className?: string }) {
   return (
     <div className={cn("space-y-4 text-sm", className)}>
       <DiceLookPreview look={look} />
+      {syncStatus === "load-error" || syncStatus === "save-error" ? <div role="alert" className="flex flex-wrap items-center gap-2 text-xs text-ember-600">
+        <span>{t(syncStatus === "load-error" ? "diceLook.loadError" : "diceLook.syncError")}</span>
+        <button type="button" className={ui.btnSmall} onClick={() => void retryDiceLookSync()}>{t("diceLook.retry")}</button>
+      </div> : syncStatus === "saving" || syncStatus === "loading" ? <p role="status" className="text-xs text-stone-500">{t("diceLook.syncing")}</p> : null}
 
       <div>
-        <SectionHead title="Start from" glyph="tab-dice" level="h4" />
+        <SectionHead title={t("diceLook.start")} glyph="tab-dice" level="h4" />
         <div data-pill-group="" className="stagger-pop flex flex-wrap gap-1.5">
           {DICE_LOOK_PRESETS.map((preset) => {
             const active = sameDiceLook(preset.look, look);
@@ -228,8 +238,8 @@ export function DiceLookEditor({ className }: { className?: string }) {
                 key={preset.id}
                 type="button"
                 onClick={() => writeDiceLook(preset.look)}
-                title={preset.label}
-                aria-label={`${preset.label} dice`}
+                title={diceLookLabel("preset", preset.id, locale)}
+                aria-label={t("diceLook.presetAria", { name: diceLookLabel("preset", preset.id, locale) })}
                 aria-pressed={active}
                 data-on={active ? "" : undefined}
                 className={cn(
@@ -240,7 +250,7 @@ export function DiceLookEditor({ className }: { className?: string }) {
                 )}
               >
                 <Swatch look={preset.look} className="size-6" />
-                {preset.label}
+                {diceLookLabel("preset", preset.id, locale)}
               </button>
             );
           })}
@@ -249,47 +259,47 @@ export function DiceLookEditor({ className }: { className?: string }) {
 
       <div className="grid gap-3 sm:grid-cols-2">
         <div className="space-y-3">
-          <ColorField label="Die colour" value={look.face} onChange={(face) => set({ face })} />
+          <ColorField label={t("diceLook.face")} value={look.face} onChange={(face) => set({ face })} />
           <ColorField
-            label="Number colour"
+            label={t("diceLook.numbers")}
             value={look.numbers}
             onChange={(numbers) => set({ numbers })}
           />
           <div className="flex items-center justify-between gap-3">
-            <span className={LABEL}>Number outline</span>
+            <span className={LABEL}>{t("diceLook.outline")}</span>
             <span className="flex items-center gap-2">
               {outlined ? (
                 <input
                   type="color"
                   value={look.outline}
                   onChange={(event) => set({ outline: event.target.value.toUpperCase() })}
-                  aria-label="Outline colour"
+                  aria-label={t("diceLook.outlineColor")}
                   className="reveal-pop h-8 w-12 cursor-pointer rounded-md border border-stone-700 bg-stone-900 p-0.5"
                 />
               ) : null}
-              <Switch on={outlined} onChange={(next) => set({ outline: next ? "#000000" : "" })} label="Outline the numbers" />
+              <Switch on={outlined} onChange={(next) => set({ outline: next ? "#000000" : "" })} label={t("diceLook.outlineNumbers")} />
             </span>
           </div>
         </div>
         <div className="space-y-3">
           <div>
-            <span className={cn(LABEL, "mb-1 block")}>Pattern</span>
+            <span className={cn(LABEL, "mb-1 block")}>{t("diceLook.pattern")}</span>
             <Select<DiceTexture>
               value={look.texture}
               onChange={(texture) => set({ texture })}
-              options={DICE_TEXTURES.map((texture) => ({ value: texture.id, label: texture.label }))}
-              label="Pattern"
+              options={DICE_TEXTURES.map((texture) => ({ value: texture.id, label: diceLookLabel("texture", texture.id, locale) }))}
+              label={t("diceLook.pattern")}
               size="sm"
               className="w-full"
             />
           </div>
           <div>
-            <span className={cn(LABEL, "mb-1 block")}>Finish</span>
+            <span className={cn(LABEL, "mb-1 block")}>{t("diceLook.finish")}</span>
             <Select<DiceMaterial>
               value={look.material}
               onChange={(material) => set({ material })}
-              options={DICE_MATERIALS.map((material) => ({ value: material.id, label: material.label }))}
-              label="Finish"
+              options={DICE_MATERIALS.map((material) => ({ value: material.id, label: diceLookLabel("material", material.id, locale) }))}
+              label={t("diceLook.finish")}
               size="sm"
               className="w-full"
             />
@@ -299,7 +309,7 @@ export function DiceLookEditor({ className }: { className?: string }) {
 
       <div className="flex items-center justify-between gap-3">
         <p className="text-xs text-stone-500">
-          Your dice follow your account: every table and every device shows them.
+          {t("diceLook.accountHint")}
         </p>
         <button
           type="button"
@@ -307,7 +317,7 @@ export function DiceLookEditor({ className }: { className?: string }) {
           disabled={isDefault}
           className={cn(ui.btnSmall, "shrink-0 px-2.5 py-1 text-xs disabled:opacity-40")}
         >
-          <RotateCcw className="size-3" /> Reset
+          <RotateCcw className="size-3" /> {t("diceLook.reset")}
         </button>
       </div>
     </div>
@@ -322,11 +332,12 @@ export function DiceLookDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const { t } = useLocale();
   return (
     <Dialog
       open={open}
       onOpenChange={onOpenChange}
-      title="Your dice"
+      title={t("account.dice")}
       icon={<GameIcon icon={{ kind: "glyph", key: "die-d20" }} size="size-7" />}
       width="w-[min(92vw,38rem)]"
     >
@@ -338,6 +349,7 @@ export function DiceLookDialog({
 // A small button that opens the dialog; the party panel and the device
 // settings panel use it.
 export function DiceLookButton({ className }: { className?: string }) {
+  const { t } = useLocale();
   const [open, setOpen] = useState(false);
   const look = useDiceLook();
   return (
@@ -345,11 +357,11 @@ export function DiceLookButton({ className }: { className?: string }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        title="Choose the colours, pattern and finish of your virtual dice."
+        title={t("diceLook.chooseHint")}
         className={cn(ui.btnSmall, "w-full justify-center py-1 text-xs", className)}
       >
         <Swatch look={look} className="size-4" />
-        Customise my dice
+        {t("diceLook.customize")}
       </button>
       <DiceLookDialog open={open} onOpenChange={setOpen} />
     </>

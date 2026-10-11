@@ -507,7 +507,7 @@ export function SidePanelRouter({
                 steersStory={steersStory}
                 refreshFacts={refreshFacts}
               />
-              <LorePanel campaignId={campaignId} steersStory={steersStory} isDm={adjudicates} members={members} />
+              <LorePanel campaignId={campaignId} campaignLocale={campaign?.gameSettings?.locale} steersStory={steersStory} isDm={adjudicates} members={members} />
             </div>
           ) : storySection === "quests" ? (
             <QuestsPanel campaignId={campaignId} steersStory={steersStory} refreshKey={questsVersion} />

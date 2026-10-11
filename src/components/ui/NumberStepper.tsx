@@ -1,9 +1,11 @@
 "use client";
+import { isComposingInput } from "@/lib/input-composition";
 
 import { Minus, Plus } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 import { replayAnimation } from "@/lib/motion/replay";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 // The kit's number field (docs/visual-overhaul-plan.md 8c.4): a real number
 // input, so it can still be typed into, between a minus and a plus that step
@@ -40,6 +42,7 @@ export function NumberStepper({
   suffix?: string;
   className?: string;
 }) {
+  const { t } = useLocale();
   const figure = useRef<HTMLInputElement | null>(null);
   const [draft, setDraft] = useState<string | null>(null);
   const held = useRef<number | null>(null);
@@ -97,7 +100,7 @@ export function NumberStepper({
     <span className={cn("kit-stepper", size === "sm" && "kit-stepper-sm", className)} data-disabled={disabled ? "" : undefined}>
       <button
         type="button"
-        aria-label={`Lower ${label}`}
+        aria-label={t("field.lower", { label })}
         disabled={disabled || (Number.isFinite(value) && value <= min)}
         onPointerDown={() => hold(-1)}
         onPointerUp={release}
@@ -127,13 +130,13 @@ export function NumberStepper({
           }
         }}
         onBlur={settle}
-        onKeyDown={(event) => event.key === "Enter" && settle()}
+        onKeyDown={(event) => !isComposingInput(event) && event.key === "Enter" && settle()}
         className="kit-stepper-figure"
       />
       {suffix ? <span className="kit-stepper-suffix">{suffix}</span> : null}
       <button
         type="button"
-        aria-label={`Raise ${label}`}
+        aria-label={t("field.raise", { label })}
         disabled={disabled || (Number.isFinite(value) && value >= max)}
         onPointerDown={() => hold(1)}
         onPointerUp={release}

@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
 import { campaignPlaceholder, miscPlaceholder } from "@/lib/placeholders";
 import { agoLabel, chapterLine, seatLine, type HomeCampaign } from "@/app/home/types";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 // The title screen's painting: the table you were last at fills the whole
 // screen, the way a game's main menu shows the world behind its Continue.
@@ -46,20 +47,21 @@ export function ScreenBackdrop({ campaign }: { campaign: HomeCampaign | null }) 
 // line between hairlines, the party's faces and the one line saying who you
 // are there, and the door in.
 export function ContinueHero({ campaign, userId }: { campaign: HomeCampaign; userId: string }) {
+  const { t, locale } = useLocale();
   const ended = campaign.status === "ended";
   const lobby = campaign.status === "lobby";
   const faces = campaign.glance?.faces ?? [];
   return (
     <div className="ts-title-block">
       <span className="ts-eyebrow ts-reveal" style={{ animationDelay: "140ms" }}>
-        {ended ? "A finished tale" : lobby ? "The table is set" : "Continue your tale"}
+        {t(ended ? "home.finishedTale" : lobby ? "home.tableSet" : "home.continueTale")}
       </span>
       <h1 className="ts-title ts-reveal" style={{ animationDelay: "220ms" }}>
         <span className="ts-title-face">{campaign.title}</span>
       </h1>
       <p className="ts-chapter ts-reveal" style={{ animationDelay: "420ms" }}>
         <span className="ts-rule" />
-        <span className="ts-chapter-text">{chapterLine(campaign)}</span>
+        <span className="ts-chapter-text">{chapterLine(campaign, locale)}</span>
         <span className="ts-rule ts-rule-end" />
       </p>
       <div className="ts-party ts-reveal" style={{ animationDelay: "520ms" }}>
@@ -71,13 +73,13 @@ export function ContinueHero({ campaign, userId }: { campaign: HomeCampaign; use
             ))}
           </span>
         ) : null}
-        <span className="ts-seat-line">{seatLine(campaign, userId)}</span>
+        <span className="ts-seat-line">{seatLine(campaign, userId, locale)}</span>
       </div>
       <div className="ts-actions ts-reveal" style={{ animationDelay: "640ms" }}>
         <Link href={`/campaigns/${campaign.id}`} className="ts-enter motion-magnet" data-tour="tile-continue">
           <span className="ts-enter-sheen" aria-hidden="true" />
           <Swords className="size-4" aria-hidden="true" />
-          {ended ? "Revisit the world" : lobby ? "Take your seat" : "Enter the world"}
+          {t(ended ? "home.revisit" : lobby ? "home.takeSeat" : "home.enter")}
         </Link>
       </div>
     </div>
@@ -87,6 +89,8 @@ export function ContinueHero({ campaign, userId }: { campaign: HomeCampaign; use
 // "When last we left": the last thing the Dungeon Master said at that
 // table, with the drop cap, and a mono line saying where the turn stood.
 export function RecapPanel({ campaign }: { campaign: HomeCampaign }) {
+  const { t, locale } = useLocale();
+  const [now] = useState(() => Date.now());
   const glance = campaign.glance;
   const floor = (campaign as HomeCampaign & { floor?: { mode?: string; round?: number; currentName?: string } }).floor;
   const recap = glance?.recap?.trim() || "";
@@ -94,22 +98,22 @@ export function RecapPanel({ campaign }: { campaign: HomeCampaign }) {
   const tail = recap.slice(1);
   const bits: string[] = [];
   if (floor?.mode === "initiative" && floor.round) {
-    bits.push(`Round ${floor.round}`);
-    if (floor.currentName) bits.push(`${floor.currentName}'s turn`);
+    bits.push(t("home.round", { round: floor.round }));
+    if (floor.currentName) bits.push(t("home.turn", { name: floor.currentName }));
   }
-  const ago = agoLabel(glance?.recapAt ?? campaign.updatedAt);
+  const ago = agoLabel(glance?.recapAt ?? campaign.updatedAt, now, locale);
   if (ago) bits.push(ago);
-  const fallback =
+  const fallback = t(
     campaign.status === "lobby"
-      ? "The table is set and the seats are filling. The tale begins when the party is gathered."
+      ? "home.recapLobby"
       : campaign.status === "ended"
-        ? "This tale has been told to its end. The chronicle keeps every page."
-        : "The Dungeon Master has not spoken yet. Step in and the first scene is yours.";
+        ? "home.recapEnded"
+        : "home.recapNew");
   return (
-    <aside className="ts-recap ts-panel ts-reveal" style={{ animationDelay: "720ms" }} aria-label="When last we left">
+    <aside className="ts-recap ts-panel ts-reveal" style={{ animationDelay: "720ms" }} aria-label={t("home.recap")}>
       <span className="ts-bracket ts-bracket-tl" aria-hidden="true" />
       <span className="ts-bracket ts-bracket-br" aria-hidden="true" />
-      <span className="ts-panel-eyebrow">When last we left</span>
+      <span className="ts-panel-eyebrow">{t("home.recap")}</span>
       {recap ? (
         <p className="ts-recap-text">
           <span className="ts-dropcap">{head}</span>
@@ -130,22 +134,21 @@ export function RecapPanel({ campaign }: { campaign: HomeCampaign }) {
 // (src/lib/shared-host.ts): the invitation then points at the room code
 // instead of a door this account cannot open.
 export function EmptyHero({ onNewCampaign, canCreate = true }: { onNewCampaign: () => void; canCreate?: boolean }) {
+  const { t } = useLocale();
   return (
     <div className="ts-title-block">
-      <span className="ts-eyebrow ts-reveal" style={{ animationDelay: "140ms" }}>Your first tale</span>
+      <span className="ts-eyebrow ts-reveal" style={{ animationDelay: "140ms" }}>{t("home.firstTale")}</span>
       <h1 className="ts-title ts-title-sm ts-reveal" style={{ animationDelay: "220ms" }}>
-        <span className="ts-title-face">Every campaign starts with an empty table.</span>
+        <span className="ts-title-face">{t("home.emptyTitle")}</span>
       </h1>
       <p className="ts-lede ts-reveal" style={{ animationDelay: "420ms" }}>
-        {canCreate
-          ? "Create one and invite your friends, or join theirs with a room code below."
-          : "On this server an administrator starts the campaigns. Ask them for a room code and join below."}
+        {t(canCreate ? "home.emptyCreate" : "home.emptyAdmin")}
       </p>
       {canCreate ? (
         <div className="ts-actions ts-reveal" style={{ animationDelay: "640ms" }}>
           <button type="button" onClick={onNewCampaign} className="ts-enter motion-magnet">
             <span className="ts-enter-sheen" aria-hidden="true" />
-            <Swords className="size-4" aria-hidden="true" /> Forge a new world
+            <Swords className="size-4" aria-hidden="true" /> {t("home.forge")}
           </button>
         </div>
       ) : null}
@@ -156,15 +159,16 @@ export function EmptyHero({ onNewCampaign, canCreate = true }: { onNewCampaign: 
 // The list never arrived; a table full of campaigns may still exist, so the
 // empty-table words would be a lie here.
 export function FailedHero({ onRetry }: { onRetry: () => void }) {
+  const { t } = useLocale();
   return (
     <div className="ts-title-block">
-      <span className="ts-eyebrow ts-reveal">The road is dark</span>
+      <span className="ts-eyebrow ts-reveal">{t("home.loadDark")}</span>
       <h1 className="ts-title ts-title-sm ts-reveal" style={{ animationDelay: "120ms" }}>
-        <span className="ts-title-face">Could not load your campaigns.</span>
+        <span className="ts-title-face">{t("home.loadFailed")}</span>
       </h1>
       <div className="ts-actions ts-reveal" style={{ animationDelay: "200ms" }}>
         <button type="button" onClick={onRetry} className="ts-ghost motion-press">
-          Try again
+          {t("home.retry")}
         </button>
       </div>
     </div>

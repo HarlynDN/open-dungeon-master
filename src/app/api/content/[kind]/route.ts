@@ -1,6 +1,8 @@
 import { currentUser, unauthorized } from "@/lib/auth";
 import { catalogPrices } from "@/lib/characters/catalog";
 import { contentPackInstalled } from "@/lib/content/db";
+import { nativeEquipmentSearch } from "@/lib/content/native-equipment-search";
+import { normalizeLocale } from "@/lib/i18n/locales";
 import { contentScopeFor, unadmittedNames } from "@/lib/content/scope";
 import { bundledItemRows, bundledSpellRows } from "@/lib/rulebook/catalog-rows";
 import { bundledGearRows } from "@/lib/workshop/bundled-gear-rows";
@@ -95,6 +97,16 @@ export async function GET(
     }
     case "items": {
       const itemKind = url.searchParams.get("kind") ?? undefined;
+      if (url.searchParams.get("native") === "1") {
+        const kind = itemKind && ITEM_KINDS.has(itemKind) ? itemKind as ItemEntry["kind"] : undefined;
+        results = nativeEquipmentSearch({
+          q, kind, locale: normalizeLocale(url.searchParams.get("locale")),
+          offset: Number.isFinite(offsetRaw) ? Math.max(0, offsetRaw) : 0,
+          limit: Number.isFinite(limitRaw) ? Math.max(1, Math.min(200, limitRaw)) : 50,
+          search: (query, offset, limit) => searchItems({ q: query, offset, limit, userIds: scope.userIds, ...(kind ? { kind } : {}) }),
+        }).map(entry => entry.source === "homebrew" ? entry : { ...entry, price: catalogPrices(entry.name) });
+        break;
+      }
       // The price rides with the row, worked out by the same catalog the
       // sheet route will charge by, so the builder's purse and the server
       // agree even where the pack files a name twice (issue #136).

@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+
 import { ChevronDown, EyeOff, Pin, Presentation, Users } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { ui } from "@/lib/ui";
@@ -26,6 +28,7 @@ export function MentionedIn({
   entryId: string;
   onOpen: (target: LoreLinkTarget) => void;
 }) {
+  const { t } = useLocale();
   const [mentions, setMentions] = useState<LoreMention[] | null>(null);
   useEffect(() => {
     let cancelled = false;
@@ -46,15 +49,14 @@ export function MentionedIn({
   }
   return (
     <p className="flex flex-wrap items-center gap-1 text-[11px] text-stone-500">
-      Mentioned in
-      {mentions.map((mention) => (
+       {t("lore.mentioned")} {mentions.map((mention) => (
         <button
           key={`${mention.kind}-${mention.id}`}
           type="button"
           disabled={mention.kind !== "lore"}
           onClick={() => onOpen({ kind: "lore", id: mention.id, name: mention.name })}
           className={cn(ui.btnSmall, "px-2 py-1 disabled:cursor-default")}
-          title={mention.kind}
+          title={t(`lore.mention.${mention.kind}`)}
         >
           {mention.name}
         </button>
@@ -86,18 +88,19 @@ export function LoreEntryRow({
   onDuplicate: () => void;
   onDelete: () => void;
 }) {
+  const { t } = useLocale();
   const [expanded, setExpanded] = useState(false);
   // The same doors the opened entry shows as buttons, for a right-click, a
   // long press or the kebab, so an entry can be pinned without opening it.
   const items: ContextMenuItem[] = [
-    { id: "read", label: expanded ? "Close" : "Read", glyph: "system-lore", onSelect: () => setExpanded((current) => !current) },
-    ...(onShow ? [{ id: "show", label: "Show this now", glyph: "tab-handout", onSelect: onShow }] : []),
+    { id: "read", label: t(expanded ? "prep.close" : "prep.read"), glyph: "system-lore", onSelect: () => setExpanded((current) => !current) },
+    ...(onShow ? [{ id: "show", label: t("lore.show"), glyph: "tab-handout", onSelect: onShow }] : []),
     ...(steersStory
       ? [
-          { id: "edit", label: "Edit", glyph: "tab-notes", onSelect: onEdit },
-          { id: "pin", label: entry.pinned ? "Unpin" : "Pin", glyph: "quest-active", onSelect: onPin },
-          { id: "duplicate", label: "Duplicate", glyph: "tab-journal", onSelect: onDuplicate },
-          { id: "delete", label: "Delete", glyph: "quest-failed", tone: "danger" as const, separated: true, onSelect: onDelete },
+          { id: "edit", label: t("prep.edit"), glyph: "tab-notes", onSelect: onEdit },
+          { id: "pin", label: t(entry.pinned ? "prep.unpin" : "prep.pin"), glyph: "quest-active", onSelect: onPin },
+          { id: "duplicate", label: t("prep.duplicate"), glyph: "tab-journal", onSelect: onDuplicate },
+          { id: "delete", label: t("prep.delete"), glyph: "quest-failed", tone: "danger" as const, separated: true, onSelect: onDelete },
         ]
       : []),
   ];
@@ -134,8 +137,7 @@ export function LoreEntryRow({
               onClick={onShow}
               className={cn(ui.btnSecondary, "h-9")}
             >
-              <Presentation className="size-3.5" /> Show this now
-            </button>
+              <Presentation className="size-3.5" />  {t("lore.show")} </button>
           ) : null}
           {steersStory ? (
             <LoreEntryActions

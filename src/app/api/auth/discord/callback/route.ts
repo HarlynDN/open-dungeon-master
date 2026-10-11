@@ -14,7 +14,9 @@ import {
   getUserByUsername,
   linkDiscordId,
   setUserAdmin,
+  updateUserSettings,
 } from "@/lib/db/users";
+import { normalizeLocale, UI_LOCALE_COOKIE } from "@/lib/i18n/locales";
 import { OAUTH_COOKIE, discordCredentials, discordRedirectUri } from "@/lib/discord-oauth";
 
 export const runtime = "nodejs";
@@ -203,6 +205,7 @@ export async function GET(request: Request) {
   }
   const username = deriveUsername(globalName, discordUsername, discordId);
   const user = createDiscordUser(username, discordId);
+  updateUserSettings(user.id, { uiLocale: normalizeLocale(cookieStore.get(UI_LOCALE_COOKIE)?.value) });
   if (isFirstUser) {
     setUserAdmin(user.id, true);
   }

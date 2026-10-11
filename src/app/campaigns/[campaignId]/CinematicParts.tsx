@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type FormEvent, type ReactNode } from "react";
+import { isComposingInput } from "@/lib/input-composition";
 import { EyeOff } from "lucide-react";
 import { GameIcon } from "@/components/ui/GameIcon";
 import type { CampaignMember } from "@/lib/campaign-types";
@@ -522,6 +523,7 @@ export function TabletopChronicle({
                 value={input}
                 onChange={(event) => setInput(event.target.value)}
                 onKeyDown={(event) => {
+                  if (isComposingInput(event)) return;
                   if (event.key === "Enter" && !event.shiftKey) {
                     event.preventDefault();
                     onSubmit(event);

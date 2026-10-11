@@ -1,8 +1,12 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+
 import { useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from "react";
+import { isComposingInput } from "@/lib/input-composition";
 import { createPortal } from "react-dom";
 import { overlayRoot } from "@/lib/overlay-root";
+import { voiceDockTip } from "@/lib/i18n/voice-presentations";
 import { cn } from "@/lib/cn";
 import { VoicePanel } from "@/app/campaigns/[campaignId]/VoicePanel";
 import { headerButtonClass } from "@/app/campaigns/[campaignId]/headerButton";
@@ -60,6 +64,7 @@ export function VoiceDock({
   meshSignal: { to: string; version: number } | null;
   transcribe?: boolean;
 }) {
+  const { locale, t } = useLocale();
   const [open, setOpen] = useState(false);
   // Read here rather than handed down: who is talking ticks for as long as
   // the call lasts, and the dock is the only header piece that cares.
@@ -102,6 +107,7 @@ export function VoiceDock({
       }
     };
     const onKeyDown = (event: KeyboardEvent) => {
+      if (isComposingInput(event)) return;
       // A picker that just closed on this Escape has claimed it.
       if (event.key === "Escape" && !event.defaultPrevented) {
         setOpen(false);
@@ -122,11 +128,7 @@ export function VoiceDock({
   const onCall = Boolean(roster?.some((peer) => peer.userId === meUserId));
   const count = roster?.length ?? 0;
   const someoneSpeaking = Boolean(speaking?.userId);
-  const tip = onCall
-    ? `Voice chat: you are on the call with ${count} ${count === 1 ? "person" : "people"}`
-    : count
-      ? `Voice chat: ${count} on the call`
-      : "Voice chat";
+  const tip = voiceDockTip(onCall, count, locale);
 
   return (
     <>
@@ -138,7 +140,7 @@ export function VoiceDock({
             anchor();
             setOpen((current) => !current);
           }}
-          aria-label="Voice chat"
+          aria-label={t("voice.chat")}
           aria-expanded={open}
           data-tour="header-voice"
           className={cn(
@@ -149,12 +151,12 @@ export function VoiceDock({
           )}
         >
           <HeaderGlyph glyph="cue-turn" className={cn(onCall && someoneSpeaking && "animate-pulse")} />
-          <span className="hidden text-sm md:inline">Voice</span>
+          <span className="hidden text-sm md:inline">{t("voice.title")}</span>
           {count ? (
             <span
               key={count}
               className="count-pop absolute -right-1 -top-1 rounded-full bg-gradient-to-b from-amber-300 to-amber-500 px-1 text-[9px] font-semibold leading-3 text-amber-950 shadow-glow-gold md:static md:ml-0.5 md:px-1.5 md:text-[10px] md:leading-4"
-              aria-label={`${count} on the call`}
+              aria-label={t("voice.onCall", { count })}
             >
               {count}
             </span>
@@ -176,7 +178,7 @@ export function VoiceDock({
               <div
                 ref={panelRef}
                 role="dialog"
-                aria-label="Voice chat"
+                aria-label={t("voice.chat")}
                 style={{ "--dock-top": "4rem", "--dock-right": "1rem" } as CSSProperties}
                 className={cn(
                   open ? "block" : "hidden",

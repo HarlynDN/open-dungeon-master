@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+
 import { AlertTriangle, Hammer, Info, Loader2 } from "lucide-react";
 import { Select } from "@/components/ui/Select";
 import { Switch } from "@/components/ui/Switch";
@@ -8,7 +10,6 @@ import { useCallback, useEffect, useState } from "react";
 import { ui } from "@/lib/ui";
 import {
   IMPORT_KINDS,
-  IMPORT_KIND_LABELS,
   SINGULAR_KINDS,
   type ImportKind,
   type ImportPlan,
@@ -62,6 +63,7 @@ export function ContentImportPicker({
   onImported?: (copied: number) => void;
 }) {
   const [sources, setSources] = useState<ImportSourceSummary[]>([]);
+  const { t } = useLocale();
   const [loading, setLoading] = useState(true);
   const [plan, setPlan] = useState<ImportPlan | null>(null);
   const [busy, setBusy] = useState(false);
@@ -203,32 +205,30 @@ export function ContentImportPicker({
   if (!offered.length) {
     return (
       <p className="text-xs text-stone-500">
-        You have nothing to copy from yet. Build maps, lore and encounters in the Workshop, or run
-        a campaign, and you can bring any of it straight in here.
-      </p>
+        {t("import.empty")}</p>
     );
   }
 
   return (
     <div className="space-y-3">
       <div className="block">
-        <FieldLabel className="mb-1 block">Start from</FieldLabel>
+        <FieldLabel className="mb-1 block">{t("import.startFrom")}</FieldLabel>
         <Select
-          label="Start from"
+          label={t("import.startFrom")}
           value={selection.sourceId}
           onChange={(id) => choose(offered.find((source) => source.id === id) ?? null)}
           options={[
-            { value: "", label: "None" },
+            { value: "", label: t("import.none") },
             ...workshops.map((source) => ({
               value: source.id,
               label: source.title,
-              group: "Workshops",
+              group: t("import.workshops"),
               icon: { kind: "glyph" as const, key: "system-storyboard" },
             })),
             ...campaigns.map((source) => ({
               value: source.id,
               label: source.title,
-              group: "Campaigns",
+              group: t("import.campaigns"),
               icon: { kind: "glyph" as const, key: "tab-campaigns" },
             })),
           ]}
@@ -241,8 +241,8 @@ export function ContentImportPicker({
             <div className="stagger space-y-1">
               {available.map((kind) => (
                 <div key={kind} className="flex min-h-9 items-center gap-2 text-sm text-stone-300">
-                  <Switch on={selection.select.includes(kind)} onChange={() => toggle(kind)} label={IMPORT_KIND_LABELS[kind]} />
-                  <span>{IMPORT_KIND_LABELS[kind]}</span>
+                  <Switch on={selection.select.includes(kind)} onChange={() => toggle(kind)} label={t(`import.kind.${kind}`)} />
+                  <span>{t(`import.kind.${kind}`)}</span>
                   {SINGULAR_KINDS.has(kind) ? null : (
                     <span className="text-xs text-stone-500">({chosen.contents[kind]})</span>
                   )}
@@ -252,14 +252,14 @@ export function ContentImportPicker({
 
             {selection.select.includes("houseRules") ? (
               <div className="block">
-                <FieldLabel className="mb-1 block">Existing house rules</FieldLabel>
+                <FieldLabel className="mb-1 block">{t("import.houseRules")}</FieldLabel>
                 <Select<"replace" | "append">
-                  label="Existing house rules"
+                  label={t("import.houseRules")}
                   value={selection.houseRules}
                   onChange={(houseRules) => onChange({ ...selection, houseRules })}
                   options={[
-                    { value: "replace", label: "Replace them" },
-                    { value: "append", label: "Keep them and add these" },
+                    { value: "replace", label: t("import.replace") },
+                    { value: "append", label: t("import.appendRules") },
                   ]}
                 />
               </div>
@@ -267,21 +267,21 @@ export function ContentImportPicker({
 
             {selection.select.includes("storyboard") && plan?.board?.targetHasArc ? (
               <div className="reveal block">
-                <FieldLabel className="mb-1 block">The board&apos;s beats</FieldLabel>
+                <FieldLabel className="mb-1 block">{t("import.beats")}</FieldLabel>
                 <Select<"leave" | "append">
-                  label="The board's beats"
+                  label={t("import.beats")}
                   value={selection.arc ?? "leave"}
                   onChange={(arc) => onChange({ ...selection, arc })}
                   options={[
                     {
                       value: "leave",
-                      label: "Leave this campaign's arc alone",
-                      hint: "Places, quests, fights and notes still land.",
+                      label: t("import.leaveArc"),
+                      hint: t("import.leaveArcHint"),
                     },
                     {
                       value: "append",
-                      label: `Add them as act ${plan.board.act}`,
-                      hint: "After the beats already played. Nothing played is changed.",
+                      label: t("import.addAct", { act: plan.board.act }),
+                      hint: t("import.appendArcHint"),
                     },
                   ]}
                 />
@@ -290,14 +290,14 @@ export function ContentImportPicker({
 
             {plan?.kept || selection.again === "copy" ? (
               <div className="reveal block">
-                <FieldLabel className="mb-1 block">Already brought in before</FieldLabel>
+                <FieldLabel className="mb-1 block">{t("import.alreadyHere")}</FieldLabel>
                 <Select<"skip" | "copy">
-                  label="Already brought in before"
+                  label={t("import.alreadyHere")}
                   value={selection.again ?? "skip"}
                   onChange={(again) => onChange({ ...selection, again })}
                   options={[
-                    { value: "skip", label: "Keep them as this campaign has them" },
-                    { value: "copy", label: "Bring second copies, numbered" },
+                    { value: "skip", label: t("import.keep") },
+                    { value: "copy", label: t("import.copyAgain") },
                   ]}
                 />
               </div>
@@ -337,22 +337,19 @@ export function ContentImportPicker({
                   className={ui.btnSmall}
                 >
                   {busy ? <Loader2 className="size-3.5 animate-spin" /> : <Hammer className="size-3.5" />}
-                  Bring it in
-                </button>
+                  {t("import.bringIn")}</button>
                 {note ? <span className="live-in text-xs text-emerald-400">{note}</span> : null}
               </div>
             ) : (
               <p className="text-xs text-stone-500">
-                This lands in the campaign right after it is created. Nothing is removed from
-                where it came from.
-              </p>
+                {t("import.afterCreation")}</p>
             )}
           </>
         ) : (
           <p className="text-xs text-stone-500">
             {chosen.kind === "workshop"
-              ? "That workshop is still empty. Build something in it first."
-              : "That campaign has no prep to copy yet."}
+              ? t("import.emptyWorkshop")
+              : t("import.emptyCampaign")}
           </p>
         )
       ) : null}

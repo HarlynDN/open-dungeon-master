@@ -1,6 +1,7 @@
 "use client";
 
 import { ChevronDown, Loader2, Send, Users } from "lucide-react";
+import { isComposingInput } from "@/lib/input-composition";
 import { memo, useCallback, useState } from "react";
 import type { FormEvent } from "react";
 import { cn } from "@/lib/cn";
@@ -269,6 +270,7 @@ function AskDockInner({
               value={question}
               onChange={(event) => setQuestion(event.target.value)}
               onKeyDown={(event) => {
+                if (isComposingInput(event)) return;
                 if (event.key === "Enter" && !event.shiftKey) {
                   event.preventDefault();
                   submit(event);

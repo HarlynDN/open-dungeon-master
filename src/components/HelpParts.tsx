@@ -29,7 +29,7 @@ const SECTION_GLYPHS: Record<string, string> = {
 };
 
 function sectionId(title: string): string {
-  return `help-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`;
+  return `help-${title.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, "-").replace(/^-|-$/g, "")}`;
 }
 
 // Exported (through HelpDialog) for HowToPlayDialog, which is the short orientation read to this

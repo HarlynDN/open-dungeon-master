@@ -1,6 +1,11 @@
 "use client";
 
+import { readUiResponse, requestErrorText, uiRequestError, type UiRequestError } from "@/lib/i18n/api-errors";
+import { loreCategoryLabel } from "@/lib/i18n/prep-presentations";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+
 import { Eye, EyeOff, FileText, Loader2, Trash2, Users, X } from "lucide-react";
+import { isComposingInput } from "@/lib/input-composition";
 import { useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 import { ui } from "@/lib/ui";
@@ -10,9 +15,9 @@ import { Select } from "@/components/ui/Select";
 import { appendTerm, insertAt } from "@/lib/workshop/pickers";
 import { AddFromList } from "@/components/ui/AddFromList";
 import { Markdown } from "@/components/ui/Markdown";
-import { LORE_STYLES, WORLD_LORE_CATEGORIES, type LoreLinkTarget, type LoreStyle, type WorldLoreCategory } from "@/lib/dm/world-lore-logic";
+import { LORE_STYLES, WORLD_LORE_CATEGORIES, type LoreLinkTarget, type WorldLoreCategory } from "@/lib/dm/world-lore-logic";
 import { LoreImageField, VisibilitySelect } from "@/app/workshop/lore/LoreFields";
-import { CATEGORY_LABELS, type LoreDraft } from "@/app/workshop/lore/types";
+import { type LoreDraft } from "@/app/workshop/lore/types";
 import { DictateField } from "@/components/DictateField";
 import { appendDictation } from "@/lib/dictation";
 
@@ -25,14 +30,6 @@ import { appendDictation } from "@/lib/dictation";
 // who reads the entry, so they stay per choice.
 // The rows that hold them carry text-xs: a button inherits its font here.
 const chip = cn(ui.btnSmall, "px-2.5 py-1.5");
-const CATEGORY_OPTIONS = WORLD_LORE_CATEGORIES.map((category) => ({
-  value: category,
-  label: CATEGORY_LABELS[category],
-  icon: { kind: "glyph" as const, key: "system-lore" },
-}));
-
-const STYLE_LABELS: Record<LoreStyle, string> = { plain: "Plain page", parchment: "Parchment", notice: "Notice" };
-
 export function LoreEditorForm({
   draft,
   onChange,
@@ -51,11 +48,12 @@ export function LoreEditorForm({
   targets: LoreLinkTarget[];
   rows: boolean;
 }) {
+  const { locale, t } = useLocale();
   const bodyRef = useRef<HTMLTextAreaElement>(null);
   const [preview, setPreview] = useState<"write" | "preview">("write");
   const [complete, setComplete] = useState<{ at: number; query: string } | null>(null);
   const [pdfBusy, setPdfBusy] = useState(false);
-  const [pdfError, setPdfError] = useState("");
+  const [pdfError, setPdfError] = useState<UiRequestError | null>(null);
   const pdfRef = useRef<HTMLInputElement>(null);
 
   function insertLink(title: string) {
@@ -93,7 +91,7 @@ export function LoreEditorForm({
 
   async function uploadPdf(file: File) {
     setPdfBusy(true);
-    setPdfError("");
+    setPdfError(null);
     try {
       const dataUrl = await new Promise<string>((resolve, reject) => {
         const reader = new FileReader();
@@ -101,19 +99,14 @@ export function LoreEditorForm({
         reader.onerror = () => reject(new Error("read failed"));
         reader.readAsDataURL(file);
       });
-      const response = await fetch("/api/upload", {
+      const payload = await readUiResponse<{ url: string }>(fetch("/api/upload", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ dataUrl, name: file.name, type: "application/pdf" }),
-      });
-      const payload = await response.json().catch(() => ({}));
-      if (!response.ok) {
-        setPdfError(payload.error || "That PDF would not upload.");
-        return;
-      }
+      }), "lore.pdfError");
       onChange({ ...draft, attachmentPath: payload.url });
-    } catch {
-      setPdfError("That PDF would not upload.");
+    } catch (failure) {
+      setPdfError(uiRequestError(failure, "lore.pdfError"));
     } finally {
       setPdfBusy(false);
     }
@@ -122,7 +115,7 @@ export function LoreEditorForm({
   const textarea = (
     <div className="relative text-sm">
       <DictateField
-        label="Lore entry"
+        label={t("lore.bodyLabel")}
         onTranscript={(text) => {
           const next = appendDictation(draft.body, text, 4000);
           onBodyChange(next, next.length);
@@ -133,6 +126,7 @@ export function LoreEditorForm({
           value={draft.body}
           onChange={(event) => onBodyChange(event.target.value, event.target.selectionStart ?? event.target.value.length)}
           onKeyDown={(event) => {
+            if (isComposingInput(event)) return;
             if (!complete) {
               return;
             }
@@ -145,7 +139,8 @@ export function LoreEditorForm({
           }}
           rows={rows ? 10 : 5}
           maxLength={4000}
-          placeholder={"What is established about it...\n\n# Headings, **bold**, - lists, [[The Mill]] to link, [[1d6]] to roll, and :::secret ... ::: for what only you read."}
+          placeholder={t("lore.bodyPlaceholder")}
+          aria-label={t("lore.bodyLabel")}
           data-tour="lore-body"
           className={cn(ui.input, "leading-5")}
         />
@@ -173,28 +168,29 @@ export function LoreEditorForm({
       {draft.body.trim() ? (
         <Markdown source={draft.body} targets={targets} style={draft.style} dmView />
       ) : (
-        <p className="text-xs italic text-stone-500">Nothing to show yet.</p>
+        <p className="text-xs italic text-stone-500">{t("lore.noPreview")}</p>
       )}
     </div>
   );
 
   return (
     <>
-      <SectionHead title="The entry" glyph="system-lore" className="mb-0" />
+      <SectionHead title={t("lore.entry")} glyph="system-lore" className="mb-0" />
       <div className="flex flex-wrap gap-1.5 sm:flex-nowrap" data-tour="lore-title">
         <span className="w-full sm:w-48 sm:shrink-0">
           <Select<WorldLoreCategory>
-            label="Category"
+            label={t("lore.category")}
             value={draft.category}
             onChange={(category) => onChange({ ...draft, category })}
-            options={CATEGORY_OPTIONS}
+            options={WORLD_LORE_CATEGORIES.map(category => ({ value: category, label: loreCategoryLabel(category, locale), icon: { kind: "glyph" as const, key: "system-lore" } }))}
           />
         </span>
         <input
           value={draft.title}
           onChange={(event) => onChange({ ...draft, title: event.target.value })}
           maxLength={120}
-          placeholder="Title (The Ashen League, The Sundering...)"
+          placeholder={t("lore.titlePlaceholder")}
+          aria-label={t("lore.title")}
           className={cn(ui.input, "min-w-0 flex-1")}
         />
       </div>
@@ -207,7 +203,7 @@ export function LoreEditorForm({
             onClick={() => setPreview(tab)}
             className={cn(chip, preview === tab ? "border-amber-700 bg-amber-950/40 text-amber-100" : "")}
           >
-            {tab === "write" ? "Write" : "Preview"}
+            {tab === "write" ? t("lore.write") : t("lore.preview")}
           </button>
         ))}
       </div>
@@ -217,11 +213,11 @@ export function LoreEditorForm({
       </div>
       {linkable.length ? (
         <div className="reveal flex flex-wrap items-center gap-1.5" data-tour="lore-link">
-          <AddFromList prompt="Link another entry" options={linkable} onPick={insertLink} />
-          <span className="text-[11px] text-stone-500">Or type [[ and the first letters.</span>
+          <AddFromList prompt={t("lore.linkAnother")} options={linkable} onPick={insertLink} />
+          <span className="text-[11px] text-stone-500">{t("lore.linkHint")}</span>
         </div>
       ) : null}
-      <SectionHead title="Who reads it" glyph="tab-party" className="mb-0 pt-1" />
+      <SectionHead title={t("lore.who")} glyph="tab-party" className="mb-0 pt-1" />
       <VisibilitySelect value={draft.visibility} onChange={(visibility) => onChange({ ...draft, visibility })} />
       {draft.visibility === "party" && members?.length ? (
         <AudienceSelect
@@ -230,7 +226,7 @@ export function LoreEditorForm({
           onChange={(audience) => onChange({ ...draft, audience })}
         />
       ) : null}
-      <SectionHead title="How it is dressed" glyph="tab-handout" className="mb-0 pt-1" />
+      <SectionHead title={t("lore.dress")} glyph="tab-handout" className="mb-0 pt-1" />
       <div data-pill-group="" className="flex flex-wrap items-center gap-1.5 text-xs">
         {LORE_STYLES.map((style) => (
           <button data-on={draft.style === style ? "" : undefined}
@@ -240,10 +236,10 @@ export function LoreEditorForm({
             onClick={() => onChange({ ...draft, style })}
             className={cn(chip, draft.style === style ? "border-amber-700 bg-amber-950/40 text-amber-100" : "")}
           >
-            {STYLE_LABELS[style]}
+            {t(`lore.style.${style}`)}
           </button>
         ))}
-        <span className="text-[11px] text-stone-500">How it reads when shown.</span>
+        <span className="text-[11px] text-stone-500">{t("lore.styleHint")}</span>
       </div>
       <LoreImageField imagePath={draft.imagePath} onChange={(imagePath) => onChange({ ...draft, imagePath })} />
       <div className="flex flex-wrap items-center gap-1.5 text-xs">
@@ -267,30 +263,29 @@ export function LoreEditorForm({
           className={chip}
         >
           {pdfBusy ? <Loader2 className="size-3 animate-spin" /> : <FileText className="size-3" />}
-          {draft.attachmentPath ? "Replace the PDF" : "Attach a PDF"}
+          {draft.attachmentPath ? t("lore.pdfReplace") : t("lore.pdfAttach")}
         </button>
         {draft.attachmentPath ? (
           <>
             <a href={draft.attachmentPath} target="_blank" rel="noreferrer" className="text-[11px] text-amber-200 underline">
-              Open it
-            </a>
+               {t("lore.pdfOpen")} </a>
             <button type="button" onClick={() => onChange({ ...draft, attachmentPath: "" })} className={chip}>
-              <Trash2 className="size-3" /> Take it away
-            </button>
+              <Trash2 className="size-3" />  {t("lore.detach")} </button>
           </>
         ) : null}
-        <span className="text-[11px] text-stone-500">Tag it &quot;rules&quot; and the DM can quote it.</span>
-        {pdfError ? <span className="motion-shake inline-block text-[11px] text-red-400">{pdfError}</span> : null}
+        <span className="text-[11px] text-stone-500">{t("lore.pdfRules")}</span>
+        {pdfError ? <span className="motion-shake inline-block text-[11px] text-red-400">{requestErrorText(locale, pdfError)}</span> : null}
       </div>
-      <SectionHead title="Tags" glyph="tab-facts" className="mb-0 pt-1" />
+      <SectionHead title={t("lore.tags")} glyph="tab-facts" className="mb-0 pt-1" />
       <div className="flex flex-wrap items-center gap-1.5">
         <input
           value={draft.tags}
           onChange={(event) => onChange({ ...draft, tags: event.target.value })}
-          placeholder="Tags, comma separated (optional)"
+          placeholder={t("lore.tagsPlaceholder")}
+          aria-label={t("lore.tags")}
           className={cn(ui.input, "min-w-40 flex-1")}
         />
-        <AddFromList prompt="Add a tag you already use" options={knownTags} onPick={(tag) => onChange({ ...draft, tags: appendTerm(draft.tags, tag) })} />
+        <AddFromList prompt={t("lore.addTag")} options={knownTags} onPick={(tag) => onChange({ ...draft, tags: appendTerm(draft.tags, tag) })} />
       </div>
     </>
   );
@@ -306,6 +301,7 @@ function AudienceSelect({
   members: Array<{ userId: string; username: string }>;
   onChange: (audience: string[] | null) => void;
 }) {
+  const { t } = useLocale();
   const some = audience !== null;
   return (
     <div className="flex flex-wrap items-center gap-1.5 text-xs">
@@ -315,16 +311,14 @@ function AudienceSelect({
         onClick={() => onChange(null)}
         className={cn(chip, !some ? "border-emerald-700 bg-emerald-950/40 text-emerald-200" : "")}
       >
-        <Users className="size-3" /> Everyone
-      </button>
+        <Users className="size-3" />  {t("lore.everyone")} </button>
       <button
         type="button"
         aria-pressed={some}
         onClick={() => onChange(some ? audience : [])}
         className={cn(chip, some ? "border-sky-700 bg-sky-950/40 text-sky-200" : "")}
       >
-        <Eye className="size-3" /> Some players
-      </button>
+        <Eye className="size-3" />  {t("lore.some")} </button>
       {some
         ? members.map((member) => {
             const on = audience.includes(member.userId);
@@ -344,8 +338,7 @@ function AudienceSelect({
         : null}
       {some && audience.length === 0 ? (
         <span className="flex items-center gap-1 text-[11px] text-amber-300">
-          <X className="size-3" /> Pick at least one, or it reads as everyone.
-        </span>
+          <X className="size-3" />  {t("lore.pickAudience")} </span>
       ) : null}
     </div>
   );

@@ -1,5 +1,6 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { cn } from "@/lib/cn";
 import { Select } from "@/components/ui/Select";
 import { Slider } from "@/components/ui/Slider";
@@ -21,43 +22,44 @@ export function NarratorFields({
   className,
 }: StepProps & { className?: string }) {
   const { aiNarrates, solo } = gates;
+  const { t } = useLocale();
   return (
     <div className={cn("space-y-4", className)}>
       {aiNarrates ? (
         <div>
-          <FieldLabel className="mb-1.5">AI allies</FieldLabel>
+          <FieldLabel className="mb-1.5">{t("table.allies")}</FieldLabel>
           <Select<GameSettings["companions"]>
             value={draft.companions}
             onChange={(companions) => patch({ companions })}
-            label="AI allies"
+            label={t("table.allies")}
             className="w-full"
-            options={(Object.keys(COMPANION_LABELS) as Array<GameSettings["companions"]>).map((mode) => ({ value: mode, label: COMPANION_LABELS[mode] }))}
+            options={(Object.keys(COMPANION_LABELS) as Array<GameSettings["companions"]>).map((mode) => ({ value: mode, label: t(`setting.companions.${mode}`) }))}
           />
           <p className="mt-1 text-xs text-stone-500">
             {solo
-              ? "Party members travel with you until dismissed; guests are allies who show up for a scene or a battle and then leave."
-              : "Guests are friendly NPCs the DM brings in for a scene or a battle; they fight with real stats and leave when the fight ends. Party members stay until dismissed."}
+              ? t("table.allies.soloHint")
+              : t("table.allies.tableHint")}
           </p>
           {draft.companions !== "off" ? (
             <div className="mt-2 grid grid-cols-2 gap-3">
               {draft.companions !== "guests" ? (
                 <label className="block">
-                  <span className="mb-1 block text-xs text-stone-500">Party members at once</span>
+                  <span className="mb-1 block text-xs text-stone-500">{t("table.partyMembers")}</span>
                   <Select<string>
                     value={String(draft.maxCompanions)}
                     onChange={(count) => patch({ maxCompanions: Number(count) })}
-                    label="Party members at once"
+                    label={t("table.partyMembers")}
                     className="w-full"
                     options={[1, 2, 3, 4].map((count) => ({ value: String(count), label: String(count) }))}
                   />
                 </label>
               ) : null}
               <label className="block">
-                <span className="mb-1 block text-xs text-stone-500">Guests at once</span>
+                <span className="mb-1 block text-xs text-stone-500">{t("table.guests")}</span>
                 <Select<string>
                   value={String(draft.maxGuests)}
                   onChange={(count) => patch({ maxGuests: Number(count) })}
-                  label="Guests at once"
+                  label={t("table.guests")}
                   className="w-full"
                   options={[1, 2, 3, 4].map((count) => ({ value: String(count), label: String(count) }))}
                 />
@@ -69,20 +71,20 @@ export function NarratorFields({
 
       {draft.ttsEnabled ? (
         <div className="block">
-          <FieldLabel>Narrator voice</FieldLabel>
+          <FieldLabel>{t("table.narratorVoice")}</FieldLabel>
           <div className="flex flex-wrap items-center gap-2">
             <VoicePicker
               value={draft.ttsVoice}
               onChange={(ttsVoice) => patch({ ttsVoice })}
-              label="Narrator voice"
+              label={t("table.narratorVoice")}
               className="grow"
             />
             <VoicePreviewButton voice={draft.ttsVoice} />
             <span className="flex items-center gap-2 text-xs text-stone-400">
-              Pace
+              {t("table.pace")}
               <span className="w-28">
                 <Slider
-                  label="Narrator pace"
+                  label={t("table.narratorPace")}
                   min={0.7}
                   max={1.4}
                   step={0.05}
@@ -101,15 +103,15 @@ export function NarratorFields({
             <Switch
               on={draft.ttsAutoCast}
               onChange={(ttsAutoCast) => patch({ ttsAutoCast })}
-              label="Give every speaker a voice"
+              label={t("table.autoCast")}
               className="mt-0.5"
             />
             <span className="min-w-0 text-xs">
-              <span className="block text-stone-200">Give every speaker a voice</span>
+              <span className="block text-stone-200">{t("table.autoCast")}</span>
               <span className="mt-0.5 block text-stone-500">
                 {draft.ttsAutoCast
-                  ? "Anyone who speaks is cast from this server's voices the first time they do, and keeps that voice. You can change any of them in the table's settings."
-                  : "The narrator reads everyone, until you give a character a voice of their own in the table's settings."}
+                  ? t("table.autoCast.onHint")
+                  : t("table.autoCast.offHint")}
               </span>
             </span>
           </div>

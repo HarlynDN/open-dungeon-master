@@ -1,6 +1,7 @@
 "use client";
 
 import { EyeOff, Eye, X } from "lucide-react";
+import { isComposingInput } from "@/lib/input-composition";
 import { useState } from "react";
 import { Dialog } from "@/components/ui/Dialog";
 import { GameIcon } from "@/components/ui/GameIcon";
@@ -178,6 +179,7 @@ export function DiceTrayDialog({
                 setError("");
               }}
               onKeyDown={(event) => {
+                if (isComposingInput(event)) return;
                 if (event.key === "Enter") {
                   event.preventDefault();
                   void roll();

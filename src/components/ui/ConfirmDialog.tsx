@@ -3,6 +3,7 @@
 import { useEffect, useSyncExternalStore } from "react";
 import { Dialog } from "@/components/ui/Dialog";
 import { ui } from "@/lib/ui";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 // The app's own confirm and notice (docs/vtt-parity-implementation-plan.md
 // section 10.5). window.confirm and window.alert are drawn by the browser,
@@ -17,12 +18,12 @@ type Request =
   | {
       kind: "confirm";
       message: string;
-      title: string;
-      actionLabel: string;
+      title?: string;
+      actionLabel?: string;
       tone: "danger" | "plain";
       resolve: (ok: boolean) => void;
     }
-  | { kind: "notice"; message: string; title: string; resolve: () => void };
+  | { kind: "notice"; message: string; title?: string; resolve: () => void };
 
 const listeners = new Set<() => void>();
 let queue: Request[] = [];
@@ -59,15 +60,15 @@ export function appConfirm(message: string, options: ConfirmOptions = {}): Promi
     push({
       kind: "confirm",
       message,
-      title: options.title ?? "Are you sure?",
-      actionLabel: options.actionLabel ?? "Yes",
+      title: options.title,
+      actionLabel: options.actionLabel,
       tone: options.tone ?? "danger",
       resolve,
     });
   });
 }
 
-export function appNotice(message: string, title = "A word"): Promise<void> {
+export function appNotice(message: string, title?: string): Promise<void> {
   if (hosts === 0) {
     if (typeof window !== "undefined") {
       window.alert(message);
@@ -87,6 +88,7 @@ function subscribe(listener: () => void) {
 }
 
 export function ConfirmHost() {
+  const { t } = useLocale();
   const current = useSyncExternalStore(subscribe, () => queue[0] ?? null, () => null);
   useEffect(() => {
     hosts += 1;
@@ -113,7 +115,7 @@ export function ConfirmHost() {
           close(false);
         }
       }}
-      title={current.title}
+      title={current.title ?? t(current.kind === "confirm" ? "common.confirmTitle" : "common.noticeTitle")}
       width="w-[min(92vw,26rem)]"
     >
       <p className="text-sm leading-relaxed text-stone-300">{current.message}</p>
@@ -121,7 +123,7 @@ export function ConfirmHost() {
         {current.kind === "confirm" ? (
           <>
             <button type="button" onClick={() => close(false)} className={ui.btnSmall}>
-              Cancel
+              {t("common.cancel")}
             </button>
             <button
               type="button"
@@ -133,12 +135,12 @@ export function ConfirmHost() {
                   : ui.btnPrimary
               }
             >
-              {current.actionLabel}
+              {current.actionLabel ?? t("common.yes")}
             </button>
           </>
         ) : (
           <button type="button" autoFocus onClick={() => close(true)} className={ui.btnPrimary}>
-            OK
+            {t("common.ok")}
           </button>
         )}
       </div>

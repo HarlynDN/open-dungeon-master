@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowLeft, ChevronDown, Loader2, X } from "lucide-react";
+import { isComposingInput } from "@/lib/input-composition";
 import { memo, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import type { CSSProperties } from "react";
 import { cn } from "@/lib/cn";
@@ -244,6 +245,7 @@ function MonsterHandInner({
       data-tour="monster-hand"
       aria-label="The monsters' hand"
       onKeyDown={(event) => {
+        if (isComposingInput(event)) return;
         if (event.key === "Escape" && picked) {
           event.stopPropagation();
           clearAim();

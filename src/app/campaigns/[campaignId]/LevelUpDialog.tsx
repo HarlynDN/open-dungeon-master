@@ -1,12 +1,16 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { skillHelpText } from "@/lib/i18n/game-help-presentations";
+import { subclassHelpText } from "@/lib/i18n/calling-material-presentations";
+
 import { isThievesTools, THIEVES_TOOLS } from "@/lib/srd/features";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Dices, Loader2, Sparkles, X } from "lucide-react";
 import { useMemo, useState } from "react";
 import { cn } from "@/lib/cn";
 import { InfoButton, InfoChipList } from "@/components/ui/InfoDialog";
-import { describeFeature, describeSkill } from "@/lib/help";
+import { describeFeature } from "@/lib/help";
 import {
   findOptionByFeatureName,
   openOptionSlots,
@@ -36,7 +40,6 @@ import {
 } from "@/lib/srd/multiclass";
 import {
   populateFeaturesForClasses,
-  subclassBlurb,
   subclassLevelFor,
   subclassNamesFor,
   subclassSpellsFor,
@@ -97,6 +100,7 @@ export function LevelUpDialog({
 }) {
   // Held from the moment the dialog opens: the sheet the server sends back
   // after the level is already at it.
+  const { locale } = useLocale();
   const [startLevel] = useState(sheet.level);
   const targetLevel = Math.min(20, startLevel + 1);
   // Under "rolled" the player may still take the fixed value; the server
@@ -909,7 +913,7 @@ export function LevelUpDialog({
                               >
                                 {name}
                               </button>
-                              <InfoButton label={name} text={describeSkill(skillId)} />
+                              <InfoButton label={name} text={skillHelpText(skillId, locale)} />
                             </span>
                           );
                         })}
@@ -982,7 +986,7 @@ export function LevelUpDialog({
                           >
                             {name}
                           </button>
-                          <InfoButton label={name} text={describeSkill(skillId)} />
+                          <InfoButton label={name} text={skillHelpText(skillId, locale)} />
                         </span>
                       );
                     })}
@@ -1128,7 +1132,7 @@ export function LevelUpDialog({
                           </button>
                           <InfoButton
                             label={name}
-                            text={archetype?.desc || subclassBlurb(classChoice, name) || undefined}
+                            text={subclassHelpText(classChoice, name, locale, archetype?.desc) || undefined}
                             reference={
                               archetype ? { kind: "archetypes", slug: archetype.id, name } : undefined
                             }

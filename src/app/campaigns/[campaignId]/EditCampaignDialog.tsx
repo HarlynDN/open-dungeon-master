@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { requestErrorText, type UiRequestError } from "@/lib/i18n/api-errors";
+
 import { Loader2, Pencil } from "lucide-react";
 import { type FormEvent, type ReactNode, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
@@ -11,7 +14,6 @@ import { NumberStepper as KitStepper } from "@/components/ui/NumberStepper";
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import {
   CAMPAIGN_DIFFICULTIES,
-  CAMPAIGN_DIFFICULTY_HINTS,
   type CampaignCover as CampaignCoverRef,
   type CampaignDifficulty,
 } from "@/lib/campaign-types";
@@ -81,13 +83,14 @@ export function EditCampaignDialog({
   };
   onClose: () => void;
 }) {
+  const { locale, t } = useLocale();
   const [title, setTitle] = useState(campaign.title);
   const [description, setDescription] = useState(campaign.description);
   const [theme, setTheme] = useState(campaign.theme);
   const [maxPlayers, setMaxPlayers] = useState(campaign.maxPlayers);
   const [startingLevel, setStartingLevel] = useState(campaign.startingLevel);
   const [difficulty, setDifficulty] = useState<CampaignDifficulty>(campaign.difficulty);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<UiRequestError | null>(null);
   const [busy, setBusy] = useState(false);
 
   // Cover art. The dialog owns its own copy so a change shows here at once;
@@ -95,7 +98,7 @@ export function EditCampaignDialog({
   const [cover, setCover] = useState<CampaignCoverRef | null>(campaign.cover ?? null);
   const [coverStatus, setCoverStatus] = useState<CoverStatus>(null);
   const [coverBusy, setCoverBusy] = useState(false);
-  const [coverError, setCoverError] = useState("");
+  const [coverError, setCoverError] = useState<UiRequestError | null>(null);
   const pollCount = useRef(0);
   const fileInput = useRef<HTMLInputElement>(null);
   const capabilities = useCapabilities();
@@ -140,7 +143,7 @@ export function EditCampaignDialog({
 
   async function coverRequest(method: "PATCH" | "POST" | "DELETE", body?: unknown) {
     setCoverBusy(true);
-    setCoverError("");
+    setCoverError(null);
     try {
       const response = await fetch(`/api/campaigns/${campaign.id}/cover`, {
         method,
@@ -149,14 +152,14 @@ export function EditCampaignDialog({
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
-        setCoverError(data.error || "Could not change the cover.");
+        setCoverError({ data, fallback: "editCampaign.coverError" });
         return;
       }
       pollCount.current = 0;
       setCover(data.cover ?? null);
       setCoverStatus(data.status ?? null);
     } catch {
-      setCoverError("Could not reach the server.");
+      setCoverError({ data: {}, fallback: "lobby.networkError" });
     } finally {
       setCoverBusy(false);
     }
@@ -164,7 +167,7 @@ export function EditCampaignDialog({
 
   async function uploadCover(file: File) {
     setCoverBusy(true);
-    setCoverError("");
+    setCoverError(null);
     try {
       const { dataUrl, type } = await encodeImageForUpload(file);
       const upload = await fetch("/api/upload", {
@@ -174,12 +177,12 @@ export function EditCampaignDialog({
       });
       const payload = await upload.json().catch(() => ({}));
       if (!upload.ok) {
-        setCoverError(payload.error || "That image would not upload.");
+        setCoverError({ data: payload, fallback: "editCampaign.uploadError" });
         return;
       }
       await coverRequest("PATCH", { imageUrl: payload.url });
     } catch {
-      setCoverError("That image would not upload.");
+      setCoverError({ data: {}, fallback: "editCampaign.uploadError" });
     } finally {
       setCoverBusy(false);
     }
@@ -188,7 +191,7 @@ export function EditCampaignDialog({
   async function submit(event: FormEvent) {
     event.preventDefault();
     setBusy(true);
-    setError("");
+    setError(null);
     try {
       const response = await fetch(`/api/campaigns/${campaign.id}`, {
         method: "PATCH",
@@ -204,12 +207,12 @@ export function EditCampaignDialog({
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
-        setError(data.error || "Could not save the campaign settings.");
+        setError({ data, fallback: "editCampaign.saveError" });
         return;
       }
       onClose();
     } catch {
-      setError("Could not reach the server.");
+      setError({ data: {}, fallback: "lobby.networkError" });
     } finally {
       setBusy(false);
     }
@@ -221,14 +224,14 @@ export function EditCampaignDialog({
     <Dialog
       open
       onOpenChange={(open) => !open && onClose()}
-      title="Edit campaign"
+      title={t("editCampaign.title")}
       icon={<Pencil className="size-4 text-amber-300" />}
       width="w-[min(94vw,32rem)]"
     >
       <form onSubmit={submit} className="space-y-6 text-sm">
-        <Group glyph="tab-story" title="The story">
+        <Group glyph="tab-story" title={t("editCampaign.story")}>
           <label className="block">
-            <span className="mb-1 block text-stone-400">Title</span>
+            <span className="mb-1 block text-stone-400">{t("editCampaign.name")}</span>
             <input
               value={title}
               onChange={(event) => setTitle(event.target.value)}
@@ -239,8 +242,7 @@ export function EditCampaignDialog({
           </label>
           <label className="block">
             <span className="mb-1 flex items-baseline justify-between text-stone-400">
-              Premise
-              <span className="text-[11px] text-stone-500">{description.length}/500</span>
+              {t("editCampaign.premise")}<span className="text-[11px] text-stone-500">{description.length}/500</span>
             </span>
             <textarea
               value={description}
@@ -251,7 +253,7 @@ export function EditCampaignDialog({
             />
           </label>
           <label className="block">
-            <span className="mb-1 block text-stone-400">World or theme notes</span>
+            <span className="mb-1 block text-stone-400">{t("editCampaign.notes")}</span>
             <input
               value={theme}
               onChange={(event) => setTheme(event.target.value)}
@@ -261,28 +263,28 @@ export function EditCampaignDialog({
           </label>
         </Group>
 
-        <Group glyph="tab-party" title="The table">
+        <Group glyph="tab-party" title={t("editCampaign.table")}>
           <div className="grid grid-cols-2 gap-3">
-            <NumberStepper label="Players" value={maxPlayers} min={1} max={8} onChange={setMaxPlayers} />
-            <NumberStepper label="Start level" value={startingLevel} min={1} max={20} onChange={setStartingLevel} />
+            <NumberStepper label={t("editCampaign.players")} value={maxPlayers} min={1} max={8} onChange={setMaxPlayers} />
+            <NumberStepper label={t("editCampaign.level")} value={startingLevel} min={1} max={20} onChange={setStartingLevel} />
           </div>
           <div>
-            <span className="mb-1 block text-stone-400">Difficulty</span>
+            <span className="mb-1 block text-stone-400">{t("editCampaign.difficulty")}</span>
             <SegmentedControl
               size="sm"
-              label="Difficulty"
+              label={t("editCampaign.difficulty")}
               className="w-full"
-              options={CAMPAIGN_DIFFICULTIES.map((value) => ({ value, label: value }))}
+              options={CAMPAIGN_DIFFICULTIES.map((value) => ({ value, label: t(`campaign.difficulty.${value}`) }))}
               value={difficulty}
               onChange={setDifficulty}
             />
             <p key={difficulty} className="motion-tab mt-1.5 text-xs text-stone-500">
-              {CAMPAIGN_DIFFICULTY_HINTS[difficulty]}
+              {t(`setting.difficulty.${difficulty}.hint`)}
             </p>
           </div>
         </Group>
 
-        <Group glyph="tab-handout" title="Cover art">
+        <Group glyph="tab-handout" title={t("editCampaign.cover")}>
           <CampaignCover
             cover={cover}
             title={title || campaign.title}
@@ -310,8 +312,7 @@ export function EditCampaignDialog({
               onClick={() => fileInput.current?.click()}
               className={ui.btnSmall}
             >
-              Upload
-            </button>
+              {t("editCampaign.upload")}</button>
             {offersImages(capabilities) ? (
               <button
                 type="button"
@@ -320,7 +321,7 @@ export function EditCampaignDialog({
                 className={ui.btnSmall}
               >
                 {coverPending ? <Loader2 className="size-3.5 animate-spin" /> : null}
-                {coverPending ? "Painting" : "Paint one"}
+                {coverPending ? t("editCampaign.painting") : t("editCampaign.paint")}
               </button>
             ) : null}
             {cover ? (
@@ -330,21 +331,19 @@ export function EditCampaignDialog({
                 onClick={() => void coverRequest("DELETE")}
                 className={ui.btnSmall}
               >
-                Remove
-              </button>
+                {t("lobby.remove")}</button>
             ) : null}
           </div>
           {coverStatus === "failed" ? (
-            <p className="motion-shake text-xs text-red-400">The cover did not paint. Try again, or upload one.</p>
+            <p className="motion-shake text-xs text-red-400">{t("editCampaign.paintFailed")}</p>
           ) : null}
-          {coverError ? <p className="motion-shake text-xs text-red-400">{coverError}</p> : null}
+          {coverError ? <p className="motion-shake text-xs text-red-400">{requestErrorText(locale, coverError)}</p> : null}
         </Group>
 
-        {error ? <p className="motion-shake text-red-400">{error}</p> : null}
+        {error ? <p className="motion-shake text-red-400">{requestErrorText(locale, error)}</p> : null}
         <button type="submit" disabled={busy} className={cn(ui.btnPrimary, "w-full")}>
           {busy ? <Loader2 className="size-4 animate-spin" /> : null}
-          Save changes
-        </button>
+          {t("editCampaign.save")}</button>
       </form>
     </Dialog>
   );

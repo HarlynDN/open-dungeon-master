@@ -1,6 +1,7 @@
 "use client";
 
 import { Check, X } from "lucide-react";
+import { isComposingInput } from "@/lib/input-composition";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 import { ui } from "@/lib/ui";
@@ -87,6 +88,7 @@ export function InlineMessageEditor({
             grow(event.currentTarget);
           }}
           onKeyDown={(event) => {
+            if (isComposingInput(event)) return;
             if (event.key === "Enter" && !event.shiftKey) {
               event.preventDefault();
               void save();

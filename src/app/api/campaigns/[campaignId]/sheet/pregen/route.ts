@@ -45,7 +45,7 @@ export async function POST(
     campaign: context.campaign,
   });
   if (!admitted.ok) {
-    return refusal(admitted.problems);
+    return refusal(admitted.problems, 400, admitted.problemDetails);
   }
   const libraryCharacter = createCharacter(context.user.id, context.campaign.startingLevel, admitted.sheet);
   const sheet = createSheet(campaignId, context.user.id, context.campaign.startingLevel, admitted.sheet, libraryCharacter.id);

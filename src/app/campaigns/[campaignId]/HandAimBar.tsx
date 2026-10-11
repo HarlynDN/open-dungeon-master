@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowLeft, Loader2, PencilLine, X } from "lucide-react";
+import { isComposingInput } from "@/lib/input-composition";
 import { useRef, type CSSProperties } from "react";
 import { cn } from "@/lib/cn";
 import { replayAnimation } from "@/lib/motion/replay";
@@ -287,6 +288,7 @@ export function HandAimBar({
             autoFocus
             onChange={(event) => onTrigger?.(event.target.value)}
             onKeyDown={(event) => {
+              if (isComposingInput(event)) return;
               if (event.key === "Enter" && ready && !sending && blocked === null) {
                 event.preventDefault();
                 onCommit();

@@ -1,6 +1,7 @@
 "use client";
 
 import { EmptyState } from "@/components/EmptyState";
+import { isComposingInput } from "@/lib/input-composition";
 import { useCallback, useEffect, useState } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import { GameIcon } from "@/components/ui/GameIcon";
@@ -203,6 +204,7 @@ export function DmStoryboardPanel({
             value={newTitle}
             onChange={(event) => setNewTitle(event.target.value.slice(0, TITLE_MAX))}
             onKeyDown={(event) => {
+              if (isComposingInput(event)) return;
               if (event.key === "Enter") {
                 void add(newKind, newTitle);
               }

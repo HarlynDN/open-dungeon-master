@@ -1,6 +1,7 @@
 "use client";
 
 import { Check, Loader2, Merge, Pencil, X } from "lucide-react";
+import { isComposingInput } from "@/lib/input-composition";
 import { useCallback, useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
 import { ui } from "@/lib/ui";
@@ -206,6 +207,7 @@ export function NpcReviewPanel({ campaignId }: { campaignId: string }) {
                       maxLength={MAX_NPC_NAME}
                       onChange={(event) => setDraft(event.target.value)}
                       onKeyDown={(event) => {
+                        if (isComposingInput(event)) return;
                         if (event.key === "Enter") {
                           void submitRename(npc.id);
                         } else if (event.key === "Escape") {

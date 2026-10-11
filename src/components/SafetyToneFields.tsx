@@ -1,5 +1,7 @@
 "use client";
 
+import { parseSafetyList, personalityPresentation } from "@/lib/i18n/settings-presentations";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
 import { VoicePreviewButton } from "@/components/VoicePreviewButton";
@@ -37,7 +39,7 @@ function ListField({ label, hint, value, onChange }: { label: string; hint: stri
       <input
         value={text}
         onChange={(event) => setText(event.target.value)}
-        onBlur={() => onChange(text.split(",").map((entry) => entry.trim()).filter(Boolean).slice(0, 12))}
+        onBlur={() => onChange(parseSafetyList(text))}
         placeholder={hint}
         className="w-full rounded-md border border-stone-700 bg-stone-950 px-2 py-1 text-xs text-stone-200 outline-none focus:border-amber-600"
       />
@@ -63,6 +65,7 @@ export function SafetyToneFields({
   showPresets?: boolean;
 }) {
   const [presets, setPresets] = useState<Personality[]>([]);
+  const { locale, t } = useLocale();
   useEffect(() => {
     if (!showPresets) {
       return;
@@ -90,43 +93,43 @@ export function SafetyToneFields({
   return (
     <div className="space-y-3 text-sm">
       <div>
-        <p className="mb-1 text-xs uppercase tracking-wide text-stone-500">Safety</p>
+        <p className="mb-1 text-xs uppercase tracking-wide text-stone-500">{t("safety.heading")}</p>
         <div data-pill-group="" className="flex flex-wrap items-center gap-1.5">
           <button type="button" aria-pressed={safety.xCard} onClick={() => onSafety({ ...safety, xCard: !safety.xCard })} className={cn(chip, safety.xCard ? on : off)}>
-            X-card {safety.xCard ? "on" : "off"}
+            {t(safety.xCard ? "safety.xCardOn" : "safety.xCardOff")}
           </button>
           {BOUNDARIES.map((boundary) => (
             <button data-on={safety.boundaries === boundary ? "" : undefined} key={boundary} type="button" aria-pressed={safety.boundaries === boundary} onClick={() => onSafety({ ...safety, boundaries: boundary })} className={cn(chip, safety.boundaries === boundary ? on : off)}>
-              {BOUNDARY_LABELS[boundary]}
+              {t(`safety.boundary.${boundary}`)}
             </button>
           ))}
         </div>
         <div className="mt-2 grid gap-2 sm:grid-cols-2">
-          <ListField label="Lines (never in the story)" hint="spiders, harm to children" value={safety.lines} onChange={(lines) => onSafety({ ...safety, lines })} />
-          <ListField label="Veils (only off the page)" hint="torture, romance" value={safety.veils} onChange={(veils) => onSafety({ ...safety, veils })} />
+          <ListField label={t("safety.lines")} hint={t("safety.linesHint")} value={safety.lines} onChange={(lines) => onSafety({ ...safety, lines })} />
+          <ListField label={t("safety.veils")} hint={t("safety.veilsHint")} value={safety.veils} onChange={(veils) => onSafety({ ...safety, veils })} />
         </div>
       </div>
       <div>
-        <p className="mb-1 text-xs uppercase tracking-wide text-stone-500">Strictness and tone</p>
+        <p className="mb-1 text-xs uppercase tracking-wide text-stone-500">{t("safety.tone")}</p>
         <div data-pill-group="" className="flex flex-wrap items-center gap-1.5">
           {STRICTNESS.map((level) => (
             <button data-on={gm.strictness === level ? "" : undefined} key={level} type="button" aria-pressed={gm.strictness === level} onClick={() => onGm({ ...gm, strictness: level })} className={cn(chip, gm.strictness === level ? on : off)}>
-              {STRICTNESS_LABELS[level]}
+              {t(`safety.strictness.${level}`)}
             </button>
           ))}
         </div>
         <div className="stagger-pop mt-1.5 flex flex-wrap items-center gap-1.5">
           {TONES.map((tone) => (
             <button key={tone} type="button" aria-pressed={gm.tone.includes(tone)} onClick={() => toggleTone(tone)} className={cn(chip, gm.tone.includes(tone) ? on : off)}>
-              {tone}
+              {t(`safety.mood.${tone}`)}
             </button>
           ))}
-          <span className="text-[10px] text-stone-600">Up to three.</span>
+          <span className="text-[10px] text-stone-600">{t("safety.toneMax")}</span>
         </div>
       </div>
       {showPresets && presets.length ? (
         <div>
-          <p className="mb-1 text-xs uppercase tracking-wide text-stone-500">Or pick a DM personality</p>
+          <p className="mb-1 text-xs uppercase tracking-wide text-stone-500">{t("safety.personality")}</p>
           <div className="stagger-pop flex flex-wrap items-center gap-1.5">
             {presets.map((preset) => {
               const active = preset.gm.strictness === gm.strictness && preset.gm.tone.join() === gm.tone.join() && (!ttsVoice || preset.ttsVoice === ttsVoice);
@@ -134,7 +137,7 @@ export function SafetyToneFields({
                 <button
                   key={preset.id}
                   type="button"
-                  title={preset.blurb}
+                  title={personalityPresentation(preset, locale).blurb}
                   aria-pressed={active}
                   onClick={() => {
                     onGm({ strictness: preset.gm.strictness, tone: [...preset.gm.tone] });
@@ -142,7 +145,7 @@ export function SafetyToneFields({
                   }}
                   className={cn(chip, active ? on : off)}
                 >
-                  {preset.name}
+                  {personalityPresentation(preset, locale).name}
                 </button>
               );
             })}

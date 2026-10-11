@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { EllipsisVertical, X } from "lucide-react";
 import { Fragment, type ReactNode } from "react";
@@ -95,6 +97,7 @@ export function OptionalStepper({
   disabled?: boolean;
   className?: string;
 }) {
+  const { t } = useLocale();
   const set = typeof value === "number" && Number.isFinite(value);
   return (
     <span className={cn("inline-flex items-center gap-0.5", className)}>
@@ -110,7 +113,7 @@ export function OptionalStepper({
         disabled={disabled}
       />
       {set && !disabled ? (
-        <button type="button" aria-label={`Clear ${label}`} title="Leave unset" onClick={() => onChange("")} className={cn(ui.iconAction, "opacity-100")}>
+        <button type="button" aria-label={t("prep.clearName", { name: label })} title={t("prep.unset")} onClick={() => onChange("")} className={cn(ui.iconAction, "opacity-100")}>
           <X className="size-3.5" aria-hidden="true" />
         </button>
       ) : null}
@@ -128,13 +131,14 @@ const menuItemClass =
 // The kebab on a row: the same items the row's ContextMenu lists, behind a
 // button, so a phone and a keyboard reach them without a long press.
 export function RowMenu({ items, label, className }: { items: ContextMenuItem[]; label: string; className?: string }) {
+  const { t } = useLocale();
   if (!items.length) return null;
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
         <button
           type="button"
-          aria-label={`More for ${label}`}
+          aria-label={t("prep.menuFor", { name: label })}
           className={cn(ui.iconAction, "grid size-10 shrink-0 place-items-center text-stone-400 opacity-100", className)}
         >
           <EllipsisVertical className="size-4" aria-hidden="true" />

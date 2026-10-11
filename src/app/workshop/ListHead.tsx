@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+
 import { useMemo } from "react";
 import { cn } from "@/lib/cn";
 import { ui } from "@/lib/ui";
@@ -43,6 +45,7 @@ export function ListHead({
   placeholder?: string;
   className?: string;
 }) {
+  const { t } = useLocale();
   if (!head.active) {
     return null;
   }
@@ -52,8 +55,8 @@ export function ListHead({
       <ListControls controls={head.controls} placeholder={placeholder} />
       <p className="mt-1 text-[11px] text-stone-500" aria-live="polite">
         {count === head.total
-          ? `${head.total} ${head.total === 1 ? noun[0] : noun[1]}`
-          : `${count} of ${head.total} ${noun[1]}`}
+          ? t("list.total", { count: head.total, noun: head.total === 1 ? noun[0] : noun[1] })
+          : t("list.filtered", { count, total: head.total, noun: noun[1] })}
       </p>
     </div>
   );
@@ -81,6 +84,7 @@ export function ListTally({
   sort: RowSort;
   onSort: (sort: RowSort) => void;
 }) {
+  const { t } = useLocale();
   if (total < LIST_HEAD_MIN) {
     return null;
   }
@@ -98,11 +102,11 @@ export function ListTally({
   return (
     <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-stone-500">
       <span aria-live="polite">
-        {shown === total ? `${total} ${total === 1 ? noun[0] : noun[1]}` : `${shown} of ${total} ${noun[1]}`}
+        {shown === total ? t("list.total", { count: total, noun: total === 1 ? noun[0] : noun[1] }) : t("list.filtered", { count: shown, total, noun: noun[1] })}
       </span>
       <span data-pill-group="" className="ml-auto flex items-center gap-1">
-        {button("made", "As made")}
-        {button("name", "By name")}
+        {button("made", t("list.made"))}
+        {button("name", t("list.name"))}
       </span>
     </div>
   );

@@ -6,65 +6,58 @@ import { Select } from "@/components/ui/Select";
 import { cn } from "@/lib/cn";
 import {
   CAMPAIGN_DIFFICULTIES,
-  CAMPAIGN_DIFFICULTY_HINTS,
   type CampaignDifficulty,
 } from "@/lib/campaign-types";
 import {
-  CAMPAIGN_LENGTH_LABELS,
   CAMPAIGN_LENGTHS,
-  HP_METHOD_LABELS,
   HP_METHODS,
   STARTING_WEALTH,
-  STARTING_WEALTH_LABELS,
   type CampaignLengthSetting,
   type HpMethodSetting,
   type StartingWealthSetting,
 } from "@/lib/schemas/game-settings-options";
 import { FieldLabel, ToggleCard } from "@/app/create-campaign/fields";
 import type { StepProps } from "@/app/create-campaign/draft";
-
-const DIFFICULTY_INFO = `Difficulty is guidance to the Dungeon Master, not a damage multiplier: every rule underneath stays 5e. It steers how hard encounters are built and how often a bad roll is allowed to really cost you.\n\n${CAMPAIGN_DIFFICULTIES.map(
-  (value) => `**${value}**: ${CAMPAIGN_DIFFICULTY_HINTS[value]}`,
-).join("\n\n")}\n\nThe party lead can change it later from the table's settings.`;
-
-const LENGTH_INFO =
-  "How far ahead the DM plans the secret story: how many acts the arc spans, and how many villains and threads it seeds at the start.\n\n**Short**: three acts, one focused adventure. A handful of sessions.\n\n**Standard**: four or five acts. The default shape of a campaign.\n\n**Epic**: six to eight acts, several threads running at once.\n\nNo length ever cuts you off. Play past the finale and a sequel saga picks up where the last one ended.";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 // Step 3: how many, how strong, how hard, how long, and whose dice. A solo
 // table has no player count (maxPlayers is pinned to 1 in the payload), and
 // only an AI narrator plans a story arc, so length hides with it.
 export function PartyStep({ draft, patch, gates }: StepProps) {
+  const { t } = useLocale();
+  const difficultyInfo = [t("create.difficultyInfo"), ...CAMPAIGN_DIFFICULTIES.map(value =>
+    `**${t(`campaign.difficulty.${value}`)}**: ${t(`setting.difficulty.${value}.hint`)}`), t("create.difficultyLater")].join("\n\n");
   const { solo, aiNarrates } = gates;
   return (
     <div className="space-y-4 text-sm">
       <div className={cn("grid gap-3", solo ? "grid-cols-2" : "grid-cols-3")}>
         {!solo ? (
           <div className="block">
-            <FieldLabel>Players</FieldLabel>
-            <NumberStepper min={1} max={8} value={draft.maxPlayers} onChange={(maxPlayers) => patch({ maxPlayers })} label="Players" />
+            <FieldLabel>{t("create.players")}</FieldLabel>
+            <NumberStepper min={1} max={8} value={draft.maxPlayers} onChange={(maxPlayers) => patch({ maxPlayers })} label={t("create.players")} />
           </div>
         ) : null}
         <div className="block">
-          <FieldLabel>Start level</FieldLabel>
-          <NumberStepper min={1} max={20} value={draft.startingLevel} onChange={(startingLevel) => patch({ startingLevel })} label="Start level" />
+          <FieldLabel>{t("create.startLevel")}</FieldLabel>
+          <NumberStepper min={1} max={20} value={draft.startingLevel} onChange={(startingLevel) => patch({ startingLevel })} label={t("create.startLevel")} />
         </div>
         <label className="block">
           <FieldLabel>
             <span className="flex items-center gap-1">
-              Difficulty
-              <InfoButton label="Difficulty" text={DIFFICULTY_INFO} />
+              {t("create.difficulty")}
+              <InfoButton label={t("create.difficulty")} text={difficultyInfo} />
             </span>
           </FieldLabel>
           <Select<CampaignDifficulty>
             value={draft.difficulty}
             onChange={(difficulty) => patch({ difficulty })}
-            label="Difficulty"
+            label={t("create.difficulty")}
             className="w-full"
-            options={CAMPAIGN_DIFFICULTIES.map((value) => ({ value, label: value }))}
+            options={CAMPAIGN_DIFFICULTIES.map((value) => ({ value, label: t(`campaign.difficulty.${value}`) }))}
           />
           {/* The chosen tier says what it means without opening anything. */}
           <p className="mt-1 text-xs text-stone-500">
-            {CAMPAIGN_DIFFICULTY_HINTS[draft.difficulty]}
+            {t(`setting.difficulty.${draft.difficulty}.hint`)}
           </p>
         </label>
       </div>
@@ -73,29 +66,29 @@ export function PartyStep({ draft, patch, gates }: StepProps) {
           characters are built before anyone opens the lobby's settings. */}
       <div className="grid grid-cols-2 gap-3">
         <label className="block">
-          <FieldLabel>Hit points per level</FieldLabel>
+          <FieldLabel>{t("create.hitPoints")}</FieldLabel>
           <Select<HpMethodSetting>
             value={draft.hpMethod}
             onChange={(hpMethod) => patch({ hpMethod })}
-            label="Hit points per level"
+            label={t("create.hitPoints")}
             className="w-full"
-            options={HP_METHODS.map((value) => ({ value, label: HP_METHOD_LABELS[value] }))}
+            options={HP_METHODS.map((value) => ({ value, label: t(`setting.hpMethod.${value}`) }))}
           />
           <p className="mt-1 text-xs text-stone-500">
-            1st level is always the hit die&apos;s highest face plus Constitution.
+            {t("create.hitPointsHint")}
           </p>
         </label>
         <label className="block">
-          <FieldLabel>Starting wealth</FieldLabel>
+          <FieldLabel>{t("create.wealth")}</FieldLabel>
           <Select<StartingWealthSetting>
             value={draft.startingWealth}
             onChange={(startingWealth) => patch({ startingWealth })}
-            label="Starting wealth"
+            label={t("create.wealth")}
             className="w-full"
-            options={STARTING_WEALTH.map((value) => ({ value, label: STARTING_WEALTH_LABELS[value] }))}
+            options={STARTING_WEALTH.map((value) => ({ value, label: t(`setting.startingWealth.${value}`) }))}
           />
           <p className="mt-1 text-xs text-stone-500">
-            What a new hero starts with; rolled gold is thrown by the server.
+            {t("create.wealthHint")}
           </p>
         </label>
       </div>
@@ -104,42 +97,37 @@ export function PartyStep({ draft, patch, gates }: StepProps) {
         <label className="block">
           <FieldLabel>
             <span className="flex items-center gap-1">
-              Campaign length
-              <InfoButton label="Campaign length" text={LENGTH_INFO} />
+              {t("create.length")}
+              <InfoButton label={t("create.length")} text={t("create.lengthInfo")} />
             </span>
           </FieldLabel>
           <Select<CampaignLengthSetting>
             value={draft.campaignLength}
             onChange={(campaignLength) => patch({ campaignLength })}
-            label="Campaign length"
+            label={t("create.length")}
             className="w-full"
-            options={CAMPAIGN_LENGTHS.map((value) => ({ value, label: CAMPAIGN_LENGTH_LABELS[value] }))}
+            options={CAMPAIGN_LENGTHS.map((value) => ({ value, label: t(`setting.campaignLength.${value}`) }))}
           />
           <p className="mt-1 text-xs text-stone-500">
-            How far the DM plans the story ahead. Any length keeps going if you play past the
-            finale: a sequel saga picks up where the last one ended.
+            {t("create.lengthHint")}
           </p>
         </label>
       ) : null}
 
       <div>
-        <FieldLabel className="mb-1.5">Dice</FieldLabel>
+        <FieldLabel className="mb-1.5">{t("create.dice")}</FieldLabel>
         <div className="flex gap-2">
           <ToggleCard
             active={draft.dicePolicy === "digital_only"}
             onClick={() => patch({ dicePolicy: "digital_only" })}
-            label="Digital only"
-            hint="The server rolls everything"
+            label={t("create.digitalDice")}
+            hint={t("create.digitalDiceHint")}
           />
           <ToggleCard
             active={draft.dicePolicy === "real_allowed"}
             onClick={() => patch({ dicePolicy: "real_allowed" })}
-            label="Real dice allowed"
-            hint={
-              solo
-                ? "Roll at your desk and enter the numbers"
-                : "Players may opt in to rolling at the table"
-            }
+            label={t("create.realDice")}
+            hint={t(solo ? "create.realDiceSoloHint" : "create.realDiceHint")}
           />
         </div>
       </div>

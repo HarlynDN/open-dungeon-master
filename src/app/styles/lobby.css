@@ -97,13 +97,16 @@
   /* The code, one sigil to a plate. */
   .lobby-sigils {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    max-width: 100%;
     gap: 0.3rem;
   }
   .lobby-sigil {
     display: grid;
     place-items: center;
-    min-width: 1.9rem;
+    flex: 0 1 1.9rem;
+    width: 1.9rem;
+    min-width: 0;
     height: 2.5rem;
     padding: 0 0.2rem;
     border-radius: 0.45rem;
@@ -120,9 +123,10 @@
     user-select: all;
   }
   .lobby-sigils[data-size="lg"] .lobby-sigil {
-    min-width: 2.15rem;
+    flex-basis: 2.15rem;
+    width: 2.15rem;
     height: 2.9rem;
-    font-size: 1.75rem;
+    font-size: clamp(1rem, 5vw, 1.75rem);
   }
   html[data-theme="light"] .lobby-sigil {
     border-color: rgba(138, 107, 28, 0.4);

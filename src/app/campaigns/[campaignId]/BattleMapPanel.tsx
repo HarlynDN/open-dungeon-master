@@ -1,6 +1,7 @@
 "use client";
 
 import * as Dialog from "@radix-ui/react-dialog";
+import { isComposingInput } from "@/lib/input-composition";
 import {
   Eraser,
   Footprints,
@@ -624,6 +625,7 @@ export function BattleMapPanel({
   }
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
+      if (isComposingInput(event)) return;
       if (event.key === "Escape") {
         tokenDragRef.current = null;
         setTokenGhost(null);

@@ -1,9 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { isComposingInput } from "@/lib/input-composition";
 import { Select, type SelectOption } from "@/components/ui/Select";
 import { cn } from "@/lib/cn";
 import { ui } from "@/lib/ui";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { voiceDisplayLabel } from "@/lib/i18n/media-presentations";
+import { DEFAULT_LOCALE, type AppLocale } from "@/lib/i18n/locales";
 import { TTS_VOICES } from "@/lib/tts-voices";
 
 // The narrator voice pickers (campaign settings, the campaign creator, the
@@ -59,8 +63,9 @@ export function useTtsVoices(): VoiceList {
 }
 
 // The name a voice goes by in a summary line.
-export function voiceLabel(list: VoiceList, voice: string): string {
-  return list.voices.find((entry) => entry.id === voice)?.label ?? voice;
+export function voiceLabel(list: VoiceList, voice: string, locale: AppLocale = DEFAULT_LOCALE): string {
+  const entry = list.voices.find((entry) => entry.id === voice);
+  return entry ? voiceDisplayLabel(entry, locale) : voice;
 }
 
 const CUSTOM = "\u0000custom";
@@ -82,6 +87,8 @@ export function VoicePicker({
   className?: string;
   noneLabel?: string;
 }) {
+  const { locale, t } = useLocale();
+
   const list = useTtsVoices();
   const listed = list.voices.some((voice) => voice.id === value);
   // Typing is open when asked for, and whenever the saved voice is one the
@@ -98,8 +105,8 @@ export function VoicePicker({
 
   const options: SelectOption<string>[] = [
     ...(noneLabel ? [{ value: "", label: noneLabel }] : []),
-    ...list.voices.map((voice) => ({ value: voice.id, label: voice.label })),
-    { value: CUSTOM, label: "Custom voice…", hint: "Type any voice this server understands" },
+    ...list.voices.map((voice) => ({ value: voice.id, label: voiceDisplayLabel(voice, locale) })),
+    { value: CUSTOM, label: t("voicePicker.custom"), hint: t("voicePicker.customHint") },
   ];
 
   function commit() {
@@ -132,13 +139,14 @@ export function VoicePicker({
           onChange={(event) => setDraft(event.target.value)}
           onBlur={commit}
           onKeyDown={(event) => {
+            if (isComposingInput(event)) return;
             if (event.key === "Enter") {
               event.currentTarget.blur();
             }
           }}
           maxLength={120}
-          aria-label={`${label}: custom voice`}
-          placeholder={list.provider === "openai" ? "alloy" : "af_heart(30)+af_bella(70)"}
+          aria-label={t("voicePicker.customLabel", { label })}
+          placeholder={t(list.provider === "openai" ? "voicePicker.exampleOpenai" : "voicePicker.exampleKokoro")}
           className={cn(ui.input, "reveal min-w-0 grow basis-40", size === "sm" && "px-2 py-1 text-xs")}
         />
       ) : null}

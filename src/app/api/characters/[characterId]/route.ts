@@ -95,7 +95,7 @@ export async function PATCH(
     baseline: { sheet: stored.sheet, level: stored.level },
   });
   if (!admitted.ok) {
-    return refusal(admitted.problems);
+    return refusal(admitted.problems, 400, admitted.problemDetails);
   }
   const character = updateCharacter(user.id, characterId, parsed.data.level, admitted.sheet);
   if (!character) {

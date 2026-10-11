@@ -104,7 +104,7 @@ export async function POST(
     });
   }
   if (!admitted.ok) {
-    return refusal(admitted.problems);
+    return refusal(admitted.problems, 400, admitted.problemDetails);
   }
   const input = admitted.sheet;
   admitted.settle();

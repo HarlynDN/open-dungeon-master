@@ -1,12 +1,14 @@
 "use client";
 
+import { gameSettingsSummary, hpMethodLabel, wealthLabel } from "@/lib/i18n/game-settings-presentations";
+import { genreLabel } from "@/lib/i18n/settings";
+import { requestErrorText, type ApiUiError, type UiRequestError } from "@/lib/i18n/api-errors";
+import { tableInfo } from "@/lib/i18n/settings-presentations";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
 import { STAGES, isStageEnabled } from "@/lib/dm/stages";
 import {
   DELEGATIONS,
-  DELEGATION_HINTS,
-  DELEGATION_LABELS,
 } from "@/lib/dm/delegation";
 import { GameIcon } from "@/components/ui/GameIcon";
 import { SectionHead } from "@/components/ui/SectionHead";
@@ -14,7 +16,7 @@ import { Select } from "@/components/ui/Select";
 import { Tooltip } from "@/components/ui/Tooltip";
 import { PanelError, SettingToggle, panelField } from "./PanelKit";
 import { InfoButton } from "@/components/ui/InfoDialog";
-import { GENRE_PRESETS, genrePreset } from "@/lib/genres";
+import { GENRE_PRESETS } from "@/lib/genres";
 import type { WorldPackSummary } from "@/lib/worlds/types";
 import { WorldPackGallery } from "@/components/WorldPackGallery";
 import { useTtsVoices, voiceLabel, VoicePicker } from "@/components/VoicePicker";
@@ -23,8 +25,10 @@ import { CharacterVoices } from "@/app/campaigns/[campaignId]/CharacterVoices";
 import { VoicePreviewButton } from "@/components/VoicePreviewButton";
 import { SafetyToneFields } from "@/components/SafetyToneFields";
 import type { GameSettings } from "@/lib/schemas/game-settings";
+import { LocalePicker } from "@/components/LocalePicker";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { LOCALE_DEFINITIONS } from "@/lib/i18n/locales";
 import {
-  CAMPAIGN_LENGTH_LABELS,
   CAMPAIGN_LENGTHS,
   COMPANION_LABELS,
   HP_METHODS,
@@ -34,47 +38,18 @@ import {
   type Genre,
 } from "@/lib/schemas/game-settings-options";
 
-// Short forms of the character-rule settings for a settings row; the long
-// forms live in game-settings-options.ts.
-const HP_METHOD_SHORT: Record<GameSettings["hpMethod"], string> = {
-  average: "HP: average each level",
-  rolled: "HP: rolled each level",
-  max: "HP: maximum each level",
-};
-const WEALTH_SHORT: Record<GameSettings["startingWealth"], string> = {
-  equipment: "Start: class kit and coin",
-  rolled: "Start: rolled gold, buy gear",
-};
-
 // The Living World explainer, shared with the campaign creator's info
 // button so the two never drift.
-export const LIVING_WORLD_INFO = [
-  "On: the world moves without you. Off-screen storylines advance on background dice each turn, so rival factions, threats, and distant events keep developing while you play.",
-  "NPCs pursue their own goals between chapters and during rests and travel. Schemes progress, pressure builds, and rivals can collide with each other.",
-  "The DM quietly records what happened off-screen and weaves it into future scenes, ambushes, and rumors. These simulation notes are DM-only until the party discovers them in play.",
-  "Off: all of that pauses. The world changes only when your party acts or the story arc calls for it. Your main story arc, chapters, quests, and XP work exactly the same either way.",
-  "You can switch this at any time. Turning it back on resumes from the world as it currently stands.",
-].join("\n\n");
+// English exports retained for existing callers. UI uses tableInfo with its locale.
+export const LIVING_WORLD_INFO = tableInfo("livingWorld", "en").text;
 
 // The same explainers as this panel's tooltips, shared with the campaign
 // creator's info buttons so the two surfaces never drift apart.
-export const BONDS_INFO = [
-  "How each NPC and AI companion feels about each character, tracked by the server on one meter from hostile through neutral to devoted.",
-  "Deeds move it, and the same deed lands differently on different people: mercy wins over a kind healer and irritates a hard-bitten mercenary.",
-  "Standing shows in the Bonds tab and colors how the DM plays them. Off: the DM tracks no personal standing and NPCs react to the party as a whole.",
-].join("\n\n");
+export const BONDS_INFO = tableInfo("bonds", "en").text;
 
-export const ROMANCE_INFO = [
-  "The romance ladder on top of the bond meter: interested, courting, together, betrothed, married.",
-  "Nobody can be romanced who does not already like the character, players always make the first move, and intimate scenes always fade to black.",
-  "Requires Bonds to be on.",
-].join("\n\n");
+export const ROMANCE_INFO = tableInfo("romance", "en").text;
 
-export const NARRATION_GUARD_INFO = [
-  "After each turn the server compares the DM's narration against what the dice and tools actually resolved: a hit written on a miss, a death the hit points deny, a damage number no die rolled.",
-  "A contradiction is sent back to the DM once for a rewrite. Nothing on any sheet changes either way.",
-  "Off costs nothing but the check, and the narration is persisted exactly as written.",
-].join("\n\n");
+export const NARRATION_GUARD_INFO = tableInfo("narrationGuard", "en").text;
 
 // Lobby game-settings section: the party lead edits live (PATCHes propagate to
 // everyone over SSE); other players see a read-only summary.
@@ -87,11 +62,12 @@ export function GameSettingsPanel({
   settings: GameSettings;
   steersStory: boolean;
 }) {
+  const { locale, t } = useLocale();
   const [busy, setBusy] = useState(false);
   const voices = useTtsVoices();
   // Every control here renders the server's settings, so a refused PATCH
   // changes nothing on screen; without this line it changes nothing silently.
-  const [error, setError] = useState("");
+  const [error, setError] = useState<UiRequestError | null>(null);
   const [packs, setPacks] = useState<WorldPackSummary[]>([]);
   // Whether any ambience audio is actually on disk. The library ships empty
   // (public/ambience is gitignored and filled by npm run fetch-ambience), so
@@ -140,7 +116,7 @@ export function GameSettingsPanel({
 
   async function patch(update: Partial<GameSettings>) {
     setBusy(true);
-    setError("");
+    setError(null);
     try {
       const response = await fetch(`/api/campaigns/${campaignId}/settings`, {
         method: "PATCH",
@@ -148,17 +124,17 @@ export function GameSettingsPanel({
         body: JSON.stringify(update),
       });
       if (!response.ok) {
-        const data = (await response.json().catch(() => ({}))) as { error?: string };
-        setError(data.error ?? "That change was not saved.");
+        const data = (await response.json().catch(() => ({}))) as ApiUiError;
+        setError({ data, fallback: "panel.saveError" });
       }
     } catch {
-      setError("Could not reach the server.");
+      setError({ data: {}, fallback: "panel.networkError" });
     } finally {
       setBusy(false);
     }
   }
 
-  const preset = genrePreset(settings.genre);
+
   const selectedPack = packs.find((entry) => entry.id === settings.worldPack) ?? null;
   // A table running its own game keeps the rules engine, the dice, the maps
   // and the bonds. What it does not keep is a second author, so the settings
@@ -172,85 +148,70 @@ export function GameSettingsPanel({
   const selectClass =
     "min-w-0 max-w-full";
 
+  const summary = gameSettingsSummary(settings, voiceLabel(voices, settings.ttsVoice, locale), selectedPack?.name, locale);
+  const livingInfo = tableInfo("livingWorld", locale);
+
   if (!steersStory) {
     return (
       <section className="panel mb-6 rounded-xl p-4">
-        <SectionHead title="Game settings" glyph="tab-settings" level="h2" />
+        <SectionHead title={t("panel.title")} glyph="tab-settings" level="h2" />
         <div className="stagger flex flex-wrap gap-x-5 gap-y-1.5 text-xs text-stone-300">
+          <span>{t("locale.campaign")}: {LOCALE_DEFINITIONS[settings.locale].nativeName}</span>
           <span className="flex items-center gap-1.5">
             <GameIcon icon={{ kind: "glyph", key: "system-region" }} size="size-5" />
-            {selectedPack?.name ?? preset.name}
-            {settings.dmMode === "human" ? " · human DM" : settings.dmMode === "steered" ? " · AI narrates, a person steers" : ""}
-            {settings.dmMode !== "human" && settings.aiStorySetup ? " · AI story setup" : ""}
-            {settings.dmMode !== "human"
-              ? ` · ${CAMPAIGN_LENGTH_LABELS[settings.campaignLength].split(" (")[0]} campaign`
-              : ""}
+            {summary.world}
           </span>
           <span className="flex items-center gap-1.5">
             <GameIcon icon={{ kind: "glyph", key: "tab-dice" }} size="size-5" />
-            {settings.dicePolicy === "real_allowed" ? "Real dice allowed" : "Digital dice only"}
+            {summary.dice}
           </span>
           <span className="flex items-center gap-1.5">
             <GameIcon icon={{ kind: "glyph", key: "cue-bell" }} size="size-5" />
-            {settings.ttsEnabled
-              ? `Narration on (${voiceLabel(voices, settings.ttsVoice)})`
-              : "Narration off"}
+            {summary.narration}
           </span>
           <span className="flex items-center gap-1.5">
             <GameIcon icon={{ kind: "glyph", key: "tab-ambience" }} size="size-5" />
-            {settings.ambienceEnabled
-              ? `Ambience on${settings.ambienceAuto ? " (follows the scene)" : ""}`
-              : "Ambience off"}
+            {summary.ambience}
           </span>
           <span className="flex items-center gap-1.5">
             <GameIcon icon={{ kind: "glyph", key: "tab-map" }} size="size-5" />
-            {settings.mapsEnabled ? "Maps on" : "Maps off"}
+            {summary.maps}
           </span>
           <span className="flex items-center gap-1.5">
             <GameIcon icon={{ kind: "glyph", key: "rest-level-up" }} size="size-5" />
-            {settings.multiclassingEnabled ? "Multiclassing allowed" : "Multiclassing off"}
+            {summary.multiclassing}
           </span>
           <span className="flex items-center gap-1.5">
             <GameIcon icon={{ kind: "glyph", key: "rest-hp" }} size="size-5" />
-            {HP_METHOD_SHORT[settings.hpMethod ?? "average"]}
+            {summary.hp}
           </span>
           <span className="flex items-center gap-1.5">
             <GameIcon icon={{ kind: "glyph", key: "coin-gp" }} size="size-5" />
-            {WEALTH_SHORT[settings.startingWealth ?? "equipment"]}
+            {summary.wealth}
           </span>
           <span className="flex items-center gap-1.5">
             <GameIcon icon={{ kind: "glyph", key: "tab-friends" }} size="size-5" />
-            {settings.midGameJoinOpen ? "Mid-game joining open" : "Mid-game joining closed"}
+            {summary.joining}
           </span>
           <span className="flex items-center gap-1.5">
             <GameIcon icon={{ kind: "glyph", key: "rest-initiative" }} size="size-5" />
-            {settings.holdSubmissions ? "Lead opens responses each turn" : "Responses always open"}
+            {summary.responses}
           </span>
           <span className="flex items-center gap-1.5">
             <GameIcon icon={{ kind: "glyph", key: "system-storyboard" }} size="size-5" />
-            {settings.worldSimulation ? "Living world on" : "Living world off"}
+            {summary.worldSimulation}
           </span>
           <span className="flex items-center gap-1.5">
             <GameIcon icon={{ kind: "glyph", key: "tab-loot" }} size="size-5" />
-            {settings.inventoryApprovals && settings.vitalsApprovals
-              ? "Item and vitals changes need approval"
-              : settings.inventoryApprovals
-                ? "Item offers need approval"
-                : settings.vitalsApprovals
-                  ? "Vitals changes need approval"
-                  : "Item changes auto-apply"}
+            {summary.approvals}
           </span>
           <span className="flex items-center gap-1.5">
             <GameIcon icon={{ kind: "glyph", key: "tab-bonds" }} size="size-5" />
-            {settings.relationships === "off"
-              ? "Bonds off"
-              : settings.romance !== "off"
-                ? "Bonds and romance tracked"
-                : "Bonds tracked, romance off"}
+            {summary.bonds}
           </span>
           <span className="flex items-center gap-1.5">
             <GameIcon icon={{ kind: "glyph", key: "system-party" }} size="size-5" />
-            AI companions: {COMPANION_LABELS[settings.companions]}
+            {summary.companions}
           </span>
         </div>
         {settings.ttsEnabled ? <CharacterVoices campaignId={campaignId} settings={settings} steersStory={false} /> : null}
@@ -260,22 +221,27 @@ export function GameSettingsPanel({
 
   return (
     <section className="panel mb-6 rounded-xl p-4">
-      <SectionHead title="Game settings" glyph="tab-settings" level="h2" />
-      {error ? <PanelError className="mb-2">{error}</PanelError> : null}
+      <SectionHead title={t("panel.title")} glyph="tab-settings" level="h2" />
+      {error ? <PanelError className="mb-2">{requestErrorText(locale, error)}</PanelError> : null}
       <div className={cn("space-y-3 text-xs", busy && "opacity-70")}>
+        <div className="space-y-1">
+          <span className="pk-rowlabel">{t("locale.campaign")}</span>
+          <LocalePicker campaign value={settings.locale} onChange={(locale) => void patch({ locale })} disabled={busy} />
+          <p className="text-stone-500">{t("locale.campaignHint")}</p>
+        </div>
         {settings.dmMode === "assisted" ? (
           // Only in the middle setting. A table the AI runs has nothing to
           // delegate and a table running itself has chosen not to, so showing
           // three switched-off switches in either would be noise.
           <div className="flex flex-wrap items-center gap-2">
-            <span className="pk-rowlabel">AI helps</span>
+            <span className="pk-rowlabel">{t("panel.aiHelps")}</span>
             {DELEGATIONS.map((which) => (
-              <Tooltip key={which} content={DELEGATION_HINTS[which]}>
+              <Tooltip key={which} content={t(`delegation.${which}.hint`)}>
                 <SettingToggle on={settings.dmAssist[which]} onToggle={() =>
                     patch({
                       dmAssist: { ...settings.dmAssist, [which]: !settings.dmAssist[which] },
                     })}>
-                  {DELEGATION_LABELS[which]}
+                  {t(`delegation.${which}.label`)}
                 </SettingToggle>
               </Tooltip>
             ))}
@@ -283,25 +249,25 @@ export function GameSettingsPanel({
         ) : null}
         {packs.length ? (
           <div className="reveal flex flex-wrap items-center gap-2">
-            <span className="pk-rowlabel">World</span>
+            <span className="pk-rowlabel">{t("panel.world")}</span>
             <Select
               size="sm"
-              label="World pack"
+              label={t("panel.worldPack")}
               value={settings.worldPack}
-              placeholder="No pack (plain setting)"
+              placeholder={t("panel.noPack")}
               onChange={(value) => {
                 const next = packs.find((entry) => entry.id === value);
                 // Genre moves with the pack, so a campaign never ends up in a
                 // world whose base genre contradicts it.
                 patch(next ? { worldPack: next.id, genre: next.baseGenre } : { worldPack: "" });
               }}
-              options={[{ value: "", label: "No pack (plain setting)" }, ...packs.map((entry) => ({ value: entry.id, label: entry.name, hint: entry.inspiredBy }))]}
+              options={[{ value: "", label: t("panel.noPack") }, ...packs.map((entry) => ({ value: entry.id, label: entry.name, hint: entry.inspiredBy }))]}
               className={selectClass}
             />
             <span className="text-stone-500">
               {selectedPack
                 ? selectedPack.inspiredBy
-                : "Pick a pre-built universe to rename races, classes, spells and monsters to fit it."}
+                : t("panel.packHint")}
             </span>
           </div>
         ) : null}
@@ -318,10 +284,10 @@ export function GameSettingsPanel({
         ) : null}
         {selectedPack ? <WorldPackGallery packId={selectedPack.id} /> : null}
         <div className="flex flex-wrap items-center gap-2">
-          <span className="pk-rowlabel">Setting</span>
+          <span className="pk-rowlabel">{t("panel.setting")}</span>
           <Select<Genre>
             size="sm"
-            label="Setting"
+            label={t("panel.setting")}
             value={settings.genre}
             onChange={(genre) =>
               // Changing the genre by hand drops the pack, for the same reason
@@ -329,36 +295,36 @@ export function GameSettingsPanel({
               // overrides, so the two must never disagree.
               patch({ genre, ...(settings.worldPack ? { worldPack: "" } : {}) })
             }
-            options={GENRE_PRESETS.map((entry) => ({ value: entry.id as Genre, label: entry.name }))}
+            options={GENRE_PRESETS.map((entry) => ({ value: entry.id as Genre, label: genreLabel(entry.id as Genre, locale) }))}
             className={selectClass}
           />
-          <span className="text-stone-500">{preset.blurb}</span>
+          <span className="text-stone-500">{t(`world.${settings.genre}.blurb`)}</span>
         </div>
         {settings.genre === "custom" ? (
           <div className="reveal flex items-start gap-2">
-            <span className="pk-rowlabel pt-1">World</span>
+            <span className="pk-rowlabel pt-1">{t("panel.world")}</span>
             <textarea
               defaultValue={settings.customGenreText}
               rows={2}
               maxLength={500}
               onBlur={(event) => patch({ customGenreText: event.target.value })}
-              placeholder="Describe the world and tone..."
-              aria-label="Describe the world and tone"
+              placeholder={t("panel.customWorld")}
+              aria-label={t("panel.customWorldLabel")}
               className={cn(panelField, "w-auto flex-1")}
             />
           </div>
         ) : null}
         {aiNarrates ? (
         <div className="reveal flex flex-wrap items-center gap-2">
-          <span className="pk-rowlabel">Length</span>
-          <Tooltip content="How far the DM plans the story ahead (acts, bosses, side quests). Changing it mid-campaign applies when the next saga is planned; any length continues with a sequel saga if you play past the finale.">
+          <span className="pk-rowlabel">{t("panel.length")}</span>
+          <Tooltip content={t("panel.lengthTip")}>
             <span className="inline-flex min-w-0 max-w-full">
               <Select<CampaignLengthSetting>
                 size="sm"
-                label="Campaign length"
+                label={t("panel.campaignLength")}
                 value={settings.campaignLength}
                 onChange={(campaignLength) => patch({ campaignLength })}
-                options={CAMPAIGN_LENGTHS.map((value) => ({ value, label: CAMPAIGN_LENGTH_LABELS[value] }))}
+                options={CAMPAIGN_LENGTHS.map((value) => ({ value, label: t(`setting.campaignLength.${value}`) }))}
                 className={selectClass}
               />
             </span>
@@ -366,17 +332,17 @@ export function GameSettingsPanel({
         </div>
         ) : null}
         <div className="flex flex-wrap items-center gap-2">
-          <span className="pk-rowlabel">Dice</span>
-          <Tooltip content="Real dice lets each player opt in to rolling at their table: the game parks until they type the result, read it from a paired Pixels Bluetooth die, or let the server roll per die (Dice sources, in the Party tab).">
+          <span className="pk-rowlabel">{t("panel.dice")}</span>
+          <Tooltip content={t("panel.diceTip")}>
             <span className="inline-flex min-w-0 max-w-full">
               <Select<DicePolicy>
                 size="sm"
-                label="Dice policy"
+                label={t("panel.dicePolicy")}
                 value={settings.dicePolicy}
                 onChange={(dicePolicy) => patch({ dicePolicy })}
                 options={[
-                  { value: "digital_only", label: "Digital only", icon: { kind: "glyph", key: "tab-dice" } },
-                  { value: "real_allowed", label: "Real dice allowed", icon: { kind: "glyph", key: "die-d20" } },
+                  { value: "digital_only", label: t("panel.digitalOnly"), icon: { kind: "glyph", key: "tab-dice" } },
+                  { value: "real_allowed", label: t("panel.realAllowed"), icon: { kind: "glyph", key: "die-d20" } },
                 ]}
                 className={selectClass}
               />
@@ -384,15 +350,15 @@ export function GameSettingsPanel({
           </Tooltip>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <span className="pk-rowlabel">Narration</span>
-          <SettingToggle label="Narration" on={settings.ttsEnabled} onToggle={() => patch({ ttsEnabled: !settings.ttsEnabled })}>
-            {settings.ttsEnabled ? "On" : "Off"}
+          <span className="pk-rowlabel">{t("panel.narration")}</span>
+          <SettingToggle label={t("panel.narration")} on={settings.ttsEnabled} onToggle={() => patch({ ttsEnabled: !settings.ttsEnabled })}>
+            {settings.ttsEnabled ? t("panel.on") : t("panel.off")}
           </SettingToggle>
           {settings.ttsEnabled ? (
             <>
               <VoicePicker
                 size="sm"
-                label="Narration voice"
+                label={t("panel.narrationVoice")}
                 value={settings.ttsVoice}
                 onChange={(ttsVoice) => patch({ ttsVoice })}
               />
@@ -405,33 +371,33 @@ export function GameSettingsPanel({
         ) : null}
         {settings.ttsEnabled ? <NarrationNote /> : null}
         <div className="flex flex-wrap items-center gap-2">
-          <span className="pk-rowlabel">Faces</span>
-          <Tooltip content="Theatre inserts: when a passage has someone speaking, their portrait comes up over the scene art while their lines play.">
+          <span className="pk-rowlabel">{t("panel.faces")}</span>
+          <Tooltip content={t("panel.theatreTip")}>
             <SettingToggle on={settings.presentation === "theatre"} onToggle={() => patch({ presentation: settings.presentation === "theatre" ? "plain" : "theatre" })}>
-              {settings.presentation === "theatre" ? "Theatre inserts on" : "Theatre inserts off"}
+              {settings.presentation === "theatre" ? t("panel.theatreOn") : t("panel.theatreOff")}
             </SettingToggle>
           </Tooltip>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <span className="pk-rowlabel">Ambience</span>
-          <SettingToggle label="Ambience" on={settings.ambienceEnabled} onToggle={() => patch({ ambienceEnabled: !settings.ambienceEnabled })}>
-            {settings.ambienceEnabled ? "On" : "Off"}
+          <span className="pk-rowlabel">{t("panel.ambience")}</span>
+          <SettingToggle label={t("panel.ambience")} on={settings.ambienceEnabled} onToggle={() => patch({ ambienceEnabled: !settings.ambienceEnabled })}>
+            {settings.ambienceEnabled ? t("panel.on") : t("panel.off")}
           </SettingToggle>
           {settings.ambienceEnabled ? (
-            <Tooltip content="Pick a bed from each new place and switch to combat music when a fight starts. Off leaves every change to the DM.">
+            <Tooltip content={t("panel.ambienceTip")}>
               <SettingToggle on={settings.ambienceAuto} onToggle={() => patch({ ambienceAuto: !settings.ambienceAuto })}>
-                {settings.ambienceAuto ? "Follows the scene" : "DM sets it"}
+                {settings.ambienceAuto ? t("panel.followsScene") : t("panel.dmSets")}
               </SettingToggle>
             </Tooltip>
           ) : null}
-          <Tooltip content="Players may draw on the live board: a plan of attack, a circle round a door. The DM always may.">
+          <Tooltip content={t("panel.drawingTip")}>
             <SettingToggle on={settings.boardDrawing} onToggle={() => patch({ boardDrawing: !settings.boardDrawing })}>
-              {settings.boardDrawing ? "Players may draw" : "Only the DM draws"}
+              {settings.boardDrawing ? t("panel.playerDraw") : t("panel.dmDraw")}
             </SettingToggle>
           </Tooltip>
-          <Tooltip content="Show what enemies look likely to do next">
+          <Tooltip content={t("panel.enemyTip")}>
             <SettingToggle on={settings.enemyIntent} onToggle={() => patch({ enemyIntent: !settings.enemyIntent })}>
-              Enemy intent {settings.enemyIntent ? "on" : "off"}
+              {t(settings.enemyIntent ? "panel.enemyOn" : "panel.enemyOff")}
             </SettingToggle>
           </Tooltip>
           {settings.ambienceEnabled && !ambienceInstalled ? (
@@ -439,59 +405,57 @@ export function GameSettingsPanel({
             // toggle above is currently a promise of silence. Say so where
             // it is being switched on rather than letting the table wonder.
             <span className="text-stone-500">
-              No ambience audio is installed yet, so this plays silence. Run npm run fetch-ambience
-              on the server; setting a FREESOUND_API_KEY first widens the sources.
-            </span>
+              {t("panel.ambienceMissing")}</span>
           ) : null}
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <span className="pk-rowlabel">Extras</span>
+          <span className="pk-rowlabel">{t("panel.extras")}</span>
           {aiNarrates ? (
             <SettingToggle on={settings.aiStorySetup} onToggle={() => patch({ aiStorySetup: !settings.aiStorySetup })}>
-              AI story setup {settings.aiStorySetup ? "on" : "off"}
+              {t(settings.aiStorySetup ? "panel.aiSetupOn" : "panel.aiSetupOff")}
             </SettingToggle>
           ) : null}
           <SettingToggle on={settings.mapsEnabled} onToggle={() => patch({ mapsEnabled: !settings.mapsEnabled })}>
-            Maps {settings.mapsEnabled ? "on" : "off"}
+            {t(settings.mapsEnabled ? "panel.mapsOn" : "panel.mapsOff")}
           </SettingToggle>
-          <Tooltip content="Let characters take levels in a second or third class at level-up (5e multiclassing, prerequisites enforced)">
+          <Tooltip content={t("panel.multiclassTip")}>
             <SettingToggle on={settings.multiclassingEnabled} onToggle={() => patch({ multiclassingEnabled: !settings.multiclassingEnabled })}>
-              Multiclassing {settings.multiclassingEnabled ? "on" : "off"}
+              {t(settings.multiclassingEnabled ? "panel.multiOn" : "panel.multiOff")}
             </SettingToggle>
           </Tooltip>
-          <Tooltip content="Allow new players to join with the invite code after the adventure starts">
+          <Tooltip content={t("panel.joinTip")}>
             <SettingToggle on={settings.midGameJoinOpen} onToggle={() => patch({ midGameJoinOpen: !settings.midGameJoinOpen })}>
-              Mid-game joining {settings.midGameJoinOpen ? "open" : "closed"}
+              {t(settings.midGameJoinOpen ? "panel.joinOpen" : "panel.joinClosed")}
             </SettingToggle>
           </Tooltip>
-          <Tooltip content="After each DM narration, players cannot act until you allow responses. OOC stays open.">
+          <Tooltip content={t("panel.heldTip")}>
             <SettingToggle on={settings.holdSubmissions} onToggle={() => patch({ holdSubmissions: !settings.holdSubmissions })}>
-              Held responses {settings.holdSubmissions ? "on" : "off"}
+              {t(settings.holdSubmissions ? "panel.heldOn" : "panel.heldOff")}
             </SettingToggle>
           </Tooltip>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <span className="pk-rowlabel">Heroes</span>
-          <Tooltip content="How hit points grow after 1st level (1st is always the hit die's highest face plus Constitution). Rolled dice are thrown by the server.">
+          <span className="pk-rowlabel">{t("panel.heroes")}</span>
+          <Tooltip content={t("panel.hpTip")}>
             <span className="inline-flex min-w-0 max-w-full">
               <Select
                 size="sm"
-                label="Hit points per level"
+                label={t("panel.hp")}
                 value={settings.hpMethod ?? "average"}
                 onChange={(value) => patch({ hpMethod: value as GameSettings["hpMethod"] })}
-                options={HP_METHODS.map((method) => ({ value: method, label: HP_METHOD_SHORT[method] }))}
+                options={HP_METHODS.map((method) => ({ value: method, label: hpMethodLabel(method, locale) }))}
                 className={selectClass}
               />
             </span>
           </Tooltip>
-          <Tooltip content="What a new character starts with: the class and background kit plus the background's coin, or gold the server rolls by class to buy gear with.">
+          <Tooltip content={t("panel.wealthTip")}>
             <span className="inline-flex min-w-0 max-w-full">
               <Select
                 size="sm"
-                label="Starting wealth"
+                label={t("panel.wealth")}
                 value={settings.startingWealth ?? "equipment"}
                 onChange={(value) => patch({ startingWealth: value as GameSettings["startingWealth"] })}
-                options={STARTING_WEALTH.map((method) => ({ value: method, label: WEALTH_SHORT[method] }))}
+                options={STARTING_WEALTH.map((method) => ({ value: method, label: wealthLabel(method, locale) }))}
                 className={selectClass}
               />
             </span>
@@ -501,26 +465,26 @@ export function GameSettingsPanel({
           // Only the DM seat is ever nudged, so this row does not exist for a
           // table the AI narrates: there, the story is typed by definition.
           <div className="flex flex-wrap items-center gap-2">
-            <span className="pk-rowlabel">Remind</span>
-            <Tooltip content="How much play may pass with nothing written down before the console nudges you to record what happened. Your own typed narration counts, so a DM who writes their scenes is never nudged.">
+            <span className="pk-rowlabel">{t("panel.remind")}</span>
+            <Tooltip content={t("panel.reminderTip")}>
               <span className="inline-flex min-w-0 max-w-full">
                 <Select
                   size="sm"
-                  label="Remind after this many actions"
+                  label={t("panel.actionReminder")}
                   value={String(settings.beatReminder.messages)}
                   onChange={(value) => patch({ beatReminder: { ...settings.beatReminder, messages: Number(value) } })}
-                  options={[0, 5, 10, 20, 40].map((count) => ({ value: String(count), label: count === 0 ? "never by actions" : `after ${count} actions` }))}
+                  options={[0, 5, 10, 20, 40].map((count) => ({ value: String(count), label: count === 0 ? t("panel.noActionReminder") : t("panel.afterActions", { count }) }))}
                   className={selectClass}
                 />
               </span>
             </Tooltip>
-            <span className="inline-flex min-w-0 max-w-full" title="The combat tempo: twelve rolls is roughly two rounds of a four-person fight.">
+            <span className="inline-flex min-w-0 max-w-full" title={t("panel.rollReminderTip")}>
               <Select
                 size="sm"
-                label="Remind after this many rolls"
+                label={t("panel.rollReminder")}
                 value={String(settings.beatReminder.rolls)}
                 onChange={(value) => patch({ beatReminder: { ...settings.beatReminder, rolls: Number(value) } })}
-                options={[0, 6, 12, 24, 48].map((count) => ({ value: String(count), label: count === 0 ? "never by rolls" : `after ${count} rolls` }))}
+                options={[0, 6, 12, 24, 48].map((count) => ({ value: String(count), label: count === 0 ? t("panel.noRollReminder") : t("panel.afterRolls", { count }) }))}
                 className={selectClass}
               />
             </span>
@@ -528,22 +492,22 @@ export function GameSettingsPanel({
         ) : null}
         {aiNarrates ? (
         <div className="reveal flex flex-wrap items-start gap-2">
-          <span className="pk-rowlabel pt-1">Stages</span>
+          <span className="pk-rowlabel pt-1">{t("panel.stages")}</span>
           <div className="flex min-w-0 flex-1 flex-wrap gap-1.5">
             {STAGES.map((stage) => {
               const on = isStageEnabled(settings.stages, stage.id);
               return (
                 <Tooltip
                   key={stage.id}
-                  content={`${stage.description} ${stage.cost}`}
+                  content={`${t(`stage.${stage.id}.description`)} ${t(`stage.${stage.id}.cost`)}`}
                 >
                   <SettingToggle on={on} onToggle={() =>
                       patch({ stages: { ...settings.stages, [stage.id]: !on } })}>
-                    {stage.label} {on ? "on" : "off"}
+                    {t(on ? "panel.stageOn" : "panel.stageOff", { name: t(`stage.${stage.id}.label`) })}
                     {/* Only a model-call stage buys back GPU time; saying so
                         stops an operator disabling recall expecting a speedup. */}
                     <span className="ml-1 text-[11px] text-stone-500">
-                      {stage.callsModel ? "model" : "engine"}
+                      {stage.callsModel ? t("panel.model") : t("panel.engine")}
                     </span>
                   </SettingToggle>
                 </Tooltip>
@@ -554,44 +518,44 @@ export function GameSettingsPanel({
         ) : null}
         {aiNarrates ? (
         <div className="reveal flex flex-wrap items-center gap-2">
-          <span className="pk-rowlabel">World</span>
-          <Tooltip content="The world moves on its own: off-screen storylines advance on background dice, surprises and encounters build up over quiet stretches, and NPC schemes progress between chapters and during rests and travel. The story arc itself is unaffected either way.">
+          <span className="pk-rowlabel">{t("panel.world")}</span>
+          <Tooltip content={t("panel.livingTip")}>
             <SettingToggle on={settings.worldSimulation} onToggle={() => patch({ worldSimulation: !settings.worldSimulation })}>
-              Living world {settings.worldSimulation ? "on" : "off"}
+              {t(settings.worldSimulation ? "panel.livingOn" : "panel.livingOff")}
             </SettingToggle>
           </Tooltip>
-          <InfoButton label="What does Living World do?" text={LIVING_WORLD_INFO} />
+          <InfoButton label={livingInfo.label} ariaLabel={livingInfo.label} text={livingInfo.text} />
           <span className="text-stone-500">
             {settings.worldSimulation
-              ? "Rumors, surprises, and off-screen schemes advance between turns."
-              : "Nothing happens unless the party or the story arc makes it happen."}
+              ? t("panel.livingHintOn")
+              : t("panel.livingHintOff")}
           </span>
         </div>
         ) : null}
         <div className="flex flex-wrap items-center gap-2">
-          <span className="pk-rowlabel">Items</span>
-          <Tooltip content="When on, DM-granted loot, item removals, and gold changes become offers the owning player accepts or declines before they land on the sheet. Damage, healing and conditions have their own switch.">
+          <span className="pk-rowlabel">{t("panel.items")}</span>
+          <Tooltip content={t("panel.itemsTip")}>
             <SettingToggle on={settings.inventoryApprovals} onToggle={() => patch({ inventoryApprovals: !settings.inventoryApprovals })}>
-              Item offers {settings.inventoryApprovals ? "on" : "off"}
+              {t(settings.inventoryApprovals ? "panel.itemOn" : "panel.itemOff")}
             </SettingToggle>
           </Tooltip>
           <span className="text-stone-500">
             {settings.inventoryApprovals
-              ? "Players confirm DM item and gold changes before they apply."
-              : "DM item and gold changes apply immediately (lead can undo)."}
+              ? t("panel.itemsHintOn")
+              : t("panel.itemsHintOff")}
           </span>
         </div>
         <div className="pk-row">
-          <span className="pk-rowlabel">Vitals</span>
-          <Tooltip content="When on, damage, healing and conditions the AI DM or a connected agent aims at a player character wait for that player (or the lead) to confirm before they land, so a wrong target, a doubled hit or a misread rule never sticks unseen. The engine's own dice, an enemy's attack or a fall, apply as always. A slower table; off by default.">
+          <span className="pk-rowlabel">{t("panel.vitals")}</span>
+          <Tooltip content={t("panel.vitalsTip")}>
             <SettingToggle on={settings.vitalsApprovals} onToggle={() => patch({ vitalsApprovals: !settings.vitalsApprovals })}>
-              Vitals changes {settings.vitalsApprovals ? "need confirming" : "auto-apply"}
+              {t(settings.vitalsApprovals ? "panel.vitalsOn" : "panel.vitalsOff")}
             </SettingToggle>
           </Tooltip>
           <span className="text-stone-500">
             {settings.vitalsApprovals
-              ? "Players confirm DM damage, healing and conditions before they apply."
-              : "DM damage, healing and conditions apply immediately (lead can undo)."}
+              ? t("panel.vitalsHintOn")
+              : t("panel.vitalsHintOff")}
           </span>
         </div>
         <div className="rounded-lg border border-amber-500/15 bg-stone-950/40 p-2.5">
@@ -605,18 +569,18 @@ export function GameSettingsPanel({
           />
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <span className="pk-rowlabel">Prose</span>
-          <Tooltip content="After each turn the server compares the DM's narration against what the dice and tools actually resolved: a hit written on a miss, a death the hit points deny, a damage number no die rolled. A contradiction is sent back to the DM once for a rewrite. Nothing on any sheet changes either way.">
+          <span className="pk-rowlabel">{t("panel.prose")}</span>
+          <Tooltip content={t("panel.proseTip")}>
             {aiNarrates ? (
               <SettingToggle on={settings.narrationGuard} onToggle={() => patch({ narrationGuard: !settings.narrationGuard })}>
-                Outcome check {settings.narrationGuard ? "on" : "off"}
+                {t(settings.narrationGuard ? "panel.outcomeOn" : "panel.outcomeOff")}
               </SettingToggle>
             ) : null}
           </Tooltip>
           <span className="text-stone-500">
             {settings.narrationGuard
-              ? "Narration that contradicts the dice goes back for one rewrite."
-              : "The DM's narration is persisted exactly as written."}
+              ? t("panel.proseHintOn")
+              : t("panel.proseHintOff")}
           </span>
         </div>
         {/* Live voice chat. The rules below are a list rather than a single
@@ -625,37 +589,37 @@ export function GameSettingsPanel({
             different one. They are all inputs to one function
             (src/lib/voice/audibility.ts). */}
         <div className="flex flex-wrap items-center gap-2">
-          <span className="pk-rowlabel">Voice</span>
-          <Tooltip content="Live voice chat for this table, in the lobby and during play. The server also has its own switch, and needs a media port open; if voice is off server-wide this has no effect.">
+          <span className="pk-rowlabel">{t("panel.voice")}</span>
+          <Tooltip content={t("panel.voiceTip")}>
             <SettingToggle on={settings.voice.enabled} onToggle={() =>
                 patch({ voice: { ...settings.voice, enabled: !settings.voice.enabled } })}>
-              Voice chat {settings.voice.enabled ? "on" : "off"}
+              {t(settings.voice.enabled ? "panel.voiceOn" : "panel.voiceOff")}
             </SettingToggle>
           </Tooltip>
           {settings.voice.enabled ? (
             <>
-              <Tooltip content="How hard the floor is enforced on microphones. Soft shows whose turn it is without muting anyone. Strict pauses a player's microphone on the server, so the mute is real rather than a greyed-out button. Off ignores the floor entirely. The DM is never muted by any of these.">
+              <Tooltip content={t("panel.turnTip")}>
                 <span className="inline-flex min-w-0 max-w-full">
                   <Select<"off" | "soft" | "strict">
                     size="sm"
-                    label="Turn enforcement on microphones"
+                    label={t("panel.turnFloor")}
                     value={settings.voice.turnEnforcement}
                     onChange={(turnEnforcement) => patch({ voice: { ...settings.voice, turnEnforcement } })}
                     options={[
-                      { value: "off", label: "Turns: ignored" },
-                      { value: "soft", label: "Turns: shown" },
-                      { value: "strict", label: "Turns: enforced" },
+                      { value: "off", label: t("panel.turnOff") },
+                      { value: "soft", label: t("panel.turnSoft") },
+                      { value: "strict", label: t("panel.turnStrict") },
                     ]}
                     className={selectClass}
                   />
                 </span>
               </Tooltip>
-              <Tooltip content="Transcription: each speaker's microphone is written down with their name, for the beat drafter and the chapter summary. Never read by the DM prompt. The lobby says out loud that the table is being transcribed while this is on.">
+              <Tooltip content={t("panel.transcriptionTip")}>
                 <SettingToggle on={settings.voice.transcribe} onToggle={() => patch({ voice: { ...settings.voice, transcribe: !settings.voice.transcribe } })}>
-                  Transcription {settings.voice.transcribe ? "on" : "off"}
+                  {t(settings.voice.transcribe ? "panel.transcribeOn" : "panel.transcribeOff")}
                 </SettingToggle>
               </Tooltip>
-              <Tooltip content="Distance decides who hears whom, using the battle map. Outside combat, or with no map, everyone hears everyone as usual. The DM always hears everyone and is always heard.">
+              <Tooltip content={t("panel.proximityTip")}>
                 <SettingToggle on={settings.voice.rules.proximity} onToggle={() =>
                     patch({
                       voice: {
@@ -663,24 +627,24 @@ export function GameSettingsPanel({
                         rules: { ...settings.voice.rules, proximity: !settings.voice.rules.proximity },
                       },
                     })}>
-                  Proximity {settings.voice.rules.proximity ? "on" : "off"}
+                  {t(settings.voice.rules.proximity ? "panel.proximityOn" : "panel.proximityOff")}
                 </SettingToggle>
               </Tooltip>
               {settings.voice.rules.proximity ? (
                 <>
-                  <span className="inline-flex min-w-0 max-w-full" title="How far a normal speaking voice carries">
+                  <span className="inline-flex min-w-0 max-w-full" title={t("panel.hearingRange")}>
                     <Select
                       size="sm"
-                      label="How far a normal speaking voice carries"
+                      label={t("panel.hearingRange")}
                       value={String(settings.voice.rules.hearingRangeFeet)}
                       onChange={(value) =>
                         patch({ voice: { ...settings.voice, rules: { ...settings.voice.rules, hearingRangeFeet: Number(value) } } })
                       }
-                      options={[15, 30, 60, 120].map((feet) => ({ value: String(feet), label: `${feet} ft` }))}
+                      options={[15, 30, 60, 120].map((feet) => ({ value: String(feet), label: t("table.feet", { feet }) }))}
                       className={selectClass}
                     />
                   </span>
-                  <Tooltip content="Lets each player pick whisper (5 ft), normal, or shout (120 ft). The range is the speaker's, because shouting is something you do rather than something done to you.">
+                  <Tooltip content={t("panel.sayRangeTip")}>
                     <SettingToggle on={settings.voice.rules.sayRange} onToggle={() =>
                         patch({
                           voice: {
@@ -688,10 +652,10 @@ export function GameSettingsPanel({
                             rules: { ...settings.voice.rules, sayRange: !settings.voice.rules.sayRange },
                           },
                         })}>
-                      Whisper/shout {settings.voice.rules.sayRange ? "on" : "off"}
+                      {t(settings.voice.rules.sayRange ? "panel.sayOn" : "panel.sayOff")}
                     </SettingToggle>
                   </Tooltip>
-                  <Tooltip content="A wall between two characters muffles the voice rather than silencing it. Hearing through a door is a real thing, and audio that vanished at a doorway would read as a bug. Fog of war never gates audio: not seeing someone has nothing to do with hearing them.">
+                  <Tooltip content={t("panel.wallsTip")}>
                     <SettingToggle on={settings.voice.rules.wallsAttenuate} onToggle={() =>
                         patch({
                           voice: {
@@ -702,12 +666,12 @@ export function GameSettingsPanel({
                             },
                           },
                         })}>
-                      Walls muffle {settings.voice.rules.wallsAttenuate ? "on" : "off"}
+                      {t(settings.voice.rules.wallsAttenuate ? "panel.wallsOn" : "panel.wallsOff")}
                     </SettingToggle>
                   </Tooltip>
                 </>
               ) : null}
-              <Tooltip content="A character at 0 hit points stops hearing the table. They still hear the DM, and they are still heard.">
+              <Tooltip content={t("panel.downedTip")}>
                 <SettingToggle on={settings.voice.rules.downedGoDeaf} onToggle={() =>
                     patch({
                       voice: {
@@ -718,46 +682,46 @@ export function GameSettingsPanel({
                         },
                       },
                     })}>
-                  Downed go deaf {settings.voice.rules.downedGoDeaf ? "on" : "off"}
+                  {t(settings.voice.rules.downedGoDeaf ? "panel.downedOn" : "panel.downedOff")}
                 </SettingToggle>
               </Tooltip>
             </>
           ) : null}
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <span className="pk-rowlabel">Bonds</span>
-          <Tooltip content="How each NPC and AI companion feels about each character, tracked by the server on one meter from hostile through neutral to devoted. Deeds move it, and the same deed lands differently on different people: mercy wins over a kind healer and irritates a hard-bitten mercenary. Standing shows in the Bonds tab and colors how the DM plays them.">
+          <span className="pk-rowlabel">{t("panel.bonds")}</span>
+          <Tooltip content={t("panel.bondsTip")}>
             <SettingToggle on={settings.relationships !== "off"} onToggle={() =>
                 patch({ relationships: settings.relationships === "off" ? "on" : "off" })}>
-              Bonds {settings.relationships !== "off" ? "on" : "off"}
+              {t(settings.relationships !== "off" ? "panel.bondsOn" : "panel.bondsOff")}
             </SettingToggle>
           </Tooltip>
           {settings.relationships !== "off" ? (
-            <Tooltip content="The romance ladder on top of the bond meter: interested, courting, together, betrothed, married. Nobody can be romanced who does not already like the character, players always make the first move, and intimate scenes always fade to black.">
+            <Tooltip content={t("panel.romanceTip")}>
               <SettingToggle on={settings.romance !== "off"} onToggle={() => patch({ romance: settings.romance === "off" ? "on" : "off" })}>
-                Romance {settings.romance !== "off" ? "on" : "off"}
+                {t(settings.romance !== "off" ? "panel.romanceOn" : "panel.romanceOff")}
               </SettingToggle>
             </Tooltip>
           ) : null}
           <span className="text-stone-500">
             {settings.relationships === "off"
-              ? "The DM tracks no personal standing; NPCs react to the party as a whole."
+              ? t("panel.bondsHintOff")
               : settings.romance !== "off"
-                ? "Standing is tracked per character, and romance can grow from it."
-                : "Standing is tracked per character; romance is off."}
+                ? t("panel.romanceHintOn")
+                : t("panel.romanceHintOff")}
           </span>
         </div>
         {aiNarrates ? (
         <div className="reveal flex flex-wrap items-center gap-2">
-          <span className="pk-rowlabel">Allies</span>
-          <Tooltip content="AI companions the DM plays: 'party members' travel with the party until dismissed; 'guests' are temporary allies for one scene or battle (a town soldier helping defend) and leave automatically when the fight ends. Auto picks full for solo play, guests only for multiplayer.">
+          <span className="pk-rowlabel">{t("panel.allies")}</span>
+          <Tooltip content={t("panel.companionsTip")}>
             <span className="inline-flex min-w-0 max-w-full">
               <Select<GameSettings["companions"]>
                 size="sm"
-                label="AI companions"
+                label={t("panel.companions")}
                 value={settings.companions}
                 onChange={(companions) => patch({ companions })}
-                options={(Object.keys(COMPANION_LABELS) as Array<GameSettings["companions"]>).map((mode) => ({ value: mode, label: COMPANION_LABELS[mode] }))}
+                options={(Object.keys(COMPANION_LABELS) as Array<GameSettings["companions"]>).map((mode) => ({ value: mode, label: t(`setting.companions.${mode}`) }))}
                 className={selectClass}
               />
             </span>
@@ -765,24 +729,24 @@ export function GameSettingsPanel({
           {settings.companions !== "off" ? (
             <>
               {settings.companions !== "guests" ? (
-                <span className="inline-flex min-w-0 max-w-full" title="Most lasting party companions allowed at once">
+                <span className="inline-flex min-w-0 max-w-full" title={t("panel.maxPartyLabel")}>
                   <Select
                     size="sm"
-                    label="Most lasting party companions allowed at once"
+                    label={t("panel.maxPartyLabel")}
                     value={String(settings.maxCompanions)}
                     onChange={(value) => patch({ maxCompanions: Number(value) })}
-                    options={[1, 2, 3, 4].map((count) => ({ value: String(count), label: `max ${count} party` }))}
+                    options={[1, 2, 3, 4].map((count) => ({ value: String(count), label: t("panel.maxParty", { count }) }))}
                     className={selectClass}
                   />
                 </span>
               ) : null}
-              <span className="inline-flex min-w-0 max-w-full" title="Most temporary guest allies allowed at once">
+              <span className="inline-flex min-w-0 max-w-full" title={t("panel.maxGuestsLabel")}>
                 <Select
                   size="sm"
-                  label="Most temporary guest allies allowed at once"
+                  label={t("panel.maxGuestsLabel")}
                   value={String(settings.maxGuests)}
                   onChange={(value) => patch({ maxGuests: Number(value) })}
-                  options={[1, 2, 3, 4].map((count) => ({ value: String(count), label: `max ${count} guest${count === 1 ? "" : "s"}` }))}
+                  options={[1, 2, 3, 4].map((count) => ({ value: String(count), label: t(count === 1 ? "panel.maxGuest" : "panel.maxGuests", { count }) }))}
                   className={selectClass}
                 />
               </span>

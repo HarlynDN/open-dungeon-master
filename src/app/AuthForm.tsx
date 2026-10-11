@@ -9,24 +9,22 @@ import { ChangePasswordForm } from "@/app/ChangePasswordForm";
 import { GameIcon } from "@/components/ui/GameIcon";
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import { currentPathname, currentQuery, navigateTo, replaceAddress } from "@/lib/navigation";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import type { MessageKey } from "@/lib/i18n/translator";
+import { apiErrorText, type ApiUiError } from "@/lib/i18n/api-errors";
+import { TranslatedText } from "@/components/TranslatedText";
 
 type AuthMode = "login" | "register";
 
-const OAUTH_ERRORS: Record<string, string> = {
-  discord: "Discord sign-in failed. Try again.",
-  signups_disabled: "Signups are disabled on this server.",
-  invite_required: "This server needs an invite code to create an account.",
-  invite_invalid: "That invite code is not valid (or has been used up).",
-  setup_required:
-    "This server has no accounts yet. Create the admin account with a password and the setup code from the server log, then link Discord in settings.",
+const OAUTH_ERRORS: Record<string, MessageKey> = {
+  discord: "auth.discordFailed",
+  signups_disabled: "auth.signupsDisabled",
+  invite_required: "auth.inviteRequired",
+  invite_invalid: "auth.inviteInvalid",
+  setup_required: "auth.oauthSetupRequired",
 };
 
 type SignupMode = "open" | "invite" | "closed";
-
-const MODE_OPTIONS: Array<{ value: AuthMode; label: string }> = [
-  { value: "login", label: "Log in" },
-  { value: "register", label: "Create account" },
-];
 
 // The fields sit a touch taller than the app's default input, each led by a
 // painted glyph. Discord is a kit secondary button (it keeps the second
@@ -107,6 +105,11 @@ export default function AuthForm({
   // on the Discord link so the OAuth round trip returns to the join page.
   joinCode?: string;
 }) {
+  const { t, locale, loadAccountLocale } = useLocale();
+  const modeOptions: Array<{ value: AuthMode; label: string }> = [
+    { value: "login", label: t("auth.login") },
+    { value: "register", label: t("auth.register") },
+  ];
   const [mode, setMode] = useState<AuthMode>("login");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -120,10 +123,10 @@ export default function AuthForm({
       .slice(0, 40);
   });
   // Seed the error from an OAuth redirect (?error=...) so it shows on load.
-  const [error, setError] = useState(() => {
-    if (typeof window === "undefined") return "";
+  const [error, setError] = useState<MessageKey | ApiUiError | null>(() => {
+    if (typeof window === "undefined") return null;
     const oauthError = currentQuery().get("error");
-    return (oauthError && OAUTH_ERRORS[oauthError]) || "";
+    return (oauthError && OAUTH_ERRORS[oauthError]) || null;
   });
   const [busy, setBusy] = useState(false);
   const [discordEnabled, setDiscordEnabled] = useState(false);
@@ -171,7 +174,7 @@ export default function AuthForm({
 
   function switchMode(next: AuthMode) {
     setMode(next);
-    setError("");
+    setError(null);
   }
 
   // Joining a device world by room code: the form asks for a name only.
@@ -181,12 +184,13 @@ export default function AuthForm({
   async function submit(event: FormEvent) {
     event.preventDefault();
     setBusy(true);
-    setError("");
+    setError(null);
     try {
       const name = username.trim();
       const kept = seatJoin ? seatSecret(name) : "";
       const secret = seatJoin ? kept || mintSecret() : password;
       const payload: Record<string, string> = { username: name, password: secret };
+      if (effectiveMode === "register") payload.uiLocale = locale;
       if (effectiveMode === "register" && inviteCode.trim()) {
         payload.inviteCode = inviteCode.trim().toUpperCase();
       }
@@ -220,14 +224,15 @@ export default function AuthForm({
       if (!response.ok) {
         setError(
           seatJoin && response.status === 409
-            ? "That name is already taken at this table. Pick another, or ask the host to remove the old seat."
-            : data.error || "Something went wrong.",
+            ? "auth.seatTaken"
+            : data,
         );
         return;
       }
       if (seatJoin) {
         rememberSeat(name, secret);
       }
+      await loadAccountLocale();
       if (data.user?.mustChangePassword) {
         setPendingReset({ user: data.user, tempPassword: password });
         return;
@@ -239,7 +244,7 @@ export default function AuthForm({
       }
       onAuthed(data.user);
     } catch {
-      setError("Could not reach the server.");
+      setError("common.serverUnavailable");
     } finally {
       setBusy(false);
     }
@@ -249,12 +254,12 @@ export default function AuthForm({
     return (
       <>
         <p className="live-in mb-3 text-sm text-stone-400">
-          An admin reset your password. Pick a new one to continue.
+          {t("password.resetShortHint")}
         </p>
         <ChangePasswordForm
           currentPassword={pendingReset.tempPassword}
           lockCurrent
-          submitLabel="Set new password"
+          submitLabel={t("password.set")}
           onChanged={() => onAuthed({ ...pendingReset.user, mustChangePassword: false })}
         />
       </>
@@ -265,28 +270,28 @@ export default function AuthForm({
   // shown with a dead option; a device world's join page has no modes at all.
   const canRegister = signupMode !== "closed" && !seatJoin;
   // On a join page both modes end at the same seat, so the button says so.
-  const submitLabel = joinCode ? "Join the table" : mode === "login" ? "Log in" : "Create account";
+  const submitLabel = t(joinCode ? "auth.join" : mode === "login" ? "auth.login" : "auth.register");
+  const errorText = typeof error === "string" ? t(error) : error ? apiErrorText(locale, error, "common.requestFailed") : "";
 
   return (
     <>
       {seatJoin ? (
         <p className="reveal mb-4 text-sm text-stone-400">
-          This world runs on its host&apos;s device. Give the table a name and you are in; there is
-          no password to remember.
+          {t("auth.seatHint")}
         </p>
       ) : null}
       {canRegister ? (
         <SegmentedControl
-          options={MODE_OPTIONS}
+          options={modeOptions}
           value={mode}
           onChange={switchMode}
-          label="Log in or create an account"
+          label={t("auth.mode")}
           className="mb-5 w-full"
         />
       ) : null}
 
       <form onSubmit={submit} className="space-y-3.5">
-        <FieldLabel glyph="tab-characters" text="Username">
+        <FieldLabel glyph="tab-characters" text={t("auth.username")}>
           <input
             value={username}
             onChange={(event) => setUsername(event.target.value)}
@@ -294,12 +299,14 @@ export default function AuthForm({
             required
             minLength={3}
             maxLength={24}
-            placeholder={seatJoin ? "Your name at this table" : mode === "register" ? "Choose a name" : undefined}
+            placeholder={seatJoin ? t("auth.seatName") : mode === "register" ? t("auth.chooseName") : undefined}
+            aria-describedby={effectiveMode === "register" ? "username-hint" : undefined}
             className={FIELD}
           />
         </FieldLabel>
+        {effectiveMode === "register" ? <p id="username-hint" className="text-xs text-stone-500">{t("auth.usernameHint")}</p> : null}
         {seatJoin ? null : (
-          <FieldLabel glyph="tab-admin" text="Password">
+          <FieldLabel glyph="tab-admin" text={t("auth.password")}>
             <input
               type="password"
               value={password}
@@ -314,7 +321,7 @@ export default function AuthForm({
         )}
         {effectiveMode === "register" && needsSetup && !seatJoin ? (
           <div className="reveal">
-            <FieldLabel glyph="tab-admin" text="Setup code">
+            <FieldLabel glyph="tab-admin" text={t("auth.setupCode")}>
               <input
                 value={setupCode}
                 onChange={(event) => setSetupCode(event.target.value)}
@@ -327,15 +334,13 @@ export default function AuthForm({
               />
             </FieldLabel>
             <span id="setup-code-hint" className="mt-1.5 block text-xs text-stone-500">
-              {urlSetupCode
-                ? "This server has no accounts yet. The first one becomes its admin; the setup code came with the link from the server log."
-                : "This server has no accounts yet. The first one becomes its admin and needs the one-time setup code printed in the server log, or open the link printed beside it."}
+              {t(urlSetupCode ? "auth.setupLinkHint" : "auth.setupManualHint")}
             </span>
           </div>
         ) : null}
         {effectiveMode === "register" && signupMode === "invite" && !seatJoin && !needsSetup ? (
           <div className="reveal">
-          <FieldLabel glyph="tab-handout" text="Invite code">
+          <FieldLabel glyph="tab-handout" text={t("auth.inviteCode")}>
             <input
               value={inviteCode}
               onChange={(event) => setInviteCode(event.target.value)}
@@ -348,9 +353,7 @@ export default function AuthForm({
             />
           </FieldLabel>
             <span id="invite-code-hint" className="mt-1.5 block text-xs text-stone-500">
-              {urlInvite
-                ? "This code came with your invite link."
-                : "This server is invite-only. Ask whoever runs it for a code."}
+              {t(urlInvite ? "auth.inviteLinkHint" : "auth.inviteManualHint")}
             </span>
           </div>
         ) : null}
@@ -358,10 +361,10 @@ export default function AuthForm({
           <p
             role="alert"
             // Keyed by the message so a second failure shakes again.
-            key={error}
+            key={errorText}
             className="motion-shake rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-300"
           >
-            {error}
+            {errorText}
           </p>
         ) : null}
         <button type="submit" disabled={busy} aria-busy={busy} className={cn(ui.btnPrimary, "h-12 w-full")}>
@@ -370,15 +373,10 @@ export default function AuthForm({
         </button>
         {effectiveMode === "register" ? (
           <p className="reveal text-center text-xs leading-5 text-stone-500">
-            Creating an account means you accept this server&apos;s{" "}
-            <a href="/terms" className="text-stone-400 underline hover:text-amber-200">
-              terms of service
-            </a>{" "}
-            and{" "}
-            <a href="/privacy" className="text-stone-400 underline hover:text-amber-200">
-              privacy policy
-            </a>
-            .
+            <TranslatedText messageKey="auth.termsAgreement" values={{
+              terms: <a href="/terms" className="text-stone-400 underline hover:text-amber-200">{t("auth.termsLink")}</a>,
+              privacy: <a href="/privacy" className="text-stone-400 underline hover:text-amber-200">{t("auth.privacyLink")}</a>,
+            }} />
           </p>
         ) : null}
       </form>
@@ -387,7 +385,7 @@ export default function AuthForm({
         <>
           <div className="auth-or" aria-hidden="true">
             <span />
-            <span className="auth-or-word">or</span>
+            <span className="auth-or-word">{t("common.or")}</span>
             <span />
           </div>
           <a
@@ -399,25 +397,25 @@ export default function AuthForm({
             className={DISCORD_BTN}
           >
             <DiscordMark />
-            {joinCode ? "Continue with Discord" : "Sign in with Discord"}
+            {t(joinCode ? "auth.discordContinue" : "auth.discordSignIn")}
           </a>
         </>
       ) : null}
 
       {canRegister ? (
         <p className="reveal mt-5 text-center text-[13px] text-stone-400">
-          {mode === "login" ? "New here? " : "Have an account? "}
+          {t(mode === "login" ? "auth.newHere" : "auth.haveAccount")}
           <button
             type="button"
             onClick={() => switchMode(mode === "login" ? "register" : "login")}
             className="-my-2 inline-flex min-h-10 items-center text-amber-200 underline-offset-2 hover:text-amber-100 hover:underline"
           >
-            {mode === "login" ? "Create an account" : "Log in"}
+            {t(mode === "login" ? "auth.register" : "auth.login")}
           </button>
         </p>
       ) : mode === "login" ? (
         <p className="reveal mt-5 text-center text-xs text-stone-500">
-          This server is not accepting new accounts.
+          {t("auth.closed")}
         </p>
       ) : null}
     </>

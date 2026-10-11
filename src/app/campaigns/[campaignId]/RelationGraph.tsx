@@ -1,6 +1,7 @@
 "use client";
 
 import { EmptyState } from "@/components/EmptyState";
+import { isComposingInput } from "@/lib/input-composition";
 import { useMemo, type KeyboardEvent } from "react";
 import { cn } from "@/lib/cn";
 import { HostSvgImage } from "@/components/ui/HostSvgImage";
@@ -144,6 +145,7 @@ export function RelationGraph({
                   "aria-label": `Open ${node.name}`,
                   onClick: () => onOpen(node.name),
                   onKeyDown: (event: KeyboardEvent<SVGGElement>) => {
+                    if (isComposingInput(event)) return;
                     if (event.key === "Enter" || event.key === " ") {
                       event.preventDefault();
                       onOpen(node.name);

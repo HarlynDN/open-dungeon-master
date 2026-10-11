@@ -1,6 +1,7 @@
 "use client";
 
 import * as RadixDialog from "@radix-ui/react-dialog";
+import { isComposingInput } from "@/lib/input-composition";
 import { Search } from "lucide-react";
 import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import { GameIcon } from "@/components/ui/GameIcon";
@@ -70,6 +71,7 @@ export function CommandPalette({
 
   useEffect(() => {
     function onKey(event: globalThis.KeyboardEvent) {
+      if (isComposingInput(event)) return;
       const chord = (event.ctrlKey || event.metaKey) && !event.altKey && event.key.toLowerCase() === "k";
       const slash = event.key === "/" && !event.ctrlKey && !event.metaKey && !event.altKey && !typingInto(event.target);
       if (!chord && !slash) return;
@@ -96,6 +98,7 @@ export function CommandPalette({
   }
 
   function onInputKey(event: KeyboardEvent<HTMLInputElement>) {
+    if (isComposingInput(event)) return;
     if (event.key === "ArrowDown" || event.key === "ArrowUp") {
       event.preventDefault();
       if (!shown.length) return;

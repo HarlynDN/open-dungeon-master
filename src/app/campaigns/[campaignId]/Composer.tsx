@@ -1,6 +1,7 @@
 "use client";
 
 import { Eye, EyeOff, Hand, Loader2, Send } from "lucide-react";
+import { isComposingInput } from "@/lib/input-composition";
 import { memo, type ReactNode } from "react";
 import type { Dispatch, FormEvent, RefObject, SetStateAction } from "react";
 import { cn } from "@/lib/cn";
@@ -308,6 +309,7 @@ function ComposerInner({
             value={input}
             onChange={(event) => setInput(event.target.value)}
             onKeyDown={(event) => {
+              if (isComposingInput(event)) return;
               if (event.key === "Enter" && !event.shiftKey) {
                 event.preventDefault();
                 onSubmit(event);

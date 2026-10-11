@@ -1,6 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { requestErrorText, type UiRequestError } from "@/lib/i18n/api-errors";
+import { lobbyBlockerText } from "@/lib/i18n/lobby-presentations";
+import type { MessageKey } from "@/lib/i18n/translator";
 import { appConfirm } from "@/components/ui/ConfirmDialog";
 import { ArrowLeft } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -21,7 +25,7 @@ import { RulesPanel } from "@/app/campaigns/[campaignId]/RulesPanel";
 import { VoicePanel } from "@/app/campaigns/[campaignId]/VoicePanel";
 import { useVoiceSpeaking } from "@/app/campaigns/[campaignId]/liveStore";
 import { resolveCompanionMode } from "@/lib/schemas/game-settings";
-import { isPrimaryDm, lobbyBlocker, partySlotCount, viewerCaps } from "@/lib/dm/viewer";
+import { isPrimaryDm, lobbyBlockerReason, partySlotCount, viewerCaps } from "@/lib/dm/viewer";
 import {
   ContentImportPicker,
   EMPTY_SELECTION,
@@ -41,18 +45,19 @@ import { SceneBackdrop } from "@/app/campaigns/[campaignId]/CinematicParts";
 const EMPTY_MESSAGES: never[] = [];
 
 export function Lobby({ state, refresh }: { state: CampaignState; refresh: () => void }) {
+  const { locale, t } = useLocale();
   const { campaign, me, members, sheets } = state;
   const voiceSpeaking = useVoiceSpeaking();
   const [busy, setBusy] = useState(false);
   const [editing, setEditing] = useState(false);
   const [buildingCompanion, setBuildingCompanion] = useState(false);
   const [contentImport, setContentImport] = useState<ImportSelection>(EMPTY_SELECTION);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<UiRequestError | null>(null);
   const [canAssignSeats, setCanAssignSeats] = useState(false);
   // Bumped after a seat move so the canAssign answer is re-asked: handing the
   // DM seat away can revoke the mover's own right to move it again.
   const [seatVersion, setSeatVersion] = useState(0);
-  const [seatError, setSeatError] = useState("");
+  const [seatError, setSeatError] = useState<UiRequestError | null>(null);
 
   // Inside the desktop or Android app, on the app's own world: the state of
   // the tunnel, watched but never started here. Opening a lobby is not
@@ -142,7 +147,7 @@ export function Lobby({ state, refresh }: { state: CampaignState; refresh: () =>
   // Why the adventure cannot open yet, or "" when it can. The server's PATCH
   // asks the same function of the same seats, so the Begin button is enabled
   // exactly when the route would accept it.
-  const startBlocker = lobbyBlocker(
+  const blockerReason = lobbyBlockerReason(
     seats,
     members.map((member) => ({
       userId: member.userId,
@@ -151,11 +156,13 @@ export function Lobby({ state, refresh }: { state: CampaignState; refresh: () =>
     })),
   );
 
+  const startBlocker = lobbyBlockerText(blockerReason, locale);
+
   // Returns whether the server took it, so the solo flow can stop before
   // trying to start a game whose only player is not ready.
   async function setReady(ready: boolean) {
     setBusy(true);
-    setError("");
+    setError(null);
     try {
       const response = await fetch(`/api/campaigns/${campaign!.id}/ready`, {
         method: "POST",
@@ -164,12 +171,12 @@ export function Lobby({ state, refresh }: { state: CampaignState; refresh: () =>
       });
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
-        setError(data.error || "Could not change your ready state.");
+        setError({ data, fallback: "lobby.readyError" });
         return false;
       }
       return true;
     } catch {
-      setError("Could not reach the server.");
+      setError({ data: {}, fallback: "lobby.networkError" });
       return false;
     } finally {
       setBusy(false);
@@ -178,9 +185,9 @@ export function Lobby({ state, refresh }: { state: CampaignState; refresh: () =>
 
   // PATCHes the campaign live. Shared by the owner's Begin button and the
   // solo one-stroke start.
-  async function activate(failure: string) {
+  async function activate(failure: MessageKey) {
     setBusy(true);
-    setError("");
+    setError(null);
     try {
       const response = await fetch(`/api/campaigns/${campaign!.id}`, {
         method: "PATCH",
@@ -189,12 +196,12 @@ export function Lobby({ state, refresh }: { state: CampaignState; refresh: () =>
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
-        setError(data.error || failure);
+        setError({ data, fallback: failure });
         return;
       }
       refresh();
     } catch {
-      setError("Could not reach the server.");
+      setError({ data: {}, fallback: "lobby.networkError" });
     } finally {
       setBusy(false);
     }
@@ -205,23 +212,34 @@ export function Lobby({ state, refresh }: { state: CampaignState; refresh: () =>
     if (!myMember?.ready && !(await setReady(true))) {
       return;
     }
-    await activate("Could not start the adventure.");
+    await activate("lobby.startError");
+  }
+
+  async function memberRequest(path: string, method: "POST" | "PATCH", body: unknown, fallback: MessageKey) {
+    setError(null);
+    try {
+      const response = await fetch(`/api/campaigns/${campaign!.id}/${path}`, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        setError({ data, fallback });
+        return;
+      }
+      refresh();
+    } catch {
+      setError({ data: {}, fallback: "lobby.networkError" });
+    }
   }
 
   async function makeLead(userId: string) {
-    await fetch(`/api/campaigns/${campaign!.id}/lead`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId }),
-    });
+    await memberRequest("lead", "POST", { userId }, "lobby.leadError");
   }
 
   async function muteMember(userId: string, muted: boolean) {
-    await fetch(`/api/campaigns/${campaign!.id}/mute`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId, muted }),
-    });
+    await memberRequest("mute", "POST", { userId, muted }, "lobby.muteError");
   }
 
   // Moves a DM seat; userId null empties it (the server allows that only for
@@ -229,7 +247,7 @@ export function Lobby({ state, refresh }: { state: CampaignState; refresh: () =>
   // change event is not one the stream applies, so the mover reloads the
   // snapshot to see the new seats.
   async function assignSeat(seat: "dm" | "assistant", userId: string | null) {
-    setSeatError("");
+    setSeatError(null);
     try {
       const response = await fetch(`/api/campaigns/${campaign!.id}/dm/seat`, {
         method: "POST",
@@ -238,22 +256,18 @@ export function Lobby({ state, refresh }: { state: CampaignState; refresh: () =>
       });
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
-        setSeatError(data.error || "Could not move that seat.");
+        setSeatError({ data, fallback: "lobby.seatError" });
         return;
       }
       setSeatVersion((version) => version + 1);
       refresh();
     } catch {
-      setSeatError("Could not reach the server.");
+      setSeatError({ data: {}, fallback: "lobby.networkError" });
     }
   }
 
   async function toggleRealDice() {
-    await fetch(`/api/campaigns/${campaign!.id}/members/me`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ useRealDice: !myMember?.useRealDice }),
-    });
+    await memberRequest("members/me", "PATCH", { useRealDice: !myMember?.useRealDice }, "lobby.diceError");
   }
 
   // Lobby-only: drop your character so you can create or pick another. The
@@ -261,21 +275,21 @@ export function Lobby({ state, refresh }: { state: CampaignState; refresh: () =>
   async function removeCharacter() {
     if (
       !await appConfirm(
-        `Remove ${mySheet?.name ?? "your character"} from this campaign? You can create or pick another afterwards.`,
+        t("lobby.removeCharacterConfirm", { name: mySheet?.name ?? t("lobby.yourCharacter") }),
       )
     ) {
       return;
     }
     setBusy(true);
-    setError("");
+    setError(null);
     try {
       const response = await fetch(`/api/campaigns/${campaign!.id}/sheet`, { method: "DELETE" });
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
-        setError(data.error || "Could not remove the character.");
+        setError({ data, fallback: "lobby.removeCharacterError" });
       }
     } catch {
-      setError("Could not reach the server.");
+      setError({ data: {}, fallback: "lobby.networkError" });
     } finally {
       setBusy(false);
     }
@@ -283,7 +297,7 @@ export function Lobby({ state, refresh }: { state: CampaignState; refresh: () =>
 
   // Lead removes a prepared companion (same path the in-session dismiss uses).
   async function dismissCompanion(characterId: string) {
-    setError("");
+    setError(null);
     try {
       const response = await fetch(
         `/api/campaigns/${campaign!.id}/companions/${characterId}`,
@@ -291,33 +305,33 @@ export function Lobby({ state, refresh }: { state: CampaignState; refresh: () =>
       );
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
-        setError(data.error || "Could not remove the companion.");
+        setError({ data, fallback: "lobby.removeCompanionError" });
       }
     } catch {
-      setError("Could not reach the server.");
+      setError({ data: {}, fallback: "lobby.networkError" });
     }
   }
 
   async function deleteCampaign() {
     if (
       !await appConfirm(
-        `Delete "${campaign!.title}" for everyone? All characters, messages, and story progress are lost. This cannot be undone.`,
+        t("lobby.deleteConfirm", { title: campaign!.title }),
       )
     ) {
       return;
     }
     setBusy(true);
-    setError("");
+    setError(null);
     try {
       const response = await fetch(`/api/campaigns/${campaign!.id}`, { method: "DELETE" });
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
-        setError(data.error || "Could not delete the campaign.");
+        setError({ data, fallback: "lobby.deleteError" });
         return;
       }
       navigateTo("/");
     } catch {
-      setError("Could not reach the server.");
+      setError({ data: {}, fallback: "lobby.networkError" });
     } finally {
       setBusy(false);
     }
@@ -332,7 +346,7 @@ export function Lobby({ state, refresh }: { state: CampaignState; refresh: () =>
         href="/"
         className="mb-3 inline-flex items-center gap-1.5 text-sm text-stone-500 transition-colors hover:text-amber-200"
       >
-        <ArrowLeft className="size-4" /> All campaigns
+        <ArrowLeft className="size-4" /> {t("nav.campaigns")}
       </Link>
 
       <div className="flex flex-col lg:grid lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:items-start lg:gap-x-8">
@@ -353,7 +367,7 @@ export function Lobby({ state, refresh }: { state: CampaignState; refresh: () =>
               canMakeLead={isLead || isOwner}
               humanDmTable={humanDmTable}
               canAssignSeats={canAssignSeats}
-              seatError={seatError}
+              seatError={requestErrorText(locale, seatError)}
               onMakeLead={makeLead}
               onAssignSeat={assignSeat}
               canMute={isLead || isOwner}
@@ -379,10 +393,10 @@ export function Lobby({ state, refresh }: { state: CampaignState; refresh: () =>
               isOwner={isOwner}
               canStart={isOwner || isPrimaryDm(seats, me.id)}
               busy={busy}
-              error={error}
+              error={requestErrorText(locale, error)}
               startBlocker={startBlocker}
               onToggleReady={() => void setReady(!myMember?.ready)}
-              onStart={() => void activate("Could not start the campaign.")}
+              onStart={() => void activate("lobby.startCampaignError")}
               onBeginSolo={() => void beginSolo()}
               onRemoveCharacter={() => void removeCharacter()}
               onDelete={() => void deleteCampaign()}
@@ -394,21 +408,21 @@ export function Lobby({ state, refresh }: { state: CampaignState; refresh: () =>
               check. Handing them to the lead alone drew editable panels for a
               player-lead the server would refuse and read-only ones for the DM. */}
           <section className="lobby-enter order-9 mb-6 space-y-3" style={enter(5)}>
-            <LobbyGroupHead glyph="tab-story" title="Rules and lore" />
+            <LobbyGroupHead glyph="tab-story" title={t("lobby.rulesLore")} />
             <RulesPanel
               campaignId={campaign.id}
               settings={campaign.gameSettings}
               steersStory={steersStory}
               isDm={adjudicates}
             />
-            <LorePanel campaignId={campaign.id} steersStory={steersStory} isDm={adjudicates} />
+            <LorePanel campaignId={campaign.id} campaignLocale={campaign.gameSettings.locale} steersStory={steersStory} isDm={adjudicates} />
             {/* Prep keeps happening after session one, so the import is not only
                 a creation-time step. Gated on story authority rather than on the
                 lead, because in a human-DM campaign the lead is a player and the
                 lore, places and prepared fights are the DM's to bring in. */}
             {steersStory ? (
               <div className={cn(ui.card, "p-3")}>
-                <h2 className={cn(ui.sectionEyebrow, "mb-2")}>Bring in prep</h2>
+                <h2 className={cn(ui.sectionEyebrow, "mb-2")}>{t("lobby.bringPrep")}</h2>
                 <ContentImportPicker
                   campaignId={campaign.id}
                   selection={contentImport}
@@ -476,14 +490,14 @@ export function Lobby({ state, refresh }: { state: CampaignState; refresh: () =>
               />
               {campaign.gameSettings.voice.transcribe ? (
                 <p className="reveal mt-2 text-xs text-amber-300/80">
-                  This table is transcribed: while voice is on, what each person says is written down with their name for the story log. Turn it off in campaign settings.
+                  {t("lobby.transcribed")}
                 </p>
               ) : null}
             </section>
           ) : null}
 
           <div className="lobby-enter order-8" style={enter(4)}>
-            <LobbyGroupHead glyph="tab-settings" title="Table settings" />
+            <LobbyGroupHead glyph="tab-settings" title={t("lobby.tableSettings")} />
             <GameSettingsPanel
               campaignId={campaign.id}
               settings={campaign.gameSettings}

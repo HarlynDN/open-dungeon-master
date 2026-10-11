@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+
 import { Dices, Pencil } from "lucide-react";
 import type { CSSProperties, ReactNode } from "react";
 import { cn } from "@/lib/cn";
@@ -9,7 +11,7 @@ import { GoldTitle } from "@/components/ui/GoldTitle";
 import { Switch } from "@/components/ui/Switch";
 import { Tooltip } from "@/components/ui/Tooltip";
 import { ui } from "@/lib/ui";
-import type { CampaignCover as CampaignCoverRef } from "@/lib/campaign-types";
+import type { CampaignCover as CampaignCoverRef, CampaignDifficulty } from "@/lib/campaign-types";
 
 // The pieces of the lobby that are pure presentation, kept out of Lobby.tsx so
 // that file stays the seat logic and the layout.
@@ -57,7 +59,7 @@ export function LobbyHero({
     description: string;
     theme: string;
     startingLevel: number;
-    difficulty: string;
+    difficulty: CampaignDifficulty;
     cover: CampaignCoverRef | null;
     gameSettings: { genre: string };
   };
@@ -66,6 +68,7 @@ export function LobbyHero({
   className?: string;
   style?: CSSProperties;
 }) {
+  const { t } = useLocale();
   return (
     <div className={cn(ui.card, "lobby-hero ornate texture-noise mb-6", className)} style={style}>
       <div className="lobby-hero-art">
@@ -78,15 +81,15 @@ export function LobbyHero({
         />
       </div>
       <div className="relative -mt-1 px-4 pb-4 sm:px-5 sm:pb-5">
-        <p className={ui.sectionEyebrow}>Waiting in the lobby</p>
+        <p className={ui.sectionEyebrow}>{t("lobby.waiting")}</p>
         <div className="mt-1 flex items-start gap-2">
           <GoldTitle className="min-w-0 text-balance break-words leading-tight">{campaign.title}</GoldTitle>
           {canEdit ? (
-            <Tooltip content="Edit campaign settings">
+            <Tooltip content={t("lobby.editSettings")}>
               <button
                 type="button"
                 onClick={onEdit}
-                aria-label="Edit campaign settings"
+                aria-label={t("lobby.editSettings")}
                 className="motion-nudge mt-1 shrink-0 rounded-md border border-stone-700/70 p-2 text-stone-400 hover:border-amber-500/40 hover:text-amber-100"
               >
                 <Pencil className="size-3.5" />
@@ -99,8 +102,8 @@ export function LobbyHero({
           aria-hidden="true"
         />
         <p className="mt-2 flex flex-wrap items-center gap-1.5 text-xs text-stone-300">
-          <HeroChip>Level {campaign.startingLevel} start</HeroChip>
-          <HeroChip>{campaign.difficulty}</HeroChip>
+          <HeroChip>{t("lobby.startLevel", { level: campaign.startingLevel })}</HeroChip>
+          <HeroChip>{t(`campaign.difficulty.${campaign.difficulty}`)}</HeroChip>
           {campaign.theme ? <HeroChip>{campaign.theme}</HeroChip> : null}
         </p>
         {campaign.description ? (
@@ -132,20 +135,20 @@ export function LobbyRealDice({
   className?: string;
   style?: CSSProperties;
 }) {
+  const { t } = useLocale();
   return (
     <section className={cn(ui.card, "mb-6 flex items-center gap-3 px-4 py-3", className)} style={style}>
       <GameIcon icon={{ kind: "glyph", key: "die-d20" }} size="size-9" />
       <div className="min-w-0 flex-1">
-        <p className="text-sm text-stone-200">I roll physical dice</p>
+        <p className="text-sm text-stone-200">{t("lobby.physicalDice")}</p>
         <p className="text-xs text-stone-500">
-          The game pauses for you to enter your real rolls instead of rolling digitally.
-        </p>
+          {t("lobby.physicalDiceHint")}</p>
       </div>
       <span className="flex shrink-0 flex-col items-center gap-1">
-        <Switch on={on} onChange={onToggle} label="I roll physical dice" />
+        <Switch on={on} onChange={onToggle} label={t("lobby.physicalDice")} />
         <span className={cn("inline-flex items-center gap-1 text-[11px]", on ? "text-amber-200" : "text-stone-500")}>
           <Dices className="size-3" />
-          {on ? "Real dice" : "Digital"}
+          {on ? t("lobby.realDice") : t("lobby.digitalDice")}
         </span>
       </span>
     </section>

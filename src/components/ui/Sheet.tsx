@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+
 import * as RadixDialog from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import type { ReactNode } from "react";
@@ -34,6 +36,7 @@ export function Sheet({
   children: ReactNode;
   className?: string;
 }) {
+  const { t } = useLocale();
   const popover = desktop === "popover";
   return (
     <RadixDialog.Root open={open} onOpenChange={onOpenChange}>
@@ -80,7 +83,7 @@ export function Sheet({
                 "rounded-md p-1 text-stone-400 transition-colors hover:bg-stone-800 hover:text-stone-200",
                 hideTitle && "absolute right-3 top-3 lg:right-4 lg:top-4",
               )}
-              aria-label="Close"
+              aria-label={t("prep.close")}
             >
               <X className="size-4" />
             </RadixDialog.Close>

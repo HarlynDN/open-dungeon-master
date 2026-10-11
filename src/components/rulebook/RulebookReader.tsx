@@ -1,6 +1,7 @@
 "use client";
 
 import { Bookmark, ChevronLeft, ChevronRight, List } from "lucide-react";
+import { isComposingInput } from "@/lib/input-composition";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 import type { RulebookContents as Contents, RulebookPageResponse } from "@/lib/rulebook/types";
@@ -277,6 +278,7 @@ export function RulebookReader({
 
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
+      if (isComposingInput(event)) return;
       if (event.altKey || event.ctrlKey || event.metaKey || typing(event.target)) return;
       if (event.key === "ArrowRight") step("forward");
       else if (event.key === "ArrowLeft") step("back");

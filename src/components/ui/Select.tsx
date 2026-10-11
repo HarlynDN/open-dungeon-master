@@ -6,6 +6,7 @@ import type { ReactNode } from "react";
 import { GameIcon } from "@/components/ui/GameIcon";
 import { cn } from "@/lib/cn";
 import type { IconRef } from "@/lib/icons";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 // The kit's select (docs/visual-overhaul-plan.md 8c.4): the same choice a
 // native <select> offers, as a menu that belongs to the app. The trigger is a
@@ -30,7 +31,7 @@ export function Select<T extends string>({
   onChange,
   options,
   label,
-  placeholder = "Choose",
+  placeholder,
   size = "md",
   disabled = false,
   name,
@@ -49,6 +50,7 @@ export function Select<T extends string>({
   className?: string;
   align?: "start" | "end";
 }) {
+  const { t } = useLocale();
   const chosen = options.find((option) => option.value === value) ?? null;
   const groups: Array<{ name: string; items: SelectOption<T>[] }> = [];
   for (const option of options) {
@@ -63,7 +65,7 @@ export function Select<T extends string>({
       <DropdownMenu.Trigger asChild disabled={disabled}>
         <button type="button" aria-label={label} disabled={disabled} className={cn("kit-select", size === "sm" && "kit-select-sm", className)}>
           {chosen?.icon ? <GameIcon icon={chosen.icon} size={size === "sm" ? "size-4" : "size-5"} /> : null}
-          <span className={cn("min-w-0 grow truncate text-left", !chosen && "text-stone-500")}>{chosen ? chosen.label : placeholder}</span>
+          <span className={cn("min-w-0 grow truncate text-left", !chosen && "text-stone-500")}>{chosen ? chosen.label : (placeholder ?? t("field.choose"))}</span>
           <ChevronDown className="kit-select-chevron size-3.5 shrink-0" aria-hidden="true" />
         </button>
       </DropdownMenu.Trigger>

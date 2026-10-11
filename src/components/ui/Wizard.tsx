@@ -7,6 +7,7 @@ import { GoldTitle } from "@/components/ui/GoldTitle";
 import { StepWipe, useStepWipe } from "@/components/ui/StepWipe";
 import { cn } from "@/lib/cn";
 import { ui } from "@/lib/ui";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 // Stepped wizard: gold progress bar, steps that slide sideways, Back in the
 // header and Continue in the footer. Fills whatever holds it (a Dialog or a
@@ -64,7 +65,7 @@ export function Wizard({
   steps,
   title,
   onDone,
-  doneLabel = "Done",
+  doneLabel,
   onCancel,
   step: controlledStep,
   onStepChange,
@@ -90,6 +91,7 @@ export function Wizard({
   aside?: ReactNode;
   notice?: WizardNotice;
 }) {
+  const { t } = useLocale();
   const [internalStep, setInternalStep] = useState(0);
   const controlled = controlledStep !== undefined;
   const raw = controlled ? controlledStep : internalStep;
@@ -106,7 +108,7 @@ export function Wizard({
   const { wiping, run } = useStepWipe(wipe);
 
   const labelOf = (s: WizardStep, index: number) =>
-    s.label ?? (typeof s.title === "string" ? s.title : `Step ${index + 1}`);
+    s.label ?? (typeof s.title === "string" ? s.title : t("wizard.step", { step: index + 1 }));
 
   const go = (next: number) => {
     // With the wipe on, the step changes once the pane has gone dark.
@@ -166,7 +168,7 @@ export function Wizard({
               type="button"
               onClick={back}
               className="-ml-1.5 rounded-md p-1.5 text-stone-400 transition-colors hover:bg-stone-800 hover:text-stone-200"
-              aria-label={step === 0 ? "Cancel" : "Back"}
+              aria-label={t(step === 0 ? "common.cancel" : "wizard.back")}
             >
               <ChevronLeft className="size-4" />
             </button>
@@ -180,7 +182,7 @@ export function Wizard({
             </span>
           ) : null}
           <span className="eyebrow shrink-0 text-[10px] text-stone-500" aria-live="polite">
-            Step {step + 1} / {total}
+            {t("wizard.progress", { step: step + 1, total })}
             {variant === "diamonds" && current ? (
               // The gold step title sits right under the header on a phone,
               // so the name is only repeated where there is room for it.
@@ -221,13 +223,13 @@ export function Wizard({
                 onClick={showNotice}
                 className="shrink-0 whitespace-nowrap font-mono text-[10px] text-amber-300 underline-offset-2 hover:text-amber-200 hover:underline"
               >
-                Show me
+                {t("wizard.showMe")}
               </button>
             ) : null}
             <button
               type="button"
               onClick={notice.onDismiss}
-              aria-label="Dismiss"
+              aria-label={t("wizard.dismiss")}
               className="-mr-1 shrink-0 rounded p-0.5 text-stone-500 transition-colors hover:text-stone-300"
             >
               <X className="size-3.5" />
@@ -284,7 +286,7 @@ export function Wizard({
               className="wizard-blocker reveal min-w-0 flex-1 text-left text-xs text-amber-300/90 underline-offset-2 hover:text-amber-200 hover:underline"
             >
               <span role="status">{blocker}</span>
-              <span className="ml-1 whitespace-nowrap font-mono text-[10px] text-stone-500">Show me</span>
+              <span className="ml-1 whitespace-nowrap font-mono text-[10px] text-stone-500">{t("wizard.showMe")}</span>
             </button>
           ) : (
             <p id={blockerId} role="status" className="wizard-blocker reveal min-w-0 flex-1 text-xs text-amber-300/90">
@@ -294,7 +296,7 @@ export function Wizard({
         ) : null}
         {step > 0 ? (
           <button type="button" onClick={back} className={ui.btnSecondary}>
-            Back
+            {t("wizard.back")}
           </button>
         ) : null}
         {/* Held with aria-disabled rather than disabled when there is a
@@ -309,7 +311,7 @@ export function Wizard({
           title={blocker ?? undefined}
           className={cn(ui.btnPrimary, "wizard-continue", blocker && "wizard-continue-held")}
         >
-          {last ? doneLabel : (current?.continueLabel ?? "Continue")}
+          {last ? (doneLabel ?? t("wizard.done")) : (current?.continueLabel ?? t("wizard.continue"))}
         </button>
       </footer>
 

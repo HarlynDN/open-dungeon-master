@@ -1,6 +1,7 @@
 "use client";
 
 import { Send } from "lucide-react";
+import { isComposingInput } from "@/lib/input-composition";
 import { useState } from "react";
 import { cn } from "@/lib/cn";
 import { ui } from "@/lib/ui";
@@ -123,6 +124,7 @@ export function DmInboxPanel({
                         autoFocus
                         onChange={(event) => setDraft(event.target.value)}
                         onKeyDown={(event) => {
+                          if (isComposingInput(event)) return;
                           if (event.key === "Enter" && !event.shiftKey) {
                             event.preventDefault();
                             void reply(whisper.characterId as string);

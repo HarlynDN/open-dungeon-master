@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { GameIcon } from "@/components/ui/GameIcon";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 // The title screen's menu, the way a game's main menu lists its doors:
 // diamond bullets, Cinzel, the painted glyph rising beside the line you
@@ -27,17 +28,18 @@ export function HomeMenu({
   showSolo: boolean;
   onJoin: () => void;
 }) {
+  const { t } = useLocale();
   const items: Array<{ id: string; label: string; glyph: string; href?: string; onClick?: () => void; tour: string }> = [
-    ...(showNew && showSolo ? [{ id: "starter", label: "Quick start", glyph: "tab-story", onClick: onStarter, tour: "tile-quick-start" }] : []),
-    ...(showNew ? [{ id: "new", label: "New campaign", glyph: "tab-campaigns", onClick: onNewCampaign, tour: "tile-new-campaign" }] : []),
-    ...(showSolo ? [{ id: "solo", label: "Solo adventure", glyph: "tab-story", onClick: onSolo, tour: "tile-solo" }] : []),
-    { id: "characters", label: "Characters", glyph: "tab-characters", href: "/characters", tour: "tile-characters" },
-    { id: "workshop", label: "Workshop", glyph: "system-homebrew", href: "/workshop", tour: "tile-workshop" },
-    { id: "rulebook", label: "Rulebook", glyph: "system-rules", href: "/rulebook", tour: "tile-rulebook" },
-    { id: "join", label: "Join with a code", glyph: "tab-handout", onClick: onJoin, tour: "tile-join" },
+    ...(showNew && showSolo ? [{ id: "starter", label: t("home.quickStart"), glyph: "tab-story", onClick: onStarter, tour: "tile-quick-start" }] : []),
+    ...(showNew ? [{ id: "new", label: t("home.newCampaign"), glyph: "tab-campaigns", onClick: onNewCampaign, tour: "tile-new-campaign" }] : []),
+    ...(showSolo ? [{ id: "solo", label: t("home.soloAdventure"), glyph: "tab-story", onClick: onSolo, tour: "tile-solo" }] : []),
+    { id: "characters", label: t("nav.characters"), glyph: "tab-characters", href: "/characters", tour: "tile-characters" },
+    { id: "workshop", label: t("home.workshop"), glyph: "system-homebrew", href: "/workshop", tour: "tile-workshop" },
+    { id: "rulebook", label: t("nav.rulebook"), glyph: "system-rules", href: "/rulebook", tour: "tile-rulebook" },
+    { id: "join", label: t("home.joinCode"), glyph: "tab-handout", onClick: onJoin, tour: "tile-join" },
   ];
   return (
-    <nav className="ts-menu" aria-label="Main menu">
+    <nav className="ts-menu" aria-label={t("home.mainMenu")}>
       {items.map((item, index) => {
         const body = (
           <>

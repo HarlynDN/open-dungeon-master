@@ -4,6 +4,9 @@ import localFont from "next/font/local";
 import TopoBackground from "./TopoBackground";
 import { ServerAddressButton } from "@/components/ServerAddressButton";
 import { ConfirmHost } from "@/components/ui/ConfirmDialog";
+import { LocaleProvider } from "@/lib/i18n/LocaleProvider";
+import { getUiLocale, getLocaleResources } from "@/lib/i18n/server";
+import { LOCALE_DEFINITIONS } from "@/lib/i18n/locales";
 import "./globals.css";
 
 // The faces ship in the repo (Google Fonts' latin subsets) so a build
@@ -56,19 +59,22 @@ export const viewport: Viewport = {
   interactiveWidget: "resizes-content",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getUiLocale();
   return (
     <html
-      lang="en"
+      lang={locale}
+      dir={LOCALE_DEFINITIONS[locale].direction}
       className={`${geistSans.variable} ${geistMono.variable} ${sourceSerif.variable} ${cinzel.variable} h-full antialiased`}
       // browser extensions inject attributes into <html> before React loads
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
+        <LocaleProvider initialLocale={locale} initialCatalogs={getLocaleResources(locale, "ui")}>
         {/* The reader's theme and scale, applied to <html> before anything
             else paints (docs/vtt-parity-implementation-plan.md section 14). */}
         <ThemeApplier />
@@ -81,6 +87,7 @@ export default function RootLayout({
         <ServerAddressButton />
         {/* The app's own confirm and notice, asked from anywhere. */}
         <ConfirmHost />
+        </LocaleProvider>
       </body>
     </html>
   );

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { currentUser, unauthorized } from "@/lib/auth";
+import { currentUser } from "@/lib/auth";
 import { joinByInviteCode, publicCampaign } from "@/lib/db/campaigns";
 import { publishPersisted } from "@/lib/events";
 import { checkLogin, recordLoginFailure, recordLoginSuccess } from "@/lib/login-throttle";
@@ -14,16 +14,16 @@ const joinSchema = z.object({
 export async function POST(request: Request) {
   const user = await currentUser();
   if (!user) {
-    return unauthorized();
+    return Response.json({ error: "Not logged in.", errorCode: "session_expired" }, { status: 401 });
   }
   if (user.mustChangePassword) {
-    return Response.json({ error: "Set a new password to continue." }, { status: 403 });
+    return Response.json({ error: "Set a new password to continue.", errorCode: "password_required" }, { status: 403 });
   }
 
   const raw = await request.json().catch(() => ({}));
   const parsed = joinSchema.safeParse(raw);
   if (!parsed.success) {
-    return Response.json({ error: "Invalid invite code." }, { status: 400 });
+    return Response.json({ error: "Invalid invite code.", errorCode: "room_code_format" }, { status: 400 });
   }
 
   // Room codes never expire, so wrong guesses get the same escalating
@@ -32,7 +32,7 @@ export async function POST(request: Request) {
   const gate = checkLogin(throttle);
   if (gate.blocked) {
     return Response.json(
-      { error: `Too many attempts. Try again in ${gate.retryAfterSec}s.` },
+      { error: `Too many attempts. Try again in ${gate.retryAfterSec}s.`, errorCode: "rate_limited", retryAfterSec: gate.retryAfterSec },
       { status: 429, headers: { "Retry-After": String(gate.retryAfterSec) } },
     );
   }
@@ -40,7 +40,7 @@ export async function POST(request: Request) {
   const result = joinByInviteCode(user.id, parsed.data.inviteCode);
   if ("error" in result) {
     recordLoginFailure(throttle);
-    return Response.json({ error: result.error }, { status: 400 });
+    return Response.json({ error: result.error, errorCode: result.error === "No campaign with that invite code." ? "room_invalid" : /full/i.test(result.error) ? "room_full" : "room_unavailable" }, { status: 400 });
   }
   recordLoginSuccess(throttle);
 

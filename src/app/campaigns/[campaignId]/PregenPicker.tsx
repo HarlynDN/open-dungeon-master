@@ -1,6 +1,8 @@
 "use client";
 
 import { Loader2 } from "lucide-react";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { requestErrorText, type UiRequestError } from "@/lib/i18n/api-errors";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
 import { ui } from "@/lib/ui";
@@ -13,9 +15,10 @@ type Hero = { id: string; name: string; tagline: string; blurb: string };
 // another table. Offered in every lobby, not only the starter's: a friend
 // who joined with a room code and ten minutes to spare is who it is for.
 export function PregenPicker({ campaignId }: { campaignId: string }) {
+  const { locale, t } = useLocale();
   const [heroes, setHeroes] = useState<Hero[] | null>(null);
   const [busyId, setBusyId] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState<UiRequestError | null>(null);
 
   useEffect(() => {
     fetch("/api/starter")
@@ -26,7 +29,7 @@ export function PregenPicker({ campaignId }: { campaignId: string }) {
 
   async function pick(id: string) {
     setBusyId(id);
-    setError("");
+    setError(null);
     try {
       const response = await fetch(`/api/campaigns/${campaignId}/sheet/pregen`, {
         method: "POST",
@@ -35,8 +38,10 @@ export function PregenPicker({ campaignId }: { campaignId: string }) {
       });
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
-        setError(data.error || "Could not seat that hero.");
+        setError({ data, fallback: "lobby.pregenError" });
       }
+    } catch {
+      setError({ data: {}, fallback: "lobby.networkError" });
     } finally {
       setBusyId("");
     }
@@ -47,7 +52,7 @@ export function PregenPicker({ campaignId }: { campaignId: string }) {
   }
   return (
     <div className={cn(ui.card, "space-y-2 px-4 py-3")} data-tour="pregen-picker">
-      <p className="text-xs uppercase tracking-wide text-stone-500">Or take a ready-made hero</p>
+      <p className="text-xs uppercase tracking-wide text-stone-500">{t("lobby.pregen")}</p>
       <ul className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
         {heroes.map((hero) => (
           <li key={hero.id}>
@@ -67,7 +72,7 @@ export function PregenPicker({ campaignId }: { campaignId: string }) {
           </li>
         ))}
       </ul>
-      {error ? <p className="motion-shake text-xs text-red-400">{error}</p> : null}
+      {error ? <p className="motion-shake text-xs text-red-400">{requestErrorText(locale, error)}</p> : null}
     </div>
   );
 }

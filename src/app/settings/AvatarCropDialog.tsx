@@ -1,5 +1,9 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { readUiResponse, requestErrorText, type UiRequestError } from "@/lib/i18n/api-errors";
+import { accountRequestError } from "@/lib/i18n/account-presentations";
+
 import * as Dialog from "@radix-ui/react-dialog";
 import { Loader2, Upload, X, ZoomIn } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
@@ -43,18 +47,21 @@ export function AvatarCropDialog({
   title,
   onUploaded,
   onClose,
+  saveFailureKey = "account.avatarSaveError",
 }: {
   title: string;
-  onUploaded: (image: UploadedImage) => void;
+  onUploaded: (image: UploadedImage) => void | boolean | Promise<void | boolean>;
   onClose: () => void;
+  saveFailureKey?: import("@/lib/i18n/messages").MessageKey;
 }) {
+  const { locale, t } = useLocale();
   const [source, setSource] = useState("");
   const [fileName, setFileName] = useState("");
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [areaPixels, setAreaPixels] = useState<Area | null>(null);
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<UiRequestError | null>(null);
   const fileInput = useRef<HTMLInputElement>(null);
 
   const onCropComplete = useCallback((_area: Area, croppedAreaPixels: Area) => {
@@ -66,18 +73,18 @@ export function AvatarCropDialog({
       return;
     }
     if (!["image/png", "image/jpeg", "image/webp"].includes(file.type)) {
-      setError("Only PNG, JPEG, and WebP images are supported.");
+      setError({ data: {}, fallback: "avatar.unsupported" });
       return;
     }
     if (file.size > 8 * 1024 * 1024) {
-      setError("Image is larger than 8MB.");
+      setError({ data: {}, fallback: "avatar.tooLarge" });
       return;
     }
-    setError("");
-    setFileName(file.name);
-    setSource(await blobToDataUrl(file));
-    setCrop({ x: 0, y: 0 });
-    setZoom(1);
+    setError(null);
+    try {
+      const dataUrl = await blobToDataUrl(file);
+      setFileName(file.name); setSource(dataUrl); setCrop({ x: 0, y: 0 }); setZoom(1);
+    } catch (cause) { setError(accountRequestError(cause, "avatar.readError")); }
   }
 
   async function save() {
@@ -85,30 +92,24 @@ export function AvatarCropDialog({
       return;
     }
     setBusy(true);
-    setError("");
+    setError(null);
     try {
       const { dataUrl, type } = await cropToSquare(source, areaPixels);
-      const response = await fetch("/api/upload", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const data = await readUiResponse<UploadedImage>(fetch("/api/upload", {
+        method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ dataUrl, name: fileName || "avatar", type }),
-      });
-      const data = await response.json().catch(() => ({}));
-      if (!response.ok) {
-        setError(data.error || "Upload failed.");
-        return;
-      }
-      onUploaded(data as UploadedImage);
-      onClose();
-    } catch {
-      setError("Could not process the image.");
-    } finally {
+      }), "avatar.uploadError");
+      if (typeof data.url !== "string" || !data.url.startsWith("/uploads/")) throw new Error("Malformed upload response.");
+      if (await onUploaded(data) === false) setError({ data: {}, fallback: saveFailureKey });
+      else onClose();
+    } catch (cause) { setError(accountRequestError(cause, "avatar.processError")); }
+    finally {
       setBusy(false);
     }
   }
 
   return (
-    <Dialog.Root open onOpenChange={(open) => !open && onClose()}>
+    <Dialog.Root open onOpenChange={(open) => !open && !busy && onClose()}>
       <Dialog.Portal>
         <Dialog.Overlay className="dialog-overlay fixed inset-0 z-50 bg-[#05030d]/70 backdrop-blur-sm" />
         <Dialog.Content
@@ -116,7 +117,7 @@ export function AvatarCropDialog({
         >
           <div className="mb-3 flex items-center justify-between">
             <Dialog.Title className="gold-title font-display text-lg tracking-wide">{title}</Dialog.Title>
-            <Dialog.Close aria-label="Close" className="rounded-md p-1.5 text-stone-500 hover:bg-stone-800 hover:text-stone-300">
+            <Dialog.Close disabled={busy} aria-label={t("avatar.close")} className="rounded-md p-1.5 text-stone-500 hover:bg-stone-800 hover:text-stone-300">
               <X className="size-4" />
             </Dialog.Close>
           </div>
@@ -134,6 +135,8 @@ export function AvatarCropDialog({
               <div className="relative h-64 w-full overflow-hidden rounded-lg bg-stone-950">
                 <Cropper
                   image={source}
+                  mediaProps={{ alt: t("avatar.image") }}
+                  cropperProps={{ "aria-label": t("avatar.cropArea") }}
                   crop={crop}
                   zoom={zoom}
                   aspect={1}
@@ -147,7 +150,7 @@ export function AvatarCropDialog({
               <div className="mt-3 flex items-center gap-2">
                 <ZoomIn className="size-4 text-stone-500" />
                 <Slider
-                  label="Zoom"
+                  label={t("avatar.zoom")}
                   min={1}
                   max={4}
                   step={0.05}
@@ -161,39 +164,41 @@ export function AvatarCropDialog({
           ) : (
             <button
               type="button"
-              onClick={() => fileInput.current?.click()}
+              disabled={busy}
+                onClick={() => fileInput.current?.click()}
               className="motion-press flex h-40 w-full flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-amber-500/30 bg-stone-950/40 text-sm text-stone-400 hover:border-amber-500/60 hover:text-amber-100"
             >
               <Upload className="size-5" />
-              Choose an image
+              {t("avatar.choose")}
             </button>
           )}
 
-          {error ? <p className="motion-shake mt-2 text-xs text-red-400">{error}</p> : null}
+          {error ? <p role="alert" className="motion-shake mt-2 text-xs text-ember-600">{requestErrorText(locale, error)}</p> : null}
 
           <div className="mt-4 flex justify-between gap-2">
             {source ? (
               <button
                 type="button"
+                disabled={busy}
                 onClick={() => fileInput.current?.click()}
                 className={ui.btnSmall}
               >
-                Different image
+                {t("avatar.different")}
               </button>
             ) : (
               <span />
             )}
             <div className="flex gap-2">
-              <button type="button" onClick={onClose} className={ui.btnSmall}>
-                Cancel
+              <button type="button" disabled={busy} onClick={onClose} className={ui.btnSmall}>
+                {t("avatar.cancel")}
               </button>
               <button
                 type="button"
                 onClick={save}
-                disabled={busy || !source}
+                disabled={busy || !source || !areaPixels}
                 className={ui.btnPrimary}
               >
-                {busy ? <Loader2 className="size-4 animate-spin" /> : null} Save
+                {busy ? <Loader2 className="size-4 animate-spin" /> : null} {t("avatar.save")}
               </button>
             </div>
           </div>

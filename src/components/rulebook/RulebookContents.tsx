@@ -1,6 +1,7 @@
 "use client";
 
 import { Bookmark, ChevronRight, Search, X } from "lucide-react";
+import { isComposingInput } from "@/lib/input-composition";
 import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import { cn } from "@/lib/cn";
 import { stem } from "@/lib/rulebook/search";
@@ -194,6 +195,7 @@ export function RulebookContents({
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           onKeyDown={(event) => {
+            if (isComposingInput(event)) return;
             if (event.key === "Escape" && query) {
               event.stopPropagation();
               setQuery("");

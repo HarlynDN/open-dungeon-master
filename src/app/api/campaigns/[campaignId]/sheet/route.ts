@@ -178,7 +178,7 @@ export async function POST(
     campaign: context.campaign,
   });
   if (!admitted.ok) {
-    return refusal(admitted.problems);
+    return refusal(admitted.problems, 400, admitted.problemDetails);
   }
   const libraryCharacter = createCharacter(
     context.user.id,
@@ -285,7 +285,7 @@ export async function PUT(
       baseline: { sheet: character.sheet, level: character.level },
     });
     if (!edited.ok) {
-      return refusal(edited.problems);
+      return refusal(edited.problems, 400, edited.problemDetails);
     }
     edit.data.sheet = edited.sheet;
     edited.settle();
@@ -349,7 +349,7 @@ export async function PUT(
     campaign: context.campaign,
   });
   if (!replaced.ok) {
-    return refusal(replaced.problems);
+    return refusal(replaced.problems, 400, replaced.problemDetails);
   }
   deleteSheetForUser(campaignId, context.user.id);
   const libraryCharacter = createCharacter(

@@ -3,7 +3,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import type { Device } from "mediasoup-client";
 import type { Transport } from "mediasoup-client/types";
-import { micBlockMessage, micBlockReason } from "@/lib/secure-context";
+import { micBlockReason } from "@/lib/secure-context";
+import { readUiResponse, type UiRequestError } from "@/lib/i18n/api-errors";
+import { microphoneBlockError, parseVoiceAvailability, voiceRequestError, type VoiceAvailabilityView } from "@/lib/i18n/voice-presentations";
 import type { VoiceRosterEntry } from "@/lib/voice/types";
 import {
   DEFAULT_PEER_VOLUME,
@@ -73,15 +75,20 @@ export function useVoiceRoom(
   useEffect(() => {
     optionsRef.current = options;
   }, [options]);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<UiRequestError | null>(null);
   const [muted, setMuted] = useState(false);
   const [handRaised, setHandRaised] = useState(false);
   // The roster from this client's own first probe, used only until the stream
   // delivers one. `peers` below prefers the stream, so this is never a second
   // source of truth that could drift.
   const [probedPeers, setProbedPeers] = useState<VoiceRosterEntry[]>([]);
-  const [available, setAvailable] = useState(false);
-  const [unavailableReason, setUnavailableReason] = useState("");
+  const [probeAttempt, setProbeAttempt] = useState(0);
+  const [probe, setProbe] = useState<{ campaignId: string; attempt: number; data: VoiceAvailabilityView | null; error: UiRequestError | null } | null>(null);
+  const currentProbe = probe?.campaignId === campaignId && probe.attempt === probeAttempt ? probe : null;
+  const availabilityStatus = !currentProbe ? "loading" : currentProbe.error ? "error" : "ready";
+  const available = currentProbe?.data?.available ?? false;
+  const unavailableReason = currentProbe?.data?.unavailableReason ?? "";
+  const retryAvailability = useCallback(() => setProbeAttempt((attempt) => attempt + 1), []);
   const [micDevices, setMicDevices] = useState<Array<{ deviceId: string; label: string }>>([]);
   const micId = useSyncExternalStore(subscribeMicPrefs, readMicId, () => "");
   const micMode = useSyncExternalStore(
@@ -133,16 +140,11 @@ export function useVoiceRoom(
 
   const post = useCallback(
     async (path: string, body?: unknown) => {
-      const response = await fetch(`/api/campaigns/${campaignId}/voice/${path}`, {
+      return readUiResponse<Awaited<ReturnType<Response["json"]>>>(fetch(`/api/campaigns/${campaignId}/voice/${path}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body ?? {}),
-      });
-      const data = await response.json().catch(() => ({}));
-      if (!response.ok) {
-        throw new Error(data.error || "Voice request failed.");
-      }
-      return data;
+      }), "voice.requestError");
     },
     [campaignId],
   );
@@ -377,7 +379,7 @@ export function useVoiceRoom(
     } catch (cause) {
       if (cause instanceof Error && cause.message.includes("Not on the call")) {
         teardown();
-        setError("The connection idled too long and the call let you go. Join again.");
+        setError({ data: {}, fallback: "voice.idleError" });
         setStatus("error");
       }
     }
@@ -385,7 +387,7 @@ export function useVoiceRoom(
 
   const joinMesh = useCallback(async () => {
     setStatus("connecting");
-    setError("");
+    setError(null);
     try {
       const savedMic = readMicId();
       const stream = withMicGain(
@@ -418,7 +420,7 @@ export function useVoiceRoom(
       setHandRaised(false);
     } catch (cause) {
       teardown();
-      setError(cause instanceof Error ? cause.message : "Could not join voice chat.");
+      setError(voiceRequestError(cause, "voice.joinError"));
       setStatus("error");
     }
   }, [ensureMeshConn, mePeerId, post, refreshGains, teardown]);
@@ -429,7 +431,7 @@ export function useVoiceRoom(
     }
     const blocked = micBlockReason();
     if (blocked) {
-      setError(micBlockMessage(blocked));
+      setError(microphoneBlockError(blocked));
       setStatus("error");
       return;
     }
@@ -438,7 +440,7 @@ export function useVoiceRoom(
       return;
     }
     setStatus("connecting");
-    setError("");
+    setError(null);
     try {
       // Ask for the mic before building any transports: if the player denies
       // it there is nothing worth setting up, and the prompt is the slowest
@@ -522,7 +524,7 @@ export function useVoiceRoom(
       setHandRaised(false);
     } catch (cause) {
       teardown();
-      setError(cause instanceof Error ? cause.message : "Could not join voice chat.");
+      setError(voiceRequestError(cause, "voice.joinError"));
       setStatus("error");
     }
   }, [campaignId, joinMesh, post, refreshGains, status, syncConsumers, teardown]);
@@ -559,8 +561,9 @@ export function useVoiceRoom(
     }
     try {
       await postState({ muted: next });
-    } catch {
+    } catch (cause) {
       setMuted(!next);
+      setError(voiceRequestError(cause, "voice.stateError"));
     }
   }, [muted, postState]);
 
@@ -569,7 +572,8 @@ export function useVoiceRoom(
     async (sayRange: "whisper" | "normal" | "shout") => {
       try {
         await postState({ sayRange });
-      } catch {
+      } catch (cause) {
+        setError(voiceRequestError(cause, "voice.stateError"));
         // the roster keeps the previous value
       }
     },
@@ -616,8 +620,8 @@ export function useVoiceRoom(
         // moment where this player is transmitting nothing.
         micStreamRef.current?.getTracks().forEach((old) => old.stop());
         micStreamRef.current = stream;
-      } catch {
-        setError("Could not switch microphone.");
+      } catch (cause) {
+        setError(voiceRequestError(cause, "voice.switchMicError"));
       }
     },
     [],
@@ -646,7 +650,7 @@ export function useVoiceRoom(
       for (const track of micStreamRef.current?.getAudioTracks() ?? []) {
         track.enabled = held;
       }
-      void postState({ muted: !held }).catch(() => {});
+      void postState({ muted: !held }).catch((cause) => setError(voiceRequestError(cause, "voice.stateError")));
     },
     [postState],
   );
@@ -689,8 +693,9 @@ export function useVoiceRoom(
     setHandRaised(next);
     try {
       await post("hand", { raised: next });
-    } catch {
+    } catch (cause) {
       setHandRaised(!next);
+      setError(voiceRequestError(cause, "voice.handError"));
     }
   }, [handRaised, post]);
 
@@ -711,9 +716,9 @@ export function useVoiceRoom(
         setMicDevices(
           devices
             .filter((device) => device.kind === "audioinput")
-            .map((device, index) => ({
+            .map((device) => ({
               deviceId: device.deviceId,
-              label: device.label || `Microphone ${index + 1}`,
+              label: device.label,
             })),
         );
       })
@@ -761,22 +766,19 @@ export function useVoiceRoom(
   // the UI can explain a disabled feature instead of hiding it.
   useEffect(() => {
     let cancelled = false;
-    fetch(`/api/campaigns/${campaignId}/voice`)
-      .then((response) => (response.ok ? response.json() : null))
+    readUiResponse<unknown>(fetch(`/api/campaigns/${campaignId}/voice`), "voice.probeError")
+      .then(parseVoiceAvailability)
       .then((data) => {
-        if (cancelled || !data) {
-          return;
-        }
-        setAvailable(Boolean(data.available));
-        setUnavailableReason(String(data.unavailableReason ?? ""));
-        setProbedPeers(data.peers ?? []);
-        modeRef.current = data.mode === "mesh" ? "mesh" : "sfu";
+        if (cancelled) return;
+        modeRef.current = data.mode;
+        setProbedPeers(data.peers);
+        setProbe({ campaignId, attempt: probeAttempt, data, error: null });
       })
-      .catch(() => {});
-    return () => {
-      cancelled = true;
-    };
-  }, [campaignId]);
+      .catch((cause) => {
+        if (!cancelled) setProbe({ campaignId, attempt: probeAttempt, data: null, error: voiceRequestError(cause, "voice.probeError") });
+      });
+    return () => { cancelled = true; };
+  }, [campaignId, probeAttempt]);
 
   // A token moved, a fight started, or the DM moved somebody between rooms.
   useEffect(() => {
@@ -904,6 +906,10 @@ export function useVoiceRoom(
     peers,
     available,
     unavailableReason,
+    availabilityStatus,
+    availabilityError: currentProbe?.error ?? null,
+    availabilityWarning: currentProbe?.data?.warning ?? null,
+    retryAvailability,
     join,
     leave,
     toggleMute,

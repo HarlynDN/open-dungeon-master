@@ -1,5 +1,6 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { ChevronDown, ChevronRight, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { ui } from "@/lib/ui";
@@ -20,15 +21,6 @@ export type LoreDraft = {
   body: string;
 };
 
-const CATEGORY_LABELS: Record<WorldLoreCategory, string> = {
-  geography: "Geography",
-  factions: "Factions",
-  history: "History",
-  magic: "Magic",
-  culture: "Culture",
-  religion: "Religion",
-  other: "Other",
-};
 
 // Posts the drafts after creation; failures are silent (the lobby panels
 // can re-enter anything that was lost).
@@ -74,6 +66,7 @@ export function WorldSetupFields({
   setLoreDrafts: (drafts: LoreDraft[]) => void;
 }) {
   const [open, setOpen] = useState(false);
+  const { t } = useLocale();
   const filled =
     (houseRules.trim() ? 1 : 0) + loreDrafts.filter((draft) => draft.title.trim()).length;
 
@@ -97,32 +90,32 @@ export function WorldSetupFields({
         ) : (
           <ChevronRight className="size-3.5 text-stone-500" />
         )}
-        <span className="font-medium">World building</span>
+        <span className="font-medium">{t("worldSetup.heading")}</span>
         <span className="text-xs text-stone-500">
-          optional{filled ? `, ${filled} item${filled === 1 ? "" : "s"}` : ""}
+          {filled ? t(filled === 1 ? "worldSetup.optionalOne" : "worldSetup.optionalMany", { count: filled }) : t("worldSetup.optional")}
         </span>
       </button>
       {open ? (
         <div className="space-y-3 border-t border-stone-800/70 p-3">
           <label className="block">
-            <span className="mb-1 block text-xs text-stone-400">House rules</span>
+            <span className="mb-1 block text-xs text-stone-400">{t("worldSetup.houseRules")}</span>
             <textarea
               value={houseRules}
               onChange={(event) => setHouseRules(event.target.value)}
               rows={4}
               maxLength={20_000}
               placeholder={
-                "Your table's rulings, grouped under headings, e.g.\n\nPotions:\nDrinking a potion is a bonus action."
+                t("worldSetup.houseRulesHint")
               }
               className={ui.input}
             />
             <span className="mt-1 block text-xs text-stone-500">
-              The DM is reminded of the relevant rules each turn. Editable later in Setup.
+              {t("worldSetup.rulesReminder")}
             </span>
           </label>
 
           <div>
-            <span className="mb-1 block text-xs text-stone-400">World lore</span>
+            <span className="mb-1 block text-xs text-stone-400">{t("worldSetup.lore")}</span>
             <div className="space-y-2">
               {loreDrafts.map((draft, index) => (
                 <div
@@ -133,15 +126,15 @@ export function WorldSetupFields({
                     <Select<WorldLoreCategory>
                       value={draft.category}
                       onChange={(category) => patchDraft(index, { category })}
-                      label="Lore category"
+                      label={t("worldSetup.category")}
                       className="w-32 shrink-0"
-                      options={WORLD_LORE_CATEGORIES.map((category) => ({ value: category, label: CATEGORY_LABELS[category] }))}
+                      options={WORLD_LORE_CATEGORIES.map((category) => ({ value: category, label: t(`worldSetup.category.${category}`) }))}
                     />
                     <input
                       value={draft.title}
                       onChange={(event) => patchDraft(index, { title: event.target.value })}
                       maxLength={120}
-                      placeholder="Title (The Ashen League, The Sundering...)"
+                      placeholder={t("worldSetup.titleHint")}
                       className={ui.input}
                     />
                     <button
@@ -149,7 +142,7 @@ export function WorldSetupFields({
                       onClick={() =>
                         setLoreDrafts(loreDrafts.filter((_, draftIndex) => draftIndex !== index))
                       }
-                      title="Remove this entry"
+                      title={t("worldSetup.remove")}
                       className="shrink-0 rounded p-1 text-stone-500 hover:text-red-400"
                     >
                       <Trash2 className="size-3.5" />
@@ -160,7 +153,7 @@ export function WorldSetupFields({
                     onChange={(event) => patchDraft(index, { body: event.target.value })}
                     rows={2}
                     maxLength={4000}
-                    placeholder="What is established about it..."
+                    placeholder={t("worldSetup.bodyHint")}
                     className={ui.input}
                   />
                 </div>
@@ -172,12 +165,11 @@ export function WorldSetupFields({
                 }
                 className="flex items-center gap-1 rounded border border-stone-700 px-2 py-1 text-xs text-stone-400 hover:bg-stone-900"
               >
-                <Plus className="size-3" /> Add lore entry
+                <Plus className="size-3" /> {t("worldSetup.add")}
               </button>
             </div>
             <span className="mt-1 block text-xs text-stone-500">
-              Places, factions, and history the DM treats as canon. Grows anytime from the lobby
-              and the Facts tab.
+              {t("worldSetup.loreReminder")}
             </span>
           </div>
         </div>

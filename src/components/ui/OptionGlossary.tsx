@@ -1,7 +1,9 @@
 "use client";
 
 import { InfoButton } from "@/components/ui/InfoDialog";
-import { glossaryText, type GlossaryEntry } from "@/lib/help/terms";
+import type { GlossaryEntry } from "@/lib/help/terms";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { glossaryListText, glossaryTitle } from "@/lib/i18n/closed-game-help-presentations";
 
 // The ⓘ beside a pick list whose options are single words a new DM may not
 // know (conditions, schools, weapon properties, damage types). Opens the
@@ -16,6 +18,7 @@ export function OptionGlossary({
   entries: readonly GlossaryEntry[];
   className?: string;
 }) {
+  const { locale } = useLocale();
   if (!entries.length) return null;
-  return <InfoButton label={title} text={glossaryText(entries)} className={className} />;
+  return <InfoButton label={glossaryTitle(title, locale)} text={glossaryListText(entries, locale)} className={className} />;
 }

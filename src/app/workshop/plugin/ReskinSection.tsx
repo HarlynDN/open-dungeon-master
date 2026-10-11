@@ -1,6 +1,7 @@
 "use client";
 
 import { rowIcon } from "@/app/workshop/kit";
+import { isComposingInput } from "@/lib/input-composition";
 import { SectionHead } from "@/components/ui/SectionHead";
 import { Plus, X } from "lucide-react";
 import { useState } from "react";
@@ -191,6 +192,7 @@ export function NameReskinList({ draft, onDraft, kind }: SectionProps & { kind: 
               aria-label="Feature to rename"
               onChange={(event) => setFeature(event.target.value)}
               onKeyDown={(event) => {
+                if (isComposingInput(event)) return;
                 if (event.key === "Enter") {
                   event.preventDefault();
                   addFrom(feature);

@@ -1,5 +1,8 @@
 "use client";
 
+import { readUiResponse, requestErrorText, uiRequestError, type UiRequestError } from "@/lib/i18n/api-errors";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+
 import { useRef, useState } from "react";
 import { EyeOff, Image as ImageIcon, Loader2, Trash2, Users } from "lucide-react";
 import { cn } from "@/lib/cn";
@@ -23,6 +26,7 @@ export function VisibilitySelect({
   value: LoreVisibility;
   onChange: (next: LoreVisibility) => void;
 }) {
+  const { t } = useLocale();
   return (
     <div data-pill-group="" className="flex flex-wrap items-center gap-1.5 text-xs">
       <button data-on={value === "party" ? "" : undefined}
@@ -34,8 +38,7 @@ export function VisibilitySelect({
           value === "party" ? "border-emerald-700 bg-emerald-950/40 text-emerald-200" : "",
         )}
       >
-        <Users className="size-3" /> The table reads it
-      </button>
+        <Users className="size-3" />  {t("lore.partyReads")} </button>
       <button data-on={value === "dm" ? "" : undefined}
         type="button"
         aria-pressed={value === "dm"}
@@ -45,12 +48,11 @@ export function VisibilitySelect({
           value === "dm" ? "border-violet-700 bg-violet-950/40 text-violet-200" : "",
         )}
       >
-        <EyeOff className="size-3" /> Only I read it
-      </button>
+        <EyeOff className="size-3" />  {t("lore.dmReads")} </button>
       <span className="text-[11px] text-stone-500">
         {value === "dm"
-          ? "A secret: the DM prompt knows it, the players never see it."
-          : "Part of the world bible every player can open. With a picture, a handout."}
+          ? t("lore.dmHint")
+          : t("lore.partyHint")}
       </span>
     </div>
   );
@@ -63,28 +65,24 @@ export function LoreImageField({
   imagePath: string;
   onChange: (path: string) => void;
 }) {
+  const { locale, t } = useLocale();
   const fileRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<UiRequestError | null>(null);
 
   async function upload(file: File) {
     setUploading(true);
-    setError("");
+    setError(null);
     try {
       const { dataUrl, type } = await encodeImageForUpload(file);
-      const response = await fetch("/api/upload", {
+      const payload = await readUiResponse<{ url: string }>(fetch("/api/upload", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ dataUrl, name: file.name, type }),
-      });
-      const payload = await response.json().catch(() => ({}));
-      if (!response.ok) {
-        setError(payload.error || "That image would not upload.");
-        return;
-      }
+      }), "lore.imageError");
       onChange(payload.url);
-    } catch {
-      setError("That image would not upload.");
+    } catch (failure) {
+      setError(uiRequestError(failure, "lore.imageError"));
     } finally {
       setUploading(false);
     }
@@ -116,14 +114,13 @@ export function LoreImageField({
         className={chip}
       >
         {uploading ? <Loader2 className="size-3 animate-spin" /> : <ImageIcon className="size-3" />}
-        {imagePath ? "Replace the picture" : "Add a picture"}
+        {imagePath ? t("lore.imageReplace") : t("lore.imageAdd")}
       </button>
       {imagePath ? (
         <button type="button" onClick={() => onChange("")} className={chip}>
-          <Trash2 className="size-3" /> Take it away
-        </button>
+          <Trash2 className="size-3" />  {t("lore.detach")} </button>
       ) : null}
-      {error ? <span className="motion-shake inline-block text-[11px] text-red-400">{error}</span> : null}
+      {error ? <span className="motion-shake inline-block text-[11px] text-red-400">{requestErrorText(locale, error)}</span> : null}
     </div>
   );
 }
@@ -141,6 +138,7 @@ export function LoreBody({
   onLink?: (target: LoreLinkTarget) => void;
   dmView?: boolean;
 }) {
+  const { t } = useLocale();
   return (
     <div className="space-y-2">
       {entry.imagePath ? (
@@ -163,12 +161,11 @@ export function LoreBody({
               onClick={() => void window.odm?.openDocument?.(entry.attachmentPath ?? "")}
               className={cn(ui.btnSmall, "mb-2 text-sm")}
             >
-              Open the pages in your reader
-            </button>
+               {t("lore.reader")} </button>
           ) : null}
           <iframe
             src={entry.attachmentPath}
-            title={`${entry.title} pages`}
+            title={t("lore.pages", { title: entry.title })}
             className="h-[70vh] w-full rounded-lg border border-stone-800 bg-stone-100"
           />
         </>

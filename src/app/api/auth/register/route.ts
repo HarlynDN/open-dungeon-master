@@ -3,7 +3,8 @@ import { hashPassword, startSession } from "@/lib/auth";
 import { consumeAccountInvite } from "@/lib/db/account-invites";
 import { getGlobalConfig } from "@/lib/db/app-settings";
 import { campaignAdmits } from "@/lib/db/campaigns";
-import { countUsers, createUser, getUserByUsername } from "@/lib/db/users";
+import { countUsers, createUser, getUserByUsername, updateUserSettings } from "@/lib/db/users";
+import { APP_LOCALES } from "@/lib/i18n/locales";
 import { checkLogin, clientIp, recordLoginFailure } from "@/lib/login-throttle";
 import { resolveSignupMode } from "@/lib/schemas/global-config";
 import { isDeviceWorld } from "@/lib/server-env";
@@ -30,6 +31,7 @@ const registerSchema = z.object({
   // The one-time code from the server log that claims a fresh server's
   // first account (src/lib/setup-code.ts).
   setupCode: z.string().trim().max(40).optional(),
+  uiLocale: z.enum(APP_LOCALES).optional(),
 });
 
 export async function POST(request: Request) {
@@ -37,12 +39,12 @@ export async function POST(request: Request) {
   const parsed = registerSchema.safeParse(raw);
   if (!parsed.success) {
     return Response.json(
-      { error: parsed.error.issues[0]?.message || "Invalid input." },
+      { error: parsed.error.issues[0]?.message || "Invalid input.", errorCode: parsed.error.issues[0]?.path[0] === "username" ? "username_rules" : parsed.error.issues[0]?.path[0] === "password" ? "password_rules" : "invalid_input" },
       { status: 400 },
     );
   }
 
-  const { username, password, inviteCode, joinCode, setupCode } = parsed.data;
+  const { username, password, inviteCode, joinCode, setupCode, uiLocale } = parsed.data;
 
   // Wrong invite codes and username probes share the login throttle's
   // escalating lockout, keyed by IP: registration is the one auth surface
@@ -52,7 +54,7 @@ export async function POST(request: Request) {
   const gate = checkLogin(throttle);
   if (gate.blocked) {
     return Response.json(
-      { error: `Too many attempts. Try again in ${gate.retryAfterSec}s.` },
+      { error: `Too many attempts. Try again in ${gate.retryAfterSec}s.`, errorCode: "rate_limited", retryAfterSec: gate.retryAfterSec },
       { status: 429, headers: { "Retry-After": String(gate.retryAfterSec) } },
     );
   }
@@ -73,13 +75,14 @@ export async function POST(request: Request) {
           ? "That setup code is not right. Copy it from the server log."
           : "This server has no accounts yet. Enter the setup code from the server log to create the admin account.",
         needsSetup: true,
+        errorCode: setupCode ? "setup_wrong" : "setup_required",
       },
       { status: 403 },
     );
   }
   const signupMode = resolveSignupMode(getGlobalConfig(), deviceWorld);
   if (!isFirstUser && signupMode === "closed") {
-    return Response.json({ error: "Signups are disabled." }, { status: 403 });
+    return Response.json({ error: "Signups are disabled.", errorCode: "signups_disabled" }, { status: 403 });
   }
   // A room code that arrives with the signup must name a table that would
   // seat the player, whatever the signup rule: a code is the whole
@@ -96,6 +99,8 @@ export async function POST(request: Request) {
             admitted.error === "No campaign with that invite code."
               ? "That room code does not match a campaign on this server."
               : admitted.error,
+          errorCode: admitted.error === "No campaign with that invite code." ? "room_invalid"
+            : /full/i.test(admitted.error) ? "room_full" : "room_unavailable",
         },
         { status: 403 },
       );
@@ -106,7 +111,7 @@ export async function POST(request: Request) {
   // nothing to seat a stranger at, so an account is not made for them.
   if (!isFirstUser && deviceWorld && !joinCode) {
     return Response.json(
-      { error: "Ask the host for the table's room code; that is the way into this world." },
+      { error: "Ask the host for the table's room code; that is the way into this world.", errorCode: "room_required" },
       { status: 403 },
     );
   }
@@ -116,14 +121,14 @@ export async function POST(request: Request) {
     // the same code still joins the campaign right after.
     if (!joinCode) {
       return Response.json(
-        { error: "This server needs an invite code to create an account." },
+        { error: "This server needs an invite code to create an account.", errorCode: "invite_required" },
         { status: 403 },
       );
     }
   }
   if (getUserByUsername(username)) {
     recordLoginFailure(throttle);
-    return Response.json({ error: "That username is taken." }, { status: 409 });
+    return Response.json({ error: "That username is taken.", errorCode: "username_taken" }, { status: 409 });
   }
   // Spend the invite only after the cheap rejections, so a typo'd username
   // does not burn a single-use code.
@@ -131,7 +136,7 @@ export async function POST(request: Request) {
     if (!consumeAccountInvite(inviteCode)) {
       recordLoginFailure(throttle);
       return Response.json(
-        { error: "That invite code is not valid (or has been used up)." },
+        { error: "That invite code is not valid (or has been used up).", errorCode: "invite_invalid" },
         { status: 403 },
       );
     }
@@ -143,8 +148,9 @@ export async function POST(request: Request) {
     : createUser(username, passwordHash, { isAdmin: isFirstUser });
   if (!user) {
     // Somebody else finished setting up the server since the check above.
-    return Response.json({ error: "This server has just been set up. Log in instead." }, { status: 409 });
+    return Response.json({ error: "This server has just been set up. Log in instead.", errorCode: "setup_finished" }, { status: 409 });
   }
+  if (uiLocale) updateUserSettings(user.id, { uiLocale });
   await startSession(user.id);
 
   return Response.json(

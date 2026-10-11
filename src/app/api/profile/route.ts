@@ -2,6 +2,7 @@ import { z } from "zod";
 import { cancelAccountDeletion, requestAccountDeletion } from "@/lib/account-deletion";
 import { currentUser, endSession, unauthorized, verifyPassword } from "@/lib/auth";
 import { isValidDiceLook, type DiceLook } from "@/lib/dice/dice-look";
+import { APP_LOCALES } from "@/lib/i18n/locales";
 import {
   NO_PASSWORD_SENTINEL,
   getUserByUsername,
@@ -23,6 +24,7 @@ const diceLookSchema = z.custom<DiceLook>(isValidDiceLook, "Invalid dice look.")
 // player's dice look (src/lib/dice/dice-look-store.ts). Voice device prefs
 // stay client-side on purpose; see useVoicePrefs.ts.
 const settingsSchema = z.object({
+  uiLocale: z.enum(APP_LOCALES).optional(),
   narrationVolume: volumeSchema.optional(),
   narrationMuted: z.boolean().optional(),
   ambienceVolume: volumeSchema.optional(),

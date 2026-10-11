@@ -1,5 +1,10 @@
 "use client";
 
+import { loadErrorText, readUiResponse, requestErrorText, uiRequestError, type UiRequestError } from "@/lib/i18n/api-errors";
+import { DEFAULT_LOCALE, type AppLocale } from "@/lib/i18n/locales";
+import { copyLoreTitle, loreCategoryLabel, parseCommaList } from "@/lib/i18n/prep-presentations";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+
 import { EmptyState } from "@/components/EmptyState";
 import { Plus, X } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -15,7 +20,7 @@ import { LoreEditorForm } from "@/app/workshop/lore/LoreEditorForm";
 import { LoreEntryRow, MentionedIn } from "@/app/workshop/lore/LoreEntryRow";
 import { LoreBody } from "@/app/workshop/lore/LoreFields";
 import { LoreRows } from "@/app/workshop/lore/LoreRows";
-import { blankLoreDraft, CATEGORY_LABELS, draftFromEntry, type LoreDraft, type LoreEntryView } from "@/app/workshop/lore/types";
+import { blankLoreDraft, draftFromEntry, type LoreDraft, type LoreEntryView } from "@/app/workshop/lore/types";
 
 // World lore builder: the lead's world bible. Entries feed the DM prompt
 // (pinned always, the rest retrieved by relevance) and the search_lore
@@ -27,12 +32,14 @@ import { blankLoreDraft, CATEGORY_LABELS, draftFromEntry, type LoreDraft, type L
 // the same form with the same buttons in a sheet.
 export function LorePanel({
   campaignId,
+  campaignLocale = DEFAULT_LOCALE,
   steersStory,
   isDm = false,
   layout = "list",
   members,
 }: {
   campaignId: string;
+  campaignLocale?: AppLocale;
   steersStory: boolean;
   // Holds the DM seat. "Show this now" and the cast and bestiary link
   // lists go through DM-only routes, so an AI campaign's lead edits the
@@ -42,6 +49,7 @@ export function LorePanel({
   // The table, for the "some players" audience. Absent in the workshop.
   members?: Array<{ userId: string; username: string }>;
 }) {
+  const { locale, t } = useLocale();
   const [loading, setLoading] = useState(true);
   // Whether a load has landed and what the last one said (issue 140): a
   // refused list is shown in the server's words, never as "no lore yet".
@@ -55,6 +63,7 @@ export function LorePanel({
   const [readingId, setReadingId] = useState<string | null>(null);
   const [draft, setDraft] = useState<LoreDraft>(blankLoreDraft());
   const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<UiRequestError | null>(null);
   // Names beyond the lore itself that a [[link]] can point at.
   const [linkTargets, setLinkTargets] = useState<{ cast: string[]; monsters: string[] } | null>(
     null,
@@ -123,105 +132,39 @@ export function LorePanel({
   }
 
   async function submitDraft() {
-    if (!draft.title.trim() || !draft.body.trim()) {
-      return;
-    }
-    setBusy(true);
+    if (!draft.title.trim() || !draft.body.trim()) return;
+    setBusy(true); setError(null);
     try {
-      const payload = {
-        category: draft.category,
-        title: draft.title,
-        body: draft.body,
-        tags: draft.tags
-          .split(",")
-          .map((tag) => tag.trim())
-          .filter(Boolean),
-        visibility: draft.visibility,
-        imagePath: draft.imagePath,
-        audience: draft.audience && draft.audience.length ? draft.audience : null,
-        attachmentPath: draft.attachmentPath,
-        style: draft.style,
-      };
-      const response = editingId
-        ? await fetch(`/api/campaigns/${campaignId}/lore/${editingId}`, {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
-          })
-        : await fetch(`/api/campaigns/${campaignId}/lore`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
-          });
-      if (response.ok) {
-        const data = await response.json();
-        if (data.entry) {
-          setEntries((current) =>
-            editingId
-              ? current.map((entry) => (entry.id === editingId ? data.entry : entry))
-              : [...current, data.entry],
-          );
-        }
-        setAdding(false);
-        setEditingId(null);
-      }
-    } finally {
-      setBusy(false);
-    }
+      const payload = { ...draft, tags: parseCommaList(draft.tags), audience: draft.audience?.length ? draft.audience : null };
+      const data = await readUiResponse<{ entry?: LoreEntryView }>(fetch(`/api/campaigns/${campaignId}/lore${editingId ? `/${editingId}` : ""}`, { method: editingId ? "PATCH" : "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }), "lore.saveError");
+      if (data.entry) setEntries(current => editingId ? current.map(entry => entry.id === editingId ? data.entry! : entry) : [...current, data.entry!]);
+      setAdding(false); setEditingId(null);
+    } catch (failure) { setError(uiRequestError(failure, "lore.saveError")); }
+    finally { setBusy(false); }
   }
-
   async function togglePin(entry: LoreEntryView) {
-    const response = await fetch(`/api/campaigns/${campaignId}/lore/${entry.id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ pinned: !entry.pinned }),
-    });
-    if (response.ok) {
-      const data = await response.json();
-      if (data.entry) {
-        setEntries((current) => current.map((e) => (e.id === entry.id ? data.entry : e)));
-      }
-    }
-  }
-
-  async function remove(entryId: string) {
-    const response = await fetch(`/api/campaigns/${campaignId}/lore/${entryId}`, {
-      method: "DELETE",
-    });
-    if (response.ok) {
-      setEntries((current) => current.filter((entry) => entry.id !== entryId));
-    }
-  }
-
-  // Same create route as submitDraft, with the copy landing in the list the
-  // same way a new entry does.
-  async function duplicate(entry: LoreEntryView) {
-    setBusy(true);
+    setError(null);
     try {
-      const response = await fetch(`/api/campaigns/${campaignId}/lore`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          category: entry.category,
-          title: `${entry.title} (copy)`,
-          body: entry.body,
-          tags: entry.tags,
-          visibility: entry.visibility,
-          imagePath: entry.imagePath,
-          audience: entry.audience ?? null,
-          attachmentPath: entry.attachmentPath ?? "",
-          style: entry.style ?? "plain",
-        }),
-      });
-      if (response.ok) {
-        const data = await response.json();
-        if (data.entry) {
-          setEntries((current) => [...current, data.entry]);
-        }
-      }
-    } finally {
-      setBusy(false);
-    }
+      const data = await readUiResponse<{ entry?: LoreEntryView }>(fetch(`/api/campaigns/${campaignId}/lore/${entry.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ pinned: !entry.pinned }) }), "lore.pinError");
+      if (data.entry) setEntries(current => current.map(row => row.id === entry.id ? data.entry! : row));
+    } catch (failure) { setError(uiRequestError(failure, "lore.pinError")); }
+  }
+  async function remove(entryId: string): Promise<boolean> {
+    setError(null);
+    try {
+      await readUiResponse(fetch(`/api/campaigns/${campaignId}/lore/${entryId}`, { method: "DELETE" }), "lore.removeError");
+      setEntries(current => current.filter(entry => entry.id !== entryId));
+      return true;
+    } catch (failure) { setError(uiRequestError(failure, "lore.removeError")); return false; }
+  }
+  async function duplicate(entry: LoreEntryView) {
+    setBusy(true); setError(null);
+    try {
+      const payload = { category: entry.category, title: copyLoreTitle(entry.title, campaignLocale), body: entry.body, tags: entry.tags, visibility: entry.visibility, imagePath: entry.imagePath, audience: entry.audience ?? null, attachmentPath: entry.attachmentPath ?? "", style: entry.style ?? "plain" };
+      const data = await readUiResponse<{ entry?: LoreEntryView }>(fetch(`/api/campaigns/${campaignId}/lore`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }), "lore.saveError");
+      if (data.entry) setEntries(current => [...current, data.entry!]);
+    } catch (failure) { setError(uiRequestError(failure, "lore.saveError")); }
+    finally { setBusy(false); }
   }
 
   const categories = WORLD_LORE_CATEGORIES.filter((category) =>
@@ -264,25 +207,25 @@ export function LorePanel({
   const linkable = [
     ...entries
       .filter((entry) => entry.id !== editingId)
-      .map((entry) => ({ value: entry.title, label: `Lore: ${entry.title}` })),
-    ...(linkTargets?.cast ?? []).map((name) => ({ value: name, label: `Cast: ${name}` })),
-    ...(linkTargets?.monsters ?? []).map((name) => ({ value: name, label: `Monster: ${name}` })),
+      .map((entry) => ({ value: entry.title, label: t("lore.linkLore", { name: entry.title }) })),
+    ...(linkTargets?.cast ?? []).map((name) => ({ value: name, label: t("lore.linkCast", { name }) })),
+    ...(linkTargets?.monsters ?? []).map((name) => ({ value: name, label: t("lore.linkMonster", { name }) })),
   ];
   const knownTags = collectTags(entries);
 
   // Show this now (section 5.2): the same engine call the model makes.
   async function showNow(entry: LoreEntryView) {
-    await fetch(`/api/campaigns/${campaignId}/dm/invoke`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: "show_handout", args: { loreId: entry.id } }),
-    });
+    setError(null);
+    try {
+      await readUiResponse(fetch(`/api/campaigns/${campaignId}/dm/invoke`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: "show_handout", args: { loreId: entry.id } }) }), "lore.showError");
+    } catch (failure) { setError(uiRequestError(failure, "lore.showError")); }
   }
 
   // The author form is the same fields in both layouts; only what wraps it
   // differs.
   const editorForm = (
     <>
+      {error ? <p role="alert" className="text-xs text-red-300">{requestErrorText(locale, error)}</p> : null}
       <LoreEditorForm
         draft={draft}
         onChange={setDraft}
@@ -294,7 +237,7 @@ export function LorePanel({
       />
       <div className="flex gap-1.5" data-tour="lore-save">
         <KitButton tone="primary" onClick={submitDraft} disabled={busy || !draft.title.trim() || !draft.body.trim()} busy={busy}>
-          {editingId ? "Save" : "Add"}
+          {editingId ? t("prep.save") : t("prep.add")}
         </KitButton>
         <KitButton
           onClick={() => {
@@ -302,8 +245,7 @@ export function LorePanel({
             setEditingId(null);
           }}
         >
-          <X className="size-3.5" /> Cancel
-        </KitButton>
+          <X className="size-3.5" />  {t("prep.cancel")} </KitButton>
       </div>
     </>
   );
@@ -313,11 +255,12 @@ export function LorePanel({
     const reading = readingId ? entries.find((entry) => entry.id === readingId) ?? null : null;
     return (
       <div className="space-y-3">
-        {loaded && loadError ? <LoadFailed error={loadError} onRetry={retry} /> : null}
+        {error ? <p role="alert" className="text-xs text-red-300">{requestErrorText(locale, error)}</p> : null}
+        {loaded && loadError ? <LoadFailed error={loadErrorText(locale, loadError, "lore.loadError")} onRetry={retry} /> : null}
         {loading ? (
-          <PanelLoading label="Loading..." />
+          <PanelLoading label={t("prep.loading")} />
         ) : !loaded && loadError ? (
-          <LoadFailed error={loadError} onRetry={retry} />
+          <LoadFailed error={loadErrorText(locale, loadError, "lore.loadError")} onRetry={retry} />
         ) : (
           <LoreRows
             entries={entries}
@@ -333,7 +276,7 @@ export function LorePanel({
               closeEditor();
             }
           }}
-          title={editing?.title || reading?.title || "New entry"}
+          title={editing?.title || reading?.title || t("lore.new")}
           className="lg:w-[min(92vw,40rem)]"
         >
           {editorOpen ? (
@@ -344,7 +287,7 @@ export function LorePanel({
                   entry={editing}
                   onPin={() => void togglePin(editing)}
                   onDuplicate={() => void duplicate(editing)}
-                  onDelete={() => void remove(editing.id).then(closeEditor)}
+                  onDelete={() => void remove(editing.id).then(removed => { if (removed) closeEditor(); })}
                 />
               ) : null}
             </div>
@@ -364,23 +307,23 @@ export function LorePanel({
 
   return (
     <div className="panel rounded-lg p-3">
+      {error && !editorOpen ? <p role="alert" className="text-xs text-red-300">{requestErrorText(locale, error)}</p> : null}
       <SectionHead
-        title="World lore"
+        title={t("lore.heading")}
         glyph="system-lore"
         aside={
           steersStory && !editorOpen ? (
             <KitButton onClick={startAdd}>
-              <Plus className="size-3.5" /> Add entry
-            </KitButton>
+              <Plus className="size-3.5" />  {t("lore.add")} </KitButton>
           ) : null
         }
       />
       {loading ? (
-        <PanelLoading label="Loading..." />
+        <PanelLoading label={t("prep.loading")} />
       ) : null}
-      {!loading && loadError ? <LoadFailed error={loadError} onRetry={retry} /> : null}
-      {!loading && loaded && !entries.length && !editorOpen ? (
-        <EmptyState size="sm" art="scrolls" title={steersStory ? "No lore yet. Write your world's places, factions, and history; the DM treats it as canon." : "The party lead has not written any world lore yet."} />
+      {!loading && loadError ? <LoadFailed error={loadErrorText(locale, loadError, "lore.loadError")} onRetry={retry} /> : null}
+      {!loading && loaded && !loadError && !entries.length && !editorOpen ? (
+        <EmptyState size="sm" art="scrolls" title={steersStory ? t("lore.emptyLead") : t("lore.emptyPlayer")} />
       ) : null}
       {editorOpen ? (
         <div className="reveal mb-2 space-y-1.5 rounded-lg border border-amber-500/20 bg-stone-950/60 p-2.5">
@@ -389,7 +332,7 @@ export function LorePanel({
       ) : null}
       {categories.map((category) => (
         <div key={category} className="mb-2">
-          <SectionHead title={CATEGORY_LABELS[category]} glyph="tab-journal" level="h4" aside={entries.filter((entry) => entry.category === category).length} />
+          <SectionHead title={loreCategoryLabel(category, locale)} glyph="tab-journal" level="h4" aside={entries.filter((entry) => entry.category === category).length} />
           <ul className="stagger space-y-1">
             {entries
               .filter((entry) => entry.category === category)

@@ -1,7 +1,10 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+
 import { DoorOpen } from "lucide-react";
 import { useState } from "react";
+import { microphoneLabel, voiceChannelLabel } from "@/lib/i18n/voice-presentations";
 import { cn } from "@/lib/cn";
 import { ui } from "@/lib/ui";
 import { GameIcon } from "@/components/ui/GameIcon";
@@ -39,10 +42,11 @@ export function VoiceSettings({
   micMode: MicMode;
   onSelectMicMode: (mode: MicMode) => void;
 }) {
+  const { locale, t } = useLocale();
   return (
     <div className="reveal panel mt-2 space-y-2.5 rounded-lg p-2.5">
       <div>
-        <span className="session-field-label">Everyone{"\u2019"}s volume</span>
+        <span className="session-field-label">{t("voice.everyoneVolume")}</span>
         <Slider
           min={0}
           max={MASTER_VOLUME_MAX}
@@ -50,42 +54,42 @@ export function VoiceSettings({
           value={masterVolume}
           disabled={deafened}
           onChange={onMasterVolume}
-          label="How loud the whole call is"
+          label={t("voice.callVolume")}
           bubble={(value) => `${Math.round(value * 100)}%`}
           className="w-full"
         />
       </div>
       <div>
-        <span className="session-field-label">Microphone</span>
+        <span className="session-field-label">{t("voice.microphone")}</span>
         <Select
           value={micId}
           onChange={onSelectMic}
-          label="Microphone"
+          label={t("voice.microphone")}
           size="sm"
           className="w-full"
           options={[
-            { value: "", label: "System default" },
-            ...micDevices.map((device) => ({ value: device.deviceId, label: device.label })),
+            { value: "", label: t("voice.systemDefault") },
+            ...micDevices.map((device, index) => ({ value: device.deviceId, label: microphoneLabel(device.label, index, locale) })),
           ]}
         />
       </div>
       <div>
         <span className="session-field-label">
-          Mode {micMode === "ptt" ? "(hold ` or the button)" : ""}
+          {t(micMode === "ptt" ? "voice.modeHold" : "voice.mode")}
         </span>
         <Select<MicMode>
           value={micMode}
           onChange={onSelectMicMode}
-          label="Microphone mode"
+          label={t("voice.micMode")}
           size="sm"
           className="w-full"
           options={[
-            { value: "open", label: "Open mic" },
-            { value: "ptt", label: "Push to talk" },
+            { value: "open", label: t("voice.openMic") },
+            { value: "ptt", label: t("voice.pushToTalk") },
           ]}
         />
       </div>
-      <p className="text-[11px] text-stone-500">Saved in this browser.</p>
+      <p className="text-[11px] text-stone-500">{t("voice.savedBrowser")}</p>
     </div>
   );
 }
@@ -95,30 +99,34 @@ export function VoiceRooms({
   occupants,
   steersStory,
   onAction,
+  pending = false,
 }: {
   channels: VoiceChannelView[];
   occupants: (channelId: string) => number;
   steersStory: boolean;
-  onAction: (body: Record<string, unknown>) => void;
+  onAction: (body: Record<string, unknown>) => Promise<boolean>;
+  pending?: boolean;
 }) {
+  const { locale, t } = useLocale();
   const [newRoom, setNewRoom] = useState("");
   return (
     <div className="reveal mt-3">
-      <SectionHead title="Rooms" glyph="tab-campaigns" level="h4" className="mb-1.5" />
+      <SectionHead title={t("voice.rooms")} glyph="tab-campaigns" level="h4" className="mb-1.5" />
       <div className="space-y-1">
         {channels.map((channel) => (
           <div key={channel.id} className="flex min-h-8 items-center gap-2 text-xs">
             <GameIcon icon={{ kind: "glyph", key: channel.id === "table" ? "tab-session" : "system-party" }} size="size-6" />
-            <span className="truncate text-stone-300">{channel.name}</span>
+            <span className="truncate text-stone-300">{voiceChannelLabel(channel, locale)}</span>
             <span key={occupants(channel.id)} className="count-pop text-stone-500">
               {occupants(channel.id)}
             </span>
             {steersStory && channel.id !== "table" ? (
               <button
                 type="button"
-                onClick={() => onAction({ action: "close", channelId: channel.id })}
-                aria-label={`Close ${channel.name} and send everyone back to the table`}
-                title="Close this room and send everyone back to the table"
+                disabled={pending}
+                onClick={() => void onAction({ action: "close", channelId: channel.id })}
+                aria-label={t("voice.closeRoom", { name: voiceChannelLabel(channel, locale) })}
+                title={t("voice.closeRoomHint")}
                 className={cn(ui.btnSmall, "session-voice-mini ml-auto hover:border-red-500/50 hover:text-red-300")}
               >
                 <DoorOpen className="size-3.5" />
@@ -131,30 +139,32 @@ export function VoiceRooms({
         <div className="reveal flex gap-1.5 pt-1.5">
           <input
             value={newRoom}
+            maxLength={40}
             onChange={(event) => setNewRoom(event.target.value)}
-            placeholder="New side room"
-            aria-label="New side room"
+            placeholder={t("voice.newRoom")}
+            aria-label={t("voice.newRoom")}
             className={cn(ui.input, "min-w-0 flex-1 py-1.5 text-xs")}
           />
           <button
             type="button"
-            disabled={!newRoom.trim()}
-            onClick={() => {
-              onAction({ action: "open", name: newRoom.trim() });
-              setNewRoom("");
+            disabled={pending || !newRoom.trim()}
+            onClick={async () => {
+              const draft = newRoom;
+              if (await onAction({ action: "open", name: draft.trim() })) setNewRoom((current) => current === draft ? "" : current);
             }}
             className={cn(ui.btnSmall, "text-xs")}
           >
-            Open
+            {t("voice.openRoom")}
           </button>
           {channels.length > 1 ? (
             <button
               type="button"
-              onClick={() => onAction({ action: "recall" })}
-              title="Bring everyone back to the table"
+              disabled={pending}
+              onClick={() => void onAction({ action: "recall" })}
+              title={t("voice.recallHint")}
               className={cn(ui.btnSmall, "text-xs")}
             >
-              Recall
+              {t("voice.recall")}
             </button>
           ) : null}
         </div>

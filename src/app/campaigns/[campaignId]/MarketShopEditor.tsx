@@ -1,6 +1,7 @@
 "use client";
 
 import { Plus, RotateCw, X } from "lucide-react";
+import { isComposingInput } from "@/lib/input-composition";
 import { useState } from "react";
 import { ContentPick } from "@/components/ui/ContentPick";
 import { GameIcon } from "@/components/ui/GameIcon";
@@ -70,6 +71,7 @@ function CoinField({ value, onChange, label }: { value: number; onChange: (cp: n
       onChange={(event) => setDraft(event.target.value)}
       onBlur={commit}
       onKeyDown={(event) => {
+        if (isComposingInput(event)) return;
         if (event.key === "Enter") {
           commit();
         }

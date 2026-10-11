@@ -66,7 +66,7 @@ export async function POST(request: Request) {
     userId: user.id,
   });
   if (!admitted.ok) {
-    return refusal(admitted.problems);
+    return refusal(admitted.problems, 400, admitted.problemDetails);
   }
   const character = createCharacter(
     user.id,

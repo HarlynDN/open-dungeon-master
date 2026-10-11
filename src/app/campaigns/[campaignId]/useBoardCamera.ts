@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { isComposingInput } from "@/lib/input-composition";
 import { TILE } from "@/app/campaigns/[campaignId]/battleMapCells";
 import { prefersReducedMotion } from "@/lib/effects-mode";
 import { clampZoomTo, fitCamera, minZoomFor } from "@/lib/battlemap/camera-fit";
@@ -367,6 +368,7 @@ export function useBoardCamera(
   // leaving a few huge tiles (issue 67).
   const onKeyDown = useCallback(
     (event: React.KeyboardEvent) => {
+      if (isComposingInput(event)) return;
       if (locked || event.ctrlKey || event.metaKey || event.altKey) {
         return;
       }

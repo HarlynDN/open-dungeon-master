@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { isComposingInput } from "@/lib/input-composition";
 import { BRUSH_KEYS, MODES, type MapTools, type SurfaceCaps } from "@/app/campaigns/[campaignId]/mapToolState";
 
 // The toolbox's keys, while an editor is on screen. Everything else about the
@@ -49,6 +50,7 @@ export function useMapHotkeys({
       return;
     }
     const onKey = (event: KeyboardEvent) => {
+      if (isComposingInput(event)) return;
       if (typingSomewhere(event.target)) {
         return;
       }

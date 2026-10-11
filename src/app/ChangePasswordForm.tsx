@@ -4,13 +4,16 @@ import { Loader2 } from "lucide-react";
 import { useState, type FormEvent } from "react";
 import { cn } from "@/lib/cn";
 import { ui } from "@/lib/ui";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import type { MessageKey } from "@/lib/i18n/translator";
+import { apiErrorText, type ApiUiError } from "@/lib/i18n/api-errors";
 
 // Change-password form shared by account settings and the forced flow after
 // an admin reset (there, the temp password is prefilled as the current one).
 export function ChangePasswordForm({
   currentPassword: initialCurrent,
   lockCurrent = false,
-  submitLabel = "Change password",
+  submitLabel,
   onChanged,
 }: {
   currentPassword?: string;
@@ -18,20 +21,21 @@ export function ChangePasswordForm({
   submitLabel?: string;
   onChanged: () => void;
 }) {
+  const { t, locale } = useLocale();
   const [currentPassword, setCurrentPassword] = useState(initialCurrent ?? "");
   const [newPassword, setNewPassword] = useState("");
   const [confirm, setConfirm] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState<MessageKey | ApiUiError | null>(null);
   const [busy, setBusy] = useState(false);
 
   async function submit(event: FormEvent) {
     event.preventDefault();
     if (newPassword !== confirm) {
-      setError("New passwords don't match.");
+      setError("password.mismatch");
       return;
     }
     setBusy(true);
-    setError("");
+    setError(null);
     try {
       const response = await fetch("/api/auth/change-password", {
         method: "POST",
@@ -40,7 +44,7 @@ export function ChangePasswordForm({
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
-        setError(data.error || "Could not change the password.");
+        setError(data);
         return;
       }
       setCurrentPassword("");
@@ -48,7 +52,7 @@ export function ChangePasswordForm({
       setConfirm("");
       onChanged();
     } catch {
-      setError("Could not reach the server.");
+      setError("common.serverUnavailable");
     } finally {
       setBusy(false);
     }
@@ -58,7 +62,7 @@ export function ChangePasswordForm({
     <form onSubmit={submit} className="space-y-3">
       {lockCurrent ? null : (
         <label className="block text-sm">
-          <span className="mb-1 block text-stone-400">Current password</span>
+          <span className="mb-1 block text-stone-400">{t("password.current")}</span>
           <input
             type="password"
             value={currentPassword}
@@ -71,7 +75,7 @@ export function ChangePasswordForm({
         </label>
       )}
       <label className="block text-sm">
-        <span className="mb-1 block text-stone-400">New password</span>
+        <span className="mb-1 block text-stone-400">{t("password.new")}</span>
         <input
           type="password"
           value={newPassword}
@@ -84,7 +88,7 @@ export function ChangePasswordForm({
         />
       </label>
       <label className="block text-sm">
-        <span className="mb-1 block text-stone-400">Confirm new password</span>
+        <span className="mb-1 block text-stone-400">{t("password.confirm")}</span>
         <input
           type="password"
           value={confirm}
@@ -96,10 +100,10 @@ export function ChangePasswordForm({
           className={ui.input}
         />
       </label>
-      {error ? <p className="motion-shake text-sm text-red-400">{error}</p> : null}
+      {error ? <p role="alert" className="motion-shake text-sm text-red-400">{typeof error === "string" ? t(error) : apiErrorText(locale, error, "password.failed")}</p> : null}
       <button type="submit" disabled={busy} aria-busy={busy} className={cn(ui.btnPrimary, "w-full")}>
         {busy ? <Loader2 className="size-4 animate-spin" /> : null}
-        {submitLabel}
+        {submitLabel ?? t("password.change")}
       </button>
     </form>
   );

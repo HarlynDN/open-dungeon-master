@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowLeft, CircleHelp, Copy, Loader2, Pencil, Trash2 } from "lucide-react";
+import { isComposingInput } from "@/lib/input-composition";
 import { cn } from "@/lib/cn";
 import { headIcon } from "@/app/workshop/kit";
 import { appConfirm } from "@/components/ui/ConfirmDialog";
@@ -96,6 +97,7 @@ export function WorkshopHeader({
             onChange={(event) => setTitleDraft(event.target.value)}
             onBlur={() => void saveTitle()}
             onKeyDown={(event) => {
+              if (isComposingInput(event)) return;
               if (event.key === "Enter") {
                 void saveTitle();
               }

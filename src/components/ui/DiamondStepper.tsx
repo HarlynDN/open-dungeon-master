@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/cn";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 // The stepper of a paced flow: one diamond per step joined by hairline rules.
 // Completed diamonds are solid gold and can be tapped to go back; the current
@@ -22,10 +23,11 @@ export function DiamondStepper({
   onSelect?: (index: number) => void;
   className?: string;
 }) {
+  const { t } = useLocale();
   return (
     // A list, not a progressbar: a progressbar's children are presentational,
     // and these are buttons.
-    <ol className={cn("diamond-stepper", className)} aria-label="Steps">
+    <ol className={cn("diamond-stepper", className)} aria-label={t("wizard.steps")}>
       {steps.map((step, index) => {
         const state = index < current ? "done" : index === current ? "current" : "upcoming";
         const canGoBack = state === "done" && Boolean(onSelect);
@@ -38,9 +40,7 @@ export function DiamondStepper({
               disabled={!canGoBack}
               aria-current={state === "current" ? "step" : undefined}
               aria-label={
-                canGoBack
-                  ? `Back to step ${index + 1}: ${step.label}`
-                  : `Step ${index + 1}: ${step.label}`
+                t(canGoBack ? "wizard.goBack" : "wizard.stepLabel", { step: index + 1, label: step.label })
               }
               title={step.label}
             >

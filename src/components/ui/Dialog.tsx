@@ -4,6 +4,7 @@ import * as RadixDialog from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 // Shared Radix dialog shell: blurred night overlay, animated glass panel,
 // gold display-font title. Content scrolls internally when tall.
@@ -22,6 +23,7 @@ export function Dialog({
   width?: string;
   children: ReactNode;
 }) {
+  const { t } = useLocale();
   return (
     <RadixDialog.Root open={open} onOpenChange={onOpenChange}>
       <RadixDialog.Portal>
@@ -37,7 +39,7 @@ export function Dialog({
               {icon}
               <span className="gold-title">{title}</span>
             </RadixDialog.Title>
-            <RadixDialog.Close className="rounded-md p-1 text-stone-400 transition-colors hover:bg-stone-800 hover:text-stone-200">
+            <RadixDialog.Close aria-label={t("common.close")} className="rounded-md p-1 text-stone-400 transition-colors hover:bg-stone-800 hover:text-stone-200">
               <X className="size-4" />
             </RadixDialog.Close>
           </div>

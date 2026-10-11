@@ -14,7 +14,9 @@ import CharacterBuilder, {
 import type { Genre } from "@/lib/schemas/game-settings";
 import type { CreateSheetInput } from "@/lib/schemas/sheet";
 import { navigateTo } from "@/lib/navigation";
-import { refusalText } from "@/app/characters/builder/refusal";
+import { LoadFailed } from "@/app/campaigns/[campaignId]/PanelKit";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { characterLabel, subclassLabel, characterCreationData, readCharacterResponse, characterRequestError, characterErrorText, type CharacterUiError } from "@/lib/i18n/character-presentations";
 
 type LibraryCharacter = {
   id: string;
@@ -26,20 +28,18 @@ type LibraryCharacter = {
   sheet?: CreateSheetInput;
 };
 
-function titleCase(value: string) {
-  return value.replace(/[-_]/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
-}
-
 // Join a campaign with a character: pick one from your library (adapted to
 // the campaign's starting level) or build a new one (also saved to your
 // library). ?mode=edit reopens the builder prefilled with the current
 // character; ?mode=replace swaps it for another (both lobby-only, both
 // clearing the ready flag; an edit keeps the existing portrait unless the
 // builder's regenerate control cleared it).
-function CampaignCharacterPageInner({ campaignId }: { campaignId: string }) {
+function CampaignCharacterPageInner({ campaignId, requested }: { campaignId: string; requested: string | null }) {
+  const { locale, t } = useLocale();
+  const [loadError, setLoadError] = useState<CharacterUiError | null>(null);
+  const [reloads, setReloads] = useState(0);
   // join = first character; edit = rebuild the current one in place;
   // replace = switch to another or a brand-new one.
-  const requested = useSearchParams().get("mode");
   const flow: "join" | "edit" | "replace" =
     requested === "edit" || requested === "replace" ? requested : "join";
   const [level, setLevel] = useState<number | null>(null);
@@ -54,39 +54,25 @@ function CampaignCharacterPageInner({ campaignId }: { campaignId: string }) {
   // a table of another level to that table; null from one that does not.
   const [libraryLevel, setLibraryLevel] = useState<number | null>(null);
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<CharacterUiError | null>(null);
 
   useEffect(() => {
     let cancelled = false;
     Promise.all([
-      fetch(`/api/campaigns/${campaignId}`).then((response) =>
-        response.ok ? response.json() : null,
-      ),
-      fetch("/api/characters").then((response) => (response.ok ? response.json() : null)),
-      fetch(`/api/campaigns/${campaignId}/sheet`).then((response) =>
-        response.ok ? response.json() : null,
-      ),
-    ])
-      .then(([campaignData, charactersData, sheetData]) => {
-        if (cancelled) {
-          return;
-        }
-        setLevel(campaignData?.campaign?.startingLevel ?? 1);
-        setGenre(campaignData?.campaign?.gameSettings?.genre ?? undefined);
-        setWorldPackId(campaignData?.campaign?.gameSettings?.worldPack ?? "");
-        const characters = charactersData?.characters ?? [];
-        setLibrary(characters);
-        setCurrentLibraryId(sheetData?.sheet?.libraryCharacterId ?? null);
-        setLibraryLevel(typeof sheetData?.libraryLevel === "number" ? sheetData.libraryLevel : null);
-        if (!characters.length) {
-          setMode("create");
-        }
-      })
-      .catch(() => setLevel(1));
+      readCharacterResponse<{ campaign: { startingLevel: number; gameSettings: { genre?: Genre; worldPack?: string } } }>(fetch(`/api/campaigns/${campaignId}`), "characterHost.loadError"),
+      readCharacterResponse<{ characters: LibraryCharacter[] }>(fetch("/api/characters"), "library.loadError"),
+      readCharacterResponse<{ sheet: { libraryCharacterId?: string } | null; libraryLevel?: number | null }>(fetch(`/api/campaigns/${campaignId}/sheet`), "characterHost.loadError"),
+    ]).then(([campaignData, charactersData, sheetData]) => {
+      if (cancelled) return;
+      const data = characterCreationData(campaignData, charactersData, sheetData);
+      setLevel(data.level); setGenre(data.genre); setWorldPackId(data.worldPackId);
+      setLibrary(data.library); setCurrentLibraryId(data.currentLibraryId); setLibraryLevel(data.libraryLevel);
+      if (!data.library.length) setMode("create");
+    }).catch((cause) => { if (!cancelled) setLoadError(characterRequestError(cause, "characterHost.loadError")); });
     return () => {
       cancelled = true;
     };
-  }, [campaignId]);
+  }, [campaignId, reloads]);
 
   const editCharacter =
     flow === "edit" && currentLibraryId
@@ -95,22 +81,15 @@ function CampaignCharacterPageInner({ campaignId }: { campaignId: string }) {
 
   async function send(body: unknown, method: "POST" | "PUT") {
     setBusy(true);
-    setError("");
+    setError(null);
     try {
-      const response = await fetch(`/api/campaigns/${campaignId}/sheet`, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-      const data = await response.json().catch(() => ({}));
-      if (!response.ok) {
-        setError(refusalText(data, "Could not save the character."));
-        return;
-      }
+      const data = await readCharacterResponse<{ sheet: { id: string } }>(fetch(`/api/campaigns/${campaignId}/sheet`, {
+        method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(body),
+      }), "characterHost.saveError");
+      if (typeof data?.sheet?.id !== "string") throw new Error("Character save was not acknowledged.");
       navigateTo(`/campaigns/${campaignId}`);
-    } catch {
-      setError("Could not reach the server.");
-    } finally {
+    } catch (cause) { setError(characterRequestError(cause, "characterHost.saveError")); }
+    finally {
       setBusy(false);
     }
   }
@@ -127,6 +106,8 @@ function CampaignCharacterPageInner({ campaignId }: { campaignId: string }) {
     send(result.sheet, flow === "join" ? "POST" : "PUT");
   }
 
+  if (loadError) return <main className="mx-auto w-full max-w-3xl flex-1 p-4 sm:p-6"><LoadFailed error={characterErrorText(loadError, locale)} onRetry={() => { setLevel(null); setLoadError(null); setReloads((count) => count + 1); }} /></main>;
+
   if (level === null) {
     return (
       <main className="mx-auto w-full max-w-3xl flex-1 p-4 sm:p-6">
@@ -139,27 +120,27 @@ function CampaignCharacterPageInner({ campaignId }: { campaignId: string }) {
     <main className="mx-auto w-full max-w-3xl flex-1 p-4 sm:p-6">
       <header className="mb-5">
         <a href={`/campaigns/${campaignId}`} className={cn(ui.btnSmall, "text-xs")}>
-          <ChevronLeft className="size-3.5" /> Back to the lobby
+          <ChevronLeft className="size-3.5" /> {t("characterHost.backLobby")}
         </a>
         <div className="mt-2 flex items-center gap-3">
           <PixelTile src={PIXEL_ICONS.characters} />
           <div>
             <h1 className="gold-title font-display text-2xl">
               {flow === "edit"
-                ? "Edit your character"
+                ? t("characterHost.edit")
                 : flow === "replace"
-                  ? "Switch your character"
+                  ? t("characterHost.switch")
                   : mode === "choose"
-                    ? "Choose your character"
-                    : "Create your character"}
+                    ? t("characterHost.choose")
+                    : t("characterHost.create")}
             </h1>
             <p className="text-sm text-stone-400">
-              This campaign starts at level {level}.
-              {flow !== "join" ? " Changing your character clears your ready status." : ""}
+              {t("characterHost.level", { level })}
+              {flow !== "join" ? ` ${t("characterHost.clearReady")}` : ""}
             </p>
             {flow === "edit" && editCharacter && libraryLevel !== null && libraryLevel !== level ? (
               <p className="reveal mt-1 text-xs text-amber-200">
-                {editCharacter.name} stays level {libraryLevel} in your library; these changes are for this table.
+                {t("characterHost.keepLevel", { name: editCharacter.name, level: libraryLevel })}
               </p>
             ) : null}
           </div>
@@ -168,7 +149,7 @@ function CampaignCharacterPageInner({ campaignId }: { campaignId: string }) {
 
       {mode === "choose" ? (
         <section className="reveal space-y-4">
-          <SectionHead title="From your library" glyph="tab-characters" level="h2" aside={<span className="text-xs text-stone-400">{library.length}</span>} />
+          <SectionHead title={t("characterHost.fromLibrary")} glyph="tab-characters" level="h2" aside={<span className="text-xs text-stone-400">{library.length}</span>} />
           <ul className="stagger-up grid grid-cols-1 gap-3 sm:grid-cols-2">
             {library.map((character) => (
               <li key={character.id}>
@@ -193,18 +174,18 @@ function CampaignCharacterPageInner({ campaignId }: { campaignId: string }) {
                     <GameIcon icon={{ kind: "family", key: `class-${character.class.toLowerCase()}` }} size="size-7" className="ml-auto" />
                     {character.id === currentLibraryId ? (
                       <span className="rounded-full border border-amber-500/30 bg-amber-400/10 px-2 py-0.5 text-[11px] text-amber-200">
-                        current
+                        {t("characterHost.current")}
                       </span>
                     ) : null}
                   </div>
                   <p className="mt-1 text-sm text-stone-400">
-                    Level {character.level} {titleCase(character.race)}{" "}
-                    {titleCase(character.class)}
-                    {character.subclass ? ` (${character.subclass})` : ""}
+                    {t("library.level", { level: character.level })} {characterLabel("race", character.race, locale)}{" "}
+                    {characterLabel("class", character.class, locale)}
+                    {character.subclass ? ` (${subclassLabel(character.class, character.subclass, locale)})` : ""}
                   </p>
                   {character.level !== level ? (
                     <p className="reveal mt-1 text-xs text-amber-200">
-                      Will be adapted to level {level}
+                      {t("characterHost.adapt", { level })}
                     </p>
                   ) : null}
                 </button>
@@ -216,9 +197,9 @@ function CampaignCharacterPageInner({ campaignId }: { campaignId: string }) {
             onClick={() => setMode("create")}
             className={cn(ui.btnSecondary, "w-full border-dashed")}
           >
-            <Plus className="size-4" /> Create a new character instead
+            <Plus className="size-4" /> {t("characterHost.newInstead")}
           </button>
-          {error ? <p className="motion-shake whitespace-pre-line text-sm text-red-400" role="alert">{error}</p> : null}
+          {error ? <p className="motion-shake whitespace-pre-line text-sm text-ember-600" role="alert">{characterErrorText(error, locale)}</p> : null}
         </section>
       ) : (
         <>
@@ -228,7 +209,7 @@ function CampaignCharacterPageInner({ campaignId }: { campaignId: string }) {
               onClick={() => setMode("choose")}
               className={cn(ui.btnSmall, "mb-4")}
             >
-              <ChevronLeft className="size-3.5" /> Or pick one from your library
+              <ChevronLeft className="size-3.5" /> {t("characterHost.pickInstead")}
             </button>
           ) : null}
           <CharacterBuilder
@@ -240,19 +221,24 @@ function CampaignCharacterPageInner({ campaignId }: { campaignId: string }) {
             initialLevel={flow === "edit" ? editCharacter?.level : undefined}
             submitLabel={
               flow === "edit"
-                ? "Save changes"
+                ? t("characterHost.saveChanges")
                 : flow === "replace"
-                  ? "Replace your character"
-                  : "Join the party"
+                  ? t("characterHost.replace")
+                  : t("characterHost.join")
             }
             onSubmit={submitNew}
             busy={busy}
-            error={error}
+            error={characterErrorText(error, locale)}
           />
         </>
       )}
     </main>
   );
+}
+
+function CampaignCharacterRoute({ campaignId }: { campaignId: string }) {
+  const requested = useSearchParams().get("mode");
+  return <CampaignCharacterPageInner key={`${campaignId}:${requested}`} campaignId={campaignId} requested={requested} />;
 }
 
 // useSearchParams needs a Suspense boundary during prerender in Next 16.
@@ -270,7 +256,7 @@ export default function CampaignCharacterPage({
         </main>
       }
     >
-      <CampaignCharacterPageInner campaignId={campaignId} />
+      <CampaignCharacterRoute campaignId={campaignId} />
     </Suspense>
   );
 }

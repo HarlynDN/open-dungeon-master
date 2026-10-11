@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { isComposingInput } from "@/lib/input-composition";
 import { Loader2, Sparkles } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { ui } from "@/lib/ui";
@@ -311,6 +312,7 @@ function RulesLookup({ campaignId }: { campaignId: string }) {
           value={question}
           onChange={(event) => setQuestion(event.target.value.slice(0, 500))}
           onKeyDown={(event) => {
+            if (isComposingInput(event)) return;
             if (event.key === "Enter") {
               void look();
             }

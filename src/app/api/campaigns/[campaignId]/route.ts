@@ -34,7 +34,7 @@ import { speciesAtTable } from "@/lib/characters/species-rules";
 import { tableFeatsFrom } from "@/lib/db/table-feats";
 import { getDatabase } from "@/lib/db/core";
 import { requestDmTurn } from "@/lib/dm/loop";
-import { hasHumanDm, isPrimaryDm, lobbyBlocker, narratorIsAi } from "@/lib/dm/viewer";
+import { hasHumanDm, isPrimaryDm, lobbyBlockerReason, LOBBY_BLOCKER_MESSAGES, narratorIsAi } from "@/lib/dm/viewer";
 import { sheetForViewer } from "@/lib/dm/sheet-view";
 import { enqueueDmJob } from "@/lib/dm/queue";
 import { runStorySetup } from "@/lib/dm/setup";
@@ -236,7 +236,7 @@ export async function PATCH(
     // offered. Asking seat by seat also closes a hole the old sheet count
     // had: a companion's sheet made up the numbers for a player who had none.
     const lobbySheets = listSheets(campaignId);
-    const blocker = lobbyBlocker(
+    const blocker = lobbyBlockerReason(
       seats,
       listMembers(campaignId).map((member) => ({
         userId: member.userId,
@@ -245,7 +245,7 @@ export async function PATCH(
       })),
     );
     if (blocker) {
-      return Response.json({ error: blocker }, { status: 400 });
+      return Response.json({ error: LOBBY_BLOCKER_MESSAGES[blocker], errorCode: `lobby_${blocker}` }, { status: 400 });
     }
   }
 

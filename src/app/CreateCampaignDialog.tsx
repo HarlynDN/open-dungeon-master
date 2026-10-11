@@ -8,7 +8,6 @@ import { Wizard, type WizardStep } from "@/components/ui/Wizard";
 import { submitWorldSetup } from "@/app/WorldSetupFields";
 import { submitContentImport } from "@/app/workshop/ContentImportPicker";
 import { groupByFranchise, type WorldPackSummary } from "@/lib/worlds/summary";
-import { genrePreset } from "@/lib/genres";
 import type { Genre } from "@/lib/schemas/game-settings";
 import {
   applyPack,
@@ -24,6 +23,9 @@ import { PartyStep } from "@/app/create-campaign/PartyStep";
 import { FeelStep } from "@/app/create-campaign/FeelStep";
 import { AdvancedStep } from "@/app/create-campaign/AdvancedStep";
 import { ReviewStep } from "@/app/create-campaign/ReviewStep";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { genreLabel } from "@/lib/i18n/settings";
+import { apiErrorText, type ApiUiError } from "@/lib/i18n/api-errors";
 
 // The slice of /api/capabilities this dialog gates on. null means the
 // endpoint never answered, and the dialog assumes everything is available:
@@ -61,9 +63,11 @@ export function CreateCampaignDialog({
   onCreated: (campaignId: string) => void;
   solo?: boolean;
 }) {
+  const { locale: uiLocale, t } = useLocale();
   // The default genre's preset writes the first theme, exactly as picking any
   // other portal would; typing in the field takes it over for good.
-  const [draft, setDraft] = useState<CampaignDraft>(() => presetTheme(DEFAULT_DRAFT));
+  const [draft, setDraft] = useState<CampaignDraft>(() => presetTheme({ ...DEFAULT_DRAFT, locale: uiLocale }));
+  const [localeTouched, setLocaleTouched] = useState(false);
   // The wizard's step is held here so each step can be told when it is the
   // one on screen: every step is mounted at once, and an entrance should play
   // when it is seen. It starts over each time the dialog opens, as it did
@@ -74,15 +78,22 @@ export function CreateCampaignDialog({
     setWasOpen(open);
     if (open) {
       setStep(0);
+      // The dialog can mount hidden before login/preferences finish loading.
+      // Follow the current UI locale on opening until the creator makes an
+      // explicit campaign choice; preserve that choice across closing.
+      if (!localeTouched) setDraft((current) => presetTheme({ ...current, locale: uiLocale }));
     }
   }
   const [packs, setPacks] = useState<WorldPackSummary[]>([]);
   const [capabilities, setCapabilities] = useState<ServerCapabilities | null>(null);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<ApiUiError | null>(null);
+  const [networkError, setNetworkError] = useState(false);
   const [busy, setBusy] = useState(false);
 
-  const patch = (changes: Partial<CampaignDraft>) =>
-    setDraft((current) => ({ ...current, ...changes }));
+  const patch = (changes: Partial<CampaignDraft>) => {
+    if (changes.locale !== undefined) setLocaleTouched(true);
+    setDraft((current) => changes.locale !== undefined ? presetTheme({ ...current, ...changes }) : { ...current, ...changes });
+  };
 
   // Everything the AI narrator brings with it. A table running its own game
   // still gets the rules engine, the maps and the dice; what it does not get
@@ -175,6 +186,7 @@ export function CreateCampaignDialog({
       return;
     }
     const {
+      locale,
       title,
       description,
       theme,
@@ -222,7 +234,8 @@ export function CreateCampaignDialog({
       contentImport,
     } = draft;
     setBusy(true);
-    setError("");
+    setError(null);
+    setNetworkError(false);
     try {
       const response = await fetch("/api/campaigns", {
         method: "POST",
@@ -235,6 +248,7 @@ export function CreateCampaignDialog({
           startingLevel,
           difficulty,
           gameSettings: {
+            locale,
             dmMode,
             genre,
             customGenreText: customGenreText.trim(),
@@ -296,7 +310,7 @@ export function CreateCampaignDialog({
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
-        setError(data.error || "Could not create the campaign.");
+        setError(data);
         return;
       }
       // House rules and starting lore land right after the campaign row
@@ -308,14 +322,14 @@ export function CreateCampaignDialog({
       await submitContentImport(data.campaign.id, contentImport);
       onCreated(data.campaign.id);
     } catch {
-      setError("Could not reach the server.");
+      setNetworkError(true);
     } finally {
       setBusy(false);
     }
   }
 
   const stepProps = { draft, patch, gates };
-  const title = solo ? "New solo adventure" : "New campaign";
+  const title = t(solo ? "create.newSolo" : "create.newCampaign");
 
   // A step is dropped when nothing on it applies. Today every step keeps at
   // least one field in every mode (voice chat leaves the Advanced step on a
@@ -346,9 +360,9 @@ export function CreateCampaignDialog({
     [
       {
         key: "premise",
-        label: "Premise",
-        title: heading("premise", "The premise", solo ? "What is this adventure?" : "What is this campaign?"),
-        blurb: solo ? "Name the adventure and decide who narrates." : "Name it and decide who runs the table.",
+        label: t("create.premiseLabel"),
+        title: heading("premise", t("create.premiseEyebrow"), t(solo ? "create.premiseSoloQuestion" : "create.premiseQuestion")),
+        blurb: t(solo ? "create.premiseSoloBlurb" : "create.premiseBlurb"),
         content: (
           <PremiseStep
             {...stepProps}
@@ -363,11 +377,10 @@ export function CreateCampaignDialog({
       },
       {
         key: "world",
-        label: "Setting",
-        title: heading("world", "The world", "What kind of world is this?"),
-        blurb:
-          "Pick a setting and say what the story is about. Every setting is the same 5e underneath; what changes is how the Dungeon Master talks, what the maps look like, and who lives there.",
-        continueLabel: `Continue in ${genrePreset(draft.genre).name}`,
+        label: t("create.worldLabel"),
+        title: heading("world", t("create.worldEyebrow"), t("create.worldQuestion")),
+        blurb: t("create.worldBlurb"),
+        continueLabel: t("create.continueIn", { genre: genreLabel(draft.genre, uiLocale) }),
         content: (
           <WorldStep
             {...stepProps}
@@ -379,36 +392,36 @@ export function CreateCampaignDialog({
       },
       {
         key: "party",
-        label: "Party",
-        title: heading("party", "The party", solo ? "How strong, and how hard?" : "Who is playing, and how hard?"),
-        blurb: solo ? "Where your hero begins." : "Who is adventuring, and how hard the road is.",
+        label: t("create.partyLabel"),
+        title: heading("party", t("create.partyEyebrow"), t(solo ? "create.partySoloQuestion" : "create.partyQuestion")),
+        blurb: t(solo ? "create.partySoloBlurb" : "create.partyBlurb"),
         content: <PartyStep {...stepProps} />,
       },
       {
         key: "feel",
-        label: "The table",
-        title: heading("feel", "The feel", "How does this table feel?"),
-        blurb: "What is on at the table. Flip any of these later in the lobby too.",
+        label: t("create.feelLabel"),
+        title: heading("feel", t("create.feelEyebrow"), t("create.feelQuestion")),
+        blurb: t("create.feelBlurb"),
         content: <FeelStep {...stepProps} active={activeKey === "feel"} />,
       },
       {
         key: "advanced",
-        label: "Advanced",
-        title: heading("advanced", "Advanced", "The parts you can skip"),
-        blurb: "Variant rules, house rules, prep and live voice. All optional.",
+        label: t("create.advancedLabel"),
+        title: heading("advanced", t("create.advancedLabel"), t("create.advancedQuestion")),
+        blurb: t("create.advancedBlurb"),
         content: <AdvancedStep {...stepProps} />,
       },
       {
         key: "review",
-        label: "Review",
-        title: heading("review", "Review", "Here is what you made"),
-        blurb: "Ready the table. The cover is the tile this will wear on the home screen until you paint it one.",
+        label: t("create.reviewLabel"),
+        title: heading("review", t("create.reviewLabel"), t("create.reviewQuestion")),
+        blurb: t("create.reviewBlurb"),
         content: (
           <ReviewStep
             {...stepProps}
             active={activeKey === "review"}
             selectedPack={selectedPack}
-            error={error}
+            error={networkError ? t("common.serverUnavailable") : error ? apiErrorText(uiLocale, error, "create.failed") : ""}
           />
         ),
         canContinue: !busy && !(solo && storyKnownMissing),
@@ -419,10 +432,10 @@ export function CreateCampaignDialog({
   // The choices so far, in one quiet line in the header, so a later step
   // still says which world it is furnishing.
   const draftLine = [
-    genrePreset(draft.genre).name,
-    solo ? "solo" : `${draft.maxPlayers} players`,
-    `level ${draft.startingLevel}`,
-    draft.difficulty,
+    genreLabel(draft.genre, uiLocale),
+    solo ? t("home.solo") : t("create.playerCount", { count: draft.maxPlayers }),
+    t("create.level", { level: draft.startingLevel }),
+    t(`campaign.difficulty.${draft.difficulty}`),
   ].join(" · ");
 
   return (
@@ -438,7 +451,7 @@ export function CreateCampaignDialog({
         <Dialog.Content className="cc-shell panel fixed left-1/2 top-1/2 z-50 flex h-[min(90vh,46rem)] w-[min(96vw,34rem)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-xl p-4 sm:p-6 lg:w-[min(96vw,60rem)]">
           <Dialog.Title className="sr-only">{title}</Dialog.Title>
           <Dialog.Close
-            aria-label="Close"
+            aria-label={t("common.close")}
             className="absolute right-3 top-3 z-10 rounded p-1 text-stone-400 hover:bg-stone-900 sm:right-5 sm:top-5"
           >
             <X className="size-4" />
@@ -456,7 +469,7 @@ export function CreateCampaignDialog({
             doneLabel={
               <>
                 {busy ? <Loader2 className="size-4 animate-spin" /> : null}
-                {solo ? "Create adventure" : "Create campaign"}
+                {t(solo ? "create.adventure" : "create.campaign")}
               </>
             }
             className="[&>header]:pr-9"

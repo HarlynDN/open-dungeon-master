@@ -1,6 +1,9 @@
 import { GENRE_PRESETS, genrePreset, type GenrePreset } from "@/lib/genres";
 import { campaignPlaceholder } from "@/lib/placeholders";
 import type { Genre } from "@/lib/schemas/game-settings";
+import { createTranslator } from "@/lib/i18n/translator";
+import { DEFAULT_LOCALE, type AppLocale } from "@/lib/i18n/locales";
+import { climateLabel, genreLabel, genreTheme } from "@/lib/i18n/settings";
 
 // The world step's pure half: what a portal card shows, what the DM flavour
 // card reads back, and when the theme field may write itself. Kept free of
@@ -31,12 +34,13 @@ export function portalPlate(genre: string): string {
   return campaignPlaceholder(genre);
 }
 
-export function portalCards(selected: Genre): PortalCard[] {
+export function portalCards(selected: Genre, locale: AppLocale = DEFAULT_LOCALE): PortalCard[] {
+  const t = createTranslator(locale);
   return GENRE_PRESETS.map((preset, index) => ({
     id: preset.id,
-    name: preset.name,
-    blurb: preset.blurb,
-    climate: preset.climate,
+    name: genreLabel(preset.id, locale),
+    blurb: t(`world.${preset.id}.blurb`),
+    climate: climateLabel(preset.climate, locale),
     humansOnly: isHumansOnly(preset),
     plate: portalPlate(preset.id),
     chosen: preset.id === selected,
@@ -48,26 +52,24 @@ export type WorldFact = { key: string; value: string };
 
 // The four things a preset decides besides the DM's tone. A custom world has
 // no name hints of its own, and says so instead of showing an empty chip.
-export function worldFacts(genre: string): WorldFact[] {
+export function worldFacts(genre: string, locale: AppLocale = DEFAULT_LOCALE): WorldFact[] {
+  const t = createTranslator(locale);
   const preset = genrePreset(genre);
   return [
-    { key: "Maps", value: preset.mapStyle },
-    { key: "Names", value: preset.nameHints || "Yours to invent" },
-    { key: "Who lives here", value: preset.raceHint },
-    { key: "Sky", value: `${preset.climate} weather table` },
+    { key: t("world.maps"), value: t(`world.${preset.id}.maps`) },
+    { key: t("world.names"), value: t(`world.${preset.id}.names`) },
+    { key: t("world.people"), value: t(`world.${preset.id}.people`) },
+    { key: t("world.sky"), value: t("world.weatherTable", { climate: climateLabel(preset.climate, locale) }) },
   ];
 }
 
-const CUSTOM_FLAVOR =
-  "Nothing is added to the briefing for a custom world: what you type in the box above is the whole tone the Dungeon Master is given.";
-
-export function dmFlavorText(genre: string): string {
-  return genrePreset(genre).dmFlavor || CUSTOM_FLAVOR;
+export function dmFlavorText(genre: string, locale: AppLocale = DEFAULT_LOCALE): string {
+  return createTranslator(locale)(`world.${genrePreset(genre).id}.tone`);
 }
 
 // ---- the theme that writes itself ----
 
-type ThemeSlice = { genre: Genre; theme: string; themeTouched: boolean; worldPack: string };
+type ThemeSlice = { genre: Genre; theme: string; themeTouched: boolean; worldPack: string; locale?: AppLocale };
 
 // The theme a draft should carry once its genre is settled. A theme the
 // person typed is never clobbered, and neither is one a world pack wrote:
@@ -77,7 +79,7 @@ export function presetTheme<T extends ThemeSlice>(draft: T): T {
   if (draft.themeTouched || draft.worldPack) {
     return draft;
   }
-  return { ...draft, theme: genrePreset(draft.genre).defaultTheme };
+  return { ...draft, theme: genreTheme(draft.genre, draft.locale) };
 }
 
 export const TYPE_MS_PER_CHAR = 22;
@@ -93,13 +95,13 @@ function planFor(text: string): TypeInPlan {
 // when the person owns the theme, when a preset has nothing to write (custom)
 // or when the line would not change.
 export function typeInPlan(
-  draft: { theme: string; themeTouched: boolean },
+  draft: { theme: string; themeTouched: boolean; locale?: AppLocale },
   genre: string,
 ): TypeInPlan | null {
   if (draft.themeTouched) {
     return null;
   }
-  const text = genrePreset(genre).defaultTheme;
+  const text = genreTheme(genrePreset(genre).id, draft.locale);
   if (!text || text === draft.theme) {
     return null;
   }
@@ -113,5 +115,5 @@ export function arrivalTypeIn(draft: ThemeSlice): TypeInPlan | null {
   if (draft.themeTouched || draft.worldPack || !draft.theme) {
     return null;
   }
-  return draft.theme === genrePreset(draft.genre).defaultTheme ? planFor(draft.theme) : null;
+  return draft.theme === genreTheme(draft.genre, draft.locale) ? planFor(draft.theme) : null;
 }

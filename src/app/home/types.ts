@@ -1,4 +1,6 @@
 import type { CampaignSummary, HomeGlance } from "@/lib/campaign-types";
+import { createTranslator } from "@/lib/i18n/translator";
+import { DEFAULT_LOCALE, type AppLocale } from "@/lib/i18n/locales";
 
 // What GET /api/campaigns hands the home screen: the summary row plus the
 // name of the character this user plays there, or null when they have no
@@ -47,7 +49,7 @@ export function pickContinue(campaigns: HomeCampaign[]): HomeCampaign | null {
 
 // "2 days ago" for the recap and the save slots. Coarse on purpose: a title
 // screen is not a log.
-export function agoLabel(iso: string | null | undefined, now = Date.now()): string {
+export function agoLabel(iso: string | null | undefined, now = Date.now(), locale: AppLocale = DEFAULT_LOCALE): string {
   if (!iso) {
     return "";
   }
@@ -56,6 +58,18 @@ export function agoLabel(iso: string | null | undefined, now = Date.now()): stri
     return "";
   }
   const minutes = Math.max(0, Math.round((now - then) / 60_000));
+  // Keep the original English title-screen wording. Other locales use the
+  // runtime's grammatical relative-time data, including future languages.
+  if (locale !== "en") {
+    if (minutes < 2) return createTranslator(locale)("home.justNow");
+    const units: Array<[Intl.RelativeTimeFormatUnit, number, number]> = [
+      ["minute", minutes, 60], ["hour", Math.round(minutes / 60), 24],
+      ["day", Math.round(minutes / 1440), 7], ["week", Math.round(minutes / 10080), 5],
+      ["month", Math.round(minutes / 43200), 12], ["year", Math.max(1, Math.round(minutes / 525600)), Infinity],
+    ];
+    const [unit, value] = units.find(([, count, limit]) => count < limit)!;
+    return new Intl.RelativeTimeFormat(locale, { numeric: "auto" }).format(-value, unit);
+  }
   if (minutes < 2) return "just now";
   if (minutes < 60) return `${minutes} minutes ago`;
   const hours = Math.round(minutes / 60);
@@ -92,30 +106,35 @@ export function romanNumeral(value: number): string {
 }
 
 // One line under a table's name: who you are there and how full it is.
-export function seatLine(campaign: HomeCampaign, userId: string): string {
-  const seats = `${campaign.playerCount} of ${campaign.maxPlayers} seats`;
+export function seatLine(campaign: HomeCampaign, userId: string, locale: AppLocale = DEFAULT_LOCALE): string {
+  const t = createTranslator(locale);
+  const count = { count: campaign.playerCount, max: campaign.maxPlayers };
+  const seats = t("home.seatCount", count);
   if (campaign.status === "lobby") {
-    return `Lobby · ${campaign.playerCount} of ${campaign.maxPlayers} ready`;
+    return t("home.lobbySeats", { seats });
   }
-  const party = campaign.maxPlayers === 1 ? "solo" : seats;
+  const party = campaign.maxPlayers === 1 ? t("home.solo") : seats;
   if (campaign.playingAs) {
-    return `Playing as ${campaign.playingAs} · ${party}`;
+    return t("home.playingAs", { name: campaign.playingAs, party });
   }
   if (holdsDmSeat(campaign, userId)) {
-    return `Running the table · ${party}`;
+    return t("home.runningParty", { party });
   }
-  return `No character yet · ${party}`;
+  return t("home.noCharacter", { party });
 }
 
 // The chapter line: "Act II, Chapter III · The Drowned Lantern" (the act
 // only once the arc has one), the act's name when the chapter has none yet,
 // the scene after that, or the campaign's own description.
-export function chapterLine(campaign: HomeCampaign): string {
+export function chapterLine(campaign: HomeCampaign, locale: AppLocale = DEFAULT_LOCALE): string {
+  const t = createTranslator(locale);
   const chapter = campaign.glance?.chapter;
   const scene = (campaign as HomeCampaign & { scene?: string }).scene?.trim() || "";
   if (chapter) {
-    const act = chapter.act ? `Act ${romanNumeral(chapter.act)}, ` : "";
-    const head = `${act}Chapter ${romanNumeral(chapter.index)}`;
+    const number = (value: number) => locale === "en" ? romanNumeral(value) : new Intl.NumberFormat(locale).format(value);
+    const head = chapter.act
+      ? t("home.actChapter", { act: number(chapter.act), chapter: number(chapter.index) })
+      : t("home.chapter", { chapter: number(chapter.index) });
     const title = chapter.title.trim();
     if (title) return `${head} · ${title}`;
     const actTitle = chapter.actTitle?.trim() || "";
@@ -128,17 +147,18 @@ export function chapterLine(campaign: HomeCampaign): string {
 }
 
 // The save slot's one line: what state the table is in, in a few words.
-export function slotLine(campaign: HomeCampaign, userId: string): string {
+export function slotLine(campaign: HomeCampaign, userId: string, locale: AppLocale = DEFAULT_LOCALE): string {
+  const t = createTranslator(locale);
   if (campaign.status === "lobby") {
-    return `${campaign.playerCount} of ${campaign.maxPlayers} ready`;
+    return t("home.seatCount", { count: campaign.playerCount, max: campaign.maxPlayers });
   }
   if (campaign.status === "ended") {
-    const ago = agoLabel(campaign.updatedAt);
-    return ago ? `Finished ${ago}` : "Finished";
+    const ago = agoLabel(campaign.updatedAt, Date.now(), locale);
+    return ago ? t("home.finishedAgo", { ago }) : t("home.finished");
   }
   if (holdsDmSeat(campaign, userId)) {
-    return "Running the table";
+    return t("home.running");
   }
-  const ago = agoLabel(campaign.glance?.recapAt ?? campaign.updatedAt);
-  return ago ? `Last played ${ago}` : "In play";
+  const ago = agoLabel(campaign.glance?.recapAt ?? campaign.updatedAt, Date.now(), locale);
+  return ago ? t("home.lastPlayed", { ago }) : t("home.inPlay");
 }

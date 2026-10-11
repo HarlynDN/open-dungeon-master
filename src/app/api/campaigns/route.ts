@@ -6,6 +6,8 @@ import { playingAsByCampaign } from "@/lib/db/sheets";
 import { homeGlanceFor, partyFacesByCampaign } from "@/lib/db/home-glance";
 import { gameSettingsSchema } from "@/lib/schemas/game-settings";
 import { CAMPAIGN_DIFFICULTIES } from "@/lib/campaign-types";
+import { getUserSettings } from "@/lib/db/users";
+import { normalizeLocale } from "@/lib/i18n/locales";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -67,6 +69,14 @@ export async function POST(request: Request) {
     return Response.json({ error: "Invalid campaign settings." }, { status: 400 });
   }
 
-  const campaign = createCampaign(user.id, parsed.data);
+  // Zod partial defaults can fill locale with "en" even when omitted. Use
+  // the raw object's own key to distinguish omission from explicit choice.
+  const locale = raw?.gameSettings && Object.hasOwn(raw.gameSettings, "locale")
+    ? parsed.data.gameSettings.locale
+    : normalizeLocale(getUserSettings(user.id).uiLocale);
+  const campaign = createCampaign(user.id, {
+    ...parsed.data,
+    gameSettings: { ...parsed.data.gameSettings, locale },
+  });
   return Response.json({ campaign: publicCampaign(campaign) }, { status: 201 });
 }

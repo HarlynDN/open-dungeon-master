@@ -11,7 +11,8 @@ import {
   Sparkles,
 } from "lucide-react";
 import { Dialog } from "@/components/ui/Dialog";
-import { ModeRow, Section } from "@/components/HelpDialog";
+import { ModeRow, Section } from "@/components/HelpParts";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 // Onboarding read for newcomers: what the app is, how to get a table running,
 // who does the maths, and the table etiquette that follows from coalesced DM
@@ -23,123 +24,52 @@ export function HowToPlayDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const { t } = useLocale();
   return (
     <Dialog
       open={open}
       onOpenChange={onOpenChange}
-      title="How to play"
+      title={t("onboarding.title")}
       icon={<ScrollText className="size-5 text-amber-500/80" />}
       width="w-[min(94vw,44rem)]"
     >
-      <Section icon={Sparkles} title="What this is">
-        <p>
-          Open Dungeon Master is a Dungeons &amp; Dragons 5e table where an AI sits in the Dungeon
-          Master&apos;s chair, or a friend does with the AI as their assistant. You and your
-          friends play the adventurers. The app is the rulebook and the dice.
-        </p>
-        <p>
-          Every table runs on the 5e rules. Where it is set is up to you: a genre of your choosing,
-          or one of the pre-built worlds your server has installed.
-        </p>
+      <Section icon={Sparkles} title={t("onboarding.whatTitle")}>
+        <p>{t("onboarding.what")}</p>
+        <p>{t("onboarding.world")}</p>
       </Section>
 
-      <Section icon={Compass} title="Getting started">
-        <p>
-          <span className="text-stone-300">New campaign</span> creates the world: pick a genre,
-          difficulty and starting level, and optionally give the DM a secret story setup only it
-          will know. If the server has campaign plugins installed, you can pick a pre-built world
-          here instead of a bare genre, which brings its own races, classes, monsters and lore
-          without changing a rule. You get an eight-letter invite code to share with your friends.
-        </p>
-        <p>
-          <span className="text-stone-300">Solo adventure</span> is the same thing for one player.
-          To join someone else&apos;s table, paste their code into &quot;Join with a room code&quot;
-          or open the invite link they send you.
-        </p>
-        <p>
-          Then build a character in the creation wizard, or reuse one saved under Characters in the
-          account menu. Everyone readies up in the lobby, and the campaign owner starts the
-          adventure.
-        </p>
+      <Section icon={Compass} title={t("onboarding.startTitle")}>
+        <p>{t("onboarding.create")}</p>
+        <p>{t("onboarding.join")}</p>
+        <p>{t("onboarding.character")}</p>
       </Section>
 
-      <Section icon={Dices} title="How the game is run">
-        <p>
-          The app does all the calculation and gives the result to the DM, who weaves it into the
-          story. Attack rolls, damage, saving throws, death saves, conditions, spell slots, rests,
-          XP and level-ups are all resolved by the server against the 5e rules and written straight
-          to your character sheet.
-        </p>
-        <p>
-          The DM narrates what those results mean. It cannot invent a roll or quietly hand you a
-          bonus, so play the story rather than arguing the numbers. Every roll and stat change is
-          recorded in the Log, under the Story tab, if you want to check the maths.
-        </p>
+      <Section icon={Dices} title={t("onboarding.rulesTitle")}>
+        <p>{t("onboarding.rules")}</p>
+        <p>{t("onboarding.log")}</p>
       </Section>
 
-      <Section icon={MessageSquareText} title="Taking your turn">
-        <p>The buttons above the message box change what your message means:</p>
-        <ModeRow label="Do">
-          Describe what your character does. The DM narrates the outcome and asks for a roll when
-          the rules call for one.
-        </ModeRow>
-        <ModeRow label="Say">Speak in character. Your text is sent as spoken dialogue.</ModeRow>
-        <ModeRow label="OOC">
-          Out-of-character table talk. The DM does not read it or respond to it.
-        </ModeRow>
-        <p>
-          To ask the DM a question about the story, the world, the rules, or your sheet, open the{" "}
-          <span className="text-stone-300">Ask the DM</span> strip just above the message box. The
-          answer quotes what the campaign has on record, and you choose whether it is just for you
-          or for the whole table. Asking never moves the story on, so it works even while the floor
-          is locked.
-        </p>
+      <Section icon={MessageSquareText} title={t("onboarding.turnTitle")}>
+        <p>{t("onboarding.modeHint")}</p>
+        <ModeRow label={t("composer.modeDo")}>{t("onboarding.do")}</ModeRow>
+        <ModeRow label={t("composer.modeSay")}>{t("onboarding.say")}</ModeRow>
+        <ModeRow label={t("composer.modeOoc")}>{t("onboarding.ooc")}</ModeRow>
+        <p>{t("onboarding.ask")}</p>
       </Section>
 
-      <Section icon={Hourglass} title="One turn at a time">
-        <p>
-          When the DM starts thinking, it reads everything sent up to that moment and writes one
-          reply for the whole table. Anything you send while it is still thinking will not change
-          that reply. It is picked up on the next turn, together with whatever everyone else sent.
-        </p>
-        <p>
-          So if you are playing with others,{" "}
-          <span className="text-stone-300">
-            talk your options over before someone sends, then send one clear action each
-          </span>
-          . Piling on more messages mid-narration does not speed the DM up or steer the reply
-          already in progress.
-        </p>
-        <p>
-          OOC is the safe channel for that discussion: it never wakes the DM, and it still works
-          while the floor is locked during narration. Sometimes the DM puts one player in the
-          spotlight and waits for them, and a banner will tell you when that is why you cannot act.
-        </p>
+      <Section icon={Hourglass} title={t("onboarding.queueTitle")}>
+        <p>{t("onboarding.queue")}</p>
+        <p>{t("onboarding.coordinate")}</p>
+        <p>{t("onboarding.spotlight")}</p>
       </Section>
 
-      <Section icon={RefreshCw} title="If a reply lands badly">
-        <p>
-          Nothing the DM writes is final. Hovering one of its messages shows a row of actions. The
-          party lead can have it <span className="text-stone-300">reroll</span> that moment, with
-          the same dice and the same outcome and only the wording changed, then page between the
-          takes and leave the best one up for the table. The lead can also have it{" "}
-          <span className="text-stone-300">continue</span> a reply that stopped short, or edit the
-          wording by hand.
-        </p>
-        <p>
-          Two of those actions are open to everyone. Anyone can check a passage against what the
-          campaign has already established, and anyone can select a line and press the bookmark to
-          keep that detail in front of the DM for the rest of the campaign.
-        </p>
+      <Section icon={RefreshCw} title={t("onboarding.fixTitle")}>
+        <p>{t("onboarding.fix")}</p>
+        <p>{t("onboarding.bookmark")}</p>
       </Section>
 
-      <Section icon={CircleHelp} title="If you get stuck">
-        <p>
-          The Help entry, in the account menu here and in the header during a session, walks through
-          every button and panel: the side panel tabs, the Ask strip, the per-message actions, dice
-          options, narration voice, notes, whispers, world packs and the party lead&apos;s powers.
-          If a spotlight leaves the table stuck, the party lead can release it.
-        </p>
+      <Section icon={CircleHelp} title={t("onboarding.helpTitle")}>
+        <p>{t("onboarding.help")}</p>
       </Section>
     </Dialog>
   );

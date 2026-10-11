@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+
 import { Copy, Pencil, Pin, Trash2 } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { ui } from "@/lib/ui";
@@ -28,6 +30,7 @@ export function LoreEntryActions({
   onDuplicate: () => void;
   onDelete: () => void;
 }) {
+  const { t } = useLocale();
   return (
     <div className="flex flex-wrap items-center gap-1.5 text-xs">
       {onEdit ? (
@@ -36,35 +39,32 @@ export function LoreEntryActions({
           onClick={onEdit}
           className={cn(ui.btnSmall, action)}
         >
-          <Pencil className="size-3" /> Edit
-        </button>
+          <Pencil className="size-3" />  {t("prep.edit")} </button>
       ) : null}
       <button
         type="button"
         onClick={onPin}
         title={
-          entry.pinned ? "Unpin: retrieved only when relevant" : "Pin: included in every DM turn"
+          entry.pinned ? t("prep.unpinHint") : t("prep.pinHint")
         }
         aria-pressed={entry.pinned}
         className={cn(ui.btnSmall, action, entry.pinned && "border-amber-500/60 bg-amber-400/10 text-amber-200")}
       >
-        <Pin className="size-3" /> {entry.pinned ? "Pinned" : "Pin"}
+        <Pin className="size-3" /> {entry.pinned ? t("prep.pinned") : t("prep.pin")}
       </button>
       <button
         type="button"
         onClick={onDuplicate}
-        aria-label={`Duplicate ${entry.title}`}
+        aria-label={t("lore.duplicateName", { name: entry.title })}
         className={cn(ui.btnSmall, action)}
       >
-        <Copy className="size-3" /> Duplicate
-      </button>
+        <Copy className="size-3" />  {t("prep.duplicate")} </button>
       <button
         type="button"
         onClick={onDelete}
         className={cn(ui.btnSmall, action, "hover:border-red-500/50 hover:text-red-300")}
       >
-        <Trash2 className="size-3" /> Delete
-      </button>
+        <Trash2 className="size-3" />  {t("prep.delete")} </button>
     </div>
   );
 }

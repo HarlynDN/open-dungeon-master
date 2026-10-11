@@ -1,10 +1,13 @@
 "use client";
 
 import { Bell } from "lucide-react";
+import { isComposingInput } from "@/lib/input-composition";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { EmptyState } from "@/components/EmptyState";
 import { GameIcon } from "@/components/ui/GameIcon";
 import { cn } from "@/lib/cn";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { DEFAULT_LOCALE, type AppLocale } from "@/lib/i18n/locales";
 
 // The bell: out-of-game news (sessions planned, moved, called off; someone
 // can't make it; reminders and the idle-table nudge). Live over the
@@ -33,8 +36,14 @@ function glyphFor(kind: string): string {
   return "tab-journal";
 }
 
-function ago(iso: string): string {
+function ago(iso: string, locale: AppLocale): string {
   const minutes = Math.max(0, Math.round((Date.now() - Date.parse(iso)) / 60_000));
+  if (locale !== DEFAULT_LOCALE) {
+    const formatter = new Intl.RelativeTimeFormat(locale, { numeric: "auto" });
+    if (minutes < 60) return formatter.format(-minutes, "minute");
+    const hours = Math.round(minutes / 60);
+    return hours < 48 ? formatter.format(-hours, "hour") : formatter.format(-Math.round(hours / 24), "day");
+  }
   if (minutes < 1) return "just now";
   if (minutes < 60) return `${minutes}m ago`;
   const hours = Math.round(minutes / 60);
@@ -43,6 +52,7 @@ function ago(iso: string): string {
 }
 
 export function NotificationBell() {
+  const { t, locale } = useLocale();
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState<BellNotification[]>([]);
   const [unread, setUnread] = useState(0);
@@ -162,6 +172,7 @@ export function NotificationBell() {
       }
     };
     const onKeyDown = (event: KeyboardEvent) => {
+      if (isComposingInput(event)) return;
       if (event.key === "Escape") {
         setOpen(false);
       }
@@ -192,7 +203,7 @@ export function NotificationBell() {
       <button
         type="button"
         onClick={toggle}
-        aria-label={unread > 0 ? `Notifications, ${unread} unread` : "Notifications"}
+        aria-label={unread > 0 ? t("notifications.unread", { count: unread }) : t("notifications.title")}
         aria-expanded={open}
         className="motion-nudge relative rounded-lg border border-stone-800 bg-stone-900/60 p-2 text-stone-300 transition-colors hover:border-amber-500/40 hover:text-amber-200"
       >
@@ -209,9 +220,9 @@ export function NotificationBell() {
       </button>
       {open ? (
         <div role="menu" className="reveal-scale panel bell-panel absolute right-0 z-40 mt-2 w-80 p-2">
-          <p className="eyebrow px-2 pb-1.5 pt-1 text-[10px] text-amber-300/80">News from your tables</p>
+          <p className="eyebrow px-2 pb-1.5 pt-1 text-[10px] text-amber-300/80">{t("notifications.news")}</p>
           {items.length === 0 ? (
-            <EmptyState art="board" size="sm" title="Nothing yet" hint="Quiet week. Session plans and reminders land here." />
+            <EmptyState art="board" size="sm" title={t("notifications.empty")} hint={t("notifications.emptyHint")} />
           ) : (
             <ul className="stagger max-h-96 space-y-1 overflow-y-auto">
               {items.map((item, index) => (
@@ -227,7 +238,7 @@ export function NotificationBell() {
                   <GameIcon icon={{ kind: "glyph", key: glyphFor(item.kind) }} size="size-8" className="shrink-0" />
                   <span className="min-w-0">
                     <span className="block">{item.body}</span>
-                    <span className="block text-xs text-stone-600">{ago(item.createdAt)}</span>
+                    <span className="block text-xs text-stone-600">{ago(item.createdAt, locale)}</span>
                   </span>
                 </li>
               ))}

@@ -1,3 +1,5 @@
+import { getUserSettings } from "@/lib/db/users";
+import { normalizeLocale } from "@/lib/i18n/locales";
 import { currentUser, unauthorized } from "@/lib/auth";
 import { duplicateCharacter } from "@/lib/db/characters";
 import { portraitStatus } from "@/lib/portrait";
@@ -20,7 +22,7 @@ export async function POST(
     return unauthorized();
   }
   const { characterId } = await params;
-  const character = duplicateCharacter(user.id, characterId);
+  const character = duplicateCharacter(user.id, characterId, normalizeLocale(getUserSettings(user.id).uiLocale));
   if (!character) {
     return Response.json({ error: "Character not found." }, { status: 404 });
   }

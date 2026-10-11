@@ -1,6 +1,7 @@
 "use client";
 
 import { Bot, Check, Crown, Heart, ImagePlus, PawPrint, Save, Sparkles, UserPlus } from "lucide-react";
+import { isComposingInput } from "@/lib/input-composition";
 import { describeExhaustion } from "@/lib/dm/condition-logic";
 import { namesLookup } from "@/lib/battlemap/condition-notes";
 import { conditionIconKey } from "@/lib/battlemap/condition-glyphs";
@@ -375,6 +376,7 @@ export function PartyPanel({
                           if (switching !== sheet.id) void playAs(sheet.id);
                         }}
                         onKeyDown={(event) => {
+                          if (isComposingInput(event)) return;
                           if (event.key !== "Enter" && event.key !== " ") return;
                           event.preventDefault();
                           event.stopPropagation();

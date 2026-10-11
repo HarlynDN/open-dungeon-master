@@ -23,6 +23,8 @@ import { SetupNudge } from "@/app/home/SetupNudge";
 import { WorkshopSection } from "@/app/home/WorkshopSection";
 import { pickContinue, type HomeCampaign } from "@/app/home/types";
 import { currentPathname, currentQuery, navigateTo, replaceAddress } from "@/lib/navigation";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { apiErrorText, type ApiUiError } from "@/lib/i18n/api-errors";
 
 // The desktop and Android shells' quick tiles land here with ?new=1,
 // ?new=solo or ?new=starter and expect that wizard already open. Read once, at mount, as the
@@ -44,6 +46,7 @@ function requestedWizard(): "campaign" | "solo" | "starter" | null {
 // below the fold. Everything the old dashboard offered is still here; only
 // the composition changed.
 export function Dashboard({ user, onLogout }: { user: SessionUser; onLogout: () => void }) {
+  const { t, locale } = useLocale();
   const [campaigns, setCampaigns] = useState<HomeCampaign[]>([]);
   const [workshops, setWorkshops] = useState<WorkshopSummary[]>([]);
   const [loading, setLoading] = useState(true);
@@ -51,7 +54,7 @@ export function Dashboard({ user, onLogout }: { user: SessionUser; onLogout: () 
   // words are a statement about the account, not about the network.
   const [loadFailed, setLoadFailed] = useState(false);
   // Clone and delete failures, shown beside the save slots.
-  const [actionError, setActionError] = useState("");
+  const [actionError, setActionError] = useState<{ data: ApiUiError; kind: "delete" | "clone"; title?: string } | null>(null);
   const [cloningId, setCloningId] = useState("");
   const [createOpen, setCreateOpen] = useState(() => requestedWizard() === "campaign");
   const [soloOpen, setSoloOpen] = useState(() => requestedWizard() === "solo");
@@ -124,12 +127,12 @@ export function Dashboard({ user, onLogout }: { user: SessionUser; onLogout: () 
   async function deleteCampaign(campaign: HomeCampaign) {
     if (
       !await appConfirm(
-        `Delete "${campaign.title}" for everyone? All characters, messages, and story progress are lost. This cannot be undone.`,
+        t("home.deleteConfirm", { title: campaign.title }),
       )
     ) {
       return;
     }
-    setActionError("");
+    setActionError(null);
     const response = await fetch(`/api/campaigns/${campaign.id}`, { method: "DELETE" }).catch(
       () => null,
     );
@@ -137,7 +140,7 @@ export function Dashboard({ user, onLogout }: { user: SessionUser; onLogout: () 
       setCampaigns((current) => current.filter((entry) => entry.id !== campaign.id));
     } else {
       const data = await response?.json().catch(() => ({}));
-      setActionError(data?.error || `Could not delete "${campaign.title}".`);
+      setActionError({ data: data ?? {}, kind: "delete", title: campaign.title });
     }
   }
 
@@ -146,14 +149,14 @@ export function Dashboard({ user, onLogout }: { user: SessionUser; onLogout: () 
   // why both rows use it.
   async function clone(id: string) {
     setCloningId(id);
-    setActionError("");
+    setActionError(null);
     try {
       const response = await fetch(`/api/campaigns/${id}/clone`, { method: "POST" }).catch(
         () => null,
       );
       if (!response?.ok) {
         const data = await response?.json().catch(() => ({}));
-        setActionError(data?.error || "Could not make the copy.");
+        setActionError({ data: data ?? {}, kind: "clone" });
         return;
       }
       const data = await response.json().catch(() => ({}));
@@ -201,10 +204,10 @@ export function Dashboard({ user, onLogout }: { user: SessionUser; onLogout: () 
           <div className="ts-cluster">
             <AppHomeButton />
             <NotificationBell />
-            <Tooltip content="What this app is and how a table works" side="bottom">
-              <button type="button" onClick={() => setHowToOpen(true)} className={ui.btnSmall} aria-label="How to play">
+            <Tooltip content={t("home.howToHint")} side="bottom">
+              <button type="button" onClick={() => setHowToOpen(true)} className={ui.btnSmall} aria-label={t("onboarding.title")}>
                 <ScrollText className="size-4" />
-                <span className="hidden sm:inline">How to play</span>
+                <span className="hidden sm:inline">{t("onboarding.title")}</span>
               </button>
             </Tooltip>
             <span className="ts-username" aria-hidden="true">{user.username}</span>
@@ -214,7 +217,7 @@ export function Dashboard({ user, onLogout }: { user: SessionUser; onLogout: () 
         {user.deletionDueAt ? <DeletionBanner dueAt={user.deletionDueAt} className="ts-deletion" /> : null}
         {user.isAdmin ? <SetupNudge className="ts-deletion" /> : null}
 
-        <section className="ts-stage" aria-label="Title screen">
+        <section className="ts-stage" aria-label={t("home.titleScreen")}>
           <div className="ts-stage-left">
             {/* The title block waits for the list: showing "empty table"
                 before the answer arrives would flash a lie at every account
@@ -250,7 +253,7 @@ export function Dashboard({ user, onLogout }: { user: SessionUser; onLogout: () 
               loading={loading}
               userId={user.id}
               cloningId={cloningId}
-              actionError={actionError}
+              actionError={actionError ? apiErrorText(locale, actionError.data, actionError.kind === "delete" ? "home.deleteFailed" : "home.cloneFailed", { title: actionError.title ?? "" }) : ""}
               onClone={clone}
               onDelete={deleteCampaign}
               onNewCampaign={() => setCreateOpen(true)}
@@ -278,6 +281,7 @@ export function Dashboard({ user, onLogout }: { user: SessionUser; onLogout: () 
 // when the storyteller answers, ember when it is configured but not
 // answering, and unlit on a server with no AI storyteller at all.
 function DmStatusLine({ capabilities }: { capabilities: ClientCapabilities | null }) {
+  const { t } = useLocale();
   const [version, setVersion] = useState("");
   useEffect(() => {
     let cancelled = false;
@@ -295,14 +299,7 @@ function DmStatusLine({ capabilities }: { capabilities: ClientCapabilities | nul
   }, []);
   const story = capabilities?.story;
   const tone = !capabilities ? "wait" : !story?.configured ? "off" : story.reachable ? "awake" : "dozing";
-  const words =
-    tone === "wait"
-      ? "Waking the DM"
-      : tone === "off"
-        ? "No AI storyteller · human-run tables"
-        : tone === "awake"
-          ? "The DM is awake"
-          : "The DM is not answering";
+  const words = t(`home.dm.${tone}`);
   const bits = [words];
   if (story?.model && tone !== "off") bits.push(story.model);
   if (version) bits.push(`v${version}`);

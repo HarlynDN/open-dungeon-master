@@ -1,6 +1,7 @@
 "use client";
 
 import { Keyboard, LocateFixed, Lock, Maximize2, Unlock, Users, ZoomIn, ZoomOut } from "lucide-react";
+import { isComposingInput } from "@/lib/input-composition";
 import { useState } from "react";
 import { Dialog } from "@/components/ui/Dialog";
 import { cn } from "@/lib/cn";
@@ -79,6 +80,7 @@ export function BoardCameraControls({
           role="note"
           className="board-keys-card"
           onKeyDown={(event) => {
+            if (isComposingInput(event)) return;
             if (event.key === "Escape") {
               event.stopPropagation();
               setKeysOpen(false);

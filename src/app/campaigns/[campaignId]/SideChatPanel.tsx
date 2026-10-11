@@ -1,6 +1,7 @@
 "use client";
 
 import { EmptyState } from "@/components/EmptyState";
+import { isComposingInput } from "@/lib/input-composition";
 import { ArrowLeft, Bell, BellOff, Loader2, Plus, Send } from "lucide-react";
 import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
 import { cn } from "@/lib/cn";
@@ -427,6 +428,7 @@ function ThreadView({
             value={input}
             onChange={(event) => setInput(event.target.value)}
             onKeyDown={(event) => {
+              if (isComposingInput(event)) return;
               if (event.key === "Enter" && !event.shiftKey) {
                 event.preventDefault();
                 event.currentTarget.form?.requestSubmit();

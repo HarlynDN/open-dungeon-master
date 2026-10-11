@@ -1,11 +1,10 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import type { CSSProperties, ReactNode } from "react";
 import { CampaignCover } from "@/components/CampaignCover";
 import { cn } from "@/lib/cn";
-import { CAMPAIGN_DIFFICULTY_HINTS } from "@/lib/campaign-types";
-import { genrePreset } from "@/lib/genres";
-import { DM_MODE_LABELS } from "@/lib/schemas/game-settings-options";
+import { genreLabel } from "@/lib/i18n/settings";
 import type { WorldPackSummary } from "@/lib/worlds/types";
 import type { StepProps } from "@/app/create-campaign/draft";
 import { coverSheet } from "@/app/create-campaign/cover-sheet";
@@ -29,8 +28,9 @@ export function ReviewStep({
   error: string;
 }) {
   const { solo, storyKnownMissing } = gates;
-  const preset = genrePreset(draft.genre);
-  const sheet = coverSheet(draft, gates, selectedPack?.name ?? null);
+  const { locale, t } = useLocale();
+
+  const sheet = coverSheet(draft, gates, selectedPack?.name ?? null, locale);
 
   return (
     <div className={cn("space-y-4 text-sm", active && "cc-live")}>
@@ -39,7 +39,7 @@ export function ReviewStep({
           <div className="cc-cover-art rounded-xl">
             <CampaignCover cover={null} title={sheet.title} genre={draft.genre} />
             <span className="cc-cover-caption">
-              <span className="cc-cover-genre">{preset.name}</span>
+              <span className="cc-cover-genre">{genreLabel(draft.genre, locale)}</span>
               <span className="cc-cover-title">{sheet.title}</span>
             </span>
           </div>
@@ -55,32 +55,32 @@ export function ReviewStep({
 
         <div className="flex min-w-0 flex-[1_1_18rem] flex-col gap-2.5">
           <dl className="cc-readback">
-            <Row label="Runs the game" index={0} gold>
-              {DM_MODE_LABELS[draft.dmMode]}
+            <Row label={t("review.runsGame")} index={0} gold>
+              {t(`setting.dmMode.${draft.dmMode}.label`)}
             </Row>
-            <Row label="Setting" index={1}>
+            <Row label={t("review.setting")} index={1}>
               {sheet.setting}
             </Row>
-            <Row label="Party" index={2}>
+            <Row label={t("review.party")} index={2}>
               {sheet.party}
             </Row>
-            <Row label="Difficulty" index={3}>
+            <Row label={t("review.difficulty")} index={3}>
               {sheet.difficulty}
             </Row>
-            <Row label="Dice" index={4}>
+            <Row label={t("review.dice")} index={4}>
               {sheet.dice}
             </Row>
-            <Row label="Table features" index={5} gold>
-              {featuresOn(draft, gates)} on
+            <Row label={t("review.features")} index={5} gold>
+              {t("review.enabledCount", { count: featuresOn(draft, gates) })}
             </Row>
           </dl>
           <p className="text-stone-400">
             {solo
-              ? "You'll drop into the lobby next to ready up."
-              : "You'll drop into the lobby next to share an invite code and ready up."}
+              ? t("review.soloLobby")
+              : t("review.tableLobby")}
           </p>
           <div className="flex flex-wrap gap-1.5">
-            {[CAMPAIGN_DIFFICULTY_HINTS[draft.difficulty], ...sheet.chips].map((chip, index) => (
+            {[t(`setting.difficulty.${draft.difficulty}.hint`), ...sheet.chips].map((chip, index) => (
               <span
                 key={chip}
                 className="cc-review-chip"
@@ -95,8 +95,7 @@ export function ReviewStep({
 
       {solo && storyKnownMissing ? (
         <p className="rounded-lg border border-amber-900/50 bg-amber-950/30 p-3 text-amber-200">
-          A solo adventure needs the AI storyteller, and this server does not have one. Ask the
-          server owner to set up an AI backend first.
+          {t("review.needsAi")}
         </p>
       ) : null}
       {error ? <p className="motion-shake text-red-400">{error}</p> : null}

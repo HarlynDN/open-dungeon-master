@@ -1,6 +1,7 @@
 "use client";
 
 import { Download, X } from "lucide-react";
+import { isComposingInput } from "@/lib/input-composition";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
 import { Markdown } from "@/components/ui/Markdown";
@@ -73,6 +74,7 @@ export function HandoutStage({
       return;
     }
     const onKey = (event: KeyboardEvent) => {
+      if (isComposingInput(event)) return;
       if (event.key === "Escape") {
         setFolded(handout.id);
       }

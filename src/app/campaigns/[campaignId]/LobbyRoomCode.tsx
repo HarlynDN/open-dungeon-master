@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+
 import { Copy, Link as LinkIcon, QrCode } from "lucide-react";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
@@ -37,6 +39,7 @@ export function LobbyRoomCode({
   className?: string;
   style?: React.CSSProperties;
 }) {
+  const { t } = useLocale();
   const [copied, setCopied] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
   const [sharing, setSharing] = useState(false);
@@ -87,13 +90,13 @@ export function LobbyRoomCode({
       <img src="/assets/ui/wax-seal-gold.webp" alt="" className="lobby-code-seal" />
       <div className="lobby-head mb-3 pr-12">
         <GameIcon icon={{ kind: "glyph", key: "tab-friends" }} size="size-7" />
-        <h2 className="lobby-head-title">Room code</h2>
+        <h2 className="lobby-head-title">{t("invite.roomCode")}</h2>
         <span className="lobby-head-rule motion-rule" aria-hidden="true" />
       </div>
       <div className="flex flex-col items-center gap-4 min-[420px]:flex-row min-[420px]:items-start">
         <div className="flex flex-col items-center gap-1">
           <InviteQr url={shareLinks.appUrl} />
-          <p className="eyebrow text-[9px] text-stone-500">Scan to join</p>
+          <p className="eyebrow text-[9px] text-stone-500">{t("invite.scan")}</p>
         </div>
         <div className="flex min-w-0 flex-1 flex-col items-center gap-3 min-[420px]:items-start">
           <RoomCodeSigils code={inviteCode} />
@@ -105,7 +108,7 @@ export function LobbyRoomCode({
               className={cn(ui.btnSmall, "lobby-copy")}
             >
               {copied ? <CopyTick /> : <Copy className="size-4" />}
-              {copied ? "Copied" : "Code"}
+              {copied ? t("invite.copied") : t("invite.code")}
             </button>
             <button
               type="button"
@@ -114,11 +117,10 @@ export function LobbyRoomCode({
               className={cn(ui.btnSmall, "lobby-copy")}
             >
               {linkCopied ? <CopyTick /> : <LinkIcon className="size-4" />}
-              {linkCopied ? "Copied" : "Link"}
+              {linkCopied ? t("invite.copied") : t("invite.link")}
             </button>
             <button type="button" onClick={() => setSharing(true)} className={ui.btnSmall}>
-              <QrCode className="size-4" /> Share
-            </button>
+              <QrCode className="size-4" /> {t("invite.share")}</button>
           </div>
           <p className="break-all text-center font-mono text-xs text-stone-500 min-[420px]:text-left">
             {shareLinks.joinUrl}
@@ -129,7 +131,7 @@ export function LobbyRoomCode({
         <RoomCodeHeldNotice onNewCode={canRegenerate ? () => setSharing(true) : undefined} className="mt-4" />
       ) : null}
       <p role="status" className="sr-only">
-        {copied ? "Room code copied." : linkCopied ? "Invite link copied." : ""}
+        {copied ? t("invite.codeCopied") : linkCopied ? t("invite.linkCopied") : ""}
       </p>
       <InviteShareDialog
         open={sharing}

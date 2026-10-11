@@ -1,3 +1,5 @@
+import { createTranslator } from "../../lib/i18n/translator.ts";
+import { DEFAULT_LOCALE, type AppLocale } from "../../lib/i18n/locales.ts";
 import type { CampaignDraft, WizardGates } from "@/app/create-campaign/draft";
 
 // The table sheet's pure half: which switches the Feel step shows, in which
@@ -104,12 +106,7 @@ const ROWS: RowSpec[] = [
   { key: "enemyIntent", group: "rules", counted: false },
 ];
 
-const GROUPS: Array<{ id: SheetGroupId; label: string; note: string }> = [
-  { id: "narration", label: "The narrator", note: "only with an AI narrator" },
-  { id: "senses", label: "Sight and sound", note: "" },
-  { id: "people", label: "People and the floor", note: "" },
-  { id: "rules", label: "Rules at the table", note: "" },
-];
+const GROUPS: SheetGroupId[] = ["narration", "senses", "people", "rules"];
 
 function parentOn(draft: CampaignDraft, needs: RowSpec["needs"]): boolean {
   if (needs === "ambienceEnabled") return draft.ambienceEnabled;
@@ -121,64 +118,26 @@ function gated(spec: RowSpec, gates: WizardGates): boolean {
   return Boolean((spec.aiOnly && !gates.aiNarrates) || (spec.tableOnly && gates.solo));
 }
 
-function copy(spec: RowSpec, draft: CampaignDraft, gates: WizardGates): { label: string; hint: string } {
+function copy(spec: RowSpec, draft: CampaignDraft, gates: WizardGates, t: ReturnType<typeof createTranslator>): { label: string; hint: string } {
   switch (spec.key) {
-    case "aiStorySetup":
-      return { label: "AI story setup", hint: "The DM invents the plot" };
-    case "narrationGuard":
-      return { label: "Outcome check", hint: "Narration that contradicts the dice is rewritten" };
-    case "worldSimulation":
-      return { label: "Living world", hint: "Off-screen schemes and rumors advance on their own" };
-    case "ttsEnabled":
-      return {
-        label: "Voice narration",
-        hint: gates.ttsAvailable ? "Spoken DM narration" : "No speech service on this server",
-      };
-    case "mapsEnabled":
-      return {
-        label: "Maps",
-        hint: gates.mapsAvailable ? "AI-drawn area maps" : "Drawn once this server can paint pictures",
-      };
-    case "ambienceEnabled":
-      return { label: "Ambience", hint: "Room tone, music and stings" };
-    case "ambienceAuto":
-      return { label: "Sound follows the scene", hint: "Off leaves it to the DM" };
-    case "presentation":
-      return {
-        label: "Theatre inserts",
-        hint: "A speaking NPC's face over the scene art while their lines play",
-      };
-    case "relationships":
-      return { label: "Bonds", hint: "NPCs remember how each character treated them" };
-    case "romance":
-      return { label: "Romance", hint: "Bonds can grow into a relationship" };
-    case "multiCharacter":
-      return {
-        label:
-          draft.multiCharacter === "all_active"
-            ? "Several characters each, all fielded"
-            : draft.multiCharacter === "one_active"
-              ? "Several characters each, one at a time"
-              : "One character each",
-        hint: "A player may build more than one; press again to field them all at once (solo tables)",
-      };
-    case "midGameJoinOpen":
-      return { label: "Mid-game joining", hint: "New players can use the invite code after the start" };
-    case "holdSubmissions":
-      return { label: "Held responses", hint: "Nobody acts until the party lead opens the floor" };
-    case "multiclassingEnabled":
-      return { label: "Multiclassing", hint: "Second classes at level-up" };
-    case "inventoryApprovals":
-      return { label: "Item offers", hint: "Players confirm DM loot and gold changes" };
-    case "vitalsApprovals":
-      return { label: "Vitals confirmed", hint: "Players confirm DM damage, healing and conditions" };
-    case "boardDrawing":
-      return {
-        label: "Players draw on the board",
-        hint: "Plans and circles on the battle map; the DM always may",
-      };
-    case "enemyIntent":
-      return { label: "Enemy intent", hint: "Show what enemies look likely to do next" };
+    case "aiStorySetup": return { label: t("table.row.aiStorySetup.label"), hint: t("table.row.aiStorySetup.hint") };
+    case "narrationGuard": return { label: t("table.row.narrationGuard.label"), hint: t("table.row.narrationGuard.hint") };
+    case "worldSimulation": return { label: t("table.row.worldSimulation.label"), hint: t("table.row.worldSimulation.hint") };
+    case "ttsEnabled": return { label: t("table.row.ttsEnabled.label"), hint: gates.ttsAvailable ? t("table.row.ttsEnabled.hint") : t("table.row.ttsEnabled.unavailable") };
+    case "mapsEnabled": return { label: t("table.row.mapsEnabled.label"), hint: gates.mapsAvailable ? t("table.row.mapsEnabled.hint") : t("table.row.mapsEnabled.unavailable") };
+    case "ambienceEnabled": return { label: t("table.row.ambienceEnabled.label"), hint: t("table.row.ambienceEnabled.hint") };
+    case "ambienceAuto": return { label: t("table.row.ambienceAuto.label"), hint: t("table.row.ambienceAuto.hint") };
+    case "presentation": return { label: t("table.row.presentation.label"), hint: t("table.row.presentation.hint") };
+    case "relationships": return { label: t("table.row.relationships.label"), hint: t("table.row.relationships.hint") };
+    case "romance": return { label: t("table.row.romance.label"), hint: t("table.row.romance.hint") };
+    case "midGameJoinOpen": return { label: t("table.row.midGameJoinOpen.label"), hint: t("table.row.midGameJoinOpen.hint") };
+    case "holdSubmissions": return { label: t("table.row.holdSubmissions.label"), hint: t("table.row.holdSubmissions.hint") };
+    case "multiclassingEnabled": return { label: t("table.row.multiclassingEnabled.label"), hint: t("table.row.multiclassingEnabled.hint") };
+    case "inventoryApprovals": return { label: t("table.row.inventoryApprovals.label"), hint: t("table.row.inventoryApprovals.hint") };
+    case "vitalsApprovals": return { label: t("table.row.vitalsApprovals.label"), hint: t("table.row.vitalsApprovals.hint") };
+    case "boardDrawing": return { label: t("table.row.boardDrawing.label"), hint: t("table.row.boardDrawing.hint") };
+    case "enemyIntent": return { label: t("table.row.enemyIntent.label"), hint: t("table.row.enemyIntent.hint") };
+    case "multiCharacter": return { label: t(`table.row.multiCharacter.${draft.multiCharacter}`), hint: t("table.row.multiCharacter.hint") };
   }
 }
 
@@ -199,16 +158,19 @@ function knobOf(key: SheetRowKey, draft: CampaignDraft): 0 | 0.5 | 1 {
 
 // The groups as the step draws them. A group with nothing to show is left
 // out, which is how the narrator block disappears when a person narrates.
-export function tableSheet(draft: CampaignDraft, gates: WizardGates): SheetGroup[] {
+export function tableSheet(draft: CampaignDraft, gates: WizardGates, locale: AppLocale = DEFAULT_LOCALE): SheetGroup[] {
+  const t = createTranslator(locale);
   return GROUPS.map((group) => ({
-    ...group,
+    id: group,
+    label: t(`table.group.${group}`),
+    note: group === "narration" ? t("table.group.aiOnly") : "",
     rows: ROWS.filter(
-      (spec) => spec.group === group.id && !gated(spec, gates) && parentOn(draft, spec.needs),
+      (spec) => spec.group === group && !gated(spec, gates) && parentOn(draft, spec.needs),
     ).map((spec) => {
       const knob = knobOf(spec.key, draft);
       return {
         key: spec.key,
-        ...copy(spec, draft, gates),
+        ...copy(spec, draft, gates, t),
         on: knob > 0,
         knob,
         counted: spec.counted,

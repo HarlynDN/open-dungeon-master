@@ -1,6 +1,7 @@
 "use client";
 
 import { ChevronRight, X } from "lucide-react";
+import { isComposingInput } from "@/lib/input-composition";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 import { placeCard, resolveSteps, skipVanished, type ResolvedStep, type TourStep } from "@/lib/tours/logic";
@@ -149,6 +150,7 @@ export function GuidedTour({
   useEffect(() => {
     if (!current) return;
     const onKey = (event: KeyboardEvent) => {
+      if (isComposingInput(event)) return;
       if (event.key === "Escape") {
         event.preventDefault();
         onClose();
