@@ -1,12 +1,13 @@
 "use client";
 
+import { classOptionView, classOptionFeatureName, classOptionHelp } from "@/lib/i18n/class-option-presentations";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { trainingLabel } from "@/lib/i18n/training-presentations";
 import { characterLabel, subclassLabel, skillLabel } from "@/lib/i18n/character-presentations";
 import { referenceDisplayName } from "@/lib/i18n/references";
 import { builderTermLabel } from "@/lib/i18n/builder-name-presentations";
 import { fightingStyleDescription } from "@/lib/i18n/calling-presentations";
-import { sheetChoiceOption, sheetFeatureChoice } from "@/lib/i18n/sheet-dialog-presentations";
+import { sheetFeatureChoice } from "@/lib/i18n/sheet-dialog-presentations";
 import { levelUpNotice, levelUpPrerequisite, levelUpGrants, levelUpClassLine } from "@/lib/i18n/level-up-presentations";
 import { skillHelpText } from "@/lib/i18n/game-help-presentations";
 import { subclassHelpText } from "@/lib/i18n/calling-material-presentations";
@@ -737,8 +738,9 @@ export function LevelUpDialog({
                       <p className="mb-1 text-xs text-amber-200">{locale === "en" ? <>New at level {targetLevel}:</> : t("sessionUi.level.newFeatures", { level: targetLevel })}</p>
                       <InfoChipList
                         items={newFeatureNames.map((name) => ({
-                          name: sheetFeatureChoice(name, locale),
-                          text: describeFeature(classChoice, effectiveSubclass, name),
+                          id: name,
+                          name: classOptionFeatureName(sheetFeatureChoice(name, locale), locale),
+                          text: classOptionHelp(name, describeFeature(classChoice, effectiveSubclass, name), locale),
                         }))}
                       />
                     </div>
@@ -1014,6 +1016,7 @@ export function LevelUpDialog({
                         </p>
                         <div className="max-h-56 space-y-1.5 overflow-y-auto pr-1">
                           {slot.options.map((option) => {
+                            const view = classOptionView(option, locale);
                             const picked = slot.chosen.some(
                               (name) => name.toLowerCase() === option.n.toLowerCase(),
                             );
@@ -1022,7 +1025,7 @@ export function LevelUpDialog({
                               !optionPicks.includes(optionFeatureName(slot.kind, option.n));
                             return (
                               <div
-                                key={locale === "en" ? option.n : sheetChoiceOption(option.n, locale)}
+                                key={option.n}
                                 className={cn(
                                   "flex items-start gap-2 rounded-lg border px-3 py-2 text-sm",
                                   picked
@@ -1037,17 +1040,17 @@ export function LevelUpDialog({
                                   onClick={() => toggleOption(slot, option.n)}
                                   className="grow text-left"
                                 >
-                                  <span className="block">{locale === "en" ? option.n : sheetChoiceOption(option.n, locale)}</span>
+                                  <span className="block">{view.name}</span>
                                   <span className="block text-[11px] text-stone-500">
                                     {already ? t("sessionUi.level.already") : ""}
-                                    {option.req ? t("sessionUi.level.optionReq", { requirements: levelUpNotice(option.req, locale) }) : ""}
-                                    {option.d}
+                                    {option.req ? t("sessionUi.level.optionReq", { requirements: view.requirement ?? option.req }) : ""}
+                                    {view.description}
                                   </span>
                                 </button>
                                 <InfoButton
-                                  label={locale === "en" ? option.n : sheetChoiceOption(option.n, locale)}
-                                  meta={option.req ? t("sessionUi.level.requires", { requirements: levelUpNotice(option.req, locale) }) : undefined}
-                                  text={option.d}
+                                  label={view.name}
+                                  meta={option.req ? t("sessionUi.level.requires", { requirements: view.requirement ?? option.req }) : undefined}
+                                  text={view.description}
                                 />
                               </div>
                             );

@@ -14,3 +14,9 @@ export function trainingLabel(kind: TrainingTermKind, value: string, locale: App
   const row = CHARACTER_TRAINING_NAMES.find(entry => entry.type === kind && normalize(entry.name) === wanted);
   return row ? createTranslator(locale)(row.key) : kind === "tool" ? featTermLabel("tool", value, locale) : value;
 }
+
+// The legacy English picker pluralizes the category; display-only grammar.
+// Other locales use their registered category name without an English suffix.
+export function toolGrantCategoryLabel(value: string, count: number, locale: AppLocale): string {
+  return locale === "en" ? `${value}${count === 1 ? "" : "s"}` : trainingLabel("toolCategory", value, locale);
+}

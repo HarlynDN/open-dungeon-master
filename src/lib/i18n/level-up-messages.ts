@@ -328,7 +328,7 @@ export const LEVEL_UP_MESSAGES = defineMessages({
   },
   "sessionUi.level.extra.tough": {
     "en": "+{amount} Tough",
-    "zh-CN": "+{amount} 健壮"
+    "zh-CN": "+{amount} 强健"
   },
   "sessionUi.level.extra.backpay": {
     "en": "+{amount} for the levels already held",
@@ -336,7 +336,7 @@ export const LEVEL_UP_MESSAGES = defineMessages({
   },
   "sessionUi.level.extra.draconic": {
     "en": "+{amount} Draconic Resilience",
-    "zh-CN": "+{amount} 龙族韧性"
+    "zh-CN": "+{amount} 龙族体魄"
   },
   "sessionUi.level.grant.none": {
     "en": "no new proficiencies",

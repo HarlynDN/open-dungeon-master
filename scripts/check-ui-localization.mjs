@@ -19,6 +19,7 @@ import { AGENT_SCOPE_CHOICES, THEME_CHOICES } from "../src/lib/i18n/account-meta
 import { AGENT_PROGRAMS, agentSetupLine } from "../src/lib/agents/setup-line.ts";
 import { DICE_LOOK_PRESETS, DICE_TEXTURES, DICE_MATERIALS } from "../src/lib/dice/dice-look.ts";
 import { TTS_VOICES } from "../src/lib/tts-voices.ts";
+import { CLASS_OPTION_MATERIAL } from "../src/lib/i18n/class-option-metadata.ts";
 import { CHARACTER_SUBCLASS_METADATA } from "../src/lib/i18n/character-subclass-metadata.ts";
 
 // Calendar normalization shares pure helpers through the project alias.
@@ -63,6 +64,16 @@ if (args.has("--sync")) {
   process.exit(0);
 }
 const problems = [];
+// These player-facing summaries are reviewed against the exact bundled source.
+// Added/edited options cannot silently fall back to English in Chinese play.
+const nativeOptions = JSON.parse(fs.readFileSync(path.join(root, "src/lib/srd/options.json"), "utf8")).options;
+if (CLASS_OPTION_MATERIAL.length !== nativeOptions.length) problems.push("Native option material count changed; review the new/removed rows.");
+for (const native of nativeOptions) {
+  const matches = CLASS_OPTION_MATERIAL.filter(row => row.kind === native.k && row.name === native.n);
+  const row = matches[0];
+  if (matches.length !== 1 || MESSAGE_CATALOGS.en[row?.nameKey] !== native.n || MESSAGE_CATALOGS.en[row?.descriptionKey] !== native.d || (row?.requirementKey ? MESSAGE_CATALOGS.en[row.requirementKey] : row?.emptyRequirement ? "" : undefined) !== native.req) problems.push(`Unreviewed native option material: ${native.k}/${native.n}`);
+}
+
 // Native condition material renders indirectly from server-projected metadata.
 // A new/changed registry row must be compared before its covered board surface
 // can silently fall back to an old translation.

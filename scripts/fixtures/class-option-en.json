@@ -1,0 +1,8 @@
+{
+  "sourceCommit": "407ec45f",
+  "note": "Actual pre-edit builder and sheet JSX, all 135 native options; help buttons stubbed.",
+  "sha256": {
+    "builder": "b6eb53ee8d9ea3d473b0df4a7d9231206c0a5209688ef5136c6005fd6bd58a04",
+    "sheet": "f53e2ea91f2c893063fd886a70c1684d221e7e2aae93e190cb7a7002a9f9f0db"
+  }
+}

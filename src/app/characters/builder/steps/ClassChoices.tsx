@@ -1,9 +1,10 @@
 "use client";
 
+import { classOptionView } from "@/lib/i18n/class-option-presentations";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { skillHelpText } from "@/lib/i18n/game-help-presentations";
 import { LocalizedText } from "@/lib/i18n/LocalizedText";
-import { trainingLabel } from "@/lib/i18n/training-presentations";
+import { trainingLabel, toolGrantCategoryLabel } from "@/lib/i18n/training-presentations";
 import { skillLabel } from "@/lib/i18n/character-presentations";
 import { builderTermLabel } from "@/lib/i18n/builder-name-presentations";
 import { fightingStyleDescription } from "@/lib/i18n/calling-presentations";
@@ -64,8 +65,7 @@ export function ClassChoices({
           <StepPanel
             key={`${choice.label}-${index}`}
             anchor="tools"
-            title={t("callingUi.toolTitle", { count: choice.count, label: locale === "en"
-              ? `${choice.label}${choice.count === 1 ? "" : "s"}` : trainingLabel("toolCategory", choice.label, locale) })}
+            title={t("callingUi.toolTitle", { count: choice.count, label: toolGrantCategoryLabel(choice.label, choice.count, locale) })}
             help={
               left > 0 ? <span className="text-amber-300">{t("callingUi.left", { count: left })}</span> : undefined
             }
@@ -217,6 +217,7 @@ export function ClassChoices({
         >
           <div className="grid gap-1.5 sm:grid-cols-2">
             {slot.options.map((option) => {
+              const view = classOptionView(option, locale);
               const selected = slot.chosen.some(
                 (chosenName) => chosenName.toLowerCase() === option.n.toLowerCase(),
               );
@@ -228,16 +229,16 @@ export function ClassChoices({
                     onClick={() => actions.toggleOption(slot, option.n)}
                     className="grow text-left"
                   >
-                    <span className="block text-xs">{option.n}</span>
+                    <span className="block text-xs">{view.name}</span>
                     <span className="block text-[11px] text-stone-500">
-                      {option.req ? t("callingUi.requiresSentence", { requirement: option.req }) : ""}
-                      {option.d}
+                      {option.req ? t("callingUi.requiresSentence", { requirement: view.requirement ?? option.req }) : ""}
+                      {view.description}
                     </span>
                   </button>
                   <InfoButton
-                    label={option.n}
-                    meta={option.req ? t("callingUi.requires", { requirement: option.req }) : undefined}
-                    text={option.d}
+                    label={view.name}
+                    meta={option.req ? t("callingUi.requires", { requirement: view.requirement ?? option.req }) : undefined}
+                    text={view.description}
                   />
                 </div>
               );

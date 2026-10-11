@@ -438,6 +438,8 @@ export function InfoChipList({
   emptyText,
 }: {
   items: Array<{
+    // Stable identity when the display name changes with the viewer locale.
+    id?: string;
     name: string;
     text?: string | null;
     meta?: string;
@@ -458,7 +460,7 @@ export function InfoChipList({
       {items.map((item) => {
         const line = firstLine(item.text);
         return (
-          <span key={item.name} className="info-chip">
+          <span key={item.id ?? item.name} className="info-chip">
             <Tooltip
               content={
                 <span className="flex items-start gap-2.5">

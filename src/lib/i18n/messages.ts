@@ -1,3 +1,4 @@
+import { CLASS_OPTION_MESSAGES } from "./class-option-messages.ts";
 import { LEVEL_UP_MESSAGES } from "./level-up-messages.ts";
 import { registerMessages } from "./translator.ts";
 import { ABILITY_UI_MESSAGES } from "./ability-ui-messages.ts";
@@ -69,6 +70,7 @@ import { PLAY_EDIT_MESSAGES } from "./play-edit-messages.ts";
 const en = {
   ...PROPOSAL_MESSAGES.en,
     ...LEVEL_UP_MESSAGES.en,
+    ...CLASS_OPTION_MESSAGES.en,
   ...PLAY_EDIT_MESSAGES.en,
   ...HAND_CASTING_MESSAGES.en,
   ...HAND_FEATURE_MESSAGES.en,
@@ -162,6 +164,7 @@ type Messages = Record<MessageKey, string>;
 const zhCN: Messages = {
   ...PROPOSAL_MESSAGES["zh-CN"],
     ...LEVEL_UP_MESSAGES["zh-CN"],
+    ...CLASS_OPTION_MESSAGES["zh-CN"],
   ...PLAY_EDIT_MESSAGES["zh-CN"],
   ...HAND_CASTING_MESSAGES["zh-CN"],
   ...HAND_FEATURE_MESSAGES["zh-CN"],

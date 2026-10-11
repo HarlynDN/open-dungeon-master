@@ -29,8 +29,8 @@ flow remains incomplete; the review-repair checkpoint is a separate scoped task.
 | Locale foundation | Registry, persistence, browser fallback, typed complete catalogs, model locale policy, classified token proxy, chapter budget, CJK retrieval, IME protection | Real prompt-usage calibration; keep legacy campaign/history regressions |
 | DM safety | Per-event engine conclusions with English/Chinese renderers; AI prose separated; one text-only correction and safe fallback; shared localized enemy names and held-resource names/IDs; scoped resource aliases and ambiguity retries; real Codex combat/resource acceptance | Untracked feature/reaction options and broader spell/condition/pack coverage; conservative regex coverage is not full language understanding |
 | Embeddings | Original English deployment default retained; explicit multilingual opt-in; fixed bilingual calibration/holdout and hard-negative policy | Broader pack quality; opt-in affects English campaigns and rebuilds indexes |
-| UI | **155/439** covered files, **2903** pending literal sites, **8289** message keys; scoped AST gate; earlier play/session surfaces plus hand labels/targets/area selection, campaign-locale action sentences, native previews, basic/reaction rules, common casting refusals, spell selectors, all 113 owned mechanic notes, 103 native technique and 23 maneuver labels, attack/bonus-route and material/ritual refusals, built-in form attack names and verified current-actor labels, correction/multi-picker chrome, native downtime facts and inventory/vitals approval/player-trade controls, guided progression chrome and rest/loot/travel moments | Remaining dynamic text keeps hand files pending; general play/inventory/rest/level-up/save/resume surfaces and full sheet/party dialogs; file fraction is not overall completion or an effort estimate |
-| Character creation/material | Identity, ancestry, class introductions, ability allocation, gear, spell book/preparation and finish preview; 517 spell and 228 equipment names; 257-entry contextual terminology policy and lint gate; 415/415 static registered resource names and guidance shared with DM references; original-source review records | Remaining feature/feat and magic-item material; dynamic free-cast resources and user-authored/pack text remain outside the static resource review |
+| UI | **157/439** covered files, **2902** pending literal sites, **8581** message keys; scoped AST gate; earlier play/session surfaces plus hand labels/targets/area selection, campaign-locale action sentences, native previews, basic/reaction rules, common casting refusals, spell selectors, all 113 owned mechanic notes, 103 native technique and 23 maneuver labels, attack/bonus-route and material/ritual refusals, built-in form attack names and verified current-actor labels, correction/multi-picker chrome, native downtime facts and inventory/vitals approval/player-trade controls, guided progression chrome, rest/loot/travel moments and all native option summaries | Remaining dynamic text keeps hand files pending; general play/inventory/rest/level-up/save/resume surfaces and full sheet/party dialogs; file fraction is not overall completion or an effort estimate |
+| Character creation/material | Identity, ancestry, class introductions, ability allocation, gear, spell book/preparation and finish preview; 517 spell and 228 equipment names; 257-entry contextual terminology policy and lint gate; 415/415 static registered resource names and guidance shared with DM references; 135/135 bundled option names/descriptions plus all 20 nonempty requirement frames; original-source review records | Remaining feature/feat and magic-item material; dynamic free-cast resources and user-authored/pack text remain outside the static resource review |
 | Player system logs | Structured rule diagnostics and engine-generated combat conclusions retain English protocol semantics with localized presentation | General player-visible log templates; model-facing English tool results remain independent |
 | Resource delivery | UI vs content namespaces; character/campaign boundaries; generated resources checked by lint; production Turbopack build and anonymous bilingual browser switch/reload succeed; home/character/campaign SSR and initial-script payloads measured | Hydrated/lazy network totals, authenticated campaign switching and active-play browser acceptance; route-level JS payload remains large |
 | Local Chinese TTS | Locale capability/voice preferences planned | Service not configured; implement/validate Unicode segmentation, voice discovery, locale-sensitive cache, numbers/units/names and real playback |
@@ -59,7 +59,36 @@ attempts were blocked at its internal port binding by the execution environment,
 including the escalated attempt; this batch does not claim a passing production
 build. Keep that gate for the next phase boundary rather than retrying per batch.
 
-The latest progression checkpoint adds 125 content-only keys: level-up
+The latest option-material checkpoint adds 292 content-only keys for all
+135 bundled choices: names, short descriptions, 20 nonempty requirements and
+two display frames. The source is `src/lib/srd/options.json`; translations were
+written against its complete English summaries and reuse existing spell/skill/
+condition terminology without importing an external Chinese rulebook. This is
+material translation, not end-to-end acceptance of every ability implementation.
+
+Creation, guided level-up and selected-feature chips share the source-bound
+view. Original kind/name/requirement fields remain in selection callbacks,
+feature IDs and icon keys. Chips accept an optional stable ID, so translated
+names are not used as identity when switching locale. Canonical native option
+help localizes; authored/story names and changed or unknown descriptions stay
+literal. Metadata is separate from translated payloads; root UI resources are
+unchanged. The main checker now rejects added/changed native option material
+until its exact source has been reviewed, including the literal empty requirement.
+Two preceding HP notes now reuse “强健” and “龙族体魄”; Evasion is “反射闪避”,
+keeping it distinct from the Dodge action.
+
+`ClassChoices` and the pure `level-up-preview` helper are covered within their
+owned scope. General feature/feat help, other level-up refusal material and full
+magic-item names remain pending. The focused option check passes all 135 source
+bindings, English render parity, authored overrides, actual Chinese builder
+callbacks with canonical picks, selected help and stable feature/icon IDs. Its
+two frozen English fingerprints occupy 313 bytes. The existing guided check
+also passes its 26 English states and rolled/ASI/spell/network paths. Types and
+catalog/AST/terminology checks pass: 157/439 covered, 2902 pending literal sites,
+8581 keys, zero terminology errors and 122 contextual warnings. No model/audio
+calls, settled Goblin check or full regression/build ran for this batch.
+
+The preceding progression checkpoint adds 125 content-only keys: level-up
 navigation, class/subclass/skill/style/spell labels, XP/dead/zero-HP blockers,
 fixed/max/rolled HP choices and results, native multiclass prerequisites/grants/
 refusals, and rest/loot/travel moments. Original choice payloads, engine math,

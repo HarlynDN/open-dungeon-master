@@ -440,7 +440,7 @@
     {
       "path": "src/app/campaigns/[campaignId]/LevelUpDialog.tsx",
       "state": "pending",
-      "review": "Owned guided progression copy, rolled/fixed/max HP choices and results, XP/dead/zero-HP blockers, class/subclass/skill/style/spell display labels and multiclass grant/refusal frames reviewed. Canonical rolled/ASI/spell PATCH shapes and 26 frozen English JSX states including moments checked. Unknown authored diagnostics and complete native option requirements/descriptions/feature help remain pending; child picker coverage is independent."
+      "review": "Owned progression chrome, labels, native grants/refusals and all 135 bundled option names/descriptions/requirements reviewed. Canonical rolled/ASI/spell PATCH shapes, native option keys and 26 frozen English JSX states checked. Selected native option help localizes; canonical feature IDs and icon keys stay original. Remaining generic feature help and other server refusal material remain pending; authored overrides stay raw."
     },
     {
       "path": "src/app/campaigns/[campaignId]/Lobby.tsx",
@@ -833,7 +833,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/level-up-preview.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Pure rule preview helpers retain canonical IDs/math and do not render UI. All four native HP extras and third-caster school-refusal strings are localized at the guided-dialog display boundary; scores, hit points, counters, racial allowances and casting lists remain original. Unknown authored inputs are preserved."
     },
     {
       "path": "src/app/campaigns/[campaignId]/liveStore.ts",
@@ -1089,7 +1090,8 @@
     },
     {
       "path": "src/app/characters/builder/steps/ClassChoices.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned tool/expertise/style chrome, registered skill/tool/style labels and help reviewed. All 135 bundled option names/descriptions and 20 nonempty requirement frames localize through source-bound metadata; literal empty requirement preserved. Actual Chinese option callbacks retain canonical kind/name; frozen English grid reviewed. Unknown authored/pack replacements keep raw text; child controls have independent coverage."
     },
     {
       "path": "src/app/characters/builder/steps/FinishStep.tsx",
@@ -1771,7 +1773,7 @@
     {
       "path": "src/components/sheet/SheetParts.tsx",
       "state": "pending",
-      "review": "ConditionChips labels and duration tails localized; feature/feat/training material remains pending."
+      "review": "Owned earlier identity/vitals/ability chrome retains independent review. This batch localizes canonical option-feature chip names/help for all 135 bundled options, with source-bound descriptions and frozen English render. Original icon keys and story/authored names stay literal. Other feat/feature help and full material remain pending."
     },
     {
       "path": "src/components/sheet/SheetSpells.tsx",
