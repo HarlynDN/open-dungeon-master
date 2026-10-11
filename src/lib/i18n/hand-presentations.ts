@@ -12,8 +12,8 @@ import type { HandAttackOptionId, HandCard, HandCost } from "../battlemap/hand-c
 export function handTermLabel(name: string, locale: AppLocale): string {
   if (locale === "en") return name;
   const t = createTranslator(locale);
-  const matches = ["handUi.term.", "handMaterial.term.", "sheetPlay.resourceName.", "combatCheck.feature.", "combatSpecial.name."].flatMap(prefix =>
-    Object.entries(catalogFor("en", prefix)).filter(([, source]) => source.toLowerCase() === name.toLowerCase())
+  const matches = ["handUi.term.", "handMaterial.term.", "sheetPlay.resourceName.", "combatCheck.feature.", "combatSpecial.name.", "sheetDialog.choice.feature.", "combatDetail.effect."].flatMap(prefix =>
+    Object.entries(catalogFor("en", prefix)).filter(([key, source]) => (prefix !== "combatDetail.effect." || key.endsWith(".name")) && source.toLowerCase() === name.toLowerCase())
       .map(([key]) => t(key as MessageKey)),
   );
   const labels = [...new Set(matches)];

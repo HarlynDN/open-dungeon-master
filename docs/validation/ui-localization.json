@@ -368,22 +368,22 @@
     {
       "path": "src/app/campaigns/[campaignId]/Hand.tsx",
       "state": "pending",
-      "review": "Owned labels, campaign-locale sentences, common engine/network and casting-state/component/focus/slot refusals reviewed; structured intent unchanged. Priced-material, ritual and uncommon feature refusal frames remain pending; authored material descriptions stay verbatim."
+      "review": "Owned labels, campaign-locale sentences, common engine/network/casting/attack-option/bonus-route/pool refusals and registered complete feat hints reviewed; structured intent unchanged. Actor names including colon punctuation preserved. Priced-material, ritual and remaining dynamic frames stay pending; authored restrictions stay verbatim."
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandAimBar.tsx",
       "state": "pending",
-      "review": "Owned aim/area/target/send/rider controls, native previews, health notes and common option rules reviewed; callbacks preserve native IDs/choice values. Core spell selectors reuse condition/ability terms; unknown choices stay literal. Uncommon subclass and remaining refusal frames remain pending."
+      "review": "Owned aim/area/target/send/rider controls, previews, health notes, attack option/refusal rules and core spell/technique selectors reviewed; callbacks preserve native IDs/values including Telekinetic Adept thrust/leap. All 103 active technique and 23 maneuver names localize. Remaining dynamic and material/ritual refusal text stays pending."
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandCardFace.tsx",
       "state": "pending",
-      "review": "Type/cost labels, known/composite names, native facts/previews, basic/reaction/registered-resource rules, common casting refusals and all 113 owned spell mechanic notes reviewed. Generated spell-note boundaries preserve multi-sentence source and ignore stale metadata; authored notes and native card callbacks retained. Uncommon names, shape/attack-option/bonus-route and priced-material/ritual frames remain pending."
+      "review": "Type/cost labels, native facts/previews, basic/reaction/resource rules, 113 owned spell notes and all 103 active technique plus 23 maneuver names reviewed. Common casting/attack/bonus/pool refusals and registered feat hints localize with source preserved. Shape and remaining dynamic/material/ritual frames keep this pending."
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandMoreSheet.tsx",
       "state": "pending",
-      "review": "Owned labels, known names/types/costs, native facts/previews, waiting/common casting refusals and basic/reaction/registered-resource/spell-note rules reviewed. Uncommon names/choices and remaining shape, attack-option, bonus-route, ritual and priced-material text keeps this file pending."
+      "review": "Owned labels, native previews/rules/spell notes, 103 active technique plus 23 maneuver names and common casting/attack/bonus/pool/feat-hint refusals reviewed. Unknown/custom source remains literal. Shape and remaining dynamic/material/ritual text keeps this file pending."
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandPips.tsx",

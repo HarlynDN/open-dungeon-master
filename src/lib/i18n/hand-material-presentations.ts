@@ -31,7 +31,10 @@ function nativeFrame(text: string, prefix: string): { key: MessageKey; args: Rec
       for (const slot of source.matchAll(/\{(\w+)\}/g)) {
         expression += escape(source.slice(at, slot.index));
         const name = slot[1];
-        const capture = name === "feet" || name === "range" ? "\\d+(?:/\\d+)?" : numeric.has(name) || (name === "current" && prefix === "handMaterial.health.") ? "\\d+" : name === "dice" ? "[+-]?(?:\\d+d\\d+|\\d+)(?:\\s*[+-]\\s*(?:\\d+d\\d+|\\d+))*"
+        // Native composed refusals prefix a canonical technique with the
+        // actor's name. The actor may contain colons; take the last separator.
+        const capture = name === "who" && source.startsWith("{who}: {feature}") ? "[\\s\\S]+"
+          : name === "feet" || name === "range" ? "\\d+(?:/\\d+)?" : numeric.has(name) || (name === "current" && prefix === "handMaterial.health.") ? "\\d+" : name === "dice" ? "[+-]?(?:\\d+d\\d+|\\d+)(?:\\s*[+-]\\s*(?:\\d+d\\d+|\\d+))*"
           : name === "die" ? "d\\d+" : "[\\s\\S]+?";
         expression += seen.has(name) ? `\\k<${name}>` : `(?<${name}>${capture})`;
         seen.add(name); at = slot.index! + slot[0].length;
@@ -67,7 +70,23 @@ function mechanic(text: string, locale: AppLocale): string {
 export function handRefusalText(raw: string, locale: AppLocale): string {
   if (locale === "en" || !raw) return raw;
   const frame = nativeFrame(raw, "handMaterial.error.");
-  if (!frame) return raw;
+  if (!frame) {
+    // checkAttackOptions appends whole owned feat hints to a native refusal.
+    // Peel only registered suffix sentences, then require a recognized base;
+    // unknown prose or unknown hint combinations retain the entire source.
+    let base = raw;
+    const hints: MessageKey[] = [];
+    const sources = Object.entries(catalogFor("en", "handMaterial.attackHint."));
+    for (;;) {
+      const found = sources.find(([, source]) => source && base.endsWith(` ${source}`));
+      if (!found) break;
+      hints.unshift(found[0] as MessageKey);
+      base = base.slice(0, -(found[1]!.length + 1));
+    }
+    if (!hints.length) return raw;
+    const translated = handRefusalText(base, locale);
+    return translated === base ? raw : [translated, ...hints.map(key => createTranslator(locale)(key))].join(" ");
+  }
   const args = { ...frame.args };
   if (args.act) {
     const act = exactLabel(args.act, "handMaterial.act.", locale);
@@ -75,9 +94,16 @@ export function handRefusalText(raw: string, locale: AppLocale): string {
     args.act = act;
   }
   if (args.condition) args.condition = conditionLabel(args.condition, locale);
+  for (const [name, prefix] of [["action", "handMaterial.routeAction."], ["which", "handMaterial.routeWhich."], ["when", "handMaterial.bonusWhen."]]) {
+    if (!args[name]) continue;
+    const label = exactLabel(args[name], prefix, locale);
+    if (label === args[name]) return raw;
+    args[name] = label;
+  }
   for (const key of ["what", "feature"] as const) if (args[key]) args[key] = mechanic(args[key], locale);
   if (args.spell) args.spell = referenceDisplayName("spell", args.spell, locale);
   if (args.form) args.form = referenceDisplayName("monster", args.form, locale);
+  if (args.pool) args.pool = resourceLabel(args.pool.replace(/ /g, "_"), args.pool, locale);
   if (args.armor) {
     const items = args.armor.split(" and ");
     const labels = items.map(value => mechanic(value, locale));
