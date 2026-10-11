@@ -11,7 +11,7 @@
     "src/lib/srd/backgrounds.json": "d4a3ff20a0a5cc802fd28b409b40d338f867c61e9a49e5d71c012e14c7210c1d",
     "src/lib/content/mechanics.ts": "7f76eafcbb4de4630c176e57d5620bb5fc86411b8ba2a40b22b310d43318b7c2"
   },
-  "catalogSha256": "d41b301018e59cf653c1f3df4d2f1581845980a399f1b48cf1b3d17c1fbdec45",
+  "catalogSha256": "c50916576cbc44e5704961f3eae94645df0e8ce2dda9ea9a097abd6bb491000d",
   "catalog": "src/lib/i18n/character-training-name-messages.ts",
   "reviewRepair": "Catalog construction marked pure for namespace loading; templates match the pre-repair archive exactly.",
   "terminologyRepair": {
@@ -20,5 +20,11 @@
     "previousHashes": {
       "src/lib/i18n/character-training-name-messages.ts": "8f0c782dea03da62e7dd052f14d18c169746f264d1d76475986e9becbaecfeb9"
     }
+  },
+  "userTerminologyChoice": {
+    "date": "2026-10-11",
+    "source": "Explicit user request: Goblin displays as 哥布林, not 地精.",
+    "scope": "Only Goblin fictional-language label changes from 地精语 to 哥布林语. Gnomish, Bugbear, Hobgoblin, canonical names, mechanics and English templates remain unchanged.",
+    "previousCatalogSha256": "d41b301018e59cf653c1f3df4d2f1581845980a399f1b48cf1b3d17c1fbdec45"
   }
 }

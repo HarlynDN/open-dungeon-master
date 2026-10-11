@@ -520,7 +520,7 @@ export const CHARACTER_TRAINING_NAME_MESSAGES = /*#__PURE__*/ defineMessages({
   },
   "training.language.goblin": {
     "en": "Goblin",
-    "zh-CN": "地精语"
+    "zh-CN": "哥布林语"
   },
   "training.language.halfling": {
     "en": "Halfling",

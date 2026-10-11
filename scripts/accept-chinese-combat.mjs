@@ -125,11 +125,11 @@ try {
   assert.ok(message.content.includes(conclusions));
   if (scenario.spell) assert.match(conclusions, /1 个 1 环法术位/);
   assert.match(message.content, /战斗结果/);
-  assert.doesNotMatch(turn.narrationParts.join("\n\n"), /\bGoblin\b|哥布林/u, "AI prose must use the canonical localized creature name");
-  assert.doesNotMatch(message.content, /\bGoblin\b|哥布林/u, "final player/TTS text must use the localized creature name");
+  assert.doesNotMatch(turn.narrationParts.join("\n\n"), /\bGoblin\b|地精/u, "AI prose must use the canonical localized creature name");
+  assert.doesNotMatch(message.content, /\bGoblin\b|地精/u, "final player/TTS text must use the localized creature name");
   if (scenario.count > 1) {
-    assert.match(message.content, /地精\s*2/u);
-    assert.match(turn.narrationParts.join("\n\n"), /地精\s*2|第二(?:只|名|个)地精/u, "AI prose must identify the selected second enemy");
+    assert.match(message.content, /哥布林\s*2/u);
+    assert.match(turn.narrationParts.join("\n\n"), /哥布林\s*2|第二(?:只|名|个)哥布林/u, "AI prose must identify the selected second enemy");
   }
   assert.deepEqual(checkNarration({ conversation: turn.conversation, narration: turn.narrationParts.join("\n\n"), locale: "zh-CN", partyNames: [hero.name] }), []);
   assert.equal(activeBridgeSessions(), 0);

@@ -8,6 +8,9 @@ flow remains incomplete; the review-repair checkpoint is a separate scoped task.
 ## Approved scope and boundaries
 
 - Simplified Chinese (`zh-CN`) with an English switch, extensible locale registry.
+- User-selected terminology: Goblin is “哥布林”, including “哥布林语” for the
+  fictional language. “地精” remains an accepted monster-input alias. Gnomish,
+  Bugbear and Hobgoblin remain separate glossary entries.
 - Personal `uiLocale` and campaign `locale` stay separate from fictional languages.
 - Existing URLs, historical messages, canonical IDs/rule names/tool protocols stay
   intact; old campaigns without a locale remain English. New campaign defaults

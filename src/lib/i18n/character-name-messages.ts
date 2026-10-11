@@ -44,7 +44,7 @@ export const CHARACTER_NAME_MESSAGES = /*#__PURE__*/ defineMessages({
   "rule.race.earth_genasi": { en: "Genasi (Earth)", "zh-CN": "土元素裔" },
   "rule.race.changeling": { en: "Changeling", "zh-CN": "变形裔" },
   "rule.race.warforged": { en: "Warforged", "zh-CN": "战铸者" },
-  "rule.race.goblin": { en: "Goblin", "zh-CN": "地精" },
+  "rule.race.goblin": { en: "Goblin", "zh-CN": "哥布林" },
   "rule.race.bugbear": { en: "Bugbear", "zh-CN": "熊地精" },
   "rule.race.lizardfolk": { en: "Lizardfolk", "zh-CN": "蜥蜴人" },
 });

@@ -39,15 +39,15 @@ await test('38 immutable English renders stay exact; Chinese controls and displa
   assert.match(of(zh,'roll/failure'),/失败！/);
   assert.match(of(zh,'roll/blind'),/在屏幕后掷骰/);
   assert.doesNotMatch(of(zh,'roll/blind'),/难度 12|DC 12|成功！/);
-  assert.match(of(zh,'roll/enemy'),/地精 2.*短棒 对Aria/);
+  assert.match(of(zh,'roll/enemy'),/哥布林 2.*短棒 对Aria/);
   assert.match(of(zh,'order/hidden-reflex'),/已隐藏.*盗贼反射：第一轮额外获得一个回合.*额外回合/);
-  assert.match(of(zh,'plate'),/地精 1.*即将倒下.*中毒.*四分之三掩护.*夹击.*远程攻击具有劣势/);
-  assert.match(of(zh,'targets/full'),/地精 1.*伤势严重.*15 英尺/);
+  assert.match(of(zh,'plate'),/哥布林 1.*即将倒下.*中毒.*四分之三掩护.*夹击.*远程攻击具有劣势/);
+  assert.match(of(zh,'targets/full'),/哥布林 1.*伤势严重.*15 英尺/);
   for(const name of ['roll/authored','modifier','pending/manual','pending/pixel','condition/authored'])assert.match(text(of(zh,name)),/Authored/,name);
 });
 
 await test('catalog terms localize by role; player names and authored strings survive and display helpers never mutate inputs',()=>{
-  assert.equal(combatName('Goblin 2','enemy','zh-CN'),'地精 2');
+  assert.equal(combatName('Goblin 2','enemy','zh-CN'),'哥布林 2');
   assert.equal(combatName('Goblin 2','pc','zh-CN'),'Goblin 2');
   assert.equal(combatName('Goblin King Gruk','enemy','zh-CN'),'Goblin King Gruk');
   assert.equal(combatTermLabel('ability','Wisdom','zh-CN'),'感知');
@@ -110,7 +110,7 @@ await test('actual pending-roll buttons submit unchanged manual, digital, Inspir
 await test('initiative controls retain IDs, direction and typed names; target chips return canonical IDs in both locales',async()=>{
   for(const locale of ['en','zh-CN'])await withFetch({},async calls=>{
     renderer.render('DmInitiativePanel',{campaignId:'campaign-id',encounter},locale);
-    await click(button(p=>p['aria-label']===(locale==='en'?'Move Goblin 2 up the order':'将地精 2上移')));
+    await click(button(p=>p['aria-label']===(locale==='en'?'Move Goblin 2 up the order':'将哥布林 2上移')));
     assert.deepEqual(calls.pop().body,{op:'move',id:'enemy-id',direction:'up'});
     renderer.render('DmInitiativePanel',{campaignId:'campaign-id',encounter},locale);
     await click(button(p=>p['aria-label']===(locale==='en'?'Back a turn':'上一个回合')));

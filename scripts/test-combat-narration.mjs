@@ -19,7 +19,7 @@ await test("every registered locale renders engine facts without changing protoc
   assert.equal(facts[0].actor.id, "hero");
   assert.equal(facts[0].target.id, "e1");
   assert.equal(facts[0].hit, false);
-  assert.match(renderCombatFacts(facts, "zh-CN"), /阿明对地精 1 .*未命中/);
+  assert.match(renderCombatFacts(facts, "zh-CN"), /阿明对哥布林 1 .*未命中/);
   assert.match(renderCombatFacts(facts, "en"), /Goblin 1.*misses/);
   assert.doesNotMatch(renderCombatFacts(facts, "zh-CN"), /13|AC|3点/);
   assert.deepEqual(miss, before);
@@ -83,11 +83,11 @@ await test("enemy casting and pet ownership do not attribute attacks to the play
   const spell = facts.find(fact => fact.kind === "spell");
   assert.equal(spell.actor.id, "e1");
   assert.equal(facts.find(fact => fact.source.tool === "pet_attack").actor, undefined);
-  assert.match(renderCombatFacts(facts, "zh-CN"), /地精 1 施放了火球术/);
+  assert.match(renderCombatFacts(facts, "zh-CN"), /哥布林 1 施放了火球术/);
 });
 await test("custom player names remain proper names, while numbered monster names localize", () => {
   const facts = collectCombatFacts(conversation([{ args: { characterId: "hero", targetEnemyId: "e2" }, result: { attacker: "Goblin", target: "Goblin 2", hit: true, damage: 7 } }]));
-  assert.match(renderCombatFacts(facts, "zh-CN"), /Goblin对地精 2 的这次攻击命中/);
+  assert.match(renderCombatFacts(facts, "zh-CN"), /Goblin对哥布林 2 的这次攻击命中/);
   assert.equal(facts[0].target.id, "e2");
 });
 await test("natural conclusions do not infer unconsciousness, effects or refunds", () => {
@@ -98,7 +98,7 @@ await test("natural conclusions do not infer unconsciousness, effects or refunds
     { tool: "cast_at_enemy", args: { characterId: "hero", spell: "Magic Missile", targetEnemyId: "e1" }, result: { countered: true, error: "Counterspelled", slotSpent: "level 1: 1/3 left" } },
   ]);
   const text = renderCombatFacts(collectCombatFacts(messages, { names: { hero: "阿明", e1: "Goblin" } }), "zh-CN");
-  assert.match(text, /地精倒下了/);
+  assert.match(text, /哥布林倒下了/);
   assert.doesNotMatch(text, /失去意识|已经死亡|阿明施放了火球术|退还|未消耗/);
   assert.match(text, /阿明获得 7 点治疗/);
   assert.match(text, /火球术的效果尚待确认/);
