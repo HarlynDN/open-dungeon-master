@@ -1,11 +1,19 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { skillHelpText } from "@/lib/i18n/game-help-presentations";
+
+import { abilityLabel, characterLabel, skillLabel, subclassLabel } from "@/lib/i18n/character-presentations";
+import { builderOptionName, builderOptionSearchNames } from "@/lib/i18n/builder-picker-presentations";
+import { builderTermLabel } from "@/lib/i18n/builder-name-presentations";
+import { callingCardFacts, grantingTraitLabel } from "@/lib/i18n/calling-presentations";
+import { subclassHelpText } from "@/lib/i18n/calling-material-presentations";
+import { LocalizedText } from "@/lib/i18n/LocalizedText";
 import { useMemo, useState } from "react";
 import { GameTerm } from "@/components/ui/GameTerm";
 import { InfoButton, InfoDialog } from "@/components/ui/InfoDialog";
-import { describeFeature, describeSkill } from "@/lib/help";
+import { describeFeature } from "@/lib/help";
 import { firstSentence } from "@/lib/help/rules-text";
-import { subclassBlurb } from "@/lib/srd/features";
 import { SRD_SKILLS } from "@/lib/srd";
 import { displayName, type Reskinned } from "@/lib/worlds/reskin-logic";
 import type { WorldPack } from "@/lib/worlds/types";
@@ -55,6 +63,7 @@ export function CallingStep({
   subclassLockedAt: number | null;
   chosenArchetype: ArchetypeOption | null;
 }) {
+  const { locale, t } = useLocale();
   const { subclass } = state;
   const { effectiveLevel, grantedFeatures } = derived;
   const { gender } = state;
@@ -82,25 +91,22 @@ export function CallingStep({
           const entry = classes.find((candidate) => candidate.id === option.id);
           // Under a reskin the canonical class name leads the tagline, the
           // same fact the dropdown kept in its meta column.
-          const canonical = entry?.packName ? option.meta?.split(" · ")[1] : undefined;
+          const facts = callingCardFacts(entry, option, locale);
           return {
             id: option.id,
             name: option.name,
-            meta: canonical,
+            searchTerms: [...(entry ? builderOptionSearchNames("class", entry) : []), option.id, option.reference?.name ?? "", characterLabel("class", option.id, "en")],
+            meta: facts.canonical,
             art: classArt(option.id, gender),
             // The book leads where the group heading does not say it
             // (issue #116: a Marshal looked like a Core Rules class).
-            tagline: [canonical, option.source, entry ? `Saves ${entry.saves.map((save) => save.toUpperCase()).join(" ")}` : ""]
-              .filter(Boolean)
-              .join(" · "),
-            chips: entry
-              ? [`d${entry.hitDie}`, ...(entry.spellAbility ? [`${entry.spellAbility.toUpperCase()} caster`] : [])]
-              : [],
+            tagline: facts.tagline,
+            chips: facts.chips,
             icon: { kind: "family" as const, key: `class-${option.id}` },
           };
         }),
       })),
-    [classGroups, classes, gender],
+    [classGroups, classes, gender, locale],
   );
   const details = detailsFor
     ? classGroups.flatMap((group) => group.options).find((option) => option.id === detailsFor)
@@ -108,25 +114,25 @@ export function CallingStep({
 
   return (
     <div className="space-y-4">
-      <StepPanel title="Choose a class" ornate anchor="class">
-        <Field label="Class">
+      <StepPanel title={t("callingUi.chooseClass")} ornate anchor="class">
+        <Field label={t("callingUi.class")}>
           {klass ? (
             <span className="mb-3 flex flex-wrap items-center gap-x-1 text-xs text-stone-500">
-              <span className="text-amber-200">{klass.name}:</span>{" "}
-              <GameTerm id="hit_dice">d{klass.hitDie} hit die</GameTerm> ·{" "}
-              <GameTerm id="saving_throw">saves</GameTerm>{" "}
-              {klass.saves.map((save) => save.toUpperCase()).join(", ")}
+              <span className="text-amber-200">{builderOptionName("class", klass, locale)}:</span>{" "}
+              <GameTerm id="hit_dice">{t("callingUi.hitDie", { die: klass.hitDie })}</GameTerm> ·{" "}
+              <GameTerm id="saving_throw">{t("callingUi.saves")}</GameTerm>{" "}
+              {klass.saves.map((save) => abilityLabel(save, locale, true)).join(", ")}
               {klass.spellAbility ? (
                 <>
                   {" · "}
-                  <GameTerm id={klass.spellAbility}>{klass.spellAbility.toUpperCase()}</GameTerm>{" "}
-                  caster
-                  {klass.castingLabel ? ` (spells flavored as ${klass.castingLabel})` : ""}
+                  <GameTerm id={klass.spellAbility}>{abilityLabel(klass.spellAbility, locale, true)}</GameTerm>{" "}
+                  {t("callingUi.casterWord")}
+                  {klass.castingLabel ? t("callingUi.castingFlavor", { kind: builderTermLabel("castingKind", klass.castingLabel, locale) }) : ""}
                 </>
               ) : null}
               <InfoButton
-                label={klass.name}
-                text={classInfoText(klass)}
+                label={builderOptionName("class", klass, locale)}
+                text={classInfoText(klass, locale)}
                 reference={{ kind: "classes", slug: klass.id }}
               />
             </span>
@@ -151,11 +157,11 @@ export function CallingStep({
           />
         </Field>
         {offersSubclass ? (
-          <Field label="Subclass" className="mt-3" anchor="subclass">
+          <Field label={t("callingUi.subclass")} className="mt-3" anchor="subclass">
             <OptionPicker
               value={subclass}
               groups={subclassGroups}
-              placeholder="None yet"
+              placeholder={t("callingUi.none")}
               className={inputClass}
               onChange={state.changeSubclass}
             />
@@ -163,12 +169,12 @@ export function CallingStep({
               {subclass ? (
                 <>
                   <span className="grow">
-                    {firstSentence(chosenArchetype?.desc || subclassBlurb(klass?.id ?? "", subclass)) ??
-                      "A specialization within your class."}
+                    {firstSentence(subclassHelpText(klass?.id ?? "", subclass, locale, chosenArchetype?.desc)) ??
+                      t("callingUi.subclassGeneric")}
                   </span>
                   <InfoButton
-                    label={subclass}
-                    text={chosenArchetype?.desc || subclassBlurb(klass?.id ?? "", subclass) || undefined}
+                    label={subclassLabel(klass?.id ?? "", subclass, locale)}
+                    text={subclassHelpText(klass?.id ?? "", subclass, locale, chosenArchetype?.desc) || undefined}
                     reference={
                       chosenArchetype ? { kind: "archetypes", slug: chosenArchetype.id } : undefined
                     }
@@ -176,10 +182,10 @@ export function CallingStep({
                 </>
               ) : (
                 <span className="grow">
-                  <span className="text-amber-300">Still to choose. </span>
-                  Your <GameTerm id="subclass">subclass</GameTerm> is the biggest choice about how
-                  this character plays. Tap the info icon next to any option to read what it does
-                  before choosing.
+                  <span className="text-amber-300">{t("callingUi.still")}</span>
+                  <LocalizedText message="callingUi.subclassAdvice" values={{
+                    subclass: <GameTerm id="subclass">{t("callingUi.subclassLower")}</GameTerm>,
+                  }} />
                 </span>
               )}
             </span>
@@ -187,11 +193,13 @@ export function CallingStep({
         ) : subclassLockedAt !== null && klass ? (
           // Below the class's subclass level the menu stays shut and says
           // when the choice comes, instead of listing picks that vanished.
-          <Field label="Subclass" className="mt-3">
+          <Field label={t("callingUi.subclass")} className="mt-3">
             <p className="rounded-lg border border-dashed border-stone-700/70 bg-stone-950/40 px-3 py-2 text-xs text-stone-400">
-              A {klass.name.toLowerCase()} chooses a <GameTerm id="subclass">subclass</GameTerm> at level{" "}
-              {subclassLockedAt}; there is nothing to pick at level {effectiveLevel}. The choice comes with
-              that level-up.
+              <LocalizedText message="callingUi.subclassLocked" values={{
+                class: locale === "en" ? klass.name.toLowerCase() : builderOptionName("class", klass, locale),
+                subclass: <GameTerm id="subclass">{t("callingUi.subclassLower")}</GameTerm>,
+                unlock: subclassLockedAt, level: effectiveLevel,
+              }} />
             </p>
           </Field>
         ) : null}
@@ -199,8 +207,8 @@ export function CallingStep({
 
       {grantedFeatures.length ? (
         <StepPanel
-          title={`What you gain at level ${effectiveLevel}`}
-          help="Tap any name to read what it does. Racial traits and background perks are added on top when the character is saved."
+          title={t("callingUi.gainTitle", { level: effectiveLevel })}
+          help={t("callingUi.gainHelp")}
         >
           <div className="flex flex-wrap gap-x-3 gap-y-1">
             {grantedFeatures.map((feature) => (
@@ -211,7 +219,7 @@ export function CallingStep({
                 {displayName(pack, "features", feature.name)}
                 <InfoButton
                   label={feature.name}
-                  meta={feature.level ? `Level ${feature.level}` : undefined}
+                  meta={feature.level ? t("callingUi.level", { level: feature.level }) : undefined}
                   text={klass ? describeFeature(klass.id, subclass, feature.name) : null}
                 />
               </span>
@@ -223,31 +231,36 @@ export function CallingStep({
       {klass ? (
         <StepPanel
           anchor="classSkills"
-          title={`Class skills (pick ${klass.skillChoices.count})`}
+          title={t("callingUi.skillsTitle", { count: klass.skillChoices.count })}
           help={
             <>
               {klass.skillChoices.count - state.chosenSkills.length > 0 ? (
                 <span className="text-amber-300">
-                  {klass.skillChoices.count - state.chosenSkills.length} still to choose.{" "}
+                  {t("callingUi.left", { count: klass.skillChoices.count - state.chosenSkills.length })}{" "}
                 </span>
               ) : null}
-              A <GameTerm id="skill">skill</GameTerm> you are proficient in adds your{" "}
-              <GameTerm id="proficiency_bonus">proficiency bonus</GameTerm> to rolls that use
-              it. Tap any ⓘ to see which ability a skill leans on. A greyed skill is already yours
-              from your race or background, so a class pick on it would be wasted.
+              <LocalizedText message="callingUi.skillsAdvice" values={{
+                skill: <GameTerm id="skill">{t("callingUi.skillLower")}</GameTerm>,
+                proficiency: <GameTerm id="proficiency_bonus">{t("callingUi.proficiencyLower")}</GameTerm>,
+              }} />
             </>
           }
         >
           <div className="flex flex-wrap gap-2">
             {klass.skillChoices.from.map((skillId) => {
               const skill = SRD_SKILLS.find((entry) => entry.id === skillId);
-              const name = skill?.name ?? skillId;
+              const canonicalName = skill?.name ?? skillId;
+              const name = skillLabel(skillId, locale);
               const source = skillSources.get(skillId.trim().toLowerCase());
-              const grantedBy = source === "race" ? race?.name : source === "background" ? background?.name : "";
-              const trait = source === "race" && race ? grantingTrait(race.id, name) : null;
+              const grantedBy = source === "race" && race ? builderOptionName("race", race, locale)
+                : source === "background" && background ? builderOptionName("background", background, locale) : "";
+              const trait = source === "race" && race ? grantingTrait(race.id, canonicalName) : null;
               const info = source
-                ? `${name} is already yours: your ${source}${grantedBy ? ` (${grantedBy})` : ""} grants it${trait ? ` through ${trait}` : ""}, so it is not offered as a class pick here.\n\n${describeSkill(skillId) ?? ""}`.trim()
-                : describeSkill(skillId);
+                ? t("callingUi.owned", { skill: name, source: t(`callingUi.source.${source}`),
+                  by: grantedBy ? t("callingUi.by", { name: grantedBy }) : "",
+                  trait: trait ? t("callingUi.through", { trait: grantingTraitLabel(trait, locale) }) : "",
+                  help: skillHelpText(skillId, locale) ?? "" }).trim()
+                : skillHelpText(skillId, locale);
               return (
                 <PickPill
                   key={skillId}
@@ -258,7 +271,7 @@ export function CallingStep({
                   info={{ text: info }}
                 >
                   {name}
-                  {source ? ` (${source})` : ""}
+                  {source ? t("callingUi.sourceSuffix", { source: t(`callingUi.source.${source}`) }) : ""}
                 </PickPill>
               );
             })}

@@ -1,6 +1,8 @@
 "use client";
 
 import { contentSlug } from "@/lib/help";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { backgroundAlternativeLabel, backgroundGearLabel, equipmentName } from "@/lib/i18n/gear-ui-presentations";
 import type { BackgroundKit } from "@/lib/srd/gear-choices";
 import { InfoButton } from "@/components/ui/InfoDialog";
 import OptionPicker from "./OptionPicker";
@@ -24,25 +26,26 @@ export default function BackgroundKitSection({
   backgroundName: string;
   onPick: (index: number, label: string) => void;
 }) {
+  const { locale, t } = useLocale();
   if (!kit.choices.length && !kit.toolLines.length) {
     return null;
   }
   return (
     <div className="mb-3 space-y-2.5" data-builder-target="backgroundGear">
       <p className="text-xs text-stone-500">
-        The {backgroundName}&apos;s kit, free. Where it offers a choice, pick one.
+        {t("gearUi.backgroundKit", { background: backgroundName })}
       </p>
       {kit.choices.map((choice, index) => {
         const taken = choice.alternatives[choice.chosen];
         return (
           <div key={choice.line} className="space-y-1.5">
-            <div role="group" aria-label={`${backgroundName} kit choice ${index + 1}`} className="flex flex-wrap gap-1.5">
+            <div role="group" aria-label={t("gearUi.backgroundChoice", { background: backgroundName, number: index + 1 })} className="flex flex-wrap gap-1.5">
               {choice.alternatives.map((alternative, at) => (
                 <PickPill
                   key={alternative.label}
                   selected={choice.chosen === at}
                   onClick={() => onPick(index, alternative.label)}
-                  label={alternative.label}
+                  label={backgroundAlternativeLabel(alternative, locale)}
                   info={{
                     reference: {
                       kind: "items",
@@ -51,14 +54,14 @@ export default function BackgroundKitSection({
                     },
                   }}
                 >
-                  <span className="text-stone-500">({LETTERS[at]})</span> {alternative.label}
+                  <span className="text-stone-500">({LETTERS[at]})</span> {backgroundAlternativeLabel(alternative, locale)}
                 </PickPill>
               ))}
             </div>
             {taken?.options ? (
               <div key={`${index}-${choice.chosen}`} className="reveal grid gap-1.5 sm:grid-cols-2">
                 <div>
-                  <span className="mb-1 block text-[11px] text-stone-400">Which {taken.label.toLowerCase()}</span>
+                  <span className="mb-1 block text-[11px] text-stone-400">{t("gearUi.which", { item: locale === "en" ? taken.label.toLowerCase() : backgroundAlternativeLabel(taken, locale) })}</span>
                   <OptionPicker
                     value={taken.items[0]?.name ?? ""}
                     onChange={(name) => onPick(index, name)}
@@ -68,7 +71,7 @@ export default function BackgroundKitSection({
                         label: null,
                         options: taken.options.map((name) => ({
                           id: name,
-                          name,
+                          name: equipmentName(name, locale),
                           meta: "",
                           reference: { kind: "items" as const, slug: contentSlug(name), name },
                         })),
@@ -83,18 +86,18 @@ export default function BackgroundKitSection({
       })}
       {kit.toolLines.map((entry) => (
         <p key={entry.line} className="flex flex-wrap items-center gap-1 text-xs text-stone-300">
-          <span className="text-stone-500">{entry.line}:</span>
+          <span className="text-stone-500">{backgroundGearLabel(entry.line, locale)}:</span>
           {entry.item ? (
             <>
-              <span className="text-amber-200">{entry.item}</span>
+              <span className="text-amber-200">{equipmentName(entry.item, locale)}</span>
               <InfoButton
-                label={entry.item}
+                label={equipmentName(entry.item, locale)}
                 reference={{ kind: "items", slug: contentSlug(entry.item), name: entry.item }}
               />
-              <span className="text-stone-500">from your tool proficiency</span>
+              <span className="text-stone-500">{t("gearUi.fromTool")}</span>
             </>
           ) : (
-            <span className="text-amber-300">the tool you pick on the Calling step.</span>
+            <span className="text-amber-300">{t("gearUi.toolOwed")}</span>
           )}
         </p>
       ))}

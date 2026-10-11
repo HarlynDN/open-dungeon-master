@@ -1,7 +1,8 @@
 "use client";
 
 import { LoadFailed } from "@/app/campaigns/[campaignId]/PanelKit";
-import { readLoad, useLoadStatus } from "@/lib/load-state";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { seatCampaigns, characterErrorText, characterRequestError, readCharacterResponse, type CharacterUiError } from "@/lib/i18n/character-presentations";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -41,52 +42,38 @@ export function UseInCampaignDialog({
   seatedIn: string[];
   onClose: () => void;
 }) {
+  const { locale, t } = useLocale();
   const [campaigns, setCampaigns] = useState<CampaignRow[] | null>(null);
   // A refused or failed read is shown in the server's words with a way to
   // ask again, never as "nothing here yet" (issue 140).
-  const { loaded, loadError, settle } = useLoadStatus();
+  const [loadError, setLoadError] = useState<CharacterUiError | null>(null);
   const [reloads, setReloads] = useState(0);
   const [busyId, setBusyId] = useState("");
-  const [error, setError] = useState<{ campaignId: string; text: string; taken: boolean } | null>(null);
+  const [error, setError] = useState<{ campaignId: string; detail: CharacterUiError; taken: boolean } | null>(null);
 
   useEffect(() => {
     let cancelled = false;
-    readLoad<{ campaigns?: CampaignRow[] }>(fetch("/api/campaigns"), "Your campaigns").then((outcome) => {
-      if (cancelled) return;
-      settle(outcome);
-      if (outcome.payload) {
-        const rows: CampaignRow[] = outcome.payload.campaigns ?? [];
-        setCampaigns(
-          rows.filter((row) => row.status !== "ended" && row.kind !== "workshop" && !row.isWorkshop),
-        );
-      }
-    });
+    readCharacterResponse<{ campaigns: CampaignRow[] }>(fetch("/api/campaigns"), "seat.loadError")
+      .then(seatCampaigns)
+      .then((rows) => { if (!cancelled) { setCampaigns(rows); setLoadError(null); } })
+      .catch((cause) => { if (!cancelled) setLoadError(characterRequestError(cause, "seat.loadError")); });
     return () => {
       cancelled = true;
     };
-  }, [reloads, settle]);
+  }, [reloads]);
 
   async function seat(campaign: CampaignRow) {
     setBusyId(campaign.id);
     setError(null);
     try {
-      const response = await fetch(`/api/campaigns/${campaign.id}/sheet`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ libraryCharacterId: characterId }),
-      });
-      const data = await response.json().catch(() => ({}));
-      if (!response.ok) {
-        setError({
-          campaignId: campaign.id,
-          text: data.error || "Could not bring the character to that table.",
-          taken: response.status === 409,
-        });
-        return;
-      }
+      const data = await readCharacterResponse<{ sheet: { id: string } }>(fetch(`/api/campaigns/${campaign.id}/sheet`, {
+        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ libraryCharacterId: characterId }),
+      }), "seat.error");
+      if (typeof data?.sheet?.id !== "string") throw new Error("Character seat was not acknowledged.");
       navigateTo(`/campaigns/${campaign.id}`);
-    } catch {
-      setError({ campaignId: campaign.id, text: "Could not reach the server.", taken: false });
+    } catch (cause) {
+      const detail = characterRequestError(cause, "seat.error");
+      setError({ campaignId: campaign.id, detail, taken: detail.status === 409 });
     } finally {
       setBusyId("");
     }
@@ -95,28 +82,27 @@ export function UseInCampaignDialog({
   return (
     <Dialog
       open
-      onOpenChange={(open) => !open && onClose()}
-      title={`Use ${characterName} in a campaign`}
+      onOpenChange={(open) => !open && !busyId && onClose()}
+      title={t("seat.title", { name: characterName })}
       icon={<GameIcon icon={{ kind: "glyph", key: "tab-campaigns" }} size="size-7" />}
       width="w-[min(92vw,30rem)]"
     >
       <p className="mb-3 text-xs leading-5 text-stone-400">
-        The table gets its own copy of the sheet, adapted to its starting level. Your library keeps
-        this one as it is.
+        {t("seat.hint")}
       </p>
-      {campaigns === null && loadError ? (
-        <LoadFailed error={loadError} onRetry={() => setReloads((current) => current + 1)} />
+      {loadError ? (
+        <LoadFailed error={characterErrorText(loadError, locale)} onRetry={() => setReloads((current) => current + 1)} />
       ) : campaigns === null ? (
-        <div className="skeleton-block h-24 rounded-xl" aria-label="Loading your campaigns" />
+        <div className="skeleton-block h-24 rounded-xl" aria-label={t("seat.loading")} />
       ) : campaigns.length === 0 ? (
         <EmptyState
           art="map"
           size="sm"
-          title="No tables to bring them to yet."
-          hint="Start a campaign or join one with a room code, then come back."
+          title={t("seat.empty")}
+          hint={t("seat.emptyHint")}
           action={
             <Link href="/" className={ui.btnSecondary}>
-              To your campaigns
+              {t("seat.home")}
             </Link>
           }
         />
@@ -130,36 +116,33 @@ export function UseInCampaignDialog({
                 <span className="min-w-0 flex-1">
                   <span className="block truncate font-display text-sm tracking-wide text-amber-100">{campaign.title}</span>
                   <span className="block text-[11px] text-stone-500">
-                    {seated ? "Already at this table" : campaign.status === "lobby" ? "In the lobby" : "In play"}
-                    {campaign.startingLevel ? ` · plays at level ${campaign.startingLevel}` : ""}
+                    {seated ? t("seat.already") : campaign.status === "lobby" ? t("seat.lobby") : t("seat.play")}
+                    {campaign.startingLevel ? t("seat.level", { level: campaign.startingLevel }) : ""}
                   </span>
                   {!seated &&
                   characterLevel !== undefined &&
                   campaign.startingLevel &&
                   campaign.startingLevel !== characterLevel ? (
                     <span className="block text-[11px] text-amber-300">
-                      {characterName} joins as level {campaign.startingLevel}, not {characterLevel}:
-                      {campaign.startingLevel < characterLevel
-                        ? " hit points, slots, improvements and spells above that level are left behind."
-                        : " the sheet is raised to that level; choose the extra spells from the sheet."}
+                      {t(campaign.startingLevel < characterLevel ? "seat.down" : "seat.up", { name: characterName, level: campaign.startingLevel, old: characterLevel })}
                     </span>
                   ) : null}
                 </span>
                 {seated ? (
                   <Link href={`/campaigns/${campaign.id}`} className={ui.btnSmall}>
-                    Open
+                    {t("library.open")}
                   </Link>
                 ) : (
                   <button type="button" disabled={Boolean(busyId)} onClick={() => void seat(campaign)} className={ui.btnSmall}>
-                    {busyId === campaign.id ? <Loader2 className="size-3.5 animate-spin" /> : null} Take a seat
+                    {busyId === campaign.id ? <Loader2 className="size-3.5 animate-spin" /> : null} {t("seat.take")}
                   </button>
                 )}
                 {error?.campaignId === campaign.id ? (
-                  <p role="alert" className="motion-shake w-full text-xs text-red-400">
-                    {error.text}{" "}
+                  <p role="alert" className="motion-shake w-full text-xs text-ember-600">
+                    {characterErrorText(error.detail, locale)}{" "}
                     {error.taken ? (
                       <Link href={`/campaigns/${campaign.id}/character?mode=replace`} className="text-amber-200 underline underline-offset-2">
-                        Swap characters in its lobby
+                        {t("seat.swap")}
                       </Link>
                     ) : null}
                   </p>

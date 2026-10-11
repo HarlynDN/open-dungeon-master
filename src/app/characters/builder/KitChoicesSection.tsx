@@ -1,12 +1,14 @@
 "use client";
 
 import { Shield } from "lucide-react";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { equipmentName, gearNote, kitSlotText } from "@/lib/i18n/gear-ui-presentations";
+import { spellGearTermLabel } from "@/lib/i18n/spell-gear-presentations";
 import { contentSlug } from "@/lib/help";
 import {
   kitSlotsByLine,
   optionAllowed,
   slotChoices,
-  describeSlot,
   type ClassKit,
   type KitChoices,
   type KitTraining,
@@ -43,13 +45,14 @@ export default function KitChoicesSection({
   onOption: (line: number, option: number) => void;
   onPick: (slot: number, name: string) => void;
 }) {
+  const { locale, t } = useLocale();
   const slotLines = kitSlotsByLine(kit, choices.options);
   return (
     <div className="mb-3 space-y-2.5">
       <p className="text-xs text-stone-500">
         {kit.source === "odm"
-          ? `The ${className}'s kit, free. Remove what you will not carry.`
-          : `The ${className}'s starting equipment, free. Where the book offers a choice, pick one.`}
+          ? t("gearUi.kitSourceOdm", { class: className })
+          : t("gearUi.kitSourceBook", { class: className })}
       </p>
       {kit.lines.map((line, lineIndex) => {
         const chosen = choices.options[lineIndex] ?? 0;
@@ -57,7 +60,7 @@ export default function KitChoicesSection({
         return (
           <div key={lineIndex} className="space-y-1.5">
             {line.options.length > 1 ? (
-              <div role="group" aria-label={`Equipment choice ${lineIndex + 1}`} className="flex flex-wrap gap-1.5">
+              <div role="group" aria-label={t("gearUi.kitChoice", { number: lineIndex + 1 })} className="flex flex-wrap gap-1.5">
                 {line.options.map((option, optionIndex) => {
                   const allowed = optionAllowed(option, training);
                   return (
@@ -67,19 +70,19 @@ export default function KitChoicesSection({
                       disabled={!allowed}
                       onClick={() => onOption(lineIndex, optionIndex)}
                     >
-                      <span className="text-stone-500">({LETTERS[optionIndex]})</span> {option.label}
+                      <span className="text-stone-500">({LETTERS[optionIndex]})</span> {spellGearTermLabel("kitOption", option.label, locale)}
                     </PickPill>
                   );
                 })}
               </div>
             ) : (
-              <p className="text-xs text-stone-300">{capital(line.options[0].label)}</p>
+              <p className="text-xs text-stone-300">{capital(spellGearTermLabel("kitOption", line.options[0].label, locale))}</p>
             )}
             {slots.length ? (
               <div key={`${lineIndex}-${chosen}`} className="reveal grid gap-1.5 sm:grid-cols-2">
                 {slots.map((slot, at) => (
                   <div key={at}>
-                    <span className="mb-1 block text-[11px] text-stone-400">{capital(describeSlot(slot))}</span>
+                    <span className="mb-1 block text-[11px] text-stone-400">{kitSlotText(slot, locale)}</span>
                     <OptionPicker
                       value={choices.picks[start + at] ?? slot.default}
                       onChange={(name) => onPick(start + at, name)}
@@ -89,8 +92,8 @@ export default function KitChoicesSection({
                           label: null,
                           options: slotChoices(slot).map((name) => ({
                             id: name,
-                            name,
-                            meta: damageOf.get(name) ?? "",
+                            name: equipmentName(name, locale),
+                            meta: gearNote(damageOf.get(name) ?? "", locale),
                             reference: { kind: "items" as const, slug: contentSlug(name), name },
                           })),
                         },
@@ -105,7 +108,7 @@ export default function KitChoicesSection({
       })}
       <div className="flex items-baseline gap-2">
         <Shield className="size-3.5 self-center text-amber-300/80" aria-hidden="true" />
-        <span className="text-xs text-stone-400">Armor class with this kit</span>
+        <span className="text-xs text-stone-400">{t("gearUi.acWithKit")}</span>
         <span key={armorClass.value} className="reveal font-mono text-sm text-amber-200">
           {armorClass.value}
         </span>

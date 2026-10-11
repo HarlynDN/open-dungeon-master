@@ -261,7 +261,7 @@ export function wrapIndex(index: number, delta: number, length: number): number 
 
 // The grid's search box: every word typed must appear in the name or in the
 // canonical name behind a reskin. Groups left empty drop out.
-export function filterGroups<T extends { name: string; meta?: string }>(
+export function filterGroups<T extends { name: string; meta?: string; searchTerms?: string[] }>(
   groups: Array<CardGroupLike<T>>,
   query: string,
 ): Array<CardGroupLike<T>> {
@@ -273,7 +273,7 @@ export function filterGroups<T extends { name: string; meta?: string }>(
     .map((group) => ({
       ...group,
       options: group.options.filter((option) => {
-        const haystack = `${option.name} ${option.meta ?? ""}`.toLowerCase();
+        const haystack = `${option.name} ${option.meta ?? ""} ${(option.searchTerms ?? []).join(" ")}`.toLowerCase();
         return words.every((word) => haystack.includes(word));
       }),
     }))

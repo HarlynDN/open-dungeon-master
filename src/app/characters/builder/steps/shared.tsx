@@ -1,5 +1,6 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { X } from "lucide-react";
 import type { ReactNode } from "react";
 import { InfoButton, type ContentRef } from "@/components/ui/InfoDialog";
@@ -82,6 +83,7 @@ export function Chip({
   homebrew?: boolean;
   info?: InfoSource;
 }) {
+  const { t } = useLocale();
   return (
     <span
       className={cn(
@@ -100,7 +102,7 @@ export function Chip({
           type="button"
           onClick={onRemove}
           className="text-stone-500 hover:text-red-400"
-          aria-label={`Remove ${label}`}
+          aria-label={t("builder.remove", { label })}
         >
           <X className="size-3" />
         </button>

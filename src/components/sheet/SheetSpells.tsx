@@ -1,6 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { createTranslator } from "@/lib/i18n/translator";
+import { characterLabel } from "@/lib/i18n/character-presentations";
+import { spellPreparationText } from "@/lib/i18n/spell-ui-presentations";
 import { spellClassFor } from "@/lib/classes";
 import { spellSlotsFor } from "@/lib/srd";
 import type { CharacterSheet } from "@/lib/schemas/sheet";
@@ -92,9 +96,10 @@ function CasterBook({
   editable: boolean;
   showClass: boolean;
 }) {
+  const { locale, t } = useLocale();
   const [editing, setEditing] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [message, setMessage] = useState<{ tone: "note" | "error"; text: string } | null>(null);
+  const [message, setMessage] = useState<{ tone: "note" | "error"; text: string; spell?: SpellTile } | null>(null);
   const maxLevel = maxSpellLevelOf(view);
   const canPrepare = editable && view.style !== "known";
   // The whole class list is only needed while a prepared caster edits.
@@ -119,20 +124,20 @@ function CasterBook({
   const full = editing && view.style !== "known" && cap !== null && preparedCount(view) >= cap.count;
   const tiles = buildTiles(view, [...lookups.values(), ...(editing ? pool : [])], editing).map((tile) =>
     full && (tile.state === "available" || tile.state === "inBook") && tile.level !== 0
-      ? { ...tile, blocked: "Prepared list full" }
+      ? { ...tile, blocked: t("spellUi.preparedFull") }
       : tile,
   );
   const counters = [
-    ...(view.cantrips.length ? [{ label: "Cantrips", value: view.cantrips.length }] : []),
+    ...(view.cantrips.length ? [{ label: t("spellUi.cantrips"), value: view.cantrips.length }] : []),
     view.style === "known"
-      ? { label: "Known", value: heldSpells(view).filter((name) => !isGranted(view, name)).length, max: cap?.count }
+      ? { label: t("spellUi.known"), value: heldSpells(view).filter((name) => !isGranted(view, name)).length, max: cap?.count }
       : {
-          label: "Prepared",
+          label: t("spellUi.prepared"),
           value: preparedCount(view),
           max: cap?.count,
-          extra: view.pending.length ? `(${view.pending.length} at long rest)` : undefined,
+          extra: view.pending.length ? t("spellUi.sheetPending", { count: view.pending.length }) : undefined,
         },
-    ...(view.style === "spellbook" ? [{ label: "Spellbook", value: spellbookOf(view).length }] : []),
+    ...(view.style === "spellbook" ? [{ label: t("spellUi.spellbook"), value: spellbookOf(view).length }] : []),
   ];
 
   async function toggle(tile: SpellTile) {
@@ -149,7 +154,7 @@ function CasterBook({
       const data = (await response.json().catch(() => ({}))) as { error?: string; note?: string };
       setMessage(
         response.ok
-          ? { tone: "note", text: data.note ?? "Done." }
+          ? { tone: "note", text: data.note ?? createTranslator("en")("spellUi.doneNote"), spell: tile }
           : {
               tone: "error",
               // A 404 means the server answering does not have this action
@@ -157,12 +162,13 @@ function CasterBook({
               text:
                 data.error ??
                 (response.status === 404
-                  ? "The server does not know how to change prepared spells yet (HTTP 404). Restart or update the server this table runs on."
-                  : `Could not change that spell (HTTP ${response.status}).`),
+                  ? createTranslator("en")("spellUi.serverOld")
+                  : createTranslator("en")("spellUi.changeHttp", { status: response.status })),
+              spell: tile,
             },
       );
     } catch {
-      setMessage({ tone: "error", text: "Could not reach the server." });
+      setMessage({ tone: "error", text: createTranslator("en")("spellUi.networkError"), spell: tile });
     } finally {
       setBusy(false);
     }
@@ -171,7 +177,7 @@ function CasterBook({
   return (
     <div>
       {showClass ? (
-        <p className="eyebrow mb-1.5 text-[10px] text-amber-400/80">{titleCase(view.classId)}</p>
+        <p className="eyebrow mb-1.5 text-[10px] text-amber-400/80">{locale === "en" ? titleCase(view.classId) : view.classId === "feats" ? t("spellUi.featBook") : characterLabel("class", view.classId, locale)}</p>
       ) : null}
       <SpellBook
         tiles={tiles}
@@ -180,7 +186,7 @@ function CasterBook({
         busy={busy}
         onTile={editing ? toggle : undefined}
         canToggle={(tile) => tile.state !== "granted" && tile.level !== 0}
-        emptyText={editing ? (loading ? "Loading the class list..." : "Nothing to prepare at this level.") : "Nothing prepared at this level."}
+        emptyText={t(editing ? loading ? "spellUi.loadingClass" : "spellUi.nothingToPrepare" : "spellUi.nothingPrepared")}
         header={
           canPrepare ? (
             <button
@@ -195,7 +201,7 @@ function CasterBook({
                   : "ml-auto rounded-full border border-amber-500/50 px-3 py-0.5 text-xs text-amber-200 hover:bg-amber-400/10"
               }
             >
-              {editing ? "Done" : view.style === "spellbook" ? "Prepare from spellbook" : "Change prepared spells"}
+              {t(editing ? "spellUi.done" : view.style === "spellbook" ? "spellUi.prepareFromBook" : "spellUi.changePrepared")}
             </button>
           ) : null
         }
@@ -203,12 +209,11 @@ function CasterBook({
           <>
             {editing ? (
               <p className="mt-2 text-[11px] text-stone-500">
-                Tap a spell to prepare it: it becomes ready after your next long rest. Tapping a
-                ready spell unprepares it at once. Cantrips and subclass spells never change.
+                {t("spellUi.sheetPrepareHelp")}
               </p>
             ) : view.style === "known" && editable ? (
               <p className="mt-2 text-[11px] text-stone-500">
-                You know these spells and always have them ready. You can swap one when you level up.
+                {t("spellUi.sheetKnownHelp")}
               </p>
             ) : null}
             {message ? (
@@ -216,7 +221,7 @@ function CasterBook({
                 role={message.tone === "error" ? "alert" : "status"}
                 className={message.tone === "error" ? "mt-2 text-xs text-red-300" : "mt-2 text-xs text-sky-300"}
               >
-                {message.text}
+                {spellPreparationText(message.text, locale, message.spell)}
               </p>
             ) : null}
           </>

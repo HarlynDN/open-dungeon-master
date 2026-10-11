@@ -1,5 +1,11 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { createTranslator } from "@/lib/i18n/translator";
+import type { AppLocale } from "@/lib/i18n/locales";
+import { abilityLabel } from "@/lib/i18n/character-presentations";
+import { featTermLabel } from "@/lib/i18n/feat-presentations";
+import { LocalizedText } from "@/lib/i18n/LocalizedText";
 import { featAbilityIncrease } from "@/lib/srd/feat-effects";
 import type { FeatChoices, FeatGrantSpec, FeatPicks } from "@/lib/srd/feat-grants";
 import FeatChoicesFields, { type KnownTraining } from "./FeatChoicesFields";
@@ -20,9 +26,9 @@ import ContentPicker from "./ContentPicker";
 const ABILITY_KEYS = Object.keys(ABILITY_LABELS) as Ability[];
 
 const MODES = [
-  ["plus2", "+2 one ability"],
-  ["plus1x2", "+1 two abilities"],
-  ["feat", "Feat"],
+  ["plus2", "abilityUi.mode.plus2"],
+  ["plus1x2", "abilityUi.mode.plus1x2"],
+  ["feat", "abilityUi.mode.feat"],
 ] as const;
 
 // One card per earned Ability Score Improvement (levels 4/8/12/16/19).
@@ -60,6 +66,8 @@ export default function AsiFeatEditor({
   onFeatPicks?: (feat: string, picks: FeatPicks) => void;
   known?: KnownTraining;
 }) {
+  const { locale, t } = useLocale();
+  const featLabel = (name: string) => featTermLabel("feat", name, locale);
   function setChoice(index: number, choice: AsiChoice | null) {
     const next = slotLevels.map((_, slot) => choices[slot] ?? null);
     next[index] = choice;
@@ -73,29 +81,27 @@ export default function AsiFeatEditor({
       <div className="mb-1 flex flex-wrap items-center gap-2">
         <h2 className="eyebrow text-xs text-amber-200/90">
           {level
-            ? `Level ${level}: ${slotLevels.length} ability score ${
-                slotLevels.length === 1 ? "improvement" : "improvements"
-              } earned`
-            : "Ability score improvements"}
+            ? t(slotLevels.length === 1 ? "abilityUi.asiEarnedOne" : "abilityUi.asiEarnedMany", { level, count: slotLevels.length })
+            : t("abilityUi.asiTitle")}
         </h2>
         {unresolved > 0 ? (
           <span className="rounded-full border border-amber-700 bg-amber-950/50 px-2 py-0.5 text-[11px] text-amber-200">
-            {unresolved} to pick
+            {t("abilityUi.toPick", { count: unresolved })}
           </span>
         ) : (
           <span className="rounded-full border border-stone-700 bg-stone-900 px-2 py-0.5 text-[11px] text-stone-400">
-            All picked
+            {t("abilityUi.allPicked")}
           </span>
         )}
       </div>
       <p className="mb-3 text-xs text-stone-500">
-        This is how higher-level characters raise their stats. Each earned level grants +2 to one{" "}
-        <GameTerm id="ability_score">ability score</GameTerm>, +1 to two of them, or a feat.
-        Scores cap at {ABILITY_SCORE_CAP}.
+        <LocalizedText message="abilityUi.asiInfo" values={{
+          ability: <GameTerm id="ability_score">{t("abilityUi.asiAbility")}</GameTerm>, cap: ABILITY_SCORE_CAP,
+        }} />
       </p>
       {!baseScores ? (
         <p className="rounded-md border border-stone-800 bg-stone-900/60 p-3 text-xs text-stone-400">
-          Assign all six ability scores first.
+          {t("abilityUi.assignFirst")}
         </p>
       ) : (
         <div className="space-y-3">
@@ -111,14 +117,13 @@ export default function AsiFeatEditor({
                   className="reveal rounded-lg border border-stone-800 bg-stone-950/60 p-3"
                 >
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-stone-300">Level {slotLevel} improvement</span>
+                    <span className="text-stone-300">{t("abilityUi.slot", { level: slotLevel })}</span>
                     <span className="rounded-full border border-stone-700 bg-stone-900 px-2 py-0.5 text-[11px] text-stone-400">
-                      Taken in play
+                      {t("abilityUi.taken")}
                     </span>
                   </div>
                   <p className="mt-2 text-xs text-stone-500">
-                    Chosen at the table when this character levelled up, so it is already in
-                    the scores above. A feat taken with it stays in the feats list.
+                    {t("abilityUi.takenInfo")}
                   </p>
                 </div>
               );
@@ -129,7 +134,7 @@ export default function AsiFeatEditor({
                 className="rounded-lg border border-stone-800 bg-stone-950/60 p-3"
               >
                 <div className="mb-2 flex flex-wrap items-center gap-2">
-                  <span className="text-stone-300">Level {slotLevel} improvement</span>
+                  <span className="text-stone-300">{t("abilityUi.slot", { level: slotLevel })}</span>
                   <div className="flex rounded-md border border-stone-700 p-0.5 text-xs">
                     {MODES.map(([mode, label]) => (
                       <button
@@ -156,7 +161,7 @@ export default function AsiFeatEditor({
                             : "text-stone-400 hover:text-stone-200",
                         )}
                       >
-                        {label}
+                        {t(label)}
                       </button>
                     ))}
                   </div>
@@ -164,15 +169,15 @@ export default function AsiFeatEditor({
 
                 {choice?.mode === "plus2" ? (
                   <label className="block sm:w-64">
-                    <span className="mb-1 block text-xs text-stone-500">+2 to</span>
+                    <span className="mb-1 block text-xs text-stone-500">{t("abilityUi.plus2To")}</span>
                     <Select<Ability>
                       value={choice.ability}
                       onChange={(ability) => setChoice(index, { mode: "plus2", ability })}
-                      label="+2 to"
+                      label={t("abilityUi.plus2To")}
                       className="w-full"
                       options={ABILITY_KEYS.map((ability) => ({
                         value: ability,
-                        label: `${ABILITY_LABELS[ability]} (${current[ability]}${current[ability] >= ABILITY_SCORE_CAP ? ", at cap" : ""})`,
+                        label: t("abilityUi.abilityOption", { ability: abilityLabel(ability, locale), score: current[ability], cap: current[ability] >= ABILITY_SCORE_CAP ? t("abilityUi.atCap") : "" }),
                         disabled: current[ability] >= ABILITY_SCORE_CAP && ability !== choice.ability,
                       }))}
                     />
@@ -184,7 +189,7 @@ export default function AsiFeatEditor({
                     {([0, 1] as const).map((half) => (
                       <label key={half} className="block">
                         <span className="mb-1 block text-xs text-stone-500">
-                          {half === 0 ? "First +1" : "Second +1"}
+                          {t(half === 0 ? "abilityUi.firstPlus1" : "abilityUi.secondPlus1")}
                         </span>
                         <Select<Ability>
                           value={choice.abilities[half]}
@@ -193,11 +198,11 @@ export default function AsiFeatEditor({
                             abilities[half] = picked;
                             setChoice(index, { mode: "plus1x2", abilities });
                           }}
-                          label={half === 0 ? "First +1" : "Second +1"}
+                          label={t(half === 0 ? "abilityUi.firstPlus1" : "abilityUi.secondPlus1")}
                           className="w-full"
                           options={ABILITY_KEYS.map((ability) => ({
                             value: ability,
-                            label: `${ABILITY_LABELS[ability]} (${current[ability]}${current[ability] >= ABILITY_SCORE_CAP ? ", at cap" : ""})`,
+                            label: t("abilityUi.abilityOption", { ability: abilityLabel(ability, locale), score: current[ability], cap: current[ability] >= ABILITY_SCORE_CAP ? t("abilityUi.atCap") : "" }),
                             disabled:
                               (current[ability] >= ABILITY_SCORE_CAP && ability !== choice.abilities[half]) ||
                               ability === choice.abilities[half === 0 ? 1 : 0],
@@ -212,9 +217,9 @@ export default function AsiFeatEditor({
                   <div>
                     {choice?.mode === "feat" ? (
                       <span className="mb-2 inline-flex items-center gap-1 rounded-full border border-amber-800 bg-amber-950/40 px-2.5 py-1 text-xs text-amber-200">
-                        {choice.feat}
+                        {featLabel(choice.feat)}
                         <InfoButton
-                          label={choice.feat}
+                          label={featLabel(choice.feat)}
                           reference={{
                             kind: "feats",
                             slug: contentSlug(choice.feat),
@@ -224,7 +229,7 @@ export default function AsiFeatEditor({
                         <button
                           type="button"
                           onClick={() => setChoice(index, null)}
-                          aria-label={`Remove ${choice.feat}`}
+                          aria-label={t("abilityUi.removeFeat", { feat: featLabel(choice.feat) })}
                           className="text-stone-500 hover:text-red-400"
                         >
                           <X className="size-3" />
@@ -234,17 +239,17 @@ export default function AsiFeatEditor({
                       <>
                         <ContentPicker
                           kind="feats"
-                          placeholder="Search feats (e.g. alert, tough)"
+                          placeholder={t("abilityUi.searchFeat")}
                           onPick={(entry) => setChoice(index, featChoice(entry.name, featDescOf?.(entry.name)))}
                         />
                         {/* Nobody picks a feat they cannot name; the list is
                             here, with what each one does on every row. */}
                         <CatalogBrowser
                           kind="feats"
-                          buttonLabel="Browse every feat"
+                          buttonLabel={t("abilityUi.browseFeats")}
                           selectedNames={[]}
                           onPick={(entry) => setChoice(index, featChoice(entry.name))}
-                          sections={[{ key: "feats:all", label: "All feats" }]}
+                          sections={[{ key: "feats:all", label: t("abilityUi.allFeats") }]}
                         />
                       </>
                     )}
@@ -255,15 +260,15 @@ export default function AsiFeatEditor({
                   // A half-feat that offers a choice of score (Resilient,
                   // Athlete) asks which one it raises.
                   <label className="mt-2 block sm:w-64">
-                    <span className="mb-1 block text-xs text-stone-500">{choice.feat} raises by 1</span>
+                    <span className="mb-1 block text-xs text-stone-500">{t("abilityUi.featRaises", { feat: featLabel(choice.feat) })}</span>
                     <Select<Ability>
                       value={choice.ability ?? featAbilityIncrease(choice.feat, featDescOf?.(choice.feat))!.from[0]}
                       onChange={(ability) => setChoice(index, { ...choice, ability })}
-                      label={`${choice.feat} raises`}
+                      label={t("abilityUi.featRaisesLabel", { feat: featLabel(choice.feat) })}
                       className="w-full"
                       options={featAbilityIncrease(choice.feat, featDescOf?.(choice.feat))!.from.map((ability) => ({
                         value: ability,
-                        label: `${ABILITY_LABELS[ability]} (${current[ability]})`,
+                        label: t("abilityUi.abilityOption", { ability: abilityLabel(ability, locale), score: current[ability], cap: "" }),
                         disabled: current[ability] >= ABILITY_SCORE_CAP && ability !== choice.ability,
                       }))}
                     />
@@ -284,12 +289,12 @@ export default function AsiFeatEditor({
                 {choice ? (
                   <p className="mt-2 text-xs text-stone-500">
                     {choice.mode === "feat"
-                      ? `Feat: ${choice.feat}${featRaise(current, choice, featDescOf)}`
-                      : summarizeChoice(current, choice)}
+                      ? t("abilityUi.featSummary", { feat: featLabel(choice.feat), raise: featRaise(current, choice, featDescOf, locale) })
+                      : summarizeChoice(current, choice, locale)}
                   </p>
                 ) : (
                   <p className="mt-2 text-xs text-stone-500">
-                    Pick +2, two +1s, or search a feat above.
+                    {t("abilityUi.pickAsi")}
                   </p>
                 )}
               </div>
@@ -318,14 +323,14 @@ function scoresEntering(base: AbilityScores, earlier: Array<AsiChoice | null>, d
 }
 
 // ", Charisma 15 to 16 (+3)" for a half-feat, nothing for any other feat.
-function featRaise(current: AbilityScores, choice: AsiChoice, descOf?: (name: string) => string): string {
+function featRaise(current: AbilityScores, choice: AsiChoice, descOf?: (name: string) => string, locale: AppLocale = "en"): string {
   if (choice.mode !== "feat") {
     return "";
   }
   const after = scoresEntering(current, [choice], descOf);
   const raised = ABILITY_KEYS.find((ability) => after[ability] > current[ability]);
   return raised
-    ? `, ${ABILITY_LABELS[raised]} ${current[raised]} to ${after[raised]} (${formatModifier(abilityMod(after[raised]))})`
+    ? createTranslator(locale)("abilityUi.raiseDetail", { transition: transitionText(raised, current[raised], after[raised], locale) })
     : "";
 }
 
@@ -335,14 +340,18 @@ function firstOpenAbility(scores: AbilityScores, skip?: Ability, room = 1): Abil
   return fits(room) ?? fits(1) ?? ABILITY_KEYS.find((ability) => ability !== skip) ?? "str";
 }
 
-function summarizeChoice(current: AbilityScores, choice: AsiChoice): string {
+function summarizeChoice(current: AbilityScores, choice: AsiChoice, locale: AppLocale = "en"): string {
   const after = applyAsiChoices(current, [choice]);
   const touched =
     choice.mode === "plus2" ? [choice.ability] : choice.mode === "plus1x2" ? choice.abilities : [];
   return touched
     .map(
       (ability) =>
-        `${ABILITY_LABELS[ability]} ${current[ability]} to ${after[ability]} (${formatModifier(abilityMod(after[ability]))})`,
+        transitionText(ability, current[ability], after[ability], locale),
     )
     .join(", ");
+}
+
+function transitionText(ability: Ability, before: number, after: number, locale: AppLocale): string {
+  return createTranslator(locale)("abilityUi.transition", { ability: abilityLabel(ability, locale), before, after, modifier: formatModifier(abilityMod(after)) });
 }

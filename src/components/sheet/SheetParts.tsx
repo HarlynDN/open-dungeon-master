@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { abilityLabel, skillLabel, characterLabel } from "@/lib/i18n/character-presentations";
+import { referenceDisplayName } from "@/lib/i18n/references";
 import type { ReactNode } from "react";
 import { GameIcon } from "@/components/ui/GameIcon";
 import { GameTerm } from "@/components/ui/GameTerm";
@@ -20,15 +23,6 @@ import { formatModifier, SRD_SKILLS } from "@/lib/srd";
 // Styles are in src/app/styles/sheet.css.
 
 type Ability = (typeof ABILITIES)[number];
-
-const ABILITY_NAMES: Record<Ability, string> = {
-  str: "Strength",
-  dex: "Dexterity",
-  con: "Constitution",
-  int: "Intelligence",
-  wis: "Wisdom",
-  cha: "Charisma",
-};
 
 // How a score reads at a glance: a weakness is dim, an ordinary score plain,
 // a strength gold, and an exceptional one lit.
@@ -52,10 +46,11 @@ export function PortraitMedallion({
   children: ReactNode;
   className?: string;
 }) {
+  const { locale } = useLocale();
   return (
     <div className={cn("sheet-medallion", className)}>
       <div className="sheet-medallion-face">{children}</div>
-      <span className="sheet-medallion-emblem" title={classId}>
+      <span className="sheet-medallion-emblem" title={characterLabel("class", classId, locale)}>
         <GameIcon icon={{ kind: "family", key: `class-${classId.toLowerCase()}` }} size="size-7" />
       </span>
       {level ? <span className="sheet-medallion-level">{level}</span> : null}
@@ -103,6 +98,7 @@ export function AbilityTiles({
   saveProficiencies?: string[];
   explainSave?: (ability: Ability) => string;
 }) {
+  const { locale, t } = useLocale();
   return (
     <div className="stagger-up grid grid-cols-3 gap-2 sm:grid-cols-6">
       {ABILITIES.map((ability, index) => {
@@ -113,10 +109,10 @@ export function AbilityTiles({
             className="sheet-ability motion-card"
             data-tier={scoreTier(abilities[ability])}
             style={{ animationDelay: `${index * 45}ms` }}
-            title={ABILITY_NAMES[ability]}
+            title={abilityLabel(ability, locale)}
           >
             <GameIcon icon={{ kind: "glyph", key: `ability-${ability}` }} size="size-9" className="mx-auto" />
-            <p className="eyebrow mt-1 text-[10px] text-stone-400">{ability}</p>
+            <p className="eyebrow mt-1 text-[10px] text-stone-400">{abilityLabel(ability, locale, true)}</p>
             <p className="sheet-ability-mod">{formatModifier(mods[ability])}</p>
             <p className="sheet-ability-score">{abilities[ability]}</p>
             {saves ? (
@@ -125,7 +121,7 @@ export function AbilityTiles({
                 title={explainSave ? explainSave(ability) : undefined}
               >
                 <span className={cn("sheet-pip", proficient && "sheet-pip-on")} aria-hidden="true" />
-                Save {formatModifier(saves[ability])}
+                {t("sheet.save", { value: formatModifier(saves[ability]) })}
               </p>
             ) : null}
           </div>
@@ -180,13 +176,14 @@ export function HpBar({
 }) {
   const span = Math.max(1, max + temp);
   const width = (value: number) => `${Math.max(0, Math.min(100, (value / span) * 100))}%`;
+  const { t } = useLocale();
   return (
-    <div className="sheet-hp" title={`${current}${temp ? ` +${temp} temporary` : ""} of ${max} hit points${note ? `. ${note}` : ""}`}>
+    <div className="sheet-hp" title={t("sheet.hpTitle", { current, temporary: temp ? t("sheet.tempHp", { value: temp }) : "", max, note: note ? `. ${note}` : "" })}>
       <GameIcon icon={{ kind: "glyph", key: "rest-hp" }} size="size-7" />
       <div className="min-w-0 grow">
         <div className="flex items-baseline justify-between gap-2">
           <span className="sheet-vital-label">
-            <GameTerm id="hit_points">Hit points</GameTerm>
+            <GameTerm id="hit_points">{t("sheet.hitPoints")}</GameTerm>
           </span>
           <span className="font-display text-sm text-amber-50">
             {current}
@@ -218,20 +215,20 @@ export function TrainingLines({
 }: {
   proficiencies: { languages: string[]; tools: string[]; armor: string[]; weapons: string[] };
 }) {
-  const nice = (value: string) =>
-    value.replace(/[-_]/g, " ").replace(/(^|\s|')([a-z])/g, (_, before: string, letter: string) => `${before}${letter.toUpperCase()}`);
+  const { t } = useLocale();
+  const nice = (value: string) => value;
   const rows: Array<[string, string[]]> = [
-    ["Languages", proficiencies.languages],
-    ["Tools", proficiencies.tools],
-    ["Armor", proficiencies.armor],
-    ["Weapons", proficiencies.weapons],
+    [t("sheet.languages"), proficiencies.languages],
+    [t("sheet.tools"), proficiencies.tools],
+    [t("sheet.armor"), proficiencies.armor],
+    [t("sheet.weapons"), proficiencies.weapons],
   ];
   return (
     <dl className="stagger-up grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-xs">
       {rows.map(([label, values]) => (
         <div key={label} className="contents">
           <dt className="text-stone-500">{label}</dt>
-          <dd className="text-stone-200">{values.length ? [...new Set(values.map(nice))].join(", ") : <span className="text-stone-600">none</span>}</dd>
+          <dd className="text-stone-200">{values.length ? [...new Set(values.map(nice))].join(t("sheet.separator")) : <span className="text-stone-600">{t("sheet.none")}</span>}</dd>
         </div>
       ))}
     </dl>
@@ -247,6 +244,7 @@ export function SkillRows({
   proficient: string[];
   explain?: (skillId: string) => string;
 }) {
+  const { locale } = useLocale();
   return (
     <div className="stagger-up grid grid-cols-1 gap-x-3 gap-y-0.5 min-[420px]:grid-cols-2">
       {SRD_SKILLS.map((skill) => {
@@ -254,7 +252,7 @@ export function SkillRows({
         return (
           <span key={skill.id} className={cn("sheet-skill", on && "sheet-skill-on")} title={explain?.(skill.id)}>
             <GameIcon icon={{ kind: "glyph", key: `skill-${skill.name}` }} size="size-5" />
-            <span className="grow truncate">{skill.name}</span>
+            <span className="grow truncate">{skillLabel(skill.id, locale)}</span>
             <span className={cn("sheet-pip", on && "sheet-pip-on")} aria-hidden="true" />
             <span className="w-7 text-right font-mono">{formatModifier(skills[skill.id] ?? 0)}</span>
           </span>
@@ -275,19 +273,20 @@ export function EquipmentChips({
   // More for a row's note, by its index: its charges ("4/7 charges").
   extra?: (index: number) => string | null | undefined;
 }) {
+  const { locale, t } = useLocale();
   return (
     <InfoChipList
       items={equipment.map((item, index) => ({
-        name: item.qty > 1 ? `${item.name} x${item.qty}` : item.name,
+        name: item.qty > 1 ? t("sheet.itemQty", { name: referenceDisplayName("equipment", item.name, locale), qty: item.qty }) : referenceDisplayName("equipment", item.name, locale),
         icon: { kind: "item" as const, key: item.name, family: "item-gear" },
         note:
           [
-            item.equipped ? "worn" : null,
-            item.attuned ? "attuned" : item.attuning ? "attunes at the next rest" : null,
+            item.equipped ? t("sheet.worn") : null,
+            item.attuned ? t("sheet.attuned") : item.attuning ? t("sheet.attuning") : null,
             extra?.(index) ?? null,
           ]
             .filter(Boolean)
-            .join(", ") || undefined,
+            .join(t("sheet.separator")) || undefined,
         reference: { kind: "items", slug: contentSlug(item.name), name: item.name },
       }))}
     />
@@ -303,13 +302,14 @@ export function FeatureChips({
   classId: string;
   subclass?: string | null;
 }) {
+  const { t } = useLocale();
   return (
     <InfoChipList
       items={features.map((feature) => ({
         name: feature.name,
         icon: { kind: "feature" as const, key: feature.name, family: `class-${classId.toLowerCase()}` },
-        note: feature.source === "story" ? "(story)" : undefined,
-        meta: feature.level ? `Level ${feature.level}` : undefined,
+        note: feature.source === "story" ? t("sheet.storySource") : undefined,
+        meta: feature.level ? t("library.level", { level: feature.level }) : undefined,
         text: describeFeature(classId, subclass ?? "", feature.name) ?? undefined,
       }))}
     />

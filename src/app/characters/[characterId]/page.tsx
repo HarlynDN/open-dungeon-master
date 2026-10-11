@@ -1,5 +1,8 @@
 "use client";
 
+import { LoadFailed } from "@/app/campaigns/[campaignId]/PanelKit";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { characterLabel, subclassLabel, characterErrorText, characterRequestError, readCharacterResponse, requireCharacter, type CharacterUiError } from "@/lib/i18n/character-presentations";
 import { PageSkeleton } from "@/components/PageSkeleton";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import Link from "next/link";
@@ -47,27 +50,28 @@ type LibraryCharacter = {
 // never resolves the job.
 const PORTRAIT_POLL_LIMIT = 240;
 
-function titleCase(value: string) {
-  return value.replace(/[-_]/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
-}
-
-export default function CharacterDetailPage({
-  params,
-}: {
-  params: Promise<{ characterId: string }>;
-}) {
+export default function CharacterDetailPage({ params }: { params: Promise<{ characterId: string }> }) {
   const { characterId } = use(params);
+  return <CharacterDetailInner key={characterId} characterId={characterId} />;
+}
+function CharacterDetailInner({ characterId }: { characterId: string }) {
+  const { locale, t } = useLocale();
+  const [loadError, setLoadError] = useState<CharacterUiError | null>(null);
+  const [actionError, setActionError] = useState<CharacterUiError | null>(null);
+  const [pollError, setPollError] = useState<CharacterUiError | null>(null);
+  const [reloads, setReloads] = useState(0);
+  const [portraitSaving, setPortraitSaving] = useState(false);
   const [character, setCharacter] = useState<LibraryCharacter | null>(null);
   const [events, setEvents] = useState<CharacterEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [pdfBusy, setPdfBusy] = useState(false);
   const [cloning, setCloning] = useState(false);
   const [exporting, setExporting] = useState(false);
-  const [exportError, setExportError] = useState("");
+  const [exportError, setExportError] = useState<CharacterUiError | null>(null);
   const [cropping, setCropping] = useState(false);
   const [seating, setSeating] = useState(false);
   const [painting, setPainting] = useState(false);
-  const [portraitError, setPortraitError] = useState("");
+  const [portraitError, setPortraitError] = useState<CharacterUiError | null>(null);
   // "Paint one" only where the server has an image model to paint with.
   const canPaint = offersImages(useCapabilities());
   const pollCount = useRef(0);
@@ -76,12 +80,12 @@ export default function CharacterDetailPage({
     if (!character) {
       return;
     }
-    setPdfBusy(true);
+    setPdfBusy(true); setActionError(null);
     try {
       // The PDF builder (pdf-lib) loads on demand; see lib/pdf/download.
       const { libraryToPdfCharacter } = await import("@/lib/pdf/character-sheet-pdf");
       await downloadCharacterSheetPdf(libraryToPdfCharacter(character));
-    } finally {
+    } catch (cause) { setActionError(characterRequestError(cause, "characterActions.pdfError")); } finally {
       setPdfBusy(false);
     }
   }
@@ -93,16 +97,16 @@ export default function CharacterDetailPage({
       return;
     }
     setExporting(true);
-    setExportError("");
+    setExportError(null);
     try {
       const response = await fetch(`/api/characters/${characterId}/export`);
       if (!response.ok) {
-        setExportError("Export failed.");
+        setExportError({ data: {}, fallback: "characterActions.exportError" });
         return;
       }
       downloadBlob(`${filenameSlug(character.name)}.odm-character.json`, await response.blob());
     } catch {
-      setExportError("Export failed.");
+      setExportError({ data: {}, fallback: "characterActions.exportError" });
     } finally {
       setExporting(false);
     }
@@ -110,112 +114,75 @@ export default function CharacterDetailPage({
 
   // Same portrait-only PATCH the library list uses; a manual upload is
   // authoritative and replaces whatever was painted.
-  async function handlePortraitUploaded(portrait: {
-    id: string;
-    name: string;
-    type: string;
-    url: string;
-  }) {
-    setCropping(false);
-    const response = await fetch(`/api/characters/${characterId}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ portrait }),
-    });
-    if (response.ok) {
-      setCharacter((current) =>
-        current
-          ? { ...current, portraitStatus: null, sheet: { ...current.sheet, portrait } }
-          : current,
-      );
-    }
+  async function savePortrait(portrait: CreateSheetInput["portrait"]): Promise<boolean> {
+    setPortraitError(null); setPortraitSaving(true);
+    try {
+      const data = await readCharacterResponse<{ character: LibraryCharacter }>(fetch(`/api/characters/${characterId}`, {
+        method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ portrait }),
+      }), "library.portraitError");
+      const saved = requireCharacter(data);
+      if (saved.id !== characterId) throw new Error("Portrait was not acknowledged for this character.");
+      setCharacter((current) => current ? { ...current, ...saved, portraitStatus: null } : current);
+      return true;
+    } catch (cause) { setPortraitError(characterRequestError(cause, "library.portraitError")); return false; }
+    finally { setPortraitSaving(false); }
   }
-
-  // The third choice beside upload and paint: no picture at all, which shows
-  // the stand-in plate for the class or race (src/lib/placeholders.ts).
-  async function clearToPlaceholder() {
-    setPortraitError("");
-    const response = await fetch(`/api/characters/${characterId}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ portrait: null }),
-    });
-    if (response.ok) {
-      setCharacter((current) =>
-        current
-          ? { ...current, portraitStatus: null, sheet: { ...current.sheet, portrait: null } }
-          : current,
-      );
-    }
+  async function handlePortraitUploaded(portrait: { id: string; name: string; type: string; url: string }) {
+    const saved = await savePortrait(portrait);
+    if (saved) setCropping(false);
+    return saved;
   }
+  async function clearToPlaceholder() { await savePortrait(null); }
 
   // Queues a fresh render; the poll that watches creation renders picks up
   // the result the same way.
   async function paintPortrait() {
-    setPortraitError("");
-    setPainting(true);
+    setPortraitError(null); setPainting(true);
     try {
-      const response = await fetch(`/api/characters/${characterId}/portrait`, { method: "POST" });
-      if (!response.ok) {
-        const data = (await response.json().catch(() => ({}))) as { error?: string };
-        setPortraitError(data.error ?? "Could not queue the portrait.");
-        return;
-      }
-      setCharacter((current) =>
-        current
-          ? { ...current, portraitStatus: "queued", sheet: { ...current.sheet, portrait: null } }
-          : current,
-      );
-    } finally {
-      setPainting(false);
-    }
+      const queued = await readCharacterResponse<{ ok?: boolean }>(fetch(`/api/characters/${characterId}/portrait`, { method: "POST" }), "characterActions.paintError");
+      if (queued.ok !== true) throw new Error("Portrait generation was not acknowledged.");
+      pollCount.current = 0; setPollError(null);
+      setCharacter((current) => current ? { ...current, portraitStatus: "queued", sheet: { ...current.sheet, portrait: null } } : current);
+    } catch (cause) { setPortraitError(characterRequestError(cause, "characterActions.paintError")); }
+    finally { setPainting(false); }
   }
 
   // A second copy under a numbered name, sheet and portrait verbatim. The
   // roster is where copies live, so that is where this lands.
   async function handleDuplicate() {
-    setCloning(true);
+    setCloning(true); setActionError(null);
     try {
-      const response = await fetch(`/api/characters/${characterId}/clone`, { method: "POST" });
-      if (response.ok) {
-        navigateTo("/characters");
-      }
-    } finally {
-      setCloning(false);
-    }
+      const data = await readCharacterResponse<{ character: LibraryCharacter }>(fetch(`/api/characters/${characterId}/clone`, { method: "POST" }), "library.cloneError");
+      requireCharacter(data); navigateTo("/characters");
+    } catch (cause) { setActionError(characterRequestError(cause, "library.cloneError")); }
+    finally { setCloning(false); }
   }
 
   useEffect(() => {
-    fetch(`/api/characters/${characterId}`)
-      .then((response) => (response.ok ? response.json() : null))
-      .then((data) => {
-        if (data?.character) {
-          setCharacter(data.character);
-          setEvents(data.events ?? []);
-        }
-      })
-      .finally(() => setLoading(false));
-  }, [characterId]);
+    let cancelled = false;
+    pollCount.current = 0;
+    readCharacterResponse<{ character: LibraryCharacter; events: CharacterEvent[] }>(fetch(`/api/characters/${characterId}`), "library.detailError")
+      .then((data) => { const row = requireCharacter(data); if (!row.sheet || !Array.isArray(data.events)) throw new Error("Malformed character detail response."); if (!cancelled) { setCharacter(row); setEvents(data.events); setPollError(null); setLoadError(null); } })
+      .catch((cause) => { if (!cancelled) setLoadError(characterRequestError(cause, "library.detailError")); })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
+  }, [characterId, reloads]);
 
   // While the portrait renders in the background, re-fetch until it lands.
   const portraitPending =
     character?.portraitStatus === "queued" || character?.portraitStatus === "generating";
   useEffect(() => {
-    if (!portraitPending || pollCount.current >= PORTRAIT_POLL_LIMIT) {
-      return;
-    }
+    if (pollError || !portraitPending || pollCount.current >= PORTRAIT_POLL_LIMIT) return;
+    let cancelled = false;
     const id = setTimeout(() => {
       pollCount.current += 1;
-      fetch(`/api/characters/${characterId}`)
-        .then((response) => (response.ok ? response.json() : null))
-        .then((data) => {
-          if (data?.character) {
-            setCharacter(data.character);
-          }
-        });
+      readCharacterResponse<{ character: LibraryCharacter }>(fetch(`/api/characters/${characterId}`), "library.pollError")
+        .then(requireCharacter<LibraryCharacter>)
+        .then((row) => { if (!cancelled) setCharacter(row); })
+        .catch((cause) => { if (!cancelled) setPollError(characterRequestError(cause, "library.pollError")); });
     }, 2500);
-    return () => clearTimeout(id);
-  }, [portraitPending, character, characterId]);
+    return () => { cancelled = true; clearTimeout(id); };
+  }, [portraitPending, character, characterId, pollError]);
 
   if (loading) {
     return (
@@ -226,16 +193,18 @@ export default function CharacterDetailPage({
     );
   }
 
-  if (!character) {
+  if (loadError && loadError.status !== 404) return <main className="mx-auto w-full max-w-3xl flex-1 p-4 sm:p-6"><AppHeader /><LoadFailed error={characterErrorText(loadError, locale)} onRetry={() => { setLoading(true); setLoadError(null); setReloads((count) => count + 1); }} /></main>;
+
+  if (!character || loadError?.status === 404) {
     return (
       <main className="mx-auto w-full max-w-3xl flex-1 p-4 sm:p-6">
         <AppHeader />
         <div className={cn(ui.card, "ornate texture-noise flex flex-col items-center gap-3 px-6 py-8 text-center")}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/assets/ui/empty-notice-board.webp" alt="" className="h-24 w-32 object-contain opacity-90" />
-          <p className="font-serif text-sm text-stone-300">Character not found.</p>
+          <p className="font-serif text-sm text-stone-300">{t("library.notFound")}</p>
           <Link href="/characters" className={ui.btnSecondary}>
-            Back to your library
+            {t("library.backLibrary")}
           </Link>
         </div>
       </main>
@@ -250,44 +219,44 @@ export default function CharacterDetailPage({
   const actions: KebabItem[] = [
     {
       id: "pdf",
-      label: pdfBusy ? "Preparing..." : "Download PDF",
-      hint: "Download this character sheet as a fillable PDF",
+      label: pdfBusy ? t("characterActions.pdfBusy") : t("characterActions.pdf"),
+      hint: t("characterActions.pdfHint"),
       glyph: "tab-journal",
       disabled: pdfBusy,
       onSelect: () => void handleDownloadPdf(),
     },
     {
       id: "export",
-      label: exporting ? "Exporting..." : "Export",
-      hint: "Save this character as a file you can import on another device or server",
+      label: exporting ? t("characterActions.exportBusy") : t("characterActions.export"),
+      hint: t("characterActions.exportHint"),
       glyph: "system-share",
       disabled: exporting,
       onSelect: () => void handleExport(),
     },
     {
       id: "duplicate",
-      label: cloning ? "Copying..." : "Duplicate",
-      hint: "Save a second copy of this character to your library",
+      label: cloning ? t("characterActions.copyBusy") : t("library.duplicate"),
+      hint: t("characterActions.copyHint"),
       glyph: "tab-notes",
       disabled: cloning,
       onSelect: () => void handleDuplicate(),
     },
     {
       id: "portrait",
-      label: sheet.portrait ? "Replace portrait" : "Upload portrait",
-      hint: sheet.portrait ? "Replace the portrait with a photo" : "Upload a portrait",
+      label: sheet.portrait ? t("characterActions.replacePortrait") : t("library.upload"),
+      hint: sheet.portrait ? t("characterActions.replaceHint") : t("characterActions.uploadHint"),
       glyph: "tab-handout",
-      separated: true,
+      separated: true, disabled: portraitSaving,
       onSelect: () => setCropping(true),
     },
     ...(canPaint
       ? [
           {
             id: "paint",
-            label: portraitPending ? "Painting..." : "Paint one",
-            hint: "Paint a new portrait on this server's image model",
+            label: portraitPending ? t("characterActions.paintBusy") : t("characterActions.paint"),
+            hint: t("characterActions.paintHint"),
             glyph: "sense-truesight",
-            disabled: painting || portraitPending,
+            disabled: painting || portraitPending || portraitSaving,
             onSelect: () => void paintPortrait(),
           },
         ]
@@ -296,22 +265,23 @@ export default function CharacterDetailPage({
       ? [
           {
             id: "placeholder",
-            label: "Use placeholder",
-            hint: "Take the picture away and show the stand-in for this class or race",
+            label: t("characterActions.placeholder"),
+            hint: t("characterActions.placeholderHint"),
             glyph: "quest-hidden",
+            disabled: portraitSaving,
             onSelect: () => void clearToPlaceholder(),
           },
         ]
       : []),
   ];
-  const working = pdfBusy || exporting || cloning || painting;
+  const working = pdfBusy || exporting || cloning || painting || portraitSaving;
 
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 p-4 sm:p-6">
       <AppHeader />
       <ContextMenu items={actions} label={character.name} className={cn(ui.card, "ornate texture-noise mb-4 p-4 sm:p-5")}>
         <Link href="/characters" className="-my-1 inline-flex min-h-10 items-center gap-1.5 text-sm text-stone-400 hover:text-amber-200">
-          <ArrowLeft className="size-4" /> Back to your characters
+          <ArrowLeft className="size-4" /> {t("library.back")}
         </Link>
         <div className="mt-2 flex items-start gap-4">
           <span className="relative shrink-0">
@@ -324,7 +294,7 @@ export default function CharacterDetailPage({
               />
             ) : portraitPending ? (
               <span
-                title="Painting portrait..."
+                title={t("library.paintingPortrait")}
                 className="flex size-20 shrink-0 items-center justify-center rounded-xl border border-amber-500/30 bg-stone-900 sm:size-24"
               >
                 <Loader2 className="size-5 animate-spin text-amber-200" />
@@ -351,14 +321,14 @@ export default function CharacterDetailPage({
             <p className="mt-1 text-sm text-stone-400">
               <span className="mr-1.5 inline-flex items-center gap-1 rounded-full border border-amber-500/30 bg-amber-400/10 py-0.5 pl-0.5 pr-2 text-[11px] text-amber-200">
                 <GameIcon icon={{ kind: "glyph", key: "rest-level-up" }} size="size-5" />
-                Level {character.level}
+                {t("library.level", { level: character.level })}
               </span>
-              {titleCase(character.race)} {titleCase(character.class)}
-              {character.subclass ? ` (${character.subclass})` : ""}
-              {character.background ? ` · ${titleCase(character.background)}` : ""}
+              {characterLabel("race", character.race, locale)} {characterLabel("class", character.class, locale)}
+              {character.subclass ? ` (${subclassLabel(character.class, character.subclass, locale)})` : ""}
+              {character.background ? ` · ${characterLabel("background", character.background, locale)}` : ""}
             </p>
             {!sheet.portrait && character.portraitStatus === "failed" ? (
-              <p className="reveal mt-1 text-xs text-stone-500">Portrait couldn&apos;t be generated.</p>
+              <p className="reveal mt-1 text-xs text-stone-500">{t("library.portraitFailedHint")}</p>
             ) : null}
             {/* Each campaign holds its own copy of this sheet, so one library
                 entry can be at several tables at once. Naming them is what
@@ -383,37 +353,41 @@ export default function CharacterDetailPage({
                   </Link>
                 ))
               ) : (
-                <span className="text-xs text-stone-500">Not in a campaign yet.</span>
+                <span className="text-xs text-stone-500">{t("library.noCampaign")}</span>
               )}
             </div>
           </div>
         </div>
         <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-amber-500/15 pt-3">
           <button type="button" onClick={() => setSeating(true)} className={cn(ui.btnPrimary, "min-w-0 flex-1 sm:flex-none")}>
-            <GameIcon icon={{ kind: "glyph", key: "tab-campaigns" }} size="size-6" /> Use in a campaign
+            <GameIcon icon={{ kind: "glyph", key: "tab-campaigns" }} size="size-6" /> {t("seat.action")}
           </button>
           <KebabMenu
             items={actions}
-            label={`More actions for ${character.name}`}
+            label={t("library.moreActions", { name: character.name })}
             heading={character.name}
             busy={working}
           />
           {working || portraitPending ? (
             <span role="status" className="live-in text-xs text-stone-400">
               {pdfBusy
-                ? "Preparing the PDF..."
+                ? t("characterActions.pdfStatus")
                 : exporting
-                  ? "Exporting..."
+                  ? t("characterActions.exportBusy")
                   : cloning
-                    ? "Copying..."
-                    : "Painting the portrait..."}
+                    ? t("characterActions.copyBusy")
+                    : portraitSaving
+                      ? t("characterActions.portraitSaving")
+                      : t("characterActions.paintStatus")}
             </span>
           ) : null}
         </div>
-        {exportError ? <p role="alert" className="motion-shake mt-2 text-sm text-red-400">{exportError}</p> : null}
-        {portraitError ? <p role="alert" className="motion-shake mt-2 text-sm text-red-400">{portraitError}</p> : null}
+        {exportError ? <p role="alert" className="motion-shake mt-2 text-sm text-ember-600">{characterErrorText(exportError, locale)}</p> : null}
+        {portraitError ? <p role="alert" className="motion-shake mt-2 text-sm text-ember-600">{characterErrorText(portraitError, locale)}</p> : null}
       </ContextMenu>
 
+      {actionError ? <p role="alert" className="mb-3 text-sm text-ember-600">{characterErrorText(actionError, locale)}</p> : null}
+      {pollError ? <LoadFailed error={characterErrorText(pollError, locale)} onRetry={() => { pollCount.current = 0; setPollError(null); setReloads((count) => count + 1); }} /> : null}
       <SheetSections sheet={sheet} level={character.level} />
       <div className="mt-4">
         <StorySoFar events={events} />
@@ -431,8 +405,9 @@ export default function CharacterDetailPage({
 
       {cropping ? (
         <AvatarCropDialog
-          title={`Portrait for ${character.name}`}
-          onUploaded={(image) => void handlePortraitUploaded(image)}
+          saveFailureKey="library.portraitError"
+          title={t("library.portraitTitle", { name: character.name })}
+          onUploaded={handlePortraitUploaded}
           onClose={() => setCropping(false)}
         />
       ) : null}

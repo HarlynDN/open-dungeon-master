@@ -1,12 +1,14 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { characterLabel, skillLabel } from "@/lib/i18n/character-presentations";
+import { builderToolChoicesText } from "@/lib/i18n/builder-presentations";
 import { UnofficialPackNotice } from "@/components/UnofficialPackNotice";
 import { GameTerm } from "@/components/ui/GameTerm";
 import { InfoButton } from "@/components/ui/InfoDialog";
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import { Select } from "@/components/ui/Select";
-import { describeSkill } from "@/lib/help";
-import { SRD_SKILLS } from "@/lib/srd";
+import { skillHelpText } from "@/lib/i18n/game-help-presentations";
 import type { WorldPack } from "@/lib/worlds/types";
 import OptionPicker, { type PickerGroup } from "../OptionPicker";
 import { backgroundInfoText } from "../usePickerGroups";
@@ -15,9 +17,8 @@ import type { BuilderState } from "../useBuilderState";
 import { splitToolGrants } from "@/lib/srd/tool-choices";
 import { Field, StepPanel, inputClass } from "./shared";
 
-const GENDERS = ["Female", "Male", "Nonbinary"];
-// How many tools a background's open grant leaves to the player, in words.
-const COUNT_WORDS: Record<number, string> = { 1: "one", 2: "two", 3: "three" };
+const GENDERS = ["Female", "Male", "Nonbinary"] as const;
+const CONTENT_IMPORT_COMMAND = "node scripts/import-open5e.mjs";
 
 export type BuilderRole = "pc" | "companion";
 
@@ -47,13 +48,12 @@ export function IdentityStep({
   backgroundGroups: PickerGroup[];
   background: BackgroundOption | undefined;
 }) {
+  const { locale, t } = useLocale();
   return (
     <div className="space-y-4">
       {!packInstalled ? (
         <p className="rounded-lg border border-stone-700/60 bg-stone-900/60 p-3 text-xs text-stone-400">
-          Content pack not installed; showing SRD 5.1 basics only. Run
-          <span className="font-mono"> node scripts/import-open5e.mjs</span> on the server
-          for the full Open5e catalog.
+          {t("builderIdentity.packNotice", { command: CONTENT_IMPORT_COMMAND })}
         </p>
       ) : null}
       {pack ? (
@@ -62,7 +62,7 @@ export function IdentityStep({
             <span className="font-medium">{pack.name}</span> · {pack.blurb}
           </p>
           <p className="mt-1 text-[11px] text-stone-400">
-            Names only. Every race, class, spell and item below plays by the same 5e rules.
+            {t("builderIdentity.reskin")}
           </p>
           <UnofficialPackNotice
             rightsHolder={pack.rightsHolder}
@@ -73,15 +73,15 @@ export function IdentityStep({
         </div>
       ) : null}
 
-      <StepPanel title="Name your hero" ornate anchor="name">
+      <StepPanel title={t("builderIdentity.heroName")} ornate anchor="name">
         <input
           value={state.name}
           onChange={(event) => state.setName(event.target.value)}
           required
           maxLength={60}
-          placeholder={pack?.nameHints || "Thornwick Ashvale"}
+          placeholder={pack?.nameHints || t("builderIdentity.nameExample")}
           className={inputClass}
-          aria-label="Name"
+          aria-label={t("builderIdentity.name")}
         />
         {pack?.nameSeeds.people.length ? (
           <span className="mt-2 flex flex-wrap gap-1">
@@ -99,53 +99,53 @@ export function IdentityStep({
         ) : null}
         {role ? (
           <div className="mt-4">
-            <span className="mb-1.5 block text-xs text-stone-400">Their place at the table</span>
+            <span className="mb-1.5 block text-xs text-stone-400">{t("builderIdentity.place")}</span>
             <SegmentedControl
-              label="Role"
+              label={t("builderIdentity.role")}
               value={role.value}
               onChange={role.onChange}
               options={[
-                { value: "pc", label: "A character I play" },
-                { value: "companion", label: "An ally the DM plays" },
+                { value: "pc", label: t("builderIdentity.pc") },
+                { value: "companion", label: t("builderIdentity.companion") },
               ]}
               className="w-full"
             />
             <p className="mt-1.5 text-xs text-stone-500">
               {role.value === "companion"
-                ? "Companions are offered when a party adds one, at whatever level that table plays at. Nobody has to roll them up again."
-                : "Joins a campaign as yours to control."}
+                ? t("builderIdentity.companionHelp")
+                : t("builderIdentity.pcHelp")}
             </p>
           </div>
         ) : null}
       </StepPanel>
 
-      <StepPanel title="Details">
+      <StepPanel title={t("builderIdentity.details")}>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <Field label="Gender">
+          <Field label={t("builderIdentity.gender")}>
             <Select<string>
               value={state.gender}
               onChange={state.setGender}
-              label="Gender"
+              label={t("builderIdentity.gender")}
               className="w-full"
-              options={[{ value: "", label: "Unspecified" }, ...GENDERS.map((value) => ({ value: value as string, label: value as string }))]}
+              options={[{ value: "", label: t("builderIdentity.unspecified") }, ...GENDERS.map((value) => ({ value, label: t(`builderIdentity.gender.${value}`) }))]}
             />
           </Field>
-          <Field label="Level">
+          <Field label={t("builderIdentity.level")}>
             {fixedLevel ? (
               <span className="block rounded-lg border border-stone-700/70 bg-stone-950/60 px-3 py-2 text-sm text-stone-400">
-                {fixedLevel} (campaign)
+                {t("builderIdentity.campaignLevel", { level: fixedLevel })}
               </span>
             ) : (
               <Select<string>
                 value={String(state.level)}
                 onChange={(next) => state.changeLevel(Number(next))}
-                label="Level"
+                label={t("builderIdentity.level")}
                 className="w-full"
                 options={Array.from({ length: 20 }, (_, index) => ({ value: String(index + 1), label: String(index + 1) }))}
               />
             )}
           </Field>
-          <Field label="Background">
+          <Field label={t("builderIdentity.background")}>
             <OptionPicker
               value={background?.id ?? ""}
               groups={backgroundGroups}
@@ -155,11 +155,10 @@ export function IdentityStep({
             {background ? (
               <span className="mt-1 flex items-start gap-1 text-xs text-stone-500">
                 <span className="grow">
-                  {background.skills.length ? "Grants " : null}
+                  {background.skills.length ? t("builderIdentity.grants") : null}
                   {background.skills.length
                     ? background.skills.map((skillId, index) => {
-                        const name =
-                          SRD_SKILLS.find((skill) => skill.id === skillId)?.name ?? skillId;
+                        const name = skillLabel(skillId, locale);
                         return (
                           <span key={skillId} className="whitespace-nowrap">
                             {index ? ", " : null}
@@ -167,15 +166,15 @@ export function IdentityStep({
                             {/* Each granted skill says what it is, so
                                 "Grants Deception, Sleight of Hand" is a
                                 sentence a new player can read. */}
-                            <InfoButton label={name} text={describeSkill(skillId)} />
+                            <InfoButton label={name} text={skillHelpText(skillId, locale)} />
                           </span>
                         );
                       })
-                    : "What your character did before adventuring."}
+                    : t("builderIdentity.beforeAdventure")}
                   {background.feature ? (
                     <span className="whitespace-nowrap">
                       {background.skills.length ? " · " : " "}
-                      Feature: {background.feature}
+                      {t("builderIdentity.feature", { feature: background.feature })}
                       <InfoButton
                         label={background.feature}
                         text={background.featureDesc || undefined}
@@ -187,7 +186,7 @@ export function IdentityStep({
                   ) : null}
                 </span>
                 <InfoButton
-                  label={background.name}
+                  label={characterLabel("background", background.name, locale)}
                   text={backgroundInfoText(background)}
                   reference={{ kind: "backgrounds", slug: background.id }}
                 />
@@ -197,7 +196,7 @@ export function IdentityStep({
               // What the background asks for on a later step, said here so
               // the hold on step 2 is no surprise (issue #117).
               <span className="mt-1 block text-xs text-stone-500">
-                On the Ancestry step you will pick {background.languages === 1 ? "one more language" : `${background.languages} more languages`} for this background.
+                {t(background.languages === 1 ? "builderIdentity.backgroundLanguagesOne" : "builderIdentity.backgroundLanguages", { count: background.languages })}
               </span>
             ) : null}
             {background?.tools?.length && splitToolGrants(background.tools).choices.length ? (
@@ -205,11 +204,7 @@ export function IdentityStep({
               // tools") is picked on the class step, under the class's own;
               // said here like the languages (issue #117 follow-up).
               <span className="mt-1 block text-xs text-stone-500">
-                On the Calling step you will pick{" "}
-                {splitToolGrants(background.tools)
-                  .choices.map((choice) => `${COUNT_WORDS[choice.count] ?? choice.count} ${choice.label}${choice.count === 1 || choice.label.endsWith("s") ? "" : "s"}`)
-                  .join(" and ")}{" "}
-                for this background.
+                {t("builderIdentity.backgroundTools", { choices: builderToolChoicesText(splitToolGrants(background.tools).choices, locale) })}
               </span>
             ) : null}
             {background?.skillChoice ? (
@@ -219,8 +214,8 @@ export function IdentityStep({
           <Field
             label={
               <span className="flex items-center gap-1">
-                Alignment
-                <InfoButton label="Alignment" text={alignmentInfo} />
+                {t("builderIdentity.alignment")}
+                <InfoButton label={t("builderIdentity.alignment")} text={alignmentInfo} />
               </span>
             }
           >
@@ -237,10 +232,6 @@ export function IdentityStep({
   );
 }
 
-function skillName(skillId: string) {
-  return SRD_SKILLS.find((skill) => skill.id === skillId)?.name ?? skillId;
-}
-
 // The skills a content-pack background leaves to the player ("Persuasion,
 // and either Insight or History"), one select per pick, the way the race's
 // skill choices are asked on the ancestry step.
@@ -253,13 +244,14 @@ function BackgroundSkillChoice({
   background: BackgroundOption;
   choice: NonNullable<BackgroundOption["skillChoice"]>;
 }) {
+  const { locale, t } = useLocale();
   const picks = state.backgroundSkills;
   const taken = new Set([...background.skills, ...state.chosenSkills, ...state.racialSkills]);
   return (
     <div className="mt-2" data-builder-target="backgroundSkills">
       <span className="mb-1 flex flex-wrap items-center gap-1 text-xs text-stone-400">
-        <GameTerm id="skill">Skill</GameTerm> {choice.count === 1 ? "proficiency" : "proficiencies"} (
-        {choice.count} of your choice)
+        <GameTerm id="skill">{t("builderIdentity.skill")}</GameTerm> {t(choice.count === 1 ? "builderIdentity.proficiency" : "builderIdentity.proficiencies")} (
+        {t("builderIdentity.choiceCount", { count: choice.count })})
       </span>
       <div className="grid grid-cols-1 gap-2">
         {Array.from({ length: choice.count }, (_, index) => (
@@ -274,17 +266,17 @@ function BackgroundSkillChoice({
                 })
               }
               className="min-w-0 grow"
-              label={`Background skill ${index + 1}`}
-              placeholder="Choose a skill..."
+              label={t("builderIdentity.backgroundSkill", { index: index + 1 })}
+              placeholder={t("builderIdentity.chooseSkill")}
               options={[
-                { value: "", label: "Choose a skill..." },
+                { value: "", label: t("builderIdentity.chooseSkill") },
                 ...choice.from
                   .filter((skill) => picks[index] === skill || (!picks.includes(skill) && !taken.has(skill)))
-                  .map((skill) => ({ value: skill, label: skillName(skill) })),
+                  .map((skill) => ({ value: skill, label: skillLabel(skill, locale) })),
               ]}
             />
             {picks[index] ? (
-              <InfoButton label={skillName(picks[index])} text={describeSkill(picks[index])} />
+              <InfoButton label={skillLabel(picks[index], locale)} text={skillHelpText(picks[index], locale)} />
             ) : null}
           </span>
         ))}

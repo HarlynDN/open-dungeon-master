@@ -10,6 +10,8 @@ import { cn } from "@/lib/cn";
 import { Dialog } from "@/components/ui/Dialog";
 import type { ItemSheet } from "@/lib/help/item-sheet";
 import { firstSentence, parseRulesBlocks } from "@/lib/help/rules-text";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { itemSheetView } from "@/lib/i18n/equipment-help-presentations";
 
 // The "what does this do?" affordance, used everywhere a game term appears.
 //
@@ -100,6 +102,7 @@ export function renderRules(text: string): ReactNode {
 // Loads a content-pack entry's description on first open, so opening a sheet
 // with forty spells on it costs nothing until one is actually inspected.
 function ContentBody({ reference }: { reference: ContentRef }) {
+  const { t } = useLocale();
   // The table the dialog opened at reads its DMs' homebrew.
   const campaignId = useContentCampaign();
   const [state, setState] = useState<{ text: string | null; loading: boolean }>({
@@ -153,15 +156,14 @@ function ContentBody({ reference }: { reference: ContentRef }) {
   if (state.loading) {
     return (
       <p className="flex items-center gap-2 text-sm text-stone-500">
-        <Loader2 className="size-4 animate-spin" /> Looking it up...
+        <Loader2 className="size-4 animate-spin" /> {t("itemHelp.loading")}
       </p>
     );
   }
   if (!state.text) {
     return (
       <p className="text-sm text-stone-500">
-        No description available. The content pack may not be installed, or this entry was added by
-        hand.
+        {t("itemHelp.noDescription")}
       </p>
     );
   }
@@ -208,6 +210,7 @@ function RuleList({ rows }: { rows: Array<{ label: string; text: string | null }
 // (src/lib/help/item-sheet.ts), so a v1 table row with no prose, a v2 gear
 // row with no stats and a genre item the pack lacks all get a full card.
 function ItemBody({ reference }: { reference: ContentRef }) {
+  const { locale, t } = useLocale();
   const campaignId = useContentCampaign();
   const [state, setState] = useState<{ sheet: ItemSheet | null; loading: boolean }>({
     sheet: null,
@@ -224,7 +227,7 @@ function ItemBody({ reference }: { reference: ContentRef }) {
         const [{ buildItemSheet }, direct, search] = await Promise.all([
           import("@/lib/help/item-sheet"),
           fetch(`/api/content/items/${encodeURIComponent(reference.slug)}${scopeQuery(campaignId)}`).then(readJson).catch(() => null),
-          fetch(`/api/content/items?q=${encodeURIComponent(wanted)}&limit=20${scopeQuery(campaignId, "&")}`).then(readJson).catch(() => null),
+          fetch(`/api/content/items?q=${encodeURIComponent(wanted)}&limit=20&native=1${scopeQuery(campaignId, "&")}`).then(readJson).catch(() => null),
         ]);
         const hits = ((search?.results ?? []) as Array<{ name: string; data?: Record<string, unknown> }>)
           .filter((entry) => entry.name.trim().toLowerCase() === wanted)
@@ -248,67 +251,67 @@ function ItemBody({ reference }: { reference: ContentRef }) {
   if (state.loading) {
     return (
       <p className="flex items-center gap-2 text-sm text-stone-500">
-        <Loader2 className="size-4 animate-spin" /> Looking it up...
+        <Loader2 className="size-4 animate-spin" /> {t("itemHelp.loading")}
       </p>
     );
   }
-  const sheet = state.sheet;
+  const sheet = state.sheet ? itemSheetView(state.sheet, locale) : null;
   if (!sheet) {
     return (
       <p className="text-sm text-stone-500">
-        No details available. The content pack may not be installed, or this item was added by hand.
+        {t("itemHelp.noDetails")}
       </p>
     );
   }
 
   const tags = [
     sheet.rarity,
-    sheet.attunement ? "Requires attunement" : null,
-    sheet.bonus ? `+${sheet.bonus} magic` : null,
+    sheet.attunement ? t("itemHelp.attunement") : null,
+    sheet.bonus ? t("itemHelp.magicBonus", { bonus: sheet.bonus }) : null,
   ].filter((tag): tag is string => Boolean(tag));
   const tiles: Array<{ label: string; value: string | null; note?: string | null }> = [
-    { label: "Weight", value: sheet.weight },
-    { label: "Value", value: sheet.cost },
+    { label: t("itemHelp.weight"), value: sheet.weight },
+    { label: t("itemHelp.value"), value: sheet.cost },
   ];
   if (sheet.armor) {
-    tiles.push({ label: sheet.armor.shield ? "AC bonus" : "Armor class", value: sheet.armor.ac });
+    tiles.push({ label: sheet.armor.shield ? t("itemHelp.acBonus") : t("itemHelp.ac"), value: sheet.armor.ac });
   }
   if (sheet.weapon) {
     tiles.push({
-      label: "Damage",
-      value: sheet.weapon.damage ?? "None",
+      label: t("itemHelp.damage"),
+      value: sheet.weapon.damage ?? t("itemHelp.none"),
       note: sheet.weapon.damageType,
     });
     if (sheet.weapon.range) {
-      tiles.push({ label: "Range", value: sheet.weapon.range });
+      tiles.push({ label: t("itemHelp.range"), value: sheet.weapon.range });
     }
   }
 
   const armorRows: Array<{ label: string; text: string | null }> = [];
   if (sheet.armor) {
     if (sheet.armor.shield) {
-      armorRows.push({ label: "Shield", text: "Carried in one hand; only one shield counts at a time." });
+      armorRows.push({ label: t("itemHelp.shield"), text: t("itemHelp.shieldRule") });
     }
     if (sheet.armor.dex) {
-      armorRows.push({ label: "Dexterity", text: sheet.armor.dex });
+      armorRows.push({ label: t("itemHelp.dexterity"), text: sheet.armor.dex });
     }
     armorRows.push({
-      label: "Strength",
+      label: t("itemHelp.strength"),
       text: sheet.armor.strength
-        ? `Needs ${sheet.armor.strength}; below that, your speed drops by 10 feet while wearing it.`
-        : "No minimum.",
+        ? t("itemHelp.strengthRule", { strength: sheet.armor.strength })
+        : t("itemHelp.noMinimum"),
     });
     armorRows.push({
-      label: "Stealth",
+      label: t("itemHelp.stealth"),
       text: sheet.armor.stealthDisadvantage
-        ? "Disadvantage on Dexterity (Stealth) checks while wearing it."
-        : "No penalty.",
+        ? t("itemHelp.stealthRule")
+        : t("itemHelp.noPenalty"),
     });
   }
   const weaponRows: Array<{ label: string; text: string | null }> = [];
   if (sheet.weapon) {
     if (sheet.bonus) {
-      weaponRows.push({ label: `+${sheet.bonus} weapon`, text: `Adds ${sheet.bonus} to attack and damage rolls.` });
+      weaponRows.push({ label: t("itemHelp.weaponBonus", { bonus: sheet.bonus }), text: t("itemHelp.weaponBonusRule", { bonus: sheet.bonus }) });
     }
     for (const property of sheet.weapon.properties) {
       weaponRows.push({ label: property.name, text: property.blurb });
@@ -317,7 +320,7 @@ function ItemBody({ reference }: { reference: ContentRef }) {
       weaponRows.push({ label: `${capitalize(sheet.weapon.damageType)}`, text: sheet.weapon.damageBlurb });
     }
     if (!sheet.weapon.damage) {
-      weaponRows.push({ label: "No damage", text: "It does not hurt on its own; its special rules say what it does." });
+      weaponRows.push({ label: t("itemHelp.noDamage"), text: t("itemHelp.noDamageRule") });
     }
   }
 
@@ -342,17 +345,17 @@ function ItemBody({ reference }: { reference: ContentRef }) {
         ))}
       </div>
       {armorRows.length ? (
-        <ItemSection title="Armor">
+        <ItemSection title={t("itemHelp.armor")}>
           <RuleList rows={armorRows} />
         </ItemSection>
       ) : null}
       {weaponRows.length ? (
-        <ItemSection title="Weapon">
+        <ItemSection title={t("itemHelp.weapon")}>
           <RuleList rows={weaponRows} />
         </ItemSection>
       ) : null}
       {sheet.description ? (
-        <ItemSection title="Description">
+        <ItemSection title={t("itemHelp.description")}>
           <div className="space-y-2 border-t border-stone-800 pt-2">{renderRules(sheet.description)}</div>
         </ItemSection>
       ) : null}
@@ -368,6 +371,7 @@ function capitalize(text: string): string {
 // description, or omit it and pass `reference` to fetch one.
 export function InfoButton({
   label,
+  ariaLabel,
   text,
   reference,
   meta,
@@ -376,6 +380,8 @@ export function InfoButton({
   size = "sm",
 }: {
   label: string;
+  // Some callers supply a complete question as the dialog title.
+  ariaLabel?: string;
   text?: string | null;
   reference?: ContentRef;
   // A short line under the title: spell level and school, feature level, and
@@ -387,6 +393,7 @@ export function InfoButton({
   className?: string;
   size?: "sm" | "md";
 }) {
+  const { t } = useLocale();
   const [open, setOpen] = useState(false);
   // Nothing to say and nothing to look up: render no control at all rather
   // than a button that opens an empty box.
@@ -402,7 +409,8 @@ export function InfoButton({
           event.stopPropagation();
           setOpen(true);
         }}
-        aria-label={`What is ${label}?`}
+        data-info-trigger
+        aria-label={ariaLabel ?? t("field.whatIs", { label })}
         className={cn(
           "inline-flex shrink-0 items-center justify-center rounded-full text-stone-500 transition-colors hover:text-amber-200",
           className,
@@ -441,6 +449,7 @@ export function InfoChipList({
   }>;
   emptyText?: string;
 }) {
+  const { t } = useLocale();
   if (!items.length) {
     return emptyText ? <p className="text-xs text-stone-500">{emptyText}</p> : null;
   }
@@ -457,7 +466,7 @@ export function InfoChipList({
                   <span className="min-w-0">
                     <span className="block font-display text-[13px] tracking-wide text-amber-100">{item.name}</span>
                     {item.meta ? <span className="block text-[10px] uppercase tracking-wider text-stone-500">{item.meta}</span> : null}
-                    <span className="mt-0.5 block text-stone-300">{line ?? "Select the mark beside it for the full entry."}</span>
+                    <span className="mt-0.5 block text-stone-300">{line ?? t("itemHelp.openEntry")}</span>
                   </span>
                 </span>
               }

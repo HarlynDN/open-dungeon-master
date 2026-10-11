@@ -1,6 +1,12 @@
 "use client";
 
 import { Star } from "lucide-react";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { localizedArmorClassLine, localizedPurseView } from "@/lib/i18n/gear-ui-presentations";
+import { builderOptionName } from "@/lib/i18n/builder-picker-presentations";
+import { spellChoiceNoticeText, spellStarterText, type SpellChoiceNotice } from "@/lib/i18n/spell-ui-presentations";
+import { characterLabel } from "@/lib/i18n/character-presentations";
+import type { RuleProblem } from "@/lib/characters/problems";
 import { useState, useSyncExternalStore } from "react";
 import { SpellBook, type SpellTile } from "@/components/sheet/SpellBook";
 import { useSpellLookups, useSpellPool } from "@/components/sheet/useSpellPool";
@@ -11,7 +17,6 @@ import { bundledSpellSchool } from "@/lib/srd/spell-facts";
 import { thirdCasterSchoolProblem } from "@/lib/srd/third-caster";
 import { displayName } from "@/lib/worlds/reskin-logic";
 import type { WorldPack } from "@/lib/worlds/types";
-import { armorClassLine, purseViewFor } from "../derivedReasons";
 import BackgroundKitSection from "../BackgroundKitSection";
 import EquipmentSection from "../EquipmentSection";
 import KitChoicesSection from "../KitChoicesSection";
@@ -43,7 +48,8 @@ export function SpellsGearStep({
   table: TableRulesState;
   pack: WorldPack | null;
 }) {
-  const purse = purseViewFor({
+  const { locale } = useLocale();
+  const purse = localizedPurseView({
     purse: derived.purse,
     keepsStoredGear: state.keepsStoredGear,
     backgroundName: background?.name ?? "chosen",
@@ -51,6 +57,9 @@ export function SpellsGearStep({
     classId: klass?.id ?? "",
     className: klass?.name ?? "character",
     table,
+  }, locale, {
+    className: klass ? builderOptionName("class", klass, locale) : "character",
+    backgroundName: background ? builderOptionName("background", background, locale) : "chosen",
   });
   return (
     <div className="space-y-4">
@@ -73,8 +82,8 @@ export function SpellsGearStep({
                 kit={derived.classKit}
                 choices={derived.kitChoices}
                 training={derived.kitTraining}
-                className={klass.name.toLowerCase()}
-                armorClass={armorClassLine(derived.acInfo?.ac ?? derived.ac, derived.acInfo?.parts)}
+                className={locale === "en" ? klass.name.toLowerCase() : builderOptionName("class", klass, locale)}
+                armorClass={localizedArmorClassLine(derived.acInfo?.ac ?? derived.ac, derived.acInfo?.parts, locale, derived.fullEquipment.filter(item => item.slug?.startsWith("homebrew:")).map(item => item.name))}
                 onOption={actions.chooseKitOption}
                 onPick={actions.pickKitSlot}
               />
@@ -82,7 +91,7 @@ export function SpellsGearStep({
             {background && !state.keepsStoredGear ? (
               <BackgroundKitSection
                 kit={derived.backgroundKit}
-                backgroundName={background.name}
+                backgroundName={builderOptionName("background", background, locale)}
                 onPick={actions.pickBackgroundGear}
               />
             ) : null}
@@ -110,6 +119,7 @@ function SpellsSection({
   klass: ClassOption;
   pack: WorldPack | null;
 }) {
+  const { locale, t } = useLocale();
   const { spells, setSpells, cantrips, setCantrips, bookPrepared, setBookPrepared } = state;
   const {
     spellAdvice,
@@ -135,7 +145,7 @@ function SpellsSection({
   const wizard = spellStyle === "spellbook";
   // A wizard fills the book first, then prepares from it.
   const [phase, setPhase] = useState<"book" | "prepare">("book");
-  const [limitNote, setLimitNote] = useState("");
+  const [limitNote, setLimitNote] = useState<SpellChoiceNotice | null>(null);
   // See SpellBook: the chosen tab is announced after mount so the travelling
   // pill never lands on server-rendered markup before hydration.
   const mounted = useSyncExternalStore(noSubscribe, () => true, () => false);
@@ -160,8 +170,9 @@ function SpellsSection({
     name: spell,
     school: poolByName.get(lower(spell))?.data?.school ?? bundledSpellSchool(spell),
   });
-  const offSchool = (name: string) =>
+  const offSchool = (name: string, details?: RuleProblem[]) =>
     thirdCasterSchoolProblem({
+      onProblem: details ? detail => details.push(detail) : undefined,
       classId: klass.id,
       subclass: state.subclass,
       level: state.level,
@@ -170,6 +181,10 @@ function SpellsSection({
   const suggested = new Set(
     [...(starters?.cantrips ?? []), ...(starters?.spells ?? [])].map((entry) => lower(entry.n)),
   );
+  const noticeSpell = (name: string) => ({
+    name, label: displayName(pack, "spells", name),
+    homebrew: (poolByName.get(lower(name)) ?? lookups.get(lower(name)))?.source === "homebrew",
+  });
 
   function toggleCantrip(name: string) {
     if (has(cantrips, name)) {
@@ -177,9 +192,7 @@ function SpellsSection({
       return;
     }
     if (cantripCap !== null && chosenCantrips.length >= cantripCap) {
-      setLimitNote(
-        `You already know ${cantripCap} ${cantripCap === 1 ? "cantrip" : "cantrips"}. Remove one to choose ${name}.`,
-      );
+      setLimitNote({ key: cantripCap === 1 ? "spellUi.cantripLimitOne" : "spellUi.cantripLimitMany", args: { count: cantripCap }, spell: noticeSpell(name) });
       return;
     }
     setCantrips((current) => [...current, name]);
@@ -194,16 +207,13 @@ function SpellsSection({
     // school rule.
     const cap = wizard ? bookCap : spellCap;
     if (cap !== null && chosenSpells.length >= cap) {
-      setLimitNote(
-        wizard
-          ? `Your spellbook starts with ${cap} spells. Remove one to write in ${name}.`
-          : `You already have ${cap} ${spellAdvice?.label ?? "spells"}. Remove one to choose ${name}.`,
-      );
+      setLimitNote({ key: wizard ? "spellUi.bookLimit" : "spellUi.spellLimit", args: { count: cap }, spell: noticeSpell(name), countLabel: spellAdvice?.label ?? "spells" });
       return;
     }
-    const school = offSchool(name);
+    const details: RuleProblem[] = [];
+    const school = offSchool(name, details);
     if (school) {
-      setLimitNote(school);
+      setLimitNote({ english: school, details });
       return;
     }
     setSpells((current) => [...current, name]);
@@ -214,14 +224,14 @@ function SpellsSection({
       return;
     }
     if (spellCap !== null && chosenPrepared.length >= spellCap) {
-      setLimitNote(`You can prepare ${spellCap} spells. Unprepare one to prepare ${name}.`);
+      setLimitNote({ key: "spellUi.prepareLimit", args: { count: spellCap }, spell: noticeSpell(name) });
       return;
     }
     setBookPrepared((current) => [...current, name]);
   }
 
   function onTile(tile: SpellTile) {
-    setLimitNote("");
+    setLimitNote(null);
     if (tile.level === 0) {
       toggleCantrip(tile.name);
     } else if (wizard && phase === "prepare") {
@@ -248,7 +258,7 @@ function SpellsSection({
       .map((entry) => entry.n)
       .filter((name) => !has(spells, name) && !isGranted(name))
       .slice(0, Math.max(0, spellRoom));
-    setLimitNote("");
+    setLimitNote(null);
     setCantrips((current) => [...current, ...newCantrips]);
     setSpells((current) => [...current, ...newSpells]);
     if (wizard) {
@@ -268,21 +278,21 @@ function SpellsSection({
   const listCap = wizard ? bookCap : spellCap;
   const listFull = listCap !== null && chosenSpells.length >= listCap;
   const preparedFull = spellCap !== null && chosenPrepared.length >= spellCap;
-  const listFullText = wizard ? "Spellbook full" : spellStyle === "known" ? "Known spells full" : "Prepared list full";
+  const listFullText = t(wizard ? "spellUi.bookFull" : spellStyle === "known" ? "spellUi.knownFull" : "spellUi.preparedFull");
   const blockedFor = (name: string, level: number | null, tileState: SpellTile["state"]) => {
     if (tileState === "inBook") {
-      return phase === "prepare" && preparedFull ? "Prepared list full" : undefined;
+      return phase === "prepare" && preparedFull ? t("spellUi.preparedFull") : undefined;
     }
     if (tileState !== "available") {
       return undefined;
     }
     if (level === 0) {
-      return cantripsFull ? "Cantrips full" : undefined;
+      return cantripsFull ? t("spellUi.cantripsFull") : undefined;
     }
     if (listFull) {
       return listFullText;
     }
-    return offSchool(name) ? "Outside your two schools" : undefined;
+    return offSchool(name) ? t("spellUi.outsideSchools") : undefined;
   };
 
   // Every tile: the class list from the pack, plus anything chosen or
@@ -328,7 +338,7 @@ function SpellsSection({
         data: row?.data,
         slug: row?.slug,
         homebrew: row?.source === "homebrew",
-        ...(level === 0 && isRacial(name) ? { note: "From your race" } : isFeat(name) ? { note: "From your feat" } : {}),
+        ...(level === 0 && isRacial(name) ? { note: t("spellUi.raceNote") } : isFeat(name) ? { note: t("spellUi.featNote") } : {}),
         ...(row?.document && row.documentSlug !== "wotc-srd" ? { source: row.document } : {}),
       },
     ];
@@ -336,15 +346,15 @@ function SpellsSection({
 
   const counters = [
     ...(cantripAdvice !== null
-      ? [{ label: "Cantrips", value: chosenCantrips.length, max: cantripAdvice }]
+      ? [{ label: t("spellUi.cantrips"), value: chosenCantrips.length, max: cantripAdvice }]
       : []),
     ...(wizard && spellbookAdvice !== null
-      ? [{ label: "Spellbook", value: chosenSpells.length, max: spellbookAdvice }]
+      ? [{ label: t("spellUi.spellbook"), value: chosenSpells.length, max: spellbookAdvice }]
       : []),
     ...(spellAdvice
       ? [
           {
-            label: spellStyle === "known" ? "Known" : "Prepared",
+            label: t(spellStyle === "known" ? "spellUi.known" : "spellUi.prepared"),
             value: wizard ? chosenPrepared.length : chosenSpells.length,
             max: spellAdvice.count,
           },
@@ -352,31 +362,30 @@ function SpellsSection({
       : []),
   ];
 
-  const className = klass.name.toLowerCase();
+  const className = locale === "en" ? klass.name.toLowerCase() : builderOptionName("class", klass, locale);
   return (
     <StepPanel
-      title="Spells"
+      title={t("spellUi.spells")}
       ornate
       anchor="spells"
       help={
         <>
-          <GameTerm id="cantrip">Cantrips</GameTerm> are small spells you know for good and cast as
-          often as you like.{" "}
+          <GameTerm id="cantrip">{t("spellUi.cantrips")}</GameTerm>{t("spellUi.cantripHelp")}{" "}
           {spellStyle === "known"
-            ? `A ${className} knows a fixed set of spells, always ready to cast with a spell slot. You can swap one each time you level up.`
+            ? t("spellUi.knownHelp", { class: className })
             : wizard
-              ? "A wizard writes spells in a spellbook, then prepares some of them to cast. Fill the book first, then choose what is prepared. In play you change what is prepared after a long rest."
-              : `A ${className} can prepare any spell on the ${className} list. Choose what you start with prepared; in play you change them after a long rest.`}{" "}
-          Tap a spell to choose it; ⓘ reads it first.
+              ? t("spellUi.bookHelp")
+              : t("spellUi.preparedHelp", { class: className })}{" "}
+          {t("spellUi.tapHelp")}
         </>
       }
     >
       {wizard ? (
-        <div role="tablist" aria-label="Spellbook step" className="mb-3 grid grid-cols-2 gap-1.5">
+        <div role="tablist" aria-label={t("spellUi.bookStep")} className="mb-3 grid grid-cols-2 gap-1.5">
           {(
             [
-              ["book", "1. Write your spellbook", `${chosenSpells.length}/${spellbookAdvice ?? "?"}`],
-              ["prepare", "2. Prepare from it", `${chosenPrepared.length}/${spellAdvice?.count ?? "?"}`],
+              ["book", t("spellUi.writeBook"), `${chosenSpells.length}/${spellbookAdvice ?? "?"}`],
+              ["prepare", t("spellUi.prepareBook"), `${chosenPrepared.length}/${spellAdvice?.count ?? "?"}`],
             ] as const
           ).map(([key, label, count]) => (
             <button
@@ -386,7 +395,7 @@ function SpellsSection({
               aria-selected={mounted && phase === key}
               onClick={() => {
                 setPhase(key);
-                setLimitNote("");
+                setLimitNote(null);
               }}
               className={cn(
                 "rounded-lg border px-3 py-2 text-left text-xs transition-colors",
@@ -404,13 +413,13 @@ function SpellsSection({
       {starters ? (
         <p className="mb-2 text-xs text-stone-400">
           <Star className="mr-1 inline size-3 fill-amber-300 text-amber-300" aria-hidden="true" />
-          {starters.why}{" "}
+          {spellStarterText(starters.why, locale)}{" "}
           <button
             type="button"
             onClick={addSuggested}
             className="text-amber-300 underline-offset-2 hover:underline"
           >
-            Fill with the suggested spells
+            {t("spellUi.fillSuggested")}
           </button>
         </p>
       ) : null}
@@ -419,17 +428,17 @@ function SpellsSection({
         maxLevel={maxSpellLevel}
         counters={counters}
         onTile={onTile}
-        notice={limitNote || undefined}
+        notice={spellChoiceNoticeText(limitNote, locale) || undefined}
         emptyText={
           loading
-            ? "Loading the spell list..."
+            ? t("spellUi.loading")
             : wizard && phase === "prepare"
-              ? "Nothing in your spellbook at this level."
-              : "No spells at this level."
+              ? t("spellUi.emptyBook")
+              : t("spellUi.emptyLevel")
         }
         header={
           klass.genres ? (
-            <span className="text-stone-500">Counts follow the {spellSearchClass} list this class borrows.</span>
+            <span className="text-stone-500">{t("spellUi.borrowedList", { class: locale === "en" ? spellSearchClass : characterLabel("class", spellSearchClass, locale) })}</span>
           ) : null
         }
       />

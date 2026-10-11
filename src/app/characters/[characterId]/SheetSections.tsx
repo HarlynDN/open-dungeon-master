@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { characterEventLabel, derivedLabel } from "@/lib/i18n/character-presentations";
+import { accountDate } from "@/lib/i18n/account-presentations";
 import { EmptyState } from "@/components/EmptyState";
 import { BookOpen } from "lucide-react";
 import type { ReactNode } from "react";
@@ -26,15 +29,6 @@ export type CharacterEvent = {
   createdAt: string;
 };
 
-const KIND_LABELS: Record<string, string> = {
-  achievement: "Achievement",
-  item: "Treasure",
-  relationship: "Bond",
-  death: "Death",
-  level_up: "Level up",
-  story: "Story",
-};
-
 // A titled block of the read-only sheet: Ribbon rule, then whatever the
 // section shows. Same shape as the builder's StepPanel so the detail page
 // reads like the wizard that made it.
@@ -59,6 +53,7 @@ function SheetPanel({
 // spells, equipment, features, feats, backstory. Read-only; editing happens
 // through the builder in a campaign lobby.
 export function SheetSections({ sheet, level = 1 }: { sheet: CreateSheetInput; level?: number }) {
+  const { locale, t } = useLocale();
   // The same working the session sheet shows, from the same function, so a
   // library character reads its saves and skills before it ever sits down.
   const derived = computeSheetDerived({
@@ -71,10 +66,10 @@ export function SheetSections({ sheet, level = 1 }: { sheet: CreateSheetInput; l
     feats: sheet.feats,
     equipment: sheet.equipment,
   });
-  const explain = (parts: DerivedPart[]) => parts.map((part) => `${formatModifier(part.value)} ${part.label}`).join(", ");
+  const explain = (parts: DerivedPart[]) => parts.map((part) => `${formatModifier(part.value)} ${derivedLabel(part.label, locale)}`).join(t("sheet.separator"));
   return (
     <div className="space-y-4">
-      <SheetPanel title="Abilities" className="ornate">
+      <SheetPanel title={t("sheet.abilities")} className="ornate">
         <AbilityTiles
           abilities={sheet.abilities}
           mods={derived.abilityMods}
@@ -85,39 +80,39 @@ export function SheetSections({ sheet, level = 1 }: { sheet: CreateSheetInput; l
         <div className="mt-3">
           <VitalTiles
             vitals={[
-              { glyph: "rest-hp", label: <GameTerm id="hit_points">Hit points</GameTerm>, value: sheet.maxHp },
-              { glyph: "rest-ac", label: <GameTerm id="armor_class">Armor class</GameTerm>, value: sheet.ac },
+              { glyph: "rest-hp", label: <GameTerm id="hit_points">{t("sheet.hitPoints")}</GameTerm>, value: sheet.maxHp },
+              { glyph: "rest-ac", label: <GameTerm id="armor_class">{t("sheet.ac")}</GameTerm>, value: sheet.ac },
               // The speed the engine moves them at: armor and features
               // (speedFor), not the raw base on the sheet.
               {
                 glyph: "rest-speed",
-                label: "Speed",
-                value: `${speedFor(sheet)} ft`,
-                title: speedFor(sheet) === sheet.speed ? "Their walking speed." : `Base ${sheet.speed} ft, changed by what they wear and their features.`,
+                label: t("sheet.speed"),
+                value: t("sheet.feet", { value: speedFor(sheet) }),
+                title: speedFor(sheet) === sheet.speed ? t("sheet.speedHint") : t("sheet.speedChanged", { value: sheet.speed }),
               },
-              { glyph: "coin-gp", label: "Gold", value: `${sheet.gold} gp` },
+              { glyph: "coin-gp", label: t("sheet.gold"), value: t("sheet.gp", { value: sheet.gold }) },
               {
                 glyph: "rest-initiative",
-                label: <GameTerm id="initiative">Initiative</GameTerm>,
+                label: <GameTerm id="initiative">{t("sheet.initiative")}</GameTerm>,
                 value: formatModifier(derived.initiative),
                 title: explain(derived.parts.initiative),
               },
               {
                 glyph: "sense-passive-perception",
-                label: <GameTerm id="passive_perception">Passive perception</GameTerm>,
+                label: <GameTerm id="passive_perception">{t("sheet.passive")}</GameTerm>,
                 value: derived.passivePerception,
                 title: explain(derived.parts.passivePerception),
               },
-              { glyph: "rest-proficiency", label: "Proficiency", value: formatModifier(derived.proficiencyBonus) },
+              { glyph: "rest-proficiency", label: t("sheet.proficiency"), value: formatModifier(derived.proficiencyBonus) },
               ...(derived.spellSaveDc
-                ? [{ glyph: "rest-spell-slot", label: "Spell save DC", value: derived.spellSaveDc, title: explain(derived.parts.spellSaveDc) }]
+                ? [{ glyph: "rest-spell-slot", label: t("sheet.spellDc"), value: derived.spellSaveDc, title: explain(derived.parts.spellSaveDc) }]
                 : []),
             ]}
           />
         </div>
       </SheetPanel>
 
-      <SheetPanel title={<GameTerm id="skill">Skills</GameTerm>}>
+      <SheetPanel title={<GameTerm id="skill">{t("sheet.skills")}</GameTerm>}>
         <SkillRows
           skills={derived.skills}
           proficient={sheet.proficiencies.skills}
@@ -125,36 +120,36 @@ export function SheetSections({ sheet, level = 1 }: { sheet: CreateSheetInput; l
         />
       </SheetPanel>
 
-      <SheetPanel title="Languages and training">
+      <SheetPanel title={t("sheet.training")}>
         <TrainingLines proficiencies={sheet.proficiencies} />
       </SheetPanel>
 
       {sheet.spellcasting ? (
-        <SheetPanel title="Spells">
+        <SheetPanel title={t("sheet.spells")}>
           <SheetSpells sheet={{ ...sheet, level }} />
         </SheetPanel>
       ) : null}
 
       {sheet.equipment.length ? (
-        <SheetPanel title="Equipment">
+        <SheetPanel title={t("sheet.equipment")}>
           <EquipmentChips equipment={sheet.equipment} />
         </SheetPanel>
       ) : null}
 
       {sheet.features?.length ? (
-        <SheetPanel title="Features and traits">
+        <SheetPanel title={t("sheet.features")}>
           <FeatureChips features={sheet.features} classId={sheet.class} subclass={sheet.subclass} />
         </SheetPanel>
       ) : null}
 
       {sheet.feats.length ? (
-        <SheetPanel title="Feats">
+        <SheetPanel title={t("sheet.feats")}>
           <FeatChips feats={sheet.feats} classId={sheet.class} subclass={sheet.subclass} />
         </SheetPanel>
       ) : null}
 
       {sheet.backstory ? (
-        <SheetPanel title="Backstory">
+        <SheetPanel title={t("sheet.backstory")}>
           <p className="whitespace-pre-wrap font-serif text-sm leading-relaxed text-stone-300">
             {sheet.backstory}
           </p>
@@ -167,16 +162,17 @@ export function SheetSections({ sheet, level = 1 }: { sheet: CreateSheetInput; l
 // Milestones the campaigns recorded for this character, newest first as the
 // API returns them, drawn as a timeline down a gold hairline.
 export function StorySoFar({ events }: { events: CharacterEvent[] }) {
+  const { locale, t } = useLocale();
   return (
     <SheetPanel
       title={
         <span className="inline-flex items-center gap-1.5">
-          <BookOpen className="size-3" aria-hidden="true" /> Story so far
+          <BookOpen className="size-3" aria-hidden="true" /> {t("sheet.story")}
         </span>
       }
     >
       {events.length === 0 ? (
-        <EmptyState size="md" art="scrolls" title="Nothing recorded yet. Milestones from campaigns land here: victories, treasures, bonds, and worse." />
+        <EmptyState size="md" art="scrolls" title={t("sheet.noEvents")} />
       ) : (
         <ol className="stagger relative ml-2 space-y-3 border-l border-amber-400/20 pl-5">
           {events.map((event) => (
@@ -187,10 +183,10 @@ export function StorySoFar({ events }: { events: CharacterEvent[] }) {
               />
               <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
                 <span className="eyebrow rounded-sm border border-amber-400/30 bg-amber-400/10 px-1.5 py-0.5 text-[9px] leading-none text-amber-300">
-                  {KIND_LABELS[event.kind] ?? event.kind}
+                  {characterEventLabel(event.kind, locale)}
                 </span>
                 <span className="text-xs text-stone-500">
-                  {new Date(event.createdAt).toLocaleDateString()}
+                  {accountDate(event.createdAt, locale, "short")}
                 </span>
               </div>
               <p className="mt-1 text-stone-200">{event.summary}</p>

@@ -1,5 +1,6 @@
 "use client";
 
+import type { BuilderValidation } from "@/lib/characters/builder-feedback";
 import { authoredFeatDesc } from "@/lib/srd/feat-effects";
 import { toolChoiceOf } from "@/lib/srd/tool-choices";
 import { useEffect, useRef, useState } from "react";
@@ -226,7 +227,7 @@ export function useBuilderState({
   const [acOverride, setAcOverride] = useState<number | null>(
     initial?.acOverride ? initial.ac : null,
   );
-  const [localError, setLocalError] = useState("");
+  const [localError, setLocalError] = useState<BuilderValidation | null>(null);
   // The picks the last change dropped, until the player dismisses the
   // notice or the next change replaces it (issue #124: reconcilePicks named
   // them and nothing showed the list).

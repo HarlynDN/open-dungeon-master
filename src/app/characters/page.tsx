@@ -1,7 +1,8 @@
 "use client";
 
 import { LoadFailed } from "@/app/campaigns/[campaignId]/PanelKit";
-import { readLoad, useLoadStatus } from "@/lib/load-state";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { characterLabel, subclassLabel, characterErrorText, characterRequestError, readCharacterResponse, requireCharacter, requireCharacterList, type CharacterUiError } from "@/lib/i18n/character-presentations";
 import { EmptyState } from "@/components/EmptyState";
 import { appConfirm } from "@/components/ui/ConfirmDialog";
 import { PageSkeleton } from "@/components/PageSkeleton";
@@ -51,94 +52,73 @@ function portraitPending(character: LibraryCharacter) {
 // never resolves the job.
 const PORTRAIT_POLL_LIMIT = 240;
 
-function titleCase(value: string) {
-  return value.replace(/[-_]/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
-}
-
 export default function CharactersPage() {
+  const { locale, t } = useLocale();
+  const [actionError, setActionError] = useState<CharacterUiError | null>(null);
+  const [pollError, setPollError] = useState<CharacterUiError | null>(null);
   const [characters, setCharacters] = useState<LibraryCharacter[]>([]);
   const [loading, setLoading] = useState(true);
   const [authed, setAuthed] = useState(true);
   // A refused or failed read is shown in the server's words with a way to
   // ask again, never as "nothing here yet" (issue 140).
-  const { loaded, loadError, settle } = useLoadStatus();
+  const [loadError, setLoadError] = useState<CharacterUiError | null>(null);
   const [reloads, setReloads] = useState(0);
   const [croppingId, setCroppingId] = useState("");
   const [cloningId, setCloningId] = useState("");
   const [importing, setImporting] = useState(false);
-  const [importError, setImportError] = useState("");
+  const [importError, setImportError] = useState<CharacterUiError | null>(null);
   const cropping = characters.find((character) => character.id === croppingId);
   const pollCount = useRef(0);
   const importInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    readLoad<{ characters?: LibraryCharacter[] }>(fetch("/api/characters"), "Your characters").then((outcome) => {
-      // Signed out: the page says so itself, not as a failed load.
-      if (outcome.error && /answered 401/.test(outcome.error)) {
-        setAuthed(false);
-        setLoading(false);
-        return;
-      }
-      settle(outcome);
-      if (outcome.payload?.characters) {
-        setCharacters(outcome.payload.characters);
-      }
-      setLoading(false);
-    });
-  }, [reloads, settle]);
+    let cancelled = false;
+    readCharacterResponse<{ characters: LibraryCharacter[] }>(fetch("/api/characters"), "library.loadError")
+      .then(requireCharacterList<LibraryCharacter>)
+      .then((rows) => { if (!cancelled) { setCharacters(rows); setAuthed(true); setLoadError(null); setPollError(null); } })
+      .catch((cause) => { if (!cancelled) { const error = characterRequestError(cause, "library.loadError"); if (error.status === 401) setAuthed(false); else setLoadError(error); } })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
+  }, [reloads]);
 
   // While a portrait renders in the background, re-fetch until it lands (or
   // fails); the finished image then appears without a reload.
   useEffect(() => {
-    if (!characters.some(portraitPending) || pollCount.current >= PORTRAIT_POLL_LIMIT) {
-      return;
-    }
+    if (pollError || !characters.some(portraitPending) || pollCount.current >= PORTRAIT_POLL_LIMIT) return;
+    let cancelled = false;
     const id = setTimeout(() => {
       pollCount.current += 1;
-      fetch("/api/characters")
-        .then((response) => (response.ok ? response.json() : null))
-        .then((data) => {
-          if (data?.characters) {
-            setCharacters(data.characters);
-          }
-        });
+      readCharacterResponse<{ characters: LibraryCharacter[] }>(fetch("/api/characters"), "library.pollError")
+        .then(requireCharacterList<LibraryCharacter>)
+        .then((rows) => { if (!cancelled) setCharacters(rows); })
+        .catch((cause) => { if (!cancelled) setPollError(characterRequestError(cause, "library.pollError")); });
     }, 2500);
-    return () => clearTimeout(id);
-  }, [characters]);
+    return () => { cancelled = true; clearTimeout(id); };
+  }, [characters, pollError]);
 
-  async function setPortrait(id: string, url: string) {
-    const response = await fetch(`/api/characters/${id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ portrait: { url } }),
-    });
-    if (response.ok) {
-      setCharacters((current) =>
-        current.map((character) =>
-          character.id === id
-            ? { ...character, sheet: { ...character.sheet, portrait: { url } } }
-            : character,
-        ),
-      );
-    }
+  async function setPortrait(id: string, url: string): Promise<boolean> {
+    setActionError(null);
+    try {
+      const data = await readCharacterResponse<{ character: LibraryCharacter }>(fetch(`/api/characters/${id}`, {
+        method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ portrait: { url } }),
+      }), "library.portraitError");
+      const saved = requireCharacter(data);
+      if (saved.id !== id) throw new Error("Portrait was not acknowledged for this character.");
+      setCharacters((current) => current.map((character) => character.id === id ? { ...character, ...saved, portraitStatus: null } : character));
+      setCroppingId(""); return true;
+    } catch (cause) { setActionError(characterRequestError(cause, "library.portraitError")); return false; }
   }
 
   // A second copy under a numbered name, sheet and portrait verbatim. The
   // copy belongs to no campaign, which is why it starts with no assignments.
   async function duplicate(id: string) {
-    setCloningId(id);
+    setCloningId(id); setActionError(null);
     try {
-      const response = await fetch(`/api/characters/${id}/clone`, { method: "POST" });
-      if (!response.ok) {
-        return;
-      }
-      const data = await response.json().catch(() => ({}));
-      if (data.character) {
-        setCharacters((current) => [data.character, ...current]);
-      }
-    } finally {
-      setCloningId("");
-    }
+      const data = await readCharacterResponse<{ character: LibraryCharacter }>(fetch(`/api/characters/${id}/clone`, { method: "POST" }), "library.cloneError");
+      const copy = requireCharacter(data);
+      setCharacters((current) => [copy, ...current]);
+    } catch (cause) { setActionError(characterRequestError(cause, "library.cloneError")); }
+    finally { setCloningId(""); }
   }
 
   // A character file from this or another server (see
@@ -147,31 +127,22 @@ export default function CharactersPage() {
   // does the real validation and reports the first problem it finds.
   async function importFile(file: File) {
     setImporting(true);
-    setImportError("");
+    setImportError(null);
     try {
       let parsed: unknown;
       try {
         parsed = JSON.parse(await file.text());
       } catch {
-        setImportError(`${file.name} is not a JSON file.`);
+        setImportError({ data: { fileName: file.name }, fallback: "library.importJson" });
         return;
       }
-      const response = await fetch("/api/characters/import", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(parsed),
-      });
-      const data = await response.json().catch(() => ({}));
-      if (!response.ok) {
-        setImportError(data.error || "Import failed.");
-        return;
-      }
-      if (data.character) {
-        setCharacters((current) => [data.character, ...current]);
-      }
-    } catch {
-      setImportError("Import failed.");
-    } finally {
+      const data = await readCharacterResponse<{ character: LibraryCharacter }>(fetch("/api/characters/import", {
+        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(parsed),
+      }), "library.importError");
+      const imported = requireCharacter(data);
+      setCharacters((current) => [imported, ...current]);
+    } catch (cause) { setImportError(characterRequestError(cause, "library.importError")); }
+    finally {
       setImporting(false);
       if (importInput.current) {
         importInput.current.value = "";
@@ -180,13 +151,13 @@ export default function CharactersPage() {
   }
 
   async function remove(id: string, name: string) {
-    if (!await appConfirm(`Delete ${name} from your library? This cannot be undone.`)) {
-      return;
-    }
-    const response = await fetch(`/api/characters/${id}`, { method: "DELETE" });
-    if (response.ok) {
+    if (!await appConfirm(t("library.deleteConfirm", { name }))) return;
+    setActionError(null);
+    try {
+      const data = await readCharacterResponse<{ ok: boolean }>(fetch(`/api/characters/${id}`, { method: "DELETE" }), "library.deleteError");
+      if (data.ok !== true) throw new Error("Character deletion was not acknowledged.");
       setCharacters((current) => current.filter((character) => character.id !== id));
-    }
+    } catch (cause) { setActionError(characterRequestError(cause, "library.deleteError")); }
   }
 
   if (!authed) {
@@ -196,8 +167,7 @@ export default function CharactersPage() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/assets/ui/empty-notice-board.webp" alt="" className="h-24 w-32 object-contain opacity-90" />
           <p className="font-serif text-sm text-stone-300">
-            <Link href="/" className="text-amber-200 hover:text-amber-400">Log in</Link> to see your
-            character library.
+            <Link href="/" className="text-amber-200 hover:text-amber-400">{t("library.login")}</Link>{" "}{t("library.loginHint")}
           </p>
         </div>
       </main>
@@ -211,9 +181,9 @@ export default function CharactersPage() {
         <div className="flex items-center gap-3">
           <GameIcon icon={{ kind: "glyph", key: "tab-characters" }} size="size-12" className="page-glyph" />
           <div>
-            <h1 className="gold-title animate-fade-up font-display text-2xl">Your characters</h1>
+            <h1 className="gold-title animate-fade-up font-display text-2xl">{t("library.title")}</h1>
             <p className="text-sm text-stone-500">
-              Saved to your profile; bring them into any campaign.
+              {t("library.hint")}
             </p>
           </div>
         </div>
@@ -235,35 +205,37 @@ export default function CharactersPage() {
             onClick={() => importInput.current?.click()}
             disabled={importing}
             className={ui.btnSecondary}
-            title="Import a character file exported from this or another server"
+            title={t("library.importHint")}
           >
             {importing ? <Loader2 className="size-4 animate-spin" /> : <FileUp className="size-4" />}
-            Import character
+            {t("library.import")}
           </button>
           <Link href="/characters/new" className={ui.btnPrimary}>
-            <Plus className="size-4" /> New character
+            <Plus className="size-4" /> {t("library.new")}
           </Link>
         </div>
       </header>
       {importError ? (
-        <p role="alert" className="motion-shake mb-4 rounded-lg border border-red-500/30 bg-red-950/30 px-3 py-2 text-sm text-red-300">
-          {importError}
+        <p role="alert" className="motion-shake mb-4 whitespace-pre-line break-words rounded-lg border border-red-500/30 bg-red-950/30 px-3 py-2 text-sm text-red-300">
+          {characterErrorText(importError, locale)}
         </p>
       ) : null}
 
+      {actionError ? <p role="alert" className="mb-3 whitespace-pre-line break-words text-sm text-ember-600">{characterErrorText(actionError, locale)}</p> : null}
+      {pollError ? <LoadFailed error={characterErrorText(pollError, locale)} onRetry={() => { pollCount.current = 0; setPollError(null); setReloads((count) => count + 1); }} /> : null}
       {loading ? (
         <PageSkeleton kind="roster" className="px-0 py-2" />
       ) : loadError ? (
-        <LoadFailed error={loadError} onRetry={() => { setLoading(true); setReloads((current) => current + 1); }} />
+        <LoadFailed error={characterErrorText(loadError, locale)} onRetry={() => { setLoading(true); setReloads((current) => current + 1); }} />
       ) : characters.length === 0 ? (
         <div className={cn(ui.tile, "px-6 py-6")}>
           <EmptyState
             art="board"
-            title="No heroes in the roster yet."
-            hint="Create one here, or one is saved automatically when you join a campaign."
+            title={t("library.empty")}
+            hint={t("library.emptyHint")}
             action={
               <Link href="/characters/new" className={ui.btnSecondary}>
-                <Plus className="size-4" /> New character
+                <Plus className="size-4" /> {t("library.new")}
               </Link>
             }
           />
@@ -271,7 +243,7 @@ export default function CharactersPage() {
       ) : (
         <>
           <Ribbon className="mb-3">
-            Roster · {characters.length}
+            {t("library.roster", { count: characters.length })}
           </Ribbon>
           <ul className="stagger-up grid grid-cols-1 gap-3 sm:grid-cols-2">
             {characters.map((character) => (
@@ -289,11 +261,9 @@ export default function CharactersPage() {
       )}
       {cropping ? (
         <AvatarCropDialog
-          title={`Portrait for ${cropping.name}`}
-          onUploaded={(image) => {
-            setCroppingId("");
-            void setPortrait(cropping.id, image.url);
-          }}
+          saveFailureKey="library.portraitError"
+          title={t("library.portraitTitle", { name: cropping.name })}
+          onUploaded={(image) => setPortrait(cropping.id, image.url)}
           onClose={() => setCroppingId("")}
         />
       ) : null}
@@ -320,15 +290,16 @@ function CharacterCard({
   onDuplicate: () => void;
 }) {
   const router = useRouter();
+  const { locale, t } = useLocale();
   // Everything the card can do, once: the kebab in its corner, a right-click
   // and a long press all raise this list.
   const menu: ContextMenuItem[] = [
-    { id: "open", label: "Open", glyph: "tab-characters", onSelect: () => router.push(`/characters/${character.id}`) },
-    { id: "portrait", label: "Upload portrait", glyph: "tab-handout", onSelect: onUploadPortrait },
-    { id: "duplicate", label: "Duplicate", glyph: "tab-notes", disabled: cloning, onSelect: onDuplicate },
+    { id: "open", label: t("library.open"), glyph: "tab-characters", onSelect: () => router.push(`/characters/${character.id}`) },
+    { id: "portrait", label: t("library.upload"), glyph: "tab-handout", onSelect: onUploadPortrait },
+    { id: "duplicate", label: t("library.duplicate"), glyph: "tab-notes", disabled: cloning, onSelect: onDuplicate },
     ...(character.campaigns ?? []).map((assignment, index) => ({
       id: `go-${assignment.campaignId}`,
-      label: `Go to ${assignment.title}`,
+      label: t("library.goTo", { title: assignment.title }),
       glyph: assignment.kind === "workshop" ? "system-storyboard" : "tab-campaigns",
       separated: index === 0,
       onSelect: () =>
@@ -336,7 +307,7 @@ function CharacterCard({
           assignment.kind === "workshop" ? `/workshop/${assignment.campaignId}` : `/campaigns/${assignment.campaignId}`,
         ),
     })),
-    { id: "delete", label: "Delete", glyph: "quest-failed", tone: "danger", separated: true, onSelect: onDelete },
+    { id: "delete", label: t("library.delete"), glyph: "quest-failed", tone: "danger", separated: true, onSelect: onDelete },
   ];
   return (
     <ContextMenu as="li" items={menu} label={character.name} className={cn("group relative", ui.cardHover, "p-4")}>
@@ -352,7 +323,7 @@ function CharacterCard({
             />
           ) : portraitPending(character) ? (
             <span
-              title="Painting portrait..."
+              title={t("library.paintingPortrait")}
               className="flex size-12 shrink-0 items-center justify-center rounded-lg border border-amber-500/30 bg-stone-900"
             >
               <Loader2 className="size-4 animate-spin text-amber-200" />
@@ -360,7 +331,7 @@ function CharacterCard({
           ) : (
             <span
               title={
-                character.portraitStatus === "failed" ? "Portrait generation failed" : undefined
+                character.portraitStatus === "failed" ? t("library.portraitFailed") : undefined
               }
             >
               <CharacterPortrait
@@ -386,16 +357,16 @@ function CharacterCard({
               {character.name}
             </span>
             <span className="inline-flex rounded-full border border-amber-500/30 bg-amber-400/10 px-2 py-0.5 text-[11px] text-amber-200">
-              Level {character.level} {titleCase(character.class)}
+              {t("library.levelClass", { level: character.level, class: characterLabel("class", character.class, locale) })}
             </span>
           </div>
         </div>
         <p className="mt-2 text-sm text-stone-400">
-          {titleCase(character.race)}
-          {character.subclass ? ` (${character.subclass})` : ""}
+          {characterLabel("race", character.race, locale)}
+          {character.subclass ? ` (${subclassLabel(character.class, character.subclass, locale)})` : ""}
         </p>
         {character.background ? (
-          <p className="reveal text-xs text-stone-500">{titleCase(character.background)}</p>
+          <p className="reveal text-xs text-stone-500">{characterLabel("background", character.background, locale)}</p>
         ) : null}
       </Link>
       {character.campaigns?.length ? (
@@ -420,12 +391,12 @@ function CharacterCard({
         </div>
       ) : (
         <p className="mt-2 border-t border-stone-700/40 pt-2 text-xs text-stone-500">
-          Not in a campaign yet.
+          {t("library.noCampaign")}
         </p>
       )}
       <KebabMenu
         items={menu}
-        label={`Actions for ${character.name}`}
+        label={t("library.actions", { name: character.name })}
         heading={character.name}
         busy={cloning}
         className="absolute right-2 top-2 border-transparent bg-transparent"

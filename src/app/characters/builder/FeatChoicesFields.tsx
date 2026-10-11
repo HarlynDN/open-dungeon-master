@@ -1,8 +1,11 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { skillHelpText } from "@/lib/i18n/game-help-presentations";
+
 import { Select } from "@/components/ui/Select";
 import { STANDARD_LANGUAGES } from "@/lib/content/mechanics";
-import { describeSkill } from "@/lib/help";
+
 import { SRD_SKILLS } from "@/lib/srd";
 import { KNOWN_TOOLS, anyPicksMade, pickSlots, type FeatGrantSpec, type FeatPicks, type PickKind } from "@/lib/srd/feat-grants";
 import { featEngineTag } from "@/lib/srd/feat-combat";
@@ -68,6 +71,7 @@ export default function FeatChoicesFields({
   // The feat's text, for the ability point it names (what the table applies).
   desc?: string;
 }) {
+  const { locale } = useLocale();
   const mine = {
     languages: picks?.languages ?? [],
     skills: picks?.skills ?? [],
@@ -248,7 +252,7 @@ export default function FeatChoicesFields({
                 label={skill.name}
                 selected={mine.skills.includes(skill.id)}
                 onClick={() => toggle("skills", skill.id, slots("skills"))}
-                info={{ text: describeSkill(skill.id) }}
+                info={{ text: skillHelpText(skill.id, locale) }}
               >
                 {skill.name}
               </PickPill>
@@ -269,7 +273,7 @@ export default function FeatChoicesFields({
                 label={skillName(skillId)}
                 selected={mine.expertise.includes(skillId)}
                 onClick={() => toggle("expertise", skillId, spec.expertise)}
-                info={{ text: describeSkill(skillId) }}
+                info={{ text: skillHelpText(skillId, locale) }}
               >
                 {skillName(skillId)}
               </PickPill>

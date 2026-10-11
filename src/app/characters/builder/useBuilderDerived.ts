@@ -1,5 +1,6 @@
 "use client";
 
+import { completeRuleDetails, type RuleProblem } from "@/lib/characters/problems";
 import { expertiseAllowed } from "@/lib/srd/features";
 import { useMemo } from "react";
 import { starterSpellsFor } from "@/lib/help";
@@ -280,12 +281,16 @@ export function useBuilderDerived({
   // tool line from the training above, an either-or line from the pick
   // made on the gear step, the book's first until then.
   const backgroundKit = useMemo(
-    () =>
-      expandBackgroundGear(background?.equipment, {
+    () => {
+      const reported: RuleProblem[] = [];
+      const result = expandBackgroundGear(background?.equipment, {
         tools: trainedTools,
         backgroundTools: background?.tools ?? [],
         picks: backgroundGearPicks,
-      }),
+        onProblem: detail => reported.push(detail),
+      });
+      return { ...result, problemDetails: completeRuleDetails(result.problems, reported) };
+    },
     [background, trainedTools, backgroundGearPicks],
   );
 
@@ -390,15 +395,18 @@ export function useBuilderDerived({
     [klass, race, subclass],
   );
   const startingKit = useMemo(
-    () =>
-      klass
-        ? startingKitFor(
-            { id: klass.id, armor: kitTraining.armor, weapons: kitTraining.weapons },
-            kitChoicesState ?? null,
-            subclass,
-            klass.name,
-          )
-        : null,
+    () => {
+      if (!klass) return null;
+      const reported: RuleProblem[] = [];
+      const result = startingKitFor(
+        { id: klass.id, armor: kitTraining.armor, weapons: kitTraining.weapons },
+        kitChoicesState ?? null,
+        subclass,
+        klass.name,
+        detail => reported.push(detail),
+      );
+      return { ...result, problemDetails: completeRuleDetails(result.problems, reported) };
+    },
     [klass, kitTraining, kitChoicesState, subclass],
   );
   const autoLoadout = useMemo(() => startingKit?.items ?? [], [startingKit]);
@@ -479,7 +487,8 @@ export function useBuilderDerived({
       : Math.round(
           (wealthMethod === "rolled" ? (rules?.wealthRoll ?? 0) : (background?.purse ?? 0)) * 100,
         );
-    const verdict = judgeStartingGear({ equipment: fullEquipment, freeKit, coinCopper, priceOf });
+    const reported: RuleProblem[] = [];
+    const verdict = judgeStartingGear({ equipment: fullEquipment, freeKit, coinCopper, priceOf, onProblem: detail => reported.push(detail) });
     const left = Math.max(0, coinCopper - verdict.spentCopper);
     return {
       method: wealthMethod,
@@ -490,6 +499,10 @@ export function useBuilderDerived({
       problems: [
         ...(keepsStoredGear || wealthMethod === "rolled" ? [] : [...(startingKit?.problems ?? []), ...backgroundKit.problems]),
         ...verdict.problems,
+      ],
+      problemDetails: [
+        ...(keepsStoredGear || wealthMethod === "rolled" ? [] : [...(startingKit?.problemDetails ?? []), ...backgroundKit.problemDetails]),
+        ...completeRuleDetails(verdict.problems, reported),
       ],
       gold: Math.floor(left / 100),
       copper: left % 100,

@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import type { AppLocale } from "@/lib/i18n/locales";
+import { builderOptionName } from "@/lib/i18n/builder-picker-presentations";
 import { hpBonusPerLevel } from "@/lib/srd/race-id";
 import AbilityEditor from "../AbilityEditor";
 import type { HpExplainerInput } from "../AbilityExplainers";
@@ -17,12 +20,13 @@ export function hpExplainerInput(
   derived: BuilderDerived,
   race: RaceOption | undefined,
   klass: ClassOption | undefined,
+  locale: AppLocale = "en",
 ): HpExplainerInput | null {
   if (!klass || !derived.shownAbilities) {
     return null;
   }
   return {
-    className: klass.name,
+    className: locale === "en" ? klass.name : builderOptionName("class", klass, locale),
     hitDie: klass.hitDie,
     // The Constitution the sheet will hold, a half-feat's point included.
     con: derived.shownAbilities.con,
@@ -47,6 +51,7 @@ export function AbilitiesStep({
   race: RaceOption | undefined;
   klass: ClassOption | undefined;
 }) {
+  const { locale } = useLocale();
   const { asiSlotLevels, activeAsiChoices, asiTakenInPlay, asiBaseAbilities, effectiveLevel } = derived;
   const asiToPick = asiTakenInPlay.filter((taken) => !taken).length;
   return (
@@ -67,8 +72,8 @@ export function AbilitiesStep({
         racialBonus={derived.racialBonus}
         gains={derived.abilityGains}
         asiCount={asiToPick}
-        who={race && klass ? `${race.name} ${klass.name}`.toLowerCase() : ""}
-        hp={hpExplainerInput(state, derived, race, klass)}
+        who={race && klass ? locale === "en" ? `${race.name} ${klass.name}`.toLowerCase() : `${builderOptionName("race", race, locale)} ${builderOptionName("class", klass, locale)}` : ""}
+        hp={hpExplainerInput(state, derived, race, klass, locale)}
       />
       </div>
       {asiSlotLevels.length ? (

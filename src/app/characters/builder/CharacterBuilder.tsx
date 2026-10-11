@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { characterLabel } from "@/lib/i18n/character-presentations";
+import { builderFeedbackText, builderDroppedText } from "@/lib/i18n/builder-presentations";
 import { ContentScopeProvider } from "@/lib/content-scope";
 import { Loader2 } from "lucide-react";
 import { useId, useMemo, useState } from "react";
@@ -7,13 +10,9 @@ import { AvatarCropDialog } from "@/app/settings/AvatarCropDialog";
 import { Wizard, type WizardNotice, type WizardStep } from "@/components/ui/Wizard";
 import { cn } from "@/lib/cn";
 import type { Genre } from "@/lib/schemas/game-settings";
-import type { Ability, CreateSheetInput } from "@/lib/schemas/sheet";
-import { SRD_SKILLS } from "@/lib/srd";
-import { FIGHTING_STYLES } from "@/lib/srd/feature-effects";
+import type { CreateSheetInput } from "@/lib/schemas/sheet";
 import { offersImages, useCapabilities } from "@/lib/use-capabilities";
 import { applyClassReskins, applyIdReskins } from "@/lib/worlds/reskin-logic";
-import { ABILITY_LABELS } from "./AbilityEditor";
-import type { DroppedPick } from "./reconcile";
 import { AbilitiesStep } from "./steps/AbilitiesStep";
 import { AncestryStep } from "./steps/AncestryStep";
 import { CallingStep } from "./steps/CallingStep";
@@ -35,7 +34,7 @@ import {
 } from "./submit";
 import { builderActions, useBuilderDerived } from "./useBuilderDerived";
 import { useArchetypes, useBuilderOptions, useWorldPack } from "./useBuilderOptions";
-import { findRace, useBuilderState, type DroppedNotice } from "./useBuilderState";
+import { findRace, useBuilderState } from "./useBuilderState";
 import { useFeatDescs } from "./useFeatDescs";
 import { usePickerGroups } from "./usePickerGroups";
 import { useTableRules } from "./useTableRules";
@@ -68,43 +67,6 @@ const STEP_OF_TARGET: Record<BlockerTarget, string> = {
   spells: "spells-gear",
   gear: "spells-gear",
 };
-
-// A dropped pick as the player knows it: skill and style ids by name, an
-// ability by its word, everything else as it was picked.
-function droppedName(drop: DroppedPick): string {
-  switch (drop.target) {
-    case "classSkills":
-    case "racialSkills":
-    case "backgroundSkills":
-    case "expertise":
-      return SRD_SKILLS.find((skill) => skill.id === drop.value)?.name ?? drop.value;
-    case "styles":
-      return FIGHTING_STYLES.find((style) => style.id === drop.value)?.name ?? drop.value;
-    case "racialAsi":
-      return ABILITY_LABELS[drop.value as Ability] ?? drop.value;
-    default:
-      return drop.value;
-  }
-}
-
-// "Changing the race set aside bonus language Dwarvish and bonus language
-// Giant: they no longer fit. Anything still owed is asked for on the
-// Ancestry step." The notice says what went, never that it must be picked
-// again: a language dropped because the new race has fewer slots is not
-// owed, and the step's own gate knows which picks are.
-function droppedMessage({ because, drops }: DroppedNotice, stepLabel: string | undefined): string {
-  const list = drops.map((drop) => `${drop.label} ${droppedName(drop)}`);
-  const named =
-    list.length <= 2 ? list.join(" and ") : `${list.slice(0, -1).join(", ")} and ${list[list.length - 1]}`;
-  const where = stepLabel ? ` Anything still owed is asked for on the ${stepLabel} step.` : "";
-  if (because === "stored character") {
-    return `${list.length === 1 ? "A stored pick is" : "Stored picks are"} no longer on offer: ${named}.${where}`;
-  }
-  if (because === "content pack") {
-    return `The content pack's rows set aside ${named}.${where}`;
-  }
-  return `Changing the ${because} set aside ${named}: ${list.length === 1 ? "it no longer fits" : "they no longer fit"}.${where}`;
-}
 
 // Full character creation flow as a six-step wizard: identity, ancestry,
 // calling, abilities, spells and gear, finishing touches, paced by the diamond
@@ -167,6 +129,7 @@ function CharacterBuilderForm({
   role?: { value: BuilderRole; onChange: (role: BuilderRole) => void };
   className?: string;
 }) {
+  const { locale, t } = useLocale();
   const {
     races: rawRaces,
     classes: rawClasses,
@@ -207,6 +170,7 @@ function CharacterBuilderForm({
   const derived = useBuilderDerived({ state, race, klass, background, fixedLevel, rules: table.rules, featDescs });
   const actions = builderActions(state, klass, race, background);
   const pickers = usePickerGroups({
+    locale,
     races,
     rawRaces,
     classes,
@@ -247,13 +211,13 @@ function CharacterBuilderForm({
     const control =
       found.querySelector<HTMLElement>('input:not([type="hidden"]), select, textarea, button[aria-haspopup]') ??
       found.querySelector<HTMLElement>(
-        'button:not(.creator-help):not([aria-label^="Details"]):not([aria-label^="What is"]), [tabindex="0"]',
+        'button:not(.creator-help):not([data-info-trigger]), [tabindex="0"]',
       );
     control?.focus({ preventScroll: true });
   }
   const gate = (blocked: StepBlock | null) => ({
     canContinue: !blocked,
-    blocker: blocked?.message ?? null,
+    blocker: builderFeedbackText(blocked, locale) || null,
     onBlocked: blocked ? () => locate(blocked.target) : undefined,
   });
 
@@ -264,16 +228,16 @@ function CharacterBuilderForm({
       if (problem.kind === "spellWarning") {
         state.setSpellWarningAck(true);
       }
-      state.setLocalError(problem.message);
+      state.setLocalError(problem);
       return;
     }
-    state.setLocalError("");
+    state.setLocalError(null);
     onSubmit(buildBuilderResult(input));
   }
 
   if (!races.length || !classes.length || !backgrounds.length) {
     return (
-      <div className="flex justify-center py-10">
+      <div className="flex justify-center py-10" role="status" aria-label={t("builder.loading")}>
         <Loader2 className="size-5 animate-spin text-stone-500" />
       </div>
     );
@@ -293,8 +257,8 @@ function CharacterBuilderForm({
   const steps: WizardStep[] = [
     {
       key: "identity",
-      label: "Identity",
-      title: "Who is this?",
+      label: t("builder.identity"),
+      title: t("builder.identityTitle"),
       ...gate(blockers.identity),
       content: (
         <>
@@ -314,11 +278,11 @@ function CharacterBuilderForm({
     },
     {
       key: "ancestry",
-      label: "Ancestry",
-      title: "Ancestry",
-      blurb: "Where are they from, and what does that grant?",
+      label: t("builder.ancestry"),
+      title: t("builder.ancestry"),
+      blurb: t("builder.ancestryBlurb"),
       ...gate(blockers.ancestry),
-      continueLabel: race ? `Continue as ${race.name}` : undefined,
+      continueLabel: race ? t("builder.continueRace", { race: characterLabel("race", race.name, locale) }) : undefined,
       content: (
         <>
           <AncestryStep
@@ -334,9 +298,9 @@ function CharacterBuilderForm({
     },
     {
       key: "calling",
-      label: "Calling",
-      title: "Calling",
-      blurb: "The class decides how this character plays.",
+      label: t("builder.calling"),
+      title: t("builder.calling"),
+      blurb: t("builder.callingBlurb"),
       ...gate(blockers.calling),
       content: (
         <>
@@ -360,9 +324,9 @@ function CharacterBuilderForm({
     },
     {
       key: "abilities",
-      label: "Ability scores",
-      title: "Ability scores",
-      blurb: "How do you roll?",
+      label: t("builder.abilities"),
+      title: t("builder.abilities"),
+      blurb: t("builder.abilitiesBlurb"),
       ...gate(blockers.abilities),
       content: (
         <>
@@ -372,9 +336,9 @@ function CharacterBuilderForm({
     },
     {
       key: "spells-gear",
-      label: casts ? "Spells and gear" : "Gear",
-      title: casts ? "Spells and gear" : "Gear",
-      blurb: casts ? "Pick what they can cast, then arm your hero." : "Arm your hero.",
+      label: t(casts ? "builder.spellsGear" : "builder.gear"),
+      title: t(casts ? "builder.spellsGear" : "builder.gear"),
+      blurb: t(casts ? "builder.spellsGearBlurb" : "builder.gearBlurb"),
       ...gate(blockers.spells),
       content: (
         <>
@@ -392,9 +356,9 @@ function CharacterBuilderForm({
     },
     {
       key: "finish",
-      label: "Finishing touches",
-      title: "Finishing touches",
-      blurb: "Who have you made?",
+      label: t("builder.finish"),
+      title: t("builder.finish"),
+      blurb: t("builder.finishBlurb"),
       canContinue: !busy,
       content: (
         <FinishStep
@@ -407,7 +371,7 @@ function CharacterBuilderForm({
           initial={initial}
           paintsPortraits={paintsPortraits}
           onUploadPortrait={() => setCropping(true)}
-          error={state.localError || error}
+          error={builderFeedbackText(state.localError, locale) || error}
         />
       ),
     },
@@ -419,7 +383,7 @@ function CharacterBuilderForm({
   const droppedStep = dropped ? steps.findIndex((entry) => entry.key === STEP_OF_TARGET[dropped.drops[0].target]) : -1;
   const notice: WizardNotice | undefined = dropped
     ? {
-        message: droppedMessage(dropped, droppedStep >= 0 ? steps[droppedStep].label : undefined),
+        message: builderDroppedText(dropped, droppedStep >= 0 ? steps[droppedStep].label : undefined, locale),
         step: droppedStep >= 0 ? droppedStep : undefined,
         onShow: () => locate(dropped.drops[0].target),
         onDismiss: state.dismissDropped,
@@ -431,14 +395,14 @@ function CharacterBuilderForm({
     // button stays put; the fallback keeps a usable pane on a short phone.
     <div data-builder-root={rootId} className={cn("flex h-[max(30rem,calc(100dvh-14rem))] flex-col text-sm", className)}>
       <Wizard
-        title={state.name.trim() || "New character"}
+        title={state.name.trim() || t("builder.newCharacter")}
         variant="diamonds"
         wipe
         goldTitles
         notice={notice}
         aside={
           race && klass
-            ? `${race.name} ${klass.name} · level ${derived.effectiveLevel} · d${klass.hitDie}`
+            ? t("builder.summary", { race: characterLabel("race", race.name, locale), class: characterLabel("class", klass.name, locale), level: derived.effectiveLevel, die: klass.hitDie })
             : undefined
         }
         steps={steps}
@@ -455,7 +419,7 @@ function CharacterBuilderForm({
       />
       {cropping ? (
         <AvatarCropDialog
-          title={`Portrait for ${state.name.trim() || "your character"}`}
+          title={t("builder.portrait", { name: state.name.trim() || t("builder.yourCharacter") })}
           onUploaded={(image) => {
             setCropping(false);
             state.setPortrait({ id: image.id, name: image.name, type: image.type, url: image.url });

@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { cn } from "@/lib/cn";
 import { InfoDialog } from "@/components/ui/InfoDialog";
-import { glossaryTerm } from "@/lib/help";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { glossaryTermView } from "@/lib/i18n/game-help-presentations";
 
 // An inline rules word a new player can tap: "Armor Class", "Saving throws",
 // "Concentration". Renders as the label with a dotted underline, so the page
@@ -23,7 +24,8 @@ export function GameTerm({
   className?: string;
 }) {
   const [open, setOpen] = useState(false);
-  const entry = glossaryTerm(id);
+  const { locale } = useLocale();
+  const entry = glossaryTermView(id, locale);
   if (!entry) {
     return <>{children}</>;
   }

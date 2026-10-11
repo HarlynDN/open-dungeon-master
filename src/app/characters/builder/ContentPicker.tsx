@@ -1,6 +1,8 @@
 "use client";
 
 import { Loader2, Plus } from "lucide-react";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { pickerName } from "@/lib/i18n/gear-ui-presentations";
 import { useEffect, useRef } from "react";
 import { cn } from "@/lib/cn";
 import { InfoButton } from "@/components/ui/InfoDialog";
@@ -30,6 +32,7 @@ export default function ContentPicker({
   onPick: (entry: PickerEntry) => void;
   renderMeta?: (entry: PickerEntry) => string;
 }) {
+  const { locale, t } = useLocale();
   const { query, setQuery, results, setResults, open, setOpen, loading, unavailable, unadmitted } =
     useContentSearch(kind, extraParams);
   const container = useRef<HTMLDivElement>(null);
@@ -67,18 +70,16 @@ export default function ContentPicker({
       </div>
       {unavailable ? (
         <p className="mt-1 rounded-lg border border-amber-900/50 bg-amber-950/20 px-3 py-2 text-xs text-amber-200/80">
-          The content pack is not installed on this server, so there is nothing to search or
-          browse. Whoever runs it can install it with: node scripts/import-open5e.mjs
+          {t("gearUi.packMissing")}
         </p>
       ) : open && !results.length && query.trim() && !loading ? (
         <p className="mt-1 rounded-lg border border-stone-800 bg-stone-950/60 px-3 py-2 text-xs text-stone-500">
-          Nothing matched &quot;{query.trim()}&quot;. Try fewer letters, or pick from the full list.
+          {t("gearUi.noMatch", { query: query.trim() })}
         </p>
       ) : null}
       {unadmitted.length ? (
         <p className="mt-1 text-[11px] text-stone-500">
-          Your own {unadmitted.join(", ")} {unadmitted.length === 1 ? "is" : "are"} not offered at this table: whoever runs it keeps a copy in their
-          workshop to admit one.
+          {t(unadmitted.length === 1 ? "gearUi.unadmittedOne" : "gearUi.unadmittedMany", { names: unadmitted.join(", ") })}
         </p>
       ) : null}
       {open && results.length ? (
@@ -99,19 +100,19 @@ export default function ContentPicker({
                   <span
                     className={cn(entry.source === "homebrew" && "text-amber-300")}
                   >
-                    {entry.name}
+                    {pickerName(kind, entry, locale)}
                   </span>
                 </span>
                 <span className="shrink-0 text-xs text-stone-500">
                   {entry.source === "homebrew"
-                    ? "homebrew"
+                    ? t("gearUi.homebrew")
                     : (renderMeta?.(entry) ?? "")}
                 </span>
               </button>
               {/* The row already carries the full entry, so reading a spell
                   before adding it costs no extra request. */}
               <InfoButton
-                label={entry.name}
+                label={pickerName(kind, entry, locale)}
                 meta={kind === "spells" ? spellSummary(entry.data) : undefined}
                 text={describeContentEntry(entry.data)}
                 reference={

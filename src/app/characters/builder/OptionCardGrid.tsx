@@ -1,5 +1,6 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { Search, Star } from "lucide-react";
 import { useMemo, useState, type CSSProperties } from "react";
 import { GameIcon } from "@/components/ui/GameIcon";
@@ -15,6 +16,8 @@ export type OptionCardView = {
   id: string;
   name: string;
   meta?: string;
+  // Canonical names/IDs remain searchable when the displayed name changes.
+  searchTerms?: string[];
   art: string;
   tagline: string;
   chips: string[];
@@ -56,9 +59,10 @@ export function OptionCardGrid({
   onChoose: (id: string) => void;
   onDetails: (id: string) => void;
   // "lineage" or "class", for the search box and the empty line.
-  noun: string;
+  noun: "lineage" | "class";
   compact?: boolean;
 }) {
+  const { t } = useLocale();
   const [query, setQuery] = useState("");
   const total = groups.reduce((sum, group) => sum + group.options.length, 0);
   const [expanded, setExpanded] = useState(false);
@@ -92,8 +96,8 @@ export function OptionCardGrid({
             type="search"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder={`Search ${total} ${noun === "class" ? "classes" : `${noun}s`}`}
-            aria-label={`Search ${noun === "class" ? "classes" : `${noun}s`}`}
+            placeholder={t(`lineageUi.searchCount.${noun}`, { count: total })}
+            aria-label={t(`lineageUi.search.${noun}`)}
             className={cn(ui.input, "pl-8")}
           />
         </label>
@@ -101,7 +105,7 @@ export function OptionCardGrid({
 
       {shown.length ? null : (
         <p className="py-6 text-center text-xs text-stone-500">
-          No {noun} matches that. Clear the search to see all {total}.
+          {t(`lineageUi.empty.${noun}`, { count: total })}
         </p>
       )}
 
@@ -135,7 +139,7 @@ export function OptionCardGrid({
                       type="button"
                       onClick={() => onChoose(option.id)}
                       aria-pressed={chosen}
-                      aria-label={`${option.name}${group.recommended ? ", recommended for this setting" : ""}`}
+                      aria-label={group.recommended ? t("lineageUi.recommendedName", { name: option.name }) : option.name}
                       className="creator-card motion-card"
                     >
                       <span className="creator-plate" data-short={compact || undefined}>
@@ -155,24 +159,24 @@ export function OptionCardGrid({
                             </span>
                           ))}
                         </span>
-                        <span className="creator-cta">{chosen ? "Chosen" : "Tap to choose"}</span>
+                        <span className="creator-cta">{t(chosen ? "lineageUi.chosen" : "lineageUi.tapChoose")}</span>
                       </span>
                     </button>
                     {group.recommended ? (
                       <span className="creator-recommended">
                         <Star className="size-2.5 fill-current" aria-hidden="true" />
-                        Recommended
+                        {t("lineageUi.recommended")}
                       </span>
                     ) : null}
                     <button
                       type="button"
                       onClick={() => onDetails(option.id)}
-                      aria-label={`Details for ${option.name}`}
+                      aria-label={t("lineageUi.details", { name: option.name })}
                       className="creator-help"
                     >
                       <span>?</span>
                     </button>
-                    {chosen ? <span className="creator-selected">✓ Selected</span> : null}
+                    {chosen ? <span className="creator-selected">{t("lineageUi.selected")}</span> : null}
                   </div>
                 );
               })}
@@ -183,7 +187,7 @@ export function OptionCardGrid({
       {folds && !searching ? (
         <div className="mt-2 flex justify-center">
           <button type="button" onClick={() => setExpanded((current) => !current)} className={ui.btnSmall} aria-expanded={expanded}>
-            {expanded ? "Show fewer" : `Show all ${total} (${hidden} more)`}
+            {expanded ? t("lineageUi.fewer") : t("lineageUi.all", { total, hidden })}
           </button>
         </div>
       ) : null}

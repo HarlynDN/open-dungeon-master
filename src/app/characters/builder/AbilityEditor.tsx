@@ -1,5 +1,9 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { abilityLabel } from "@/lib/i18n/character-presentations";
+import { LocalizedText } from "@/lib/i18n/LocalizedText";
+import { abilityMethodRows, abilityGainText, abilityRollErrorText } from "@/lib/i18n/ability-ui-presentations";
 import { Dices } from "lucide-react";
 import { useEffect, useRef, useState, type CSSProperties, type DragEvent, type ReactNode } from "react";
 import { GameTerm } from "@/components/ui/GameTerm";
@@ -42,38 +46,6 @@ export const ABILITY_LABELS: Record<Ability, string> = {
 };
 
 const ABILITY_KEYS = Object.keys(ABILITY_LABELS) as Ability[];
-
-// What each way of getting six numbers actually costs you, for the player who
-// has never been asked this question before.
-// The 4d6 method's reroll rule in words, for the server's threshold (an
-// admin setting, issue #128).
-function rerollRule(below: number): string {
-  return below <= 0
-    ? "The six are yours to keep: this server allows no second throw."
-    : `The six are yours to keep: you may throw again only if they add up to less than ${below}.`;
-}
-
-const METHODS: Array<{ id: AbilityMethod; label: string; info: string }> = [
-  {
-    id: "standard",
-    label: "Standard array",
-    info: `Everyone starts with the same six numbers: ${STANDARD_ARRAY.join(
-      ", ",
-    )}. You decide which ability gets which. Nothing is left to luck, and no character is accidentally weaker than the rest of the party. This is the safe choice if you are new.`,
-  },
-  {
-    id: "pointbuy",
-    label: "Point buy",
-    info:
-      "You spend 27 points raising each score from 8. The higher a score climbs the more each step costs, so a character with one towering ability pays for it with weak ones. Fair like the standard array, but you choose the shape.",
-  },
-  {
-    id: "roll",
-    label: "Roll 4d6",
-    info:
-      `Roll four six-sided dice six times, dropping the lowest each time, then place the six totals on the abilities you choose. It can hand you a hero far above the standard array, or well below it. ${rerollRule(REROLL_BELOW)} Some tables love the swing; ask yours before choosing it.`,
-  },
-];
 
 export type AbilityState = Record<Ability, number | null>;
 
@@ -123,6 +95,7 @@ export default function AbilityEditor({
   // What the health explainer under the summary works from.
   hp?: HpExplainerInput | null;
 }) {
+  const { locale, t } = useLocale();
   // The toss in the air. Display only: the pool itself is committed the
   // moment the dice leave the hand, so nothing is lost if the player moves
   // on mid-toss.
@@ -194,6 +167,7 @@ export default function AbilityEditor({
     };
   }, []);
 
+  const methods = abilityMethodRows(locale, rerollBelow, STANDARD_ARRAY);
   const pointBuyScores = ABILITY_KEYS.map((key) => scores[key] ?? POINT_BUY_MIN);
   const remaining = method === "pointbuy" ? pointBuyRemaining(pointBuyScores) : 0;
   const anyRolling = method === "roll" && phases.some((phase) => phase === "rolling");
@@ -202,7 +176,7 @@ export default function AbilityEditor({
   const total = pool ? poolSum(pool) : 0;
   const rerollOpen = canRerollPool(pool, rerollBelow);
   const keptDate =
-    keptAt ? new Date(keptAt).toLocaleDateString(undefined, { month: "short", day: "numeric" }) : "";
+    keptAt ? new Date(keptAt).toLocaleDateString(locale === "en" ? undefined : locale, { month: "short", day: "numeric" }) : "";
   const ownerOf = (index: number) => ABILITY_KEYS.find((key) => slots[key] === index) ?? null;
 
   function switchMethod(next: AbilityMethod) {
@@ -324,10 +298,10 @@ export default function AbilityEditor({
       <DiceDefs />
       <div className="mb-3 flex flex-wrap items-center gap-x-2.5 gap-y-2">
         <h2 className="eyebrow w-full text-xs text-amber-200/90 sm:w-auto">
-          <GameTerm id="ability_score">Ability scores</GameTerm>
+          <GameTerm id="ability_score">{t("abilityUi.scores")}</GameTerm>
         </h2>
         <div className="method-switch">
-          {METHODS.map((entry) => (
+          {methods.map((entry) => (
             <button
               key={entry.id}
               type="button"
@@ -341,23 +315,23 @@ export default function AbilityEditor({
           {/* Which of the three to use is the question a first character
               actually gets stuck on, so the answer sits on the control. */}
           <HelpDot
-            label={`About ${METHODS.find((entry) => entry.id === method)?.label ?? "the three ways"}`}
+            label={t("abilityUi.about", { method: methods.find((entry) => entry.id === method)?.label ?? t("abilityUi.waysFallback") })}
             onClick={() => setMethodInfoOpen(true)}
             className="-my-px size-[30px]"
           />
         </div>
         {method === "pointbuy" ? (
           <span className={cn("font-mono text-[11px]", remaining < 0 ? "text-red-400" : "text-stone-400")} aria-live="polite">
-            {remaining} points left
+            {t("abilityUi.pointsLeft", { count: remaining })}
           </span>
         ) : null}
         {method === "roll" ? (
           <>
             <span className="inline-flex items-center gap-2">
-              <span className="eyebrow text-[10px] tracking-[0.18em] text-amber-500/80">4d6 drop lowest</span>
+              <span className="eyebrow text-[10px] tracking-[0.18em] text-amber-500/80">{t("abilityUi.dropLowest")}</span>
               {pool ? (
                 <span className="font-mono text-[10.5px] text-stone-500" aria-live="polite">
-                  {placedCount} / 6 placed
+                  {t("abilityUi.placed", { count: placedCount })}
                 </span>
               ) : null}
             </span>
@@ -369,14 +343,14 @@ export default function AbilityEditor({
                 aria-busy={asking}
                 title={
                   rerollOpen
-                    ? `These add up to less than ${rerollBelow}, so you may throw again`
+                    ? t("abilityUi.rerollTitleOpen", { below: rerollBelow })
                     : rerollBelow <= 0
-                      ? "This server allows no second throw"
-                      : `A reroll opens only when the six add up to less than ${rerollBelow}`
+                      ? t("abilityUi.rerollTitleNone")
+                      : t("abilityUi.rerollTitleClosed", { below: rerollBelow })
                 }
                 className={cn(ui.btnSmall, "ml-auto px-2.5 py-1 text-xs disabled:cursor-not-allowed disabled:opacity-40")}
               >
-                <Dices className="size-3.5" /> Reroll
+                <Dices className="size-3.5" /> {t("abilityUi.reroll")}
               </button>
             ) : null}
           </>
@@ -386,17 +360,14 @@ export default function AbilityEditor({
         // The roll on record is not lost by choosing another method; it
         // waits for a character that uses it (issue #128).
         <p className="mb-3 text-xs text-stone-500" aria-live="polite">
-          Your rolled six ({openPool.pool.map((entry) => entry.total).join(", ")}) stay on record until a
-          character uses them. Choose Roll 4d6 to see them.
+          {t("abilityUi.openPool", { numbers: openPool.pool.map((entry) => entry.total).join(", ") })}
         </p>
       ) : null}
       {asiCount > 0 ? (
         <p className="mb-3 text-xs text-stone-500">
-          These are your base scores, the same at every level. Your level has earned{" "}
-          <span className="text-amber-200">
-            {asiCount} ability score {asiCount === 1 ? "improvement" : "improvements"}
-          </span>{" "}
-          on top of them; pick those in the section below, and each Final here counts them.
+          <LocalizedText message={asiCount === 1 ? "abilityUi.baseHintOne" : "abilityUi.baseHintMany"} values={{
+            improvements: <span className="text-amber-200">{t(asiCount === 1 ? "abilityUi.improvementsOne" : "abilityUi.improvementsMany", { count: asiCount })}</span>,
+          }} />
         </p>
       ) : null}
 
@@ -411,7 +382,7 @@ export default function AbilityEditor({
         >
           {pool ? (
             <>
-              <div className="pool-grid" role="group" aria-label="Your six throws">
+              <div className="pool-grid" role="group" aria-label={t("abilityUi.sixThrows")}>
                 {pool.map((entry, index) => {
                   const phase = phases[index] ?? "settled";
                   const rolling = anyRolling && phase === "rolling";
@@ -428,7 +399,7 @@ export default function AbilityEditor({
                       draggable={!anyRolling}
                       disabled={anyRolling}
                       aria-pressed={inHand}
-                      aria-label={`Throw of ${entry.total}${owner ? `, on ${ABILITY_LABELS[owner]}` : ", not placed"}`}
+                      aria-label={t(owner ? "abilityUi.throwPlaced" : "abilityUi.throwFree", { total: entry.total, ability: owner ? abilityLabel(owner, locale) : "" })}
                       onClick={() => setHeld(inHand ? null : index)}
                       onDragStart={(event) => startDrag(event, index)}
                       onDragEnd={() => {
@@ -447,42 +418,42 @@ export default function AbilityEditor({
                           <DiceRow roll={{ ...entry.roll, phase: anyRolling ? phase : "settled" }} />
                         </span>
                       ) : (
-                        <span className="pool-saved">from your sheet</span>
+                        <span className="pool-saved">{t("abilityUi.fromSheet")}</span>
                       )}
                       <span className={cn("dice-total", `roll-tier-${rollTier(entry.total)}`)} data-phase={rolling ? "rolling" : undefined}>
                         {entry.total}
                       </span>
-                      <span className="pool-tag">{owner ? owner.toUpperCase() : inHand ? "in hand" : "free"}</span>
+                      <span className="pool-tag">{owner ? locale === "en" ? owner.toUpperCase() : abilityLabel(owner, locale, true) : t(inHand ? "abilityUi.inHand" : "abilityUi.free")}</span>
                     </button>
                   );
                 })}
               </div>
               <p className="pool-note" aria-live="polite">
                 {anyRolling ? (
-                  "The dice are in the air…"
+                  t("abilityUi.rollingAir")
                 ) : (
                   <>
                     {keptAt !== undefined ? (
                       <>
-                        <span className="text-amber-200">Your kept roll{keptDate ? ` from ${keptDate}` : ""}.</span>
+                        <span className="text-amber-200">{keptDate ? t("abilityUi.keptDate", { date: keptDate }) : t("abilityUi.kept")}</span>
                         <span className="text-stone-600"> · </span>
                       </>
                     ) : null}
-                    <span className="font-mono text-amber-200">Total {total}</span>
+                    <span className="font-mono text-amber-200">{t("abilityUi.total", { total })}</span>
                     <span className="text-stone-600"> · </span>
                     {rerollOpen
-                      ? `Under ${rerollBelow}: you may throw all six again.`
+                      ? t("abilityUi.under", { below: rerollBelow })
                       : rerollBelow <= 0
-                        ? "This server allows no second throw. These six are yours."
+                        ? t("abilityUi.noSecond")
                         : keptAt !== undefined
-                          ? `It stays until a character uses it; a reroll opens only under ${rerollBelow}.`
-                          : `A reroll opens only under ${rerollBelow}. These six are yours.`}
+                          ? t("abilityUi.keptUnder", { below: rerollBelow })
+                          : t("abilityUi.closedUnder", { below: rerollBelow })}
                     <span className="block text-stone-500">
                       {held !== null
-                        ? "Now tap the ability that should get it."
+                        ? t("abilityUi.tapAbility")
                         : placedCount < 6
-                          ? "Tap a throw, then an ability, or drag it into place."
-                          : "Tap or drag a placed score to swap it with another."}
+                          ? t("abilityUi.tapThrow")
+                          : t("abilityUi.swapPlaced")}
                     </span>
                   </>
                 )}
@@ -490,9 +461,9 @@ export default function AbilityEditor({
             </>
           ) : (
             <div className="pool-empty">
-              <p className="font-display text-[15px] font-semibold text-stone-100">Six throws of four dice</p>
+              <p className="font-display text-[15px] font-semibold text-stone-100">{t("abilityUi.poolEmptyTitle")}</p>
               <p className="max-w-sm text-xs text-stone-400">
-                Each throw keeps its best three. All six land at once, then you decide which ability gets which.
+                {t("abilityUi.poolEmptyInfo")}
               </p>
               <button
                 type="button"
@@ -501,10 +472,10 @@ export default function AbilityEditor({
                 aria-busy={asking}
                 className="pool-throw motion-press disabled:opacity-60"
               >
-                <Dices className={cn("size-4", asking && "animate-spin")} /> {asking ? "Rolling..." : "Roll the dice"}
+                <Dices className={cn("size-4", asking && "animate-spin")} /> {t(asking ? "abilityUi.rolling" : "abilityUi.rollDice")}
               </button>
               <p className="max-w-sm text-[11px] text-stone-500">
-                The server throws the dice and keeps them, so a rolled hero is one the table can trust.
+                {t("abilityUi.serverKeeps")}
               </p>
             </div>
           )}
@@ -512,7 +483,7 @@ export default function AbilityEditor({
       ) : null}
       {method === "roll" && rollError ? (
         <p role="alert" className="reveal motion-shake mb-3 text-xs text-red-400">
-          {rollError}
+          {abilityRollErrorText(rollError, locale)}
         </p>
       ) : null}
 
@@ -528,12 +499,12 @@ export default function AbilityEditor({
           // its words so the others stay put) and the final pops when it
           // moves.
           const notes: Array<{ key: string; tone: string; motion?: string; body: ReactNode }> = [
-            ...(bonus ? [{ key: "racial", tone: "text-amber-300", body: `+${bonus} racial` }] : []),
+            ...(bonus ? [{ key: "racial", tone: "text-amber-300", body: t("abilityUi.racialBonus", { bonus }) }] : []),
             ...extra.map((gain) => ({
               key: `gain-${gainLabel(gain)}`,
               tone: "text-amber-200",
               motion: "reveal-pop",
-              body: gainLabel(gain),
+              body: abilityGainText(gain, locale),
             })),
             ...(finalScore !== null
               ? [
@@ -542,14 +513,14 @@ export default function AbilityEditor({
                     tone: "",
                     body: (
                       <>
-                        Final <CountPop value={finalScore}>{finalScore}</CountPop> ({formatModifier(abilityMod(finalScore))})
+                        {t("abilityUi.final")} <CountPop value={finalScore}>{finalScore}</CountPop> ({formatModifier(abilityMod(finalScore))})
                       </>
                     ),
                   },
                 ]
               : []),
           ];
-          const label = ABILITY_LABELS[ability];
+          const label = abilityLabel(ability, locale);
           const slot = method === "roll" ? slots[ability] : null;
           const armed = method === "roll" && held !== null && !anyRolling;
           return (
@@ -563,7 +534,7 @@ export default function AbilityEditor({
               onDrop={method === "roll" && pool ? (event) => dropInto(event, ability) : undefined}
             >
               <span className="dice-abbr" aria-hidden="true">
-                {ability.toUpperCase()}
+                {locale === "en" ? ability.toUpperCase() : abilityLabel(ability, locale, true)}
               </span>
               {/* The bonuses and the final score ride under the name, so the
                   controls keep one line in the builder's column; with feats
@@ -600,10 +571,10 @@ export default function AbilityEditor({
                   }}
                   aria-label={
                     slot !== null
-                      ? `${label} holds ${assigned}. ${held === slot ? "Tap again to send it back to the tray" : held !== null ? "Tap to swap" : "Tap to pick it up"}`
+                      ? t("abilityUi.socketHeld", { ability: label, score: assigned ?? 0, action: t(held === slot ? "abilityUi.socketReturn" : held !== null ? "abilityUi.socketSwap" : "abilityUi.socketPick") })
                       : held !== null
-                        ? `Place the held throw on ${label}`
-                        : `${label} is empty`
+                        ? t("abilityUi.socketPlace", { ability: label })
+                        : t("abilityUi.socketEmpty", { ability: label })
                   }
                 >
                   {slot !== null && assigned !== null ? (
@@ -611,13 +582,13 @@ export default function AbilityEditor({
                       {assigned}
                     </span>
                   ) : (
-                    <span className="pool-socket-hint">{armed ? "Place" : "—"}</span>
+                    <span className="pool-socket-hint">{armed ? t("abilityUi.place") : "—"}</span>
                   )}
                 </button>
               ) : null}
 
               {method === "standard" ? (
-                <span className="flex min-w-[192px] flex-[1_1_192px] items-center gap-[5px]" role="group" aria-label={`${label} score`}>
+                <span className="flex min-w-[192px] flex-[1_1_192px] items-center gap-[5px]" role="group" aria-label={t("abilityUi.scoreGroup", { ability: label })}>
                   {STANDARD_ARRAY.map((value) => {
                     const mine = assigned === value;
                     const taken = !mine && ABILITY_KEYS.some((key) => scores[key] === value);
@@ -627,7 +598,7 @@ export default function AbilityEditor({
                         type="button"
                         onClick={() => onScoresChange(assignStandard(scores, ability, value))}
                         aria-pressed={mine}
-                        aria-label={`${label} ${value}${taken ? ", held by another ability" : ""}`}
+                        aria-label={t(taken ? "abilityUi.scoreTaken" : "abilityUi.scoreAvailable", { ability: label, score: value })}
                         data-taken={taken || undefined}
                         className="slot-button"
                       >
@@ -644,7 +615,7 @@ export default function AbilityEditor({
                     type="button"
                     onClick={() => nudgeBuy(ability, -1)}
                     disabled={(assigned ?? POINT_BUY_MIN) <= POINT_BUY_MIN}
-                    aria-label={`Lower ${label}`}
+                    aria-label={t("abilityUi.lower", { ability: label })}
                     className="step-button"
                   >
                     −
@@ -652,14 +623,14 @@ export default function AbilityEditor({
                   <span className="flex flex-1 flex-col items-center leading-none" aria-live="polite">
                     <span className="font-display text-[19px] font-bold text-amber-100">{assigned ?? POINT_BUY_MIN}</span>
                     <span className="mt-0.5 font-mono text-[9px] text-stone-500">
-                      costs {pointBuyCost(assigned ?? POINT_BUY_MIN)}
+                      {t("abilityUi.cost", { cost: pointBuyCost(assigned ?? POINT_BUY_MIN) })}
                     </span>
                   </span>
                   <button
                     type="button"
                     onClick={() => nudgeBuy(ability, 1)}
                     disabled={(assigned ?? POINT_BUY_MIN) >= POINT_BUY_MAX}
-                    aria-label={`Raise ${label}`}
+                    aria-label={t("abilityUi.raise", { ability: label })}
                     className="step-button"
                   >
                     +
@@ -691,9 +662,7 @@ export default function AbilityEditor({
       <MethodInfoDialog
         open={methodInfoOpen}
         onOpenChange={setMethodInfoOpen}
-        methods={METHODS.map((entry) =>
-          entry.id === "roll" ? { ...entry, info: entry.info.replace(rerollRule(REROLL_BELOW), rerollRule(rerollBelow)) } : entry,
-        )}
+        methods={methods}
         current={method}
       />
     </section>

@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { pickerName, pickerMatches } from "@/lib/i18n/gear-ui-presentations";
 import { scopedParams, useContentCampaign } from "@/lib/content-scope";
 import { Check, ChevronDown, ChevronRight, Loader2, Plus } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -85,6 +87,7 @@ export default function CatalogBrowser({
   // Section keys expanded (and fetched) from the first render.
   openSections?: string[];
 }) {
+  const { locale, t } = useLocale();
   const [open, setOpen] = useState(defaultOpen);
   const [expanded, setExpanded] = useState<string[]>(openSections);
   const [loaded, setLoaded] = useState<Record<string, Loaded>>({});
@@ -128,7 +131,7 @@ export default function CatalogBrowser({
           };
           // The route answers 200 with no rows when the pack is missing;
           // that is "nothing to browse", not "nothing here".
-          if (body.packInstalled === false) {
+          if (body.packInstalled === false && section.params?.native !== "1") {
             setUnavailable(true);
           }
           const page: PickerEntry[] = body.results ?? [];
@@ -211,8 +214,8 @@ export default function CatalogBrowser({
           <input
             value={filter}
             onChange={(event) => setFilter(event.target.value)}
-            placeholder="Narrow this list..."
-            aria-label="Narrow the browsed list"
+            placeholder={t("gearUi.narrow")}
+            aria-label={t("gearUi.narrowAria")}
             className="mb-2 w-full rounded-md border border-stone-700/70 bg-stone-950 px-2.5 py-1.5 text-xs text-stone-200 outline-none focus:border-amber-400/60"
           />
 
@@ -226,7 +229,7 @@ export default function CatalogBrowser({
               ) : null}
               <ul>
                 {recommended.entries
-                  .filter((entry) => !needle || entry.name.toLowerCase().includes(needle))
+                  .filter((entry) => !needle || pickerMatches(kind, { name: entry.name, source: "open5e" }, needle, locale))
                   .map((entry) => {
                     const on = selected.has(entry.name.trim().toLowerCase());
                     return (
@@ -253,14 +256,14 @@ export default function CatalogBrowser({
                             ) : (
                               <Plus className="size-3.5 shrink-0 text-stone-600" />
                             )}
-                            <span className={cn(on && "text-amber-200")}>{entry.name}</span>
+                            <span className={cn(on && "text-amber-200")}>{pickerName(kind, { name: entry.name, source: "open5e" }, locale)}</span>
                           </span>
                           <span className="shrink-0 text-[11px] text-stone-500">
                             {entry.note ?? ""}
                           </span>
                         </button>
                         <InfoButton
-                          label={entry.name}
+                          label={pickerName(kind, { name: entry.name, source: "open5e" }, locale)}
                           reference={{ kind, slug: contentSlug(entry.name), name: entry.name }}
                         />
                       </li>
@@ -275,7 +278,7 @@ export default function CatalogBrowser({
             const isLoading = loading.includes(section.key);
             const rows = loaded[section.key]?.rows ?? [];
             const visible = needle
-              ? rows.filter((entry) => entry.name.toLowerCase().includes(needle))
+              ? rows.filter((entry) => pickerMatches(kind, entry, needle, locale))
               : rows;
             return (
               <div key={section.key} className="border-t border-stone-800/80 first:border-t-0">
@@ -304,8 +307,8 @@ export default function CatalogBrowser({
                     {!isLoading && !rows.length ? (
                       <p className="px-1 py-1 text-[11px] text-stone-500">
                         {unavailable
-                          ? "The content pack is not installed on this server, so there is nothing to list. Whoever runs it can install it with: node scripts/import-open5e.mjs"
-                          : "Nothing here."}
+                          ? t("gearUi.listMissing")
+                          : t("gearUi.nothing")}
                       </p>
                     ) : null}
                     <ul className="max-h-72 overflow-y-auto">
@@ -342,19 +345,19 @@ export default function CatalogBrowser({
                                           entry.source === "homebrew" && !on && "text-amber-300",
                                         )}
                                       >
-                                        {entry.name}
+                                        {pickerName(kind, entry, locale)}
                                       </span>
                                     </span>
                                     <span className="shrink-0 text-[11px] text-stone-500">
                                       {entry.source === "homebrew"
-                                        ? "homebrew"
+                                        ? t("gearUi.homebrew")
                                         : (metaOf?.(entry) ?? "")}
                                     </span>
                                   </button>
                                   {/* The row already carries the full entry, so
                                       reading it before adding costs nothing. */}
                                   <InfoButton
-                                    label={entry.name}
+                                    label={pickerName(kind, entry, locale)}
                                     meta={kind === "spells" ? spellSummary(entry.data) : undefined}
                                     text={describeContentEntry(entry.data)}
                                     reference={
@@ -372,7 +375,7 @@ export default function CatalogBrowser({
                     </ul>
                     {loaded[section.key]?.truncated ? (
                       <p className="px-1 pt-1 text-[11px] text-stone-500">
-                        Showing the first {rows.length}. Search by name above for the rest.
+                        {t("gearUi.truncated", { count: rows.length })}
                       </p>
                     ) : null}
                   </div>

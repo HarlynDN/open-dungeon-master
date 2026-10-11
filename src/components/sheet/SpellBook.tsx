@@ -5,9 +5,11 @@ import { useMemo, useState, useSyncExternalStore, type ReactNode } from "react";
 import { GameIcon } from "@/components/ui/GameIcon";
 import { InfoButton } from "@/components/ui/InfoDialog";
 import { cn } from "@/lib/cn";
-import { contentSlug, describeContentEntry, spellSummary } from "@/lib/help";
+import { contentSlug, describeContentEntry } from "@/lib/help";
 import { replayAnimation } from "@/lib/motion/replay";
-import { spellSupportFor, spellSupportWord } from "@/lib/srd/spell-support";
+import { spellSupportFor } from "@/lib/srd/spell-support";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { spellSummaryView, spellSupportNote, spellTileMatches, spellTileName } from "@/lib/i18n/spell-ui-presentations";
 
 // The spell book: one tab per spell level (cantrips first), every spell a
 // tile that says at a glance whether it is ready, waiting for a long rest,
@@ -53,28 +55,12 @@ export type SpellTile = {
 
 export type SpellCounter = { label: string; value: number; max?: number | null; extra?: string };
 
-const STATE_TEXT: Record<SpellTileState, string> = {
-  ready: "Ready",
-  pending: "At long rest",
-  granted: "Always prepared",
-  inBook: "In spellbook",
-  available: "Available",
-};
-
 const RANK: Record<SpellTileState, number> = { granted: 0, ready: 1, pending: 2, inBook: 3, available: 4 };
 const ROMAN = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"];
 const noSubscribe = () => () => {};
 const levelKey = (level: number | null) => (level === null ? "other" : String(level));
-const levelLabel = (key: string) =>
-  key === "0"
-    ? "Cantrips"
-    : key === "other"
-      ? "Other spells (level unknown)"
-      : `Level ${ROMAN[Number(key)] ?? key} spells`;
 // Spell levels read as roman numerals, the way a spell book would number
 // its chapters; cantrips and homebrew with no known level keep a word.
-const tabLabel = (key: string) =>
-  key === "0" ? "Cantrips" : key === "other" ? "Other" : (ROMAN[Number(key)] ?? key);
 
 export function SpellBook({
   tiles,
@@ -86,7 +72,7 @@ export function SpellBook({
   header,
   footer,
   notice,
-  emptyText = "No spells yet.",
+  emptyText,
 }: {
   tiles: SpellTile[];
   // Tabs run from cantrips to this level even when a level is still empty,
@@ -105,6 +91,10 @@ export function SpellBook({
   notice?: ReactNode;
   emptyText?: string;
 }) {
+  const { locale, t } = useLocale();
+  const stateText = (state: SpellTileState) => t(`spellUi.${state}`);
+  const levelLabel = (key: string) => key === "0" ? t("spellUi.cantrips") : key === "other" ? t("spellUi.otherSpells") : t("spellUi.levelSpells", { level: locale === "en" ? ROMAN[Number(key)] ?? key : key });
+  const tabLabel = (key: string) => key === "0" ? t("spellUi.cantrips") : key === "other" ? t("spellUi.other") : ROMAN[Number(key)] ?? key;
   const [filter, setFilter] = useState("");
   const needle = filter.trim().toLowerCase();
   // The tab strip says which tab is chosen only once mounted. The travelling
@@ -141,9 +131,7 @@ export function SpellBook({
 
   const shown = needle
     ? keys.flatMap((key) =>
-        (byLevel.get(key) ?? []).filter((tile) =>
-          (tile.label ?? tile.name).toLowerCase().includes(needle),
-        ),
+        (byLevel.get(key) ?? []).filter((tile) => spellTileMatches(tile, needle, locale)),
       )
     : (byLevel.get(active) ?? []);
   // Chosen first, then what is left to choose, alphabetical inside each.
@@ -152,8 +140,8 @@ export function SpellBook({
   // that chose it. Re-sorting on every tap sent a chosen spell leaping to
   // the front and the list jumping, and the tap looked lost (issue 66).
   const byRank = (a: SpellTile, b: SpellTile) =>
-    RANK[a.state] - RANK[b.state] || (a.label ?? a.name).localeCompare(b.label ?? b.name);
-  const pageKey = `${needle ? `?${needle}` : active}|${shown
+    RANK[a.state] - RANK[b.state] || spellTileName(a, locale).localeCompare(spellTileName(b, locale), locale);
+  const pageKey = `${locale}|${needle ? `?${needle}` : active}|${shown
     .map((tile) => tile.name)
     .sort()
     .join("|")}`;
@@ -201,7 +189,7 @@ export function SpellBook({
       ) : null}
 
       <div className="flex flex-wrap items-center gap-2">
-        <div role="tablist" aria-label="Spell level" className="flex flex-wrap gap-1">
+        <div role="tablist" aria-label={t("spellUi.level")} className="flex flex-wrap gap-1">
           {keys.map((key) => {
             const count = chosenIn(key);
             const selected = !needle && key === active;
@@ -236,8 +224,8 @@ export function SpellBook({
         <input
           value={filter}
           onChange={(event) => setFilter(event.target.value)}
-          placeholder="Find a spell..."
-          aria-label="Find a spell"
+          placeholder={t("spellUi.findPlaceholder")}
+          aria-label={t("spellUi.find")}
           className="ml-auto w-36 rounded-md border border-stone-700/70 bg-stone-950 px-2 py-1 text-xs text-stone-200 outline-none focus:border-amber-400/60"
         />
       </div>
@@ -247,7 +235,7 @@ export function SpellBook({
           note is its tooltip; the full counter shakes with the tile. */}
       <p className="mt-2 mb-1.5 flex h-4 min-w-0 items-center gap-2">
         <span className="eyebrow shrink-0 text-[10px] leading-4 text-stone-500">
-          {needle ? `Matching "${filter.trim()}"` : levelLabel(active)}
+          {needle ? t("spellUi.matching", { query: filter.trim() }) : levelLabel(active)}
         </span>
         {notice ? (
           <span
@@ -267,7 +255,7 @@ export function SpellBook({
         <ul className="grid grid-cols-2 gap-1.5 @lg:grid-cols-3 @3xl:grid-cols-4">
           {ordered.map((tile) => {
             const clickable = toggles(tile) && !busy;
-            const facts = tile.data ? spellSummary(tile.data) : undefined;
+            const facts = tile.data ? spellSummaryView(tile.data, locale, tile.homebrew) : undefined;
             const summary = tile.source ? [facts, tile.source].filter(Boolean).join(" · ") : facts;
             // What the server leaves to the DM, said before the spell is picked.
             const support = spellSupportFor(tile.name);
@@ -294,7 +282,7 @@ export function SpellBook({
                     }
                     onTile?.(tile);
                   }}
-                  title={tile.blocked ?? tile.note ?? STATE_TEXT[tile.state]}
+                  title={tile.blocked ?? tile.note ?? stateText(tile.state)}
                   className="flex w-full min-w-0 items-center gap-2 text-left disabled:cursor-default"
                 >
                   <span className="relative shrink-0">
@@ -302,24 +290,24 @@ export function SpellBook({
                     <StateMark state={tile.state} />
                   </span>
                   <span className="min-w-0">
-                    <span className="line-clamp-2 text-xs leading-tight [overflow-wrap:anywhere]" title={tile.label ?? tile.name}>
-                      {tile.label ?? tile.name}
+                    <span className="line-clamp-2 text-xs leading-tight [overflow-wrap:anywhere]" title={spellTileName(tile, locale)}>
+                      {spellTileName(tile, locale)}
                       {tile.suggested ? (
-                        <Star className="ml-1 inline size-3 fill-amber-300 text-amber-300" aria-label="suggested" />
+                        <Star className="ml-1 inline size-3 fill-amber-300 text-amber-300" aria-label={t("spellUi.suggestedAria")} />
                       ) : null}
                     </span>
                     <span className="spell-tile-state block truncate text-[10px]">
-                      {tile.homebrew ? "homebrew · " : tile.source ? `${tile.source} · ` : ""}
-                      {support ? `${spellSupportWord(support)} · ` : ""}
-                      {tile.blocked ?? tile.note ?? STATE_TEXT[tile.state]}
+                      {tile.homebrew ? t("spellUi.homebrewPrefix") : tile.source ? `${tile.source} · ` : ""}
+                      {support ? `${t(support.kind === "partial" ? "spellUi.partialWord" : "spellUi.narratedWord")} · ` : ""}
+                      {tile.blocked ?? tile.note ?? stateText(tile.state)}
                     </span>
                   </span>
                 </button>
                 <InfoButton
-                  label={tile.label ?? tile.name}
+                  label={spellTileName(tile, locale)}
                   meta={summary}
                   text={described ?? undefined}
-                  note={support ? `**${support.kind === "partial" ? "Partly by hand" : "Narrated"}.** ${support.manual}` : undefined}
+                  note={spellSupportNote(tile.name, locale)}
                   reference={
                     tile.homebrew
                       ? undefined
@@ -333,7 +321,7 @@ export function SpellBook({
         </ul>
         </div>
       ) : (
-        <p className="py-2 text-xs text-stone-500">{needle ? "No spell matches." : emptyText}</p>
+        <p className="py-2 text-xs text-stone-500">{needle ? t("spellUi.noMatch") : emptyText ?? t("spellUi.empty")}</p>
       )}
 
       <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-stone-500">
@@ -342,12 +330,12 @@ export function SpellBook({
           .map((state) => (
             <span key={state} className="flex items-center gap-1">
               <span className="spell-tile-dot" data-state={state} aria-hidden="true" />
-              {STATE_TEXT[state]}
+              {stateText(state)}
             </span>
           ))}
         {tiles.some((tile) => tile.suggested) ? (
           <span className="flex items-center gap-1">
-            <Star className="size-3 fill-amber-300 text-amber-300" aria-hidden="true" /> Suggested
+            <Star className="size-3 fill-amber-300 text-amber-300" aria-hidden="true" /> {t("spellUi.suggested")}
           </span>
         ) : null}
       </div>

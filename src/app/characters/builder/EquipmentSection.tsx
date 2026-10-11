@@ -1,6 +1,8 @@
 "use client";
 
 import { Coins, Dices, Loader2 } from "lucide-react";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { equipmentName, gearNote, gearRarity, gearKind, gearCoin, gearWealthError, gearWealthDiceText, gearCostText } from "@/lib/i18n/gear-ui-presentations";
 import type { ReactNode } from "react";
 import { InfoButton } from "@/components/ui/InfoDialog";
 import { cn } from "@/lib/cn";
@@ -92,6 +94,7 @@ export default function EquipmentSection({
   purse: PurseView;
   inputClass: string;
 }) {
+  const { locale, t } = useLocale();
   const have = new Set(equipment.map((item) => item.name.trim().toLowerCase()));
   const openSuggestions = suggestions.filter((entry) => !have.has(entry.name.trim().toLowerCase()));
   // Only what the kit does not already carry: most class kits come with a
@@ -100,11 +103,11 @@ export default function EquipmentSection({
 
   return (
     <section className="panel rounded-xl p-4">
-      <h2 className="eyebrow mb-1 text-xs text-amber-200/90">Equipment</h2>
+      <h2 className="eyebrow mb-1 text-xs text-amber-200/90">{t("gearUi.equipment")}</h2>
       {kit}
       {openSuggestions.length ? (
         <div className="mb-2">
-          <p className="mb-1.5 text-xs text-stone-500">Suggested for your class:</p>
+          <p className="mb-1.5 text-xs text-stone-500">{t("gearUi.suggested")}</p>
           <div className="flex flex-wrap gap-1.5">
             {openSuggestions.map((entry) => (
               <span
@@ -116,11 +119,11 @@ export default function EquipmentSection({
                   onClick={() => onAdd({ name: entry.name })}
                   className="py-1 hover:text-amber-100"
                 >
-                  + {entry.name}
-                  <span className="ml-1 text-amber-200/50">{entry.note}</span>
+                  + {equipmentName(entry.name, locale)}
+                  <span className="ml-1 text-amber-200/50">{gearNote(entry.note, locale)}</span>
                 </button>
                 <InfoButton
-                  label={entry.name}
+                  label={equipmentName(entry.name, locale)}
                   reference={{ kind: "items", slug: contentSlug(entry.name), name: entry.name }}
                 />
               </span>
@@ -135,16 +138,16 @@ export default function EquipmentSection({
           disabled={!starterMissing.length}
           title={
             starterMissing.length
-              ? `Adds ${starterMissing.map((entry) => (entry.qty > 1 ? `${entry.name} x${entry.qty}` : entry.name)).join(", ")}.`
-              : "Your kit already carries the basics: a backpack, bedroll, rations, rope, torches and a waterskin."
+              ? t("gearUi.adds", { items: starterMissing.map((entry) => (entry.qty > 1 ? `${equipmentName(entry.name, locale)} x${entry.qty}` : equipmentName(entry.name, locale))).join(t("gearUi.listSeparator")) })
+              : t("gearUi.starterComplete")
           }
           className="rounded-md border border-stone-700 px-2.5 py-1 text-xs text-stone-300 hover:bg-stone-900 disabled:cursor-not-allowed disabled:opacity-50 motion-press"
         >
           {starterMissing.length
-            ? `Add adventurer's starter pack (${starterMissing.length} ${starterMissing.length === 1 ? "item" : "items"} the kit lacks)`
-            : "Starter pack already in the kit"}
+            ? t(starterMissing.length === 1 ? "gearUi.starterOne" : "gearUi.starterMany", { count: starterMissing.length })
+            : t("gearUi.starterAlready")}
         </button>
-        <span className="text-xs text-stone-500">plus search armor, weapons, and gear:</span>
+        <span className="text-xs text-stone-500">{t("gearUi.plusSearch")}</span>
       </div>
       {/* What stops Continue, where the items are added: the purse's line
           sat under the whole inventory and out of view (issue #111). */}
@@ -157,58 +160,59 @@ export default function EquipmentSection({
       ) : null}
       <ContentPicker
         kind="items"
-        placeholder="Search items (e.g. longsword, chain mail, rope)"
+        extraParams={{ native: "1", locale }}
+        placeholder={t("gearUi.searchItems")}
         onPick={(entry) => onAdd(pickedGear(entry))}
-        renderMeta={(entry) => entry.rarity || entry.kind || ""}
+        renderMeta={(entry) => entry.rarity ? gearRarity(entry.rarity, locale) : gearKind(entry.kind ?? "", locale)}
       />
       {/* Searching only finds what you can already name. The catalog itself
           is here, by category, with what this class is proficient with on
           top and a ⓘ on every row. */}
       <CatalogBrowser
         kind="items"
-        buttonLabel="Browse every weapon, armor and item"
+        buttonLabel={t("gearUi.browseItems")}
         selectedNames={equipment.map((item) => item.name)}
         onPick={(entry) => onAdd(pickedGear(entry))}
         onUnpick={onRemove}
         recommended={
           suggestions.length
             ? {
-                label: "Suggested for your class",
-                note: "What this class is proficient with, plus the kit everyone carries.",
+                label: t("gearUi.suggestedHeading"),
+                note: t("gearUi.recommendedNote"),
                 entries: [
-                  ...suggestions.map((entry) => ({ name: entry.name, note: entry.note })),
-                  ...STARTER_PACK.map((entry) => ({ name: entry.name, note: "kit" })),
+                  ...suggestions.map((entry) => ({ name: entry.name, note: gearNote(entry.note, locale) })),
+                  ...STARTER_PACK.map((entry) => ({ name: entry.name, note: t("gearUi.kit") })),
                 ],
               }
             : undefined
         }
         sections={[
-          { key: "items:weapon", label: "Weapons", params: { kind: "weapon" } },
-          { key: "items:armor", label: "Armor and shields", params: { kind: "armor" } },
-          { key: "items:gear", label: "Adventuring gear", params: { kind: "gear" } },
+          { key: "items:weapon", label: t("gearUi.weapons"), params: { kind: "weapon", native: "1", locale } },
+          { key: "items:armor", label: t("gearUi.armor"), params: { kind: "armor", native: "1", locale } },
+          { key: "items:gear", label: t("gearUi.adventuring"), params: { kind: "gear", native: "1", locale } },
           {
             key: "items:magic",
-            label: "Magic items",
-            params: { kind: "magic_item" },
-            note: "Ask your DM before starting with one of these.",
+            label: t("gearUi.magic"),
+            params: { kind: "magic_item", native: "1", locale },
+            note: t("gearUi.askMagic"),
             bucketOf: (entry) => {
               const rarity = (entry.rarity ?? "").trim().toLowerCase();
               const order = RARITY_ORDER.indexOf(rarity);
               return {
                 key: rarity || "unspecified",
-                label: rarity ? rarity.replace(/^./, (c) => c.toUpperCase()) : "Rarity not given",
+                label: rarity ? gearRarity(rarity, locale, true) : t("gearUi.rarityUnknown"),
                 order: order === -1 ? RARITY_ORDER.length : order,
               };
             },
           },
         ]}
-        metaOf={(entry) => entry.rarity || entry.cost || ""}
+        metaOf={(entry) => entry.rarity ? gearRarity(entry.rarity, locale) : gearCostText(entry.cost ?? "", locale)}
       />
       <div className="mt-2 flex flex-wrap gap-1.5">
         {equipment.map((item) => (
           <Chip
             key={item.name}
-            label={item.qty > 1 ? `${item.name} x${item.qty}` : item.name}
+            label={item.qty > 1 ? t("gearUi.quantity", { name: equipmentName(item.name, locale, item.slug?.startsWith("homebrew:")), quantity: item.qty }) : equipmentName(item.name, locale, item.slug?.startsWith("homebrew:"))}
             homebrew={item.slug?.startsWith("homebrew:") ?? false}
             info={
               item.slug?.startsWith("homebrew:")
@@ -235,31 +239,30 @@ export default function EquipmentSection({
             className="flex items-center gap-2 rounded-md border border-amber-800/70 bg-amber-950/30 px-3 py-1.5 text-xs text-amber-100 hover:bg-amber-950/60 disabled:opacity-60 motion-press"
           >
             {purse.wealth.busy ? <Loader2 className="size-3.5 animate-spin" /> : <Dices className="size-3.5" />}
-            Roll starting wealth ({purse.wealth.dice})
+            {t("gearUi.rollWealth", { dice: gearWealthDiceText(purse.wealth.dice, locale) })}
           </button>
         ) : null}
         <div className="flex items-baseline gap-2">
           <Coins className="size-3.5 self-center text-amber-300/80" />
-          <span className="text-xs text-stone-400">Coin left after the gear</span>
+          <span className="text-xs text-stone-400">{t("gearUi.coinLeft")}</span>
           <span key={`${purse.gold}-${purse.copper}`} className="reveal font-mono text-sm text-amber-200">
-            {purse.gold} gp{purse.copper ? ` ${purse.copper} cp` : ""}
+            {gearCoin(purse.gold, purse.copper, locale)}
           </span>
         </div>
         <p className="text-[11px] text-stone-500">
           {purse.wealth?.rolled
-            ? `The server rolled ${purse.wealth.rolled.faces.join(", ")} on ${purse.wealth.dice}: ${purse.wealth.rolled.gold} gp. `
+            ? t("gearUi.rolledWealth", { faces: purse.wealth.rolled.faces.join(", "), dice: gearWealthDiceText(purse.wealth.dice, locale), gold: purse.wealth.rolled.gold })
             : ""}
           {purse.source}
         </p>
         {purse.wealth?.error ? (
           <p role="alert" className="reveal motion-shake text-[11px] text-red-400">
-            {purse.wealth.error}
+            {gearWealthError(purse.wealth.error, locale)}
           </p>
         ) : null}
         {purse.problems.length ? (
           <p className={cn("reveal text-[11px] text-amber-300")}>
-            {purse.problems.length === 1 ? "One item above" : `${purse.problems.length} items above`} cannot be paid for; the
-            Continue button waits on that.
+            {t(purse.problems.length === 1 ? "gearUi.unpaidOne" : "gearUi.unpaidMany", { count: purse.problems.length })}
           </p>
         ) : null}
       </div>

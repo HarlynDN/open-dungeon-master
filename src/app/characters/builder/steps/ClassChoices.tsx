@@ -1,9 +1,17 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { skillHelpText } from "@/lib/i18n/game-help-presentations";
+import { LocalizedText } from "@/lib/i18n/LocalizedText";
+import { trainingLabel } from "@/lib/i18n/training-presentations";
+import { skillLabel } from "@/lib/i18n/character-presentations";
+import { builderTermLabel } from "@/lib/i18n/builder-name-presentations";
+import { fightingStyleDescription } from "@/lib/i18n/calling-presentations";
+
 import { GameTerm } from "@/components/ui/GameTerm";
 import { InfoButton } from "@/components/ui/InfoDialog";
 import { cn } from "@/lib/cn";
-import { describeSkill } from "@/lib/help";
+
 import { SRD_SKILLS } from "@/lib/srd";
 import { expertiseAllowed, expertiseSlotsFor, THIEVES_TOOLS } from "@/lib/srd/features";
 import { FIGHTING_STYLES } from "@/lib/srd/feature-effects";
@@ -34,6 +42,7 @@ export function ClassChoices({
   actions: BuilderActions;
   klass: ClassOption | undefined;
 }) {
+  const { locale, t } = useLocale();
   const { effectiveLevel, proficientSkills, styleSlots, optionSlots, toolGrants } = derived;
   const expertiseSlots = klass ? expertiseSlotsFor(klass.id, effectiveLevel) : 0;
   // Only picks in a skill the character still has count: dropping a class
@@ -55,9 +64,10 @@ export function ClassChoices({
           <StepPanel
             key={`${choice.label}-${index}`}
             anchor="tools"
-            title={`Tool proficiency: ${choice.count} ${choice.label}${choice.count === 1 ? "" : "s"}`}
+            title={t("callingUi.toolTitle", { count: choice.count, label: locale === "en"
+              ? `${choice.label}${choice.count === 1 ? "" : "s"}` : trainingLabel("toolCategory", choice.label, locale) })}
             help={
-              left > 0 ? <span className="text-amber-300">{left} still to choose.</span> : undefined
+              left > 0 ? <span className="text-amber-300">{t("callingUi.left", { count: left })}</span> : undefined
             }
           >
             <div className="flex flex-wrap gap-2">
@@ -66,7 +76,7 @@ export function ClassChoices({
                 return (
                   <PickPill
                     key={tool}
-                    label={tool}
+                    label={trainingLabel("tool", tool, locale)}
                     selected={selected}
                     onClick={() => {
                       if (selected) {
@@ -87,7 +97,7 @@ export function ClassChoices({
                       }
                     }}
                   >
-                    {tool}
+                    {trainingLabel("tool", tool, locale)}
                   </PickPill>
                 );
               })}
@@ -102,22 +112,24 @@ export function ClassChoices({
       {klass && expertiseSlots > 0 ? (
         <StepPanel
           anchor="expertise"
-          title={`Expertise (pick ${expertiseSlots})`}
+          title={t("callingUi.expertiseTitle", { count: expertiseSlots })}
           help={
             <>
               {expertiseSlots - expertiseChosen.length > 0 ? (
                 <span className="text-amber-300">
-                  {expertiseSlots - expertiseChosen.length} still to choose.{" "}
+                  {t("callingUi.left", { count: expertiseSlots - expertiseChosen.length })}{" "}
                 </span>
               ) : null}
-              <GameTerm id="expertise">Expertise</GameTerm> doubles your{" "}
-              <GameTerm id="proficiency_bonus">proficiency bonus</GameTerm> on the chosen skills.
+              <LocalizedText message="callingUi.expertiseHelp" values={{
+                expertise: <GameTerm id="expertise">{t("callingUi.expertiseWord")}</GameTerm>,
+                proficiency: <GameTerm id="proficiency_bonus">{t("callingUi.proficiencyLower")}</GameTerm>,
+              }} />
             </>
           }
         >
           <div className="flex flex-wrap gap-2">
             {proficientSkills.length === 0 ? (
-              <span className="text-xs text-stone-500">Pick your class skills above first.</span>
+              <span className="text-xs text-stone-500">{t("callingUi.skillsFirst")}</span>
             ) : null}
             {expertiseOptions.map((skillId) => {
               const skill = SRD_SKILLS.find((entry) => entry.id === skillId);
@@ -125,9 +137,9 @@ export function ClassChoices({
               return (
                 <PickPill
                   key={skillId}
-                  label={skill?.name ?? (skillId === THIEVES_TOOLS ? "Thieves' tools" : skillId)}
+                  label={skill ? skillLabel(skillId, locale) : skillId === THIEVES_TOOLS ? t("callingUi.thievesLabel") : skillId}
                   selected={selected}
-                  info={{ text: skill ? describeSkill(skillId) : "Your proficiency bonus is doubled for ability checks you make with thieves' tools." }}
+                  info={{ text: skill ? skillHelpText(skillId, locale) : t("callingUi.thievesHelp") }}
                   onClick={() =>
                     state.setExpertisePicks((current) => {
                       // Picks whose skill has since been dropped are swept
@@ -141,7 +153,7 @@ export function ClassChoices({
                     })
                   }
                 >
-                  {skill?.name ?? skillId}
+                  {skill ? skillLabel(skillId, locale) : skillId === THIEVES_TOOLS && locale !== "en" ? t("callingUi.thievesLabel") : skillId}
                 </PickPill>
               );
             })}
@@ -152,12 +164,11 @@ export function ClassChoices({
       {styleSlots > 0 ? (
         <StepPanel
           anchor="styles"
-          title={`Fighting style (pick ${styleSlots})`}
+          title={t("callingUi.styleTitle", { count: styleSlots })}
           help={
             styleSlots - state.stylePicks.length > 0 ? (
               <span className="text-amber-300">
-                {styleSlots - state.stylePicks.length} still to choose. A fighting style is a
-                permanent edge with one kind of weapon or armour; read each card before picking.
+                {t("callingUi.styleHelp", { count: styleSlots - state.stylePicks.length })}
               </span>
             ) : undefined
           }
@@ -181,8 +192,8 @@ export function ClassChoices({
                   }
                   className={optionCard(selected)}
                 >
-                  <span className="block text-xs">{style.name}</span>
-                  <span className="block text-[11px] text-stone-500">{style.description}</span>
+                  <span className="block text-xs">{builderTermLabel("fightingStyle", style.name, locale)}</span>
+                  <span className="block text-[11px] text-stone-500">{fightingStyleDescription(style, locale)}</span>
                 </button>
               );
             })}
@@ -194,14 +205,13 @@ export function ClassChoices({
         <StepPanel
           key={slot.kind}
           anchor="options"
-          title={`${slot.label} (pick ${slot.total})`}
+          title={t("callingUi.optionsTitle", { label: builderTermLabel("optionCategory", slot.label, locale), count: slot.total })}
           help={
             <>
               {slot.remaining > 0 ? (
-                <span className="text-amber-300">{slot.remaining} still to choose. </span>
+                <span className="text-amber-300">{t("callingUi.left", { count: slot.remaining })}{" "}</span>
               ) : null}
-              These are real abilities your character gets. Tap the info button on any one to
-              read what it does.
+              {t("callingUi.optionsHelp")}
             </>
           }
         >
@@ -220,13 +230,13 @@ export function ClassChoices({
                   >
                     <span className="block text-xs">{option.n}</span>
                     <span className="block text-[11px] text-stone-500">
-                      {option.req ? `Requires ${option.req}. ` : ""}
+                      {option.req ? t("callingUi.requiresSentence", { requirement: option.req }) : ""}
                       {option.d}
                     </span>
                   </button>
                   <InfoButton
                     label={option.n}
-                    meta={option.req ? `Requires ${option.req}` : undefined}
+                    meta={option.req ? t("callingUi.requires", { requirement: option.req }) : undefined}
                     text={option.d}
                   />
                 </div>

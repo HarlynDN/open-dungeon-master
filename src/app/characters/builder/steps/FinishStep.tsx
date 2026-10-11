@@ -1,5 +1,10 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { finishRulesErrorText, localizedHitPointsLine } from "@/lib/i18n/finish-ui-presentations";
+import { gearCoin, gearWealthDiceText, localizedArmorClassLine, localizedPurseView } from "@/lib/i18n/gear-ui-presentations";
+import { builderOptionName } from "@/lib/i18n/builder-picker-presentations";
+import { featTermLabel } from "@/lib/i18n/feat-presentations";
 import { Camera, UserRound } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { contentSlug } from "@/lib/help";
@@ -8,7 +13,6 @@ import { formatModifier, proficiencyBonus } from "@/lib/srd";
 import { racialFeatCount } from "@/lib/srd/race-id";
 import { ui } from "@/lib/ui";
 import { HpExplainerButton } from "../AbilityExplainers";
-import { armorClassLine, hitPointsLine, purseViewFor } from "../derivedReasons";
 import type { BackgroundOption, ClassOption, RaceOption } from "../useBuilderOptions";
 import type { TableRulesState } from "../useTableRules";
 import type { BuilderDerived } from "../useBuilderDerived";
@@ -44,15 +48,16 @@ export function FinishStep({
   onUploadPortrait: () => void;
   error: string;
 }) {
+  const { locale, t } = useLocale();
   const { portrait, setPortrait } = state;
   const { preview, acInfo, ac, effectiveLevel } = derived;
   const keptSaved = Boolean(initial?.portrait && portrait?.url === initial.portrait.url);
-  const hp = hpExplainerInput(state, derived, race, klass);
+  const hp = hpExplainerInput(state, derived, race, klass, locale);
   // Hit points, armor class and coin are the server's to work out, so they
   // are shown with their reasons and never typed.
   const hpLine =
     preview && klass
-      ? hitPointsLine({
+      ? localizedHitPointsLine({
           hitDie: klass.hitDie,
           level: effectiveLevel,
           maxHp: preview.maxHp,
@@ -60,10 +65,10 @@ export function FinishStep({
           method: preview.hpMethod,
           kept: state.hpOverride !== null,
           atTable: Boolean(table.rules),
-        })
+        }, locale)
       : null;
-  const acLine = armorClassLine(acInfo?.ac ?? ac, acInfo?.parts);
-  const purse = purseViewFor({
+  const acLine = localizedArmorClassLine(acInfo?.ac ?? ac, acInfo?.parts, locale, derived.fullEquipment.filter(item => item.slug?.startsWith("homebrew:")).map(item => item.name));
+  const purse = localizedPurseView({
     purse: derived.purse,
     keepsStoredGear: state.keepsStoredGear,
     backgroundName: background?.name ?? "chosen",
@@ -71,6 +76,9 @@ export function FinishStep({
     classId: klass?.id ?? "",
     className: klass?.name ?? "character",
     table,
+  }, locale, {
+    backgroundName: background ? builderOptionName("background", background, locale) : "chosen",
+    className: klass ? builderOptionName("class", klass, locale) : "character",
   });
   // Feats come with Ability Score Improvements (picked on the Abilities
   // step) or, for a variant human, with the race (picked on the Ancestry
@@ -79,13 +87,13 @@ export function FinishStep({
   const racialFeat = race ? racialFeatCount(race.id) > 0 : false;
   return (
     <div className="space-y-4">
-      <StepPanel title="Portrait (optional)" ornate>
+      <StepPanel title={t("finishUi.portrait")} ornate>
         <div className="flex items-center gap-3">
           {portrait?.url ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={portrait.url}
-              alt="Character portrait"
+              alt={t("finishUi.portraitAlt")}
               className="size-16 shrink-0 rounded-lg border border-amber-500/30 object-cover"
             />
           ) : (
@@ -99,70 +107,70 @@ export function FinishStep({
                   exists: a photo is always a way to give a hero a face. */}
               <button type="button" onClick={onUploadPortrait} className={ui.btnSmall}>
                 <Camera className="size-3.5" />
-                {portrait ? "Replace photo" : "Upload a photo"}
+                {t(portrait ? "finishUi.replacePhoto" : "finishUi.uploadPhoto")}
               </button>
               {/* Clearing the saved portrait means "paint me a new one", which
                   only makes sense where a painter exists. A freshly uploaded
                   photo can always be taken back. */}
               {portrait && (paintsPortraits || !keptSaved) ? (
                 <button type="button" onClick={() => setPortrait(null)} className={ui.btnSmall}>
-                  {keptSaved ? "Regenerate portrait" : "Remove photo"}
+                  {t(keptSaved ? "finishUi.regenerate" : "finishUi.removePhoto")}
                 </button>
               ) : null}
             </div>
             <p className="mt-1.5 text-xs text-stone-500">
               {portrait
                 ? paintsPortraits
-                  ? "This photo is used as-is; no portrait is painted for you."
-                  : "This photo is used as-is."
+                  ? t("finishUi.photoAsIsWithPainter")
+                  : t("finishUi.photoAsIs")
                 : paintsPortraits
-                  ? "Add art, or let the AI paint one after you save."
-                  : "Upload a photo to give your character a face."}
+                  ? t("finishUi.photoOrPaint")
+                  : t("finishUi.photoHelp")}
             </p>
           </div>
         </div>
-        <Field label="Appearance" className="mt-4">
+        <Field label={t("finishUi.appearance")} className="mt-4">
           <p className="mb-2 text-xs text-stone-500">
             {paintsPortraits
-              ? "Used to paint your character's portrait if you don't upload a photo."
-              : "How your character looks, for the party and the DM to picture."}
+              ? t("finishUi.paintAppearance")
+              : t("finishUi.appearanceHelp")}
           </p>
           <textarea
             value={state.appearance}
             onChange={(event) => state.setAppearance(event.target.value)}
             rows={2}
             maxLength={500}
-            placeholder="Silver hair, weathered face, a scar across one eye..."
+            placeholder={t("finishUi.appearancePlaceholder")}
             className={cn(inputClass, "resize-y")}
           />
         </Field>
       </StepPanel>
 
       <StepPanel
-        title="Backstory (optional)"
-        help="Who were they before the adventure? The party can read this, and the DM weaves it into the story."
+        title={t("finishUi.backstoryOptional")}
+        help={t("finishUi.backstoryHelp")}
       >
         <textarea
           value={state.backstory}
           onChange={(event) => state.setBackstory(event.target.value)}
           rows={4}
           maxLength={2000}
-          placeholder="A disgraced temple guard looking for a second chance..."
+          placeholder={t("finishUi.backstoryPlaceholder")}
           className={cn(inputClass, "resize-y")}
-          aria-label="Backstory"
+          aria-label={t("finishUi.backstory")}
         />
       </StepPanel>
 
       {!racialFeat && state.feats.length ? (
         <StepPanel
-          title="Feats"
-          help="Feats this character already holds. New feats come with an ability score improvement."
+          title={t("finishUi.feats")}
+          help={t("finishUi.featsHelp")}
         >
           <div className="mt-2 flex flex-wrap gap-1.5">
             {state.feats.map((feat) => (
               <Chip
                 key={feat}
-                label={feat}
+                label={featTermLabel("feat", feat, locale)}
                 info={{ reference: { kind: "feats", slug: contentSlug(feat), name: feat } }}
                 onRemove={() => state.setFeats((current) => current.filter((entry) => entry !== feat))}
               />
@@ -173,19 +181,19 @@ export function FinishStep({
 
       {table.rulesError ? (
         <p role="alert" className="reveal flex flex-wrap items-center gap-2 rounded-lg border border-amber-500/30 bg-amber-950/20 px-3 py-2 text-xs text-amber-100">
-          {table.rulesError}
+          {finishRulesErrorText(table.rulesError, locale)}
           <button type="button" onClick={table.retryRules} className={ui.btnSmall}>
-            Try again
+            {t("finishUi.retry")}
           </button>
         </p>
       ) : null}
       {preview && race ? (
-        <StepPanel title="Derived stats" ornate className="border-amber-500/30">
+        <StepPanel title={t("finishUi.stats")} ornate className="border-amber-500/30">
           <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm text-stone-300 sm:grid-cols-4">
             <Field
               label={
                 <span className="flex items-center gap-0.5">
-                  Max HP
+                  {t("finishUi.maxHp")}
                   {hp ? <HpExplainerButton hp={hp} compact /> : null}
                 </span>
               }
@@ -195,30 +203,30 @@ export function FinishStep({
               </span>
               <span className="mt-1 block text-[11px] text-stone-500">{hpLine?.reason}</span>
             </Field>
-            <Field label="AC">
+            <Field label={t("finishUi.ac")}>
               <span key={acLine.value} className="reveal font-mono text-base text-amber-100">
                 {acLine.value}
               </span>
               <span className="mt-1 block text-[11px] text-stone-500">{acLine.reason}</span>
             </Field>
-            <Field label="Gold" className="col-span-2">
+            <Field label={t("finishUi.gold")} className="col-span-2">
               <span key={`${purse.gold}-${purse.copper}`} className="reveal font-mono text-base text-amber-100">
-                {purse.gold} gp{purse.copper ? ` ${purse.copper} cp` : ""}
+                {gearCoin(purse.gold, purse.copper, locale)}
               </span>
               <span className="mt-1 block text-[11px] text-stone-500">
                 {purse.wealth?.rolled
-                  ? `Rolled by the server: ${purse.wealth.rolled.gold} gp on ${purse.wealth.dice}. `
+                  ? t("finishUi.rolledWealth", { gold: purse.wealth.rolled.gold, dice: gearWealthDiceText(purse.wealth.dice, locale) })
                   : ""}
                 {purse.source}
               </span>
             </Field>
-            <span className="self-end">Speed {race.speed} ft</span>
-            <span className="self-end">Prof {formatModifier(proficiencyBonus(effectiveLevel))}</span>
-            <span>Initiative {formatModifier(preview.derived.initiative)}</span>
-            <span>Passive Perception {preview.derived.passivePerception}</span>
-            {preview.derived.spellSaveDc ? <span>Spell DC {preview.derived.spellSaveDc}</span> : null}
+            <span className="self-end">{t("finishUi.speed", { speed: race.speed })}</span>
+            <span className="self-end">{t("finishUi.proficiency", { bonus: formatModifier(proficiencyBonus(effectiveLevel)) })}</span>
+            <span>{t("finishUi.initiative", { bonus: formatModifier(preview.derived.initiative) })}</span>
+            <span>{t("finishUi.perception", { value: preview.derived.passivePerception })}</span>
+            {preview.derived.spellSaveDc ? <span>{t("finishUi.spellDc", { value: preview.derived.spellSaveDc })}</span> : null}
             {preview.derived.spellAttack !== null ? (
-              <span>Spell attack {formatModifier(preview.derived.spellAttack)}</span>
+              <span>{t("finishUi.spellAttack", { bonus: formatModifier(preview.derived.spellAttack) })}</span>
             ) : null}
           </div>
         </StepPanel>
@@ -228,7 +236,7 @@ export function FinishStep({
         // Every reason the server gave, not just the first (U:UB8).
         error.includes("\n") ? (
           <div className="motion-shake text-sm text-red-400" role="alert">
-            <p>The server did not save the character:</p>
+            <p>{t("finishUi.saveRefused")}</p>
             <ul className="stagger mt-1 list-disc space-y-0.5 pl-5">
               {error.split("\n").map((line) => (
                 <li key={line}>{line}</li>

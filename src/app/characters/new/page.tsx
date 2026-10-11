@@ -3,14 +3,17 @@
 import Link from "next/link";
 import { useState } from "react";
 import { GoldTitle } from "@/components/ui/GoldTitle";
+import { InterfaceLocalePicker } from "@/components/LocalePicker";
 import { PIXEL_ICONS, PixelTile } from "@/lib/ui";
 import CharacterBuilder, { type BuilderResult } from "../builder/CharacterBuilder";
 import { navigateTo } from "@/lib/navigation";
-import { refusalText } from "@/app/characters/builder/refusal";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { readCharacterResponse, requireCharacter, characterRequestError, characterErrorText, type CharacterUiError } from "@/lib/i18n/character-presentations";
 
 export default function NewCharacterPage() {
+  const { locale, t } = useLocale();
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<CharacterUiError | null>(null);
   // The same sheet either way, and the same adaptation on the way into a
   // campaign (src/lib/characters/adapt.ts). What the role decides is which
   // door they come through: a player character joins a table as yours, a
@@ -20,22 +23,14 @@ export default function NewCharacterPage() {
 
   async function submit(result: BuilderResult) {
     setBusy(true);
-    setError("");
+    setError(null);
     try {
-      const response = await fetch("/api/characters", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...result, role }),
-      });
-      const data = await response.json().catch(() => ({}));
-      if (!response.ok) {
-        setError(refusalText(data, "Could not save the character."));
-        return;
-      }
-      navigateTo("/characters");
-    } catch {
-      setError("Could not reach the server.");
-    } finally {
+      const data = await readCharacterResponse<{ character: { id: string; name: string } }>(fetch("/api/characters", {
+        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...result, role }),
+      }), "characterHost.saveError");
+      requireCharacter(data); navigateTo("/characters");
+    } catch (cause) { setError(characterRequestError(cause, "characterHost.saveError")); }
+    finally {
       setBusy(false);
     }
   }
@@ -44,23 +39,26 @@ export default function NewCharacterPage() {
     <main className="mx-auto w-full max-w-3xl flex-1 p-4 sm:p-6">
       <header className="mb-5">
         <Link href="/characters" className="text-sm text-stone-500 hover:text-stone-300">
-          &larr; Back to your characters
+          &larr; {t("library.back")}
         </Link>
         <div className="mt-2 flex items-center gap-3">
           <PixelTile src={PIXEL_ICONS.characters} />
           <div>
-            <GoldTitle size="text-2xl">Create a character</GoldTitle>
+            <GoldTitle size="text-2xl">{t("characterHost.new")}</GoldTitle>
             <p className="text-sm text-stone-400">
-              Saved to your library; bring them into any campaign later.
+              {t("characterHost.newHint")}
             </p>
           </div>
         </div>
+        <div className="mt-3 max-w-sm">
+          <InterfaceLocalePicker />
+        </div>
       </header>
       <CharacterBuilder
-        submitLabel="Save to library"
+        submitLabel={t("characterHost.save")}
         onSubmit={submit}
         busy={busy}
-        error={error}
+        error={characterErrorText(error, locale)}
         role={{ value: role, onChange: setRole }}
       />
     </main>

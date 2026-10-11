@@ -1,6 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { Check, ChevronDown, Star } from "lucide-react";
+import { isComposingInput } from "@/lib/input-composition";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 import { InfoButton, type ContentRef } from "@/components/ui/InfoDialog";
@@ -36,7 +38,7 @@ export default function OptionPicker({
   value,
   groups,
   onChange,
-  placeholder = "Choose...",
+  placeholder,
   className,
 }: {
   value: string;
@@ -45,6 +47,7 @@ export default function OptionPicker({
   placeholder?: string;
   className?: string;
 }) {
+  const { t } = useLocale();
   const [open, setOpen] = useState(false);
   const container = useRef<HTMLDivElement>(null);
   const selectedRow = useRef<HTMLLIElement>(null);
@@ -73,6 +76,7 @@ export default function OptionPicker({
     <div
       ref={container}
       onKeyDown={(event) => {
+        if (isComposingInput(event)) return;
         if (event.key === "Escape") {
           setOpen(false);
         }
@@ -86,7 +90,7 @@ export default function OptionPicker({
         className={cn(className, "flex items-center justify-between gap-2 text-left")}
       >
         <span className={cn("truncate", !selected?.name && "text-stone-500")}>
-          {selected?.name || placeholder}
+          {selected?.name || placeholder || t("builder.choose")}
         </span>
         <ChevronDown className="size-4 shrink-0 text-stone-500" />
       </button>
@@ -138,9 +142,9 @@ export default function OptionPicker({
                         {/* A star, not a word: these rows sit in half-width
                             columns, and the group heading says the rest. */}
                         {group.recommended ? (
-                          <span className="shrink-0 text-amber-300" title="Recommended for this setting">
+                          <span className="shrink-0 text-amber-300" title={t("builder.recommended")}>
                             <Star className="size-3 fill-current" aria-hidden="true" />
-                            <span className="sr-only">Recommended for this setting</span>
+                            <span className="sr-only">{t("builder.recommended")}</span>
                           </span>
                         ) : null}
                       </span>

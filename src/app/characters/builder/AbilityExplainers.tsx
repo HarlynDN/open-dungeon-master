@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { abilityHpSteps } from "@/lib/i18n/ability-ui-presentations";
 import { useState, type CSSProperties } from "react";
 import { Dialog } from "@/components/ui/Dialog";
 import { Ribbon } from "@/components/ui/Ribbon";
@@ -50,11 +52,12 @@ export function MethodInfoDialog({
   methods: Array<{ id: string; label: string; info: string }>;
   current: string;
 }) {
+  const { t } = useLocale();
   const chosen = methods.find((entry) => entry.id === current) ?? methods[0];
   return (
     <Dialog open={open} onOpenChange={onOpenChange} title={chosen.label} width="w-[min(94vw,26rem)]">
       <Brackets />
-      <Ribbon className="mb-3">Three ways</Ribbon>
+      <Ribbon className="mb-3">{t("abilityUi.threeWays")}</Ribbon>
       <div className="flex flex-col gap-2">
         {methods.map((entry, index) => {
           const isCurrent = entry.id === current;
@@ -72,7 +75,7 @@ export function MethodInfoDialog({
                   {entry.label}
                 </span>
                 {isCurrent ? (
-                  <span className="shrink-0 font-mono text-[9px] uppercase tracking-[0.08em] text-amber-300">chosen</span>
+                  <span className="shrink-0 font-mono text-[9px] uppercase tracking-[0.08em] text-amber-300">{t("abilityUi.chosen")}</span>
                 ) : null}
               </div>
               <p className="font-serif text-[12.5px] leading-normal text-stone-300">{entry.info}</p>
@@ -82,7 +85,7 @@ export function MethodInfoDialog({
       </div>
       <div className="mt-4 flex justify-end">
         <button type="button" onClick={() => onOpenChange(false)} className={ui.btnPrimary}>
-          Close
+          {t("common.close")}
         </button>
       </div>
     </Dialog>
@@ -153,39 +156,30 @@ export function HpExplainerDialog({
   onOpenChange: (open: boolean) => void;
   hp: HpExplainerInput;
 }) {
+  const { locale, t } = useLocale();
   const parts = hpBreakdown(hp);
-  const klass = hp.className.toLowerCase();
   const later = hp.level > 1;
   const signed = (value: number) => `${value >= 0 ? "+" : "-"} ${Math.abs(value)}`;
   const sum = later
     ? `${parts.firstLevel} + ${hp.level - 1} x ${parts.perLevel} = ${parts.total}`
     : `${parts.hitDie} ${signed(parts.conMod)}${parts.bonusPerLevel ? ` + ${parts.bonusPerLevel}` : ""} = ${parts.total}`;
-  const steps = [
-    `A ${klass} rolls a d${parts.hitDie} for health. At first level you do not roll it: you take the best it can give.`,
-    `Your Constitution of ${hp.con} is worth ${formatModifier(parts.conMod)}, and that applies to every level you gain.`,
-    later
-      ? `Each level after the first adds the die's average (${Math.floor(parts.hitDie / 2) + 1}) plus that modifier, so ${hp.level - 1} more ${hp.level === 2 ? "level adds" : "levels add"} ${parts.laterLevels}. You begin on ${parts.total}.`
-      : `So you begin on ${parts.total}. Rest fully and you are back to it.`,
-    hp.override
-      ? `Your table set a different number: the last step has ${hp.override} typed into Max HP, so that is what the sheet will use.`
-      : "Your table can set a different number instead. The last step takes a Max HP override, and the builder stops suggesting once you type one.",
-  ];
+  const steps = abilityHpSteps(hp, locale);
   return (
-    <Dialog open={open} onOpenChange={onOpenChange} title="How your health is worked out" width="w-[min(94vw,26rem)]">
+    <Dialog open={open} onOpenChange={onOpenChange} title={t("abilityUi.hpTitle")} width="w-[min(94vw,26rem)]">
       <Brackets />
       <p className="mb-4 font-serif text-[13.5px] leading-normal text-stone-300">
-        At first level you take the best your hit die can give, then add your Constitution modifier.
+        {t("abilityUi.hpIntro")}
       </p>
       <div className="mb-3 flex flex-wrap items-center justify-center gap-2">
-        <FormulaChip index={0} label="Hit die max" value={`d${parts.hitDie}`} note={hp.className} />
+        <FormulaChip index={0} label={t("abilityUi.hpHitMax")} value={`d${parts.hitDie}`} note={hp.className} />
         <Op>+</Op>
-        <FormulaChip index={1} label="Con mod" value={formatModifier(parts.conMod)} note={`(${hp.con})`} />
+        <FormulaChip index={1} label={t("abilityUi.hpConMod")} value={formatModifier(parts.conMod)} note={`(${hp.con})`} />
         {later ? (
           <>
             <Op>+</Op>
             <FormulaChip
               index={2}
-              label={`Levels 2 to ${hp.level}`}
+              label={t("abilityUi.hpLevels", { level: hp.level })}
               value={String(parts.laterLevels)}
               note={`${hp.level - 1} x ${parts.perLevel}`}
             />
@@ -195,15 +189,15 @@ export function HpExplainerDialog({
         <FormulaChip
           index={later ? 3 : 2}
           tone="result"
-          label={later ? "Max hp" : "Starting hp"}
+          label={t(later ? "abilityUi.hpMax" : "abilityUi.hpStarting")}
           value={String(parts.total)}
-          note="full health"
+          note={t("abilityUi.hpFull")}
         />
       </div>
       <p className="mb-3.5 text-center font-mono text-[13px] text-amber-300">{sum}</p>
       {parts.bonusPerLevel ? (
         <p className="mb-3 text-center font-mono text-[10.5px] text-stone-500">
-          Includes +{parts.bonusPerLevel} per level from your lineage.
+          {t("abilityUi.hpBonus", { bonus: parts.bonusPerLevel })}
         </p>
       ) : null}
       <ol className="flex flex-col gap-[7px]">
@@ -222,7 +216,7 @@ export function HpExplainerDialog({
       </ol>
       <div className="mt-4 flex justify-end">
         <button type="button" onClick={() => onOpenChange(false)} className={ui.btnPrimary}>
-          Got it
+          {t("abilityUi.gotIt")}
         </button>
       </div>
     </Dialog>
@@ -232,17 +226,18 @@ export function HpExplainerDialog({
 // The labelled button under the abilities summary, and the bare "?" beside
 // the Max HP field on the last step: two doors to the same explainer.
 export function HpExplainerButton({ hp, compact = false }: { hp: HpExplainerInput; compact?: boolean }) {
+  const { t } = useLocale();
   const [open, setOpen] = useState(false);
   return (
     <>
       {compact ? (
-        <HelpDot label="How your health is worked out" onClick={() => setOpen(true)} className="-my-2" />
+        <HelpDot label={t("abilityUi.hpTitle")} onClick={() => setOpen(true)} className="-my-2" />
       ) : (
         <button type="button" onClick={() => setOpen(true)} className={cn(ui.btnSmall, "text-xs")}>
           <span className="flex size-[15px] items-center justify-center rounded-full border border-amber-500/50 font-mono text-[9px] text-amber-300">
             ?
           </span>
-          How is my health worked out?
+          {t("abilityUi.hpButton")}
         </button>
       )}
       <HpExplainerDialog open={open} onOpenChange={setOpen} hp={hp} />
