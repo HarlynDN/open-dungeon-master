@@ -9,6 +9,7 @@ import {
   STARTING_WEALTH,
 } from "@/lib/schemas/game-settings-options";
 import { parseKeepingValid } from "@/lib/schemas/parse-keeping-valid";
+import { APP_LOCALES } from "@/lib/i18n/locales";
 
 // The option lists and their labels live in ./game-settings-options (no
 // zod) so the campaign wizard can draw them without the validator; they
@@ -40,6 +41,9 @@ export {
 // separate from settings_json (the model/image StorySettings) so the two
 // never fight over shape.
 export const gameSettingsSchema = z.object({
+  // Campaign prose, independent of each player's interface preference.
+  // An old campaign without this field retains its original English mode.
+  locale: z.enum(APP_LOCALES).default("en"),
   // Who runs the game. "ai" is the original behavior and the default.
   // "human" silences the AI narrator entirely: player actions queue for the
   // DM instead of waking a turn. "assisted" keeps the AI available for the

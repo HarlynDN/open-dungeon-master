@@ -1,5 +1,6 @@
 import { getDatabase, nowIso, parseJson } from "@/lib/db/core";
 import type { DiceLook } from "@/lib/dice/dice-look";
+import type { AppLocale } from "@/lib/i18n/locales";
 
 export type UserAvatar = {
   url: string;
@@ -133,6 +134,7 @@ export function setUserAvatar(userId: string, avatar: UserAvatar | null) {
 // mean "use the default", so a patch merges rather than replaces: a browser
 // syncing its chime toggle must not erase the volumes another one saved.
 export type UserSettings = {
+  uiLocale?: AppLocale;
   narrationVolume?: number;
   narrationMuted?: boolean;
   ambienceVolume?: number;

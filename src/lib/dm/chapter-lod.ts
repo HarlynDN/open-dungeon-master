@@ -21,6 +21,8 @@
 //
 // Dependency-free so scripts/test-chapter-lod.mjs can import it directly.
 
+import { estimateTokens } from "./context-budget.ts";
+
 export type LodTier = "summary" | "synopsis" | "dropped";
 
 // A sealed chapter, reduced to what rendering needs. `importance` is the
@@ -53,7 +55,7 @@ export const DEFAULT_LOD_CONFIG: LodConfig = { summaryChapters: 7, importanceBon
 export const IMPORTANCE_THRESHOLD = 8;
 
 export function estimateLodTokens(text: string): number {
-  return Math.ceil(text.length / 4);
+  return estimateTokens(text);
 }
 
 // First sentence of the summary, falling back to the title. Deliberately
@@ -64,7 +66,7 @@ export function firstSentence(summary: string): string {
   if (!trimmed) {
     return "";
   }
-  const match = trimmed.match(/^[^.!?]*[.!?]?/);
+  const match = trimmed.match(/^[^.!?。！？]*[.!?。！？]?[”’"'」』]*/u);
   const sentence = match ? match[0].trim() : trimmed;
   return sentence || trimmed;
 }

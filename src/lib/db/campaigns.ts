@@ -106,6 +106,7 @@ type CampaignRow = {
   created_at: string;
   updated_at: string;
   player_count?: number;
+  dm_count?: number;
   member_role?: "owner" | "player";
 };
 
@@ -250,7 +251,7 @@ function mapCampaign(row: CampaignRow): Campaign {
     leadUserId: row.party_lead_user_id ?? row.owner_user_id,
     dmUserId: row.human_dm_user_id ?? null,
     assistantDmUserId: row.assistant_dm_user_id ?? null,
-    playerCount: Number(row.player_count ?? 0),
+    playerCount: Number(row.player_count ?? 0) - (gameSettings.dmMode === "ai" ? 0 : Number(row.dm_count ?? 0)),
     role: row.member_role ?? (row.owner_user_id ? "player" : "player"),
     cover: normalizeCampaignCover(parseJson(row.cover_json ?? "", null)),
     genre: gameSettings.genre,
@@ -275,6 +276,10 @@ const CAMPAIGN_SELECT = `
   SELECT
     c.*,
     (SELECT COUNT(*) FROM campaign_members m WHERE m.campaign_id = c.id) AS player_count,
+    -- Only real members in active human DM seats are excluded in mapCampaign.
+    -- An AI-mode legacy row with stale seat columns still counts all players.
+    (SELECT COUNT(*) FROM campaign_members m WHERE m.campaign_id = c.id
+      AND (m.user_id = c.human_dm_user_id OR m.user_id = c.assistant_dm_user_id)) AS dm_count,
     -- Whether the owner may choose backend addresses (src/lib/db/settings.ts).
     (SELECT u.is_admin FROM users u WHERE u.id = c.owner_user_id) AS owner_is_admin
   FROM campaigns c

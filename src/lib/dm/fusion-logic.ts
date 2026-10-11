@@ -25,11 +25,50 @@ const STOP_WORDS = new Set([
   "again", "once", "about", "after", "before", "between", "through", "during",
 ]);
 
+const CJK = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u;
+const CJK_STOP_WORDS = new Set(["的", "了", "在", "是", "和", "与", "有", "为", "我们", "你们", "他们", "这个", "那个"]);
+const wordSegmenter = typeof Intl.Segmenter === "function"
+  ? new Intl.Segmenter("zh-CN", { granularity: "word" })
+  : null;
+
+function segmentCjk(token: string): string[] {
+  if (wordSegmenter) {
+    const words = [...wordSegmenter.segment(token)]
+      .filter((part) => part.isWordLike)
+      .map((part) => part.segment)
+      .filter((part) => CJK.test(part)
+        ? !CJK_STOP_WORDS.has(part)
+        : part.length > 2 && !STOP_WORDS.has(part));
+    // ICU can split a domain term across boundaries (e.g. 掷骰子 becomes
+    // 掷骰 + 子). Add overlapping CJK bigrams that were not already emitted
+    // so a two-character query and a short proper name still find the run.
+    const existing = new Set(words);
+    const bigrams = [...token.matchAll(/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]+/gu)]
+      .flatMap(([run]) => {
+        const chars = [...run];
+        return chars.slice(0, -1).map((char, i) => char + chars[i + 1]);
+      })
+      .filter((word) => !existing.has(word) && !CJK_STOP_WORDS.has(word));
+    return [...words, ...bigrams];
+  }
+  // Engines without ICU word segmentation: preserve two-character terms
+  // and overlapping bigrams, rather than treating a paragraph as one word.
+  return token.split(/([\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]+)/u)
+    .flatMap((run) => {
+      if (!CJK.test(run)) return run.length > 2 && !STOP_WORDS.has(run) ? [run] : [];
+      const chars = [...run];
+      const words = chars.length === 1 ? chars : chars.slice(0, -1).map((char, i) => char + chars[i + 1]);
+      return words.filter((word) => !CJK_STOP_WORDS.has(word));
+    });
+}
+
 export function tokenize(text: string): string[] {
   return text
     .toLowerCase()
     .split(/[^\p{L}\p{N}']+/u)
-    .filter((token) => token.length > 2 && !STOP_WORDS.has(token));
+    .flatMap((token) => CJK.test(token)
+      ? segmentCjk(token)
+      : token.length > 2 && !STOP_WORDS.has(token) ? [token] : []);
 }
 
 // Inverse document frequency with BM25's smoothing, so a term in every

@@ -8,10 +8,8 @@
 //
 // Dependency-free so scripts/test-context-budget.mjs can import it directly.
 
-// Characters per token. A rough proxy, not a tokenizer: ODM deliberately
-// carries no tokenizer dependency, and the DM runs against whatever local
-// model the operator configured, each with its own vocabulary. Four is the
-// usual English approximation and errs slightly conservative for prose.
+// ASCII characters per token. Non-ASCII text is counted separately below:
+// applying this English approximation to Chinese can undercount by 4–8x.
 export const CHARS_PER_TOKEN = 4;
 
 // Used when a campaign has no configured context limit. Deliberately modest:
@@ -35,7 +33,19 @@ export const MAX_RESPONSE_RESERVE_TOKENS = 8_192;
 export const RESPONSE_RESERVE_SHARE = 1 / 8;
 
 export function estimateTokens(text: string): number {
-  return Math.ceil((text?.length ?? 0) / CHARS_PER_TOKEN);
+  // Model-independent estimate, not a guaranteed upper bound. Han/kana/
+  // Hangul need a different proxy from English; Latin diacritics and prose
+  // punctuation retain the legacy character rate. Rare symbols/emoji keep
+  // a conservative allowance. Backend usage includes framing and tools and
+  // cannot directly calibrate a character rate from the reply alone.
+  let tokens = 0;
+  for (const char of text ?? "") {
+    if (char.codePointAt(0)! <= 0x7f) tokens += 1 / CHARS_PER_TOKEN;
+    else if (/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u.test(char)) tokens += 1.5;
+    else if (/[\p{Script=Latin}\p{Punctuation}\p{Separator}\p{Mark}]/u.test(char)) tokens += 1 / CHARS_PER_TOKEN;
+    else tokens += 2;
+  }
+  return Math.ceil(tokens);
 }
 
 export function responseReserveTokens(contextWindowTokens: number): number {
