@@ -34,6 +34,7 @@ function nativeFrame(text: string, prefix: string): { key: MessageKey; args: Rec
         // Native composed refusals prefix a canonical technique with the
         // actor's name. The actor may contain colons; take the last separator.
         const capture = name === "who" && source.startsWith("{who}: {feature}") ? "[\\s\\S]+"
+          : name === "gp" ? "\\d+(?:\\.\\d+)?"
           : name === "feet" || name === "range" ? "\\d+(?:/\\d+)?" : numeric.has(name) || (name === "current" && prefix === "handMaterial.health.") ? "\\d+" : name === "dice" ? "[+-]?(?:\\d+d\\d+|\\d+)(?:\\s*[+-]\\s*(?:\\d+d\\d+|\\d+))*"
           : name === "die" ? "d\\d+" : "[\\s\\S]+?";
         expression += seen.has(name) ? `\\k<${name}>` : `(?<${name}>${capture})`;
@@ -65,6 +66,31 @@ function mechanic(text: string, locale: AppLocale): string {
   if (term !== text) return term;
   const spell = referenceDisplayName("spell", text, locale);
   return spell !== text ? spell : referenceDisplayName("equipment", text, locale);
+}
+
+// Project the native materialPlan printer, requiring a complete reviewed noun
+// or phrase. Prices/quantity/consumption are display facts; custom descriptions
+// and the inventory example used for actual engine matching remain untouched.
+export function handComponentText(raw: string, locale: AppLocale): string {
+  if (locale === "en" || !raw) return raw;
+  const whole = exactLabel(raw, "handMaterial.componentText.", locale);
+  if (whole !== raw) return whole;
+  const t = createTranslator(locale);
+  const count = /^(\d+) × ([\s\S]+)$/.exec(raw);
+  let text = count?.[2] ?? raw;
+  const suffix = ", which the spell consumes";
+  const consumed = text.endsWith(suffix);
+  if (consumed) text = text.slice(0, -suffix.length);
+  let material = exactLabel(text, "handMaterial.componentText.", locale);
+  if (material === text) {
+    const price = /^([\s\S]*?) worth (\d+(?:\.\d+)?) gp( each)?$/.exec(text);
+    if (!price) return raw;
+    const noun = price[1] ? exactLabel(price[1], "handMaterial.componentText.", locale) : t("handMaterial.component.unspecified");
+    if (noun === price[1]) return raw;
+    material = t(price[3] ? "handMaterial.component.each" : "handMaterial.component.value", { material: noun, gp: price[2] });
+  }
+  if (consumed) material = t("handMaterial.component.consumed", { material });
+  return count ? t("handMaterial.component.count", { count: count[1], material }) : material;
 }
 
 export function handRefusalText(raw: string, locale: AppLocale): string {
@@ -103,6 +129,12 @@ export function handRefusalText(raw: string, locale: AppLocale): string {
   for (const key of ["what", "feature"] as const) if (args[key]) args[key] = mechanic(args[key], locale);
   if (args.spell) args.spell = referenceDisplayName("spell", args.spell, locale);
   if (args.form) args.form = referenceDisplayName("monster", args.form, locale);
+  if (args.material) args.material = handComponentText(args.material, locale);
+  if (args.time) {
+    const time = nativeFrame(args.time, "handMaterial.time.");
+    if (!time) return raw;
+    args.time = createTranslator(locale)(time.key, time.args);
+  }
   if (args.pool) args.pool = resourceLabel(args.pool.replace(/ /g, "_"), args.pool, locale);
   if (args.armor) {
     const items = args.armor.split(" and ");
@@ -135,6 +167,7 @@ export function handRuleText(raw: string, locale: AppLocale): string {
     const args = { ...frame.args };
     if (args.type) args.type = damageListLabel(args.type, locale);
     if (args.feature) args.feature = mechanic(args.feature, locale);
+    if (args.form) args.form = referenceDisplayName("monster", args.form, locale);
     if (args.spell) args.spell = referenceDisplayName("spell", args.spell, locale);
     if (args.ability) args.ability = args.ability.split(" or ").map(value => ability(value, locale)).join(createTranslator(locale)("handMaterial.join.or"));
     if (args.against) args.against = handFactText(args.against, locale);

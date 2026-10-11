@@ -29,7 +29,7 @@ flow remains incomplete; the review-repair checkpoint is a separate scoped task.
 | Locale foundation | Registry, persistence, browser fallback, typed complete catalogs, model locale policy, classified token proxy, chapter budget, CJK retrieval, IME protection | Real prompt-usage calibration; keep legacy campaign/history regressions |
 | DM safety | Per-event engine conclusions with English/Chinese renderers; AI prose separated; one text-only correction and safe fallback; shared localized enemy names and held-resource names/IDs; scoped resource aliases and ambiguity retries; real Codex combat/resource acceptance | Untracked feature/reaction options and broader spell/condition/pack coverage; conservative regex coverage is not full language understanding |
 | Embeddings | Original English deployment default retained; explicit multilingual opt-in; fixed bilingual calibration/holdout and hard-negative policy | Broader pack quality; opt-in affects English campaigns and rebuilds indexes |
-| UI | **152/437** covered files, **2935** pending literal sites, **7873** message keys; scoped AST gate; earlier play/session surfaces plus hand labels/targets/area selection, campaign-locale action sentences, native previews, basic/reaction rules, common casting refusals, spell selectors, all 113 owned mechanic notes, 103 native technique and 23 maneuver labels, attack/bonus-route refusals | Shape/remaining dynamic text, priced-material and ritual text keep hand files pending; general play/inventory/rest/level-up/save/resume surfaces and full sheet/party dialogs; file fraction is not overall completion or an effort estimate |
+| UI | **153/437** covered files, **2935** pending literal sites, **7987** message keys; scoped AST gate; earlier play/session surfaces plus hand labels/targets/area selection, campaign-locale action sentences, native previews, basic/reaction rules, common casting refusals, spell selectors, all 113 owned mechanic notes, 103 native technique and 23 maneuver labels, attack/bonus-route and material/ritual refusals | Form attack/current-actor labels and remaining dynamic text keep hand files pending; general play/inventory/rest/level-up/save/resume surfaces and full sheet/party dialogs; file fraction is not overall completion or an effort estimate |
 | Character creation/material | Identity, ancestry, class introductions, ability allocation, gear, spell book/preparation and finish preview; 517 spell and 228 equipment names; 257-entry contextual terminology policy and lint gate; 415/415 static registered resource names and guidance shared with DM references; original-source review records | Remaining feature/feat and magic-item material; dynamic free-cast resources and user-authored/pack text remain outside the static resource review |
 | Player system logs | Structured rule diagnostics and engine-generated combat conclusions retain English protocol semantics with localized presentation | General player-visible log templates; model-facing English tool results remain independent |
 | Resource delivery | UI vs content namespaces; character/campaign boundaries; generated resources checked by lint; production Turbopack build and anonymous bilingual browser switch/reload succeed; home/character/campaign SSR and initial-script payloads measured | Hydrated/lazy network totals, authenticated campaign switching and active-play browser acceptance; route-level JS payload remains large |
@@ -59,24 +59,26 @@ attempts were blocked at its internal port binding by the execution environment,
 including the escalated attempt; this batch does not claim a passing production
 build. Keep that gate for the next phase boundary rather than retrying per batch.
 
-The latest Hand checkpoint adds 137 content-only keys. All 103 currently
-registered active technique names (authored spends/reactions/bonus routes) and
-23 maneuver names now display in Chinese. Existing effect/choice/roll labels are
-reused; only 65 technique names and 18 maneuver names needed new entries. Core
-attack-option refusals, bonus-route requirements, pool shortages and full known
-feat-hint suffixes now localize without changing native strings or intent values.
-Telekinetic Adept's two choices retain `thrust`/`leap` in the payload. Unknown
-requirements, authored restrictions and unknown hint combinations stay verbatim.
+The latest Hand checkpoint adds 114 content-only keys: all 80 bundled material
+descriptions, 15 special priced-component nouns, and native quantity/value/
+consumption, ritual, long-casting and form frames. Missing/partial material,
+insufficient-gold and target-Hit-Die refusals now display reviewed Chinese facts.
+Prices, quantities and consumption flags remain native. Inventory examples stay
+verbatim and are explicitly labeled as names to copy, because the existing
+material matcher recognizes those canonical English words; no item/protocol or
+stored name is rewritten. Unknown authored material descriptions stay literal.
 
-The focused `scripts/test-hand-feature-locales.mjs` passed in 1.3 seconds: native
-names/maneuvers, 30 real refusal/hint combinations and the real JSX choice
-callback. It caught and fixed an actor-name boundary bug in composed refusals;
-proper names containing colons/apostrophes/decimals remain intact. Types and
-catalog/AST/terminology checks passed (zero errors, 111 context warnings). No
-settled Goblin, model/audio call, full regression, lint or build was repeated.
-File coverage remains 152/437; Hand stays pending for shape text, remaining
-native dynamic fields and priced-material/ritual refusals. The prior spell-note
-checkpoint and its narrow contracts remain in Git.
+The focused `scripts/test-hand-casting-locales.mjs` passed in one second: 95
+material descriptions and 167 real material/ritual/casting refusals, unchanged
+numbers/examples, partial-component shortages and copying the example back into
+a successful native plan. Types and catalog/AST/terminology checks passed with
+zero errors and 112 context warnings. The added warning is a quantified material
+“一个圣徽” versus focus label “圣徽”, with the same noun. No settled Goblin,
+model/audio call, full regression, lint or build was repeated. HandSpells is a
+reviewed lookup hook with no owned UI copy; marking it covered makes file coverage
+153/437 while pending literal sites stay 2935. Hand surfaces still need form
+attack/current-actor labels and remaining native dynamic fields. Earlier spell
+and technique contracts remain in Git.
 
 ## Compatibility contracts
 

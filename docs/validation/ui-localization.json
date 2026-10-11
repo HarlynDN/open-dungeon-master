@@ -368,7 +368,7 @@
     {
       "path": "src/app/campaigns/[campaignId]/Hand.tsx",
       "state": "pending",
-      "review": "Owned labels, campaign-locale sentences, common engine/network/casting/attack-option/bonus-route/pool refusals and registered complete feat hints reviewed; structured intent unchanged. Actor names including colon punctuation preserved. Priced-material, ritual and remaining dynamic frames stay pending; authored restrictions stay verbatim."
+      "review": "Owned labels, campaign-locale sentences and common network/casting/attack/bonus/pool/material/ritual refusals reviewed. Native inventory examples stay verbatim for copyable engine matching; unknown authored restrictions retained. Current-actor labels and remaining dynamic frames keep this pending."
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandAimBar.tsx",
@@ -378,12 +378,12 @@
     {
       "path": "src/app/campaigns/[campaignId]/HandCardFace.tsx",
       "state": "pending",
-      "review": "Type/cost labels, native facts/previews, basic/reaction/resource rules, 113 owned spell notes and all 103 active technique plus 23 maneuver names reviewed. Common casting/attack/bonus/pool refusals and registered feat hints localize with source preserved. Shape and remaining dynamic/material/ritual frames keep this pending."
+      "review": "Owned labels, native facts/previews/rules, 113 spell notes, 103 active technique and 23 maneuver names, 95 material descriptions and common casting/attack/bonus/pool/material/ritual refusals reviewed. Form rule text localizes; natural form attack and remaining dynamic names keep this pending. Native parameters/examples remain untouched."
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandMoreSheet.tsx",
       "state": "pending",
-      "review": "Owned labels, native previews/rules/spell notes, 103 active technique plus 23 maneuver names and common casting/attack/bonus/pool/feat-hint refusals reviewed. Unknown/custom source remains literal. Shape and remaining dynamic/material/ritual text keeps this file pending."
+      "review": "Owned labels, previews/rules/spell notes, active technique/maneuver names and common casting/attack/bonus/pool/material/ritual refusals reviewed. Canonical inventory examples and authored content stay literal. Form/current-actor and remaining dynamic labels keep this pending."
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandPips.tsx",
@@ -393,11 +393,12 @@
     {
       "path": "src/app/campaigns/[campaignId]/HandReactPrompt.tsx",
       "state": "pending",
-      "review": "Owned reaction strip, current-record hit/fall prompts, known names/resource counters, native reaction rules and common refusals reviewed; native card callbacks preserved. Uncommon subclass reaction names and casting/material refusal frames remain pending."
+      "review": "Owned reaction strip, current-record prompts, active technique names, counters/rules and common casting/material refusals reviewed; callbacks and canonical examples preserved. Remaining current-attacker/action display names keep this pending."
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandSpells.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Content/fact lookup hook has no owned player-facing UI text. Canonical names, scoped cache keys, English parser prose and authored spell/mechanic data remain unchanged; visible spell cards are reviewed independently."
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandTutorial.tsx",
