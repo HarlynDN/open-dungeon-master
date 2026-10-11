@@ -37,7 +37,7 @@ await test('38 original English picker/book/finish/sheet projections remain exac
  assert.match(of(zh,'finish/hp/rolled'),/9 至 24.*d6/);
  assert.match(of(zh,'finish/stored'),/保留已保存角色/);assert.match(of(zh,'finish/stored'),/运动健将.*Cloud \{feat\}/);
  assert.match(of(zh,'sheet/prepared/true'),/长休后.*立即取消准备/);
- assert.match(of(zh,'finish/portrait/false/false/false'),/上传图片.*外貌.*身世/);
+ assert.match(of(zh,'finish/portrait/false/false/false'),/上传图片.*外貌.*背景故事/);
 });
 
 await test('all 517 checklist names and printed aliases translate while authored/reskinned names and English survive verbatim',()=>{

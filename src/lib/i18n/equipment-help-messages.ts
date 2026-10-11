@@ -32,11 +32,11 @@ export const EQUIPMENT_HELP_MESSAGES = /*#__PURE__*/ defineMessages({
   },
   "itemHelp.acBonus": {
     "en": "AC bonus",
-    "zh-CN": "防御等级加值"
+    "zh-CN": "护甲等级加值"
   },
   "itemHelp.ac": {
     "en": "Armor class",
-    "zh-CN": "防御等级"
+    "zh-CN": "护甲等级"
   },
   "itemHelp.damage": {
     "en": "Damage",

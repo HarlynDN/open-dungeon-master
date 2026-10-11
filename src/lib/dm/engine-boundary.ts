@@ -13,6 +13,7 @@
 import { LEVELED_SPELL_NAMES } from "./leveled-spells.ts";
 import { normalizeLocale, type AppLocale } from "../i18n/locales.ts";
 import { referenceAliases, type ReferenceKind } from "../i18n/reference-names.ts";
+import { localizedReferenceAliases } from "../i18n/references.ts";
 import { NARRATION_LOCALE_ADAPTERS } from "./narration-locales.ts";
 import { GUARD_MESSAGES } from "../i18n/guard-messages.ts";
 
@@ -675,7 +676,7 @@ function proseNames(kind: ReferenceKind, key: string, display: string, locale: A
   const indexed = kind === "monster" && /^(?:#\s*)?\d+$/u.test(suffix)
     ? translated.flatMap(name => [`${name}${suffix}`, `${name} ${suffix}`])
     : [];
-  return [...new Set([key, display, ...translated, ...indexed, ...(aliases?.[key] ?? []), ...(aliases?.[display] ?? [])])];
+  return [...new Set([key, display, ...translated, ...indexed, ...localizedReferenceAliases(kind, display, locale), ...(aliases?.[key] ?? []), ...(aliases?.[display] ?? [])])];
 }
 
 export function findNarrationContradictions(

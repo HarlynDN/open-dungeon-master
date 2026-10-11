@@ -143,7 +143,7 @@ export const BUILDER_MESSAGES = /*#__PURE__*/ defineMessages({
   },
   "builder.newCharacter": {
     "en": "New character",
-    "zh-CN": "新角色"
+    "zh-CN": "新建角色"
   },
   "builder.yourCharacter": {
     "en": "your character",
@@ -423,7 +423,7 @@ export const BUILDER_MESSAGES = /*#__PURE__*/ defineMessages({
   },
   "builder.term.23": {
     "en": "Bonds",
-    "zh-CN": "联结"
+    "zh-CN": "羁绊"
   },
   "builder.term.24": {
     "en": "Dirges",

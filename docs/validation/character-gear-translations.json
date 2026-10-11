@@ -15,14 +15,23 @@
     "src/lib/i18n/equipment-presentations.ts": "7b5cc62cf0d7348b25f0baf693af129e7ce8e911b94255c932553b392a9645d6",
     "src/lib/i18n/gear-ui-presentations.ts": "7f5e42e0c8d41b35948beefea931bff76257146f50bd2b722638b24ee182ca80",
     "src/lib/i18n/equipment-help-presentations.ts": "8e0cbb2471312fa9c85dc6f253af275ea9be8c885985f0ded40f61a893ceee41",
-    "src/lib/i18n/reference-names.ts": "339580a3ea95ebcb2185ace6558f203eb907caefe0b5e7a25c90abcf4aa095bd",
+    "src/lib/i18n/reference-names.ts": "8811aa04f8ddcf46bbba5853186751b3140e84b4c398fd19ff47e4fe03946c7e",
     "src/lib/content/native-equipment-search.ts": "6ade2d40d22e64f6d1ac6e4e1bbd05e4d40e0d38991f06cbc14504bef1218d32",
     "src/app/api/content/[kind]/route.ts": "e8990c888a6a6a04db0943709610be63fbcc59d70f0eef36cf975636c8201d89"
   },
   "catalogs": {
-    "src/lib/i18n/gear-ui-messages.ts": "72c709098612fe489f29895896bd02cf9ca8ff088114e0fe56e56d4fc70ba681",
+    "src/lib/i18n/gear-ui-messages.ts": "9762d8ef614c012861d92d7cf92e11e8362ff7836dd96da528e557919b59ab6a",
     "src/lib/i18n/equipment-name-messages.ts": "babb7d54d96715a26d809cc1256a23a76a041578d62e61b1e57464113f0acb3a",
-    "src/lib/i18n/equipment-help-messages.ts": "aabd782f86396dbff1ef58e2121daf529ea4179a916f6130300a9f28496f51ee"
+    "src/lib/i18n/equipment-help-messages.ts": "98a9b13249b077f83f277dfe7a2234a7d18a14ed8e86e5c081e2d95fb4fd04c2"
   },
-  "reviewRepair": "2026-10-11: browser imports now use scoped resource runtime; co-located catalog construction marked pure. All English/Chinese templates independently compared equal to the pre-repair archive; original golden bytes preserved. See localization-review-repairs.md."
+  "reviewRepair": "2026-10-11: browser imports now use scoped resource runtime; co-located catalog construction marked pure. All English/Chinese templates independently compared equal to the pre-repair archive; original golden bytes preserved. See localization-review-repairs.md.",
+  "terminologyRepair": {
+    "date": "2026-10-11",
+    "review": "Implementation-agent source comparison: canonical terms and UI actions unified against glossary.zh-CN; reference aliases share the registry. English catalog text, rules identifiers and frozen English goldens retained. Not independent human approval.",
+    "previousHashes": {
+      "src/lib/i18n/reference-names.ts": "339580a3ea95ebcb2185ace6558f203eb907caefe0b5e7a25c90abcf4aa095bd",
+      "src/lib/i18n/gear-ui-messages.ts": "72c709098612fe489f29895896bd02cf9ca8ff088114e0fe56e56d4fc70ba681",
+      "src/lib/i18n/equipment-help-messages.ts": "aabd782f86396dbff1ef58e2121daf529ea4179a916f6130300a9f28496f51ee"
+    }
+  }
 }

@@ -175,7 +175,7 @@ export const CALLING_UI_MESSAGES = /*#__PURE__*/ defineMessages({
   },
   "callingUi.styleDescription.defense": {
     "en": "+1 AC while wearing armor.",
-    "zh-CN": "穿着护甲时，防御等级获得 +1。"
+    "zh-CN": "穿着护甲时，护甲等级获得 +1。"
   },
   "callingUi.styleDescription.dueling": {
     "en": "+2 damage with a one-handed melee weapon and no other weapon in hand.",

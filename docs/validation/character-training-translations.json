@@ -11,7 +11,14 @@
     "src/lib/srd/backgrounds.json": "d4a3ff20a0a5cc802fd28b409b40d338f867c61e9a49e5d71c012e14c7210c1d",
     "src/lib/content/mechanics.ts": "7f76eafcbb4de4630c176e57d5620bb5fc86411b8ba2a40b22b310d43318b7c2"
   },
-  "catalogSha256": "8f0c782dea03da62e7dd052f14d18c169746f264d1d76475986e9becbaecfeb9",
+  "catalogSha256": "d41b301018e59cf653c1f3df4d2f1581845980a399f1b48cf1b3d17c1fbdec45",
   "catalog": "src/lib/i18n/character-training-name-messages.ts",
-  "reviewRepair": "Catalog construction marked pure for namespace loading; templates match the pre-repair archive exactly."
+  "reviewRepair": "Catalog construction marked pure for namespace loading; templates match the pre-repair archive exactly.",
+  "terminologyRepair": {
+    "date": "2026-10-11",
+    "review": "Implementation-agent source comparison: gaming set and compound alternatives consistently use 游戏用具. English sources and frozen goldens retained.",
+    "previousHashes": {
+      "src/lib/i18n/character-training-name-messages.ts": "8f0c782dea03da62e7dd052f14d18c169746f264d1d76475986e9becbaecfeb9"
+    }
+  }
 }

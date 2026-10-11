@@ -14,7 +14,7 @@ export const CHARACTER_NAME_MESSAGES = /*#__PURE__*/ defineMessages({
   "rule.class.ranger": { en: "Ranger", "zh-CN": "游侠" },
   "rule.class.rogue": { en: "Rogue", "zh-CN": "游荡者" },
   "rule.class.sorcerer": { en: "Sorcerer", "zh-CN": "术士" },
-  "rule.class.warlock": { en: "Warlock", "zh-CN": "契术师" },
+  "rule.class.warlock": { en: "Warlock", "zh-CN": "邪术师" },
   "rule.class.wizard": { en: "Wizard", "zh-CN": "法师" },
   "rule.race.hill_dwarf": { en: "Dwarf (Hill)", "zh-CN": "丘陵矮人" },
   "rule.race.mountain_dwarf": { en: "Dwarf (Mountain)", "zh-CN": "山地矮人" },
@@ -44,7 +44,7 @@ export const CHARACTER_NAME_MESSAGES = /*#__PURE__*/ defineMessages({
   "rule.race.earth_genasi": { en: "Genasi (Earth)", "zh-CN": "土元素裔" },
   "rule.race.changeling": { en: "Changeling", "zh-CN": "变形裔" },
   "rule.race.warforged": { en: "Warforged", "zh-CN": "战铸者" },
-  "rule.race.goblin": { en: "Goblin", "zh-CN": "哥布林" },
+  "rule.race.goblin": { en: "Goblin", "zh-CN": "地精" },
   "rule.race.bugbear": { en: "Bugbear", "zh-CN": "熊地精" },
   "rule.race.lizardfolk": { en: "Lizardfolk", "zh-CN": "蜥蜴人" },
 });

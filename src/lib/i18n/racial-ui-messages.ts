@@ -99,7 +99,7 @@ export const RACIAL_UI_MESSAGES = /*#__PURE__*/ defineMessages({
   },
   "racialUi.allFeats": {
     "en": "All feats",
-    "zh-CN": "所有专长"
+    "zh-CN": "全部专长"
   },
   "racialUi.searchName": {
     "en": "Or search by name:",

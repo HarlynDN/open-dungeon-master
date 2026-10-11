@@ -11,10 +11,10 @@
     "src/app/characters/builder/steps/FinishStep.tsx": "c21709faab972c02f4a3233114d8eb867ce3118802a664a48448fbab9431245a",
     "src/lib/i18n/spell-ui-presentations.ts": "eb1fd9296404e3a28ee85803b29a78909bd70d688d82064c7ab9e5ccd435d094",
     "src/lib/i18n/finish-ui-presentations.ts": "98d109c684bdd35fd25929c3de3c161250cd3f7fb1f55fba65a535f6a368d9df",
-    "src/lib/i18n/reference-names.ts": "339580a3ea95ebcb2185ace6558f203eb907caefe0b5e7a25c90abcf4aa095bd"
+    "src/lib/i18n/reference-names.ts": "8811aa04f8ddcf46bbba5853186751b3140e84b4c398fd19ff47e4fe03946c7e"
   },
   "catalogs": {
-    "src/lib/i18n/spell-ui-messages.ts": "99713115e016cc59682645abf681a87536e9ea16eddcab629e52307c36dd7219",
+    "src/lib/i18n/spell-ui-messages.ts": "1594352f4ed3790eab70100b83163a34075ad25e3ba249179f401d1a2bf9f6b7",
     "src/lib/i18n/spell-name-messages.ts": "1d9cf7d51948be7b4e0b33b889f062db75aa2c07ceb0b0d52562772d1a857f8a",
     "src/lib/i18n/spell-material-messages.ts": "c5f5ae9a3541293480278f6efcdbce497fb1dc6ba574aacd95aa2adac410e9e3"
   },
@@ -30,5 +30,13 @@
     "src/components/sheet/useSpellPool.ts": "151a9f818dbcc3469ca099d0afbf2afa8329ced614ee1c47d123a233a20520f9",
     "src/app/api/campaigns/[campaignId]/sheet/spells/route.ts": "65d02f3a2d701dd62708ea7276741abb0076319c75561ccd999113dc0af337eb"
   },
-  "reviewRepair": "2026-10-11: browser imports now use scoped resource runtime; co-located catalog construction marked pure. All English/Chinese templates independently compared equal to the pre-repair archive; original golden bytes preserved. See localization-review-repairs.md."
+  "reviewRepair": "2026-10-11: browser imports now use scoped resource runtime; co-located catalog construction marked pure. All English/Chinese templates independently compared equal to the pre-repair archive; original golden bytes preserved. See localization-review-repairs.md.",
+  "terminologyRepair": {
+    "date": "2026-10-11",
+    "review": "Implementation-agent source comparison: canonical terms and UI actions unified against glossary.zh-CN; reference aliases share the registry. English catalog text, rules identifiers and frozen English goldens retained. Not independent human approval.",
+    "previousHashes": {
+      "src/lib/i18n/reference-names.ts": "339580a3ea95ebcb2185ace6558f203eb907caefe0b5e7a25c90abcf4aa095bd",
+      "src/lib/i18n/spell-ui-messages.ts": "99713115e016cc59682645abf681a87536e9ea16eddcab629e52307c36dd7219"
+    }
+  }
 }

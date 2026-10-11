@@ -71,7 +71,7 @@ export const CHARACTER_UI_MESSAGES = /*#__PURE__*/ defineMessages({
   },
   "library.duplicate": {
     "en": "Duplicate",
-    "zh-CN": "复制"
+    "zh-CN": "创建副本"
   },
   "library.delete": {
     "en": "Delete",
@@ -391,7 +391,7 @@ export const CHARACTER_UI_MESSAGES = /*#__PURE__*/ defineMessages({
   },
   "characterHost.saveChanges": {
     "en": "Save changes",
-    "zh-CN": "保存修改"
+    "zh-CN": "保存更改"
   },
   "characterHost.replace": {
     "en": "Replace your character",
@@ -623,7 +623,7 @@ export const CHARACTER_UI_MESSAGES = /*#__PURE__*/ defineMessages({
   },
   "sheet.skill.acrobatics": {
     "en": "Acrobatics",
-    "zh-CN": "体操"
+    "zh-CN": "特技"
   },
   "sheet.skill.animal_handling": {
     "en": "Animal Handling",
@@ -691,7 +691,7 @@ export const CHARACTER_UI_MESSAGES = /*#__PURE__*/ defineMessages({
   },
   "sheet.skill.survival": {
     "en": "Survival",
-    "zh-CN": "生存"
+    "zh-CN": "求生"
   },
   "sheet.derived.proficiency": {
     "en": "proficiency",

@@ -489,11 +489,11 @@ export const LOBBY_MESSAGES = /*#__PURE__*/ defineMessages({
   },
   "editCampaign.premise": {
     "en": "Premise",
-    "zh-CN": "冒险背景"
+    "zh-CN": "故事设定"
   },
   "editCampaign.notes": {
     "en": "World or theme notes",
-    "zh-CN": "世界或主题备注"
+    "zh-CN": "世界或主题说明"
   },
   "editCampaign.table": {
     "en": "The table",

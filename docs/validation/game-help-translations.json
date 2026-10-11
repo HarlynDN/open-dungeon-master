@@ -21,8 +21,15 @@
     "src/app/campaigns/[campaignId]/LevelUpDialog.tsx": "1804e1a2653dd71483f1151cd55a3a0af4d28396951a7a4f95ac04a59607e17d"
   },
   "catalogs": {
-    "src/lib/i18n/game-help-messages.ts": "98b8f16d4479d05d69d5c34279d56884b88fff05ce208f2c861f96f95242cb67",
+    "src/lib/i18n/game-help-messages.ts": "5eb6bd7f94a82396d3433a887e72d3bff7def4169f3ba0483c2c52b7db68a37e",
     "src/lib/i18n/closed-game-help-messages.ts": "32cebe37e719f39267f3d5f49bde070f1e5f57fe3844a5ed0fe06f05ddccaca4"
   },
-  "reviewRepair": "2026-10-11: browser imports now use scoped resource runtime; co-located catalog construction marked pure. All English/Chinese templates independently compared equal to the pre-repair archive; original golden bytes preserved. See localization-review-repairs.md."
+  "reviewRepair": "2026-10-11: browser imports now use scoped resource runtime; co-located catalog construction marked pure. All English/Chinese templates independently compared equal to the pre-repair archive; original golden bytes preserved. See localization-review-repairs.md.",
+  "terminologyRepair": {
+    "date": "2026-10-11",
+    "review": "Implementation-agent source comparison: canonical terms and UI actions unified against glossary.zh-CN; reference aliases share the registry. English catalog text, rules identifiers and frozen English goldens retained. Not independent human approval.",
+    "previousHashes": {
+      "src/lib/i18n/game-help-messages.ts": "98b8f16d4479d05d69d5c34279d56884b88fff05ce208f2c861f96f95242cb67"
+    }
+  }
 }

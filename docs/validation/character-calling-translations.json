@@ -16,9 +16,16 @@
     "src/lib/i18n/messages.ts": "3411351b3d607241ad39bf728fd1fff4d0675a2cdc3009c60cbb6f75eedd4c52"
   },
   "catalogs": {
-    "src/lib/i18n/calling-ui-messages.ts": "41d8b40085b668c294fb469f55f443d26a33a5f0f6f9d652ca5e85f6c1507dfc"
+    "src/lib/i18n/calling-ui-messages.ts": "6ee79c641a5e39a5240764e9c90d68718c8d7b822a72e46d1776391177444280"
   },
   "abilityCatalogIntegration": "Shared catalog fingerprint refreshed for a separate ability UI corpus; the original review scope is unchanged.",
   "catalogMaintenance": "Shared messages.ts only gains independent equipment UI/name/help catalogs; original calling catalog values and the reviewed calling scope are unchanged. Fingerprint refreshed for these additions, not an expanded review.",
-  "reviewRepair": "2026-10-11: browser imports now use scoped resource runtime; co-located catalog construction marked pure. All English/Chinese templates independently compared equal to the pre-repair archive; original golden bytes preserved. See localization-review-repairs.md."
+  "reviewRepair": "2026-10-11: browser imports now use scoped resource runtime; co-located catalog construction marked pure. All English/Chinese templates independently compared equal to the pre-repair archive; original golden bytes preserved. See localization-review-repairs.md.",
+  "terminologyRepair": {
+    "date": "2026-10-11",
+    "review": "Implementation-agent source comparison: canonical terms and UI actions unified against glossary.zh-CN; reference aliases share the registry. English catalog text, rules identifiers and frozen English goldens retained. Not independent human approval.",
+    "previousHashes": {
+      "src/lib/i18n/calling-ui-messages.ts": "41d8b40085b668c294fb469f55f443d26a33a5f0f6f9d652ca5e85f6c1507dfc"
+    }
+  }
 }

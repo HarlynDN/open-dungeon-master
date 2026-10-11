@@ -27,7 +27,7 @@ await test("read-only summaries preserve authored values and hide AI planning in
   assert.equal(en.world, "Author's world pack · human DM");
   assert.deepEqual(gameSettingsSummary(settings, "Player's custom voice", "Author's world pack", "en"), en);
   const narrated = gameSettingsSummary({ ...settings, ttsEnabled: true, dmMode: "steered", campaignLength: "epic", aiStorySetup: true }, "Player's custom voice", undefined, "zh-CN");
-  assert.match(narrated.world, /AI 叙事，真人引导 · AI 规划故事 · 史诗战役$/);
+  assert.match(narrated.world, /AI 叙事，真人引导 · AI 规划剧情 · 史诗战役$/);
   assert.match(narrated.narration, /Player's custom voice/);
   assert.deepEqual(settings, original);
 });

@@ -26,5 +26,12 @@
     "src/lib/worlds/bundled/saltmarch.json": "e4583a2f5a97a89b7b8b59993ce4d6e23882d314f57e8f484cef46e1f506f4a8"
   },
   "catalog": "src/lib/i18n/builder-messages.ts",
-  "catalogSha256": "3afa36215f042dfcde361ed43c9183a6e94ed1f317f029d20374e9dab377af46"
+  "catalogSha256": "c4737a9fc88a0de8ed319707fd48d7f55e0cab93d7c8b7b13cc695c6e2106807",
+  "terminologyRepair": {
+    "date": "2026-10-11",
+    "review": "Source comparison of New character against the terminology policy. Frozen English output retained.",
+    "previousHashes": {
+      "src/lib/i18n/builder-messages.ts": "3afa36215f042dfcde361ed43c9183a6e94ed1f317f029d20374e9dab377af46"
+    }
+  }
 }

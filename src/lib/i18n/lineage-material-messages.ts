@@ -671,11 +671,11 @@ export const LINEAGE_MATERIAL_MESSAGES = /*#__PURE__*/ defineMessages({
   },
   "lineageMaterial.trait62.line": {
     "en": "Survival proficiency (Tortle Instinct)",
-    "zh-CN": "生存熟练（龟人本能）"
+    "zh-CN": "求生熟练（龟人本能）"
   },
   "lineageMaterial.trait62.head": {
     "en": "Survival proficiency (Tortle Instinct)",
-    "zh-CN": "生存熟练（龟人本能）"
+    "zh-CN": "求生熟练（龟人本能）"
   },
   "lineageMaterial.trait63.line": {
     "en": "Fire Resistance",

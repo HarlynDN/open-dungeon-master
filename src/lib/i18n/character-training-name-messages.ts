@@ -604,18 +604,18 @@ export const CHARACTER_TRAINING_NAME_MESSAGES = /*#__PURE__*/ defineMessages({
   },
   "training.toolCategory.gaming_set": {
     "en": "gaming set",
-    "zh-CN": "游戏器具"
+    "zh-CN": "游戏用具"
   },
   "training.toolCategory.artisan_s_tools_or_gaming_set": {
     "en": "artisan's tools or gaming set",
-    "zh-CN": "工匠工具或游戏器具"
+    "zh-CN": "工匠工具或游戏用具"
   },
   "training.toolCategory.musical_instrument_or_gaming_set": {
     "en": "musical instrument or gaming set",
-    "zh-CN": "乐器或游戏器具"
+    "zh-CN": "乐器或游戏用具"
   },
   "training.toolCategory.artisan_s_tools_or_musical_instrument_or_gaming_set": {
     "en": "artisan's tools or musical instrument or gaming set",
-    "zh-CN": "工匠工具或乐器或游戏器具"
+    "zh-CN": "工匠工具或乐器或游戏用具"
   }
 });

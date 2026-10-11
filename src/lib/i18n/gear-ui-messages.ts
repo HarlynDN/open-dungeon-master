@@ -6,8 +6,8 @@ export const GEAR_UI_MESSAGES = /*#__PURE__*/ defineMessages({
   "gearUi.quantity": { "en": "{name} x{quantity}", "zh-CN": "{name} ×{quantity}" },
   "gearUi.wealthDice": { "en": "{dice} gp", "zh-CN": "{dice} 金币" },
   "gearUi.background.shortbow with 20 arrows": { "en": "Shortbow with 20 arrows", "zh-CN": "短弓与 20 支箭" },
-  "gearUi.acNote": { "en": "AC {ac}", "zh-CN": "防御等级 {ac}" },
-  "gearUi.acBonusNote": { "en": "{bonus} AC", "zh-CN": "防御等级 {bonus}" },
+  "gearUi.acNote": { "en": "AC {ac}", "zh-CN": "护甲等级 {ac}" },
+  "gearUi.acBonusNote": { "en": "{bonus} AC", "zh-CN": "护甲等级 {bonus}" },
   "gearUi.equipment": {
     "en": "Equipment",
     "zh-CN": "装备"
@@ -126,7 +126,7 @@ export const GEAR_UI_MESSAGES = /*#__PURE__*/ defineMessages({
   },
   "gearUi.acWithKit": {
     "en": "Armor class with this kit",
-    "zh-CN": "使用此套装的防御等级"
+    "zh-CN": "使用此套装的护甲等级"
   },
   "gearUi.acWorn": {
     "en": "From what is worn: {parts}.",

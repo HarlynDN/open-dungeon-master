@@ -43,11 +43,11 @@ export const GAME_HELP_MESSAGES = /*#__PURE__*/ defineMessages({
   },
   "gameHelp.dex.short": {
     "en": "Agility and precision: light weapons, bows, armor class, dodging.",
-    "zh-CN": "灵活与精准：轻型武器、弓、防御等级和闪避。"
+    "zh-CN": "灵活与精准：轻型武器、弓、护甲等级和闪避。"
   },
   "gameHelp.dex.long": {
     "en": "Dexterity adds to your armor class in light and medium armor, decides your initiative, and powers finesse and ranged weapons. Its saving throw is the one you make to dodge fireballs and traps.",
-    "zh-CN": "敏捷可增加穿着轻甲或中甲时的防御等级，决定先攻，并用于灵巧武器与远程武器。敏捷豁免用于躲避火球和陷阱。"
+    "zh-CN": "敏捷可增加穿着轻甲或中甲时的护甲等级，决定先攻，并用于灵巧武器与远程武器。敏捷豁免用于躲避火球和陷阱。"
   },
   "gameHelp.con.term": {
     "en": "Constitution",
@@ -91,7 +91,7 @@ export const GAME_HELP_MESSAGES = /*#__PURE__*/ defineMessages({
   },
   "gameHelp.cha.short": {
     "en": "Force of personality. The casting ability for bards, sorcerers, warlocks and paladins.",
-    "zh-CN": "人格与气势。吟游诗人、术士、契术师和圣武士的施法属性。"
+    "zh-CN": "人格与气势。吟游诗人、术士、邪术师和圣武士的施法属性。"
   },
   "gameHelp.cha.long": {
     "en": "It covers Persuasion, Deception, Intimidation and Performance. Its saving throw resists banishment and possession.",
@@ -99,7 +99,7 @@ export const GAME_HELP_MESSAGES = /*#__PURE__*/ defineMessages({
   },
   "gameHelp.armor_class.term": {
     "en": "Armor Class (AC)",
-    "zh-CN": "防御等级（AC）"
+    "zh-CN": "护甲等级（AC）"
   },
   "gameHelp.armor_class.short": {
     "en": "How hard you are to hit. An attacker must roll this number or higher to land a hit.",
@@ -107,7 +107,7 @@ export const GAME_HELP_MESSAGES = /*#__PURE__*/ defineMessages({
   },
   "gameHelp.armor_class.long": {
     "en": "Your AC comes from your armor, your shield, your Dexterity, and any magic or class feature that adds to it. The app works it out for you from what you are wearing. Higher is better, and most characters sit between 12 and 20.",
-    "zh-CN": "防御等级由护甲、盾牌、敏捷，以及增加防御的魔法或职业特性决定。应用会根据你的穿戴自动计算。数值越高越好，大多数角色的防御等级在 12 到 20 之间。"
+    "zh-CN": "护甲等级由护甲、盾牌、敏捷，以及增加防御的魔法或职业特性决定。应用会根据你的穿戴自动计算。数值越高越好，大多数角色的护甲等级在 12 到 20 之间。"
   },
   "gameHelp.hit_points.term": {
     "en": "Hit points (HP)",
@@ -259,11 +259,11 @@ export const GAME_HELP_MESSAGES = /*#__PURE__*/ defineMessages({
   },
   "gameHelp.attack_roll.short": {
     "en": "A d20 plus your ability modifier and proficiency bonus, against the target's AC.",
-    "zh-CN": "掷 d20，加上属性调整值和熟练加值，与目标的防御等级比较。"
+    "zh-CN": "掷 d20，加上属性调整值和熟练加值，与目标的护甲等级比较。"
   },
   "gameHelp.attack_roll.long": {
     "en": "Meet or beat the AC and you hit, then roll the weapon or spell's damage. A natural 20 always hits and doubles the damage dice, and a natural 1 always misses.",
-    "zh-CN": "结果达到或超过防御等级就命中，随后掷武器或法术的伤害。骰面为 20 时必定命中，伤害骰数量翻倍；骰面为 1 时必定未命中。"
+    "zh-CN": "结果达到或超过护甲等级就命中，随后掷武器或法术的伤害。骰面为 20 时必定命中，伤害骰数量翻倍；骰面为 1 时必定未命中。"
   },
   "gameHelp.critical_hit.term": {
     "en": "Critical hit",
@@ -287,7 +287,7 @@ export const GAME_HELP_MESSAGES = /*#__PURE__*/ defineMessages({
   },
   "gameHelp.spell_slot.long": {
     "en": "Casting a 1st-level spell spends a 1st-level slot or higher. Casting a spell with a bigger slot than it needs often makes it stronger, which is called upcasting. Most casters get their slots back on a long rest; warlocks get theirs back on a short one.",
-    "zh-CN": "施放 1 环法术需要消耗 1 环或更高环的法术位。使用高于法术本身环级的法术位往往能增强效果，这称为升环施法。大多数施法者在长休后恢复法术位；契术师在短休后恢复。"
+    "zh-CN": "施放 1 环法术需要消耗 1 环或更高环的法术位。使用高于法术本身环级的法术位往往能增强效果，这称为升环施法。大多数施法者在长休后恢复法术位；邪术师在短休后恢复。"
   },
   "gameHelp.cantrip.term": {
     "en": "Cantrip",
@@ -303,7 +303,7 @@ export const GAME_HELP_MESSAGES = /*#__PURE__*/ defineMessages({
   },
   "gameHelp.spell_save_dc.term": {
     "en": "Spell save DC",
-    "zh-CN": "法术豁免难度等级"
+    "zh-CN": "法术豁免难度"
   },
   "gameHelp.spell_save_dc.short": {
     "en": "The number an enemy must beat to resist your spell.",
@@ -359,7 +359,7 @@ export const GAME_HELP_MESSAGES = /*#__PURE__*/ defineMessages({
   },
   "gameHelp.short_rest.long": {
     "en": "Features that say short rest come back, including warlock spell slots, monk ki, and a fighter's Second Wind and Action Surge. You can take several in a day.",
-    "zh-CN": "标明短休恢复的特性会恢复，包括契术师法术位、武僧的气，以及战士的回气和动作如潮。一天中可以进行多次短休。"
+    "zh-CN": "标明短休恢复的特性会恢复，包括邪术师法术位、武僧的气，以及战士的回气和动作如潮。一天中可以进行多次短休。"
   },
   "gameHelp.long_rest.term": {
     "en": "Long rest",
@@ -443,7 +443,7 @@ export const GAME_HELP_MESSAGES = /*#__PURE__*/ defineMessages({
   },
   "gameHelp.cover.long": {
     "en": "Half cover gives +2 AC and +2 on Dexterity saves, three-quarters cover gives +5, and total cover means you cannot be targeted directly at all.",
-    "zh-CN": "半身掩护提供 +2 防御等级和 +2 敏捷豁免，四分之三掩护提供 +5；完全掩护使你无法被直接选为目标。"
+    "zh-CN": "半身掩护提供 +2 护甲等级和 +2 敏捷豁免，四分之三掩护提供 +5；完全掩护使你无法被直接选为目标。"
   },
   "gameHelp.opportunity_attack.term": {
     "en": "Opportunity attack",

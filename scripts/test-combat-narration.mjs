@@ -19,7 +19,7 @@ await test("every registered locale renders engine facts without changing protoc
   assert.equal(facts[0].actor.id, "hero");
   assert.equal(facts[0].target.id, "e1");
   assert.equal(facts[0].hit, false);
-  assert.match(renderCombatFacts(facts, "zh-CN"), /阿明对哥布林 1.*未命中/);
+  assert.match(renderCombatFacts(facts, "zh-CN"), /阿明对地精 1 .*未命中/);
   assert.match(renderCombatFacts(facts, "en"), /Goblin 1.*misses/);
   assert.doesNotMatch(renderCombatFacts(facts, "zh-CN"), /13|AC|3点/);
   assert.deepEqual(miss, before);
@@ -34,15 +34,15 @@ await test("individual calls and multiattack swings preserve conflicting outcome
   assert.equal(new Set(facts.map(f => f.id)).size, facts.length);
   assert.deepEqual(facts.filter(f => f.kind === "attack").map(f => [f.target.id, f.hit, f.swing]), [["e1", false, undefined], ["e2", true, undefined], ["hero", false, 1], ["hero", true, 2]]);
   const rendered = renderCombatFacts(facts, "zh-CN");
-  assert.match(rendered, /重击命中.*受到0点伤害/s);
-  assert.equal((rendered.match(/5点伤害/g) ?? []).length, 1, "multiattack total was counted twice");
+  assert.match(rendered, /重击命中.*受到 0 点伤害/s);
+  assert.equal((rendered.match(/5 点伤害/g) ?? []).length, 1, "multiattack total was counted twice");
 });
 await test("downed is not dead; bodies, negation, metaphor and quoted speech are checked conservatively", () => {
   assert.equal(checkNarration({ locale: "zh-CN", conversation: miss, narration: "短剑刺入哥布林的胸膛。" })[0].kind, "hit");
   for (const narration of ["短剑没有刺入哥布林的胸膛。", "短剑刺入哥布林身旁的泥土。", "「短剑刺入哥布林的胸膛！」有人喊道。", "如果短剑刺入哥布林的胸膛，战斗就会结束。"])
     assert.deepEqual(checkNarration({ locale: "zh-CN", conversation: miss, narration }), []);
   const down = conversation([{ result: { target: "Goblin 1", name: "Goblin 1", hit: true, damage: 7, hp: "0/40", knockedOut: true } }]);
-  assert.match(renderCombatFacts(collectCombatFacts(down), "zh-CN"), /倒地，尚未被判定死亡/);
+  assert.match(renderCombatFacts(collectCombatFacts(down), "zh-CN"), /倒地失去意识，仍然活着/);
   assert.equal(checkNarration({ locale: "zh-CN", conversation: down, narration: "哥布林死了。" })[0].kind, "death");
 });
 await test("nested targets, actual slot spend, free casts, previews and refusals do not invent outcomes", () => {
@@ -55,7 +55,7 @@ await test("nested targets, actual slot spend, free casts, previews and refusals
   const facts = collectCombatFacts(messages, { names: { hero: "阿明", e1: "Goblin 1" } });
   assert.equal(facts.filter(f => f.kind === "resource").length, 1);
   assert.equal(facts.filter(f => f.kind === "refused").length, 1);
-  assert.match(renderCombatFacts(facts, "zh-CN"), /3环法术位/);
+  assert.match(renderCombatFacts(facts, "zh-CN"), /1 个 3 环法术位/);
   assert.doesNotMatch(renderCombatFacts(facts, "zh-CN"), /Counterspelled|1\/2/);
   assert.equal(collectCombatFacts(conversation([{ tool: "search_lore", result: { damage: 99, name: "Goblin" } }])).length, 0);
 });
@@ -64,7 +64,7 @@ await test("fallback uses engine facts or live state and preserves roll markers 
   const final = combatNarrationContent(`[roll:abc]\n\n${fallback}`, miss, "zh-CN");
   assert.equal((final.match(/未命中/g) ?? []).length, 1);
   assert.equal((final.match(/\[roll:abc\]/g) ?? []).length, 1);
-  assert.match(combatFallback([], "zh-CN", { live: { enemies: [{ id: "e1", name: "Goblin 1", hp: 0, maxHp: 40, status: "alive" }] } }), /倒地/);
+  assert.match(combatFallback([], "zh-CN", { live: { enemies: [{ id: "e1", name: "Goblin 1", hp: 0, maxHp: 40, status: "alive" }] } }), /倒下了/);
   assert.match(combatNarrationPrompt(miss, "zh-CN"), /\[0:result:attack\]/);
 });
 await test("an opportunity attack does not inherit the original player's identity", () => {
@@ -83,7 +83,27 @@ await test("enemy casting and pet ownership do not attribute attacks to the play
   const spell = facts.find(fact => fact.kind === "spell");
   assert.equal(spell.actor.id, "e1");
   assert.equal(facts.find(fact => fact.source.tool === "pet_attack").actor, undefined);
-  assert.match(renderCombatFacts(facts, "zh-CN"), /哥布林 1的火球术施法已登记/);
+  assert.match(renderCombatFacts(facts, "zh-CN"), /地精 1 施放了火球术/);
+});
+await test("custom player names remain proper names, while numbered monster names localize", () => {
+  const facts = collectCombatFacts(conversation([{ args: { characterId: "hero", targetEnemyId: "e2" }, result: { attacker: "Goblin", target: "Goblin 2", hit: true, damage: 7 } }]));
+  assert.match(renderCombatFacts(facts, "zh-CN"), /Goblin对地精 2 的这次攻击命中/);
+  assert.equal(facts[0].target.id, "e2");
+});
+await test("natural conclusions do not infer unconsciousness, effects or refunds", () => {
+  const messages = conversation([
+    { tool: "damage_enemy", result: { name: "Goblin", downed: true } },
+    { tool: "heal", args: { characterId: "hero" }, result: { name: "阿明", healed: 7 } },
+    { tool: "use_spell_slot", args: { characterId: "hero", spell: "Fireball" }, result: { ok: true, slot: "level 3: 1/2 left" } },
+    { tool: "cast_at_enemy", args: { characterId: "hero", spell: "Magic Missile", targetEnemyId: "e1" }, result: { countered: true, error: "Counterspelled", slotSpent: "level 1: 1/3 left" } },
+  ]);
+  const text = renderCombatFacts(collectCombatFacts(messages, { names: { hero: "阿明", e1: "Goblin" } }), "zh-CN");
+  assert.match(text, /地精倒下了/);
+  assert.doesNotMatch(text, /失去意识|已经死亡|阿明施放了火球术|退还|未消耗/);
+  assert.match(text, /阿明获得 7 点治疗/);
+  assert.match(text, /火球术的效果尚待确认/);
+  assert.match(text, /消耗了 1 个 1 环法术位/);
+  assert.match(text, /法术被反制，未能生效/);
 });
 await test("one rewrite; all detected contradictions must be gone; every failure drops incorrect prose", async () => {
   for (const reply of [null, "", "Understood.", "命中了！仍然有矛盾。", new Error("offline")]) {

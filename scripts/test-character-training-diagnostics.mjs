@@ -82,7 +82,7 @@ await test("tool failures retain categories, precise owed counts and named pack 
   assert.match(chinese("tools-missing-bard"), /3 项乐器.*风笛.*鼓.*长笛/);
   assert.match(chinese("tools-partial-bard"), /2 项乐器/);
   assert.match(chinese("tools-monk-alternatives"), /工匠工具或乐器/);
-  assert.match(chinese("tools-gaming-and-instrument"), /1 项游戏器具.*1 项乐器/);
+  assert.match(chinese("tools-gaming-and-instrument"), /1 项游戏用具.*1 项乐器/);
   assert.match(chinese("tools-named-pack"), /盗贼工具.*伪造工具.*易容工具/);
   assert.equal(chinese("tools-valid-bard"), ""); assert.equal(chinese("tools-held-answer"), ""); assert.equal(chinese("tools-legacy-wording"), "");
 });

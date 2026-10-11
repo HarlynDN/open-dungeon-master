@@ -9,7 +9,7 @@ import path from "node:path";
 import { openWorld } from "./lib/enforce-world.mjs";
 import { combatKit, TRAINED } from "./lib/enforce-combat.mjs";
 
-const output = path.resolve(process.argv[2] ?? "docs/validation/chinese-combat-runtime.json");
+const output = path.resolve(process.argv[2] ?? "docs/validation/chinese-combat-terminology-runtime.json");
 const world = await openWorld({ gameSettings: { locale: "zh-CN", ttsEnabled: false, worldSimulation: false, narrationGuard: true, stages: { compaction: false } } });
 const dir = path.dirname(process.env.SQLITE_DB_PATH);
 let MODEL = process.env.HARNESS_MODEL ?? "";
@@ -87,11 +87,22 @@ try {
   if (actor.id !== hero.id) kit.place(actor.id, 4, 5);
   kit.setEnemy(enemy.id, { currentHp: scenario.hp });
   world.clearDice(); world.dice(...scenario.faces);
-  insertCampaignMessage({ campaignId: world.campaignId, seq: allocateSeq(world.campaignId), authorType: "player", userId: actor.userId, characterId: actor.id,
+  const playerSeq = allocateSeq(world.campaignId);
+  const previousDm = listRecentMessages(world.campaignId, 5).filter(row => row.authorType === "dm").at(-1);
+  insertCampaignMessage({ campaignId: world.campaignId, seq: playerSeq, authorType: "player", userId: actor.userId, characterId: actor.id,
     content: scenario.spell ? `我向 ${enemy.displayName} 施放一次一环魔法飞弹（Magic Missile）。请调用 cast_at_enemy，让引擎扣除法术位并判定伤害。只施放一次，随后用中文描写，不要结束我的回合。` : `我用长剑攻击 ${enemy.displayName} 一次${scenario.downed ? "，选择非致命攻击（nonlethal=true），击倒而不杀死" : ""}。请调用 pc_attack，由引擎判定，随后用中文描写动作。只攻击一次，不替我选择其他行动，也不要结束我的回合。` });
   const started = Date.now();
   await startDmTurn(world.campaignId);
   const message = listRecentMessages(world.campaignId, 5).filter(row => row.authorType === "dm").at(-1);
+  const diagnostic = { scenario: scenario.id, expectedTarget: enemy.id, campaignStatus: world.campaign().status,
+    playerSeq, previousTurn: previousDm?.dmTurnId, observedTurn: message?.dmTurnId,
+    recent: listRecentMessages(world.campaignId, 5).map(row => ({ seq: row.seq, author: row.authorType, turn: row.dmTurnId })) };
+  if (!message || message.seq <= playerSeq || message.dmTurnId === previousDm?.dmTurnId) {
+    report.failure = { ...diagnostic, reason: "No new DM message; cannot reuse the preceding turn" };
+    fs.writeFileSync(output, JSON.stringify(report, null, 2)+"\n");
+    console.error(report.failure);
+    throw new Error(`${scenario.id}: no new DM message for the current input`);
+  }
   assert.ok(message?.dmTurnId, `${scenario.id}: no DM message`);
   const turn = getDmTurn(message.dmTurnId);
   assert.equal(turn.status, "done");
@@ -112,8 +123,14 @@ try {
   const facts = collectCombatFacts(turn.conversation, { names: { [actor.id]: actor.name } });
   const conclusions = renderCombatFacts(facts, "zh-CN");
   assert.ok(message.content.includes(conclusions));
-  if (scenario.spell) assert.match(conclusions, /1环法术位/);
+  if (scenario.spell) assert.match(conclusions, /1 个 1 环法术位/);
   assert.match(message.content, /战斗结果/);
+  assert.doesNotMatch(turn.narrationParts.join("\n\n"), /\bGoblin\b|哥布林/u, "AI prose must use the canonical localized creature name");
+  assert.doesNotMatch(message.content, /\bGoblin\b|哥布林/u, "final player/TTS text must use the localized creature name");
+  if (scenario.count > 1) {
+    assert.match(message.content, /地精\s*2/u);
+    assert.match(turn.narrationParts.join("\n\n"), /地精\s*2|第二(?:只|名|个)地精/u, "AI prose must identify the selected second enemy");
+  }
   assert.deepEqual(checkNarration({ conversation: turn.conversation, narration: turn.narrationParts.join("\n\n"), locale: "zh-CN", partyNames: [hero.name] }), []);
   assert.equal(activeBridgeSessions(), 0);
   report.cases.push({ id: scenario.id, seconds: +((Date.now()-started)/1000).toFixed(2), calls: turn.callIndex, facts, narration: turn.narrationParts.join("\n\n"), finalText: message.content, rolls: world.diceLog(), passed: true });

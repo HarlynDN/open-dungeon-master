@@ -20,8 +20,16 @@
   },
   "catalogs": {
     "src/lib/i18n/lineage-ui-messages.ts": "7e7e9477291558288c1ca424d20e76fc371ae1fe9c4cca38f44a5bd518e64945",
-    "src/lib/i18n/lineage-material-messages.ts": "65ccba753fe3995347fa21606026ee46df0ee0143fccc4d8caaa86d7101205ea",
-    "src/lib/i18n/racial-ui-messages.ts": "33870629adbf14cd14e51760a0b857cd04aa8fac4cbf5ca0b788cef86e14e3eb"
+    "src/lib/i18n/lineage-material-messages.ts": "e549e7deeddab6c0236fd3e454ad950b843b50a029d58f3e7c70317cc4e7c3e3",
+    "src/lib/i18n/racial-ui-messages.ts": "ee73b38a9c0980d72c0fe3d66d4a3827f87d372cc1bcf3e5af4d5f18a7df67a2"
   },
-  "reviewRepair": "2026-10-11: browser imports now use scoped resource runtime; co-located catalog construction marked pure. All English/Chinese templates independently compared equal to the pre-repair archive; original golden bytes preserved. See localization-review-repairs.md."
+  "reviewRepair": "2026-10-11: browser imports now use scoped resource runtime; co-located catalog construction marked pure. All English/Chinese templates independently compared equal to the pre-repair archive; original golden bytes preserved. See localization-review-repairs.md.",
+  "terminologyRepair": {
+    "date": "2026-10-11",
+    "review": "Implementation-agent source comparison: canonical terms and UI actions unified against glossary.zh-CN; reference aliases share the registry. English catalog text, rules identifiers and frozen English goldens retained. Not independent human approval.",
+    "previousHashes": {
+      "src/lib/i18n/lineage-material-messages.ts": "65ccba753fe3995347fa21606026ee46df0ee0143fccc4d8caaa86d7101205ea",
+      "src/lib/i18n/racial-ui-messages.ts": "33870629adbf14cd14e51760a0b857cd04aa8fac4cbf5ca0b788cef86e14e3eb"
+    }
+  }
 }

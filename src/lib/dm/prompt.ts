@@ -60,6 +60,7 @@ import { dmSystemText, encounterRulesText, tracksAmmunition } from "@/lib/dm/pro
 import { rollerName } from "@/lib/roll-labels";
 import { tableHazards } from "@/lib/srd/table-hazards";
 import { generationLocaleRule } from "@/lib/i18n/generation";
+import { referencePresentation } from "@/lib/i18n/references";
 
 export { DM_SYSTEM, dmSystemText, ENCOUNTER_RULES, encounterRulesText } from "@/lib/dm/prompt-rules";
 
@@ -106,7 +107,7 @@ export function buildDmSystem(campaign: Campaign): string {
 export type DmEncounterState = {
   round: number;
   orderReady: boolean;
-  order: Array<{ name: string; current: boolean }>;
+  order: Array<{ name: string; current: boolean; enemyId?: string }>;
   awaitingInitiative: string[];
   // What the combatant whose turn it is still has to spend, or null before
   // they have spent anything (src/lib/dm/action-budget.ts).
@@ -708,11 +709,16 @@ export function buildGameStateBlock(state: DmGameState): string {
   }
   if (state.encounter) {
     const encounter = state.encounter;
+    const enemyNames = new Map(encounter.enemies.map(enemy => [enemy.enemyId,
+      referencePresentation("monster", { id: enemy.enemyId, name: enemy.name }, campaign.gameSettings.locale).displayName]));
     const lines: string[] = [];
     if (encounter.orderReady) {
       lines.push(
         `Active combat, round ${encounter.round}. Initiative order: ${encounter.order
-          .map((entry) => (entry.current ? `${entry.name} (CURRENT TURN)` : entry.name))
+          .map((entry) => {
+            const name = entry.enemyId ? enemyNames.get(entry.enemyId) ?? entry.name : entry.name;
+            return entry.current ? `${name} (CURRENT TURN)` : name;
+          })
           .join(" > ")}.`,
       );
       if (encounter.turnBudget) {
@@ -740,12 +746,15 @@ export function buildGameStateBlock(state: DmGameState): string {
       "Enemies (DM-SECRET numbers, never revealed to players; HP and AC are server-authoritative and change only through tool results: pc_attack and the spell tools for the party's blows, enemy_attack for theirs, damage_enemy only for harm that is neither an attack nor a spell):",
     );
     for (const enemy of encounter.enemies) {
+      const reference = referencePresentation("monster", { id: enemy.enemyId, name: enemy.name }, campaign.gameSettings.locale);
+      const label = reference.displayName === reference.canonicalName ? enemy.name
+        : `${reference.displayName} (canonical name: ${reference.canonicalName}; use display name in prose)`;
       if (enemy.status !== "alive") {
-        lines.push(`- ${enemy.name} [enemyId=${enemy.enemyId}] ${enemy.status.toUpperCase()}`);
+        lines.push(`- ${label} [enemyId=${enemy.enemyId}] ${enemy.status.toUpperCase()}`);
         continue;
       }
       const parts = [
-        `- ${enemy.name} [enemyId=${enemy.enemyId}] HP ${enemy.hp} AC ${enemy.ac}`,
+        `- ${label} [enemyId=${enemy.enemyId}] HP ${enemy.hp} AC ${enemy.ac}`,
         ...enemy.attacks.map(
           (attack) => `${attack.name} +${attack.toHit} (${attack.damage} ${attack.type})`,
         ),
@@ -778,7 +787,8 @@ export function buildGameStateBlock(state: DmGameState): string {
         .map((entry) => {
           const cr =
             entry.cr === 0.125 ? "1/8" : entry.cr === 0.25 ? "1/4" : entry.cr === 0.5 ? "1/2" : entry.cr;
-          return `${entry.slug} as "${entry.name}" (CR ${cr})`;
+          const reference = referencePresentation("monster", { id: entry.slug, name: entry.name }, campaign.gameSettings.locale);
+          return `${entry.slug} as "${reference.displayName}" (CR ${cr})`;
         })
         .join(", ")}`,
     );

@@ -1,6 +1,7 @@
 import type { AppLocale } from "./locales.ts";
 import { EQUIPMENT_NAMES, EQUIPMENT_NAME_MESSAGES } from "./equipment-name-messages.ts";
 import { SPELL_NAMES, SPELL_NAME_MESSAGES } from "./spell-name-messages.ts";
+import { terminologyAliases } from "./terminology.ts";
 
 export type ReferenceKind = "spell" | "monster" | "equipment";
 type ReferenceNames = Partial<Record<ReferenceKind, Record<string, readonly string[]>>>;
@@ -12,12 +13,7 @@ type ReferenceNames = Partial<Record<ReferenceKind, Record<string, readonly stri
 export const REFERENCE_NAMES: Record<AppLocale, ReferenceNames> = {
   en: {},
   "zh-CN": {
-    monster: {
-      goblin: ["哥布林", "地精"], ogre: ["食人魔"], orc: ["兽人"],
-      wolf: ["狼"], skeleton: ["骷髅"], zombie: ["僵尸"], troll: ["巨魔"],
-      "dire wolf": ["恐狼"], owl: ["猫头鹰"], bat: ["蝙蝠"], cat: ["猫"], rat: ["老鼠"],
-      spider: ["蜘蛛"], hawk: ["鹰"], raven: ["渡鸦"], snake: ["蛇"],
-    },
+    monster: terminologyAliases("monster", "zh-CN"),
     equipment: {
       ...Object.fromEntries(EQUIPMENT_NAMES.map(row => [row.name.toLowerCase(), [EQUIPMENT_NAME_MESSAGES["zh-CN"][row.key]]])),
       club: ["短棒"], dagger: ["匕首"], greatclub: ["巨棒"], handaxe: ["手斧"],

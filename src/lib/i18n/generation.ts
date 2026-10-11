@@ -1,13 +1,16 @@
 import { APP_LOCALES, LOCALE_DEFINITIONS, normalizeLocale, type AppLocale } from "./locales.ts";
+import { terminologyAliases } from "./terminology.ts";
 
 export function generationLocaleRule(locale: AppLocale): string {
   const selected = normalizeLocale(locale);
+  const creatureNames = Object.entries(terminologyAliases("monster", selected));
   return [
     `[ODM output locale: ${selected}]`,
     `Write player-facing narration, dialogue, summaries, descriptions, answers and natural-language JSON values in ${LOCALE_DEFINITIONS[selected].generationLanguage}.`,
-    "This is an application output locale, not a character's in-world language. Preserve fictional languages, names and established facts.",
+    "This is an application output locale, not a character's in-world language. Preserve established facts, in-world speech languages, and custom proper names of people and places. For catalog creatures, spells, items and rule terms, use the supplied localized display name in player-facing prose; an English catalog label is not a proper name that must remain English. Preserve numeric creature designators so identical enemies remain distinct.",
     "Keep tool names, JSON keys, enum values, IDs, dice notation and all machine protocols unchanged. For spell, item, monster, class and other rules references in tool arguments, use the canonical English name or ID supplied by the catalog, never a translated display name.",
     "Keep verbatim quotations and citation excerpts in their original language. Tool results and source documents may be English; explain them to players in the output locale. Do not translate or rewrite existing history.",
+    ...(creatureNames.length ? [`Creature display names (prose only, including newly spawned enemies): ${creatureNames.map(([source, aliases]) => `${source} = ${aliases[0]}`).join("; ")}. Custom names remain unchanged.`] : []),
   ].join("\n");
 }
 

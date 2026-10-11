@@ -34,7 +34,7 @@ await test('113 frozen actual English equipment/kit/background/search/catalog pr
     assert.deepEqual(controls(zh[i].html),controls(en[i].html),en[i].name);
   }
   assert.match(of(zh,'equipment/kit'),/长剑.*1d8 挥砍/);
-  assert.match(of(zh,'equipment/kit'),/防御等级 18/);
+  assert.match(of(zh,'equipment/kit'),/护甲等级 18/);
   assert.match(of(zh,'equipment/wealth-rolled'),/110.*金币/);
   assert.match(of(zh,'equipment/wealth-busy'),/无法连接/);
   assert.match(of(zh,'background/ammo'),/短弓与 20 支箭/);
@@ -54,7 +54,7 @@ await test('native equipment names and all native background fragments translate
     assert.equal(view.equipmentName(row.name,'zh-CN',true),row.name);
   }
   assert.equal(view.equipmentName('Longsword +2','zh-CN'),'长剑 +2');
-  assert.equal(view.gearNote('+2 AC','en'),'+2 AC');assert.equal(view.gearNote('+2 AC','zh-CN'),'防御等级 +2');
+  assert.equal(view.gearNote('+2 AC','en'),'+2 AC');assert.equal(view.gearNote('+2 AC','zh-CN'),'护甲等级 +2');
   assert.equal(view.equipmentName('Authored {item}\n<script>','zh-CN'),'Authored {item}\n<script>');
   assert.equal(view.pickerName('items',{name:'Longsword',source:'homebrew'},'zh-CN'),'Longsword');
   assert.equal(view.pickerMatches('items',{name:'Longsword',source:'srd'},'长剑','zh-CN'),true);

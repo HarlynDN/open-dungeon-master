@@ -267,6 +267,7 @@ function buildEncounterState(campaignId: string, sheets: CharacterSheet[]) {
     order: encounter.orderReady
       ? encounter.order.map((entry, index) => ({
           name: entry.name,
+          ...(entry.kind === "enemy" ? { enemyId: entry.enemyId } : {}),
           current: index === encounter.turnIndex,
         }))
       : [],

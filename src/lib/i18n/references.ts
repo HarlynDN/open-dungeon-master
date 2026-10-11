@@ -18,13 +18,23 @@ const key = (name: string) => name.normalize("NFKC").replace(/[‘’]/g, "'").t
 // Longsword +1 must not turn it into a different, plain Longsword.
 export function localizedReferenceAliases(kind: ReferenceKind, name: string, locale: AppLocale): readonly string[] {
   const direct = referenceAliases(kind, name, locale);
-  if (direct.length || kind !== "equipment") return direct;
+  if (direct.length) return direct;
+  if (kind === "monster") {
+    const indexed = /^(.*?)\s+((?:#\s*)?\d+)$/.exec(name.trim());
+    return indexed ? referenceAliases(kind, indexed[1], locale).map(alias => `${alias} ${indexed[2]}`) : [];
+  }
+  if (kind !== "equipment") return direct;
   const bonus = /^(.*?)\s*(\+[1-3])$/.exec(name.trim());
   return bonus ? referenceAliases(kind, bonus[1].trim(), locale).map(alias => `${alias} ${bonus[2]}`) : [];
 }
 
 export function referenceDisplayName(kind: ReferenceKind, name: string, locale: AppLocale): string {
   return localizedReferenceAliases(kind, name, locale)[0] ?? name;
+}
+
+export function referencePresentation(kind: ReferenceKind, entry: ReferenceCandidate, locale: AppLocale) {
+  const aliases = localizedReferenceAliases(kind, entry.name, locale);
+  return { id: entry.id, canonicalName: entry.name, displayName: aliases[0] ?? entry.name, aliases };
 }
 
 // Callers supply only their own allowed catalog/inventory. This helper

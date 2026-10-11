@@ -57,10 +57,10 @@ await test("compound prerequisites retain AND/OR, armor, casting, skills, levels
   assert.match(chinese("stock-unmet-Heavily Armored"), /重甲训练.*中甲.*熟练/);
   assert.match(chinese("stock-unmet-Elven Accuracy"), /精灵精准.*精灵或半精灵/);
   assert.match(chinese("stock-unmet-War Caster"), /战场施法者.*至少能施放/);
-  assert.match(chinese("pack-unmet-5"), /生存.*且至少达到 8 级/);
+  assert.match(chinese("pack-unmet-5"), /求生.*且至少达到 8 级/);
   const mixed = chinese("pack-unmet-6");
   assert.match(mixed, /感知 13且前置条件（中文翻译待补）：the Ki class feature/);
-  assert.match(chinese("pack-unmet-8"), /隐匿或生存/);
+  assert.match(chinese("pack-unmet-8"), /隐匿或求生/);
   assert.match(chinese("pack-unmet-9"), /载具/);
   assert.match(chinese("pack-unmet-10"), /军用武器/);
   assert.match(chinese("pack-unmet-11"), /简易远程武器/);

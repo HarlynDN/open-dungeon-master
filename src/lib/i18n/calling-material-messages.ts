@@ -581,7 +581,7 @@ export const CALLING_MATERIAL_MESSAGES = /*#__PURE__*/ defineMessages({
   },
   "callingMaterial.subclass.warlock.the_fiend.blurb": {
     "en": "A warlock whose patron is a fiend of the lower planes, granting fiery spells and temporary hit points on a kill.",
-    "zh-CN": "以低层位面邪魔为宗主的契术师，获得火焰法术，并在击杀敌人时获得临时生命值。"
+    "zh-CN": "以低层位面邪魔为宗主的邪术师，获得火焰法术，并在击杀敌人时获得临时生命值。"
   },
   "callingMaterial.subclass.warlock.the_archfey.blurb": {
     "en": "A pact with a lord or lady of the Feywild: charm, illusion and very sharp bargains.",
@@ -597,7 +597,7 @@ export const CALLING_MATERIAL_MESSAGES = /*#__PURE__*/ defineMessages({
   },
   "callingMaterial.subclass.warlock.the_hexblade.blurb": {
     "en": "A pact with a sentient weapon from the Shadowfell: a warlock who fights in armor, with a blade.",
-    "zh-CN": "与来自堕影冥界的智慧武器缔约，成为身着护甲、手持利刃作战的契术师。"
+    "zh-CN": "与来自堕影冥界的智慧武器缔约，成为身着护甲、手持利刃作战的邪术师。"
   },
   "callingMaterial.subclass.warlock.the_fathomless.blurb": {
     "en": "A pact with something in the deep water, which sends a tentacle when called.",
@@ -609,7 +609,7 @@ export const CALLING_MATERIAL_MESSAGES = /*#__PURE__*/ defineMessages({
   },
   "callingMaterial.subclass.warlock.the_undead.blurb": {
     "en": "A pact with a lich or worse: the warlock becomes a little more like their patron each level.",
-    "zh-CN": "与巫妖或更可怕的存在缔约，每提升一级，契术师就更接近宗主的模样。"
+    "zh-CN": "与巫妖或更可怕的存在缔约，每提升一级，邪术师就更接近宗主的模样。"
   },
   "callingMaterial.subclass.warlock.the_undying.blurb": {
     "en": "A pact with a deathless being that has cheated the grave and shares the trick.",

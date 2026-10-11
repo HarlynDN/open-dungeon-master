@@ -42,7 +42,7 @@ await test("Chinese review preserves authored strings and campaign locale, inclu
   assert.equal(zh.title, draft.title);
   assert.equal(zh.theme, draft.theme);
   assert.equal(zh.party, "4 名玩家 · 3 级");
-  assert.equal(zh.dice, "允许实体骰子");
+  assert.equal(zh.dice, "允许使用实体骰");
   assert.equal(zh.difficulty, "普通");
   assert.match(zh.setting, /^Author's English world pack（/);
   assert.deepEqual(draft, before);
