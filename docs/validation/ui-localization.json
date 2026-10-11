@@ -19,7 +19,8 @@
     "src/app/setup/page.tsx"
   ],
   "additionalSources": [
-    "src/lib/i18n/LocalizedText.tsx"
+    "src/lib/i18n/LocalizedText.tsx",
+    "src/app/characters/builder/refusal.ts"
   ],
   "deferred": [
     {
@@ -162,7 +163,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/CharacterGate.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned entry/companion text, native creation errors, structured rule diagnostics and four exact-source pregen card summaries localized. Pregen selection and companion sheet/library requests preserve canonical IDs/fields. Failed reads retain known rows and expose retry. New pregen backstory follows campaign locale only at admission; existing/authored text and mechanical fields unchanged. Character-builder children retain independent scope; focused validation uses mock transport only."
     },
     {
       "path": "src/app/campaigns/[campaignId]/CharacterMenu.tsx",
@@ -191,7 +193,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/CompanionBuilderDialog.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned entry/companion text, native creation errors, structured rule diagnostics and four exact-source pregen card summaries localized. Pregen selection and companion sheet/library requests preserve canonical IDs/fields. Failed reads retain known rows and expose retry. New pregen backstory follows campaign locale only at admission; existing/authored text and mechanical fields unchanged. Character-builder children retain independent scope; focused validation uses mock transport only."
     },
     {
       "path": "src/app/campaigns/[campaignId]/Composer.tsx",
@@ -644,7 +647,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/PregenPicker.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned entry/companion text, native creation errors, structured rule diagnostics and four exact-source pregen card summaries localized. Pregen selection and companion sheet/library requests preserve canonical IDs/fields. Failed reads retain known rows and expose retry. New pregen backstory follows campaign locale only at admission; existing/authored text and mechanical fields unchanged. Character-builder children retain independent scope; focused validation uses mock transport only."
     },
     {
       "path": "src/app/campaigns/[campaignId]/Prose.tsx",
@@ -1092,7 +1096,8 @@
     },
     {
       "path": "src/app/characters/builder/refusal.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Reviewed copy-free English refusal aggregator, still used indirectly by characterErrorText after companion entry migrated to the locale adapter. Kept as an explicit additional source because the UI import walk stops at library adapters. It preserves all native problem lines; localized/coded rendering belongs to callers. Focused entry validation checks the complete multi-problem response."
     },
     {
       "path": "src/app/characters/builder/steps/AbilitiesStep.tsx",

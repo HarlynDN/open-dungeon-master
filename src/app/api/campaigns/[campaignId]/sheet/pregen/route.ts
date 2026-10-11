@@ -1,3 +1,6 @@
+import "@/lib/i18n/messages";
+import { normalizeLocale } from "@/lib/i18n/locales";
+import { pregenSheet } from "@/lib/i18n/entry-character-presentations";
 import { z } from "zod";
 import { capsFor, isErrorResponse, requireMember } from "@/lib/campaign-api";
 import { admitSheet, refusal } from "@/lib/characters/admit";
@@ -36,7 +39,7 @@ export async function POST(
   if (!pregen) {
     return Response.json({ error: "No such hero." }, { status: 404 });
   }
-  const input = createSheetSchema.parse(pregen.sheet);
+  const input = createSheetSchema.parse(pregenSheet(pregen.id, pregen.sheet, normalizeLocale(context.campaign.gameSettings.locale)));
   const admitted = admitSheet({
     door: "table",
     level: context.campaign.startingLevel,
