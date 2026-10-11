@@ -597,7 +597,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/NpcReviewPanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned roster review, merge/dismiss/rename controls, three native attitudes, aliases/archive status, native refusals and load/retry notices localized. Names, alias storage and historical prose remain raw; merging is still manual. First failed read no longer pretends the roster is empty; later failures keep known rows with retry. Frozen English states and actual canonical mutation/IME/retry callbacks checked using mocked transport."
     },
     {
       "path": "src/app/campaigns/[campaignId]/OverworldAuthoring.tsx",
@@ -742,7 +743,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/StoryAiPanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned model/backend/prose selectors, read-only/device/server-managed summaries, agent/key/image notes and known policy/validation failures localized. Canonical values and PATCH fields, model IDs, URLs, secret-kept sentinel and masking preserved. Typed enum mappings and frozen English states plus actual Chinese selection/blur/PATCH callbacks checked; no real model config or key changed. ImagesNote/native-shell child owners retain independent scope."
     },
     {
       "path": "src/app/campaigns/[campaignId]/StoryNudge.tsx",

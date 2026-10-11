@@ -81,6 +81,14 @@ function collectArcErrors(node) {
   ts.forEachChild(node, collectArcErrors);
 }
 collectArcErrors(arcEditAst);
+const entityReviewFile = "src/lib/dm/entity-review-logic.ts";
+const entityReviewAst = parseUiSource(entityReviewFile, fs.readFileSync(path.join(root, entityReviewFile), "utf8"));
+const entityErrorSource = Object.entries(MESSAGE_CATALOGS.en).filter(([key]) => key.startsWith("storyControl.error.")).map(([, text]) => text);
+function collectEntityErrors(node) {
+  if (ts.isPropertyAssignment(node) && node.name.getText(entityReviewAst) === "error" && ts.isStringLiteral(node.initializer) && !entityErrorSource.includes(node.initializer.text)) problems.push(`Unreviewed NPC review refusal: ${node.initializer.text}`);
+  ts.forEachChild(node, collectEntityErrors);
+}
+collectEntityErrors(entityReviewAst);
 // Small source bindings support the lazy help scope without downloading a
 // second complete language. Reject stale topic/tour bindings on source edits.
 for (const topic of HELP_TOPICS) if (MESSAGE_CATALOGS.en[topic.key] !== topic.canonical) problems.push(`Help topic source changed: ${topic.canonical}`);
