@@ -39,12 +39,14 @@ import { PREP_MESSAGES } from "./prep-messages.ts";
 import { WORLD_MESSAGES } from "./world-messages.ts";
 import { COMBAT_UI_MESSAGES } from "./combat-ui-messages.ts";
 import { CONDITION_UI_MESSAGES } from "./condition-ui-messages.ts";
+import { ROLL_PRESENTATION_MESSAGES } from "./roll-presentation-messages.ts";
 import { CONDITION_MATERIAL_MESSAGES } from "./condition-material-messages.ts";
 
 const en = {
   ...AUTH_MESSAGES.en,
   ...COMBAT_UI_MESSAGES.en,
   ...CONDITION_UI_MESSAGES.en,
+  ...ROLL_PRESENTATION_MESSAGES.en,
   ...CONDITION_MATERIAL_MESSAGES.en,
   ...ONBOARDING_MESSAGES.en,
   ...HOME_MESSAGES.en,
@@ -117,6 +119,7 @@ const zhCN: Messages = {
   ...AUTH_MESSAGES["zh-CN"],
   ...COMBAT_UI_MESSAGES["zh-CN"],
   ...CONDITION_UI_MESSAGES["zh-CN"],
+  ...ROLL_PRESENTATION_MESSAGES["zh-CN"],
   ...CONDITION_MATERIAL_MESSAGES["zh-CN"],
   ...ONBOARDING_MESSAGES["zh-CN"],
   ...HOME_MESSAGES["zh-CN"],

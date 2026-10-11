@@ -22,7 +22,7 @@ import { createDmTurn, saveDmTurn, type DmTurn } from "@/lib/db/dm-turns";
 import { getBattleMapForEncounter, listHiddenRefIds, listTokens, moveToken, type BattleMap } from "@/lib/db/battle-maps";
 import type { RollAttacker } from "@/lib/db/rolls";
 import { rollCard } from "@/lib/dm/roll-card";
-import { rollAgainst } from "@/lib/roll-labels";
+import { againstRoll } from "@/lib/roll-labels";
 import { getActiveEncounter, getEnemy, patchEnemyConditions, setEnemyConcentration, turnKey, type Encounter, type EncounterEnemy } from "@/lib/db/encounters";
 import { getSheetById, patchSheet } from "@/lib/db/sheets";
 import { publishPersisted } from "@/lib/events";
@@ -156,7 +156,7 @@ function strike(
     }
     let dealt = 0;
     if (dice && (failed || (trigger.half && !trigger.damageOnFail))) {
-      const rolled = rollCard(campaign, null, zone.casterKind === "pc" ? zone.casterId : null, "damage", rollAgainst(zone.spell, enemy.displayName), dice, by).total;
+      const rolled = rollCard(campaign, null, zone.casterKind === "pc" ? zone.casterId : null, "damage", againstRoll(zone.spell, enemy.displayName, "enemy"), dice, by).total;
       dealt = failed ? rolled : Math.floor(rolled / 2);
       if (dealt > 0) {
         const before = enemy.currentHp;
@@ -187,7 +187,7 @@ function strike(
       lines.push(`${sheet.name} ${failed ? "fails" : "makes"} the ${trigger.save.toUpperCase()} save against ${zone.spell} (DC ${dc}).`);
     }
     if (dice && (failed || (trigger.half && !trigger.damageOnFail))) {
-      const rolled = rollCard(campaign, turn, sheet.id, "damage", rollAgainst(zone.spell, sheet.name), dice, by).total;
+      const rolled = rollCard(campaign, turn, sheet.id, "damage", againstRoll(zone.spell, sheet.name, "proper"), dice, by).total;
       // The one save-for-half rule, Evasion included (src/lib/srd/trait-rules.ts).
       const taken = trigger.save
         ? saveDamageTaken({ total: rolled, saved: !failed, halfOnSave: Boolean(trigger.half && !trigger.damageOnFail), ability: trigger.save, sheet })

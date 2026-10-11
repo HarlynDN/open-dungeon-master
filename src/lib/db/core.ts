@@ -1873,6 +1873,8 @@ function ensureSchema(db: SqliteDatabase) {
     // AC, damage expressions) the server needs when the d20 is submitted
     // (src/lib/dm/pc-attack.ts).
     ["attack_json", `TEXT`],
+    // The same public caption data as rolls, kept while dice are pending.
+    ["presentation_json", `TEXT`],
     // Who may read the roll once it lands (rolls.visibility): a person's
     // screen survives the roll being parked for real dice or a held roll.
     ["visibility", `TEXT NOT NULL DEFAULT 'public'`],
@@ -1897,6 +1899,9 @@ function ensureSchema(db: SqliteDatabase) {
     // say who rolled. NULL: nobody did (a fall), a roll tool, or a roll
     // stored before the column.
     ["attacker_json", `TEXT`],
+    // Optional locale-neutral caption data. Legacy detail and combat
+    // adjudication fields keep their original meaning; old rows stay NULL.
+    ["presentation_json", `TEXT`],
   ]);
 
   addColumns("campaign_notes", [

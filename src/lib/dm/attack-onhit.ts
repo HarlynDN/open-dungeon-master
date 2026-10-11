@@ -14,7 +14,7 @@
 import { allocateSeq, type Campaign } from "@/lib/db/campaigns";
 import { getActiveEncounter, getEnemy, patchEnemyConditions, type EncounterEnemy } from "@/lib/db/encounters";
 import { insertRoll } from "@/lib/db/rolls";
-import { rollAgainst } from "@/lib/roll-labels";
+import { againstRoll } from "@/lib/roll-labels";
 import { insertSheetAudit } from "@/lib/db/sheet-audit";
 import { getSheetById, listSheets, patchSheet } from "@/lib/db/sheets";
 import { rollExpression } from "@/lib/dice";
@@ -190,7 +190,7 @@ export function poisonOnHit(campaign: Campaign, sheetId: string, enemyId: string
       characterId: sheet.id,
       requestedBy: "dm",
       kind: "damage",
-      detail: rollAgainst(label, enemy.displayName),
+      ...againstRoll(label, enemy.displayName, "enemy"),
       result: outcome,
       attacker: { kind: "sheet", id: sheet.id, name: sheet.name },
     });
@@ -310,7 +310,7 @@ export function hurlReturn(campaign: Campaign, enemy: EncounterEnemy, meta: Cond
     characterId: meta.source ?? null,
     requestedBy: "dm",
     kind: "damage",
-    detail: rollAgainst("Hurl Through Hell", enemy.displayName),
+    ...againstRoll("Hurl Through Hell", enemy.displayName, "enemy"),
     result: outcome,
     attacker: warlock ? { kind: "sheet", id: warlock.id, name: warlock.name } : null,
   });

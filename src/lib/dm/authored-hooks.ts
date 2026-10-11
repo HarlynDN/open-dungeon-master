@@ -44,7 +44,7 @@ import { withinFeet } from "@/lib/dm/authored-saves";
 import { naturalWeaponOnHit } from "@/lib/dm/authored-attacks";
 import type { CharacterSheet } from "@/lib/schemas/sheet";
 import { rollCard, sheetAttacker } from "@/lib/dm/roll-card";
-import { rollAgainst } from "@/lib/roll-labels";
+import { againstRoll } from "@/lib/roll-labels";
 
 const lower = (value: string | undefined | null) => (value ?? "").trim().toLowerCase();
 
@@ -159,7 +159,7 @@ export function authoredAfterHit(
     const amount =
       effect.formula === "half_dealt"
         ? Math.floor(input.dealt / 2)
-        : Number(rollCard(campaign, null, target.id, "damage", rollAgainst(held.feature, live.displayName), resolveFormula(effect.formula, held.level, modsOf(target)), sheetAttacker(target)).total);
+        : Number(rollCard(campaign, null, target.id, "damage", againstRoll(held.feature, live.displayName, "enemy"), resolveFormula(effect.formula, held.level, modsOf(target)), sheetAttacker(target)).total);
     if (amount > 0) {
       lines.push(hurtEnemy(campaign, input.encounter, live, amount, effect.type, held.feature));
     }
@@ -261,7 +261,7 @@ export function authoredOnHit(
       delete meta[cursed];
       patchEnemyConditions(enemy.id, cleared, meta);
       const cleric = getSheetById(curse.source);
-      const amount = rollCard(campaign, null, cleric?.id ?? null, "damage", rollAgainst("Order's Wrath", enemy.displayName), curse.dice ?? "2d8", cleric ? sheetAttacker(cleric) : null).total;
+      const amount = rollCard(campaign, null, cleric?.id ?? null, "damage", againstRoll("Order's Wrath", enemy.displayName, "enemy"), curse.dice ?? "2d8", cleric ? sheetAttacker(cleric) : null).total;
       const fresh = getEnemy(enemy.id);
       if (fresh) {
         lines.push(hurtEnemy(campaign, encounter, fresh, amount, curse.type ?? "psychic", "Order's Wrath"));

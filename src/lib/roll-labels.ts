@@ -7,6 +7,7 @@
 // Pure (type imports only), so client components and test scripts import it.
 
 import type { StoredRoll } from "@/lib/db/rolls";
+import type { RollDetail, RollDisplayName } from "./roll-presentation";
 
 type Worded = Pick<StoredRoll, "kind" | "detail" | "attacker">;
 
@@ -19,6 +20,18 @@ export function rollAgainst(what: string, target: string): string {
 // An area that caught only creatures the table cannot see names none.
 export function rollOn(what: string, targets: string[]): string {
   return targets.length ? `${what} on ${targets.join(", ")}` : what;
+}
+
+// Producers know whether a target is a catalog creature or a proper name.
+// Keep the English detail alongside that identity instead of guessing from
+// the attacker or parsing names in a stored sentence.
+export function againstRoll(what: string, target: string, kind: RollDisplayName["kind"]): RollDetail {
+  return { detail: rollAgainst(what, target), presentation: { kind: "against", what, target: { name: target, kind } } };
+}
+
+export function areaRoll(what: string, targets: RollDisplayName[], options: { damageType?: string; actorUnseen?: true } = {}): RollDetail {
+  const legacy = `${what}${options.damageType ? ` (${options.damageType})` : ""}`;
+  return { detail: rollOn(legacy, targets.map(target => target.name)), presentation: { kind: "area", what, targets, ...options } };
 }
 
 // Who made the roll: its attacker, else the sheet it concerns.

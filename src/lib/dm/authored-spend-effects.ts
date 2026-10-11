@@ -24,11 +24,11 @@ import { rerollLastSave, swarmPush } from "@/lib/dm/authored-spend-more";
 import { summonSteelDefender } from "@/lib/dm/summon-defender";
 import type { CharacterSheet, FullPatchSheetInput } from "@/lib/schemas/sheet";
 import { rollCard, sheetAttacker } from "@/lib/dm/roll-card";
-import { rollAgainst } from "@/lib/roll-labels";
+import { againstRoll } from "@/lib/roll-labels";
 
 // A spend's damage on one enemy, as the holder's dice card.
 const damageDice = (ctx: SpendContext, enemy: EncounterEnemy, dice: string) =>
-  rollCard(ctx.campaign, ctx.turn, ctx.sheet.id, "damage", rollAgainst(ctx.spend.name, enemy.displayName), dice, sheetAttacker(ctx.sheet)).total;
+  rollCard(ctx.campaign, ctx.turn, ctx.sheet.id, "damage", againstRoll(ctx.spend.name, enemy.displayName, "enemy"), dice, sheetAttacker(ctx.sheet)).total;
 
 export type SpendContext = {
   campaign: Campaign;

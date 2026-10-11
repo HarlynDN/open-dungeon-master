@@ -4,6 +4,7 @@ import { apiErrorText, type UiRequestError } from "./api-errors.ts";
 import { referenceDisplayName } from "./references.ts";
 import { rollCardLabel } from "../roll-labels.ts";
 import type { StoredRoll } from "../db/rolls.ts";
+import { rollPresentationLabel, unseenRollActor } from "./roll-presentations.ts";
 
 // Display projection only. Stored English details and all rule inputs remain
 // untouched; arbitrary prose/custom rolls are not translated by replacement.
@@ -23,11 +24,14 @@ export function combatTermLabel(kind: "ability" | "skill" | "condition", value: 
   const key = Object.hasOwn(source, direct) ? direct : Object.keys(source).find(key => source[key as MessageKey]?.toLowerCase() === value.trim().toLowerCase());
   return key ? createTranslator(locale)(key as MessageKey) : value;
 }
-type RollLabelInput = Pick<StoredRoll, "kind" | "detail" | "attacker">;
+type RollLabelInput = Pick<StoredRoll, "kind" | "detail" | "attacker" | "presentation">;
 type RollDetailInput = Omit<RollLabelInput, "kind"> & { kind: string };
 export function rollDetailLabel(roll: RollDetailInput, locale: AppLocale, sheetName?: string): string {
   const detail = roll.detail.replaceAll("_", " ");
-  if (locale === "en" || roll.kind === "custom") return detail;
+  if (locale === "en") return detail;
+  const presentation = rollPresentationLabel(roll.presentation, locale);
+  if (presentation !== undefined) return presentation;
+  if (roll.kind === "custom") return detail;
   if (["skill_check", "saving_throw", "ability_check"].includes(roll.kind)) {
     const kind = roll.kind === "skill_check" ? "skill" : "ability";
     const prefix = sheetName && detail.startsWith(`${sheetName}: `) ? `${sheetName}: ` : "";
@@ -40,9 +44,9 @@ export function rollDetailLabel(roll: RollDetailInput, locale: AppLocale, sheetN
     if (match) {
       const what = referenceDisplayName("spell", match[1], locale);
       const tool = referenceDisplayName("equipment", what, locale);
-      // Enemy attacks concern a player's proper name. Player attacks use
-      // the encounter's enemy catalog names; unknown authored names survive.
-      const target = roll.attacker.kind === "enemy" ? match[2] : referenceDisplayName("monster", match[2], locale);
+      // Old rows do not identify their target. Attacker kind cannot tell
+      // whether it attacked a player, a pet or an enemy with the same name.
+      const target = match[2];
       return createTranslator(locale)("combatUi.roll.against", { what: tool, target });
     }
   }
@@ -50,11 +54,11 @@ export function rollDetailLabel(roll: RollDetailInput, locale: AppLocale, sheetN
 }
 export function localizedRollCardLabel(roll: RollLabelInput, sheetName: string | undefined, locale: AppLocale): string {
   if (locale === "en") return rollCardLabel(roll, sheetName);
-  const who = roll.attacker ? combatName(roll.attacker.name, roll.attacker.kind, locale) : sheetName;
-  const detail = rollDetailLabel(roll, locale, sheetName);
+  const who = unseenRollActor(roll.presentation, locale) ?? (roll.attacker ? combatName(roll.attacker.name, roll.attacker.kind, locale) : sheetName);
+  const detail = rollPresentationLabel(roll.presentation, locale) ?? rollDetailLabel(roll, locale, sheetName);
   return `${who ? `${who} · ` : ""}${rollKindLabel(roll.kind, locale)}${detail ? `（${detail}）` : ""}`;
 }
-export function pendingRollLabel(roll: Pick<RollDetailInput, "kind" | "detail">, name: string | undefined, locale: AppLocale): string {
+export function pendingRollLabel(roll: Pick<RollDetailInput, "kind" | "detail" | "presentation">, name: string | undefined, locale: AppLocale): string {
   const t = createTranslator(locale);
   const detail = rollDetailLabel({ ...roll, attacker: null }, locale, name);
   return t("combatUi.pending.label", { name: name ?? t("combatUi.pending.someone"),

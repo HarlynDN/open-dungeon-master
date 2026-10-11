@@ -1,6 +1,7 @@
 import { getDatabase, nowIso, parseJson } from "@/lib/db/core";
 import { redactRoll, rollAccessFor, type ViewerCaps } from "@/lib/dm/viewer";
 import type { Advantage, RollResult } from "@/lib/dice";
+import { parseRollPresentation, type RollPresentation } from "@/lib/roll-presentation";
 
 export type RollKind =
   | "skill_check"
@@ -30,6 +31,7 @@ export type StoredRoll = {
   requestedBy: "dm" | "player";
   kind: RollKind;
   detail: string;
+  presentation?: RollPresentation;
   expression: string;
   advantage: Advantage;
   dc: number | null;
@@ -66,10 +68,12 @@ type RollRow = {
   target_enemy_id: string | null;
   applied: number;
   attacker_json: string | null;
+  presentation_json?: string | null;
   created_at: string;
 };
 
 function mapRoll(row: RollRow): StoredRoll {
+  const presentation = parseRollPresentation(parseJson(row.presentation_json ?? "null", null));
   return {
     id: row.id,
     campaignId: row.campaign_id,
@@ -77,6 +81,7 @@ function mapRoll(row: RollRow): StoredRoll {
     requestedBy: row.requested_by,
     kind: row.roll_kind,
     detail: row.detail,
+    ...(presentation ? { presentation } : {}),
     expression: row.expression,
     advantage: row.advantage,
     dc: row.dc,
@@ -123,6 +128,7 @@ export type RollInsert = {
   characterId?: string | null;
   requestedBy: "dm" | "player";
   detail?: string;
+  presentation?: RollPresentation;
   advantage?: Advantage;
   dc?: number | null;
   result: RollResult;
@@ -144,9 +150,9 @@ export function insertRoll(input: RollInsert): StoredRoll {
         INSERT INTO rolls (
           id, campaign_id, character_id, requested_by, roll_kind, detail,
           expression, advantage, dc, total, success, breakdown_json,
-          visibility, message_id, attacker_json, created_at
+          visibility, message_id, attacker_json, presentation_json, created_at
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
     )
     .run(
@@ -165,6 +171,7 @@ export function insertRoll(input: RollInsert): StoredRoll {
       input.visibility ?? "public",
       input.messageId ?? null,
       input.attacker ? JSON.stringify(input.attacker) : null,
+      input.presentation ? JSON.stringify(parseRollPresentation(input.presentation) ?? null) : null,
       nowIso(),
     );
 

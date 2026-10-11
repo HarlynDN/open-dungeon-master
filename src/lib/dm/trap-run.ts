@@ -6,7 +6,7 @@ import { handleCastAtPlayer } from "@/lib/dm/cast-tools";
 import { afflictCondition } from "@/lib/dm/afflictions";
 import { openFall } from "@/lib/dm/last-hit";
 import { rollCard } from "@/lib/dm/roll-card";
-import { rollOn } from "@/lib/roll-labels";
+import { areaRoll } from "@/lib/roll-labels";
 import { acWithEffects } from "@/lib/dm/ac-effects";
 import { critDamageExpression } from "@/lib/dm/encounter-logic";
 import { wornArmorTurnsCrits } from "@/lib/srd/armor";
@@ -39,7 +39,7 @@ export function springTrapOn(
   if (trap.attackBonus !== undefined) {
     const ac = acWithEffects(campaign.id, sheet());
     const sign = trap.attackBonus >= 0 ? "+" : "-";
-    const attack = rollCard(campaign, turn, victim.id, "attack", rollOn(`${name} attacks (vs AC ${ac})`, [victim.name]), `1d20${sign}${Math.abs(trap.attackBonus)}`, null);
+    const attack = rollCard(campaign, turn, victim.id, "attack", areaRoll(`${name} attacks (vs AC ${ac})`, [{ name: victim.name, kind: "proper" }]), `1d20${sign}${Math.abs(trap.attackBonus)}`, null);
     const natural = attack.crit;
     const hit = natural !== "nat1" && (natural === "nat20" || attack.total >= ac);
     if (!hit) {
@@ -57,7 +57,7 @@ export function springTrapOn(
   if (trap.fallFeet) {
     const dice = fallingDamageDice(trap.fallFeet);
     if (dice !== "0") {
-      const rolled = rollCard(campaign, turn, victim.id, "damage", rollOn(`${trap.fallFeet} ft fall into ${name} (${dice} bludgeoning)`, [victim.name]), dice, null);
+      const rolled = rollCard(campaign, turn, victim.id, "damage", areaRoll(`${trap.fallFeet} ft fall into ${name} (${dice} bludgeoning)`, [{ name: victim.name, kind: "proper" }]), dice, null);
       const fall = openFall(campaign.id, victim.id);
       applyPcDamage(campaign, turn.id, sheet(), { amount: rolled.total, type: "bludgeoning", knocksProne: true, reason: name });
       fall.close(rolled.total);
@@ -77,7 +77,7 @@ export function springTrapOn(
     const dice = critical(part.dice);
     const amount = /^\d+$/.test(dice)
       ? Number(dice)
-      : rollCard(campaign, turn, victim.id, "damage", rollOn(`${name} (${dice} ${part.type})`, [victim.name]), dice, null).total;
+      : rollCard(campaign, turn, victim.id, "damage", areaRoll(`${name} (${dice} ${part.type})`, [{ name: victim.name, kind: "proper" }]), dice, null).total;
     if (amount > 0) {
       applyPcDamage(campaign, turn.id, sheet(), { amount, type: part.type, reason: name });
       lines.push(`${amount} ${part.type}.`);

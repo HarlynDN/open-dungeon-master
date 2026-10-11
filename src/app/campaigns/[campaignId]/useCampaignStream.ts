@@ -1,4 +1,5 @@
 "use client";
+import type { RollPresentation } from "@/lib/roll-presentation";
 
 import { useCallback, useEffect, useMemo, useReducer, useRef } from "react";
 import type { CampaignMember, SessionUser } from "@/lib/campaign-types";
@@ -71,6 +72,7 @@ export type PendingRoll = {
   characterId: string | null;
   kind: string;
   detail: string;
+  presentation?: RollPresentation;
   expression: string;
   advantage: string;
   dc: number | null;

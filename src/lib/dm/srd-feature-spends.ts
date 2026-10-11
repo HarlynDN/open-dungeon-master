@@ -36,7 +36,7 @@ import { getDmTurn } from "@/lib/db/dm-turns";
 import { feetBetween, priceTheAction, publishSheet } from "@/lib/dm/combat-features";
 import type { CharacterSheet } from "@/lib/schemas/sheet";
 import { rollCard, sheetAttacker } from "@/lib/dm/roll-card";
-import { rollAgainst } from "@/lib/roll-labels";
+import { againstRoll } from "@/lib/roll-labels";
 
 const lower = (value: string | undefined | null) => (value ?? "").trim().toLowerCase();
 
@@ -143,7 +143,7 @@ function quiveringPalm(campaign: Campaign, turnId: string, sheet: CharacterSheet
   const save = rollEnemySave(campaign.id, enemy, "con", dc, { resist: true, record: { detail: `${enemy.displayName}: CON save against Quivering Palm` } });
   price.commit();
   const live = listEnemies(encounter.id).find((entry) => entry.id === enemy.id) ?? enemy;
-  const amount = save.success ? rollCard(campaign, null, sheet.id, "damage", rollAgainst("Quivering Palm", live.displayName), "10d10", sheetAttacker(sheet)).total : live.currentHp;
+  const amount = save.success ? rollCard(campaign, null, sheet.id, "damage", againstRoll("Quivering Palm", live.displayName, "enemy"), "10d10", sheetAttacker(sheet)).total : live.currentHp;
   const sheets = listSheets(campaign.id);
   const turn = getDmTurn(turnId);
   // The damage path wants the DM turn; off one, the aura path lands it.

@@ -8,7 +8,7 @@ import { allocateSeq, type Campaign } from "@/lib/db/campaigns";
 import type { DmTurn } from "@/lib/db/dm-turns";
 import { getEnemy, patchEnemyConditions, type Encounter, type EncounterEnemy } from "@/lib/db/encounters";
 import { insertRoll } from "@/lib/db/rolls";
-import { rollOn } from "@/lib/roll-labels";
+import { areaRoll } from "@/lib/roll-labels";
 import { rollExpression } from "@/lib/dice";
 import { publishWithSeq } from "@/lib/events";
 import { applyEnemyDamage, publishEncounter } from "@/lib/dm/enemy-damage";
@@ -34,7 +34,7 @@ export function enemyFalls(
     characterId: null,
     requestedBy: "dm",
     kind: "damage",
-    detail: rollOn(`${feet} ft fall (${dice} bludgeoning)`, [enemy.displayName]),
+    ...areaRoll(`${feet} ft fall (${dice} bludgeoning)`, [{ name: enemy.displayName, kind: "enemy" }]),
     result: outcome,
     attacker: null,
   });

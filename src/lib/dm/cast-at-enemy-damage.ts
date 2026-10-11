@@ -9,7 +9,7 @@ import type { Campaign } from "@/lib/db/campaigns";
 import type { Encounter, EncounterEnemy } from "@/lib/db/encounters";
 import type { DmTurn } from "@/lib/db/dm-turns";
 import { rollCard } from "@/lib/dm/action-common";
-import { rollAgainst } from "@/lib/roll-labels";
+import { againstRoll } from "@/lib/roll-labels";
 import { spellDamageFor, spellFactsFor, spellMechanicsFor, spellSchoolFor } from "@/lib/content";
 import { authoredOnKill } from "@/lib/dm/authored-hooks";
 import { applyEnemyDamage } from "@/lib/dm/enemy-damage";
@@ -61,7 +61,7 @@ export function landSpellDamage(input: {
   // A maximized blow rolls no dice, so it has no card.
   const outcome =
     maxed === null
-      ? rollCard(campaign, turn, sheet.id, "damage", rollAgainst(spellName, enemy.displayName), rolledExpression, { kind: "sheet", id: sheet.id, name: sheet.name })
+      ? rollCard(campaign, turn, sheet.id, "damage", againstRoll(spellName, enemy.displayName, "enemy"), rolledExpression, { kind: "sheet", id: sheet.id, name: sheet.name })
       : { total: maxed };
   const total = outcome.total + riders.flat;
   const halves = halfOnSave || riders.potentCantrip;

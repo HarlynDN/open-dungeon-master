@@ -3,6 +3,7 @@ import type { ChatMessage } from "@/lib/model-client";
 import type { Advantage } from "@/lib/dice";
 import type { RollKind, RollVisibility } from "@/lib/db/rolls";
 import type { ContextTrace } from "@/lib/dm/context-budget";
+import { parseRollPresentation, type RollPresentation } from "@/lib/roll-presentation";
 import { parkReasonFor, type ParkReason } from "@/lib/dice/held-rolls";
 
 // A DM narration turn persisted as a state machine so it can park while a
@@ -238,6 +239,7 @@ export type PendingRoll = {
   characterId: string | null;
   kind: RollKind;
   detail: string;
+  presentation?: RollPresentation;
   expression: string;
   advantage: Advantage;
   dc: number | null;
@@ -262,6 +264,7 @@ export type PendingRoll = {
 };
 
 type PendingRow = {
+  presentation_json?: string | null;
   parked_for?: string | null;
   id: string;
   campaign_id: string;
@@ -285,6 +288,7 @@ type PendingRow = {
 };
 
 function mapPending(row: PendingRow): PendingRoll {
+  const presentation = parseRollPresentation(parseJson(row.presentation_json ?? "null", null));
   return {
     id: row.id,
     campaignId: row.campaign_id,
@@ -294,6 +298,7 @@ function mapPending(row: PendingRow): PendingRoll {
     characterId: row.character_id,
     kind: row.kind,
     detail: row.detail,
+    ...(presentation ? { presentation } : {}),
     expression: row.expression,
     advantage: row.advantage,
     dc: row.dc,
@@ -356,6 +361,7 @@ export function createPendingRoll(input: {
   characterId: string | null;
   kind: RollKind;
   detail: string;
+  presentation?: RollPresentation;
   expression: string;
   advantage: Advantage;
   dc: number | null;
@@ -380,9 +386,9 @@ export function createPendingRoll(input: {
         INSERT INTO pending_rolls (
           id, campaign_id, turn_id, tool_call_id, user_id, character_id, kind,
           detail, expression, advantage, dc, reason, target_enemy_id, attack_json, parked_for,
-          visibility, status, created_at
+          visibility, presentation_json, status, created_at
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?)
       `,
     )
     .run(
@@ -402,6 +408,7 @@ export function createPendingRoll(input: {
       input.attack ? JSON.stringify(input.attack) : null,
       parkedFor,
       input.visibility ?? "public",
+      input.presentation ? JSON.stringify(parseRollPresentation(input.presentation) ?? null) : null,
       nowIso(),
     );
   const pending = getPendingRoll(id);

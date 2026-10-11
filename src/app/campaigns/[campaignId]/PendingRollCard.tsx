@@ -27,6 +27,7 @@ import { INSPIRED_KINDS } from "@/lib/dm/pending-inspiration";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import type { UiRequestError } from "@/lib/i18n/api-errors";
 import { combatErrorText, combatTermLabel, diceListLabel, pendingRollLabel, rollKindLabel } from "@/lib/i18n/combat-ui-presentations";
+import { pendingRollReason } from "@/lib/i18n/roll-presentations";
 
 const ABILITY_NAMES: Record<string, string> = {
   str: "Strength",
@@ -339,7 +340,7 @@ export function PendingRollCard({
             <Dices className="size-4 shrink-0" style={{ color: "var(--check-vine)" }} />
             <span className="min-w-0">{t("combatUi.pending.yourRoll", { label })}</span>
           </p>
-          {pending.reason ? <p className="check-dim mt-0.5 text-xs">{pending.reason}</p> : null}
+          {pending.reason ? <p className="check-dim mt-0.5 text-xs">{pendingRollReason(pending, locale)}</p> : null}
           {canInspire ? (
             <button
               type="button"

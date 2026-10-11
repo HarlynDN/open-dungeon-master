@@ -222,6 +222,7 @@ export function rollStableTimer(campaign: Campaign, sheet: CharacterSheet) {
     requestedBy: "dm",
     kind: "custom",
     detail: `hours until ${sheet.name} regains 1 hit point (1d4)`,
+    presentation: { kind: "stable-recovery", name: sheet.name },
     result: outcome,
   });
   publishWithSeq(campaign.id, allocateSeq(campaign.id), "roll_result", {
@@ -292,6 +293,7 @@ export function rollDeathSave(campaign: Campaign, characterId: string): void {
     requestedBy: "dm",
     kind: "saving_throw",
     detail: `death save${notes.length ? ` (${notes.join("; ")})` : ""}`.slice(0, 200),
+    presentation: { kind: "death-save", notes },
     dc: 10,
     ...(advantage === "none" ? {} : { advantage }),
     result: outcome,

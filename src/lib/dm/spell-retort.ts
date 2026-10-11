@@ -22,7 +22,7 @@ import { applyEnemyDamage, publishEncounter } from "@/lib/dm/enemy-damage";
 import { rollEnemySave } from "@/lib/dm/forced-save";
 import type { CharacterSheet } from "@/lib/schemas/sheet";
 import { rollCard, sheetAttacker } from "@/lib/dm/roll-card";
-import { rollAgainst } from "@/lib/roll-labels";
+import { againstRoll } from "@/lib/roll-labels";
 
 // The riders of the attacker's next swing, with what this one spent taken
 // off the creature (the spent condition leaves its row).
@@ -104,7 +104,7 @@ export function spellRetort(
     const live = getEnemy(attacker.id);
     if (live?.status === "alive") {
       // The shield's bearer deals it.
-      const rolled = rollCard(campaign, turn, target.id, "damage", rollAgainst("Fire Shield", live.displayName), "2d8", sheetAttacker(target)).total;
+      const rolled = rollCard(campaign, turn, target.id, "damage", againstRoll("Fire Shield", live.displayName, "enemy"), "2d8", sheetAttacker(target)).total;
       const applied = applyEnemyDamage(campaign, turn, encounter, live, rolled, sheets, sheetsById, type, { magical: true });
       lines.push(`${target.name}'s Fire Shield sears ${live.displayName} for ${applied.damageApplied ?? rolled} ${type} damage.`);
     }
@@ -166,7 +166,7 @@ export function curseBurn(
     return null;
   }
   const caster = getSheetById(casterId);
-  const rolled = rollCard(campaign, turn, caster?.id ?? null, "damage", rollAgainst("Bestow Curse", enemy.displayName), rider.dice, caster ? sheetAttacker(caster) : null).total;
+  const rolled = rollCard(campaign, turn, caster?.id ?? null, "damage", againstRoll("Bestow Curse", enemy.displayName, "enemy"), rider.dice, caster ? sheetAttacker(caster) : null).total;
   applyEnemyDamage(campaign, turn, encounter, enemy, rolled, sheets, sheetsById, rider.type, { magical: true });
   return `Bestow Curse: ${rolled} necrotic more to ${enemy.displayName}.`;
 }

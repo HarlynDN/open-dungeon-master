@@ -5,7 +5,7 @@ import { getEnemy, patchEnemyHp, type EncounterEnemy } from "@/lib/db/encounters
 import { enemyHpCap } from "@/lib/dm/monster-abilities";
 import { getSheetById, patchSheet } from "@/lib/db/sheets";
 import { insertRoll } from "@/lib/db/rolls";
-import { rollAgainst } from "@/lib/roll-labels";
+import { againstRoll } from "@/lib/roll-labels";
 import { allocateSeq } from "@/lib/db/campaigns";
 import { publishPersisted, publishWithSeq } from "@/lib/events";
 import { isValidExpression, rollExpression, type RollResult } from "@/lib/dice";
@@ -134,7 +134,7 @@ export function resolveOnHit(
       characterId: target.id,
       requestedBy: "dm",
       kind: "damage",
-      detail: rollAgainst(`${attack.name} (${rider.damageType ?? "rider"})`, target.name),
+      ...againstRoll(`${attack.name} (${rider.damageType ?? "rider"})`, target.name, "proper"),
       result: outcome,
       attacker: { kind: "enemy", id: enemy.id, name: enemy.displayName },
     });

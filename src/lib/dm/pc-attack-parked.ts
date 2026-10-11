@@ -34,7 +34,7 @@ import {
   spendFeatureUse,
 } from "@/lib/dm/attack-onhit";
 import { storeBudget } from "@/lib/dm/turn-budget";
-import { rollAgainst } from "@/lib/roll-labels";
+import { againstRoll } from "@/lib/roll-labels";
 
 // The parked roll's share of what rides the attack (src/lib/dm/pc-attack-plan.ts).
 function parkedExtras(plan: AttackPlan): Pick<ParkedAttack, "extras"> | null {
@@ -100,6 +100,7 @@ export function parkPcAttack(plan: AttackPlan, strike: Strike, toolCallId: strin
     characterId: sheet.id,
     kind: "attack",
     detail: strike.detail,
+    presentation: strike.presentation,
     expression: strike.toHitExpression,
     advantage: plan.advantage,
     dc: null,
@@ -261,7 +262,7 @@ export function resolvePendingPcAttack(pending: PendingRoll, roll: StoredRoll): 
     userId: pending.userId,
     characterId: pending.characterId,
     kind: "damage",
-    detail: rollAgainst(context.weapon, enemy.displayName),
+    ...againstRoll(context.weapon, enemy.displayName, "enemy"),
     expression,
     advantage: "none",
     dc: null,

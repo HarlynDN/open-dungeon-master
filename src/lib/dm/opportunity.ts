@@ -6,7 +6,7 @@ import { getActiveEncounter, listEnemies, saveEncounter } from "@/lib/db/encount
 import { getBattleMapForEncounter, getTokenByRef } from "@/lib/db/battle-maps";
 import { getSheetById, listSheets, patchSheet } from "@/lib/db/sheets";
 import { insertRoll } from "@/lib/db/rolls";
-import { rollAgainst } from "@/lib/roll-labels";
+import { againstRoll } from "@/lib/roll-labels";
 import { chebyshev } from "@/lib/battlemap/types";
 import { d20Expression, rollExpression } from "@/lib/dice";
 import { publishWithSeq } from "@/lib/events";
@@ -232,7 +232,7 @@ export function resolveOpportunityAttacks(
       characterId: null,
       requestedBy: "dm",
       kind: "attack",
-      detail: rollAgainst(`${attack.name} (opportunity attack)`, sheet.name),
+      ...againstRoll(`${attack.name} (opportunity attack)`, sheet.name, "proper"),
       advantage,
       result: hitOutcome,
       attacker: { kind: "enemy", id: enemy.id, name: enemy.displayName },
@@ -263,7 +263,7 @@ export function resolveOpportunityAttacks(
       characterId: null,
       requestedBy: "dm",
       kind: "damage",
-      detail: rollAgainst(`${attack.name} (opportunity attack)`, sheet.name),
+      ...againstRoll(`${attack.name} (opportunity attack)`, sheet.name, "proper"),
       result: damageOutcome,
       attacker: { kind: "enemy", id: enemy.id, name: enemy.displayName },
     });

@@ -26,7 +26,7 @@ import { rollEnemySave } from "@/lib/dm/forced-save";
 import { lastCastSlot, spellKey } from "@/lib/dm/spell-effects";
 import { hurtEnemy } from "@/lib/dm/spell-aura";
 import { rollCard, sheetAttacker } from "@/lib/dm/roll-card";
-import { rollAgainst } from "@/lib/roll-labels";
+import { againstRoll } from "@/lib/roll-labels";
 
 type TurnEndHook = (campaign: Campaign, enemy: EncounterEnemy, meta: ConditionMeta) => string | null;
 
@@ -39,7 +39,7 @@ function acidArrowBurn(campaign: Campaign, enemy: EncounterEnemy, meta: Conditio
   const slot = meta.slotLevel ?? (meta.source ? lastCastSlot(meta.source, "Acid Arrow") : null) ?? 2;
   const dice = addDice("2d4", "1d4", Math.max(0, slot - 2));
   const caster = meta.source ? getSheetById(meta.source) : null;
-  const burn = rollCard(campaign, null, caster?.id ?? null, "damage", rollAgainst("Acid Arrow (second burn)", enemy.displayName), dice, caster ? sheetAttacker(caster) : null).total;
+  const burn = rollCard(campaign, null, caster?.id ?? null, "damage", againstRoll("Acid Arrow (second burn)", enemy.displayName, "enemy"), dice, caster ? sheetAttacker(caster) : null).total;
   return hurtEnemy(campaign, encounter, enemy, burn, "acid", "Acid Arrow's acid");
 }
 
@@ -114,7 +114,7 @@ function saveAtTurnEnd(campaign: Campaign, enemy: EncounterEnemy, meta: Conditio
   if (!dice) {
     return null;
   }
-  const hurt = rollCard(campaign, null, caster?.id ?? null, "damage", rollAgainst(resolved.name, enemy.displayName), dice, caster ? sheetAttacker(caster) : null).total;
+  const hurt = rollCard(campaign, null, caster?.id ?? null, "damage", againstRoll(resolved.name, enemy.displayName, "enemy"), dice, caster ? sheetAttacker(caster) : null).total;
   return hurtEnemy(campaign, encounter, enemy, hurt, edge.type ?? "psychic", resolved.name);
 }
 

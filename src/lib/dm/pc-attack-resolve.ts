@@ -47,7 +47,7 @@ import {
 } from "@/lib/dm/attack-onhit";
 import { storeBudget } from "@/lib/dm/turn-budget";
 import { untilTurnEnd } from "@/lib/dm/turn-end";
-import { rollAgainst } from "@/lib/roll-labels";
+import { againstRoll } from "@/lib/roll-labels";
 import type { CharacterSheet } from "@/lib/schemas/sheet";
 
 // The roll the attack makes and the damage it carries, built once the
@@ -91,8 +91,7 @@ export function strikeToHit(plan: AttackPlan) {
     .replace(/^(\d+)d20(?:k[hl]\d+)?/, (whole, count) => (plan.extras.luck ? `${Number(count) + 1}d20kh1` : whole))
     .replace(/^(\d+d20(?:k[hl]\d+)?)/, lucky ? "$1r1" : "$1");
   const toHitExpression = `${toHitD20}${toHitRiderSuffix}`;
-  const detail = rollAgainst(profile.weapon, enemy.displayName);
-  return { toHitExpression, detail };
+  return { toHitExpression, ...againstRoll(profile.weapon, enemy.displayName, "enemy") };
 }
 
 // Digital path: roll, adjudicate, and apply in one pass.
@@ -114,6 +113,7 @@ export function rollPcAttack(plan: AttackPlan, strike: Strike): Record<string, u
     requestedBy: "dm",
     kind: "attack",
     detail: strike.detail,
+    presentation: strike.presentation,
     advantage: plan.advantage,
     result: hitOutcome,
     attacker: { kind: "sheet", id: sheet.id, name: sheet.name },
@@ -280,6 +280,7 @@ export function rollPcAttack(plan: AttackPlan, strike: Strike): Record<string, u
     requestedBy: "dm",
     kind: "damage",
     detail: strike.detail,
+    presentation: strike.presentation,
     result: damageOutcome,
     attacker: { kind: "sheet", id: sheet.id, name: sheet.name },
   });
@@ -436,7 +437,7 @@ function missDamage(plan: AttackPlan): Record<string, unknown> | null {
     characterId: sheet.id,
     requestedBy: "dm",
     kind: "damage",
-    detail: rollAgainst(`${profile.weapon} (half on a miss)`, enemy.displayName),
+    ...againstRoll(`${profile.weapon} (half on a miss)`, enemy.displayName, "enemy"),
     result: outcome,
     attacker: { kind: "sheet", id: sheet.id, name: sheet.name },
   });

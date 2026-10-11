@@ -9,6 +9,7 @@ import type { DmTurn } from "@/lib/db/dm-turns";
 import { insertRoll, type RollAttacker, type RollKind } from "@/lib/db/rolls";
 import { rollExpression } from "@/lib/dice";
 import { publishWithSeq } from "@/lib/events";
+import type { RollDetail } from "@/lib/roll-presentation";
 
 // `turn` is the DM turn the card belongs to, when one is running; a roll at a
 // turn's start or end (no DM turn) stands alone in the chronicle. `attacker`
@@ -20,7 +21,7 @@ export function rollCard(
   turn: DmTurn | null,
   characterId: string | null,
   kind: RollKind,
-  detail: string,
+  detail: string | RollDetail,
   expression: string,
   attacker: RollAttacker | null,
 ) {
@@ -33,7 +34,8 @@ export function rollCard(
     characterId,
     requestedBy: "dm",
     kind,
-    detail: detail.slice(0, 120),
+    detail: (typeof detail === "string" ? detail : detail.detail).slice(0, 120),
+    ...(typeof detail === "string" ? {} : { presentation: detail.presentation }),
     result: outcome,
     attacker,
   });

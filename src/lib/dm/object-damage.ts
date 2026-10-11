@@ -15,7 +15,8 @@ import { allocateSeq, type Campaign } from "@/lib/db/campaigns";
 import type { DmTurn } from "@/lib/db/dm-turns";
 import { getClock, setClock } from "@/lib/db/clock";
 import { insertRoll, type RollAttacker } from "@/lib/db/rolls";
-import { rollAgainst, rollOn } from "@/lib/roll-labels";
+import { againstRoll, areaRoll } from "@/lib/roll-labels";
+import type { RollDetail } from "@/lib/roll-presentation";
 import { getSheetById } from "@/lib/db/sheets";
 import { isValidExpression, rollExpression, type RollResult } from "@/lib/dice";
 import { publishWithSeq } from "@/lib/events";
@@ -48,8 +49,9 @@ const objectSchema = z.object({
 
 const keyOf = (name: string) => name.trim().toLowerCase().replace(/\s+/g, " ").slice(0, 60);
 
-function publishRoll(campaign: Campaign, turn: DmTurn | null, characterId: string | null, kind: "attack" | "damage", detail: string, result: RollResult, attacker: RollAttacker | null) {
-  const roll = insertRoll({ campaignId: campaign.id, characterId, requestedBy: "dm", kind, detail, result, attacker });
+function publishRoll(campaign: Campaign, turn: DmTurn | null, characterId: string | null, kind: "attack" | "damage", detail: string | RollDetail, result: RollResult, attacker: RollAttacker | null) {
+  const caption = typeof detail === "string" ? { detail } : detail;
+  const roll = insertRoll({ campaignId: campaign.id, characterId, requestedBy: "dm", kind, ...caption, result, attacker });
   publishWithSeq(campaign.id, allocateSeq(campaign.id), "roll_result", { roll, source: "digital" });
   turn?.rollIds.push(roll.id);
 }
@@ -108,7 +110,7 @@ export function damageObject(
     }
     const attack = rollExpression(`1d20${built.profile.toHit >= 0 ? "+" : ""}${built.profile.toHit}`);
     const striker: RollAttacker = { kind: "sheet", id: sheet.id, name: sheet.name };
-    publishRoll(campaign, turn, sheet.id, "attack", rollAgainst(built.profile.weapon, args.name ?? "an object"), attack, striker);
+    publishRoll(campaign, turn, sheet.id, "attack", againstRoll(built.profile.weapon, args.name ?? "an object", "proper"), attack, striker);
     const natural = attack.natural ?? 0;
     const hit = natural !== 1 && (natural === 20 || attack.total >= ac);
     if (!hit) {
@@ -124,7 +126,7 @@ export function damageObject(
     }
     const expression = natural === 20 ? critDamageExpression(built.profile.damageExpression) : built.profile.damageExpression;
     const damage = rollExpression(expression);
-    publishRoll(campaign, turn, sheet.id, "damage", rollAgainst(built.profile.weapon, args.name ?? "an object"), damage, striker);
+    publishRoll(campaign, turn, sheet.id, "damage", againstRoll(built.profile.weapon, args.name ?? "an object", "proper"), damage, striker);
     dealt = Math.max(0, damage.total);
     type = type || built.profile.damageType;
   } else if (args.damage) {
@@ -134,7 +136,7 @@ export function damageObject(
       const rolled = rollExpression(args.damage);
       // Harm no character dealt (a hazard, a falling block): nobody's roll.
       if (campaign) {
-        publishRoll(campaign, turn, null, "damage", rollOn(type || "damage", [args.name ?? "an object"]), rolled, null);
+        publishRoll(campaign, turn, null, "damage", areaRoll(type || "damage", [{ name: args.name ?? "an object", kind: "proper" }]), rolled, null);
       }
       dealt = rolled.total;
     } else {

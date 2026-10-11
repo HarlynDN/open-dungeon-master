@@ -18,7 +18,7 @@ import type { DmTurn } from "@/lib/db/dm-turns";
 import { getRoll, markRollApplied } from "@/lib/db/rolls";
 import { isValidExpression } from "@/lib/dice";
 import { spellFactsFor } from "@/lib/content";
-import { rollAgainst } from "@/lib/roll-labels";
+import { againstRoll } from "@/lib/roll-labels";
 import { rollCard } from "@/lib/dm/roll-card";
 import { rollCharacterSave } from "@/lib/dm/forced-save";
 import { canonicalCondition } from "@/lib/dm/set-condition";
@@ -95,7 +95,7 @@ function number(ctx: GateContext, args: Record<string, unknown>, what: "damage" 
       return { result: { error: `"${dice}" is not dice the server can roll; send it like "2d6+3".` } };
     }
     const sheet = ctx.sheetsById.get(targetId);
-    const label = rollAgainst(String(args.reason ?? (what === "damage" ? "Damage" : "Healing")).slice(0, 60), sheet?.name ?? "the target");
+    const label = againstRoll(String(args.reason ?? (what === "damage" ? "Damage" : "Healing")).slice(0, 60), sheet?.name ?? "the target", "proper");
     const rolled = rollCard(ctx.campaign, ctx.turn, sheet ? sheet.id : null, what === "damage" ? "damage" : "custom", label, dice, null);
     const { dice: _sent, ...rest } = args;
     void _sent;

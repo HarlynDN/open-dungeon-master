@@ -587,7 +587,7 @@
     {
       "path": "src/app/campaigns/[campaignId]/PendingRollCard.tsx",
       "state": "covered",
-      "review": "Owned check/ability labels, manual/digital/Pixels/held-roll instructions, Inspiration and API errors reviewed. Error state retains raw responses and rerenders by locale, including observer fallback. Actual button callbacks preserve dice payloads and canonical endpoints; character names, assigned die names and campaign-authored reason remain verbatim. Imported steppers have independent coverage."
+      "review": "Owned check/ability labels, manual/digital/Pixels/held-roll instructions, Inspiration and API errors reviewed. Error state retains raw responses and rerenders by locale, including observer fallback. Actual button callbacks preserve dice payloads and canonical endpoints. Engine attack/damage reasons and typed target captions now localize and persist across restart; real physical submission handlers and English render parity are tested. Character names, assigned die names and campaign-authored reason remain verbatim. Imported steppers have independent coverage."
     },
     {
       "path": "src/app/campaigns/[campaignId]/PinsPanel.tsx",
@@ -624,7 +624,7 @@
     {
       "path": "src/app/campaigns/[campaignId]/RollCard.tsx",
       "state": "pending",
-      "review": "Owned verdict/DC/hidden/natural-roll strings and stock skill/ability/single-target labels now localize with frozen English parity. Still pending: complete engine-generated area/death-save/condition-related detail variants and identity-safe target projection."
+      "review": "Owned verdict/DC/hidden/natural-roll strings, stock skill/ability labels and structured attack/area/death-save/stable-recovery captions now localize with frozen English parity. Typed targets preserve proper names; area metadata retains existing visibility filters, and physical roll captions persist across restart. Still pending: group/contested checks, source-bearing saves and remaining feature/special roll variants. Unknown authored text and legacy rows retain original detail."
     },
     {
       "path": "src/app/campaigns/[campaignId]/RulesPanel.tsx",

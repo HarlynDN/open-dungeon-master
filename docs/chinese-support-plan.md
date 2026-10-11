@@ -29,7 +29,7 @@ flow remains incomplete; the review-repair checkpoint is a separate scoped task.
 | Locale foundation | Registry, persistence, browser fallback, typed complete catalogs, model locale policy, classified token proxy, chapter budget, CJK retrieval, IME protection | Real prompt-usage calibration; keep legacy campaign/history regressions |
 | DM safety | Per-event engine conclusions with English/Chinese renderers; AI prose separated; one text-only correction and safe fallback; shared localized enemy names in roster/initiative/prose/guard; real Codex combat acceptance | Broader spell/condition/pack coverage; conservative regex coverage is not full language understanding |
 | Embeddings | Original English deployment default retained; explicit multilingual opt-in; fixed bilingual calibration/holdout and hard-negative policy | Broader pack quality; opt-in affects English campaigns and rebuilds indexes |
-| UI | **122/437** covered files, **3466** pending literal sites, **5358** message keys; scoped AST gate; pending checks, initiative controls, encounter roster and board condition/effect presentation | Remaining play/action/combat/inventory/rest/level-up/save/resume surfaces, condition notes on remaining sheet/party surfaces and area/death-save roll details; file fraction is not overall completion or an effort estimate |
+| UI | **122/437** covered files, **3466** pending literal sites, **5404** message keys; scoped AST gate; pending checks, initiative controls, encounter roster, board conditions and structured attack/area/death roll captions | Remaining play/action/combat/inventory/rest/level-up/save/resume surfaces, sheet/party condition notes and other generated check/save/feature captions; file fraction is not overall completion or an effort estimate |
 | Character creation/material | Identity, ancestry, class introductions, ability allocation, gear, spell book/preparation and finish preview; 517 spell and 228 equipment names; 225-entry contextual terminology policy and lint gate; original-source review records | Remaining material beyond reviewed names/creator snippets; authored/pack text retains original language |
 | Player system logs | Structured rule diagnostics and engine-generated combat conclusions retain English protocol semantics with localized presentation | General player-visible log templates; model-facing English tool results remain independent |
 | Resource delivery | UI vs content namespaces; character/campaign boundaries; generated resources checked by lint; production Turbopack build and anonymous bilingual browser switch/reload succeed; home/character/campaign SSR and initial-script payloads measured | Hydrated/lazy network totals, authenticated campaign switching and active-play browser acceptance; route-level JS payload remains large |
@@ -85,7 +85,7 @@ proprietary Chinese rulebooks. Review records distinguish implementation-agent
 source comparison from external/human approval. Preserve names, mechanisms,
 numbers, dice, units, placeholders and content-pack override boundaries. Retain
 source fingerprints and immutable English golden results; never refresh goldens
-to hide regressions. The 19 compressed baselines preserve exact original bytes
+to hide regressions. The 20 compressed baselines preserve exact original bytes
 and verify SHA-256 when loaded.
 
 Runtime evidence names Codex CLI 0.162.1: earlier exploration/social/utility
@@ -125,8 +125,16 @@ visibility-filtered condition metadata, 274 native effect labels/summaries and
 322 frozen English renders. BoardChrome now passes the dynamic display review;
 all 522 script suites, TypeScript, lint and the production Turbopack build pass.
 
-1. Complete area/death-save roll details and identity-safe target labels;
-   RollCard remains pending. Carry structured condition notes into the remaining
+The [roll caption checkpoint](validation/chinese-roll-presentations.md) adds
+identity-safe target arrays and optional persisted presentation data for attacks,
+area damage, death saves and stable recovery. Physical attack/damage stages keep
+their captions across restart; 25 original English RollCard renders stay exact.
+RollCard remains pending for other engine-generated captions and special rolls.
+All 523 script suites, TypeScript, lint and the production Turbopack build pass.
+
+1. Complete group/contested checks, source-bearing saves and remaining feature
+   and special roll captions, including the cinematic display. Carry structured
+   condition notes into the remaining
    sheet/party surfaces, preserving proper/authored names, canonical IDs and
    English render parity.
 2. Continue the remaining main play UI and parameterized player logs in bounded

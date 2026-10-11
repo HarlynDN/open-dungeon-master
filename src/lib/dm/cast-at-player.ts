@@ -20,7 +20,7 @@ import { prepareEnemyUse, type EnemyUse } from "@/lib/dm/enemy-casting";
 import { rollCharacterSave } from "@/lib/dm/forced-save";
 import { rollCard } from "@/lib/dm/action-common";
 import type { RollAttacker } from "@/lib/db/rolls";
-import { rollAgainst } from "@/lib/roll-labels";
+import { againstRoll } from "@/lib/roll-labels";
 import { publishFx, tokenPosition } from "@/lib/dm/fx";
 import { applyDmMutation, canonicalCondition } from "@/lib/dm/mutations";
 import { resolveSheetRef } from "@/lib/dm/rolls";
@@ -296,7 +296,7 @@ export function handleCastAtPlayer(
   if (damage) {
     // The card shows the dice as rolled; the save halves or stops what lands.
     const caster: RollAttacker | null = use ? { kind: "enemy", id: use.enemy.id, name: use.enemy.displayName } : null;
-    const outcome = rollCard(campaign, turn, sheet.id, "damage", rollAgainst(use?.name || args.spell || args.source || "Effect", sheet.name), damage, caster);
+    const outcome = rollCard(campaign, turn, sheet.id, "damage", againstRoll(use?.name || args.spell || args.source || "Effect", sheet.name, "proper"), damage, caster);
     // The one save-for-half rule every path shares, Evasion included
     // (src/lib/srd/trait-rules.ts).
     const taken = saveDamageTaken({ total: outcome.total, saved, halfOnSave, ability, sheet });

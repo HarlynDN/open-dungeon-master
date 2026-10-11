@@ -24,7 +24,7 @@ import {
 import { pcResistances } from "@/lib/dm/condition-logic";
 import type { CharacterSheet } from "@/lib/schemas/sheet";
 import { rollCard } from "@/lib/dm/roll-card";
-import { rollOn } from "@/lib/roll-labels";
+import { areaRoll } from "@/lib/roll-labels";
 import { springTrapOn } from "@/lib/dm/trap-run";
 import { SAMPLE_TRAPS } from "@/lib/srd/trap-specs";
 import { hazardNamesAt, trapAt } from "@/lib/srd/table-hazards";
@@ -210,7 +210,7 @@ export function handleApplyHazard(
         return { name: sheet.name, damage: 0, note: `${sheet.name} drifts down under Feather Fall and lands unhurt.` };
       }
       // A fall: nobody made it, as an enemy's fall (src/lib/dm/enemy-fall.ts).
-      const rolled = rollCard(campaign, turn, sheet.id, "damage", rollOn(`${args.feet ?? 0} ft fall (${dice} bludgeoning)`, [sheet.name]), dice, null);
+      const rolled = rollCard(campaign, turn, sheet.id, "damage", areaRoll(`${args.feet ?? 0} ft fall (${dice} bludgeoning)`, [{ name: sheet.name, kind: "proper" }]), dice, null);
       // Kept so Slow Fall and Feather Fall can answer it (src/lib/dm/last-hit.ts).
       const fall = openFall(campaign.id, sheet.id);
       // The server rolled these dice, so they land as rolled (20d6 can pass

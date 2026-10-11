@@ -37,7 +37,7 @@ import { handleSetCondition } from "@/lib/dm/set-condition";
 import { breakConcentration, clearSpellConditionsByName } from "@/lib/dm/concentration";
 import { laySpellConditionsOnEnemy } from "@/lib/dm/spell-effects";
 import { rollCard } from "@/lib/dm/roll-card";
-import { rollOn } from "@/lib/roll-labels";
+import { areaRoll } from "@/lib/roll-labels";
 
 function withQuakeTurn<T>(campaignId: string, run: (turn: DmTurn) => T): T {
   const turn = createDmTurn(campaignId, [], "human_dm");
@@ -176,7 +176,7 @@ function fallIn(campaign: Campaign, encounter: Encounter, zone: SpellZone, token
     if (save.success) {
       return `${enemy.displayName} keeps its footing at the fissure's edge.`;
     }
-    const landed = rollCard(campaign, null, null, "damage", rollOn(fall, [enemy.displayName]), dice, null).total;
+    const landed = rollCard(campaign, null, null, "damage", areaRoll(fall, [{ name: enemy.displayName, kind: "enemy" }]), dice, null).total;
     const hurt = hurtEnemy(campaign, encounter, enemy, landed, "bludgeoning", `falling ${depth} feet into a fissure`);
     const standing = getEnemy(enemy.id);
     if (standing?.status === "alive") {
@@ -193,7 +193,7 @@ function fallIn(campaign: Campaign, encounter: Encounter, zone: SpellZone, token
     if (save.success) {
       return `${sheet.name} keeps their footing at the fissure's edge.`;
     }
-    const amount = rollCard(campaign, turn, sheet.id, "damage", rollOn(fall, [sheet.name]), dice, null).total;
+    const amount = rollCard(campaign, turn, sheet.id, "damage", areaRoll(fall, [{ name: sheet.name, kind: "proper" }]), dice, null).total;
     applyPcDamage(campaign, turn.id, getSheetById(sheet.id) ?? sheet, { amount, type: "bludgeoning", reason: `fell ${depth} feet into a fissure (${zone.spell})` });
     const standing = getSheetById(sheet.id);
     if (standing && !standing.deathSaves?.dead && !prone(standing.conditions)) {

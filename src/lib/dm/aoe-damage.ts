@@ -12,7 +12,7 @@ import { allocateSeq, type Campaign } from "@/lib/db/campaigns";
 import { getActiveEncounter, getEnemy, type EncounterEnemy } from "@/lib/db/encounters";
 import { insertRoll, type RollAttacker } from "@/lib/db/rolls";
 import { getBattleMapForEncounter, listHiddenRefIds } from "@/lib/db/battle-maps";
-import { rollOn } from "@/lib/roll-labels";
+import { areaRoll } from "@/lib/roll-labels";
 import type { DmTurn } from "@/lib/db/dm-turns";
 import { isValidExpression, rollExpression } from "@/lib/dice";
 import { publishWithSeq } from "@/lib/events";
@@ -319,8 +319,8 @@ export function handleAoeDamage(
   const map = getBattleMapForEncounter(encounter.id);
   const unseen = map ? listHiddenRefIds(map.id) : [];
   const caught = [
-    ...enemyTargets.filter((enemy) => !unseen.includes(enemy.id)).map((enemy) => enemy.displayName),
-    ...pcTargets.filter((sheet) => !plan?.sculpted.includes(sheet.id)).map((sheet) => sheet.name),
+    ...enemyTargets.filter((enemy) => !unseen.includes(enemy.id)).map((enemy) => ({ name: enemy.displayName, kind: "enemy" as const })),
+    ...pcTargets.filter((sheet) => !plan?.sculpted.includes(sheet.id)).map((sheet) => ({ name: sheet.name, kind: "proper" as const })),
   ];
   // A character's area that names no spell (a dragonborn's breath) is still
   // theirs. A caster whose token is hidden is not named, as a hidden
@@ -353,7 +353,10 @@ export function handleAoeDamage(
         kind: "damage",
         // The type tells a two-type spell's rolls apart, and is all an
         // unnamed effect has.
-        detail: rollOn(`${areaName ?? "area effect"}${type && (split || !areaName) ? ` (${type})` : ""}`, caught),
+        ...areaRoll(areaName ?? "area effect", caught, {
+          ...(type && (split || !areaName) ? { damageType: type } : {}),
+          ...(enemyUse && unseen.includes(enemyUse.enemy.id) ? { actorUnseen: true } : {}),
+        }),
         result: outcome,
         attacker: areaBy,
       });

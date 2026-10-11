@@ -29,7 +29,7 @@ import { applyEnemyDamage, publishEncounter, resolveEnemyRef } from "@/lib/dm/en
 import { rollEnemySave } from "@/lib/dm/forced-save";
 import { bindsWorthResisting } from "@/lib/dm/legendary-logic";
 import { freshLastHit, rerollAttacker, type LastHit, type SwingRecord } from "@/lib/dm/last-hit";
-import { rollAgainst } from "@/lib/roll-labels";
+import { againstRoll } from "@/lib/roll-labels";
 import { READIED } from "@/lib/dm/object-actions";
 import { applyPcDamage } from "@/lib/dm/pc-damage";
 import { handlePcAttack } from "@/lib/dm/pc-attack";
@@ -269,7 +269,7 @@ function resolve(ctx: Ctx, found: Found): Record<string, unknown> | { error: str
           ? swing.natural
           : swing.advantage === "advantage"
             ? (swing.faces[0] ?? swing.natural)
-            : Math.min(swing.natural, rollCard(ctx.campaign, ctx.turn, null, "attack", rollAgainst(`${hit.record.attack} again, at disadvantage (${reaction.name})`, ctx.sheet.name), "1d20", rerollAttacker(hit.record)).total);
+            : Math.min(swing.natural, rollCard(ctx.campaign, ctx.turn, null, "attack", againstRoll(`${hit.record.attack} again, at disadvantage (${reaction.name})`, ctx.sheet.name, "proper"), "1d20", rerollAttacker(hit.record)).total);
       const total = swing.total - swing.natural + kept;
       const missed = kept !== 20 && (kept === 1 || total < swing.vsAc);
       if (!missed) {
@@ -331,7 +331,7 @@ function resolve(ctx: Ctx, found: Found): Record<string, unknown> | { error: str
         return { error: `${enemy.displayName} is beyond ${does.rangeFt} feet of ${ctx.sheet.name}. Nothing was spent.` };
       }
       const expression = resolveFormula(does.amount, held.level, modsOf(holder));
-      let amount = rollCard(ctx.campaign, ctx.turn, holder.id, "damage", rollAgainst(reaction.name, enemy.displayName), expression, { kind: "sheet", id: holder.id, name: holder.name }).total;
+      let amount = rollCard(ctx.campaign, ctx.turn, holder.id, "damage", againstRoll(reaction.name, enemy.displayName, "enemy"), expression, { kind: "sheet", id: holder.id, name: holder.name }).total;
       const out: Record<string, unknown> = { rolled: `${expression}: ${amount}` };
       if (does.save) {
         const dc = saveDc(holder, does.save.dcAbility);

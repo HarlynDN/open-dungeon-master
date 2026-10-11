@@ -138,6 +138,8 @@ export async function POST(
       isFallback || anyDigital
         ? pending.detail
         : `${pending.detail || pending.kind} (physical)`.trim(),
+    ...(pending.presentation ? { presentation: { ...pending.presentation,
+      ...(!isFallback && !anyDigital ? { physical: true as const } : {}) } } : {}),
     advantage: pending.advantage,
     dc: pending.dc,
     result: outcome,

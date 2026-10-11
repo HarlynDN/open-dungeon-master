@@ -30,7 +30,7 @@ import { handleSetCondition } from "@/lib/dm/set-condition";
 import { rollCharacterSave, rollEnemySave } from "@/lib/dm/forced-save";
 import { rollCard } from "@/lib/dm/action-common";
 import type { RollAttacker } from "@/lib/db/rolls";
-import { rollAgainst } from "@/lib/roll-labels";
+import { againstRoll } from "@/lib/roll-labels";
 import { layOnEnemy, turnEndMark } from "@/lib/dm/spell-riders";
 import type { ConditionMetaMap } from "@/lib/dm/condition-logic";
 import type { CharacterSheet } from "@/lib/schemas/sheet";
@@ -89,9 +89,9 @@ const rayDie = (input: PrismaticCast, characterId: string, target: string) => ()
 
 // A damaging ray's 10d6, a dice card as a weapon's damage is. characterId
 // is the PC the roll concerns: the caster on an enemy, the PC a ray hits.
-function rayDamage(input: PrismaticCast, characterId: string, color: string, target: string): number {
+function rayDamage(input: PrismaticCast, characterId: string, color: string, target: string, targetKind: "enemy" | "proper"): number {
   const caster: RollAttacker = { kind: "sheet", id: input.caster.id, name: input.caster.name };
-  return rollCard(input.campaign, input.turn, characterId, "damage", rollAgainst(`Prismatic Spray (${color})`, target), "10d6", caster).total;
+  return rollCard(input.campaign, input.turn, characterId, "damage", againstRoll(`Prismatic Spray (${color})`, target, targetKind), "10d6", caster).total;
 }
 
 // Every creature caught: its save, its rays, what each does. Returns the
@@ -117,7 +117,7 @@ export function castPrismaticSpray(input: PrismaticCast): Array<Record<string, u
       }
       const { color, type } = RAYS[ray - 1];
       if (type) {
-        const rolled = rayDamage(input, caster.id, color, enemy.displayName);
+        const rolled = rayDamage(input, caster.id, color, enemy.displayName, "enemy");
         const amount = save.success ? Math.floor(rolled / 2) : rolled;
         const applied = applyEnemyDamage(campaign, turn, encounter, now, amount, input.sheets, input.sheetsById, type, { magical: true });
         notes.push(`${color}: ${amount} ${type}`);
@@ -151,7 +151,7 @@ export function castPrismaticSpray(input: PrismaticCast): Array<Record<string, u
     for (const ray of rays) {
       const { color, type } = RAYS[ray - 1];
       if (type) {
-        const rolled = rayDamage(input, sheet.id, color, sheet.name);
+        const rolled = rayDamage(input, sheet.id, color, sheet.name, "proper");
         // A DEX save for half: Evasion turns it to none or half.
         const amount = saveDamageTaken({ total: rolled, saved: save.success, halfOnSave: true, ability: "dex", sheet }).damage;
         applyDmMutation(campaign, turn.id, "apply_damage", JSON.stringify({ characterId: sheet.id, amount, type, spell: "Prismatic Spray", reason: `Prismatic Spray's ${color} ray` }), input.sheets, input.sheetsById);

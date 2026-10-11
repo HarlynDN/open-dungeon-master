@@ -28,7 +28,7 @@
     "src/app/characters/builder/usePickerGroups.ts": "d271803b233c0f3fd4add709fb4b4247c0c622a9dfd9e63f543c59ebc987a5f1",
     "src/app/characters/builder/steps/CallingStep.tsx": "dddfac30b09eef862b1c05da0f2ec8b07dd9062c71f6f37c0483260f87c3aaa7",
     "src/app/campaigns/[campaignId]/LevelUpDialog.tsx": "1804e1a2653dd71483f1151cd55a3a0af4d28396951a7a4f95ac04a59607e17d",
-    "src/lib/i18n/messages.ts": "4161275d8342bc5782a51f2fc9341fa6fc869e8b9ec648e7030089f8f9d87de6"
+    "src/lib/i18n/messages.ts": "5eb51d6f6c4d5f486e1b0750d1dcbc68a0022bb868c0c9046e01a5f65028c5fe"
   },
   "catalogs": {
     "src/lib/i18n/calling-material-messages.ts": "6387a3295a5426eca343f1fe331857d5381d98476cd15a38f9c3085ba3add814"
@@ -48,5 +48,10 @@
     "date": "2026-10-11",
     "review": "Re-compared every existing English/Chinese UI/content key/value to HEAD eaac3ba0: unchanged. The shared entrypoint only appends native condition material and display templates. Calling sources, catalogs, rules, original English goldens and scope remain unchanged.",
     "previousEntrypointSha256": "1a15d595090f2451d909c790b6bf34a06c92488ad5bef8663cf66e2d290741dd"
+  },
+  "rollCaptionCatalogIntegration": {
+    "date": "2026-10-11",
+    "review": "The shared messages entrypoint only adds 46 combatRoll keys. All 10716 existing bilingual UI/content values and 19 compressed English baselines match aeccfe1f. Calling sources, catalogs, rules and original review scope are unchanged.",
+    "previousEntrypointSha256": "4161275d8342bc5782a51f2fc9341fa6fc869e8b9ec648e7030089f8f9d87de6"
   }
 }

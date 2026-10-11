@@ -37,7 +37,7 @@ import { canAct } from "@/lib/dm/can-act";
 import { removeConditions } from "@/lib/dm/condition-logic";
 import { freshLastHit, rerollAttacker, type LastHit, type SwingRecord } from "@/lib/dm/last-hit";
 import type { RollAttacker } from "@/lib/db/rolls";
-import { rollAgainst } from "@/lib/roll-labels";
+import { againstRoll } from "@/lib/roll-labels";
 import { opportunity, reactionSpell } from "@/lib/dm/reaction-spells";
 import { settleLastHit } from "@/lib/dm/reaction-refund";
 import { authoredReaction } from "@/lib/dm/authored-reactions";
@@ -203,14 +203,14 @@ function throwBack(ctx: Ctx, record: LastHit, monkLevel: number): Record<string,
   const derived = computeSheetDerived(sheet);
   const bonus = derived.abilityMods.dex + derived.proficiencyBonus;
   const thrower: RollAttacker = { kind: "sheet", id: sheet.id, name: sheet.name };
-  const hitRoll = rollCard(campaign, ctx.turn, sheet.id, "attack", rollAgainst("Caught missile", enemy.displayName), d20Expression(bonus, apart !== null && apart > 4 ? "disadvantage" : "none"), thrower);
+  const hitRoll = rollCard(campaign, ctx.turn, sheet.id, "attack", againstRoll("Caught missile", enemy.displayName, "enemy"), d20Expression(bonus, apart !== null && apart > 4 ? "disadvantage" : "none"), thrower);
   const ac = enemyAcWithEffects(campaign.id, enemy);
   const hit = hitRoll.crit !== "nat1" && (hitRoll.crit === "nat20" || hitRoll.total >= ac);
   if (!hit) {
     return { rolled: hitRoll.total, vsAc: ac, hit: false, ki: "1 ki spent" };
   }
   const faces = `1${martialArtsDie(monkLevel)}`;
-  const damage = rollCard(campaign, ctx.turn, sheet.id, "damage", rollAgainst("Caught missile", enemy.displayName), hitRoll.crit === "nat20" ? `${faces}+${faces}+${derived.abilityMods.dex}` : `${faces}+${derived.abilityMods.dex}`, thrower);
+  const damage = rollCard(campaign, ctx.turn, sheet.id, "damage", againstRoll("Caught missile", enemy.displayName, "enemy"), hitRoll.crit === "nat20" ? `${faces}+${faces}+${derived.abilityMods.dex}` : `${faces}+${derived.abilityMods.dex}`, thrower);
   const applied = applyEnemyDamage(campaign, ctx.turn, encounter, enemy, Math.max(0, damage.total), ctx.sheets, ctx.sheetsById, record.type);
   publishEncounter(campaign.id);
   return { rolled: hitRoll.total, vsAc: ac, hit: true, damage: damage.total, ki: "1 ki spent", ...applied };
@@ -308,7 +308,7 @@ function protection(ctx: Ctx): Record<string, unknown> {
         ? first.natural
         : first.advantage === "advantage"
           ? first.faces[0]
-          : Math.min(first.natural, rollCard(campaign, ctx.turn, null, "attack", rollAgainst(`${record.attack} again, at disadvantage (Protection)`, ally.name), "1d20", rerollAttacker(record)).total);
+          : Math.min(first.natural, rollCard(campaign, ctx.turn, null, "attack", againstRoll(`${record.attack} again, at disadvantage (Protection)`, ally.name, "proper"), "1d20", rerollAttacker(record)).total);
     const total = first.total - first.natural + kept;
     const missed = kept !== 20 && (kept === 1 || total < first.vsAc);
     if (missed) {
