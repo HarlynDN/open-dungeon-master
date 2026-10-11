@@ -340,6 +340,7 @@ export function EncounterPanel({
                       label={condition}
                       rounds={enemy.conditionRounds?.[condition]}
                       note={enemy.conditionNotes?.[condition]}
+                      presentation={enemy.conditionPresentations?.[condition]}
                     />
                   ))}
                 </div>

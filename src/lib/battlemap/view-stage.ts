@@ -13,8 +13,10 @@ import { healthWord, type HealthWord } from "@/lib/battlemap/health-words";
 import type { CharacterSheet } from "@/lib/schemas/sheet";
 import { regeneratingNote } from "@/lib/battlemap/regeneration-notes";
 import { conditionNote, conditionNoteLine, type ConditionMetaLike } from "@/lib/battlemap/condition-notes";
+import { conditionPresentation, type ConditionPresentation, type ConditionNameLookup } from "./condition-presentation";
+import { conditionEffectsFor } from "@/lib/srd/condition-effects";
 
-export type StageRow = { id: string; label: string; rounds?: number; note?: string };
+export type StageRow = { id: string; label: string; rounds?: number; note?: string; presentation?: ConditionPresentation };
 
 type Holder = {
   id: string;
@@ -22,14 +24,18 @@ type Holder = {
   conditionMeta?: Record<string, ConditionMetaLike | undefined>;
 };
 
-export function conditionStageRows(holder: Holder, nameOf: (id: string) => string | null): StageRow[] {
+export function conditionStageRows(holder: Holder, nameOf: (id: string) => string | null,
+  displayNameOf: ConditionNameLookup = id => { const name = nameOf(id); return name ? { name, kind: "proper" } : null; }): StageRow[] {
   return holder.conditions.map((condition) => {
     const meta = holder.conditionMeta?.[condition];
     const rounds = meta?.rounds;
-    const note = conditionNoteLine(conditionNote(condition, meta, nameOf, holder.id), { skipCounted: true });
+    const details = conditionNote(condition, meta, nameOf, holder.id);
+    const note = conditionNoteLine(details, { skipCounted: true });
     return {
       id: condition.toLowerCase(),
       label: condition,
+      presentation: conditionPresentation(condition, meta, displayNameOf, holder.id,
+        details.meaning ? conditionEffectsFor(condition)?.id : undefined),
       ...(typeof rounds === "number" && rounds > 0 && !meta?.untilTurnOf ? { rounds } : {}),
       ...(note ? { note } : {}),
     };
@@ -43,24 +49,25 @@ type CharacterHolder = Holder & {
   currentHp: number;
 };
 
-export function characterStageRows(sheet: CharacterHolder, nameOf: (id: string) => string | null): StageRow[] {
-  const rows = conditionStageRows(sheet, nameOf);
+export function characterStageRows(sheet: CharacterHolder, nameOf: (id: string) => string | null, displayNameOf?: ConditionNameLookup): StageRow[] {
+  const rows = conditionStageRows(sheet, nameOf, displayNameOf);
   if (sheet.concentratingOn) {
-    rows.push({ id: "concentrating", label: `Concentrating: ${sheet.concentratingOn}` });
+    rows.push({ id: "concentrating", label: `Concentrating: ${sheet.concentratingOn}`, presentation: { kind: "concentration", spell: sheet.concentratingOn } });
   }
   const exhaustion = sheet.exhaustion ?? 0;
   if (exhaustion > 0) {
-    rows.push({ id: "exhaustion", label: `Exhaustion ${exhaustion}`, note: describeExhaustion(exhaustion) });
+    rows.push({ id: "exhaustion", label: `Exhaustion ${exhaustion}`, note: describeExhaustion(exhaustion), presentation: { kind: "exhaustion", level: exhaustion } });
   }
   const saves = sheet.deathSaves;
   if (saves && !saves.dead && sheet.currentHp <= 0) {
     rows.push(
       saves.stable
-        ? { id: "unconscious", label: "Stable", note: "unconscious, no longer rolling death saves" }
+        ? { id: "unconscious", label: "Stable", note: "unconscious, no longer rolling death saves", presentation: { kind: "death-track", successes: saves.successes, failures: saves.failures, stable: true } }
         : {
             id: "unconscious",
             label: `Dying ${saves.successes}/${saves.failures}`,
             note: `death saves: ${saves.successes} success${saves.successes === 1 ? "" : "es"}, ${saves.failures} failure${saves.failures === 1 ? "" : "s"}`,
+            presentation: { kind: "death-track", successes: saves.successes, failures: saves.failures, stable: false },
           },
     );
   }
@@ -72,10 +79,11 @@ export function characterStageRows(sheet: CharacterHolder, nameOf: (id: string) 
 export function enemyStageRows(
   enemy: Holder & { concentration?: string | null; currentHp: number },
   nameOf: (id: string) => string | null,
+  displayNameOf?: ConditionNameLookup,
 ): StageRow[] {
-  const rows = conditionStageRows(enemy, nameOf);
+  const rows = conditionStageRows(enemy, nameOf, displayNameOf);
   if (enemy.concentration) {
-    rows.push({ id: "concentrating", label: `Concentrating: ${enemy.concentration}` });
+    rows.push({ id: "concentrating", label: `Concentrating: ${enemy.concentration}`, presentation: { kind: "concentration", spell: enemy.concentration } });
   }
   const knockedOut = enemy.currentHp <= 0 && enemy.conditionMeta?.unconscious?.source === "knocked out";
   // A troll down at 0 waiting to regenerate (src/lib/dm/regeneration.ts):
@@ -83,10 +91,10 @@ export function enemyStageRows(
   const regenerating = enemy.currentHp <= 0 && enemy.conditionMeta?.unconscious?.source === "regenerating";
   const stopped = enemy.conditions.includes("regeneration stopped");
   return knockedOut
-    ? rows.map((row) => (row.id === "unconscious" ? { ...row, label: "Knocked out", note: "alive at 0 hit points, out of the fight" } : row))
+    ? rows.map((row) => (row.id === "unconscious" ? { ...row, label: "Knocked out", note: "alive at 0 hit points, out of the fight", presentation: { kind: "knocked-out" as const } } : row))
     : regenerating
       ? rows.map((row) =>
-          row.id === "unconscious" ? { ...row, label: stopped ? "Down, dies at its turn" : "Down, regenerating", note: regeneratingNote(stopped) } : row,
+          row.id === "unconscious" ? { ...row, label: stopped ? "Down, dies at its turn" : "Down, regenerating", note: regeneratingNote(stopped), presentation: { kind: "regenerating" as const, stopped } } : row,
         )
       : rows;
 }

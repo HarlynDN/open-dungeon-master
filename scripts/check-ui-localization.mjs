@@ -63,6 +63,14 @@ if (args.has("--sync")) {
   process.exit(0);
 }
 const problems = [];
+// Native condition material renders indirectly from server-projected metadata.
+// A new/changed registry row must be compared before its covered board surface
+// can silently fall back to an old translation.
+const conditionReview = JSON.parse(fs.readFileSync(path.join(root, "docs/validation/condition-material-translations.json"), "utf8"));
+for (const [file, expected] of Object.entries({ ...conditionReview.sourceSha256, ...conditionReview.catalogSha256 })) {
+  const current = createHash("sha256").update(fs.readFileSync(path.join(root, file))).digest("hex");
+  if (current !== expected) problems.push(`Condition material ${file}: review the changed source/translation before refreshing its fingerprint.`);
+}
 // Presets render through indirect tables, so the JSX audit cannot find a
 // changed English source. Require a fresh translation comparison when the
 // repository-authored source behind a translated card changes.

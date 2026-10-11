@@ -13,7 +13,7 @@
     "src/lib/srd/feature-effects.ts": "0a7f3b483608a2207bfd8af110edc36e8f4c96b7e0a5fc51e1e874e979a1b95e",
     "src/lib/characters/options.ts": "e0294a844664240604091c945104e20adc08bcbf7d0fc32bafacfff70174c31c",
     "src/lib/i18n/builder-picker-presentations.ts": "728ad42accc71a7f52efb7f8c38493ff357ff2c956a182edb6e0263af0a8b539",
-    "src/lib/i18n/messages.ts": "1a15d595090f2451d909c790b6bf34a06c92488ad5bef8663cf66e2d290741dd"
+    "src/lib/i18n/messages.ts": "4161275d8342bc5782a51f2fc9341fa6fc869e8b9ec648e7030089f8f9d87de6"
   },
   "catalogs": {
     "src/lib/i18n/calling-ui-messages.ts": "6ee79c641a5e39a5240764e9c90d68718c8d7b822a72e46d1776391177444280"
@@ -28,5 +28,10 @@
       "src/lib/i18n/calling-ui-messages.ts": "41d8b40085b668c294fb469f55f443d26a33a5f0f6f9d652ca5e85f6c1507dfc"
     }
   },
-  "combatUiCatalogIntegration": "2026-10-11: shared messages.ts appends 183 combatUi keys. Re-compared every pre-existing English/Chinese resource key/value and all 17 previous compressed English baselines to HEAD b7217a84: unchanged. Only the shared entrypoint fingerprint is refreshed; original calling material, mechanism source hashes and review scope are retained."
+  "combatUiCatalogIntegration": "2026-10-11: shared messages.ts appends 183 combatUi keys. Re-compared every pre-existing English/Chinese resource key/value and all 17 previous compressed English baselines to HEAD b7217a84: unchanged. Only the shared entrypoint fingerprint is refreshed; original calling material, mechanism source hashes and review scope are retained.",
+  "conditionCatalogIntegration": {
+    "date": "2026-10-11",
+    "review": "Re-compared every existing English/Chinese UI/content key/value to HEAD eaac3ba0: unchanged. The shared entrypoint only appends native condition material and display templates. Calling sources, catalogs, rules, original English goldens and scope remain unchanged.",
+    "previousEntrypointSha256": "1a15d595090f2451d909c790b6bf34a06c92488ad5bef8663cf66e2d290741dd"
+  }
 }

@@ -204,7 +204,11 @@ test("the projection carries health words, footprints and conditions", () => {
   assert.equal(view.tokenHealth[ogreToken.id], "unharmed");
   assert.equal(view.tokenFootprint[ogreToken.id], 2, "the ogre is Large");
   assert.equal(view.tokenFootprint[goblinToken.id], undefined, "small creatures carry no footprint");
-  assert.deepEqual(view.tokenConditions[mine.id], [{ id: "poisoned", label: "poisoned", rounds: 2 }]);
+  // The legacy stage fields stay exact. Locale-neutral display metadata is
+  // additive and carries the same duration, without changing the rules.
+  const conditions = view.tokenConditions[mine.id];
+  assert.deepEqual(conditions.map(row => Object.fromEntries(Object.entries(row).filter(([key]) => key !== "presentation"))), [{ id: "poisoned", label: "poisoned", rounds: 2 }]);
+  assert.deepEqual(conditions.map(row => row.presentation), [{ kind: "effect", name: "poisoned", duration: { kind: "rounds", rounds: 2 } }]);
   assert.equal(view.turn, null, "no initiative order yet");
   assert.deepEqual(view.targets, {});
 });

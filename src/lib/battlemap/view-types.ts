@@ -12,6 +12,7 @@ import type { MapSkin } from "@/lib/battlemap/skins";
 import type { AmbientLight, TokenKind } from "@/lib/battlemap/types";
 import type { TargetEdge } from "@/lib/battlemap/view-tactics";
 import type { ViewZone } from "@/lib/dm/zone-view";
+import type { StageRow } from "@/lib/battlemap/view-stage";
 
 export type PlayerMapView = {
   mapId: string;
@@ -102,7 +103,7 @@ export type PlayerMapView = {
   // `note` is what the condition's metadata says beyond rounds ("until
   // Kael's turn", "save ends (WIS 13)", "from Kael"); a character's rows
   // also carry concentration, exhaustion and the death track (view-stage.ts).
-  tokenConditions: Record<string, Array<{ id: string; label: string; rounds?: number; note?: string }>>;
+  tokenConditions: Record<string, StageRow[]>;
   // From the viewer's own character to each enemy they can see, keyed by the
   // enemy's id: cover, flanking, reach, shooting in melee (view-tactics.ts).
   // Empty for the DM and for a viewer with no token.

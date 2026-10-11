@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "date": "2026-10-11",
+  "status": "source-compared-by-implementation-agent",
+  "scope": "All 274 native condition-effect labels and brief summaries (548 bilingual keys), plus stock engine-condition labels and structured board/encounter duration, source, save and combat-state presentation. Authored and pack prose remains original.",
+  "provenance": "Original Simplified Chinese drafts compared against repository English source; no proprietary Chinese rulebook translation used. Source licenses remain in their original files.",
+  "review": "Implementation-agent bilingual comparison of every native label/summary, preserving mechanic qualifiers, timing, dice, counts, ranges, units and signed bonuses. Model tool instructions and implementation-only descriptions are omitted from player prose; engine summaries stay English. Existing spell names and rule terms reused. Numeric variants were checked individually, including all 12 Defensive Flourish values and ability/dice variants. Not independent human approval.",
+  "numericExceptions": {
+    "spiritual_weapon": "English 2nd is 二环 in Chinese; +1d8 per two slot levels is preserved.",
+    "flame_blade": "English 2nd is 二环 in Chinese; +1d6 per two slot levels is preserved."
+  },
+  "sourceSha256": {
+    "src/lib/srd/condition-effects.ts": "10ec0186225be52c36e64ead35454c160b3aca372955779c29487ecfac31a2ac",
+    "src/lib/srd/condition-effects-tail.ts": "9b07e468c902b7466b3f19ee7d8ed950a98d50dceededfa0121fc56f3a23e480",
+    "src/lib/srd/combat-rows.ts": "a81fce77b0083c2967c1292c71b7e81d06a3b584f7e26c404feccf7587547f66",
+    "src/lib/srd/authored-conditions.ts": "84343a8d48297f4a0784fe923fb69c38c20593af37ba743a92ae043dadd88853",
+    "src/lib/srd/affliction-conditions.ts": "cd17760d8de045395bde4175386d350838e834712fc54a7fe1f6e2557e4f9a48",
+    "src/lib/srd/condition-effects-last.ts": "cb0da89df3105f1f36e5253c7a0f31efc31e8c4b9798fba6bd2b3788ab6a0d3f",
+    "src/lib/srd/condition-effects-spells.ts": "ba53b76ec5d10be0dd42736aee8be774f1cfec3773b53c14e49fa80a80d14eae",
+    "src/lib/dm/condition-logic.ts": "cd14ca107d7c4acdb34b0105c5eaf45556a0713158cdf7c602e5720997a16771",
+    "src/lib/srd/class-resources.ts": "87646e7b3f27e1e95e7d28a3f4aedd30ea802e9e648a904f7e19ec21abdac21e",
+    "src/lib/dm/object-actions.ts": "d30633a0c15ee771b73ca641081def124b25b3fc352fd1630d89901941591e2a",
+    "src/lib/dm/roll-feature-riders.ts": "08a2ec8e7d2ab0395f02f2ed6ca0eed365095f4b7a3747e45570696abc077806"
+  },
+  "catalogSha256": {
+    "src/lib/i18n/condition-material-messages.ts": "9f0497ca3515c66fda07a571edabe02a10c37fb7e9781e0924c0e91e795fa0fd",
+    "src/lib/i18n/condition-material-index.ts": "26b65d5618f13126e3a1f4f5df597675667d77d9e3922be28dde160005bdd2a5",
+    "src/lib/i18n/condition-ui-messages.ts": "122e63bb10f4bfbb83ce55ef10399f4d0c935eead4abc15522f239404fc43242"
+  },
+  "englishGolden": {
+    "baselineCommit": "eaac3ba0",
+    "file": "docs/validation/condition-ui-goldens.json.gz",
+    "renders": 322,
+    "uncompressedSha256": "dfc53e390b828f1917e038266e9e0c65bbb89b963aa1b7ec4038e7851872a5f3",
+    "capture": "Captured actual English ConditionChip JSX before changing producers, source catalogs or display renderer; existing 18 compressed baselines are untouched."
+  },
+  "terminologyReview": "Compared new short-English groups against the current catalogs: Necrotic is 黯蚀; knock-out and regeneration labels match existing combat UI. Suggested has a deliberate context split: 受到暗示 for the condition, 推荐 for spell-choice advice."
+}

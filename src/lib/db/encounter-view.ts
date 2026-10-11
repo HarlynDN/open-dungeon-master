@@ -4,6 +4,8 @@ import { enemyActedThisRound, isSurprised } from "@/lib/dm/can-act";
 import { isCompanionUserId } from "@/lib/db/users";
 import { freshLastHit, type LastHit } from "@/lib/dm/last-hit";
 import { conditionNote, conditionNoteLine, namesLookup } from "@/lib/battlemap/condition-notes";
+import { conditionPresentation, conditionNamesLookup, type ConditionPresentation } from "@/lib/battlemap/condition-presentation";
+import { conditionEffectsFor } from "@/lib/srd/condition-effects";
 import { healthState, type HealthState } from "@/lib/bestiary/health";
 import { creatureTypeOf } from "@/lib/bestiary/statblock";
 import { isRegeneratingDown } from "@/lib/dm/regeneration";
@@ -83,6 +85,7 @@ export type PublicEncounter = {
     conditionRounds: Record<string, number>;
     // "until Kael's turn", "save ends (WIS 13)", "from Kael", per condition.
     conditionNotes?: Record<string, string>;
+    conditionPresentations?: Record<string, ConditionPresentation>;
     // DM view only; absent for every player.
     currentHp?: number;
     maxHp?: number;
@@ -241,6 +244,9 @@ export function publicEncounter(
       .filter((entry) => showNumbers || !hidden.has(orderEntryId(entry)))
       .map((entry) => ({ id: orderEntryId(entry), name: entry.name })),
   );
+  const displayNameOf = conditionNamesLookup(encounter.order
+    .filter(entry => showNumbers || !hidden.has(orderEntryId(entry)))
+    .map(entry => ({ id: orderEntryId(entry), name: entry.name, kind: entry.kind })));
   return {
     id: encounter.id,
     status: encounter.status,
@@ -303,6 +309,12 @@ export function publicEncounter(
               }),
             )
           : {},
+      conditionPresentations: enemy.status === "alive" ? Object.fromEntries(enemy.conditions.map(name => {
+        const meta = enemy.conditionMeta[name];
+        const details = conditionNote(name, meta, nameOf, enemy.id);
+        return [name, conditionPresentation(name, meta, displayNameOf, enemy.id,
+          details.meaning ? conditionEffectsFor(name)?.id : undefined)];
+      })) : {},
       ...(showNumbers
         ? {
             currentHp: enemy.currentHp,

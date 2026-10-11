@@ -16,5 +16,6 @@
   "character-training-goldens.json": "398b65e73f5b3b1d774c3f39ce93e9c1a1698bbd5a9d9402dec395a4d65c5ddf",
   "closed-game-help-ui-goldens.json": "27af1e78e6c9fc422114e615f939ab4e4ba5f4daafc5274c2d9ac66872612dd2",
   "game-help-ui-goldens.json": "3b7b8443f965590b37aecc6850fdf2aa1454cd14d30f8b929f66257628b395da",
-  "combat-ui-goldens.json": "60b09271195c776a7b291647294e44d85692d41774a1f0a69b675a4446fdcd7a"
+  "combat-ui-goldens.json": "60b09271195c776a7b291647294e44d85692d41774a1f0a69b675a4446fdcd7a",
+  "condition-ui-goldens.json": "dfc53e390b828f1917e038266e9e0c65bbb89b963aa1b7ec4038e7851872a5f3"
 }

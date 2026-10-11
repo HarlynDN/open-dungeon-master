@@ -10,7 +10,8 @@ import type { StageToken } from "@/app/campaigns/[campaignId]/BoardStage";
 import type { PublicEncounter } from "@/lib/db/encounter-view";
 import type { TargetEdge } from "@/lib/battlemap/view-tactics";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
-import { combatName, combatTermLabel } from "@/lib/i18n/combat-ui-presentations";
+import { combatName } from "@/lib/i18n/combat-ui-presentations";
+import { conditionDisplay, type ConditionDisplayRow } from "@/lib/i18n/condition-presentations";
 
 // The chrome on the board as a stage (docs/visual-overhaul-plan.md 5.1): the
 // initiative rail, the turn HUD, the turn banner, the hover plate and the
@@ -274,16 +275,17 @@ function HealthWordChip({ word }: { word: HealthWord }) {
   );
 }
 
-export function ConditionChip({ label, rounds, note }: { label: string; rounds?: number; note?: string }) {
-  const { locale, t } = useLocale();
+export function ConditionChip({ label, rounds, note, presentation }: ConditionDisplayRow) {
+  const { locale } = useLocale();
+  const display = conditionDisplay({ label, rounds, note, presentation }, locale);
   return (
     <span className="fx-pop inline-flex max-w-full items-center gap-1 rounded-full border border-amber-900/60 bg-amber-950/30 py-px pl-px pr-1.5 text-[10px] text-amber-300">
       <GameIcon icon={{ kind: "condition", key: conditionIconKey(label) }} size="size-4" />
-      <span className="capitalize">{combatTermLabel("condition", label, locale)}</span>
-      {rounds ? t("combatUi.board.conditionRounds", { rounds }) : ""}
+      <span className="capitalize">{display.label}</span>
+      {display.rounds}
       {/* What the engine's metadata says: until whose turn, the save that
           ends it, who laid it (src/lib/battlemap/condition-notes.ts). */}
-      {note ? <span className="truncate text-amber-200/70">{note}</span> : null}
+      {display.note ? <span className="truncate text-amber-200/70">{display.note}</span> : null}
     </span>
   );
 }
@@ -328,7 +330,7 @@ export function TokenPlate({
   footprint: number;
   face: Array<string | null | undefined>;
   health?: HealthWord;
-  conditions?: Array<{ id: string; label: string; rounds?: number; note?: string }>;
+  conditions?: Array<ConditionDisplayRow & { id: string }>;
   edge?: TargetEdge;
 }) {
   const { locale } = useLocale();
@@ -364,7 +366,7 @@ export function TokenPlate({
       {conditions?.length ? (
         <div className="mt-1 flex flex-wrap gap-1">
           {conditions.map((condition, index) => (
-            <ConditionChip key={`${condition.id}-${index}`} label={condition.label} rounds={condition.rounds} note={condition.note} />
+            <ConditionChip key={`${condition.id}-${index}`} {...condition} />
           ))}
         </div>
       ) : null}

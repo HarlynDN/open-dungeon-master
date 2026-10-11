@@ -72,7 +72,7 @@ export function addSilenceChips(
     if (inside && !rows.some((row) => row.id === "deafened")) {
       tokenConditions[shown.id] = [
         ...rows,
-        { id: "deafened", label: `Deafened (${inside.spell})`, note: "no sound inside: no spell with a verbal component, immune to thunder damage" },
+        { id: "deafened", label: `Deafened (${inside.spell})`, note: "no sound inside: no spell with a verbal component, immune to thunder damage", presentation: { kind: "silence", spell: inside.spell } },
       ];
     }
   }

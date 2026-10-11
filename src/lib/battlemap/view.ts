@@ -37,6 +37,7 @@ import { drawingsFor, labelsFor } from "@/lib/battlemap/scene";
 import type { CharacterSheet } from "@/lib/schemas/sheet";
 import { projectIntents } from "@/lib/dm/intent";
 import { namesLookup } from "@/lib/battlemap/condition-notes";
+import { conditionNamesLookup } from "@/lib/battlemap/condition-presentation";
 import { characterHealthWord, characterStageRows, enemyStageRows } from "@/lib/battlemap/view-stage";
 import { targetEdges } from "@/lib/battlemap/view-tactics";
 import { lightsWithZones, sightTerrainFor, withZoneSteps } from "@/lib/dm/zone-rules";
@@ -323,6 +324,10 @@ export function buildPlayerMapView(
     ...shownTokens.map((token) => ({ id: token.refId, name: token.name })),
     ...[...sheetsById.values()].map((entry) => ({ id: entry.id, name: entry.name })),
   ]);
+  const displayNameOf = conditionNamesLookup([
+    ...shownTokens.map(token => ({ id: token.refId, name: token.name, kind: token.kind })),
+    ...[...sheetsById.values()].map(entry => ({ id: entry.id, name: entry.name, kind: "pc" })),
+  ]);
   const tokenConditions: PlayerMapView["tokenConditions"] = {};
   const tokenHealth: PlayerMapView["tokenHealth"] = {};
   const tokenAuras: PlayerMapView["tokenAuras"] = {};
@@ -350,7 +355,7 @@ export function buildPlayerMapView(
       if (!enemy) {
         continue;
       }
-      const rows = enemyStageRows(enemy, nameOf);
+      const rows = enemyStageRows(enemy, nameOf, displayNameOf);
       if (rows.length) {
         tokenConditions[shown.id] = rows;
       }
@@ -366,7 +371,7 @@ export function buildPlayerMapView(
       if (!pcSheet) {
         continue;
       }
-      const rows = characterStageRows(pcSheet, nameOf);
+      const rows = characterStageRows(pcSheet, nameOf, displayNameOf);
       if (rows.length) {
         tokenConditions[shown.id] = rows;
       }

@@ -106,8 +106,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/BoardChrome.tsx",
-      "state": "pending",
-      "review": "Static rail/HUD/health/cover/target strings and stock SRD condition labels now localize with actual English render/target-ID parity. Still pending: registry effect names/summaries and structured condition-duration/source notes; unknown authored note text must remain intact."
+      "state": "covered",
+      "review": "Rail/HUD/health/cover/target labels and all native stock condition/effect labels, summaries, duration/save/source and special combat states use locale display data. Proper/authored names and trigger prose retained; hidden identities filtered server-side. 322 original English condition renders and the earlier 38 combat UI renders stay exact. Canonical icon/target IDs, input metadata and rules unchanged. Source-compared material and aliases are gated by fingerprints; raw legacy authored notes remain verbatim."
     },
     {
       "path": "src/app/campaigns/[campaignId]/BoardDelivery.tsx",
