@@ -33,5 +33,19 @@
     "guardProductionRecall": "not measured; recorded turns contain no eligible combat contradictions",
     "tokenCoefficientCalibration": "provisional; not calibrated with Codex usage",
     "chineseTTS": "unconfigured"
-  }
+  },
+  "postValidationFormatting": [
+    {
+      "file": "src/lib/agents/setup-line.ts",
+      "beforeSha256": "0bae6791cfa21a1b3cb01be498dbeaab6e58e02924c75c276aab604fa35263ce",
+      "afterSha256": "e55cd837b3d4c900fc7f33a65d5af4a8acbc02f5b248d79aba23d0a514c2d948",
+      "emittedJavaScriptUnchanged": true
+    },
+    {
+      "file": "src/lib/i18n/variant-metadata.ts",
+      "beforeSha256": "957f9da20c8fbdc6fb74e4b902fd34c1c462ad0cd39aa5081950d5a64b4e60c0",
+      "afterSha256": "b2d7a5f230aa700306dfa77f2c744be30669324c74bf522543a4888697ec5786",
+      "emittedJavaScriptUnchanged": true
+    }
+  ]
 }

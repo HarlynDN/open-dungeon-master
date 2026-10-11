@@ -38,4 +38,3 @@ export function agentSetupLine(program: AgentProgram, url: string, token: string
     where: "Any MCP client that speaks streamable HTTP: give it this address and this header.",
   };
 }
-

@@ -62,3 +62,8 @@ all eight focused suites passed before the final complete rerun. Original
 English/Chinese catalogs remain identical to the pre-repair archive, and all
 17 golden byte checksums remain unchanged. Build/runtime limits above are
 separate from these passed checks.
+
+Final diff cleanup removed two extra EOF blank lines in setup-line.ts and
+variant-metadata.ts. Their emitted JavaScript was compared byte-for-byte equal;
+targeted lint and the final diff check passed. The full regression source-freeze
+above remains the original tested record.

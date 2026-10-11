@@ -53,4 +53,3 @@ export const REST_LABELS: Record<GameSettings["variantRules"]["restVariant"], st
   gritty: "Gritty realism (8h short, 7-day long)",
   heroic: "Heroic (5min short, 1h long)",
 };
-
