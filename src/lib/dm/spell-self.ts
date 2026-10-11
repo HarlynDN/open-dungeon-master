@@ -1,3 +1,4 @@
+import { specialRoll } from "@/lib/roll-labels";
 // Spells whose cost falls on their caster once the casting is paid (SRD 5.1):
 //
 //   Contact Other Plane: "you must make a DC 15 Intelligence saving throw.
@@ -35,7 +36,7 @@ export function casterCost(campaign: Campaign, sheet: CharacterSheet, spell: str
     if (save.success) {
       return { casterCost: `${sheet.name}'s mind holds against the other plane (INT save ${save.total} against DC 15).` };
     }
-    const amount = rollCard(campaign, turn, sheet.id, "damage", named, "6d6", null).total;
+    const amount = rollCard(campaign, turn, sheet.id, "damage", specialRoll(named, { kind: "named", name: named }), "6d6", null).total;
     applyPcDamage(campaign, turn.id, getSheetById(sheet.id) ?? sheet, { amount, type: "psychic", reason: `${named}: the mind recoils` });
     const standing = getSheetById(sheet.id);
     if (standing && !standing.deathSaves?.dead) {

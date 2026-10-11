@@ -1,3 +1,4 @@
+import { saveRoll, specialRoll } from "@/lib/roll-labels";
 // The SRD 5.1 poisons (Running the Game, Poisons) on a character, held by
 // the engine: the save, the damage, the conditions and how long they last,
 // the repeated saves, and Midnight Tears waiting for midnight. The afflict
@@ -25,7 +26,7 @@ function damage(campaign: Campaign, turnId: string, sheetId: string, dice: strin
   if (!sheet) {
     return 0;
   }
-  const rolled = publicDie(campaign, sheet, dice, `${sheet.name}: ${poison.name}`);
+  const rolled = publicDie(campaign, sheet, dice, specialRoll(`${sheet.name}: ${poison.name}`, { kind: "poison-damage", name: poison.name, ...(POISONS.some(row => row.id === poison.id) ? {} : { literalName: true as const }) }, { name: sheet.name, kind: "proper" }));
   const amount = half ? Math.floor(rolled / 2) : rolled;
   if (amount > 0) {
     applyPcDamage(campaign, turnId, sheet, { amount, type: "poison", reason: poison.name });
@@ -60,7 +61,7 @@ export function applyPoison(
   const recuperated = sheet.conditions.some((entry) => entry.toLowerCase() === "recuperated");
   const save = input.save === false
     ? { success: false, total: 0, failBy: 99, autoFailed: true }
-    : characterSave(campaign, sheet, { ability: "con", dc: poison.dc, detail: `${sheet.name}: CON save vs ${poison.name}`, against: "poison", advantage: recuperated });
+    : characterSave(campaign, sheet, { ability: "con", dc: poison.dc, detail: saveRoll(`${sheet.name}: CON save vs ${poison.name}`, "con", { kind: "save-against", name: poison.name, ...(POISONS.some(row => row.id === poison.id) ? {} : { literalName: true as const }) }, { name: sheet.name, kind: "proper" }), against: "poison", advantage: recuperated });
   const lines: string[] = [];
   if (save.success) {
     if (poison.damage && poison.halfOnSave) {
@@ -79,7 +80,7 @@ export function applyPoison(
     } else {
       lines.push(`${sheet.name} fails the save against ${poison.name}.`);
     }
-    const minutes = poison.hoursDice ? publicDie(campaign, sheet, poison.hoursDice, `${sheet.name}: hours of ${poison.name}`) * 60 : poison.minutes;
+    const minutes = poison.hoursDice ? publicDie(campaign, sheet, poison.hoursDice, specialRoll(`${sheet.name}: hours of ${poison.name}`, { kind: "item-hours", name: poison.name, ...(POISONS.some(row => row.id === poison.id) ? {} : { literalName: true as const }) }, { name: sheet.name, kind: "proper" })) * 60 : poison.minutes;
     const conditions = [...(poison.conditions ?? [])];
     if (poison.unconsciousIfFailBy && save.failBy >= poison.unconsciousIfFailBy) {
       conditions.push("unconscious");
@@ -120,7 +121,7 @@ export function applyPoison(
       if (!fresh || fresh.deathSaves?.dead || fresh.currentHp <= 0) {
         break;
       }
-      const again = characterSave(campaign, fresh, { ability: "con", dc: poison.dc, detail: `${fresh.name}: CON save vs ${poison.name}, round ${rounds + 1}`, against: "poison" });
+      const again = characterSave(campaign, fresh, { ability: "con", dc: poison.dc, detail: saveRoll(`${fresh.name}: CON save vs ${poison.name}, round ${rounds + 1}`, "con", { kind: "poison-round", name: poison.name, round: rounds + 1, ...(POISONS.some(row => row.id === poison.id) ? {} : { literalName: true as const }) }, { name: fresh.name, kind: "proper" }), against: "poison" });
       if (again.success) {
         successes += 1;
       } else if (poison.repeat.damage) {
@@ -155,7 +156,7 @@ export function poisonClockTick(campaignId: string, to: number) {
         continue;
       }
       if (poison.atMidnight) {
-        const save = characterSave(campaign, sheet, { ability: "con", dc: poison.dc, detail: `${sheet.name}: CON save vs ${poison.name} at midnight`, against: "poison" });
+        const save = characterSave(campaign, sheet, { ability: "con", dc: poison.dc, detail: saveRoll(`${sheet.name}: CON save vs ${poison.name} at midnight`, "con", { kind: "at-midnight", name: poison.name, ...(POISONS.some(row => row.id === poison.id) ? {} : { literalName: true as const }) }, { name: sheet.name, kind: "proper" }), against: "poison" });
         const dealt = damage(campaign, "clock", sheet.id, poison.damage ?? "9d6", save.success, poison);
         tableNote(campaign, `Midnight: ${poison.name} takes ${sheet.name} (${dealt} poison damage).`);
         continue;
@@ -166,7 +167,7 @@ export function poisonClockTick(campaignId: string, to: number) {
         if (!fresh || fresh.deathSaves?.dead) {
           break;
         }
-        const save = characterSave(campaign, fresh, { ability: "con", dc: poison.dc, detail: `${fresh.name}: daily CON save vs ${poison.name}`, against: "poison" });
+        const save = characterSave(campaign, fresh, { ability: "con", dc: poison.dc, detail: saveRoll(`${fresh.name}: daily CON save vs ${poison.name}`, "con", { kind: "daily", name: poison.name, ...(POISONS.some(row => row.id === poison.id) ? {} : { literalName: true as const }) }, { name: fresh.name, kind: "proper" }), against: "poison" });
         const successes = (current.successes ?? 0) + (save.success ? 1 : 0);
         if (!save.success && poison.repeat?.damage) {
           damage(campaign, "clock", fresh.id, poison.repeat.damage, false, poison);

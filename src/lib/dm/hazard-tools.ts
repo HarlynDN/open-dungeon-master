@@ -1,3 +1,4 @@
+import { saveRoll } from "@/lib/roll-labels";
 import { z } from "zod";
 import type { Campaign } from "@/lib/db/campaigns";
 import { getSheetById, patchSheet } from "@/lib/db/sheets";
@@ -325,7 +326,7 @@ export function handleApplyHazard(
         sheet,
         hours,
         disadvantage: !cold && heatHampers(sheet),
-        detail: (hour) => `${sheet.name}: CON save vs ${cold ? "the cold" : "the heat"}, hour ${hour}`,
+        detail: (hour) => saveRoll(`${sheet.name}: CON save vs ${cold ? "the cold" : "the heat"}, hour ${hour}`, "con", { kind: "hourly-endurance", activity: cold ? "cold" : "heat", hour }, { name: sheet.name, kind: "proper" }),
         reason: source,
         sheets,
         sheetsById,

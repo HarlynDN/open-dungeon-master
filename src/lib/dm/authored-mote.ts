@@ -1,3 +1,4 @@
+import { specialRoll } from "@/lib/roll-labels";
 // Mote of Potential (College of Creation 3): the Bardic Inspiration die a
 // Creation bard gives carries a mote (the condition's meta `mote`, written by
 // use_resource in resource-tools.ts), and the roll that spends the die sets
@@ -52,7 +53,7 @@ export function moteOf(sheet: Pick<CharacterSheet, "conditionMeta">, spent: stri
 // when the expression did not keep it apart.
 function dieValue(campaign: Campaign, sheetId: string, outcome: RollResult | null, mote: HeldMote): number {
   const term = outcome?.terms.find((entry) => entry.kind === "dice" && entry.sides === mote.sides);
-  return term && term.kind === "dice" ? term.subtotal : rollCard(campaign, null, sheetId, "custom", "Mote of Potential", `1${mote.die}`, null).total;
+  return term && term.kind === "dice" ? term.subtotal : rollCard(campaign, null, sheetId, "custom", specialRoll("Mote of Potential", { kind: "named", name: "Mote of Potential" }), `1${mote.die}`, null).total;
 }
 
 // After a saving throw that spent a mote die: its temporary hit points.

@@ -1,3 +1,4 @@
+import { specialRoll } from "@/lib/roll-labels";
 // What a running spell does at the start of a creature's turn (SRD 5.1):
 //
 //   Spirit Guardians: an enemy that starts its turn within 15 feet of the
@@ -216,7 +217,7 @@ function confusionRoll(enemy: EncounterEnemy, lines: string[]) {
     return;
   }
   // The creature's own roll: the DM sees the die, the table what it does.
-  const roll = dmRoll(enemy.campaignId, null, "custom", `${enemy.displayName}: Confusion`, "1d10").total;
+  const roll = dmRoll(enemy.campaignId, null, "custom", specialRoll(`${enemy.displayName}: Confusion`, { kind: "confusion" }, { name: enemy.displayName, kind: "enemy" }), "1d10").total;
   const lost = roll === 1 ? "wandering" : roll <= 6 ? "halted" : null;
   if (lost && !enemy.conditions.includes(lost)) {
     // Until the end of this turn (src/lib/dm/turn-end.ts reads the mark).

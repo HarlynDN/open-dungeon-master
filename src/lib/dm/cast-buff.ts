@@ -1,3 +1,4 @@
+import { specialRoll } from "@/lib/roll-labels";
 // cast_buff: a spell that grants an ongoing effect to the caster or allies
 // (Bless, Haste, Aid, Spirit Guardians, Hunter's Mark). The server spends the
 // slot through the one cast guard, applies the effect as a tracked condition
@@ -317,7 +318,7 @@ export function handleCastBuff(
   for (const target of targetSheets) {
     const fresh = getSheetById(target.id) ?? target;
     // Heroes' Feast rolls each diner's 2d10; it rides in the name as Aid's does.
-    const feast = resolvedMech.mech.maxHpDice ? rollCard(campaign, turn, target.id, "custom", `${args.spell}: ${target.name}'s hit point maximum`, resolvedMech.mech.maxHpDice, null).total : 0;
+    const feast = resolvedMech.mech.maxHpDice ? rollCard(campaign, turn, target.id, "custom", specialRoll(`${args.spell}: ${target.name}'s hit point maximum`, { kind: "hp-max", name: args.spell, target: { name: target.name, kind: "proper" } }), resolvedMech.mech.maxHpDice, null).total : 0;
     const outcome = handleSetCondition(
       campaign,
       turn.id,
@@ -358,9 +359,9 @@ export function handleCastBuff(
     const tempHp = buff.tempHp
       ? buff.tempHp.base +
         (buff.tempHp.perSlotLevel ?? 0) * above +
-        (buff.tempHp.dice ? rollCard(campaign, turn, target.id, "custom", `${args.spell}: temporary hit points`, buff.tempHp.dice, null).total : 0)
+        (buff.tempHp.dice ? rollCard(campaign, turn, target.id, "custom", specialRoll(`${args.spell}: temporary hit points`, { kind: "temporary-hp", name: args.spell }), buff.tempHp.dice, null).total : 0)
       : tempDice
-        ? rollCard(campaign, turn, target.id, "custom", `${condition}: temporary hit points`, tempDice, null).total
+        ? rollCard(campaign, turn, target.id, "custom", specialRoll(`${condition}: temporary hit points`, { kind: "temporary-hp", name: condition }), tempDice, null).total
         : 0;
     if (tempHp > 0) {
       const now = getSheetById(target.id);

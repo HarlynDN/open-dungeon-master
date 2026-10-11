@@ -1,3 +1,5 @@
+import { checkRoll, saveRoll, specialRoll } from "@/lib/roll-labels";
+import type { RollDetail } from "@/lib/roll-presentation";
 // What drinking a potion or reading a scroll does, beyond a healing potion's
 // dice (src/lib/dm/item-logic.ts): the SRD potions mapped onto the engines
 // that already hold the effect, and the spell scroll's rules. use_item asks
@@ -211,16 +213,16 @@ export function applyConsumable(
       return { effect: `${sheet.name}'s Strength is ${plan.score} for an hour (if it was lower).` };
     }
     case "condition": {
-      const minutes = plan.hoursDice ? 60 * rollCard(campaign, null, sheet.id, "custom", `${itemName}: hours it lasts`, plan.hoursDice, null).total : plan.minutes;
+      const minutes = plan.hoursDice ? 60 * rollCard(campaign, null, sheet.id, "custom", specialRoll(`${itemName}: hours it lasts`, { kind: "item-hours", name: itemName }), plan.hoursDice, null).total : plan.minutes;
       const applied = condition(campaign, turnId, sheet, plan.condition, minutes, reason);
       return "error" in applied
         ? { effect: `No effect: ${String(applied.error)}` }
         : { effect: `${sheet.name} is ${plan.condition} for ${minutes >= 60 ? `${minutes / 60} hour${minutes === 60 ? "" : "s"}` : `${minutes} minute${minutes === 1 ? "" : "s"}`}.` };
     }
     case "poison": {
-      const damage = rollCard(campaign, null, sheet.id, "damage", `${itemName}: it was poison`, "3d6", null);
+      const damage = rollCard(campaign, null, sheet.id, "damage", specialRoll(`${itemName}: it was poison`, { kind: "poison-damage", name: itemName }), "3d6", null);
       const hurt = applyPcDamage(campaign, turnId, sheet, { amount: damage.total, type: "poison", reason });
-      const save = rollSave(campaign, getSheetById(sheet.id) ?? sheet, 13, `${sheet.name}: CON save vs ${itemName}`);
+      const save = rollSave(campaign, getSheetById(sheet.id) ?? sheet, 13, saveRoll(`${sheet.name}: CON save vs ${itemName}`, "con", { kind: "save-against", name: itemName }, { name: sheet.name, kind: "proper" }));
       if (!save.success) {
         condition(campaign, turnId, sheet, "poisoned", 60, reason);
       }
@@ -231,7 +233,7 @@ export function applyConsumable(
   }
 }
 
-function rollSave(campaign: Campaign, sheet: CharacterSheet, dc: number, detail: string): { success: boolean } {
+function rollSave(campaign: Campaign, sheet: CharacterSheet, dc: number, detail: string | RollDetail): { success: boolean } {
   const resolved = resolveRollExpression(
     { kind: "saving_throw", ability: "con", dc } as unknown as RollArgs,
     sheet,
@@ -242,7 +244,7 @@ function rollSave(campaign: Campaign, sheet: CharacterSheet, dc: number, detail:
   }
   spendRollCarriers(campaign.id, sheet.id, resolved.spendInspiration);
   const outcome = rollExpression(resolved.expression);
-  const roll = insertRoll({ campaignId: campaign.id, characterId: sheet.id, requestedBy: "dm", kind: "saving_throw", detail, dc, result: outcome });
+  const roll = insertRoll({ campaignId: campaign.id, characterId: sheet.id, requestedBy: "dm", kind: "saving_throw", detail: typeof detail === "string" ? detail : detail.detail, ...(typeof detail === "string" ? {} : { presentation: detail.presentation }), dc, result: outcome });
   publishWithSeq(campaign.id, allocateSeq(campaign.id), "roll_result", { roll, source: "digital" });
   return { success: outcome.total >= dc };
 }
@@ -266,7 +268,7 @@ function readScroll(campaign: Campaign, turnId: string, reader: CharacterSheet, 
       spendRollCarriers(campaign.id, reader.id, resolved.spendInspiration);
       const outcome = rollExpression(resolved.expression);
       total = outcome.total;
-      const roll = insertRoll({ campaignId: campaign.id, characterId: reader.id, requestedBy: "dm", kind: "ability_check", detail: `${reader.name}: reading a scroll of ${name}`, dc, result: outcome });
+      const roll = insertRoll({ campaignId: campaign.id, characterId: reader.id, requestedBy: "dm", kind: "ability_check", ...checkRoll(`${reader.name}: reading a scroll of ${name}`, "ability", reader.spellcasting.ability, { kind: "scroll-reading", name }, { name: reader.name, kind: "proper" }), dc, result: outcome });
       publishWithSeq(campaign.id, allocateSeq(campaign.id), "roll_result", { roll, source: "digital" });
     }
     if (total < dc) {

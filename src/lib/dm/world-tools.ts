@@ -1,3 +1,5 @@
+import { saveRoll } from "@/lib/roll-labels";
+import { specialRoll } from "@/lib/roll-labels";
 import { z } from "zod";
 import { rollCard } from "@/lib/dm/roll-card";
 import { allocateSeq, type Campaign } from "@/lib/db/campaigns";
@@ -347,7 +349,7 @@ export function handleRollTreasure(
   }
   const tier = treasureTierForCr(args.cr);
   const { dice, mult } = hoardGoldDice(tier);
-  let gold = rollCard(campaign, turn, null, "custom", `Treasure: gold (${dice} × ${mult})`, dice, null).total * mult;
+  let gold = rollCard(campaign, turn, null, "custom", specialRoll(`Treasure: gold (${dice} × ${mult})`, { kind: "treasure", dice, multiplier: mult }), dice, null).total * mult;
   if (args.individual) {
     gold = Math.floor(gold / 10);
   }
@@ -612,7 +614,7 @@ export function handleTravel(
       turn,
       sheet,
       hours,
-      detail: (hour) => `${sheet.name}: CON save vs forced march, hour ${8 + hour}`,
+      detail: (hour) => saveRoll(`${sheet.name}: CON save vs forced march, hour ${8 + hour}`, "con", { kind: "hourly-endurance", activity: "forced-march", hour: 8 + hour }, { name: sheet.name, kind: "proper" }),
       reason: "forced march",
       sheets,
       sheetsById,

@@ -57,7 +57,7 @@ export function dmRoll(
   campaignId: string,
   turn: DmTurn | null,
   kind: Exclude<RollKind, "attack" | "damage">,
-  detail: string,
+  detail: string | RollDetail,
   expression: string,
 ) {
   const outcome = rollExpression(expression);
@@ -66,7 +66,8 @@ export function dmRoll(
     characterId: null,
     requestedBy: "dm",
     kind,
-    detail: detail.slice(0, 200),
+    detail: (typeof detail === "string" ? detail : detail.detail).slice(0, 200),
+    ...(typeof detail === "string" ? {} : { presentation: detail.presentation }),
     result: outcome,
     visibility: "dm",
   });

@@ -1,3 +1,4 @@
+import { specialRoll } from "@/lib/roll-labels";
 // Prismatic Spray (SRD 5.1): "Each creature in a 60-foot cone must make a
 // Dexterity saving throw. For each target, roll a d8 to determine which color
 // ray affects it."
@@ -84,8 +85,8 @@ export type PrismaticCast = {
 };
 
 // The d8 that picks a creature's ray, as a card the table sees.
-const rayDie = (input: PrismaticCast, characterId: string, target: string) => () =>
-  rollCard(input.campaign, input.turn, characterId, "custom", `Prismatic Spray: the ray that strikes ${target}`, "1d8", null).total;
+const rayDie = (input: PrismaticCast, characterId: string, target: string, kind: "enemy" | "proper") => () =>
+  rollCard(input.campaign, input.turn, characterId, "custom", specialRoll(`Prismatic Spray: the ray that strikes ${target}`, { kind: "ray", target: { name: target, kind } }), "1d8", null).total;
 
 // A damaging ray's 10d6, a dice card as a weapon's damage is. characterId
 // is the PC the roll concerns: the caster on an enemy, the PC a ray hits.
@@ -107,7 +108,7 @@ export function castPrismaticSpray(input: PrismaticCast): Array<Record<string, u
       continue;
     }
     const save = rollEnemySave(campaign.id, enemy, "dex", dc, { magical: true, record: { turn, ...saveRoll(`${enemy.displayName}: DEX save against Prismatic Spray`, "dex", { kind: "save-against", name: "Prismatic Spray" }, { name: enemy.displayName, kind: "enemy" }) } });
-    const rays = rollRays(rayDie(input, caster.id, enemy.displayName));
+    const rays = rollRays(rayDie(input, caster.id, enemy.displayName, "enemy"));
     const row: Record<string, unknown> = { target: enemy.displayName, save: save.total, success: save.success, rays: rays.map((ray) => RAYS[ray - 1].color) };
     const notes: string[] = [];
     for (const ray of rays) {
@@ -146,7 +147,7 @@ export function castPrismaticSpray(input: PrismaticCast): Array<Record<string, u
       continue;
     }
     const save = rollCharacterSave(campaign, turn, sheet, "dex", dc, saveRoll("DEX save against Prismatic Spray", "dex", { kind: "save-against", name: "Prismatic Spray" }), "spell");
-    const rays = rollRays(rayDie(input, sheet.id, sheet.name));
+    const rays = rollRays(rayDie(input, sheet.id, sheet.name, "proper"));
     const notes: string[] = [];
     for (const ray of rays) {
       const { color, type } = RAYS[ray - 1];

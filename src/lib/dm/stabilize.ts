@@ -1,3 +1,4 @@
+import { checkRoll, specialRoll } from "@/lib/roll-labels";
 // Stabilizing a dying creature (SRD 5.1, Stabilizing a Creature): somebody
 // uses their action on it and makes a DC 10 Wisdom (Medicine) check, or
 // spends a use of a healer's kit, or casts Spare the Dying. The server rolls
@@ -200,7 +201,7 @@ export function handleStabilize(
       characterId: healer.id,
       requestedBy: "dm",
       kind: "skill_check",
-      detail: `medicine, to stabilize ${sheet.name}`,
+      ...checkRoll(`medicine, to stabilize ${sheet.name}`, "skill", "medicine", { kind: "stabilize", target: { name: sheet.name, kind: "proper" } }),
       dc: STABILIZE_DC,
       result: outcome,
     });
@@ -315,7 +316,7 @@ export function healerKitUse(
     characterId: healer.id,
     requestedBy: "dm",
     kind: "custom",
-    detail: `Healer: a healer's kit use on ${target.name} (1d6 + 4 + ${dice} Hit Dice)`,
+    ...specialRoll(`Healer: a healer's kit use on ${target.name} (1d6 + 4 + ${dice} Hit Dice)`, { kind: "healer-kit", target: { name: target.name, kind: "proper" }, hitDice: dice }),
     result: outcome,
   });
   publishWithSeq(campaign.id, allocateSeq(campaign.id), "roll_result", { roll, source: "digital" });

@@ -16,7 +16,7 @@ export function rollActionLabel(what: string, locale: AppLocale): string {
   }
   if (what === "the effect") return t("combatCheck.effect");
   if (what === "area effect") return t("combatRoll.areaEffect");
-  const features = catalogFor("en", "combatCheck.feature.");
+  const features = { ...catalogFor("en", "combatCheck.feature."), ...catalogFor("en", "combatSpecial.name.") };
   const featureKey = Object.keys(features).find(key => features[key as MessageKey]?.toLowerCase() === what.toLowerCase());
   if (featureKey) return t(featureKey as MessageKey);
   if (what.toLowerCase() === "quivering palm") return t("combatDetail.effect.quivering_palm.name");
@@ -67,6 +67,7 @@ export function rollNoteLabel(note: string, locale: AppLocale): string {
 }
 
 export function rollCheckTerm(kind: "skill" | "ability", value: string, locale: AppLocale): string {
+  if (value === "strength_or_dexterity") return createTranslator(locale)("combatCheck.eitherAbility");
   if (value === "athletics_or_acrobatics") return createTranslator(locale)("combatCheck.either");
   const prefix = `sheet.${kind}.`, source = catalogFor("en", prefix);
   const direct = `${prefix}${value.trim().toLowerCase().replace(/[ -]+/g, "_")}`;
@@ -108,9 +109,30 @@ export function rollPresentationLabel(raw: unknown, locale: AppLocale): string |
       }
       if ("from" in c) values.from = c.from.kind === "enemy" ? referenceDisplayName("monster", c.from.name, locale).replace(/(\d)$/, "$1 ") : c.from.name;
       if ("text" in c) values.text = c.text;
-      const frame = c.kind === "escape-grapple" && c.target && typeof c.difficulty === "number" ? "escape-grapple-target" : c.kind;
+      if ("hour" in c) values.hour = c.hour;
+      if ("round" in c) values.round = c.round;
+      const frame = c.kind === "hourly-endurance" ? `${c.kind}.${c.activity}`
+        : c.kind === "escape-grapple" && c.target && typeof c.difficulty === "number" ? "escape-grapple-target" : c.kind;
       if ("difficulty" in c && typeof c.difficulty === "number") values.difficulty = c.difficulty;
-      detail = t(`combatCheck.${frame}`, values);
+      detail = t(`combatCheck.${frame}` as MessageKey, values);
+      break;
+    }
+    case "special": {
+      const c = p.context;
+      const values: Record<string, string | number> = {};
+      if ("name" in c) values.name = c.literalName ? c.name : noteName(c.name, locale);
+      if ("target" in c) values.target = c.target.kind === "enemy" ? referenceDisplayName("monster", c.target.name, locale) : c.target.name;
+      if ("hitDice" in c) values.hitDice = c.hitDice;
+      if ("threshold" in c) values.threshold = c.threshold;
+      if ("level" in c) values.level = c.level;
+      if ("count" in c) values.count = c.count;
+      if ("multiplier" in c) { values.multiplier = c.multiplier; values.dice = c.dice; }
+      if (c.kind === "affliction-onset") values.unit = t(`combatSpecial.unit.${c.unit}`);
+      detail = t(`combatSpecial.${c.kind === "madness" ? `madness.${c.term}` : c.kind}` as MessageKey, values);
+      if (c.kind === "short-rest") {
+        if (c.songDie) detail = t("combatSpecial.song", { detail, dice: c.songDie });
+        if (c.chefDie) detail = t("combatSpecial.chef", { detail, dice: c.chefDie });
+      } else if ("dice" in c && c.dice && c.kind !== "treasure") detail = t("combatSpecial.with-dice", { detail, dice: c.dice });
       break;
     }
     case "stable-recovery": detail = t("combatRoll.recovery", { name: p.name }); break;
@@ -120,7 +142,7 @@ export function rollPresentationLabel(raw: unknown, locale: AppLocale): string |
 
 export function rollPresentationActor(presentation: RollPresentation | undefined, locale: AppLocale): string | undefined {
   const p = parseRollPresentation(presentation);
-  if (p?.kind === "check" && p.owner) return p.owner.kind === "enemy" ? referenceDisplayName("monster", p.owner.name, locale) : p.owner.name;
+  if ((p?.kind === "check" || p?.kind === "special") && p.owner) return p.owner.kind === "enemy" ? referenceDisplayName("monster", p.owner.name, locale) : p.owner.name;
   return p?.kind === "area" && p.actorUnseen ? createTranslator(locale)("combatRoll.someoneUnseen") : undefined;
 }
 

@@ -1,3 +1,5 @@
+import { specialRoll } from "@/lib/roll-labels";
+import type { RollDetail } from "@/lib/roll-presentation";
 // The use_item cases the gear engine owns: an item with charges (a wand, a
 // staff, a once-a-day power), which spends charges and stays in the pack.
 // mutations.ts asks here first; null means "an ordinary consumable", and
@@ -31,13 +33,14 @@ import { conditionExtraActions } from "@/lib/srd/condition-effects";
 import type { CharacterSheet } from "@/lib/schemas/sheet";
 import type { RollResult } from "@/lib/dice";
 
-function publishRoll(campaign: Campaign, sheet: CharacterSheet, detail: string, result: RollResult) {
+function publishRoll(campaign: Campaign, sheet: CharacterSheet, detail: string | RollDetail, result: RollResult) {
   const roll = insertRoll({
     campaignId: campaign.id,
     characterId: sheet.id,
     requestedBy: "dm",
     kind: "custom",
-    detail,
+    detail: typeof detail === "string" ? detail : detail.detail,
+    ...(typeof detail === "string" ? {} : { presentation: detail.presentation }),
     result,
   });
   publishWithSeq(campaign.id, allocateSeq(campaign.id), "roll_result", { roll, source: "digital" });
@@ -112,10 +115,10 @@ export function chargedItemUse(
     storeBudget(encounter, budget);
   }
   if (math.initial) {
-    publishRoll(campaign, sheet, `${carried.name}: charges it holds`, math.initial);
+    publishRoll(campaign, sheet, specialRoll(`${carried.name}: charges it holds`, { kind: "charges", name: carried.name }), math.initial);
   }
   if (math.d20) {
-    publishRoll(campaign, sheet, `${carried.name}: the last charge`, math.d20);
+    publishRoll(campaign, sheet, specialRoll(`${carried.name}: the last charge`, { kind: "last-charge", name: carried.name }), math.d20);
   }
   const equipment = equipmentAfterSpend(sheet.equipment, carried, math.charges, math.destroyed);
   writeCharges(campaign.id, sheet, equipment, "use_item", `${carried.name}: ${count} charge${count === 1 ? "" : "s"}`, turnId);

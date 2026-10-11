@@ -1327,7 +1327,7 @@ export function applyDmMutation(
         if (!math) {
           return { result: { error: `${sheet.name} has no free level ${level} spell slot.` } };
         }
-        const healed = rollHealing(campaign, sheet, "Combat Wild Shape", `${level}d8`);
+        const healed = rollHealing(campaign, sheet, "Combat Wild Shape", `${level}d8`, { kind: "healing", name: "Combat Wild Shape" });
         const beastHp = Math.min(
           sheet.wildShape.beastMaxHp,
           sheet.wildShape.beastHp + Math.max(1, healed),

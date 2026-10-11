@@ -1,3 +1,4 @@
+import { saveRoll } from "@/lib/roll-labels";
 // Life between adventures (SRD 5.1, Between Adventures): what a character's
 // lifestyle costs each day, and the downtime activities with their costs,
 // progress and results. The tools are set_lifestyle and downtime
@@ -263,7 +264,7 @@ export function spendDowntime(campaign: Campaign, turnId: string, entry: Downtim
     }
     for (let index = 0; index < Math.min(saves, 5); index += 1) {
       const fresh = getSheetById(sheet.id) ?? sheet;
-      const save = characterSave(campaign, fresh, { ability: "con", dc: 15, detail: `${fresh.name}: CON save after recuperating` });
+      const save = characterSave(campaign, fresh, { ability: "con", dc: 15, detail: saveRoll(`${fresh.name}: CON save after recuperating`, "con", { kind: "recuperation" }, { name: fresh.name, kind: "proper" }) });
       if (!save.success) {
         lines.push(`${sheet.name} recuperates three days but fails the DC 15 CON save (${save.total}).`);
         continue;

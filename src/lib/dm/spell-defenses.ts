@@ -1,3 +1,4 @@
+import { specialRoll } from "@/lib/roll-labels";
 // The protective spells an enemy's attack meets on its way in (SRD 5.1):
 //
 //   Sanctuary: a creature that targets the warded character with an attack
@@ -50,7 +51,7 @@ export function mirrorImageDecoy(campaignId: string, targetId: string, attackTot
   }
   const left = Number(/\((\d)\)/.exec(held)?.[1] ?? 3);
   const needed = left >= 3 ? 6 : left === 2 ? 8 : 11;
-  const roll = rollCard({ id: campaignId }, null, target.id, "custom", `Mirror Image (${needed} or higher turns the attack)`, "1d20", null).total;
+  const roll = rollCard({ id: campaignId }, null, target.id, "custom", specialRoll(`Mirror Image (${needed} or higher turns the attack)`, { kind: "mirror", threshold: needed }), "1d20", null).total;
   if (roll < needed) {
     return null;
   }

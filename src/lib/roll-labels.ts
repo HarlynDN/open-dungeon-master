@@ -7,7 +7,7 @@
 // Pure (type imports only), so client components and test scripts import it.
 
 import type { StoredRoll } from "@/lib/db/rolls";
-import type { RollDetail, RollDisplayName, RollCheckContext } from "./roll-presentation";
+import type { RollDetail, RollDisplayName, RollCheckContext, RollSpecialContext } from "./roll-presentation";
 
 type Worded = Pick<StoredRoll, "kind" | "detail" | "attacker">;
 
@@ -42,6 +42,10 @@ export function checkRoll(detail: string, kind: "skill" | "ability", key: string
 // is additive and contains only the source/purpose the existing caption names.
 export function saveRoll(detail: string, ability: string, context: RollCheckContext, owner?: RollDisplayName): RollDetail {
   return checkRoll(detail, "ability", ability, context, owner);
+}
+
+export function specialRoll(detail: string, context: RollSpecialContext, owner?: RollDisplayName): RollDetail {
+  return { detail, presentation: { kind: "special", context, ...(owner ? { owner } : {}) } };
 }
 
 // Who made the roll: its attacker, else the sheet it concerns.

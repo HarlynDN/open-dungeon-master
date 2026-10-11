@@ -1,3 +1,4 @@
+import { saveRoll } from "@/lib/roll-labels";
 // Food and water, under the `supplies` variant rule (off by default: the
 // party is assumed fed and watered, as it is assumed to have arrows).
 //
@@ -108,7 +109,7 @@ export function upkeepAtDawns(
       const upkeep = dayOfUpkeep(sheet, next[sheet.id] ?? { food: 0, water: 0 }, waterRation);
       next[sheet.id] = upkeep.hunger;
       if (upkeep.halfWater) {
-        const save = characterSave(campaign, sheet, { ability: "con", dc: 15, detail: `${sheet.name}: CON save on half water`, against: "thirst" });
+        const save = characterSave(campaign, sheet, { ability: "con", dc: 15, detail: saveRoll(`${sheet.name}: CON save on half water`, "con", { kind: "half-water" }, { name: sheet.name, kind: "proper" }), against: "thirst" });
         if (!save.success) {
           upkeep.exhaustion += (sheet.exhaustion ?? 0) >= 1 ? 2 : 1;
         }

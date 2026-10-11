@@ -5,7 +5,7 @@
 // take_action escape comes here when the escaper holds no grapple
 // (src/lib/dm/grapple.ts).
 
-import { saveRoll } from "@/lib/roll-labels";
+import { checkRoll, saveRoll } from "@/lib/roll-labels";
 import { dmRoll } from "@/lib/dm/roll-card";
 import type { Campaign } from "@/lib/db/campaigns";
 import type { DmTurn } from "@/lib/db/dm-turns";
@@ -70,7 +70,7 @@ export function enemySpellEscape(campaign: Campaign, turn: DmTurn, enemy: Encoun
   const saved = hold.save
     ? rollEnemySave(campaign.id, enemy, hold.save, hold.dc, { magical: true, resist: true, record: { turn, ...saveRoll(`${enemy.displayName}: ${hold.save.toUpperCase()} save against ${hold.spell}`, hold.save, { kind: "save-against", name: hold.spell }, { name: enemy.displayName, kind: "enemy" }) } })
     : null;
-  const total = saved ? (saved.total ?? 0) : dmRoll(campaign.id, turn, "ability_check", `${enemy.displayName}: breaking free of ${hold.spell}`, d20Expression(mod)).total;
+  const total = saved ? (saved.total ?? 0) : dmRoll(campaign.id, turn, "ability_check", checkRoll(`${enemy.displayName}: breaking free of ${hold.spell}`, "ability", hold.abilities.length > 1 ? "strength_or_dexterity" : hold.abilities[0], { kind: "escape-spell", name: hold.spell }, { name: enemy.displayName, kind: "enemy" }), d20Expression(mod)).total;
   const escaped = saved ? saved.success : total >= hold.dc;
   if (escaped) {
     const cleared = removeConditions(enemy.conditions, enemy.conditionMeta, [hold.name]);

@@ -1,3 +1,4 @@
+import { specialRoll } from "@/lib/roll-labels";
 // A healing spell through the heal tool, worked out before anything is
 // spent (SRD 5.1):
 //
@@ -200,7 +201,7 @@ export function castHealingSpell(
       characterId: target.id,
       requestedBy: "dm",
       kind: "custom",
-      detail: `${name} on ${target.name} (${full})`,
+      ...specialRoll(`${name} on ${target.name} (${full})`, { kind: "healing-target", name, target: { name: target.name, kind: "proper" }, dice: full }),
       result: outcome,
     });
     publishWithSeq(campaign.id, allocateSeq(campaign.id), "roll_result", { roll, source: "digital" });

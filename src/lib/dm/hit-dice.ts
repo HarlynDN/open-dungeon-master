@@ -1,3 +1,4 @@
+import { specialRoll } from "@/lib/roll-labels";
 // Spending hit dice at the end of a short rest: the server rolls them, each
 // die heals its face plus the Constitution modifier (never below 0 for that
 // die), and the healing stops at the character's maximum. Shared by the rest
@@ -73,9 +74,9 @@ export function spendHitDice(input: {
     characterId: sheet.id,
     requestedBy: input.requestedBy,
     kind: "custom",
-    detail: `short rest: ${count} hit ${count === 1 ? "die" : "dice"}${
+    ...specialRoll(`short rest: ${count} hit ${count === 1 ? "die" : "dice"}${
       input.songDie ? ` + Song of Rest ${input.songDie}` : ""
-    }${input.chefDie ? ` + Chef ${input.chefDie}` : ""}`,
+    }${input.chefDie ? ` + Chef ${input.chefDie}` : ""}`, { kind: "short-rest", count, ...(input.songDie ? { songDie: input.songDie } : {}), ...(input.chefDie ? { chefDie: input.chefDie } : {}) }),
     result: outcome,
   });
   publishWithSeq(campaign.id, allocateSeq(campaign.id), "roll_result", { roll, source: "digital" });

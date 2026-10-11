@@ -1,3 +1,4 @@
+import { saveRoll as saveCaption } from "@/lib/roll-labels";
 // The digital dice path of pc_attack: the to-hit expression is built, the
 // server rolls it against the target's Armor Class, a hit pays for what it
 // carries, the damage lands per type, and a maneuver's rider save resolves.
@@ -482,7 +483,7 @@ function maneuverRiderSave(plan: AttackPlan, maneuver: ManeuverPick): Record<str
       characterId: null,
       requestedBy: "dm",
       kind: "saving_throw",
-      detail: `${fresh.displayName}: ${rider.save.toUpperCase()} save vs ${maneuver.name}`,
+      ...saveCaption(`${fresh.displayName}: ${rider.save.toUpperCase()} save vs ${maneuver.name}`, rider.save, { kind: "save-against", name: maneuver.name }, { name: fresh.displayName, kind: "enemy" }),
       dc,
       result: save.result,
     });

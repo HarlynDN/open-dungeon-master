@@ -1,3 +1,4 @@
+import type { RollDetail } from "@/lib/roll-presentation";
 // The reads and writes the between-adventures engines share: their state on
 // the clock, a character's saving throw rolled and stored like any other,
 // and the table note and sheet push every engine sends
@@ -94,7 +95,7 @@ export type SaveOutcome = { success: boolean; total: number; failBy: number; aut
 export function characterSave(
   campaign: Campaign,
   sheet: CharacterSheet,
-  input: { ability: Ability; dc: number; detail: string; against?: string; advantage?: boolean },
+  input: { ability: Ability; dc: number; detail: string | RollDetail; against?: string; advantage?: boolean },
 ): SaveOutcome {
   const args = {
     kind: "saving_throw",
@@ -117,7 +118,8 @@ export function characterSave(
     characterId: sheet.id,
     requestedBy: "dm",
     kind: "saving_throw",
-    detail: input.detail.slice(0, 200),
+    detail: (typeof input.detail === "string" ? input.detail : input.detail.detail).slice(0, 200),
+    ...(typeof input.detail === "string" ? {} : { presentation: input.detail.presentation }),
     dc: input.dc,
     result: outcome,
   });
@@ -126,14 +128,15 @@ export function characterSave(
 }
 
 // A die the table sees, for a duration or a DC drop.
-export function publicDie(campaign: Campaign, sheet: CharacterSheet | null, expression: string, detail: string): number {
+export function publicDie(campaign: Campaign, sheet: CharacterSheet | null, expression: string, detail: string | RollDetail): number {
   const outcome = rollExpression(expression);
   const roll = insertRoll({
     campaignId: campaign.id,
     characterId: sheet?.id ?? null,
     requestedBy: "dm",
     kind: "custom",
-    detail: detail.slice(0, 200),
+    detail: (typeof detail === "string" ? detail : detail.detail).slice(0, 200),
+    ...(typeof detail === "string" ? {} : { presentation: detail.presentation }),
     result: outcome,
   });
   publishWithSeq(campaign.id, allocateSeq(campaign.id), "roll_result", { roll, source: "digital" });

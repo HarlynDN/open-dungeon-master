@@ -1,3 +1,4 @@
+import type { RollDetail } from "@/lib/roll-presentation";
 // Hour-by-hour Constitution saves against exhaustion: a forced march past
 // eight hours, a day in extreme heat or cold. One save at the end of each
 // hour, each with its own DC, each failure one level of exhaustion (SRD 5.1,
@@ -36,7 +37,7 @@ export function hourlyConSaves(input: {
   sheet: CharacterSheet;
   hours: Array<{ hour: number; dc: number }>;
   disadvantage?: boolean;
-  detail: (hour: number) => string;
+  detail: (hour: number) => string | RollDetail;
   reason: string;
   sheets: CharacterSheet[];
   sheetsById: Map<string, CharacterSheet>;
@@ -66,12 +67,14 @@ export function hourlyConSaves(input: {
       spendRollCarriers(campaign.id, sheet.id, resolved.spendInspiration);
       const rolled = rollExpression(resolved.expression);
       save = rolled.total;
+      const detail = input.detail(hour);
       const roll = insertRoll({
         campaignId: campaign.id,
         characterId: sheet.id,
         requestedBy: "dm",
         kind: "saving_throw",
-        detail: input.detail(hour),
+        detail: typeof detail === "string" ? detail : detail.detail,
+        ...(typeof detail === "string" ? {} : { presentation: detail.presentation }),
         dc,
         result: rolled,
       });

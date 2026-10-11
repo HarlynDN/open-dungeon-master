@@ -1,3 +1,4 @@
+import { specialRoll } from "@/lib/roll-labels";
 import { z } from "zod";
 import { reactionBias } from "@/lib/dm/safety-logic";
 import { reputationDcOffset } from "@/lib/dm/faction-logic";
@@ -259,7 +260,7 @@ export function handleNpcReaction(
     characterId: null,
     requestedBy: "dm",
     kind: "custom",
-    detail: `Reaction roll for ${args.name}`,
+    ...specialRoll(`Reaction roll for ${args.name}`, { kind: "npc-reaction", target: { name: args.name, kind: "proper" } }),
     result: outcome,
   });
   publishRoll(campaign.id, roll);

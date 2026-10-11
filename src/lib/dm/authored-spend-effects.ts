@@ -1,3 +1,4 @@
+import { specialRoll } from "@/lib/roll-labels";
 // What an authored spend does once it is paid for (src/lib/dm/authored-spends.ts
 // has checked the gate, the pool and the turn). Each resolver refuses before
 // it writes; the caller then spends the pool and the turn.
@@ -170,7 +171,7 @@ export function resolveSpendEffect(ctx: SpendContext, does: SpendDoes): Resoluti
     case "buff": {
       const condition = conditionName(ctx, does);
       const lines: string[] = [];
-      const tempHp = does.tempHp ? Math.max(0, Number(rollCard(ctx.campaign, ctx.turn, sheet.id, "custom", `${ctx.spend.name}: temporary hit points`, formula(ctx, does.tempHp), null).total)) : 0;
+      const tempHp = does.tempHp ? Math.max(0, Number(rollCard(ctx.campaign, ctx.turn, sheet.id, "custom", specialRoll(`${ctx.spend.name}: temporary hit points`, { kind: "temporary-hp", name: ctx.spend.name, literalName: true }), formula(ctx, does.tempHp), null).total)) : 0;
       if (does.target === "enemy") {
         const enemy = targetEnemy(ctx);
         if ("error" in enemy) {
@@ -259,7 +260,7 @@ export function resolveSpendEffect(ctx: SpendContext, does: SpendDoes): Resoluti
     case "reroll_save":
       return rerollLastSave(ctx);
     case "temp_hp": {
-      const amount = Math.max(1, Number(rollCard(ctx.campaign, ctx.turn, sheet.id, "custom", `${ctx.spend.name}: temporary hit points`, formula(ctx, does.formula), null).total));
+      const amount = Math.max(1, Number(rollCard(ctx.campaign, ctx.turn, sheet.id, "custom", specialRoll(`${ctx.spend.name}: temporary hit points`, { kind: "temporary-hp", name: ctx.spend.name, literalName: true }), formula(ctx, does.formula), null).total));
       if (!does.allies) {
         return {
           patch: amount > sheet.tempHp ? { tempHp: amount } : {},
@@ -334,7 +335,7 @@ export function resolveSpendEffect(ctx: SpendContext, does: SpendDoes): Resoluti
     case "flames": {
       const wanted = lower(ctx.args.variant);
       if (/heal/.test(wanted)) {
-        const rolled = rollCard(ctx.campaign, ctx.turn, sheet.id, "custom", `${ctx.spend.name}: healing`, formula(ctx, does.formula), null).total;
+        const rolled = rollCard(ctx.campaign, ctx.turn, sheet.id, "custom", specialRoll(`${ctx.spend.name}: healing`, { kind: "healing", name: ctx.spend.name, literalName: true }), formula(ctx, does.formula), null).total;
         const ally = ctx.args.targetCharacterId ? getSheetById(ctx.args.targetCharacterId) : sheet;
         if (!ally || ally.deathSaves?.dead) {
           return { error: `${ctx.spend.name} heals a living creature at the table: pass targetCharacterId. Nothing was spent.` };

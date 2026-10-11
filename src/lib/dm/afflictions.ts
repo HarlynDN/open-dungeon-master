@@ -1,3 +1,4 @@
+import { saveRoll, specialRoll } from "@/lib/roll-labels";
 // Diseases and madness from the SRD 5.1 Running the Game chapter, held by the
 // engine: the afflict tool lays them on (src/lib/dm/explore-tools.ts), the
 // clock brings a disease's symptoms and ends a long madness
@@ -185,13 +186,13 @@ export function infectWorkshopDisease(
   }
   if (input.save !== false) {
     const dc = input.dc ?? spec.infect.dc;
-    const save = characterSave(campaign, sheet, { ability: spec.infect.ability, dc, detail: `${sheet.name}: ${spec.infect.ability.toUpperCase()} save vs ${own.name}`, against: "disease", advantage: holds(sheet, "recuperated") });
+    const save = characterSave(campaign, sheet, { ability: spec.infect.ability, dc, detail: saveRoll(`${sheet.name}: ${spec.infect.ability.toUpperCase()} save vs ${own.name}`, spec.infect.ability, { kind: "save-against", name: own.name, literalName: true }, { name: sheet.name, kind: "proper" }), against: "disease", advantage: holds(sheet, "recuperated") });
     if (save.success) {
       return { ok: true, resisted: true, note: `${sheet.name} resists ${own.name} (${spec.infect.ability.toUpperCase()} save ${save.total} vs DC ${dc}).` };
     }
   }
   const clock = getClock(campaign.id);
-  const amount = /^\d+$/.test(spec.onset.dice) ? Number(spec.onset.dice) : publicDie(campaign, sheet, spec.onset.dice, `${own.name}: ${spec.onset.unit} until symptoms`);
+  const amount = /^\d+$/.test(spec.onset.dice) ? Number(spec.onset.dice) : publicDie(campaign, sheet, spec.onset.dice, specialRoll(`${own.name}: ${spec.onset.unit} until symptoms`, { kind: "affliction-onset", name: own.name, unit: spec.onset.unit, literalName: true }, { name: sheet.name, kind: "proper" }));
   const minutes = amount * (spec.onset.unit === "days" ? MINUTES_PER_DAY : 60);
   let record: Affliction = { kind: "disease", id: own.id, conditions: [], onsetAt: clock.instant + minutes, disease: { name: own.name, spec } };
   if (input.symptomsNow || minutes <= 0) {
@@ -217,7 +218,7 @@ function workshopDiseaseAfterRest(campaign: Campaign, sheet: CharacterSheet, ent
   if (!rest) {
     return entry;
   }
-  const save = characterSave(campaign, sheet, { ability: rest.ability, dc: rest.dc, detail: `${sheet.name}: ${rest.ability.toUpperCase()} save vs ${held.name} after a long rest`, against: "disease", advantage: holds(sheet, "recuperated") });
+  const save = characterSave(campaign, sheet, { ability: rest.ability, dc: rest.dc, detail: saveRoll(`${sheet.name}: ${rest.ability.toUpperCase()} save vs ${held.name} after a long rest`, rest.ability, { kind: "after-rest", name: held.name, literalName: true }, { name: sheet.name, kind: "proper" }), against: "disease", advantage: holds(sheet, "recuperated") });
   if (save.success) {
     if (rest.onSuccess === "improve") {
       const level = (sheet.exhaustion ?? 0) - 1;
@@ -262,13 +263,13 @@ export function infectDisease(
   }
   if (input.save !== false) {
     const dc = input.dc ?? disease.infectDc;
-    const save = characterSave(campaign, sheet, { ability: "con", dc, detail: `${sheet.name}: CON save vs ${disease.name}`, against: "disease", advantage: holds(sheet, "recuperated") });
+    const save = characterSave(campaign, sheet, { ability: "con", dc, detail: saveRoll(`${sheet.name}: CON save vs ${disease.name}`, "con", { kind: "save-against", name: disease.name }, { name: sheet.name, kind: "proper" }), against: "disease", advantage: holds(sheet, "recuperated") });
     if (save.success) {
       return { ok: true, resisted: true, note: `${sheet.name} resists ${disease.name} (CON save ${save.total} vs DC ${dc}).` };
     }
   }
   const clock = getClock(campaign.id);
-  const amount = disease.onset.dice === "1" ? 1 : publicDie(campaign, sheet, disease.onset.dice, `${disease.name}: ${disease.onset.unit} until symptoms`);
+  const amount = disease.onset.dice === "1" ? 1 : publicDie(campaign, sheet, disease.onset.dice, specialRoll(`${disease.name}: ${disease.onset.unit} until symptoms`, { kind: "affliction-onset", name: disease.name, unit: disease.onset.unit }, { name: sheet.name, kind: "proper" }));
   const minutes = amount * (disease.onset.unit === "days" ? MINUTES_PER_DAY : 60);
   let record: Affliction = { kind: "disease", id: disease.id, conditions: [], onsetAt: clock.instant + minutes };
   if (input.symptomsNow) {
@@ -297,12 +298,12 @@ export function inflictMadness(
 ): Record<string, unknown> {
   if (input.saveDc) {
     const ability = input.saveAbility ?? "wis";
-    const save = characterSave(campaign, sheet, { ability, dc: input.saveDc, detail: `${sheet.name}: ${ability.toUpperCase()} save against madness`, against: "madness" });
+    const save = characterSave(campaign, sheet, { ability, dc: input.saveDc, detail: saveRoll(`${sheet.name}: ${ability.toUpperCase()} save against madness`, ability, { kind: "madness-save" }, { name: sheet.name, kind: "proper" }), against: "madness" });
     if (save.success) {
       return { ok: true, resisted: true, note: `${sheet.name} keeps their mind (${ability.toUpperCase()} save ${save.total} vs DC ${input.saveDc}).` };
     }
   }
-  const roll = publicDie(campaign, sheet, "1d100", `${sheet.name}: ${kind}-term madness`);
+  const roll = publicDie(campaign, sheet, "1d100", specialRoll(`${sheet.name}: ${kind}-term madness`, { kind: "madness", term: kind }, { name: sheet.name, kind: "proper" }));
   const list = liveAfflictions(campaign.id, sheet);
   const clock = getClock(campaign.id);
   if (kind === "indefinite") {
@@ -315,11 +316,11 @@ export function inflictMadness(
   let conditions = effect.conditions;
   if (!conditions.length) {
     // Long-term 56 to 65: blinded (25%) or deafened (75%).
-    conditions = [publicDie(campaign, sheet, "1d4", `${sheet.name}: blinded on a 1, deafened otherwise`) === 1 ? "blinded" : "deafened"];
+    conditions = [publicDie(campaign, sheet, "1d4", specialRoll(`${sheet.name}: blinded on a 1, deafened otherwise`, { kind: "madness-blind" }, { name: sheet.name, kind: "proper" })) === 1 ? "blinded" : "deafened"];
   }
   const duration = kind === "short"
-    ? publicDie(campaign, sheet, "1d10", `${sheet.name}: minutes of short-term madness`)
-    : publicDie(campaign, sheet, "1d10", `${sheet.name}: tens of hours of long-term madness`) * 10 * 60;
+    ? publicDie(campaign, sheet, "1d10", specialRoll(`${sheet.name}: minutes of short-term madness`, { kind: "madness-minutes" }, { name: sheet.name, kind: "proper" }))
+    : publicDie(campaign, sheet, "1d10", specialRoll(`${sheet.name}: tens of hours of long-term madness`, { kind: "madness-hours" }, { name: sheet.name, kind: "proper" })) * 10 * 60;
   const held: string[] = [];
   for (const condition of conditions) {
     // A short madness counts down on the condition itself; a long one (up to
@@ -425,9 +426,9 @@ export function afflictionsAfterLongRest(campaign: Campaign, turnId: string, res
       }
       if (entry.id === "cackle_fever") {
         const dc = entry.dc ?? 13;
-        const save = characterSave(campaign, sheet, { ability: "con", dc, detail: `${sheet.name}: CON save vs cackle fever after a long rest`, against: "disease", advantage: recuperated });
+        const save = characterSave(campaign, sheet, { ability: "con", dc, detail: saveRoll(`${sheet.name}: CON save vs cackle fever after a long rest`, "con", { kind: "after-rest", name: "Cackle Fever" }, { name: sheet.name, kind: "proper" }), against: "disease", advantage: recuperated });
         if (save.success) {
-          const drop = publicDie(campaign, sheet, "1d6", `${sheet.name}: cackle fever's DC drops`);
+          const drop = publicDie(campaign, sheet, "1d6", specialRoll(`${sheet.name}: cackle fever's DC drops`, { kind: "fever-dc" }, { name: sheet.name, kind: "proper" }));
           if (dc - drop <= 0) {
             dropConditions(campaign.id, sheet.id, entry.conditions);
             lines.push(`${sheet.name} recovers from cackle fever.`);
@@ -447,7 +448,7 @@ export function afflictionsAfterLongRest(campaign: Campaign, turnId: string, res
         continue;
       }
       if (entry.id === "sewer_plague") {
-        const save = characterSave(campaign, sheet, { ability: "con", dc: 11, detail: `${sheet.name}: CON save vs sewer plague after a long rest`, against: "disease", advantage: recuperated });
+        const save = characterSave(campaign, sheet, { ability: "con", dc: 11, detail: saveRoll(`${sheet.name}: CON save vs sewer plague after a long rest`, "con", { kind: "after-rest", name: "Sewer Plague" }, { name: sheet.name, kind: "proper" }), against: "disease", advantage: recuperated });
         const level = sheet.exhaustion ?? 0;
         if (save.success) {
           patchSheet(sheet.id, exhaustionPatch(sheet, level - 1));
@@ -533,11 +534,11 @@ export function afflictionStress(campaign: Campaign, turnId: string, sheetId: st
   const fever = diseaseOf(campaign.id, sheet, "cackle_fever");
   if (fever && !holds(sheet, "incapacitated")) {
     const dc = fever.dc ?? 13;
-    const save = characterSave(campaign, sheet, { ability: "con", dc, detail: `${sheet.name}: CON save vs cackle fever's laughter`, against: "disease" });
+    const save = characterSave(campaign, sheet, { ability: "con", dc, detail: saveRoll(`${sheet.name}: CON save vs cackle fever's laughter`, "con", { kind: "fever-laughter" }, { name: sheet.name, kind: "proper" }), against: "disease" });
     if (!save.success) {
       inLaughter = true;
       try {
-        const psychic = publicDie(campaign, sheet, "1d10", `${sheet.name}: cackle fever's mad laughter`);
+        const psychic = publicDie(campaign, sheet, "1d10", specialRoll(`${sheet.name}: cackle fever's mad laughter`, { kind: "fever-damage" }, { name: sheet.name, kind: "proper" }));
         applyPcDamage(campaign, turnId, getSheetById(sheet.id) ?? sheet, { amount: psychic, type: "psychic", reason: "cackle fever's mad laughter" });
         afflictCondition(campaign, turnId, sheet.id, "incapacitated", { rounds: 10, saveAbility: "con", saveDc: dc, source: "cackle fever" });
         lines.push(`${sheet.name} is seized by mad laughter (cackle fever, ${cause}): ${psychic} psychic damage and incapacitated for a minute, a CON save at the end of each turn ends it.`);
@@ -547,7 +548,7 @@ export function afflictionStress(campaign: Campaign, turnId: string, sheetId: st
     }
   }
   if (cause === "damage" && holds(sheet, "madness: confusion on damage")) {
-    const save = characterSave(campaign, getSheetById(sheet.id) ?? sheet, { ability: "wis", dc: 15, detail: `${sheet.name}: WIS save against madness's confusion`, against: "madness" });
+    const save = characterSave(campaign, getSheetById(sheet.id) ?? sheet, { ability: "wis", dc: 15, detail: saveRoll(`${sheet.name}: WIS save against madness's confusion`, "wis", { kind: "madness-confusion" }, { name: sheet.name, kind: "proper" }), against: "madness" });
     if (!save.success && afflictCondition(campaign, turnId, sheet.id, "confused", { rounds: 10, source: "long-term madness" })) {
       lines.push(`${sheet.name}'s madness takes hold: confused for 1 minute.`);
     }

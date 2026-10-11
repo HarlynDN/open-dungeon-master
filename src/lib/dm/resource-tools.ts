@@ -1,3 +1,4 @@
+import { specialRoll } from "@/lib/roll-labels";
 import { allocateSeq, type Campaign } from "@/lib/db/campaigns";
 import { insertRoll } from "@/lib/db/rolls";
 import { getSheetById } from "@/lib/db/sheets";
@@ -58,6 +59,7 @@ export function rollHealing(
   target: CharacterSheet,
   detail: string,
   expression: string,
+  context?: { kind: "healing" | "temporary-hp"; name: string; literalName?: true },
 ): number {
   const outcome = rollExpression(expression);
   const roll = insertRoll({
@@ -66,6 +68,7 @@ export function rollHealing(
     requestedBy: "dm",
     kind: "custom",
     detail: `${detail} (${expression})`,
+    ...(context ? { presentation: specialRoll(`${detail} (${expression})`, { ...context, dice: expression }).presentation } : {}),
     result: outcome,
   });
   publishWithSeq(campaign.id, allocateSeq(campaign.id), "roll_result", {
@@ -102,7 +105,7 @@ export function computeUseItem(
     if (target.deathSaves?.dead) {
       return { error: `${target.name} is DEAD; a potion cannot help.` };
     }
-    const total = rollHealing(campaign, target, carried.name, effect.expression);
+    const total = rollHealing(campaign, target, carried.name, effect.expression, { kind: "healing", name: carried.name });
     base.healTarget = { characterId: target.id, amount: Math.max(1, total) };
     base.result.healingRolled = total;
   }
@@ -341,7 +344,7 @@ export function computeUseResource(
   switch (def.effect.kind) {
     case "heal_self": {
       const expression = def.effect.dice(fxLevel, derived.abilityMods);
-      const total = rollHealing(campaign, sheet, def.displayName, expression);
+      const total = rollHealing(campaign, sheet, def.displayName, expression, { kind: "healing", name: def.displayName });
       outcome.healTarget = { characterId: sheet.id, amount: Math.max(1, total) };
       outcome.result.healingRolled = total;
       return outcome;
@@ -359,7 +362,7 @@ export function computeUseResource(
       if (target.deathSaves?.dead) {
         return { error: `${target.name} is DEAD; ${def.displayName} cannot help.` };
       }
-      const total = rollHealing(campaign, target, def.displayName, `${amount}${def.effect.die}`);
+      const total = rollHealing(campaign, target, def.displayName, `${amount}${def.effect.die}`, { kind: "healing", name: def.displayName });
       outcome.healTarget = { characterId: target.id, amount: Math.max(1, total) };
       outcome.result.healingRolled = total;
       outcome.result.healed = `${total} HP to ${target.name}`;
@@ -370,7 +373,7 @@ export function computeUseResource(
         return { error: `${target.name} is DEAD; ${def.displayName} cannot help.` };
       }
       const expression = def.effect.dice(fxLevel, derived.abilityMods);
-      const total = rollHealing(campaign, target, def.displayName, expression);
+      const total = rollHealing(campaign, target, def.displayName, expression, { kind: "healing", name: def.displayName });
       outcome.healTarget = { characterId: target.id, amount: Math.max(1, total) };
       outcome.result.healingRolled = total;
       return outcome;
@@ -379,7 +382,7 @@ export function computeUseResource(
       const expression = def.effect.dice(fxLevel, derived.abilityMods);
       const total = Math.max(
         1,
-        rollHealing(campaign, target, `${def.displayName} (temporary HP)`, expression),
+        rollHealing(campaign, target, `${def.displayName} (temporary HP)`, expression, { kind: "temporary-hp", name: def.displayName }),
       );
       // 5e temporary hit points never stack; the higher value stands.
       if (target.tempHp >= total) {
@@ -426,6 +429,7 @@ export function computeUseResource(
             recipient,
             `${def.displayName} (temporary HP)`,
             effect.tempHp(sheet.level, derived.abilityMods),
+            { kind: "temporary-hp", name: def.displayName },
           ),
         );
         if (rolled > recipient.tempHp) {

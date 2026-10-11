@@ -1,3 +1,4 @@
+import { specialRoll } from "@/lib/roll-labels";
 // Sleep and Color Spray (SRD 5.1): no saving throw. The caster rolls one pool
 // of hit points for the casting, spent on the caught creatures from the
 // fewest current hit points up; a creature the rest of the pool does not
@@ -76,7 +77,7 @@ export function sleepPool(
   const budget = encounter?.turnBudget && encounter.turnBudget.ownerId === caster.id ? encounter.turnBudget : null;
   const carried = input.continuing ? poolLeftOf(budget, spell) : null;
   const dice = addDice(pool.dice, pool.perSlotLevel, Math.max(0, input.slotLevel - input.spellLevel));
-  const rolled = carried ?? rollCard(campaign, null, caster.id, "custom", `${spell}: hit points it can affect`, dice, null).total;
+  const rolled = carried ?? rollCard(campaign, null, caster.id, "custom", specialRoll(`${spell}: hit points it can affect`, { kind: "hp-pool", name: spell }), dice, null).total;
   const out: Record<string, unknown> = {
     noSave: true,
     pool: carried === null ? `${dice}: ${rolled} hit points` : `${rolled} hit points left of the casting's roll`,

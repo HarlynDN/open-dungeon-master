@@ -1,12 +1,17 @@
 // Locale-neutral public caption data only. There are no fields for result
 // values, entity IDs or private adjudication context; authored text stays
 // literal. A blind roll can keep the same caption it already disclosed.
+import { parseRollSpecialContext, type RollSpecialContext } from "./roll-special-presentation.ts";
+export type { RollSpecialContext } from "./roll-special-presentation.ts";
 export type RollDisplayName = { name: string; kind: "enemy" | "proper" };
 export type RollCheckContext =
-  | { kind: "group" | "contest" | "hide" | "search" | "hold-grapple" | "land-jump" | "land-feet" | "keep-concentration" }
-  | { kind: "grapple" | "shove" | "insight-deception"; target: RollDisplayName }
+  | { kind: "group" | "contest" | "hide" | "search" | "hold-grapple" | "land-jump" | "land-feet" | "keep-concentration" | "recuperation" | "half-water" | "madness-save" | "madness-confusion" | "fever-laughter" }
+  | { kind: "grapple" | "shove" | "insight-deception" | "stabilize"; target: RollDisplayName }
   | { kind: "dispel" | "counterspell" | "escape-spell" | "save-against" | "concentration" | "concentration-slayer" | "feature-save" | "feature-reroll" | "concentration-zone" | "fissure" | "violet" | "save-after-damage" | "end-condition" | "avoid-condition"; name: string; literalName?: true }
   | { kind: "save-from"; name: string; from: RollDisplayName; literalName?: true }
+  | { kind: "after-rest" | "at-midnight" | "daily" | "scroll-reading"; name: string; literalName?: true }
+  | { kind: "poison-round"; name: string; round: number; literalName?: true }
+  | { kind: "hourly-endurance"; activity: "forced-march" | "heat" | "cold"; hour: number }
   | { kind: "escape-grapple"; target?: RollDisplayName; difficulty?: number }
   | { kind: "authored"; text: string };
 export type RollPresentation = (
@@ -15,6 +20,7 @@ export type RollPresentation = (
   | { kind: "death-save"; notes: string[] }
   | { kind: "stable-recovery"; name: string }
   | { kind: "check"; term: { kind: "skill" | "ability"; key: string }; owner?: RollDisplayName; context?: RollCheckContext }
+  | { kind: "special"; context: RollSpecialContext; owner?: RollDisplayName }
 ) & { physical?: true };
 export type RollDetail = { detail: string; presentation: RollPresentation };
 
@@ -48,6 +54,11 @@ export function parseRollPresentation(raw: unknown): RollPresentation | undefine
     return physical({ kind: "death-save", notes: [...p.notes] });
   }
   if (p.kind === "stable-recovery" && typeof p.name === "string") return physical({ kind: "stable-recovery", name: p.name });
+  if (p.kind === "special") {
+    const context = parseRollSpecialContext(p.context), owner = p.owner === undefined ? undefined : name(p.owner);
+    if (context && (p.owner === undefined || owner)) return physical({ kind: "special", context, ...(owner ? { owner } : {}) });
+    return;
+  }
   if (p.kind === "check" && p.term && typeof p.term === "object") {
     const term = p.term as Record<string, unknown>;
     if ((term.kind !== "skill" && term.kind !== "ability") || typeof term.key !== "string") return;
@@ -62,19 +73,24 @@ export function parseRollPresentation(raw: unknown): RollPresentation | undefine
         const target = c.target === undefined ? undefined : name(c.target);
         if ((c.target !== undefined && !target) || (c.difficulty !== undefined && (typeof c.difficulty !== "number" || !Number.isFinite(c.difficulty) || !target))) return;
         context = { kind: "escape-grapple", ...(target ? { target } : {}), ...(typeof c.difficulty === "number" ? { difficulty: c.difficulty } : {}) };
-      } else if (["group", "contest", "hide", "search", "hold-grapple", "land-jump", "land-feet", "keep-concentration"].includes(c.kind)) {
+      } else if (c.kind === "hourly-endurance" && typeof c.activity === "string" && ["forced-march", "heat", "cold"].includes(c.activity) && typeof c.hour === "number" && Number.isFinite(c.hour)) {
+        context = { kind: "hourly-endurance", activity: c.activity as "forced-march" | "heat" | "cold", hour: c.hour };
+      } else if (["group", "contest", "hide", "search", "hold-grapple", "land-jump", "land-feet", "keep-concentration", "recuperation", "half-water", "madness-save", "madness-confusion", "fever-laughter"].includes(c.kind)) {
         context = { kind: c.kind } as RollCheckContext;
-      } else if (["grapple", "shove", "insight-deception"].includes(c.kind)) {
+      } else if (["grapple", "shove", "insight-deception", "stabilize"].includes(c.kind)) {
         const target = name(c.target);
         if (!target) return;
         context = { kind: c.kind, target } as RollCheckContext;
-      } else if (["dispel", "counterspell", "escape-spell", "save-against", "concentration", "concentration-slayer", "feature-save", "feature-reroll", "concentration-zone", "fissure", "violet", "save-after-damage", "end-condition", "avoid-condition", "save-from"].includes(c.kind) && typeof c.name === "string") {
+      } else if (["dispel", "counterspell", "escape-spell", "save-against", "concentration", "concentration-slayer", "feature-save", "feature-reroll", "concentration-zone", "fissure", "violet", "save-after-damage", "end-condition", "avoid-condition", "save-from", "after-rest", "at-midnight", "daily", "scroll-reading", "poison-round"].includes(c.kind) && typeof c.name === "string") {
         if (c.literalName !== undefined && c.literalName !== true) return;
         const literal = c.literalName ? { literalName: true as const } : {};
         if (c.kind === "save-from") {
           const from = name(c.from);
           if (!from) return;
           context = { kind: "save-from", name: c.name, from, ...literal };
+        } else if (c.kind === "poison-round") {
+          if (typeof c.round !== "number" || !Number.isFinite(c.round)) return;
+          context = { kind: "poison-round", name: c.name, round: c.round, ...literal };
         } else context = { kind: c.kind, name: c.name, ...literal } as RollCheckContext;
       } else if (c.kind === "authored" && typeof c.text === "string") context = { kind: "authored", text: c.text };
       else return;

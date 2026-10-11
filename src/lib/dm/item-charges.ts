@@ -1,3 +1,4 @@
+import { specialRoll } from "@/lib/roll-labels";
 // Magic item charges: how many an item holds, spending them, and what comes
 // back at dawn.
 //
@@ -147,7 +148,7 @@ export function rechargeAtDawn(campaignId: string, from: number, to: number): st
           characterId: sheet.id,
           requestedBy: "dm",
           kind: "custom",
-          detail: `${item.name} regains charges at dawn`,
+          ...specialRoll(`${item.name} regains charges at dawn`, { kind: "dawn-charges", name: item.name }),
           result: rolled,
         });
         publishWithSeq(campaignId, allocateSeq(campaignId), "roll_result", { roll, source: "digital" });

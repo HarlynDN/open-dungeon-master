@@ -19,7 +19,7 @@
     "src/lib/dm/jump-move.ts": "bab6fa077b1a3f5ecc6ef49fcaa661548235fd1292b7bb8b68e99a98c426ae1c"
   },
   "catalogSha256": {
-    "src/lib/i18n/check-roll-messages.ts": "4e9aa45a4d27c0100077742d04b0c94da8eb896a98dc06326bcd452a1e2b4441",
+    "src/lib/i18n/check-roll-messages.ts": "4661a030c9959c12c073a06d52006e0c67a1b3973b35a3dd7e9a2c131a5c19ad",
     "src/lib/i18n/cinematic-messages.ts": "a667bae07e2befe43a5d5d5696b205113515fd85fc10246eda43a7f714bb50fd"
   },
   "englishGolden": {
@@ -37,5 +37,12 @@
       "src/lib/i18n/check-roll-messages.ts": "d1e723d6bf9d0c3cc3d5e78075449a3b1093332824e4830be62184874ab9b5ce"
     },
     "review": "Re-compared only the forced-save additive record metadata, feature-save optional context/default literal name and appended 17 check messages. All 47 prior check/cinematic messages and 30 prior original English renders remain unchanged. Other source/catalog fingerprints remain intact; the new save-caption review records the expanded scope separately."
+  },
+  "specialCaptionIntegration": {
+    "baselineCommit": "d0b8f879",
+    "priorSha256": {
+      "src/lib/i18n/check-roll-messages.ts": "4e9aa45a4d27c0100077742d04b0c94da8eb896a98dc06326bcd452a1e2b4441"
+    },
+    "review": "Inspected additive direct-save and special-purpose caption diffs. All 10936 prior bilingual resource values and 23 prior compressed baselines are unchanged. Original English details, dice, DCs, result inputs and visibility match 94 new immutable original call contracts. This refresh does not expand the older review scope; special captions have their own review."
   }
 }

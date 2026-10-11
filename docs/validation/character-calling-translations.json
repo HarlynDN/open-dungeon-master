@@ -13,7 +13,7 @@
     "src/lib/srd/feature-effects.ts": "0a7f3b483608a2207bfd8af110edc36e8f4c96b7e0a5fc51e1e874e979a1b95e",
     "src/lib/characters/options.ts": "e0294a844664240604091c945104e20adc08bcbf7d0fc32bafacfff70174c31c",
     "src/lib/i18n/builder-picker-presentations.ts": "728ad42accc71a7f52efb7f8c38493ff357ff2c956a182edb6e0263af0a8b539",
-    "src/lib/i18n/messages.ts": "d292e2a3cebce25757e55beaa05454c99b7780f5e7824a24ecac770179a3250c"
+    "src/lib/i18n/messages.ts": "478f742e28a0c154a3e9e8eade3390fde63d121bf21c6c4eb747cf3d4890ac79"
   },
   "catalogs": {
     "src/lib/i18n/calling-ui-messages.ts": "6ee79c641a5e39a5240764e9c90d68718c8d7b822a72e46d1776391177444280"
@@ -43,5 +43,12 @@
     "date": "2026-10-11",
     "review": "The shared entrypoint only appends 47 combatCheck/cinematic keys. All 10808 existing bilingual values and 20 prior compressed English baselines match c2d86838. Original calling sources, catalogs, mechanisms and review scope are unchanged.",
     "previousEntrypointSha256": "5eb51d6f6c4d5f486e1b0750d1dcbc68a0022bb868c0c9046e01a5f65028c5fe"
+  },
+  "specialCaptionIntegration": {
+    "baselineCommit": "d0b8f879",
+    "priorSha256": {
+      "src/lib/i18n/messages.ts": "d292e2a3cebce25757e55beaa05454c99b7780f5e7824a24ecac770179a3250c"
+    },
+    "review": "Inspected additive direct-save and special-purpose caption diffs. All 10936 prior bilingual resource values and 23 prior compressed baselines are unchanged. Original English details, dice, DCs, result inputs and visibility match 94 new immutable original call contracts. This refresh does not expand the older review scope; special captions have their own review."
   }
 }

@@ -1,3 +1,4 @@
+import { specialRoll } from "@/lib/roll-labels";
 // use_reaction: a character's reaction, resolved by the engine.
 //
 // Before this the reaction was spent and the rest was a note: Uncanny Dodge
@@ -155,7 +156,7 @@ function deflectMissiles(ctx: Ctx): Record<string, unknown> {
   }
   spendReaction(ctx);
   const dex = computeSheetDerived(sheet).abilityMods.dex;
-  const die = rollCard(campaign, ctx.turn, sheet.id, "custom", `${sheet.name}: Deflect Missiles`, "1d10", null).total;
+  const die = rollCard(campaign, ctx.turn, sheet.id, "custom", specialRoll(`${sheet.name}: Deflect Missiles`, { kind: "named", name: "Deflect Missiles" }, { name: sheet.name, kind: "proper" }), "1d10", null).total;
   const reduction = die + dex + (monk || sheet.level);
   const corrected = record.swings.map((swing, at) =>
     at === index ? { ...swing, raw: Math.max(0, swing.raw - reduction) } : swing,
@@ -255,7 +256,7 @@ function cuttingWords(ctx: Ctx): Record<string, unknown> {
     publishPersisted(campaign.id, "sheet_updated", { sheet: spentPool });
   }
   const dieExpression = bardDie(sheet);
-  const die = rollCard(campaign, ctx.turn, sheet.id, "custom", `${sheet.name}: Cutting Words`, dieExpression, null).total;
+  const die = rollCard(campaign, ctx.turn, sheet.id, "custom", specialRoll(`${sheet.name}: Cutting Words`, { kind: "named", name: "Cutting Words" }, { name: sheet.name, kind: "proper" }), dieExpression, null).total;
   const swing = record.swings[index];
   // Off the attack roll when that turns the hit into a miss (a natural 20
   // hits whatever the total), otherwise off the damage.

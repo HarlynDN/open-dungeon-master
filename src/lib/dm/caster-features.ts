@@ -1,3 +1,4 @@
+import { specialRoll } from "@/lib/roll-labels";
 // A spellcaster's class features that change a casting (SRD 5.1):
 //   - Sculpt Spells (School of Evocation 2): the evoker's evocation spares
 //     up to 1 + the spell's level chosen creatures, who succeed on the save
@@ -80,7 +81,7 @@ export function payOverchannel(campaign: Campaign, turn: DmTurn, casterId: strin
   }
   const dice = `${(used + 1) * spellLevel}d12`;
   // A cost to the caster's own hit points: their card, nobody's attack.
-  const rolled = rollCard(campaign, turn, sheet.id, "damage", "Overchannel", dice, null).total;
+  const rolled = rollCard(campaign, turn, sheet.id, "damage", specialRoll("Overchannel", { kind: "named", name: "Overchannel" }), dice, null).total;
   // Typeless on purpose: the SRD says this damage ignores resistance and
   // immunity.
   applyPcDamage(campaign, turn.id, getSheetById(sheet.id) ?? sheet, { amount: rolled, reason: "Overchannel" });

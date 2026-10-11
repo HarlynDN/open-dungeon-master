@@ -1,3 +1,4 @@
+import { specialRoll } from "@/lib/roll-labels";
 // Class features a character spends through use_resource whose effect the
 // server resolves in the fight (SRD 5.1):
 //   - Intimidating Presence (Berserker 10): the action; one creature within
@@ -312,7 +313,7 @@ function divineIntervention(campaign: Campaign, turnId: string, stale: Character
       characterId: sheet.id,
       requestedBy: "dm",
       kind: "ability_check",
-      detail: `${sheet.name}: Divine Intervention (at or under ${level})`,
+      ...specialRoll(`${sheet.name}: Divine Intervention (at or under ${level})`, { kind: "intervention", level }, { name: sheet.name, kind: "proper" }),
       result: outcome,
     });
     publishWithSeq(campaign.id, allocateSeq(campaign.id), "roll_result", { roll, source: "digital" });

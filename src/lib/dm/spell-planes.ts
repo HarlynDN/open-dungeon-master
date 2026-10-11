@@ -1,3 +1,4 @@
+import { specialRoll } from "@/lib/roll-labels";
 // Spells that put a creature out of reach, or out of the fight (SRD 5.1):
 //
 //   - Blink: "Roll a d20 at the end of each of your turns for the duration
@@ -78,7 +79,7 @@ export function blinkTurnEnd(campaign: Campaign, combatantIds: string[]): string
     if (!sheet || !holds(sheet.conditions, BLINK) || holds(sheet.conditions, BLINKED) || sheet.currentHp <= 0) {
       continue;
     }
-    const roll = rollCard(campaign, null, sheet.id, "custom", "Blink (11 or higher: to the Ethereal Plane)", "1d20", null).total;
+    const roll = rollCard(campaign, null, sheet.id, "custom", specialRoll("Blink (11 or higher: to the Ethereal Plane)", { kind: "blink" }), "1d20", null).total;
     if (roll < 11) {
       lines.push(`${sheet.name}'s Blink: ${roll}, they stay on the Material Plane.`);
       continue;
