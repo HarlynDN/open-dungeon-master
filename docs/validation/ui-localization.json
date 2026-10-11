@@ -546,7 +546,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/MessageContent.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned private-chat/create/send/chime/native failure chrome, media queue/failure copy and native narrator role labels localized. Prose is a reviewed copy-free Markdown projection. Authored names, thread titles, body text, speaker identities and roll IDs stay raw. Failed incremental reads retain rows with retry; invalid send responses retain drafts and busy sends cannot duplicate. English privacy copy now explicitly identifies AI DM. Speech attribution/voice casting and imported owners retain their separate scope; focused display/callback check uses fake transport only."
     },
     {
       "path": "src/app/campaigns/[campaignId]/MessageItem.tsx",
@@ -652,7 +653,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/Prose.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned private-chat/create/send/chime/native failure chrome, media queue/failure copy and native narrator role labels localized. Prose is a reviewed copy-free Markdown projection. Authored names, thread titles, body text, speaker identities and roll IDs stay raw. Failed incremental reads retain rows with retry; invalid send responses retain drafts and busy sends cannot duplicate. English privacy copy now explicitly identifies AI DM. Speech attribution/voice casting and imported owners retain their separate scope; focused display/callback check uses fake transport only."
     },
     {
       "path": "src/app/campaigns/[campaignId]/PushToTalk.tsx",
@@ -730,7 +732,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/SideChatPanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned private-chat/create/send/chime/native failure chrome, media queue/failure copy and native narrator role labels localized. Prose is a reviewed copy-free Markdown projection. Authored names, thread titles, body text, speaker identities and roll IDs stay raw. Failed incremental reads retain rows with retry; invalid send responses retain drafts and busy sends cannot duplicate. English privacy copy now explicitly identifies AI DM. Speech attribution/voice casting and imported owners retain their separate scope; focused display/callback check uses fake transport only."
     },
     {
       "path": "src/app/campaigns/[campaignId]/SidePanel.tsx",
@@ -752,7 +755,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/SpeechLine.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned private-chat/create/send/chime/native failure chrome, media queue/failure copy and native narrator role labels localized. Prose is a reviewed copy-free Markdown projection. Authored names, thread titles, body text, speaker identities and roll IDs stay raw. Failed incremental reads retain rows with retry; invalid send responses retain drafts and busy sends cannot duplicate. English privacy copy now explicitly identifies AI DM. Speech attribution/voice casting and imported owners retain their separate scope; focused display/callback check uses fake transport only."
     },
     {
       "path": "src/app/campaigns/[campaignId]/StampPicker.tsx",

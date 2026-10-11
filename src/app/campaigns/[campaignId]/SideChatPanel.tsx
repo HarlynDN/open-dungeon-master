@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { createTranslator } from "@/lib/i18n/translator";
+import { chatText } from "@/lib/i18n/chat-presentations";
 import { EmptyState } from "@/components/EmptyState";
 import { isComposingInput } from "@/lib/input-composition";
 import { ArrowLeft, Bell, BellOff, Loader2, Plus, Send } from "lucide-react";
@@ -37,6 +40,7 @@ export function SideChatPanel({
   openThreadRequest: string | null;
   onOpenHandled: () => void;
 }) {
+  const { locale, t } = useLocale();
   const [openThreadId, setOpenThreadId] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState("");
@@ -55,13 +59,13 @@ export function SideChatPanel({
         });
         const data = await response.json().catch(() => ({}));
         if (!response.ok) {
-          setError(data.error || "Could not open the chat.");
+          setError(typeof data.error === "string" ? data.error : createTranslator("en")("chatUi.error.open"));
           return;
         }
         await refreshSideChat();
         setOpenThreadId(data.thread.id);
       } catch {
-        setError("Could not reach the server.");
+        setError(createTranslator("en")("chatUi.error.network"));
       }
     },
     [campaignId, refreshSideChat],
@@ -80,8 +84,8 @@ export function SideChatPanel({
   }, [openThreadRequest, onOpenHandled, openDmWith]);
 
   const nameOf = useCallback(
-    (userId: string) => members.find((member) => member.userId === userId)?.username ?? "someone",
-    [members],
+    (userId: string) => members.find((member) => member.userId === userId)?.username ?? t("chatUi.someone"),
+    [members, t],
   );
 
   function threadLabel(thread: SideThread): string {
@@ -89,7 +93,7 @@ export function SideChatPanel({
       const other = thread.memberUserIds.find((id) => id !== meUserId);
       return nameOf(other ?? "");
     }
-    return thread.title || thread.memberUserIds.map(nameOf).join(", ");
+    return thread.title || thread.memberUserIds.map(nameOf).join(t("chatUi.separator"));
   }
 
   if (openThread) {
@@ -109,41 +113,41 @@ export function SideChatPanel({
   return (
     <div className="space-y-3">
       <SectionHead
-        title="Private chats"
+        title={t("chatUi.title")}
         glyph="tab-chat"
         aside={
           <>
             <KitButton
               onClick={() => setChimeMuted(!chimeMuted)}
               aria-pressed={!chimeMuted}
-              aria-label={chimeMuted ? "Chime muted" : "Chime on"}
+              aria-label={chimeMuted ? t("chatUi.chime.muted") : t("chatUi.chime.on")}
               title={
                 chimeMuted
-                  ? "Chime muted. Click to play a chime when a private message arrives."
-                  : "The chime plays when a private message arrives. Click to mute."
+                  ? t("chatUi.chime.mutedTip")
+                  : t("chatUi.chime.onTip")
               }
             >
               {chimeMuted ? <BellOff className="size-3.5" /> : <Bell className="size-3.5" />}
             </KitButton>
             <KitButton onClick={() => setCreating(true)}>
-              <Plus className="size-3.5" /> New
+              <Plus className="size-3.5" />{t("chatUi.new")}
             </KitButton>
           </>
         }
       />
       <p className="text-xs leading-5 text-stone-500">
-        Only the people in a chat can read it. The Dungeon Master never sees these.
+        {t("chatUi.privacy")}
       </p>
-      {error ? <PanelError className="text-sm">{error}</PanelError> : null}
+      {error ? <PanelError className="text-sm">{chatText(error, locale)}</PanelError> : null}
 
       {threads.length === 0 ? (
         <EmptyState
           size="sm"
           art="board"
-          title="No side chats yet. Whisper a party member from their card, or start one here."
+          title={t("chatUi.empty")}
           action={
             <KitButton onClick={() => setCreating(true)}>
-              <Plus className="size-3.5" /> New
+              <Plus className="size-3.5" />{t("chatUi.new")}
             </KitButton>
           }
         />
@@ -201,6 +205,7 @@ function NewChatForm({
   onCreated: (threadId: string) => Promise<void>;
   onCancel: () => void;
 }) {
+  const { locale, t } = useLocale();
   const [selected, setSelected] = useState<string[]>([]);
   const [title, setTitle] = useState("");
   const [busy, setBusy] = useState(false);
@@ -208,7 +213,7 @@ function NewChatForm({
 
   async function create() {
     if (selected.length === 0) {
-      setError("Pick at least one member.");
+      setError(createTranslator("en")("chatUi.error.pick"));
       return;
     }
     setBusy(true);
@@ -225,12 +230,12 @@ function NewChatForm({
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
-        setError(data.error || "Could not create the chat.");
+        setError(typeof data.error === "string" ? data.error : createTranslator("en")("chatUi.error.create"));
         return;
       }
       await onCreated(data.thread.id);
     } catch {
-      setError("Could not reach the server.");
+      setError(createTranslator("en")("chatUi.error.network"));
     } finally {
       setBusy(false);
     }
@@ -238,7 +243,7 @@ function NewChatForm({
 
   return (
     <div className="panel rounded-lg p-3">
-      <SectionHead title="Who&apos;s in it?" glyph="tab-party" level="h4" />
+      <SectionHead title={t("chatUi.participants")} glyph="tab-party" level="h4" />
       <ul className="stagger space-y-1">
         {members.map((member) => (
           <li key={member.userId}>
@@ -260,15 +265,15 @@ function NewChatForm({
           value={title}
           onChange={(event) => setTitle(event.target.value)}
           maxLength={80}
-          placeholder="Group name (optional)"
+          placeholder={t("chatUi.groupName")}
           className={cn(ui.input, "mt-2 text-sm")}
         />
       ) : null}
-      {error ? <PanelError className="mt-2">{error}</PanelError> : null}
+      {error ? <PanelError className="mt-2">{chatText(error, locale)}</PanelError> : null}
       <div className="mt-2 flex justify-end gap-2">
-        <KitButton onClick={onCancel}>Cancel</KitButton>
+        <KitButton onClick={onCancel}>{t("chatUi.cancel")}</KitButton>
         <KitButton tone="primary" onClick={create} disabled={busy} busy={busy}>
-          Start chat
+          {t("chatUi.start")}
         </KitButton>
       </div>
     </div>
@@ -292,10 +297,12 @@ function ThreadView({
   refreshSideChat: () => Promise<void>;
   onBack: () => void;
 }) {
+  const { locale, t } = useLocale();
   const [messages, setMessages] = useState<SideMessage[]>([]);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
+  const [loadError, setLoadError] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
   const lastSeqRef = useRef(0);
 
@@ -317,9 +324,18 @@ function ThreadView({
       const response = await fetch(
         `/api/campaigns/${campaignId}/side-chat/${thread.id}/messages?afterSeq=${lastSeqRef.current}`,
       );
-      if (!response.ok) return;
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        setLoadError(typeof data.error === "string" ? data.error : createTranslator("en")("chatUi.error.load"));
+        return;
+      }
       const data = await response.json();
-      const fresh = (data.messages ?? []) as SideMessage[];
+      if (!Array.isArray(data.messages)) {
+        setLoadError(createTranslator("en")("chatUi.error.load"));
+        return;
+      }
+      const fresh = data.messages as SideMessage[];
+      setLoadError("");
       if (fresh.length > 0) {
         setMessages((current) => {
           const known = new Set(current.map((message) => message.id));
@@ -330,7 +346,7 @@ function ThreadView({
         void markRead(maxSeq);
       }
     } catch {
-      // transient; next side_activity retries
+      setLoadError(createTranslator("en")("chatUi.error.network"));
     }
   }, [campaignId, thread.id, markRead]);
 
@@ -352,7 +368,7 @@ function ThreadView({
   async function send(event: FormEvent) {
     event.preventDefault();
     const content = input.trim();
-    if (!content) return;
+    if (sending || !content) return;
     setSending(true);
     setError("");
     try {
@@ -366,27 +382,31 @@ function ThreadView({
       );
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
-        setError(data.error || "Could not send.");
+        setError(typeof data.error === "string" ? data.error : createTranslator("en")("chatUi.error.send"));
+        return;
+      }
+      const message = data.message as SideMessage | undefined;
+      if (!message || typeof message.id !== "string" || typeof message.content !== "string" || typeof message.authorUserId !== "string" || !Number.isFinite(message.seq)) {
+        setError(createTranslator("en")("chatUi.error.send"));
         return;
       }
       setInput("");
-      const message = data.message as SideMessage;
       setMessages((current) => [...current, message]);
       lastSeqRef.current = Math.max(lastSeqRef.current, message.seq);
     } catch {
-      setError("Could not reach the server.");
+      setError(createTranslator("en")("chatUi.error.network"));
     } finally {
       setSending(false);
     }
   }
 
   const nameOf = (userId: string) =>
-    members.find((member) => member.userId === userId)?.username ?? "someone";
+    members.find((member) => member.userId === userId)?.username ?? t("chatUi.someone");
 
   return (
     <div className="flex h-full flex-col">
       <div className="mb-2 flex items-center gap-2">
-        <KitButton tone="icon" always onClick={onBack} title="All chats" aria-label="All chats">
+        <KitButton tone="icon" always onClick={onBack} title={t("chatUi.all")} aria-label={t("chatUi.all")}>
           <ArrowLeft className="size-4" />
         </KitButton>
         <GameIcon icon={{ kind: "glyph", key: thread.kind === "dm" ? "tab-chat" : "tab-party" }} size="size-6" className="shrink-0" />
@@ -394,10 +414,16 @@ function ThreadView({
       </div>
       {thread.kind === "group" ? (
         <p className="reveal mb-2 truncate text-xs text-stone-500">
-          {thread.memberUserIds.map(nameOf).join(", ")}
+          {thread.memberUserIds.map(nameOf).join(t("chatUi.separator"))}
         </p>
       ) : null}
 
+      {loadError ? (
+        <div role="alert" className="mb-2 text-xs text-red-400">
+          {chatText(loadError, locale)}
+          <button type="button" onClick={() => void load()} className="ml-2 underline">{t("chatUi.retry")}</button>
+        </div>
+      ) : null}
       <div className="min-h-0 flex-1 space-y-2 overflow-y-auto pr-1">
         {messages.map((message) => {
           const mine = message.authorUserId === meUserId;
@@ -436,20 +462,20 @@ function ThreadView({
             }}
             rows={1}
             maxLength={2000}
-            placeholder={`Message ${label}`}
-            aria-label={`Message ${label}`}
+            placeholder={t("chatUi.message", { name: label })}
+            aria-label={t("chatUi.message", { name: label })}
             className="flex-1 resize-none bg-transparent px-1.5 py-1 text-sm text-stone-200 outline-none"
           />
           <button
             type="submit"
             disabled={sending || !input.trim()}
-            aria-label="Send"
+            aria-label={t("chatUi.send")}
             className={cn(ui.btnPrimary, "pk-tap size-9 shrink-0 px-0 disabled:opacity-40")}
           >
             {sending ? <Loader2 className="size-3.5 animate-spin" /> : <Send className="size-3.5" />}
           </button>
         </div>
-        {error ? <PanelError className="mt-1">{error}</PanelError> : null}
+        {error ? <PanelError className="mt-1">{chatText(error, locale)}</PanelError> : null}
       </form>
     </div>
   );
