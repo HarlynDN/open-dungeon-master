@@ -1,3 +1,4 @@
+import { tradeFailureDetail, type TradeFailureDetail } from "@/lib/dm/trade-presentation";
 import type { Campaign } from "@/lib/db/campaigns";
 import { allocateSeq } from "@/lib/db/campaigns";
 import { insertCharacterEvent } from "@/lib/db/character-events";
@@ -12,7 +13,7 @@ import { publishEphemeral, publishPersisted } from "@/lib/events";
 // 11.2): both sheets move in one transaction with an audit row each, so
 // the ledger shows the exchange from both sides and nothing can land on
 // one sheet without leaving the other.
-export function applyTrade(campaign: Campaign, proposal: ItemProposal): { ok: true; summary: string } | { error: string } {
+export function applyTrade(campaign: Campaign, proposal: ItemProposal): { ok: true; summary: string } | { error: string; errorDetail?: TradeFailureDetail } {
   let raw: unknown;
   try {
     raw = JSON.parse(proposal.argsJson || "{}");
@@ -30,7 +31,8 @@ export function applyTrade(campaign: Campaign, proposal: ItemProposal): { ok: tr
   }
   const computed = computeTrade(from, to, offer);
   if ("error" in computed) {
-    return computed;
+    const errorDetail = tradeFailureDetail(computed.error, offer, from.name, to.name);
+    return { ...computed, ...(errorDetail ? { errorDetail } : {}) };
   }
   const summary = tradeSummary(offer, from.name, to.name);
   getDatabase().transaction(() => {

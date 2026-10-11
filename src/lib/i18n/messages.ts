@@ -62,9 +62,11 @@ import { HAND_SPELL_MESSAGES } from "./hand-spell-messages.ts";
 import { HAND_FEATURE_MESSAGES } from "./hand-feature-messages.ts";
 import { HAND_CASTING_MESSAGES } from "./hand-casting-messages.ts";
 
+import { PROPOSAL_MESSAGES } from "./proposal-messages.ts";
 import { PLAY_EDIT_MESSAGES } from "./play-edit-messages.ts";
 
 const en = {
+  ...PROPOSAL_MESSAGES.en,
   ...PLAY_EDIT_MESSAGES.en,
   ...HAND_CASTING_MESSAGES.en,
   ...HAND_FEATURE_MESSAGES.en,
@@ -156,6 +158,7 @@ export type MessageKey = keyof typeof en;
 type Messages = Record<MessageKey, string>;
 
 const zhCN: Messages = {
+  ...PROPOSAL_MESSAGES["zh-CN"],
   ...PLAY_EDIT_MESSAGES["zh-CN"],
   ...HAND_CASTING_MESSAGES["zh-CN"],
   ...HAND_FEATURE_MESSAGES["zh-CN"],

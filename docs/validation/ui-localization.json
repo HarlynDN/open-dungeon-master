@@ -411,7 +411,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/ItemProposalBar.tsx",
-      "state": "pending"
+      "state": "pending",
+      "review": "Owned approval/withdrawal/waiting controls and eight native summary kinds localized using source-bound public metadata. Trade summaries/refusals bind to native offers; six frozen English renders and canonical callbacks reviewed. Authored reasons/names and unknown, stale or truncated source frames retain original text. Full magic-item and complex-condition names remain pending."
     },
     {
       "path": "src/app/campaigns/[campaignId]/LabelSheet.tsx",
@@ -763,7 +764,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/TradeDialog.tsx",
-      "state": "pending"
+      "state": "pending",
+      "review": "Owned player-trade controls, registered equipment labels, quantity accessibility and native item/coin refusals localized. Chinese UI retains canonical item names and copper amounts in requests; frozen English render reviewed. Full magic-item/material names remain pending; custom names stay literal."
     },
     {
       "path": "src/app/campaigns/[campaignId]/UtilityCallStrip.tsx",

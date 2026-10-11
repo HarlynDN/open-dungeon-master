@@ -1,0 +1,12 @@
+{
+  "sourceCommit": "2d5d8a92",
+  "note": "Six actual pre-edit English JSX renders; portal rendering stubbed.",
+  "sha256": {
+    "owner": "bd637687b14cc769eca60ce3cae557b29700c7744f4b33900804201f9e5e0389",
+    "lead": "cdf994e867df275a5e43bb7e39aa94cdb48b76ff0d9f20dbf881711b280c1100",
+    "viewer": "171934802c2ca86ba2b719c884811ca5b61ea9e226123cad92eb807f97313b64",
+    "trade-proposer": "4a0681dada6c5426d174c0e2018f02f6e47520d5b1ba5904dbd71d0bc4d4d23a",
+    "trade-counterparty": "b0fd1601c56ffd78880e16991fa45b2e1a9966435cbbd1f59b09a821a3e11ec3",
+    "trade-dialog": "19e09e6173b26bef01f1d5276e7772f383f5ed1f0eeb1097fb6f7dcb8856a3b7"
+  }
+}

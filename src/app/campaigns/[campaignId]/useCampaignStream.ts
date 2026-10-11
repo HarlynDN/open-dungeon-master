@@ -1,4 +1,6 @@
 "use client";
+
+import type { ProposalSummaryDetail } from "@/lib/dm/proposal-summary";
 import type { RollPresentation } from "@/lib/roll-presentation";
 
 import { useCallback, useEffect, useMemo, useReducer, useRef } from "react";
@@ -109,6 +111,7 @@ export type ItemProposal = {
   userId: string;
   toolName: string;
   summary: string;
+  summaryDetail?: ProposalSummaryDetail;
   reason: string;
   status: string;
   createdAt: string;

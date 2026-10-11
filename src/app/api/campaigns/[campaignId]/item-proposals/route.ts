@@ -4,6 +4,7 @@ import { insertItemProposal, listOpenItemProposals } from "@/lib/db/item-proposa
 import { getSheetById, getSheetForUser } from "@/lib/db/sheets";
 import { publicItemProposal } from "@/lib/dm/proposal-intercept";
 import { computeTrade, normalizeTradeOffer, tradeSummary } from "@/lib/dm/trade-logic";
+import { tradeFailureDetail } from "@/lib/dm/trade-presentation";
 import { publishPersisted } from "@/lib/events";
 
 export const runtime = "nodejs";
@@ -50,7 +51,8 @@ export async function POST(request: Request, { params }: { params: Promise<{ cam
   }
   const computed = computeTrade(from, to, offer);
   if ("error" in computed) {
-    return Response.json({ error: computed.error }, { status: 409 });
+    const errorDetail = tradeFailureDetail(computed.error, offer, from.name, to.name);
+    return Response.json({ error: computed.error, ...(errorDetail ? { errorDetail } : {}) }, { status: 409 });
   }
   const proposal = insertItemProposal({
     campaignId,

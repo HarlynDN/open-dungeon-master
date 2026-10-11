@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { proposalSummaryText, tradeSummaryText, proposalErrorText, PROPOSAL_SEND_FAILURE, PROPOSAL_NETWORK_FAILURE } from "@/lib/i18n/proposal-presentations";
 import { Check, X } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/cn";
@@ -26,8 +28,9 @@ export function ItemProposalBar({
   meUserId: string;
   steersStory: boolean;
 }) {
+  const { locale, t } = useLocale();
   const [busyId, setBusyId] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState<{ text: string; detail?: unknown } | null>(null);
 
   if (!proposals.length) {
     return null;
@@ -35,7 +38,7 @@ export function ItemProposalBar({
 
   async function resolve(proposalId: string, action: "approve" | "decline" | "cancel") {
     setBusyId(proposalId);
-    setError("");
+    setError(null);
     try {
       const response = await fetch(
         `/api/campaigns/${campaignId}/item-proposals/${proposalId}`,
@@ -47,8 +50,10 @@ export function ItemProposalBar({
       );
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
-        setError(String(data.error ?? "That did not work."));
+        setError({ text: String(data.error ?? PROPOSAL_SEND_FAILURE), detail: data.errorDetail });
       }
+    } catch {
+      setError({ text: PROPOSAL_NETWORK_FAILURE });
     } finally {
       setBusyId("");
     }
@@ -56,7 +61,7 @@ export function ItemProposalBar({
 
   return (
     <div className="stagger mx-3 mb-2 space-y-1.5">
-      {error ? <PanelError>{error}</PanelError> : null}
+      {error ? <PanelError>{proposalErrorText(error.text, locale, error.detail)}</PanelError> : null}
       {proposals.map((proposal) => {
         const trade = proposal.toolName === "trade";
         // A trade is "mine" to answer when it is made to my character; the
@@ -65,8 +70,12 @@ export function ItemProposalBar({
         const proposer = proposal.userId === meUserId;
         const mine = trade ? counterparty?.userId === meUserId : proposal.userId === meUserId;
         const characterName =
-          (trade ? counterparty?.name : sheets.find((sheet) => sheet.id === proposal.characterId)?.name) ?? "a character";
+          (trade ? counterparty?.name : sheets.find((sheet) => sheet.id === proposal.characterId)?.name) ?? t("sessionUi.proposal.character");
         const busy = busyId === proposal.id;
+        const from = trade ? sheets.find(sheet => sheet.id === proposal.characterId) : null;
+        const summary = trade && from && counterparty
+          ? tradeSummaryText(proposal.summary, proposal.offer, from.name, counterparty.name, locale)
+          : proposalSummaryText(proposal, locale);
         return (
           <div
             key={proposal.id}
@@ -81,28 +90,28 @@ export function ItemProposalBar({
               className="shrink-0"
             />
             <span className="min-w-0 flex-1">
-              {proposal.summary}
+              {summary}
               {proposal.reason ? (
                 <span className="text-stone-500"> ({proposal.reason})</span>
               ) : null}
             </span>
             {trade && proposer && !mine && !steersStory ? (
               <KitButton onClick={() => resolve(proposal.id, "cancel")} disabled={busy} busy={busy}>
-                {busy ? null : <X className="size-3.5" />} Withdraw
+                {busy ? null : <X className="size-3.5" />} {t("sessionUi.proposal.withdraw")}
               </KitButton>
             ) : mine || steersStory ? (
               <span className="flex shrink-0 items-center gap-1.5">
                 <KitButton tone="primary" onClick={() => resolve(proposal.id, "approve")} disabled={busy} busy={busy}>
                   {busy ? null : <Check className="size-3.5" />}
-                  Accept
+                  {t("sessionUi.proposal.accept")}
                 </KitButton>
                 <KitButton onClick={() => resolve(proposal.id, mine ? "decline" : "cancel")} disabled={busy}>
-                  <X className="size-3.5" /> {mine ? "Decline" : "Withdraw"}
+                  <X className="size-3.5" /> {t(mine ? "sessionUi.proposal.decline" : "sessionUi.proposal.withdraw")}
                 </KitButton>
               </span>
             ) : (
               <span className="shrink-0 text-[11px] italic text-stone-500">
-                waiting on {characterName}
+                {t("sessionUi.proposal.waiting", { name: characterName })}
               </span>
             )}
           </div>

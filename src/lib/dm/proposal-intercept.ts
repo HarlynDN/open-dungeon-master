@@ -1,3 +1,4 @@
+import { proposalSummaryDetail } from "@/lib/dm/proposal-summary";
 import { normalizeTradeOffer } from "@/lib/dm/trade-logic";
 import type { Campaign } from "@/lib/db/campaigns";
 import { allocateSeq } from "@/lib/db/campaigns";
@@ -20,12 +21,14 @@ import type { CharacterSheet } from "@/lib/schemas/sheet";
 // Inventory is party-visible, so the full proposal may ride the persisted
 // stream (unlike notes/whispers).
 export function publicItemProposal(proposal: ItemProposal) {
+  const summaryDetail = proposalSummaryDetail(proposal.toolName, safeParse(proposal.argsJson), proposal.summary);
   return {
     id: proposal.id,
     characterId: proposal.characterId,
     userId: proposal.userId,
     toolName: proposal.toolName,
     summary: proposal.summary,
+    ...(summaryDetail ? { summaryDetail } : {}),
     reason: proposal.reason,
     status: proposal.status,
     createdAt: proposal.createdAt,

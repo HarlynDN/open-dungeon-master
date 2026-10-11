@@ -29,7 +29,7 @@ flow remains incomplete; the review-repair checkpoint is a separate scoped task.
 | Locale foundation | Registry, persistence, browser fallback, typed complete catalogs, model locale policy, classified token proxy, chapter budget, CJK retrieval, IME protection | Real prompt-usage calibration; keep legacy campaign/history regressions |
 | DM safety | Per-event engine conclusions with English/Chinese renderers; AI prose separated; one text-only correction and safe fallback; shared localized enemy names and held-resource names/IDs; scoped resource aliases and ambiguity retries; real Codex combat/resource acceptance | Untracked feature/reaction options and broader spell/condition/pack coverage; conservative regex coverage is not full language understanding |
 | Embeddings | Original English deployment default retained; explicit multilingual opt-in; fixed bilingual calibration/holdout and hard-negative policy | Broader pack quality; opt-in affects English campaigns and rebuilds indexes |
-| UI | **155/437** covered files, **2878** pending literal sites, **8109** message keys; scoped AST gate; earlier play/session surfaces plus hand labels/targets/area selection, campaign-locale action sentences, native previews, basic/reaction rules, common casting refusals, spell selectors, all 113 owned mechanic notes, 103 native technique and 23 maneuver labels, attack/bonus-route and material/ritual refusals, built-in form attack names and verified current-actor labels, correction/multi-picker chrome and native downtime facts | Remaining dynamic text keeps hand files pending; general play/inventory/rest/level-up/save/resume surfaces and full sheet/party dialogs; file fraction is not overall completion or an effort estimate |
+| UI | **155/437** covered files, **2861** pending literal sites, **8164** message keys; scoped AST gate; earlier play/session surfaces plus hand labels/targets/area selection, campaign-locale action sentences, native previews, basic/reaction rules, common casting refusals, spell selectors, all 113 owned mechanic notes, 103 native technique and 23 maneuver labels, attack/bonus-route and material/ritual refusals, built-in form attack names and verified current-actor labels, correction/multi-picker chrome, native downtime facts and inventory/vitals approval/player-trade controls | Remaining dynamic text keeps hand files pending; general play/inventory/rest/level-up/save/resume surfaces and full sheet/party dialogs; file fraction is not overall completion or an effort estimate |
 | Character creation/material | Identity, ancestry, class introductions, ability allocation, gear, spell book/preparation and finish preview; 517 spell and 228 equipment names; 257-entry contextual terminology policy and lint gate; 415/415 static registered resource names and guidance shared with DM references; original-source review records | Remaining feature/feat and magic-item material; dynamic free-cast resources and user-authored/pack text remain outside the static resource review |
 | Player system logs | Structured rule diagnostics and engine-generated combat conclusions retain English protocol semantics with localized presentation | General player-visible log templates; model-facing English tool results remain independent |
 | Resource delivery | UI vs content namespaces; character/campaign boundaries; generated resources checked by lint; production Turbopack build and anonymous bilingual browser switch/reload succeed; home/character/campaign SSR and initial-script payloads measured | Hydrated/lazy network totals, authenticated campaign switching and active-play browser acceptance; route-level JS payload remains large |
@@ -59,7 +59,23 @@ attempts were blocked at its internal port binding by the execution environment,
 including the escalated attempt; this batch does not claim a passing production
 build. Keep that gate for the next phase boundary rather than retrying per batch.
 
-The latest play checkpoint adds 117 content-only keys for lead corrections,
+The latest approval/trade checkpoint adds 55 content-only keys. Item/gold,
+purchase, damage/healing and condition confirmations use read-only metadata
+bound to the exact original native summary; canonical mutation arguments and
+stored English history are unchanged. Trade item/coin refusals carry optional
+source-bound display details, and network failures now clear busy state and
+show a localized retryable error. Proper/authored names, reasons and unknown,
+stale or truncated source frames retain their original text. Full magic-item
+and complex-condition names keep both UI owners pending.
+
+One focused check (under one second) covers 16 native summary branches, public
+metadata privacy, four actual trade refusals, six frozen English JSX renders,
+Chinese approve/decline/withdraw/trade callbacks and network failure. Catalog/
+AST/terminology and types pass: 155/437 covered, 2861 pending literal sites,
+8164 keys, zero terminology errors and 118 contextual warnings. No live model,
+audio, repeated Goblin check or full regression/build was run for this batch.
+
+The preceding correction checkpoint adds 117 content-only keys for lead corrections,
 inventory flags and quantities, spell/feat lists and slot edits, multi-picker
 selection/admission controls and native downtime facts. Standard Chinese
 condition labels and Chinese commas are accepted by the editor; its draft keeps

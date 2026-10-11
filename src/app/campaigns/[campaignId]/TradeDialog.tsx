@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { referenceDisplayName } from "@/lib/i18n/references";
+import { proposalErrorText, TRADE_SEND_FAILURE, PROPOSAL_NETWORK_FAILURE } from "@/lib/i18n/proposal-presentations";
 import { ArrowLeftRight, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { Dialog } from "@/components/ui/Dialog";
@@ -14,6 +17,7 @@ import type { CharacterSheet } from "@/lib/schemas/sheet";
 type Picked = Record<string, number>;
 
 function ItemPicker({ sheet, picked, onChange, title }: { sheet: CharacterSheet; picked: Picked; onChange: (next: Picked) => void; title: string }) {
+  const { locale, t } = useLocale();
   return (
     <div className="space-y-1">
       <p className="text-[10px] uppercase tracking-wide text-stone-500">{title}</p>
@@ -29,7 +33,7 @@ function ItemPicker({ sheet, picked, onChange, title }: { sheet: CharacterSheet;
                   onClick={() => onChange({ ...picked, [item.name]: qty > 0 ? 0 : 1 })}
                   className={cn("min-w-0 flex-1 truncate rounded border px-1.5 py-0.5 text-left", qty > 0 ? "border-amber-700 bg-amber-950/40 text-amber-100" : "border-stone-800 text-stone-400 hover:text-stone-200")}
                 >
-                  {item.name}
+                  {referenceDisplayName("equipment", item.name, locale)}
                   {item.qty > 1 ? <span className="text-stone-500"> x{item.qty}</span> : null}
                 </button>
                 {qty > 0 && item.qty > 1 ? (
@@ -38,7 +42,7 @@ function ItemPicker({ sheet, picked, onChange, title }: { sheet: CharacterSheet;
                     max={item.qty}
                     value={qty}
                     onChange={(next) => onChange({ ...picked, [item.name]: Math.max(1, Math.min(item.qty, next || 1)) })}
-                    label={`How many ${item.name}`}
+                    label={t("sessionUi.trade.quantity", { name: referenceDisplayName("equipment", item.name, locale) })}
                     size="sm"
                   />
                 ) : null}
@@ -47,35 +51,37 @@ function ItemPicker({ sheet, picked, onChange, title }: { sheet: CharacterSheet;
           })}
         </ul>
       ) : (
-        <p className="text-[11px] italic text-stone-600">Nothing carried.</p>
+        <p className="text-[11px] italic text-stone-600">{t("sessionUi.trade.empty")}</p>
       )}
     </div>
   );
 }
 
 function CoinField({ label, max, value, onChange }: { label: string; max: number; value: number; onChange: (gold: number) => void }) {
+  const { t } = useLocale();
   return (
     <div className="flex flex-wrap items-center gap-1 text-[11px] text-stone-400">
       {label}
       <NumberStepper min={0} max={max} value={value} onChange={(next) => onChange(Math.max(0, Math.min(max, next || 0)))} label={label} size="sm" />
-      <span className="text-stone-500">gp of {max}</span>
+      <span className="text-stone-500">{t("sessionUi.trade.goldLimit", { max })}</span>
     </div>
   );
 }
 
 export function TradeDialog({ campaignId, me, them, onClose }: { campaignId: string; me: CharacterSheet; them: CharacterSheet; onClose: () => void }) {
+  const { locale, t } = useLocale();
   const [give, setGive] = useState<Picked>({});
   const [want, setWant] = useState<Picked>({});
   const [giveGold, setGiveGold] = useState(0);
   const [wantGold, setWantGold] = useState(0);
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<{ text: string; detail?: unknown } | null>(null);
   const lines = (picked: Picked) => Object.entries(picked).filter(([, qty]) => qty > 0).map(([name, qty]) => ({ name, qty }));
   const empty = !lines(give).length && !lines(want).length && !giveGold && !wantGold;
 
   async function offer() {
     setBusy(true);
-    setError("");
+    setError(null);
     try {
       const response = await fetch(`/api/campaigns/${campaignId}/item-proposals`, {
         method: "POST",
@@ -84,36 +90,38 @@ export function TradeDialog({ campaignId, me, them, onClose }: { campaignId: str
       });
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
-        setError(String(data.error ?? "The offer could not be made."));
+        setError({ text: String(data.error ?? TRADE_SEND_FAILURE), detail: data.errorDetail });
         return;
       }
       onClose();
+    } catch {
+      setError({ text: PROPOSAL_NETWORK_FAILURE });
     } finally {
       setBusy(false);
     }
   }
 
   return (
-    <Dialog open onOpenChange={(open) => (open ? null : onClose())} title={`Trade with ${them.name}`} icon={<ArrowLeftRight className="size-4 text-amber-400" />} width="w-[min(94vw,40rem)]">
+    <Dialog open onOpenChange={(open) => (open ? null : onClose())} title={t("sessionUi.trade.title", { name: them.name })} icon={<ArrowLeftRight className="size-4 text-amber-400" />} width="w-[min(94vw,40rem)]">
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2 rounded-lg border border-stone-800 bg-stone-950/50 p-2.5">
-          <p className="font-display text-sm text-amber-100">{me.name} gives</p>
-          <ItemPicker sheet={me} picked={give} onChange={setGive} title="From my pack" />
-          <CoinField label="Coin" max={me.gold} value={giveGold} onChange={setGiveGold} />
+          <p className="font-display text-sm text-amber-100">{t("sessionUi.trade.gives", { name: me.name })}</p>
+          <ItemPicker sheet={me} picked={give} onChange={setGive} title={t("sessionUi.trade.mine")} />
+          <CoinField label={t("sessionUi.trade.coin")} max={me.gold} value={giveGold} onChange={setGiveGold} />
         </div>
         <div className="space-y-2 rounded-lg border border-stone-800 bg-stone-950/50 p-2.5">
-          <p className="font-display text-sm text-amber-100">{them.name} gives</p>
-          <ItemPicker sheet={them} picked={want} onChange={setWant} title="From their pack" />
-          <CoinField label="Coin" max={them.gold} value={wantGold} onChange={setWantGold} />
+          <p className="font-display text-sm text-amber-100">{t("sessionUi.trade.gives", { name: them.name })}</p>
+          <ItemPicker sheet={them} picked={want} onChange={setWant} title={t("sessionUi.trade.theirs")} />
+          <CoinField label={t("sessionUi.trade.coin")} max={them.gold} value={wantGold} onChange={setWantGold} />
         </div>
       </div>
-      {error ? <p className="motion-shake mt-2 text-[11px] text-red-400">{error}</p> : null}
+      {error ? <p className="motion-shake mt-2 text-[11px] text-red-400">{proposalErrorText(error.text, locale, error.detail)}</p> : null}
       <div className="mt-3 flex justify-end gap-2">
         <button type="button" onClick={onClose} className="rounded border border-stone-700 px-3 py-1 text-xs text-stone-400 hover:bg-stone-900">
-          Never mind
+          {t("sessionUi.trade.cancel")}
         </button>
         <button type="button" disabled={busy || empty} onClick={() => void offer()} className="flex items-center gap-1 rounded border border-amber-700 bg-amber-950/50 px-3 py-1 text-xs text-amber-100 disabled:opacity-50">
-          {busy ? <Loader2 className="size-3 animate-spin" /> : <ArrowLeftRight className="size-3" />} Offer the trade
+          {busy ? <Loader2 className="size-3 animate-spin" /> : <ArrowLeftRight className="size-3" />} {t("sessionUi.trade.offer")}
         </button>
       </div>
     </Dialog>

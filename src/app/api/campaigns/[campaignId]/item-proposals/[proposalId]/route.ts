@@ -63,7 +63,7 @@ export async function POST(
       if (declined) {
         publishPersisted(campaignId, "item_proposal_resolved", { proposal: publicItemProposal(declined) });
       }
-      return Response.json({ error: `The trade could not go through: ${applied.error}` }, { status: 409 });
+      return Response.json({ error: `The trade could not go through: ${applied.error}`, ...(applied.errorDetail ? { errorDetail: applied.errorDetail } : {}) }, { status: 409 });
     }
   } else if (action === "approve") {
     // Fresh sheets: the offer may be hours old and the sheet has moved on.
