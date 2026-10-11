@@ -1,6 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { helpTourView } from "@/lib/i18n/app-help-presentations";
+import { catalogFor } from "@/lib/i18n/translator";
+import { loadLocaleMessages } from "@/lib/i18n/client-catalogs";
+import type { AppLocale } from "@/lib/i18n/locales";
 import {
   BookOpen,
   Brain,
@@ -31,7 +37,7 @@ export { ModeRow, Section };
 // asking the DM, fixing a bad narration, what the DM remembers, dice, voice,
 // lead powers and world packs. Opened from the home account menu and the
 // in-session header.
-export function HelpDialog({
+function HelpBody({
   open,
   onOpenChange,
   tours,
@@ -42,24 +48,23 @@ export function HelpDialog({
   // and can be replayed at will. Other pages pass nothing.
   tours?: { label: string; detail: string; onStart: () => void }[];
 }) {
+  const { locale, t } = useLocale();
   return (
     <Dialog
       open={open}
       onOpenChange={onOpenChange}
-      title="Help"
+      title={t("appHelp.fragment.0")}
       icon={<GameIcon icon={{ kind: "glyph", key: "tab-story" }} size="size-7" />}
       width="w-[min(94vw,44rem)]"
     >
       <HelpContents withTours={Boolean(tours?.length)} />
       {tours && tours.length ? (
-        <Section icon={Footprints} title="Guided tours">
-          <p>
-            A spotlight walk through the table&apos;s controls, one at a time. Each tour ran once
-            when you first sat down; take it again whenever you like.
-          </p>
+        <Section icon={Footprints} title={t("appHelp.fragment.1")} anchor={"Guided tours"}>
+          <p>{t("appHelp.fragment.2")}</p>
           <div className="flex flex-wrap gap-2">
-            {tours.map((tour) => (
-              <button
+            {tours.map((tour) => {
+              const view = helpTourView(tour, locale);
+              return <button
                 key={tour.label}
                 type="button"
                 onClick={() => {
@@ -67,399 +72,187 @@ export function HelpDialog({
                   tour.onStart();
                 }}
                 className={ui.btnSmall}
-                title={tour.detail}
+                title={view.detail}
               >
-                <Footprints className="size-4" /> {tour.label}
-              </button>
-            ))}
+                <Footprints className="size-4" /> {view.label}
+              </button>;
+            })}
           </div>
         </Section>
       ) : null}
-      <Section icon={Compass} title="Getting started">
-        <p>
-          Create a campaign from the home page, or join a friend&apos;s with their invite code or a{" "}
-          <span className="text-stone-300">/join</span> link. Build a character in the creation
-          wizard, or reuse one saved to your library under Characters in the account menu. When
-          everyone in the lobby is ready, the owner starts the adventure.
-        </p>
-        <p>
-          If the server has campaign plugins installed, the create form also offers a{" "}
-          <span className="text-stone-300">pre-built world</span> to run the campaign in. See
-          Campaign plugins below for what that changes.
-        </p>
+      <Section icon={Compass} title={t("appHelp.fragment.3")} anchor={"Getting started"}>
+        <p>{t("appHelp.fragment.4")}{" "}
+          <span className="text-stone-300">{t("appHelp.fragment.5")}</span>{t("appHelp.fragment.6")}</p>
+        <p>{t("appHelp.fragment.7")}{" "}
+          <span className="text-stone-300">{t("appHelp.fragment.8")}</span>{t("appHelp.fragment.9")}</p>
       </Section>
 
-      <Section icon={DoorOpen} title="The lobby">
-        <p>
-          Before the game begins, each player readies up and whoever steers the story (the party
-          lead, or the DM when a person runs the table) can adjust the game settings: genre, an
-          optional secret story setup for the DM, dice policy, narration voice, and maps. Share the
-          room code or copy the invite link to bring in more players; the owner or the DM opens the
-          table once everyone is ready.
-        </p>
+      <Section icon={DoorOpen} title={t("appHelp.fragment.10")} anchor={"The lobby"}>
+        <p>{t("appHelp.fragment.11")}</p>
       </Section>
 
-      <Section icon={MessageSquareText} title="Talking to the DM">
-        <p>The buttons above the message box change what your message means:</p>
-        <ModeRow label="Do">
-          Describe what your character does. The DM narrates the outcome and asks for dice rolls
-          when the rules call for them.
-        </ModeRow>
-        <ModeRow label="Say">
-          Speak in character. Your text is sent as spoken dialogue, in quotes.
-        </ModeRow>
-        <ModeRow label="OOC">
-          Out-of-character table talk. The DM does not respond to it, and it stays available even
-          when the floor is locked during narration or a spotlight.
-        </ModeRow>
-        <ModeRow label="Direct" lead>
-          Party lead only. Send the DM an authoritative story direction it must weave into the
-          tale, or arm one of the seven canned events: Combat, Place, Social, Romance, Mystery,
-          Weird or Windfall. Turn on <span className="text-stone-300">Private</span> and the
-          direction goes to the DM alone: no character hears it, it never enters the transcript,
-          and it steers the next turn instead of this one. The table still sees that something is
-          armed, just never what.
-        </ModeRow>
-        <p>
-          Questions are not one of these buttons. Open the{" "}
-          <span className="text-stone-300">Ask the DM</span> strip just above the message box and
-          use its own question box. Set <span className="text-stone-300">About</span> to Auto,
-          Story, Rules or My sheet to say where the answer should come from, and{" "}
-          <span className="text-stone-300">Seen by</span> to Just me or The table to say who reads
-          it. Answers quote what the campaign has on record under{" "}
-          <span className="text-stone-300">From the record</span>.
+      <Section icon={MessageSquareText} title={t("appHelp.fragment.12")} anchor={"Talking to the DM"}>
+        <p>{t("appHelp.fragment.13")}</p>
+        <ModeRow label={t("appHelp.fragment.14")}>{t("appHelp.fragment.15")}</ModeRow>
+        <ModeRow label={t("appHelp.fragment.16")}>{t("appHelp.fragment.17")}</ModeRow>
+        <ModeRow label={t("appHelp.fragment.18")}>{t("appHelp.fragment.19")}</ModeRow>
+        <ModeRow label={t("appHelp.fragment.20")} lead>{t("appHelp.fragment.21")}<span className="text-stone-300">{t("appHelp.fragment.22")}</span>{t("appHelp.fragment.23")}</ModeRow>
+        <p>{t("appHelp.fragment.24")}{" "}
+          <span className="text-stone-300">{t("appHelp.fragment.25")}</span>{t("appHelp.fragment.26")}<span className="text-stone-300">{t("appHelp.fragment.27")}</span>{t("appHelp.fragment.28")}{" "}
+          <span className="text-stone-300">{t("appHelp.fragment.29")}</span>{t("appHelp.fragment.30")}{" "}
+          <span className="text-stone-300">{t("appHelp.fragment.31")}</span>.
         </p>
-        <p>
-          Asking writes nothing to the transcript and never moves the story on, so it works during
-          narration, during someone else&apos;s spotlight, and while the floor is locked. Collapsing
-          the strip keeps a half-typed question and your place in the thread.
-        </p>
-        <p>
-          Sometimes the DM puts one player in the spotlight and waits for them to act. While the
-          floor is locked for you, a banner explains why, and OOC and the Ask strip still work.
-          Small chips above the message box name the background work the engine is doing between
-          turns, such as compacting history, sealing a chapter, running the world tick or answering
-          an Ask, with how long it has been going.
-        </p>
+        <p>{t("appHelp.fragment.32")}</p>
+        <p>{t("appHelp.fragment.33")}</p>
       </Section>
 
-      <Section icon={Swords} title="Your hand in a fight">
-        <p>
-          While a fight is on, your options appear as a hand of cards above the message box: one
-          for each weapon you carry, each spell you have prepared, your class features, and the
-          basic actions (Dodge, Dash, Disengage, Help, Hide, Ready, Grapple, Shove, Use an object,
-          End turn). Each card shows what it costs (action, bonus action, reaction, a spell slot, a
-          use) and what it rolls, worked out from your sheet.
-        </p>
-        <p>
-          Pick a card, pick who it lands on from the chips or by tapping them on the battle map,
-          check the line under <span className="text-stone-300">Sends</span>, then press the gold
-          button named after the card. <span className="text-stone-300">Edit</span> puts that line
-          in the message box so you can change it first. A dimmed card is spent for the turn; hover
-          or press it to see why. Rider cards such as Divine Smite attach to your next attack.
-        </p>
-        <p>
-          The hand never replaces typing. The message box, Do, Say and OOC, the microphone and
-          Enter to send all work exactly as before, and the arrow on the hand&apos;s bar puts it
-          away. The question mark beside it replays the two-line introduction.
-        </p>
+      <Section icon={Swords} title={t("appHelp.fragment.34")} anchor={"Your hand in a fight"}>
+        <p>{t("appHelp.fragment.35")}</p>
+        <p>{t("appHelp.fragment.36")}<span className="text-stone-300">{t("appHelp.fragment.37")}</span>{t("appHelp.fragment.38")}<span className="text-stone-300">{t("appHelp.fragment.39")}</span>{t("appHelp.fragment.40")}</p>
+        <p>{t("appHelp.fragment.41")}</p>
       </Section>
 
-      <Section icon={RefreshCw} title="When the DM gets it wrong">
-        <p>
-          Hover a DM message and a row of actions appears above it. None of them advance the story
-          or change a single number the rules produced. Rewriting the narration belongs to the
-          party lead, since everyone reads the same transcript:
-        </p>
+      <Section icon={RefreshCw} title={t("appHelp.fragment.42")} anchor={"When the DM gets it wrong"}>
+        <p>{t("appHelp.fragment.43")}</p>
         <ul className="list-none space-y-1.5">
           <li>
-            <span className="text-stone-300">Reroll:</span> lead only. Have the DM write that
-            moment again with the same dice and the same outcome, optionally with a note on what to
-            do differently. Only the prose changes.
-          </li>
+            <span className="text-stone-300">{t("appHelp.fragment.44")}</span>{t("appHelp.fragment.45")}</li>
           <li>
-            <span className="text-stone-300">Takes:</span> lead only. Once a second version exists,
-            arrows and a counter appear in the message header. Paging between takes swaps the
-            message for the whole table.
-          </li>
+            <span className="text-stone-300">{t("appHelp.fragment.46")}</span>{t("appHelp.fragment.47")}</li>
           <li>
-            <span className="text-stone-300">Continue:</span> lead only. Have the DM keep writing
-            from where a reply stopped short, without moving the story on.
-          </li>
+            <span className="text-stone-300">{t("appHelp.fragment.48")}</span>{t("appHelp.fragment.49")}</li>
           <li>
-            <span className="text-stone-300">Edit:</span> lead only. Fix what the DM said by hand.
-            Mechanics are untouched and every dice marker in the passage has to survive the edit.
-          </li>
+            <span className="text-stone-300">{t("appHelp.fragment.50")}</span>{t("appHelp.fragment.51")}</li>
           <li>
-            <span className="text-stone-300">Lore check:</span> anyone. Flag the passage, or just
-            the text you selected, against the campaign record and see whether it contradicts
-            anything already established.
-          </li>
+            <span className="text-stone-300">{t("appHelp.fragment.52")}</span>{t("appHelp.fragment.53")}</li>
         </ul>
-        <p>
-          If a DM turn fails outright, a banner offers to send it back in from where it stopped. It
-          resumes the turn that was already running, so nobody has to retype an action and nothing
-          lands in the transcript twice.
-        </p>
+        <p>{t("appHelp.fragment.54")}</p>
       </Section>
 
-      <Section icon={Brain} title="What the DM remembers">
-        <p>
-          Recent turns are in front of the DM word for word. Older ones are compacted into a
-          rolling summary, and closed chapters become chapter summaries it can search and re-read
-          when the table brings up something from long ago.
-        </p>
+      <Section icon={Brain} title={t("appHelp.fragment.55")} anchor={"What the DM remembers"}>
+        <p>{t("appHelp.fragment.56")}</p>
         <ul className="list-none space-y-1.5">
           <li>
-            <span className="text-stone-300">Remember:</span> any player can select text in a DM
-            message and press the bookmark icon, or press it with nothing selected to keep the
-            whole message. Pinned memories ride in every prompt from then on. There is a size
-            budget, and the Pinned memories list under Story, Facts shows how much of it the table
-            has spent.
-          </li>
+            <span className="text-stone-300">{t("appHelp.fragment.57")}</span>{t("appHelp.fragment.58")}</li>
           <li>
-            <span className="text-stone-300">Pin as canon:</span> party lead only, because it
-            writes to the campaign record. Keeps a passage in front of the DM permanently as
-            established fact.
-          </li>
+            <span className="text-stone-300">{t("appHelp.fragment.59")}</span>{t("appHelp.fragment.60")}</li>
           <li>
-            <span className="text-stone-300">Facts and lore:</span> Story, Facts also holds DM
-            secrets the DM must never contradict and the lore entries the table has written up.
-          </li>
+            <span className="text-stone-300">{t("appHelp.fragment.61")}</span>{t("appHelp.fragment.62")}</li>
           <li>
-            <span className="text-stone-300">Bonds:</span> under Party, where each character stands
-            with the people they have dealt with.
-          </li>
+            <span className="text-stone-300">{t("appHelp.fragment.63")}</span>{t("appHelp.fragment.64")}</li>
         </ul>
-        <p>
-          NPCs the party stops mentioning are archived so they do not crowd out the ones in play,
-          and the party lead can see exactly what the DM was sent on the last turn, plus anything
-          the budget cut, in the Context tab.
-        </p>
+        <p>{t("appHelp.fragment.65")}</p>
       </Section>
 
-      <Section icon={PanelRight} title="The side panel">
+      <Section icon={PanelRight} title={t("appHelp.fragment.66")} anchor={"The side panel"}>
         <ul className="list-none space-y-1.5">
           <li>
-            <span className="text-stone-300">Party:</span> the roster, with character sheets, HP and
-            conditions for the whole party, and the active encounter during combat. A Bonds
-            sub-tab appears when relationships are on. The room code is in the lead&apos;s tab.
-          </li>
+            <span className="text-stone-300">{t("appHelp.fragment.67")}</span>{t("appHelp.fragment.68")}</li>
           <li>
-            <span className="text-stone-300">Battle:</span> the tactical battle map, while a fight
-            with a map is running. Move your token on your turn.
-          </li>
+            <span className="text-stone-300">{t("appHelp.fragment.69")}</span>{t("appHelp.fragment.70")}</li>
           <li>
-            <span className="text-stone-300">Map:</span> the scene map, the overworld and
-            discovered locations, when maps are enabled.
-          </li>
+            <span className="text-stone-300">{t("appHelp.fragment.71")}</span>{t("appHelp.fragment.72")}</li>
           <li>
-            <span className="text-stone-300">Story:</span> three sub-tabs. Chapters is the tale so
-            far and the arc in play, and it is where you export the story. Facts holds pinned
-            memories, DM secrets and lore. Log is the audited record of every dice roll and every
-            stat change the DM makes.
-          </li>
+            <span className="text-stone-300">{t("appHelp.fragment.73")}</span>{t("appHelp.fragment.74")}</li>
           <li>
-            <span className="text-stone-300">Notes:</span> suggest campaign notes for the story; the
-            party lead approves them.
-          </li>
+            <span className="text-stone-300">{t("appHelp.fragment.75")}</span>{t("appHelp.fragment.76")}</li>
           <li>
-            <span className="text-stone-300">Chat:</span> private whispers between you and the DM,
-            and side chat between players that the DM and the campaign transcript never see.
-          </li>
+            <span className="text-stone-300">{t("appHelp.fragment.77")}</span>{t("appHelp.fragment.78")}</li>
           <li>
-            <span className="text-stone-300">Context:</span> party lead only. What the DM was
-            actually sent last turn, and anything the token budget dropped.
-          </li>
+            <span className="text-stone-300">{t("appHelp.fragment.79")}</span>{t("appHelp.fragment.80")}</li>
           <li>
-            <span className="text-stone-300">Setup:</span> campaign settings, invites and game
-            toggles.
-          </li>
+            <span className="text-stone-300">{t("appHelp.fragment.81")}</span>{t("appHelp.fragment.82")}</li>
         </ul>
       </Section>
 
-      <Section icon={Dices} title="Dice">
-        <p>
-          Every check, save, and attack is rolled by the server, never invented by the AI. The dice
-          button in the header opens <span className="text-stone-300">Roll dice</span>: tap dice
-          into the tray (or type an expression such as 2d6+3), add a bonus, and roll. Turn on{" "}
-          <span className="text-stone-300">Roll in secret</span> to roll behind the screen: a DM&apos;s
-          secret roll is seen by the DM seats alone, and a player&apos;s by that player and the DM;
-          the rest of the table is not told a die was rolled. The same menu toggles the 3D dice
-          animation. If you opt into real dice in the game
-          settings, the DM waits for you to enter your physical roll, with a digital fallback
-          button if you would rather let the server roll.
-        </p>
-        <p>
-          Once you have opted in, the <span className="text-stone-300">Dice sources</span> button in
-          the Party tab lets you decide per die which happens: type the physical roll yourself, let
-          the server roll that die for you, or read it straight from a connected{" "}
-          <span className="text-stone-300">Pixels Bluetooth die</span>. Pairing a Pixel needs a
-          Chromium-based browser and a secure (https) connection, because that is what Web
-          Bluetooth requires. When every die in a request is covered by a Pixel or the server, the
-          roll submits itself the moment the last die lands. These choices are saved in the
-          browser you set them in, so set them again if you switch devices.
-        </p>
+      <Section icon={Dices} title={t("appHelp.fragment.83")} anchor={"Dice"}>
+        <p>{t("appHelp.fragment.84")}<span className="text-stone-300">{t("appHelp.fragment.85")}</span>{t("appHelp.fragment.86")}{" "}
+          <span className="text-stone-300">{t("appHelp.fragment.87")}</span>{t("appHelp.fragment.88")}</p>
+        <p>{t("appHelp.fragment.89")}<span className="text-stone-300">{t("appHelp.fragment.90")}</span>{t("appHelp.fragment.91")}{" "}
+          <span className="text-stone-300">{t("appHelp.fragment.92")}</span>{t("appHelp.fragment.93")}</p>
       </Section>
 
-      <Section icon={Volume2} title="Voice and narration">
-        <p>
-          When narration is enabled, the DM reads its replies aloud. Use the speaker button in the
-          header to unmute (browsers require one click before audio can play) and the slider to set
-          the volume. Hover a DM message to replay its narration. Push-to-talk, when configured,
-          lets you hold the microphone button to dictate your message.
-        </p>
+      <Section icon={Volume2} title={t("appHelp.fragment.94")} anchor={"Voice and narration"}>
+        <p>{t("appHelp.fragment.95")}</p>
       </Section>
 
-      <Section icon={Mic} title="Live voice chat">
-        <p>
-          When the server and the campaign both have voice chat switched on, a{" "}
-          <span className="text-stone-300">Voice</span> card appears in the lobby, and during play a{" "}
-          <span className="text-stone-300">headphones button</span> sits in the top bar with the
-          full voice menu under it. Join and you are talking to the table; no other app needed, and
-          the call stays up whatever panel you switch to. The microphone needs a secure (https)
-          connection, and your browser will ask permission the first time.
-        </p>
-        <p>
-          Whoever runs the story can open <span className="text-stone-300">side rooms</span> for a
-          split party or a private word, and can hold the floor: soft enforcement marks who should
-          be talking, strict actually mutes everyone else, and a raised-hand queue keeps it civil.
-          A table can also opt into rules that make the call behave like the world: proximity
-          hearing (you only hear players whose characters are near yours on the map, while the DM
-          hears everyone), whisper and shout ranges, walls muffling speech, and downed characters
-          going deaf. All of that lives under voice settings in Setup, and all of it is off by
-          default, so a plain group call is what you get until the table asks for more.
-        </p>
+      <Section icon={Mic} title={t("appHelp.fragment.96")} anchor={"Live voice chat"}>
+        <p>{t("appHelp.fragment.97")}{" "}
+          <span className="text-stone-300">{t("appHelp.fragment.98")}</span>{t("appHelp.fragment.99")}{" "}
+          <span className="text-stone-300">{t("appHelp.fragment.100")}</span>{t("appHelp.fragment.101")}</p>
+        <p>{t("appHelp.fragment.102")}<span className="text-stone-300">{t("appHelp.fragment.103")}</span>{t("appHelp.fragment.104")}</p>
       </Section>
 
-      <Section icon={Music} title="Ambience and music">
-        <p>
-          With ambience enabled in the game settings, the table shares a soundtrack: a background
-          bed for where the party is (a tavern, a forest, a crypt), a music layer for what the
-          scene is doing, and one-shot stings for dramatic moments. The DM changes it as the story
-          moves, and combat brings its own sound. Whoever runs the story can also hold a layer on a
-          chosen cue so the auto-picker leaves it alone. Your speaker button and volume slider in
-          the header control it for you alone, and it ducks automatically while narration speaks.
-        </p>
-        <p>
-          The sounds themselves are public-domain and Creative Commons recordings the server admin
-          installs; see the licenses page for who made what. If ambience is on but silent, the
-          server simply has no audio installed yet.
-        </p>
+      <Section icon={Music} title={t("appHelp.fragment.105")} anchor={"Ambience and music"}>
+        <p>{t("appHelp.fragment.106")}</p>
+        <p>{t("appHelp.fragment.107")}</p>
       </Section>
 
-      <Section icon={Gavel} title="Playing with a human DM">
-        <p>
-          A campaign does not have to be run by the AI. Created with{" "}
-          <span className="text-stone-300">a person in the DM seat</span>, the table works the way
-          a kitchen-table game does: the DM narrates in their own words (most tables do it over
-          voice chat), and the app keeps the sheets, the dice, the maps and the record straight
-          underneath them. Your Do and Say messages still land in the transcript, but instead of
-          waking the AI they queue as intents for the DM to answer. The DM holds no party slot
-          (though they can build a companion to play from the console), holds the story secrets
-          the party lead would hold at an AI table, and gets a console of
-          tools: initiative, monsters, maps, NPCs, roll tables and rulings, with an AI assistant
-          one click away for stat blocks and suggestions if they want it.
-        </p>
-        <p>
-          The in-between setting, <span className="text-stone-300">assisted mode</span>, lets the
-          DM keep the story and hand the bookkeeping to the AI a piece at a time: it can run the
-          monsters&apos; turns, read the DM&apos;s notes aloud as full prose, or{" "}
-          <span className="text-stone-300">cover the table</span> for a counted stretch of answers
-          while the DM steps away, following the outline they left behind.
-        </p>
-        <p>
-          Because the narration happens out loud, the app nudges the DM every so often to jot down
-          a <span className="text-stone-300">story beat</span>, a line or two about what just
-          happened. Beats are what chapter summaries, recaps and the exported story are built
-          from, so a table that never writes any ends up with a transcript of intents and no tale.
-          Players can help by keeping their actions in the composer rather than only in the call.
-        </p>
+      <Section icon={Gavel} title={t("appHelp.fragment.108")} anchor={"Playing with a human DM"}>
+        <p>{t("appHelp.fragment.109")}{" "}
+          <span className="text-stone-300">{t("appHelp.fragment.110")}</span>{t("appHelp.fragment.111")}</p>
+        <p>{t("appHelp.fragment.112")}<span className="text-stone-300">{t("appHelp.fragment.113")}</span>{t("appHelp.fragment.114")}{" "}
+          <span className="text-stone-300">{t("appHelp.fragment.115")}</span>{t("appHelp.fragment.116")}</p>
+        <p>{t("appHelp.fragment.117")}<span className="text-stone-300">{t("appHelp.fragment.118")}</span>{t("appHelp.fragment.119")}</p>
       </Section>
 
-      <Section icon={Crown} title="Party lead">
-        <p>
-          The campaign owner starts as party lead and can pass the role from a party member&apos;s
-          menu. The lead steers the table: the Direct message mode with its event presets and
-          private directions, approving suggested notes, releasing a stuck spotlight, retrying a
-          halted turn, rerolling or editing a narration, letting new players join mid-game, and
-          editing campaign settings and house rules.
-        </p>
-        <p>
-          The lead also owns the story spine, under Story, Chapters. A single beat can be reworded,
-          skipped or promoted to the one in play without regenerating the whole arc, a chapter can
-          be sealed early, and the whole campaign can be rewound to the start of a chapter. A
-          rewind is destructive: it asks for confirmation and lists what it will undo first, then
-          puts sheets, NPCs, locations, maps and quest state back the way they were.
-        </p>
-        <p>
-          Where the engine spots two NPC names that might be the same person but refuses to merge
-          them on a guess, the lead is the one who settles it.
-        </p>
-        <p>
-          At a table with a human DM the split is different: the lead keeps the invites and the
-          campaign details but is otherwise a player, because the story powers listed above exist
-          to steer the AI and there is no AI to steer. Story secrets, settings, rules, floor
-          control, narration fixes and the DM seats belong to the person in the DM seat instead.
-        </p>
+      <Section icon={Crown} title={t("appHelp.fragment.120")} anchor={"Party lead"}>
+        <p>{t("appHelp.fragment.121")}</p>
+        <p>{t("appHelp.fragment.122")}</p>
+        <p>{t("appHelp.fragment.123")}</p>
+        <p>{t("appHelp.fragment.124")}</p>
       </Section>
 
-      <Section icon={Puzzle} title="Campaign plugins">
-        <p>
-          A campaign can run in a <span className="text-stone-300">world pack</span>: a pre-built
-          setting with its own races, classes, spells, gear, monsters, factions and lore, and a
-          brief telling the DM how that world should sound. Picking one at creation also sets the
-          campaign&apos;s genre and can fill in its theme and premise.
-        </p>
-        <p>
-          A pack renames things, it never changes a rule. Everything underneath is still 5e, your
-          sheet still stores the canonical names, and a character built in a pack campaign can be
-          brought into a plain one and simply reads under its ordinary names again.
-        </p>
-        <p>
-          Server admins install and remove packs under Admin, Campaign plugins, from a registry or
-          from a file. A pack built on somebody else&apos;s setting carries an unofficial-work
-          notice wherever it appears: it is fan-made and is not affiliated with, sponsored by or
-          endorsed by the rights holder.
-        </p>
+      <Section icon={Puzzle} title={t("appHelp.fragment.125")} anchor={"Campaign plugins"}>
+        <p>{t("appHelp.fragment.126")}<span className="text-stone-300">{t("appHelp.fragment.127")}</span>{t("appHelp.fragment.128")}</p>
+        <p>{t("appHelp.fragment.129")}</p>
+        <p>{t("appHelp.fragment.130")}</p>
       </Section>
 
-      <Section icon={BookOpen} title="New to D&amp;D?">
-        <p>
-          You do not need to know the rules to play; the DM and the server handle them. When a term
-          comes up that you do not recognize, look for the small info button next to it: every
-          feature, spell and stat on your sheet explains itself.
-        </p>
-        <p>
-          The{" "}
-          <Link href="/reference" className="text-amber-300 underline-offset-2 hover:underline">
-            rules reference
-          </Link>{" "}
-          collects the basics in plain language and lets you search every spell, feat, item and
-          condition the app knows about. The{" "}
-          <Link href="/rulebook" className="text-amber-300 underline-offset-2 hover:underline">
-            rulebook
-          </Link>{" "}
-          is the whole fifth edition reference document, searchable, for the moment a rule needs
-          checking word for word. Its contents are bound as three books: the players&apos; rules,
-          the Dungeon Master&apos;s, and the monsters, each holding everything the reference document
-          opens from the Player&apos;s Handbook, the Dungeon Master&apos;s Guide and the Monster Manual
-          (the rest of those books is not openly licensed). At the table it opens from the book
-          button in the header.
-        </p>
+      <Section icon={BookOpen} title={t("appHelp.fragment.131")} anchor={"New to D&D?"}>
+        <p>{t("appHelp.fragment.132")}</p>
+        <p>{t("appHelp.fragment.133")}{" "}
+          <Link href="/reference" className="text-amber-300 underline-offset-2 hover:underline">{t("appHelp.fragment.134")}</Link>{" "}{t("appHelp.fragment.135")}{" "}
+          <Link href="/rulebook" className="text-amber-300 underline-offset-2 hover:underline">{t("appHelp.fragment.136")}</Link>{" "}{t("appHelp.fragment.137")}</p>
       </Section>
 
-      <Section icon={BookOpen} title="About">
-        <p>
-          Open Dungeon Master is a self-hosted, multiplayer Dungeons &amp; Dragons 5e platform run
-          by an AI Dungeon Master. Server admins manage users, models, images, voice and campaign
-          plugins from the Admin panel. Game content comes from the SRD 5.1 and Open5e; see{" "}
-          <Link href="/licenses" className="text-amber-300 underline-offset-2 hover:underline">
-            licenses and attribution
-          </Link>
+      <Section icon={BookOpen} title={t("appHelp.fragment.138")} anchor={"About"}>
+        <p>{t("appHelp.fragment.139")}{" "}
+          <Link href="/licenses" className="text-amber-300 underline-offset-2 hover:underline">{t("appHelp.fragment.140")}</Link>
           .
         </p>
       </Section>
+    </Dialog>
+  );
+}
+
+// Home has no campaign/character content boundary. Load only the chosen help
+// locale when opened, and show a translated retry if its chunk cannot arrive.
+export function HelpDialog(props: Parameters<typeof HelpBody>[0]) {
+  const { locale, t } = useLocale();
+  const [readyLocale, setReadyLocale] = useState<AppLocale | null>(() => catalogFor(locale, "appHelp.fragment.0")["appHelp.fragment.0"] ? locale : null);
+  const [failedLocale, setFailedLocale] = useState<AppLocale | null>(null);
+  const [retry, setRetry] = useState(0);
+  useEffect(() => {
+    if (!props.open) return;
+    let live = true;
+    loadLocaleMessages(locale, "help").then(() => {
+      if (live) setReadyLocale(locale);
+    }).catch(() => {
+      if (live) setFailedLocale(locale);
+    });
+    return () => { live = false; };
+  }, [locale, props.open, retry]);
+  if (!props.open) return null;
+  if (readyLocale === locale) return <HelpBody {...props} />;
+  return (
+    <Dialog open onOpenChange={props.onOpenChange} title={t("nav.help")} width="w-[min(94vw,44rem)]">
+      {failedLocale === locale ? (
+        <div role="alert" className="space-y-2 text-sm text-stone-400">
+          <p>{t("helpLoading.error")}</p>
+          <button type="button" className={ui.btnSmall} onClick={() => { setFailedLocale(null); setRetry(value => value + 1); }}>{t("helpLoading.retry")}</button>
+        </div>
+      ) : <p role="status" className="text-sm text-stone-400">{t("common.loading")}</p>}
     </Dialog>
   );
 }

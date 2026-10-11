@@ -1639,11 +1639,13 @@
     },
     {
       "path": "src/components/HelpDialog.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Complete project-owned app walkthrough translated with preserved English rendering and links. Opens an independent selected-locale help resource; loading/retry and locale-transition gate checked. Known native tour labels/details use exact small source bindings, callbacks and original identities preserved; authored tour copy stays literal. Five frozen English states and actual Chinese actions checked. Full external rulebook prose is outside scope."
     },
     {
       "path": "src/components/HelpParts.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Contents/topic search and accessibility labels localized. Section display titles are separate from canonical anchors/glyph identities; other callers retain their default title behavior. Chinese and English search, all 17 directory targets, reduced-motion scroll and no-match state checked."
     },
     {
       "path": "src/components/HowToPlayDialog.tsx",

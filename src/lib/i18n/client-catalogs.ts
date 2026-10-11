@@ -4,8 +4,8 @@ import type { MessageScope } from "./resource-scope.ts";
 
 // Literal import paths let Next emit independent language/scope chunks.
 const loaders: Record<AppLocale, Record<MessageScope, () => Promise<{ default: MessageCatalog }>>> = {
-  en: { ui: () => import("./resources/en.ui.json", { with: { type: "json" } }), content: () => import("./resources/en.content.json", { with: { type: "json" } }) },
-  "zh-CN": { ui: () => import("./resources/zh-CN.ui.json", { with: { type: "json" } }), content: () => import("./resources/zh-CN.content.json", { with: { type: "json" } }) },
+  en: { ui: () => import("./resources/en.ui.json", { with: { type: "json" } }), content: () => import("./resources/en.content.json", { with: { type: "json" } }), help: () => import("./resources/en.help.json", { with: { type: "json" } }) },
+  "zh-CN": { ui: () => import("./resources/zh-CN.ui.json", { with: { type: "json" } }), content: () => import("./resources/zh-CN.content.json", { with: { type: "json" } }), help: () => import("./resources/zh-CN.help.json", { with: { type: "json" } }) },
 };
 const pending = new Map<string, Promise<void>>();
 export function registerLocaleScope(resources: LocaleCatalogs, scope: MessageScope) {

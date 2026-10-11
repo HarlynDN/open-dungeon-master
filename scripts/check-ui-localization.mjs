@@ -21,6 +21,7 @@ import { DICE_LOOK_PRESETS, DICE_TEXTURES, DICE_MATERIALS } from "../src/lib/dic
 import { TTS_VOICES } from "../src/lib/tts-voices.ts";
 import { CLASS_OPTION_MATERIAL } from "../src/lib/i18n/class-option-metadata.ts";
 import { NATIVE_FEATURE_MATERIAL, NATIVE_FEAT_MATERIAL } from "../src/lib/i18n/feature-material-metadata.ts";
+import { HELP_TOPICS, HELP_TOURS } from "../src/lib/i18n/app-help-metadata.ts";
 import { CHARACTER_SUBCLASS_METADATA } from "../src/lib/i18n/character-subclass-metadata.ts";
 
 // Calendar normalization shares pure helpers through the project alias.
@@ -65,6 +66,25 @@ if (args.has("--sync")) {
   process.exit(0);
 }
 const problems = [];
+// Small source bindings support the lazy help scope without downloading a
+// second complete language. Reject stale topic/tour bindings on source edits.
+for (const topic of HELP_TOPICS) if (MESSAGE_CATALOGS.en[topic.key] !== topic.canonical) problems.push(`Help topic source changed: ${topic.canonical}`);
+const sessionFile = "src/app/campaigns/[campaignId]/SessionView.tsx";
+const sessionAst = parseUiSource(sessionFile, fs.readFileSync(path.join(root, sessionFile), "utf8"));
+const nativeTours = [];
+function collectTours(node) {
+  if (ts.isObjectLiteralExpression(node)) {
+    const properties = new Map(node.properties.filter(ts.isPropertyAssignment).map(property => [property.name.getText(sessionAst), property.initializer]));
+    if (properties.has("onStart") && ts.isStringLiteral(properties.get("label") ?? sessionAst) && ts.isStringLiteral(properties.get("detail") ?? sessionAst)) nativeTours.push({ label: properties.get("label").text, detail: properties.get("detail").text });
+  }
+  ts.forEachChild(node, collectTours);
+}
+collectTours(sessionAst);
+if (nativeTours.length !== HELP_TOURS.length) problems.push("Help tour count changed; review its localized label/detail bindings.");
+for (const native of nativeTours) {
+  const row = HELP_TOURS.find(row => row.label === native.label && row.detail === native.detail);
+  if (!row || MESSAGE_CATALOGS.en[row.labelKey] !== native.label || MESSAGE_CATALOGS.en[row.detailKey] !== native.detail) problems.push(`Unreviewed help tour: ${native.label}`);
+}
 // These player-facing summaries are reviewed against the exact bundled source.
 // Added/edited options cannot silently fall back to English in Chinese play.
 const nativeOptions = JSON.parse(fs.readFileSync(path.join(root, "src/lib/srd/options.json"), "utf8")).options;

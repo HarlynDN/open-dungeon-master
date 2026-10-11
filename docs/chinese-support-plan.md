@@ -29,10 +29,10 @@ flow remains incomplete; the review-repair checkpoint is a separate scoped task.
 | Locale foundation | Registry, persistence, browser fallback, typed complete catalogs, model locale policy, classified token proxy, chapter budget, CJK retrieval, IME protection | Real prompt-usage calibration; keep legacy campaign/history regressions |
 | DM safety | Per-event engine conclusions with English/Chinese renderers; AI prose separated; one text-only correction and safe fallback; shared localized enemy names and held-resource names/IDs; scoped resource aliases and ambiguity retries; real Codex combat/resource acceptance | Untracked feature/reaction options and broader spell/condition/pack coverage; conservative regex coverage is not full language understanding |
 | Embeddings | Original English deployment default retained; explicit multilingual opt-in; fixed bilingual calibration/holdout and hard-negative policy | Broader pack quality; opt-in affects English campaigns and rebuilds indexes |
-| UI | **161/439** covered files, **2844** pending literal sites, **9007** message keys; scoped AST gate; earlier play/session surfaces plus hand labels/targets/area selection, campaign-locale action sentences, native previews, basic/reaction rules, common casting refusals, spell selectors, all 113 owned mechanic notes, 103 native technique and 23 maneuver labels, attack/bonus-route and material/ritual refusals, built-in form attack names and verified current-actor labels, correction/multi-picker chrome, native downtime facts and inventory/vitals approval/player-trade controls, guided progression chrome, rest/loot/travel moments and all native option summaries, owned generic feature/feat summaries, feat choice controls and campaign/map entry notices | Remaining dynamic text keeps hand files pending; general play/inventory/rest/level-up/save/resume surfaces and full sheet/party dialogs; file fraction is not overall completion or an effort estimate |
+| UI | **163/439** covered files, **2699** pending literal sites, **9158** message keys; scoped AST gate; earlier play/session surfaces plus hand labels/targets/area selection, campaign-locale action sentences, native previews, basic/reaction rules, common casting refusals, spell selectors, all 113 owned mechanic notes, 103 native technique and 23 maneuver labels, attack/bonus-route and material/ritual refusals, built-in form attack names and verified current-actor labels, correction/multi-picker chrome, native downtime facts and inventory/vitals approval/player-trade controls, guided progression chrome, rest/loot/travel moments and all native option summaries, owned generic feature/feat summaries, feat choice controls, campaign/map entry notices and the complete app help walkthrough | Remaining dynamic text keeps hand files pending; general play/inventory/rest/level-up/save/resume surfaces and full sheet/party dialogs; file fraction is not overall completion or an effort estimate |
 | Character creation/material | Identity, ancestry, class introductions, ability allocation, gear, spell book/preparation and finish preview; 517 spell and 228 equipment names; 257-entry contextual terminology policy and lint gate; 415/415 static registered resource names and guidance shared with DM references; 135/135 bundled option names/descriptions plus all 20 nonempty requirement frames; 146 shared/class-specific feature summaries, 54 native feat summaries and owned feat choice controls; original-source review records | Remaining specific/themed feature and magic-item material; dynamic free-cast resources and user-authored/pack text remain outside the static resource review |
 | Player system logs | Structured rule diagnostics and engine-generated combat conclusions retain English protocol semantics with localized presentation | General player-visible log templates; model-facing English tool results remain independent |
-| Resource delivery | UI vs content namespaces; character/campaign boundaries; generated resources checked by lint; production Turbopack build and anonymous bilingual browser switch/reload succeed; home/character/campaign SSR and initial-script payloads measured | Hydrated/lazy network totals, authenticated campaign switching and active-play browser acceptance; route-level JS payload remains large |
+| Resource delivery | UI/content/help scopes; selected-locale help loads independently on open, with retry; character/campaign boundaries; generated resources checked by lint; production Turbopack build and anonymous bilingual browser switch/reload succeed; home/character/campaign SSR and initial-script payloads measured | Hydrated/lazy network totals, authenticated campaign switching and active-play browser acceptance; route-level JS payload remains large |
 | Local Chinese TTS | Locale capability/voice preferences planned | Service not configured; implement/validate Unicode segmentation, voice discovery, locale-sensitive cache, numbers/units/names and real playback |
 | Final play flow | Recorded Chinese exploration/social/utility and combat/slot/correction acceptance on Codex | Complete Chinese journey, English regression and real local TTS acceptance |
 
@@ -59,7 +59,34 @@ attempts were blocked at its internal port binding by the execution environment,
 including the escalated attempt; this batch does not claim a passing production
 build. Keep that gate for the next phase boundary rather than retrying per batch.
 
-The latest choice/entry checkpoint adds 71 content-only keys. Native feat
+The latest help checkpoint translates the complete project-owned app walkthrough
+and its contents/search/accessibility labels, with 151 new keys (149 help-only
+and two short UI loading-failure controls). Existing English copy/formatting,
+links, section anchors, painted glyph identities and tour callbacks are preserved.
+Chinese help covers input modes, asking, combat cards, narration corrections,
+memory, side panels, dice, voice/music, human DM, lead powers and world packs.
+It translates app instructions, not external rulebook prose or an assertion that
+Chinese voice input/full-rulebook support has been delivered.
+
+Help opens from home without a campaign resource boundary. A new typed `help`
+scope loads only the selected language on open. The generator shares the scope
+registry with runtime types; English/Chinese JSON imports are literal paths for
+separate chunks. Loading, failed-download retry and a locale transition gate
+prevent missing or stale-language help rendering. Tiny metadata source bindings
+translate the two native tours without downloading a second complete help
+language. Authored tour labels/details remain literal; checker source bindings
+reject stale topic/tour copy when the native caller changes.
+
+Lightweight validation passed: five frozen English render states, all 17 Chinese
+contents targets and scroll actions, bilingual search, original links/tour
+callbacks, authored copy, loading/retry and independent selected-language imports
+in a fresh process; types and catalog/AST/terminology. Five English fingerprints
+occupy 462 bytes. Current coverage is 163/439 files, 2699 pending literal sites,
+9158 keys, zero terminology errors and 131 contextual warnings. This is source/
+render/import verification, not a browser network-total or full-play acceptance.
+No model/audio calls, settled name recheck or full tests/lint/build ran here.
+
+The preceding choice/entry checkpoint adds 71 content-only keys. Native feat
 selection now displays localized skills/expertise, fictional languages, weapons,
 tools, armor training, damage types, class lists, casting abilities and chosen
 spells. Spell captions and the explanation of automatically applied effects
