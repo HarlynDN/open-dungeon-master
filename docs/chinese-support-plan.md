@@ -29,8 +29,8 @@ flow remains incomplete; the review-repair checkpoint is a separate scoped task.
 | Locale foundation | Registry, persistence, browser fallback, typed complete catalogs, model locale policy, classified token proxy, chapter budget, CJK retrieval, IME protection | Real prompt-usage calibration; keep legacy campaign/history regressions |
 | DM safety | Per-event engine conclusions with English/Chinese renderers; AI prose separated; one text-only correction and safe fallback; shared localized enemy names in roster/initiative/prose/guard; real Codex combat acceptance | Broader spell/condition/pack coverage; conservative regex coverage is not full language understanding |
 | Embeddings | Original English deployment default retained; explicit multilingual opt-in; fixed bilingual calibration/holdout and hard-negative policy | Broader pack quality; opt-in affects English campaigns and rebuilds indexes |
-| UI | **123/437** covered files, **3436** pending literal sites, **5451** message keys; scoped AST gate; pending checks, initiative controls, encounter roster, board conditions, structured attack/area/death/check captions and cinematic owned UI | Remaining play/action/combat/inventory/rest/level-up/save/resume surfaces, sheet/party condition notes and remaining save/feature/special captions; file fraction is not overall completion or an effort estimate |
-| Character creation/material | Identity, ancestry, class introductions, ability allocation, gear, spell book/preparation and finish preview; 517 spell and 228 equipment names; 225-entry contextual terminology policy and lint gate; original-source review records | Remaining material beyond reviewed names/creator snippets; authored/pack text retains original language |
+| UI | **123/437** covered files, **3436** pending literal sites, **5468** message keys; scoped AST gate; pending checks, initiative controls, encounter roster, board conditions, structured attack/area/death/check/save captions and cinematic owned UI | Remaining play/action/combat/inventory/rest/level-up/save/resume surfaces, sheet/party condition notes, native feature/reaction names and special captions; file fraction is not overall completion or an effort estimate |
+| Character creation/material | Identity, ancestry, class introductions, ability allocation, gear, spell book/preparation and finish preview; 517 spell and 228 equipment names; 230-entry contextual terminology policy and lint gate; original-source review records | Remaining material beyond reviewed names/creator snippets; authored/pack text retains original language |
 | Player system logs | Structured rule diagnostics and engine-generated combat conclusions retain English protocol semantics with localized presentation | General player-visible log templates; model-facing English tool results remain independent |
 | Resource delivery | UI vs content namespaces; character/campaign boundaries; generated resources checked by lint; production Turbopack build and anonymous bilingual browser switch/reload succeed; home/character/campaign SSR and initial-script payloads measured | Hydrated/lazy network totals, authenticated campaign switching and active-play browser acceptance; route-level JS payload remains large |
 | Local Chinese TTS | Locale capability/voice preferences planned | Service not configured; implement/validate Unicode segmentation, voice discovery, locale-sensitive cache, numbers/units/names and real playback |
@@ -85,7 +85,7 @@ proprietary Chinese rulebooks. Review records distinguish implementation-agent
 source comparison from external/human approval. Preserve names, mechanisms,
 numbers, dice, units, placeholders and content-pack override boundaries. Retain
 source fingerprints and immutable English golden results; never refresh goldens
-to hide regressions. The 21 compressed baselines preserve exact original bytes
+to hide regressions. The 23 compressed baseline artifacts preserve exact original bytes
 and verify SHA-256 when loaded.
 
 Runtime evidence names Codex CLI 0.162.1: earlier exploration/social/utility
@@ -142,8 +142,17 @@ All 524 script suites pass (265.04 seconds), as do TypeScript, lint and the
 default production Turbopack build. This checkpoint does not complete the
 remaining UI, real-model journey or local audio acceptance gates.
 
-1. Complete remaining source-bearing enemy/PC saves, native feature names and
-   special roll captions. Carry structured condition notes into the remaining
+The [save caption checkpoint](validation/chinese-save-captions.md) adds source
+and purpose metadata to 47 existing forced-save caption producers and three
+feature-save context callers. All 60 original save calls retain their original
+rule inputs and record/no-record choices; 23 original English renders stay exact.
+Five native feature terms join the glossary. Authored names stay literal; these
+enemy save records remain DM-only. All 525 script suites pass (261.10 seconds),
+as do independent TypeScript, lint and the default production Turbopack build.
+
+1. Complete remaining direct save producers (maneuver cards, consumables,
+   downtime and endurance), native feature/reaction names, special roll captions
+   and the enemy non-save spell escape check. Carry structured condition notes into the remaining
    sheet/party surfaces, preserving proper/authored names, canonical IDs and
    English render parity.
 2. Continue the remaining main play UI and parameterized player logs in bounded

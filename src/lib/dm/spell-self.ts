@@ -10,6 +10,7 @@
 //
 // The cast guard calls casterCost once the spend has gone through.
 
+import { saveRoll } from "@/lib/roll-labels";
 import type { Campaign } from "@/lib/db/campaigns";
 import { createDmTurn, saveDmTurn } from "@/lib/db/dm-turns";
 import { getSheetById } from "@/lib/db/sheets";
@@ -30,7 +31,7 @@ export function casterCost(campaign: Campaign, sheet: CharacterSheet, spell: str
   }
   const turn = createDmTurn(campaign.id, [], "human_dm");
   try {
-    const save = rollCharacterSave(campaign, turn, sheet, "int", 15, `INT save against ${named}`);
+    const save = rollCharacterSave(campaign, turn, sheet, "int", 15, saveRoll(`INT save against ${named}`, "int", { kind: "save-against", name: named }));
     if (save.success) {
       return { casterCost: `${sheet.name}'s mind holds against the other plane (INT save ${save.total} against DC 15).` };
     }

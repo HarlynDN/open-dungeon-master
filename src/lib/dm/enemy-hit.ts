@@ -5,7 +5,7 @@ import { getEnemy, patchEnemyHp, type EncounterEnemy } from "@/lib/db/encounters
 import { enemyHpCap } from "@/lib/dm/monster-abilities";
 import { getSheetById, patchSheet } from "@/lib/db/sheets";
 import { insertRoll } from "@/lib/db/rolls";
-import { againstRoll } from "@/lib/roll-labels";
+import { saveRoll, againstRoll } from "@/lib/roll-labels";
 import { allocateSeq } from "@/lib/db/campaigns";
 import { publishPersisted, publishWithSeq } from "@/lib/events";
 import { isValidExpression, rollExpression, type RollResult } from "@/lib/dice";
@@ -120,7 +120,7 @@ export function resolveOnHit(
       target,
       rider.save,
       rider.dc,
-      `${target.name}: ${rider.save.toUpperCase()} save vs ${enemy.displayName}'s ${attack.name}`,
+      saveRoll(`${target.name}: ${rider.save.toUpperCase()} save vs ${enemy.displayName}'s ${attack.name}`, rider.save, { kind: "save-from", name: attack.name, from: { name: enemy.displayName, kind: "enemy" } }),
       rider.condition ?? rider.damageType,
     );
     saved = save.success;

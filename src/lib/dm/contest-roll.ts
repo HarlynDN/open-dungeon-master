@@ -90,6 +90,7 @@ export function rollFeatureSave(
   dc: number,
   detail: string,
   against?: string,
+  context: RollCheckContext = { kind: "feature-save", name: detail, literalName: true },
 ): { success: boolean; total: number | null; notes: string[] } {
   const sheet = getSheetById(stale.id) ?? stale;
   const args = {
@@ -112,7 +113,7 @@ export function rollFeatureSave(
     characterId: sheet.id,
     requestedBy: "dm",
     kind: "saving_throw",
-    ...checkRoll(`${sheet.name}: ${ability.toUpperCase()} save, ${detail}`.slice(0, 120), "ability", ability, { kind: "feature-save", name: detail }, { name: sheet.name, kind: "proper" }),
+    ...checkRoll(`${sheet.name}: ${ability.toUpperCase()} save, ${detail}`.slice(0, 120), "ability", ability, context, { name: sheet.name, kind: "proper" }),
     dc,
     result: outcome,
   });

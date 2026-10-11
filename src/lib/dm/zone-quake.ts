@@ -37,7 +37,7 @@ import { handleSetCondition } from "@/lib/dm/set-condition";
 import { breakConcentration, clearSpellConditionsByName } from "@/lib/dm/concentration";
 import { laySpellConditionsOnEnemy } from "@/lib/dm/spell-effects";
 import { rollCard } from "@/lib/dm/roll-card";
-import { areaRoll } from "@/lib/roll-labels";
+import { saveRoll, areaRoll } from "@/lib/roll-labels";
 
 function withQuakeTurn<T>(campaignId: string, run: (turn: DmTurn) => T): T {
   const turn = createDmTurn(campaignId, [], "human_dm");
@@ -78,14 +78,14 @@ export function quakeShake(campaign: Campaign, map: BattleMap, zone: SpellZone, 
           continue;
         }
         if (!prone(enemy.conditions)) {
-          const save = rollEnemySave(campaign.id, enemy, "dex", dc, { magical: true, record: { turn, detail: `${enemy.displayName}: DEX save against ${zone.spell}` } });
+          const save = rollEnemySave(campaign.id, enemy, "dex", dc, { magical: true, record: { turn, ...saveRoll(`${enemy.displayName}: DEX save against ${zone.spell}`, "dex", { kind: "save-against", name: zone.spell }, { name: enemy.displayName, kind: "enemy" }) } });
           if (!save.success && laySpellConditionsOnEnemy(enemy.id, ["prone"], {}).length) {
             lines.push(`${enemy.displayName} is knocked prone by ${zone.spell}.`);
           }
         }
         const standing = getEnemy(enemy.id);
         if (standing?.concentration) {
-          const kept = rollEnemySave(campaign.id, standing, "con", dc, { magical: true, record: { turn, detail: `${standing.displayName}: CON save to keep concentration in ${zone.spell}` } });
+          const kept = rollEnemySave(campaign.id, standing, "con", dc, { magical: true, record: { turn, ...saveRoll(`${standing.displayName}: CON save to keep concentration in ${zone.spell}`, "con", { kind: "concentration-zone", name: zone.spell }, { name: standing.displayName, kind: "enemy" }) } });
           if (!kept.success) {
             const spell = standing.concentration;
             setEnemyConcentration(standing.id, null);
@@ -100,7 +100,7 @@ export function quakeShake(campaign: Campaign, map: BattleMap, zone: SpellZone, 
         continue;
       }
       if (!prone(sheet.conditions)) {
-        const save = rollCharacterSave(campaign, turn, sheet, "dex", dc, `DEX save against ${zone.spell}`, "spell");
+        const save = rollCharacterSave(campaign, turn, sheet, "dex", dc, saveRoll(`DEX save against ${zone.spell}`, "dex", { kind: "save-against", name: zone.spell }), "spell");
         if (!save.success) {
           const laid = handleSetCondition(campaign, turn.id, getSheetById(sheet.id) ?? sheet, { condition: "prone" }, zone.spell);
           if (!("error" in laid)) {
@@ -110,7 +110,7 @@ export function quakeShake(campaign: Campaign, map: BattleMap, zone: SpellZone, 
       }
       const standing = getSheetById(sheet.id);
       if (standing?.concentratingOn) {
-        const kept = rollCharacterSave(campaign, turn, standing, "con", dc, `CON save to keep concentration in ${zone.spell}`);
+        const kept = rollCharacterSave(campaign, turn, standing, "con", dc, saveRoll(`CON save to keep concentration in ${zone.spell}`, "con", { kind: "concentration-zone", name: zone.spell }));
         if (!kept.success) {
           const spell = breakConcentration(campaign, turn.id, standing.id, `lost in ${zone.spell}`);
           if (spell) {
@@ -172,7 +172,7 @@ function fallIn(campaign: Campaign, encounter: Encounter, zone: SpellZone, token
     if (!enemy || enemy.status !== "alive") {
       return null;
     }
-    const save = rollEnemySave(campaign.id, enemy, "dex", dc, { magical: true, record: { detail: `${enemy.displayName}: DEX save against a fissure of ${zone.spell}` } });
+    const save = rollEnemySave(campaign.id, enemy, "dex", dc, { magical: true, record: { ...saveRoll(`${enemy.displayName}: DEX save against a fissure of ${zone.spell}`, "dex", { kind: "fissure", name: zone.spell }, { name: enemy.displayName, kind: "enemy" }) } });
     if (save.success) {
       return `${enemy.displayName} keeps its footing at the fissure's edge.`;
     }
@@ -189,7 +189,7 @@ function fallIn(campaign: Campaign, encounter: Encounter, zone: SpellZone, token
     return null;
   }
   return withQuakeTurn(campaign.id, (turn) => {
-    const save = rollCharacterSave(campaign, turn, sheet, "dex", dc, `DEX save against a fissure of ${zone.spell}`, "spell");
+    const save = rollCharacterSave(campaign, turn, sheet, "dex", dc, saveRoll(`DEX save against a fissure of ${zone.spell}`, "dex", { kind: "fissure", name: zone.spell }), "spell");
     if (save.success) {
       return `${sheet.name} keeps their footing at the fissure's edge.`;
     }

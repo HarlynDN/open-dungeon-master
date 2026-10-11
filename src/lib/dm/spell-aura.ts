@@ -37,7 +37,7 @@ import { clearSpellConditionsByName } from "@/lib/dm/concentration";
 import { spellEffectsOnEnemyDamage, spellKey } from "@/lib/dm/spell-effects";
 import type { CharacterSheet } from "@/lib/schemas/sheet";
 import { effectiveMaxHp } from "@/lib/dm/condition-logic";
-import { againstRoll } from "@/lib/roll-labels";
+import { saveRoll, againstRoll } from "@/lib/roll-labels";
 
 const FEET_PER_TILE = 5;
 
@@ -67,7 +67,7 @@ export function hurtEnemy(campaign: Campaign, encounter: Encounter, enemy: Encou
     const dc = Math.max(10, Math.floor(adjusted.amount / 2));
     // The same save the damage path rolls (enemy-damage.ts): its conditions
     // count, and the DM sees the roll.
-    const kept = hp > 0 && rollEnemySave(campaign.id, enemy, "con", dc, { record: { detail: `${enemy.displayName}: concentration on ${enemy.concentration} (CON save)` } }).success;
+    const kept = hp > 0 && rollEnemySave(campaign.id, enemy, "con", dc, { record: { ...saveRoll(`${enemy.displayName}: concentration on ${enemy.concentration} (CON save)`, "con", { kind: "concentration", name: enemy.concentration }, { name: enemy.displayName, kind: "enemy" }) } }).success;
     if (!kept) {
       setEnemyConcentration(enemy.id, null);
       clearSpellConditionsByName(campaign, enemy.concentration, undefined, enemy.id);
@@ -112,7 +112,7 @@ function auraHits(campaign: Campaign, encounter: Encounter, enemy: EncounterEnem
       const dice = ring.perSlotLevel ? addDice(ring.dice, ring.perSlotLevel, Math.max(0, slot - ring.baseLevel)) : ring.dice;
       const save = rollEnemySave(campaign.id, live, ring.save, dc, {
         magical: true,
-        record: { detail: `${live.displayName}: ${ring.save.toUpperCase()} save against ${aura.name}` },
+        record: { ...saveRoll(`${live.displayName}: ${ring.save.toUpperCase()} save against ${aura.name}`, ring.save, { kind: "save-against", name: aura.name }, { name: live.displayName, kind: "enemy" }) },
       });
       // Each creature's damage is its own roll, and its own card.
       const rolled = rollCard(campaign, null, caster.id, "damage", againstRoll(aura.name, live.displayName, "enemy"), dice, sheetAttacker(caster)).total;
@@ -162,7 +162,7 @@ function turnStartDamage(campaign: Campaign, encounter: Encounter, enemy: Encoun
     const dc = spellSaveDcFor(caster, resolved.name) ?? 13;
     const save = rollEnemySave(campaign.id, live, resolved.mech.save, dc, {
       magical: true,
-      record: { detail: `${live.displayName}: ${resolved.mech.save.toUpperCase()} save against ${resolved.name}` },
+      record: { ...saveRoll(`${live.displayName}: ${resolved.mech.save.toUpperCase()} save against ${resolved.name}`, resolved.mech.save, { kind: "save-against", name: resolved.name }, { name: live.displayName, kind: "enemy" }) },
     });
     if (save.success) {
       const ending = live.conditions.filter((name) => {
@@ -246,7 +246,7 @@ function curseOfWill(campaign: Campaign, enemy: EncounterEnemy, lines: string[])
     return;
   }
   const dc = spellSaveDcFor(caster, "Bestow Curse") ?? 13;
-  const save = rollEnemySave(campaign.id, enemy, "wis", dc, { magical: true, record: { detail: `${enemy.displayName}: WIS save against Bestow Curse` } });
+  const save = rollEnemySave(campaign.id, enemy, "wis", dc, { magical: true, record: { ...saveRoll(`${enemy.displayName}: WIS save against Bestow Curse`, "wis", { kind: "save-against", name: "Bestow Curse" }, { name: enemy.displayName, kind: "enemy" }) } });
   if (save.success || enemy.conditions.includes("dazed")) {
     return;
   }

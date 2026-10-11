@@ -36,7 +36,7 @@ import { getDmTurn } from "@/lib/db/dm-turns";
 import { feetBetween, priceTheAction, publishSheet } from "@/lib/dm/combat-features";
 import type { CharacterSheet } from "@/lib/schemas/sheet";
 import { rollCard, sheetAttacker } from "@/lib/dm/roll-card";
-import { againstRoll } from "@/lib/roll-labels";
+import { saveRoll, againstRoll } from "@/lib/roll-labels";
 
 const lower = (value: string | undefined | null) => (value ?? "").trim().toLowerCase();
 
@@ -140,7 +140,7 @@ function quiveringPalm(campaign: Campaign, turnId: string, sheet: CharacterSheet
   const rest = { ...meta };
   delete rest[QUIVERING];
   patchEnemyConditions(enemy.id, cleared, rest as typeof enemy.conditionMeta);
-  const save = rollEnemySave(campaign.id, enemy, "con", dc, { resist: true, record: { detail: `${enemy.displayName}: CON save against Quivering Palm` } });
+  const save = rollEnemySave(campaign.id, enemy, "con", dc, { resist: true, record: { ...saveRoll(`${enemy.displayName}: CON save against Quivering Palm`, "con", { kind: "save-against", name: "Quivering Palm" }, { name: enemy.displayName, kind: "enemy" }) } });
   price.commit();
   const live = listEnemies(encounter.id).find((entry) => entry.id === enemy.id) ?? enemy;
   const amount = save.success ? rollCard(campaign, null, sheet.id, "damage", againstRoll("Quivering Palm", live.displayName, "enemy"), "10d10", sheetAttacker(sheet)).total : live.currentHp;
@@ -196,7 +196,7 @@ function draconicPresence(campaign: Campaign, turnId: string, sheet: CharacterSh
   const dc = computeSheetDerived(sheet).spellSaveDc ?? 13;
   const lines: string[] = [];
   for (const enemy of targets) {
-    const save = rollEnemySave(campaign.id, enemy, "wis", dc, { magical: true, resist: true, record: { detail: `${enemy.displayName}: WIS save against Draconic Presence` } });
+    const save = rollEnemySave(campaign.id, enemy, "wis", dc, { magical: true, resist: true, record: { ...saveRoll(`${enemy.displayName}: WIS save against Draconic Presence`, "wis", { kind: "save-against", name: "Draconic Presence" }, { name: enemy.displayName, kind: "enemy" }) } });
     const immune = String(enemy.stats.conditionImmune ?? "").toLowerCase().includes(condition);
     if (save.success || immune) {
       lines.push(`${enemy.displayName} ${immune ? `cannot be ${condition}` : `resists (WIS ${save.total} vs DC ${dc})`}.`);

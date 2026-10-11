@@ -4,6 +4,11 @@ import type { TerminologyEntry } from "./terminology.ts";
 // terminology policy, not licensed publisher prose or an official translation.
 // IDs and contexts distinguish e.g. Goblin the language from the creature.
 export const ZH_CN_GLOSSARY = [
+  {"id":"combatCheck.feature.relentlessRage","matchSource":true,"source":"Relentless Rage","preferred":"不屈狂暴","scope":"rule","keys":["combatCheck.feature.relentlessRage"]},
+  {"id":"combatCheck.feature.indomitable","matchSource":true,"source":"Indomitable","preferred":"不屈","scope":"rule","keys":["combatCheck.feature.indomitable"]},
+  {"id":"combatCheck.feature.undeadFortitude","matchSource":true,"source":"Undead Fortitude","preferred":"亡灵韧性","scope":"rule","keys":["combatCheck.feature.undeadFortitude"]},
+  {"id":"combatCheck.feature.draconicPresence","matchSource":true,"source":"Draconic Presence","preferred":"龙族威仪","scope":"rule","keys":["combatCheck.feature.draconicPresence"]},
+  {"id":"combatCheck.feature.naturesSanctuary","matchSource":true,"source":"Nature's Sanctuary","preferred":"自然庇护","scope":"rule","keys":["combatCheck.feature.naturesSanctuary"]},
   {"id":"worldSetup.category.history","source":"History","preferred":"历史","scope":"ui","keys":["worldSetup.category.history"]},
   {"id":"worldSetup.category.religion","source":"Religion","preferred":"宗教","scope":"ui","keys":["worldSetup.category.religion"]},
   {"id":"rule.class.artificer","source":"Artificer","preferred":"奇械师","scope":"rule","keys":["rule.class.artificer"]},

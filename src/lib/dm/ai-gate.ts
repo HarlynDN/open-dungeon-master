@@ -18,7 +18,7 @@ import type { DmTurn } from "@/lib/db/dm-turns";
 import { getRoll, markRollApplied } from "@/lib/db/rolls";
 import { isValidExpression } from "@/lib/dice";
 import { spellFactsFor } from "@/lib/content";
-import { againstRoll } from "@/lib/roll-labels";
+import { saveRoll, againstRoll } from "@/lib/roll-labels";
 import { rollCard } from "@/lib/dm/roll-card";
 import { rollCharacterSave } from "@/lib/dm/forced-save";
 import { canonicalCondition } from "@/lib/dm/set-condition";
@@ -130,7 +130,7 @@ function bind(ctx: GateContext, args: Record<string, unknown>): GateOutcome {
   if (!SAVE_ABILITIES.has(ability) || !(dc >= 1)) {
     return { result: { error: AI_BIND_REFUSAL(sheet.name, wanted) } };
   }
-  const save = rollCharacterSave(ctx.campaign, ctx.turn, sheet, ability as SaveAbility, dc, `${ability.toUpperCase()} save against being ${wanted}`, wanted);
+  const save = rollCharacterSave(ctx.campaign, ctx.turn, sheet, ability as SaveAbility, dc, saveRoll(`${ability.toUpperCase()} save against being ${wanted}`, ability as SaveAbility, { kind: "avoid-condition", name: wanted }), wanted);
   if (save.success) {
     return {
       result: { ok: true, name: sheet.name, saved: true, note: `${sheet.name} makes the ${ability.toUpperCase()} save (${save.total} vs DC ${dc}): no ${wanted}.` },

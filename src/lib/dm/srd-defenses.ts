@@ -10,6 +10,7 @@
 //     save DC of 8 + WIS + proficiency (spell-defenses.ts sanctuaryRefusal
 //     reads tranquilityDc for a caster with no spell save DC of their own).
 
+import { saveRoll } from "@/lib/roll-labels";
 import type { Campaign } from "@/lib/db/campaigns";
 import type { EncounterEnemy } from "@/lib/db/encounters";
 import { getSheetById, patchSheet } from "@/lib/db/sheets";
@@ -30,7 +31,7 @@ export function naturesSanctuaryRefusal(campaignId: string, enemy: EncounterEnem
   const dc = computeSheetDerived(target).spellSaveDc ?? 13;
   const save = rollEnemySave(campaignId, enemy, "wis", dc, {
     magical: true,
-    record: { detail: `${enemy.displayName}: WIS save against ${target.name}'s Nature's Sanctuary` },
+    record: { ...saveRoll(`${enemy.displayName}: WIS save against ${target.name}'s Nature's Sanctuary`, "wis", { kind: "save-from", name: "Nature's Sanctuary", from: { name: target.name, kind: "proper" } }, { name: enemy.displayName, kind: "enemy" }) },
   });
   return save.success
     ? null

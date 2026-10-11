@@ -16,6 +16,10 @@ export function rollActionLabel(what: string, locale: AppLocale): string {
   }
   if (what === "the effect") return t("combatCheck.effect");
   if (what === "area effect") return t("combatRoll.areaEffect");
+  const features = catalogFor("en", "combatCheck.feature.");
+  const featureKey = Object.keys(features).find(key => features[key as MessageKey]?.toLowerCase() === what.toLowerCase());
+  if (featureKey) return t(featureKey as MessageKey);
+  if (what.toLowerCase() === "quivering palm") return t("combatDetail.effect.quivering_palm.name");
   let frame = /^(\d+) ft fall \((\d+d\d+) bludgeoning\)$/.exec(what);
   if (frame) return t("combatRoll.fall", { feet: frame[1], dice: frame[2] });
   frame = /^(\d+) ft fall into (.*) \((\d+d\d+) bludgeoning\)$/.exec(what);
@@ -97,7 +101,12 @@ export function rollPresentationLabel(raw: unknown, locale: AppLocale): string |
       if (!c) { detail = term; break; }
       const values: Record<string, string | number> = { term };
       if ("target" in c && c.target) values.target = c.target.kind === "enemy" ? referenceDisplayName("monster", c.target.name, locale) : c.target.name;
-      if ("name" in c) values.name = rollActionLabel(c.name, locale);
+      if ("name" in c) {
+        const conditions = catalogFor("en", "closedHelp.condition.");
+        const conditionKey = Object.keys(conditions).find(key => key.endsWith(".name") && conditions[key as MessageKey]?.toLowerCase() === c.name.toLowerCase());
+        values.name = c.literalName ? c.name : conditionKey ? t(conditionKey as MessageKey) : noteName(c.name, locale);
+      }
+      if ("from" in c) values.from = c.from.kind === "enemy" ? referenceDisplayName("monster", c.from.name, locale).replace(/(\d)$/, "$1 ") : c.from.name;
       if ("text" in c) values.text = c.text;
       const frame = c.kind === "escape-grapple" && c.target && typeof c.difficulty === "number" ? "escape-grapple-target" : c.kind;
       if ("difficulty" in c && typeof c.difficulty === "number") values.difficulty = c.difficulty;

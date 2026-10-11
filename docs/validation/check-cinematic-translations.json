@@ -7,10 +7,10 @@
   "review": "Group means at least half pass; contests retain existing tie/DC rules. Unknown names, tracker titles, authored reasons/features and historical prose remain literal. The original toast calls any failure Miss: English stays unchanged; Chinese uses 未命中 for attacks and 失败 for other rolls. Natural 1/20 labels do not assert automatic success/failure on a check. Concealed chronicle rolls now show a hidden caption in both locales instead of an empty numeric equation; this deliberate branch correction is tested separately from the 30 original full-result English renders. Source-compared fixed jump DC 10 and printed grapple escape DC; these public caption details remain visible, while adjudication fields stay separate.",
   "sourceSha256": {
     "src/lib/dm/check-tools.ts": "1935afc8e407b17b2162f89e6feba6b0e5702e2d5a7d846d26dcf8a4975629e3",
-    "src/lib/dm/contest-roll.ts": "0fd9d0d88532e39ac01b39e5e0b7bc6601ccebc736acdb88882f99731d7e8b6d",
+    "src/lib/dm/contest-roll.ts": "470324c2c97e131aacec50910cb2d50e392e40f2256e796659488e8a2f79985b",
     "src/lib/dm/roll-gates.ts": "d085e3b369433d9ce4159076a00b6682f7c4d0b1b9dc751f3d6107250ec55564",
     "src/lib/dm/action-common.ts": "21c7fa9a6aad73b77d8a8602a5fd4fce64224a0e097e89733c2a43f1782ea87f",
-    "src/lib/dm/forced-save.ts": "6a75f7730378713d6187d41d353d557e4ee93ba41113f2401e407470f2c40f97",
+    "src/lib/dm/forced-save.ts": "9dddf082f58b603eb7e1c7f0eae49e1e8df1515f2b1b647de79c25736be52ec0",
     "src/lib/dm/cast-at-player.ts": "5d0358b37da01cf9a2888f43cb8ed92002dd5a93db84136cd527b5eee73d0bb6",
     "src/lib/dm/aoe-characters.ts": "d904a81955c20a58a949ec95f7ef15f5c09335f7869365ccce834038cad5abcb",
     "src/lib/dm/concentration.ts": "e030817bf2c7903b3b0fcecb2f9e7d9a0ee906816c84b299b420edb7b7bb22b8",
@@ -19,7 +19,7 @@
     "src/lib/dm/jump-move.ts": "bab6fa077b1a3f5ecc6ef49fcaa661548235fd1292b7bb8b68e99a98c426ae1c"
   },
   "catalogSha256": {
-    "src/lib/i18n/check-roll-messages.ts": "d1e723d6bf9d0c3cc3d5e78075449a3b1093332824e4830be62184874ab9b5ce",
+    "src/lib/i18n/check-roll-messages.ts": "4e9aa45a4d27c0100077742d04b0c94da8eb896a98dc06326bcd452a1e2b4441",
     "src/lib/i18n/cinematic-messages.ts": "a667bae07e2befe43a5d5d5696b205113515fd85fc10246eda43a7f714bb50fd"
   },
   "englishGolden": {
@@ -28,5 +28,14 @@
     "renders": 30,
     "uncompressedSha256": "363d0d729fc1b3da63ca875e4a2b62d06c1e94f80253ec16ec7d7df13f283da5",
     "capture": "Original English cinematic JSX loaded from git show c2d86838. Initial fixture used an invalid roll marker; corrected to the real UUID syntax and captured from original commit, not the modified component. Existing 20 baseline files remain byte-identical."
+  },
+  "saveCaptionIntegration": {
+    "baselineCommit": "3db1642e",
+    "priorSha256": {
+      "src/lib/dm/contest-roll.ts": "0fd9d0d88532e39ac01b39e5e0b7bc6601ccebc736acdb88882f99731d7e8b6d",
+      "src/lib/dm/forced-save.ts": "6a75f7730378713d6187d41d353d557e4ee93ba41113f2401e407470f2c40f97",
+      "src/lib/i18n/check-roll-messages.ts": "d1e723d6bf9d0c3cc3d5e78075449a3b1093332824e4830be62184874ab9b5ce"
+    },
+    "review": "Re-compared only the forced-save additive record metadata, feature-save optional context/default literal name and appended 17 check messages. All 47 prior check/cinematic messages and 30 prior original English renders remain unchanged. Other source/catalog fingerprints remain intact; the new save-caption review records the expanded scope separately."
   }
 }

@@ -26,7 +26,7 @@ import { rollEnemySave } from "@/lib/dm/forced-save";
 import { lastCastSlot, spellKey } from "@/lib/dm/spell-effects";
 import { hurtEnemy } from "@/lib/dm/spell-aura";
 import { rollCard, sheetAttacker } from "@/lib/dm/roll-card";
-import { againstRoll } from "@/lib/roll-labels";
+import { saveRoll, againstRoll } from "@/lib/roll-labels";
 
 type TurnEndHook = (campaign: Campaign, enemy: EncounterEnemy, meta: ConditionMeta) => string | null;
 
@@ -79,7 +79,7 @@ function saveAtTurnEnd(campaign: Campaign, enemy: EncounterEnemy, meta: Conditio
   const save = rollEnemySave(campaign.id, enemy, ability, dc, {
     magical: true,
     resist: true,
-    record: { detail: `${enemy.displayName}: ${ability.toUpperCase()} save against ${resolved.name}` },
+    record: { ...saveRoll(`${enemy.displayName}: ${ability.toUpperCase()} save against ${resolved.name}`, ability, { kind: "save-against", name: resolved.name }, { name: enemy.displayName, kind: "enemy" }) },
   });
   const release = () => {
     const cleared = removeConditions(enemy.conditions, enemy.conditionMeta, held);

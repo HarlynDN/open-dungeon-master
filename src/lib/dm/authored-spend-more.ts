@@ -9,6 +9,7 @@
 //   - The reroll of the last failed save (Fanatical Focus, as Indomitable
 //     does): a success lifts what that failure laid on them.
 
+import { saveRoll } from "@/lib/roll-labels";
 import { getActiveEncounter, getEnemy, patchEnemyConditions } from "@/lib/db/encounters";
 import { listRecentRolls } from "@/lib/db/rolls";
 import { getSheetById } from "@/lib/db/sheets";
@@ -45,7 +46,7 @@ export function swarmPush(ctx: SpendContext, does: Extract<SpendDoes, { kind: "s
   const dc = derived.spellSaveDc ?? 8 + derived.proficiencyBonus + derived.abilityMods.wis;
   const save = rollEnemySave(ctx.campaign.id, enemy, "str", dc, {
     magical: true,
-    record: { turn: ctx.turn ?? undefined, detail: `${enemy.displayName}: STR save against ${ctx.spend.name}` },
+    record: { turn: ctx.turn ?? undefined, ...saveRoll(`${enemy.displayName}: STR save against ${ctx.spend.name}`, "str", { kind: "save-against", name: ctx.spend.name, literalName: true }, { name: enemy.displayName, kind: "enemy" }) },
   });
   if (save.success) {
     return { result: { target: enemy.displayName, save: save.total, dc, applied: `${enemy.displayName} holds its ground against the swarm.` } };
@@ -88,7 +89,7 @@ export function rerollLastSave(ctx: SpendContext): { error: string } | { patch?:
   }
   const dc = failed.dc!;
   const against = /\bvs\.? (.+)$/i.exec(failed.detail)?.[1];
-  const save = rollFeatureSave(campaign, sheet, ability, dc, `${ctx.spend.name} reroll`, against);
+  const save = rollFeatureSave(campaign, sheet, ability, dc, `${ctx.spend.name} reroll`, against, { kind: "feature-reroll", name: ctx.spend.name, literalName: true });
   if (!save.success) {
     return { result: { reroll: `The reroll fails too (${ability.toUpperCase()} ${save.total ?? "failed"} vs DC ${dc}); the failure stands.` } };
   }

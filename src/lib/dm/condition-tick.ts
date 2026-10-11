@@ -1,3 +1,4 @@
+import { saveRoll } from "@/lib/roll-labels";
 import { settleFrenzies } from "@/lib/dm/frenzy";
 import { allocateSeq, type Campaign } from "@/lib/db/campaigns";
 import type { TurnBudget } from "@/lib/dm/action-budget";
@@ -369,7 +370,7 @@ function tickEnemyConditions(campaign: Campaign, encounter: Encounter, by: numbe
           resist: true,
           // On the record like every roll, for the DM's eyes (enemy saves are
           // rolled silently at the table).
-          record: { detail: `${enemy.displayName}: ${due.ability.toUpperCase()} save to end ${due.name}` },
+          record: { ...saveRoll(`${enemy.displayName}: ${due.ability.toUpperCase()} save to end ${due.name}`, due.ability, { kind: "end-condition", name: due.name }, { name: enemy.displayName, kind: "enemy" }) },
         },
       );
       const shown = outcome.total === null ? "an automatic failure" : String(outcome.total);
@@ -459,7 +460,7 @@ function tickSheetConditions(
         getSheetById(sheet.id) ?? sheet,
         due.ability,
         due.dc,
-        `${due.ability.toUpperCase()} save to end ${due.name}`,
+        saveRoll(`${due.ability.toUpperCase()} save to end ${due.name}`, due.ability, { kind: "end-condition", name: due.name }),
         due.name,
       );
       // A carrier the save spent (an inspiration die) is gone from the

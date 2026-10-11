@@ -3,6 +3,7 @@
 // Kept apart from prismatic.ts, which resolves the cone through the mutation
 // dispatcher: condition-tick.ts imports this, and the clock imports
 // condition-tick.ts, so pulling the dispatcher in here closes an import cycle.
+import { saveRoll } from "@/lib/roll-labels";
 import type { Campaign } from "@/lib/db/campaigns";
 import { createDmTurn, saveDmTurn } from "@/lib/db/dm-turns";
 import { getActiveEncounter, getEnemy, listEnemies, patchEnemyConditions } from "@/lib/db/encounters";
@@ -49,7 +50,7 @@ export function violetRayTurnStart(campaign: Campaign, combatantIds: string[]): 
     for (const caster of casters) {
       const dc = spellSaveDcFor(caster, "Prismatic Spray") ?? 13;
       for (const enemy of held.filter((entry) => (entry.conditionMeta as ConditionMetaMap)[VIOLET_MARK]?.source === caster.id)) {
-        const save = rollEnemySave(campaign.id, enemy, "wis", dc, { magical: true, resist: true, record: { turn, detail: `${enemy.displayName}: WIS save against Prismatic Spray's violet ray` } });
+        const save = rollEnemySave(campaign.id, enemy, "wis", dc, { magical: true, resist: true, record: { turn, ...saveRoll(`${enemy.displayName}: WIS save against Prismatic Spray's violet ray`, "wis", { kind: "violet", name: "Prismatic Spray" }, { name: enemy.displayName, kind: "enemy" }) } });
         const cleared = withoutViolet(enemy.conditions, enemy.conditionMeta as ConditionMetaMap);
         patchEnemyConditions(enemy.id, cleared.conditions, cleared.meta);
         lines.push(
@@ -59,7 +60,7 @@ export function violetRayTurnStart(campaign: Campaign, combatantIds: string[]): 
         );
       }
       for (const sheet of heldSheets.filter((entry) => (entry.conditionMeta as ConditionMetaMap)[VIOLET_MARK]?.source === caster.id)) {
-        const save = rollCharacterSave(campaign, turn, sheet, "wis", dc, "WIS save against Prismatic Spray's violet ray", "spell");
+        const save = rollCharacterSave(campaign, turn, sheet, "wis", dc, saveRoll("WIS save against Prismatic Spray's violet ray", "wis", { kind: "violet", name: "Prismatic Spray" }), "spell");
         const cleared = withoutViolet(sheet.conditions, sheet.conditionMeta as ConditionMetaMap);
         const updated = patchSheet(sheet.id, {
           conditions: save.success ? cleared.conditions : [...cleared.conditions, "banished"],

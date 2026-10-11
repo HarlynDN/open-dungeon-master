@@ -625,7 +625,7 @@
     {
       "path": "src/app/campaigns/[campaignId]/RollCard.tsx",
       "state": "pending",
-      "review": "Owned verdict/DC/hidden/natural-roll strings and structured attack/area/death/stable/group/opposing/grapple/search/spell-check captions now localize with frozen English parity. Principal PC source/concentration save paths and ordinary requested/physical checks carry metadata. Typed targets preserve proper names and visibility filters. Still pending: other forced-save producers, native feature names and special roll variants. Unknown authored text and legacy rows retain original detail."
+      "review": "Owned verdict/DC/hidden/natural-roll strings and structured attack/area/death/stable/group/opposing/grapple/search/spell-check captions localize with frozen English parity. All existing records through the shared forced-save paths now carry source/purpose metadata, including condition upkeep, zones, on-hit riders and feature rerolls. Proper names, explicit authored feature/reaction names and visibility filters are preserved; 23 additional original English renders and 60 original save-call input contracts are frozen. Still pending: direct maneuver/consumable/downtime/endurance save producers, other native feature/reaction names, special roll variants and the enemy non-save escape check. Unknown authored text and legacy rows retain original detail."
     },
     {
       "path": "src/app/campaigns/[campaignId]/RulesPanel.tsx",

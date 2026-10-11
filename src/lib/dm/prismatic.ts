@@ -30,7 +30,7 @@ import { handleSetCondition } from "@/lib/dm/set-condition";
 import { rollCharacterSave, rollEnemySave } from "@/lib/dm/forced-save";
 import { rollCard } from "@/lib/dm/action-common";
 import type { RollAttacker } from "@/lib/db/rolls";
-import { againstRoll } from "@/lib/roll-labels";
+import { saveRoll, againstRoll } from "@/lib/roll-labels";
 import { layOnEnemy, turnEndMark } from "@/lib/dm/spell-riders";
 import type { ConditionMetaMap } from "@/lib/dm/condition-logic";
 import type { CharacterSheet } from "@/lib/schemas/sheet";
@@ -106,7 +106,7 @@ export function castPrismaticSpray(input: PrismaticCast): Array<Record<string, u
     if (!encounter || enemy.status !== "alive") {
       continue;
     }
-    const save = rollEnemySave(campaign.id, enemy, "dex", dc, { magical: true, record: { turn, detail: `${enemy.displayName}: DEX save against Prismatic Spray` } });
+    const save = rollEnemySave(campaign.id, enemy, "dex", dc, { magical: true, record: { turn, ...saveRoll(`${enemy.displayName}: DEX save against Prismatic Spray`, "dex", { kind: "save-against", name: "Prismatic Spray" }, { name: enemy.displayName, kind: "enemy" }) } });
     const rays = rollRays(rayDie(input, caster.id, enemy.displayName));
     const row: Record<string, unknown> = { target: enemy.displayName, save: save.total, success: save.success, rays: rays.map((ray) => RAYS[ray - 1].color) };
     const notes: string[] = [];
@@ -145,7 +145,7 @@ export function castPrismaticSpray(input: PrismaticCast): Array<Record<string, u
     if (sheet.deathSaves?.dead) {
       continue;
     }
-    const save = rollCharacterSave(campaign, turn, sheet, "dex", dc, "DEX save against Prismatic Spray", "spell");
+    const save = rollCharacterSave(campaign, turn, sheet, "dex", dc, saveRoll("DEX save against Prismatic Spray", "dex", { kind: "save-against", name: "Prismatic Spray" }), "spell");
     const rays = rollRays(rayDie(input, sheet.id, sheet.name));
     const notes: string[] = [];
     for (const ray of rays) {

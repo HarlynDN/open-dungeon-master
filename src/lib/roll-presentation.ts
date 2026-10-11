@@ -3,9 +3,10 @@
 // literal. A blind roll can keep the same caption it already disclosed.
 export type RollDisplayName = { name: string; kind: "enemy" | "proper" };
 export type RollCheckContext =
-  | { kind: "group" | "contest" | "hide" | "search" | "hold-grapple" | "land-jump" }
+  | { kind: "group" | "contest" | "hide" | "search" | "hold-grapple" | "land-jump" | "land-feet" | "keep-concentration" }
   | { kind: "grapple" | "shove" | "insight-deception"; target: RollDisplayName }
-  | { kind: "dispel" | "counterspell" | "escape-spell" | "save-against" | "concentration" | "feature-save"; name: string }
+  | { kind: "dispel" | "counterspell" | "escape-spell" | "save-against" | "concentration" | "concentration-slayer" | "feature-save" | "feature-reroll" | "concentration-zone" | "fissure" | "violet" | "save-after-damage" | "end-condition" | "avoid-condition"; name: string; literalName?: true }
+  | { kind: "save-from"; name: string; from: RollDisplayName; literalName?: true }
   | { kind: "escape-grapple"; target?: RollDisplayName; difficulty?: number }
   | { kind: "authored"; text: string };
 export type RollPresentation = (
@@ -61,14 +62,20 @@ export function parseRollPresentation(raw: unknown): RollPresentation | undefine
         const target = c.target === undefined ? undefined : name(c.target);
         if ((c.target !== undefined && !target) || (c.difficulty !== undefined && (typeof c.difficulty !== "number" || !Number.isFinite(c.difficulty) || !target))) return;
         context = { kind: "escape-grapple", ...(target ? { target } : {}), ...(typeof c.difficulty === "number" ? { difficulty: c.difficulty } : {}) };
-      } else if (["group", "contest", "hide", "search", "hold-grapple", "land-jump"].includes(c.kind)) {
+      } else if (["group", "contest", "hide", "search", "hold-grapple", "land-jump", "land-feet", "keep-concentration"].includes(c.kind)) {
         context = { kind: c.kind } as RollCheckContext;
       } else if (["grapple", "shove", "insight-deception"].includes(c.kind)) {
         const target = name(c.target);
         if (!target) return;
         context = { kind: c.kind, target } as RollCheckContext;
-      } else if (["dispel", "counterspell", "escape-spell", "save-against", "concentration", "feature-save"].includes(c.kind) && typeof c.name === "string") {
-        context = { kind: c.kind, name: c.name } as RollCheckContext;
+      } else if (["dispel", "counterspell", "escape-spell", "save-against", "concentration", "concentration-slayer", "feature-save", "feature-reroll", "concentration-zone", "fissure", "violet", "save-after-damage", "end-condition", "avoid-condition", "save-from"].includes(c.kind) && typeof c.name === "string") {
+        if (c.literalName !== undefined && c.literalName !== true) return;
+        const literal = c.literalName ? { literalName: true as const } : {};
+        if (c.kind === "save-from") {
+          const from = name(c.from);
+          if (!from) return;
+          context = { kind: "save-from", name: c.name, from, ...literal };
+        } else context = { kind: c.kind, name: c.name, ...literal } as RollCheckContext;
       } else if (c.kind === "authored" && typeof c.text === "string") context = { kind: "authored", text: c.text };
       else return;
     }

@@ -15,6 +15,7 @@
 // Reached from cast_buff with targetEnemyId and from cast_at_enemy; both pass
 // the slot spend in, so this module never imports mutations.ts.
 
+import { saveRoll } from "@/lib/roll-labels";
 import type { Campaign } from "@/lib/db/campaigns";
 import type { DmTurn } from "@/lib/db/dm-turns";
 import { getActiveEncounter, getEnemy, type EncounterEnemy } from "@/lib/db/encounters";
@@ -138,7 +139,7 @@ export function castShapeAtEnemy(
   const live = getEnemy(enemy.id) ?? enemy;
   const save = rollEnemySave(campaign.id, live, "wis", dc, {
     magical: true,
-    record: { turn, detail: `${live.displayName}: WIS save against ${named}` },
+    record: { turn, ...saveRoll(`${live.displayName}: WIS save against ${named}`, "wis", { kind: "save-against", name: named }, { name: live.displayName, kind: "enemy" }) },
   });
   let saved = save.success;
   Object.assign(base, {

@@ -38,6 +38,12 @@ export function checkRoll(detail: string, kind: "skill" | "ability", key: string
   return { detail, presentation: { kind: "check", term: { kind, key }, ...(context ? { context } : {}), ...(owner ? { owner } : {}) } };
 }
 
+// The original English detail also feeds rules and tool results. Presentation
+// is additive and contains only the source/purpose the existing caption names.
+export function saveRoll(detail: string, ability: string, context: RollCheckContext, owner?: RollDisplayName): RollDetail {
+  return checkRoll(detail, "ability", ability, context, owner);
+}
+
 // Who made the roll: its attacker, else the sheet it concerns.
 export function rollerName(roll: Pick<StoredRoll, "attacker">, sheetName: string | undefined): string | undefined {
   return roll.attacker ? roll.attacker.name : sheetName;

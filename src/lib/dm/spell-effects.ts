@@ -14,6 +14,7 @@
 // This module must not import mutations.ts, cast-tools.ts or
 // enemy-damage.ts (they import it).
 
+import { saveRoll } from "@/lib/roll-labels";
 import { getDatabase, parseJson } from "@/lib/db/core";
 import { getEnemy, patchEnemyConditions } from "@/lib/db/encounters";
 import { addConditionInstance, removeConditions, type ConditionMeta, type ConditionMetaMap } from "@/lib/dm/condition-logic";
@@ -194,7 +195,7 @@ export function spellEffectsOnEnemyDamage(enemyId: string): string[] {
       magical: true,
       resist: true,
       advantage,
-      record: { detail: `${enemy.displayName}: ${ability.toUpperCase()} save against ${entry.spell ?? name} (hurt)` },
+      record: { ...saveRoll(`${enemy.displayName}: ${ability.toUpperCase()} save against ${entry.spell ?? name} (hurt)`, ability, { kind: "save-after-damage", name: entry.spell ?? name }, { name: enemy.displayName, kind: "enemy" }) },
     });
     if (outcome.success) {
       endingSpells.add(tag);

@@ -24,7 +24,7 @@ import { rerollLastSave, swarmPush } from "@/lib/dm/authored-spend-more";
 import { summonSteelDefender } from "@/lib/dm/summon-defender";
 import type { CharacterSheet, FullPatchSheetInput } from "@/lib/schemas/sheet";
 import { rollCard, sheetAttacker } from "@/lib/dm/roll-card";
-import { againstRoll } from "@/lib/roll-labels";
+import { saveRoll, againstRoll } from "@/lib/roll-labels";
 
 // A spend's damage on one enemy, as the holder's dice card.
 const damageDice = (ctx: SpendContext, enemy: EncounterEnemy, dice: string) =>
@@ -237,7 +237,7 @@ export function resolveSpendEffect(ctx: SpendContext, does: SpendDoes): Resoluti
       const dc = saveDc(ctx, does.dcAbility);
       const save = rollEnemySave(campaign.id, enemy, does.save, dc, {
         resist: Boolean(does.condition) && bindsWorthResisting([does.condition ?? ""]),
-        record: { turn: ctx.turn ?? undefined, detail: `${enemy.displayName}: ${does.save.toUpperCase()} save against ${ctx.spend.name}` },
+        record: { turn: ctx.turn ?? undefined, ...saveRoll(`${enemy.displayName}: ${does.save.toUpperCase()} save against ${ctx.spend.name}`, does.save, { kind: "save-against", name: ctx.spend.name, literalName: true }, { name: enemy.displayName, kind: "enemy" }) },
       });
       const result: Record<string, unknown> = { target: enemy.displayName, save: save.total, dc, saved: save.success };
       const dice = does.perUnit ? addUnits(does.perUnit, does.perUnit, ctx.units - 1) : does.dice ? formula(ctx, does.dice) : null;
@@ -400,7 +400,7 @@ function burst(ctx: SpendContext, spec: NonNullable<Extract<SpendDoes, { kind: "
   for (const enemy of enemies) {
     const save = rollEnemySave(ctx.campaign.id, enemy, spec.save, dc, {
       resist: Boolean(spec.condition) && bindsWorthResisting([spec.condition ?? ""]),
-      record: { turn: ctx.turn ?? undefined, detail: `${enemy.displayName}: ${spec.save.toUpperCase()} save against ${ctx.spend.name}` },
+      record: { turn: ctx.turn ?? undefined, ...saveRoll(`${enemy.displayName}: ${spec.save.toUpperCase()} save against ${ctx.spend.name}`, spec.save, { kind: "save-against", name: ctx.spend.name, literalName: true }, { name: enemy.displayName, kind: "enemy" }) },
     });
     if (save.success) {
       lines.push(`${enemy.displayName} resists (${spec.save.toUpperCase()} ${save.total} vs DC ${dc}).`);

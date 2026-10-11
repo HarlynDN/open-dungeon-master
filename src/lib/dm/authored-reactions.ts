@@ -29,7 +29,7 @@ import { applyEnemyDamage, publishEncounter, resolveEnemyRef } from "@/lib/dm/en
 import { rollEnemySave } from "@/lib/dm/forced-save";
 import { bindsWorthResisting } from "@/lib/dm/legendary-logic";
 import { freshLastHit, rerollAttacker, type LastHit, type SwingRecord } from "@/lib/dm/last-hit";
-import { againstRoll } from "@/lib/roll-labels";
+import { saveRoll, againstRoll } from "@/lib/roll-labels";
 import { READIED } from "@/lib/dm/object-actions";
 import { applyPcDamage } from "@/lib/dm/pc-damage";
 import { handlePcAttack } from "@/lib/dm/pc-attack";
@@ -337,7 +337,7 @@ function resolve(ctx: Ctx, found: Found): Record<string, unknown> | { error: str
         const dc = saveDc(holder, does.save.dcAbility);
         const save = rollEnemySave(ctx.campaign.id, enemy, does.save.ability, dc, {
           magical: true,
-          record: { turn: ctx.turn, detail: `${enemy.displayName}: ${does.save.ability.toUpperCase()} save against ${reaction.name}` },
+          record: { turn: ctx.turn, ...saveRoll(`${enemy.displayName}: ${does.save.ability.toUpperCase()} save against ${reaction.name}`, does.save.ability, { kind: "save-against", name: reaction.name, literalName: true }, { name: enemy.displayName, kind: "enemy" }) },
         });
         out.save = `${save.total ?? "failed"} vs DC ${dc}`;
         if (save.success && !does.save.damageRegardless) {
@@ -394,7 +394,7 @@ function resolve(ctx: Ctx, found: Found): Record<string, unknown> | { error: str
       const save = rollEnemySave(ctx.campaign.id, enemy, does.save, dc, {
         magical: true,
         resist: bindsWorthResisting([condition]),
-        record: { turn: ctx.turn, detail: `${enemy.displayName}: ${does.save.toUpperCase()} save against ${reaction.name}` },
+        record: { turn: ctx.turn, ...saveRoll(`${enemy.displayName}: ${does.save.toUpperCase()} save against ${reaction.name}`, does.save, { kind: "save-against", name: reaction.name, literalName: true }, { name: enemy.displayName, kind: "enemy" }) },
       });
       if (save.success) {
         return { applied: `${enemy.displayName} resists (${does.save.toUpperCase()} ${save.total} vs DC ${dc}).` };

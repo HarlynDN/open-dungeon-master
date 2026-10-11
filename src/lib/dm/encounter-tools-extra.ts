@@ -1,3 +1,4 @@
+import { saveRoll } from "@/lib/roll-labels";
 import { z } from "zod";
 import type { Campaign } from "@/lib/db/campaigns";
 import { getActiveEncounter, listEnemies, patchEnemyConditions, patchEnemyHp } from "@/lib/db/encounters";
@@ -253,7 +254,7 @@ function handleEnemyCondition(
       }
       const save = rollEnemySave(campaign.id, enemy, args.saveAbility, args.saveDc, {
         resist: true,
-        record: { turn: ctx.turn, detail: `${enemy.displayName}: ${args.saveAbility.toUpperCase()} save against being ${wanted}` },
+        record: { turn: ctx.turn, ...saveRoll(`${enemy.displayName}: ${args.saveAbility.toUpperCase()} save against being ${wanted}`, args.saveAbility, { kind: "avoid-condition", name: wanted }, { name: enemy.displayName, kind: "enemy" }) },
       });
       initialSave = `${args.saveAbility.toUpperCase()} save ${save.total ?? "failed outright"} vs DC ${args.saveDc}`;
       if (save.success) {

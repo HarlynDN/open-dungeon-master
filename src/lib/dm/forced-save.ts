@@ -8,7 +8,7 @@
 // request_roll (src/lib/dm/invoke-roll.ts), group_check and aoe_damage call
 // in here; cast_at_player and cast_at_enemy are meant to.
 
-import type { RollDetail } from "@/lib/roll-presentation";
+import type { RollDetail, RollPresentation } from "@/lib/roll-presentation";
 import { diehardSaveAdvantage, shieldMasterSaveBonus } from "@/lib/srd/feat-combat";
 import { LUCK_SPEND } from "@/lib/dm/roll-riders";
 import { spendLuckCounter } from "@/lib/srd/class-resources";
@@ -276,7 +276,7 @@ export function rollEnemySave(
     magical?: boolean;
     advantage?: boolean;
     disadvantage?: boolean;
-    record?: { turn?: DmTurn; detail: string };
+    record?: { turn?: DmTurn; detail: string; presentation?: RollPresentation };
     // The failed save would bind the creature (a condition that takes its
     // turn, its movement or its mind): a creature with Legendary Resistance
     // spends one and succeeds instead, as a DM running it would
@@ -323,6 +323,7 @@ export function rollEnemySave(
       requestedBy: "dm",
       kind: "saving_throw",
       detail: options.record.detail.slice(0, 200),
+      ...(options.record.presentation ? { presentation: options.record.presentation } : {}),
       dc,
       ...(advantage === "none" ? {} : { advantage }),
       result: outcome,

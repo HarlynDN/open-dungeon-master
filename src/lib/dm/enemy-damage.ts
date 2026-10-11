@@ -1,3 +1,4 @@
+import { saveRoll } from "@/lib/roll-labels";
 import { getFloor, setFloor, type Campaign } from "@/lib/db/campaigns";
 import { silencedImmunity } from "@/lib/dm/zone-rules";
 import { burnWebUnder } from "@/lib/dm/zone-cast";
@@ -336,7 +337,7 @@ export function applyEnemyDamage(
   ) {
     const dc = 5 + adjusted.amount;
     // A save like any other (forced-save.ts): exhaustion, Bane, its roll row.
-    const save = rollEnemySave(campaign.id, enemy, "con", dc, { record: { turn, detail: `${enemy.displayName}: Undead Fortitude (CON save)` } });
+    const save = rollEnemySave(campaign.id, enemy, "con", dc, { record: { turn, ...saveRoll(`${enemy.displayName}: Undead Fortitude (CON save)`, "con", { kind: "feature-save", name: "Undead Fortitude" }, { name: enemy.displayName, kind: "enemy" }) } });
     if (save.success) {
       math = { currentHp: 1, dropped: false };
       fortitude = `${enemy.displayName}'s Undead Fortitude holds (CON save ${save.total} vs DC ${dc}): it stays up at 1 hit point.`;
@@ -406,7 +407,7 @@ export function applyEnemyDamage(
       const slain = options?.concentrationDisadvantage === true;
       const outcome = rollEnemySave(campaign.id, enemy, "con", dc, {
         ...(slain ? { disadvantage: true } : {}),
-        record: { turn, detail: `${enemy.displayName}: concentration on ${spell} (CON save${slain ? ", Mage Slayer: disadvantage" : ""})` },
+        record: { turn, ...saveRoll(`${enemy.displayName}: concentration on ${spell} (CON save${slain ? ", Mage Slayer: disadvantage" : ""})`, "con", (slain ? { kind: "concentration-slayer", name: spell } : { kind: "concentration", name: spell }), { name: enemy.displayName, kind: "enemy" }) },
       });
       const held = outcome.success;
       if (slain) {

@@ -7,6 +7,7 @@
 // of cast-tools.ts, which re-exports it; this module imports mutations (for
 // the slot spend) and must never be imported by it.
 
+import { saveRoll } from "@/lib/roll-labels";
 import { magicImmunityProblem } from "@/lib/dm/monster-traits";
 import { describeConditionDuration } from "@/lib/dm/condition-logic";
 import { z } from "zod";
@@ -358,7 +359,7 @@ export function handleCastAtEnemy(
       magical: true,
       resist,
       ...spellSaveOptions(mech, enemy),
-      record: { turn, detail: `${enemy.displayName}: ${ability.toUpperCase()} save against ${spellName}` },
+      record: { turn, ...saveRoll(`${enemy.displayName}: ${ability.toUpperCase()} save against ${spellName}`, ability, { kind: "save-against", name: spellName }, { name: enemy.displayName, kind: "enemy" }) },
     });
     saved = save.success;
     Object.assign(base, {

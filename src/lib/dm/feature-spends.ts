@@ -394,7 +394,7 @@ function indomitable(campaign: Campaign, sheet: CharacterSheet): Resolution {
   }
   const dc = failed.dc!;
   const against = /\bvs\.? (.+)$/i.exec(failed.detail)?.[1];
-  const save = rollFeatureSave(campaign, sheet, ability, dc, "Indomitable reroll", against);
+  const save = rollFeatureSave(campaign, sheet, ability, dc, "Indomitable reroll", against, { kind: "feature-reroll", name: "Indomitable" });
   if (!save.success) {
     return { result: { indomitable: `The reroll fails too (${ability.toUpperCase()} ${save.total ?? "failed"} vs DC ${dc}); the failure stands.` } };
   }

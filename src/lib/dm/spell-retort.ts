@@ -22,7 +22,7 @@ import { applyEnemyDamage, publishEncounter } from "@/lib/dm/enemy-damage";
 import { rollEnemySave } from "@/lib/dm/forced-save";
 import type { CharacterSheet } from "@/lib/schemas/sheet";
 import { rollCard, sheetAttacker } from "@/lib/dm/roll-card";
-import { againstRoll } from "@/lib/roll-labels";
+import { saveRoll, againstRoll } from "@/lib/roll-labels";
 
 // The riders of the attacker's next swing, with what this one spent taken
 // off the creature (the spent condition leaves its row).
@@ -119,7 +119,7 @@ export function spellRetort(
       const save = rollEnemySave(campaign.id, live, "con", dc, {
         magical: true,
         resist: true,
-        record: { turn, detail: `${live.displayName}: CON save against Holy Aura` },
+        record: { turn, ...saveRoll(`${live.displayName}: CON save against Holy Aura`, "con", { kind: "save-against", name: "Holy Aura" }, { name: live.displayName, kind: "enemy" }) },
       });
       if (!save.success && !live.conditions.includes("blinded")) {
         const meta: ConditionMetaMap = { ...(live.conditionMeta as ConditionMetaMap), blinded: { spell: "Holy Aura", source: caster.id } };

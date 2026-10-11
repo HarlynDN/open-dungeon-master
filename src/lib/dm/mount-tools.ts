@@ -1,3 +1,4 @@
+import { saveRoll } from "@/lib/roll-labels";
 import { z } from "zod";
 import { allocateSeq, type Campaign } from "@/lib/db/campaigns";
 import { getMounts, setMount } from "@/lib/db/mounts";
@@ -242,7 +243,7 @@ export function handleDismount(
   // and lays them prone on a failure (SRD 5.1, Mounted Combat).
   tableNote(campaign, `${sheet.name} is thrown from ${current.name}.`);
   const save = turn
-    ? rollCharacterSave(campaign, turn, sheet, "dex", DISMOUNT_SAVE_DC, `${sheet.name}: DEX save to land on their feet`)
+    ? rollCharacterSave(campaign, turn, sheet, "dex", DISMOUNT_SAVE_DC, saveRoll(`${sheet.name}: DEX save to land on their feet`, "dex", { kind: "land-feet" }))
     : null;
   const failed = !save || !save.success;
   if (failed && turn) {

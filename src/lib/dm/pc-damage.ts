@@ -343,7 +343,7 @@ function relentlessRage(
   }
   const used = sheet.resources?.relentless_rage?.used ?? 0;
   const dc = 10 + 5 * used;
-  const save = rollFeatureSave(campaign, sheet, "con", dc, "Relentless Rage");
+  const save = rollFeatureSave(campaign, sheet, "con", dc, "Relentless Rage", undefined, { kind: "feature-save", name: "Relentless Rage" });
   const now = getSheetById(sheet.id) ?? sheet;
   const resources = {
     ...now.resources,

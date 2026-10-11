@@ -19,5 +19,7 @@
   "combat-ui-goldens.json": "60b09271195c776a7b291647294e44d85692d41774a1f0a69b675a4446fdcd7a",
   "condition-ui-goldens.json": "dfc53e390b828f1917e038266e9e0c65bbb89b963aa1b7ec4038e7851872a5f3",
   "roll-presentation-goldens.json": "e6e7532b8b39e5d0fd8219ebe19b8a3b66f1664174d259b9b3ac35b1bc34de51",
-  "check-cinematic-goldens.json": "363d0d729fc1b3da63ca875e4a2b62d06c1e94f80253ec16ec7d7df13f283da5"
+  "check-cinematic-goldens.json": "363d0d729fc1b3da63ca875e4a2b62d06c1e94f80253ec16ec7d7df13f283da5",
+  "save-caption-goldens.json": "24bb9373e2d013d4cfc15ba54707a9c926da522d47a7f57e79bc86a68f74f7f2",
+  "save-caption-contracts.json": "3078e220f595352618e027c56e978e9ae54943143d141840dd5ad72bc0f03f89"
 }

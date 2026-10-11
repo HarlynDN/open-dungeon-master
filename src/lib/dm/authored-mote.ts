@@ -28,7 +28,7 @@ import { applyEnemyDamage, publishEncounter } from "@/lib/dm/enemy-damage";
 import { rollEnemySave } from "@/lib/dm/forced-save";
 import type { CharacterSheet } from "@/lib/schemas/sheet";
 import { rollCard, sheetAttacker } from "@/lib/dm/roll-card";
-import { againstRoll } from "@/lib/roll-labels";
+import { saveRoll, againstRoll } from "@/lib/roll-labels";
 
 export type HeldMote = { bardId: string; die: string; sides: number };
 
@@ -91,7 +91,7 @@ export function moteBurst(campaign: Campaign, turn: DmTurn, mote: HeldMote | nul
   const dc = derived?.spellSaveDc ?? 8 + (derived?.proficiencyBonus ?? 2) + (derived?.abilityMods.cha ?? 0);
   const save = rollEnemySave(campaign.id, enemy, "con", dc, {
     magical: true,
-    record: { turn, detail: `${enemy.displayName}: CON save against the mote's burst` },
+    record: { turn, ...saveRoll(`${enemy.displayName}: CON save against the mote's burst`, "con", { kind: "save-against", name: "the mote's burst" }, { name: enemy.displayName, kind: "enemy" }) },
   });
   if (save.success) {
     return `Mote of Potential: the mote bursts on ${enemy.displayName}, which shrugs it off (CON ${save.total} vs DC ${dc}).`;

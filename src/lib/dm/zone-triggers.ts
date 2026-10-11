@@ -22,7 +22,7 @@ import { createDmTurn, saveDmTurn, type DmTurn } from "@/lib/db/dm-turns";
 import { getBattleMapForEncounter, listHiddenRefIds, listTokens, moveToken, type BattleMap } from "@/lib/db/battle-maps";
 import type { RollAttacker } from "@/lib/db/rolls";
 import { rollCard } from "@/lib/dm/roll-card";
-import { againstRoll } from "@/lib/roll-labels";
+import { saveRoll, againstRoll } from "@/lib/roll-labels";
 import { getActiveEncounter, getEnemy, patchEnemyConditions, setEnemyConcentration, turnKey, type Encounter, type EncounterEnemy } from "@/lib/db/encounters";
 import { getSheetById, patchSheet } from "@/lib/db/sheets";
 import { publishPersisted } from "@/lib/events";
@@ -148,7 +148,7 @@ function strike(
     }
     const immune = trigger.immuneSucceeds && new RegExp(`\\b${trigger.immuneSucceeds}\\b`, "i").test(enemy.stats.immune ?? "");
     const save = trigger.save && !immune
-      ? rollEnemySave(campaign.id, enemy, trigger.save, dc, { magical: true, resist: Boolean(trigger.condition) && bindsWorthResisting([trigger.condition ?? ""]), record: { detail: `${enemy.displayName}: ${trigger.save.toUpperCase()} save against ${zone.spell}` } })
+      ? rollEnemySave(campaign.id, enemy, trigger.save, dc, { magical: true, resist: Boolean(trigger.condition) && bindsWorthResisting([trigger.condition ?? ""]), record: { ...saveRoll(`${enemy.displayName}: ${trigger.save.toUpperCase()} save against ${zone.spell}`, trigger.save, { kind: "save-against", name: zone.spell }, { name: enemy.displayName, kind: "enemy" }) } })
       : null;
     const failed = trigger.save ? !immune && !save?.success : true;
     if (trigger.save) {
@@ -180,7 +180,7 @@ function strike(
   }
   return withZoneTurn(campaign.id, (turn) => {
     const save = trigger.save
-      ? rollCharacterSave(campaign, turn, sheet, trigger.save, dc, `${trigger.save.toUpperCase()} save against ${zone.spell}`, [trigger.type, "spell"].filter(Boolean).join(" "))
+      ? rollCharacterSave(campaign, turn, sheet, trigger.save, dc, saveRoll(`${trigger.save.toUpperCase()} save against ${zone.spell}`, trigger.save, { kind: "save-against", name: zone.spell }), [trigger.type, "spell"].filter(Boolean).join(" "))
       : null;
     const failed = trigger.save ? !save?.success : true;
     if (trigger.save) {
@@ -234,7 +234,7 @@ function afterFailOnEnemy(campaign: Campaign, map: BattleMap, zone: SpellZone, t
     lines.push(`${enemy.displayName} spends its action this turn retching.`);
   }
   if (trigger.concentrationSave && enemy.concentration) {
-    const kept = rollEnemySave(campaign.id, enemy, "con", dc, { magical: true, record: { detail: `${enemy.displayName}: CON save to keep concentration in ${zone.spell}` } });
+    const kept = rollEnemySave(campaign.id, enemy, "con", dc, { magical: true, record: { ...saveRoll(`${enemy.displayName}: CON save to keep concentration in ${zone.spell}`, "con", { kind: "concentration-zone", name: zone.spell }, { name: enemy.displayName, kind: "enemy" }) } });
     if (!kept.success) {
       const spell = enemy.concentration;
       setEnemyConcentration(enemy.id, null);
@@ -272,7 +272,7 @@ function afterFailOnCharacter(campaign: Campaign, turn: DmTurn, map: BattleMap, 
     lines.push(`${sheet.name} spends their action this turn retching.`);
   }
   if (trigger.concentrationSave && sheet.concentratingOn) {
-    const kept = rollCharacterSave(campaign, turn, sheet, "con", dc, `CON save to keep concentration in ${zone.spell}`);
+    const kept = rollCharacterSave(campaign, turn, sheet, "con", dc, saveRoll(`CON save to keep concentration in ${zone.spell}`, "con", { kind: "concentration-zone", name: zone.spell }));
     if (!kept.success) {
       const spell = breakConcentration(campaign, turn.id, sheet.id, `lost in ${zone.spell}`);
       if (spell) {

@@ -15,6 +15,7 @@
 // Must not be imported by enemy-damage.ts or mutations.ts (it imports both
 // through its callers' paths).
 
+import { saveRoll } from "@/lib/roll-labels";
 import type { Campaign } from "@/lib/db/campaigns";
 import { getDatabase } from "@/lib/db/core";
 import type { DmTurn } from "@/lib/db/dm-turns";
@@ -281,7 +282,7 @@ export function concentrationShaken(
     if (!enemy?.concentration || enemy.status !== "alive") {
       continue;
     }
-    const save = rollEnemySave(campaign.id, enemy, ability, dc, { magical: true, record: { turn, detail: `${enemy.displayName}: ${ability.toUpperCase()} save to keep concentrating` } });
+    const save = rollEnemySave(campaign.id, enemy, ability, dc, { magical: true, record: { turn, ...saveRoll(`${enemy.displayName}: ${ability.toUpperCase()} save to keep concentrating`, ability, { kind: "keep-concentration" }, { name: enemy.displayName, kind: "enemy" }) } });
     if (!save.success) {
       const spell = enemy.concentration;
       setEnemyConcentration(enemy.id, null);
@@ -294,7 +295,7 @@ export function concentrationShaken(
     if (!sheet?.concentratingOn) {
       continue;
     }
-    const save = rollCharacterSave(campaign, turn, sheet, ability, dc, `${sheet.name}: ${ability.toUpperCase()} save to keep concentrating`);
+    const save = rollCharacterSave(campaign, turn, sheet, ability, dc, saveRoll(`${sheet.name}: ${ability.toUpperCase()} save to keep concentrating`, ability, { kind: "keep-concentration" }));
     if (!save.success) {
       const spell = breakConcentration(campaign, turn.id, sheet.id, "the storm broke it");
       if (spell) {
@@ -322,7 +323,7 @@ export function heatMetalGrip(
   if (!ability || !standing || standing.status !== "alive") {
     return null;
   }
-  const save = rollEnemySave(campaign.id, standing, ability, dc, { magical: true, record: { turn, detail: `${standing.displayName}: ${ability.toUpperCase()} save against ${source.spell}` } });
+  const save = rollEnemySave(campaign.id, standing, ability, dc, { magical: true, record: { turn, ...saveRoll(`${standing.displayName}: ${ability.toUpperCase()} save against ${source.spell}`, ability, { kind: "save-against", name: source.spell }, { name: standing.displayName, kind: "enemy" }) } });
   if (!worn && !save.success) {
     return `${standing.displayName} drops the searing object (${ability.toUpperCase()} save failed).`;
   }

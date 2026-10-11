@@ -12,7 +12,7 @@ import { allocateSeq, type Campaign } from "@/lib/db/campaigns";
 import { getActiveEncounter, getEnemy, type EncounterEnemy } from "@/lib/db/encounters";
 import { insertRoll, type RollAttacker } from "@/lib/db/rolls";
 import { getBattleMapForEncounter, listHiddenRefIds } from "@/lib/db/battle-maps";
-import { areaRoll } from "@/lib/roll-labels";
+import { saveRoll, areaRoll } from "@/lib/roll-labels";
 import type { DmTurn } from "@/lib/db/dm-turns";
 import { isValidExpression, rollExpression } from "@/lib/dice";
 import { publishWithSeq } from "@/lib/events";
@@ -401,7 +401,7 @@ export function handleAoeDamage(
           // condition, as it would on one cast at it alone (legendary-logic.ts).
           resist: Boolean(plan?.conditions.length) && bindsWorthResisting(plan?.conditions ?? [], Boolean(plan?.mech?.condition?.endsWith)),
           ...(plan ? spellSaveOptions(plan.mech, enemy) : {}),
-          ...(plan ? { record: { turn, detail: `${enemy.displayName}: ${ability.toUpperCase()} save against ${plan.spell}` } } : {}),
+          ...(plan ? { record: { turn, ...saveRoll(`${enemy.displayName}: ${ability.toUpperCase()} save against ${plan.spell}`, ability, { kind: "save-against", name: plan.spell }, { name: enemy.displayName, kind: "enemy" }) } } : {}),
         });
     const success = untouched ? true : save ? save.success : false;
     const taken = partsTaken(blast, success ? (halfOnSave ? "half" : "none") : "full");
