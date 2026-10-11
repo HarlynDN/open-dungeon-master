@@ -16,6 +16,9 @@ import type { CampaignMember } from "@/lib/campaign-types";
 import type { Note } from "@/lib/db/notes";
 import { DictateField } from "@/components/DictateField";
 import { appendDictation } from "@/lib/dictation";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { messageTemplate } from "@/lib/i18n/translator";
+import { journalErrorText } from "@/lib/i18n/journal-presentations";
 
 // Campaign notes tab: the lead's public party notes and pinned events, the
 // suggestion queue, and each member's private notes. Character-scoped notes
@@ -49,6 +52,7 @@ function NoteCard({
   deleteLabel: string;
   refreshNotes: () => Promise<void>;
 }) {
+  const { t } = useLocale();
   const [editing, setEditing] = useState(false);
   const [title, setTitle] = useState(note.title);
   const [body, setBody] = useState(note.body);
@@ -86,10 +90,10 @@ function NoteCard({
             value={title}
             onChange={(event) => setTitle(event.target.value)}
             maxLength={120}
-            placeholder="Title (optional)"
+            placeholder={t("journalUi.title")}
             className="w-full rounded border border-stone-700 bg-stone-900 px-2 py-1 text-xs outline-none focus:border-amber-600"
           />
-          <DictateField label="Note" onTranscript={(text) => setBody((current) => appendDictation(current, text, 2000))}>
+          <DictateField label={t("journalUi.note")} onTranscript={(text) => setBody((current) => appendDictation(current, text, 2000))}>
             <textarea
               value={body}
               onChange={(event) => setBody(event.target.value)}
@@ -109,7 +113,7 @@ function NoteCard({
               className="flex items-center gap-1 rounded border border-stone-700 px-2 py-0.5 text-[11px] text-stone-300 hover:bg-stone-900 disabled:opacity-50"
             >
               {busy ? <Loader2 className="size-3 animate-spin" /> : <Check className="size-3" />}
-              Save
+              {t("journalUi.save")}
             </button>
             <button
               type="button"
@@ -120,7 +124,7 @@ function NoteCard({
               }}
               className="flex items-center gap-1 rounded border border-stone-700 px-2 py-0.5 text-[11px] text-stone-500 hover:bg-stone-900"
             >
-              <X className="size-3" /> Cancel
+              <X className="size-3" /> {t("common.cancel")}
             </button>
           </div>
         </div>
@@ -143,10 +147,10 @@ function NoteCard({
                   type="button"
                   disabled={busy} aria-busy={busy}
                   onClick={() => patch({ status: "active" })}
-                  title="Approve: publish to the whole party"
+                  title={t("journalUi.approveHint")}
                   className="flex items-center gap-0.5 rounded border border-emerald-900 px-1.5 py-0.5 text-emerald-400 hover:bg-emerald-950/50"
                 >
-                  <Check className="size-3" /> Approve
+                  <Check className="size-3" /> {t("journalUi.approve")}
                 </button>
               ) : null}
               {canPin ? (
@@ -154,7 +158,7 @@ function NoteCard({
                   type="button"
                   disabled={busy} aria-busy={busy}
                   onClick={() => patch({ pinned: !note.pinned })}
-                  title={note.pinned ? "Unpin" : "Pin to the top (the DM treats pinned notes as key canon)"}
+                  title={t(note.pinned ? "journalUi.unpin" : "journalUi.pin")}
                   className="text-stone-500 hover:text-amber-300"
                 >
                   {note.pinned ? <PinOff className="size-3" /> : <Pin className="size-3" />}
@@ -164,7 +168,7 @@ function NoteCard({
                 <button
                   type="button"
                   onClick={() => setEditing(true)}
-                  title="Edit"
+                  title={t("journalUi.edit")}
                   className="text-stone-500 hover:text-stone-300"
                 >
                   <Pencil className="size-3" />
@@ -200,17 +204,14 @@ export function NoteComposer({
   steersStory: boolean;
   refreshNotes: () => Promise<void>;
 }) {
+  const { t, locale } = useLocale();
   const [visibility, setVisibility] = useState<"public" | "private">("private");
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
-  const publicLabel = characterId
-    ? "Party note"
-    : steersStory
-      ? "Party note"
-      : "Suggest party note";
+  const publicLabel = t(characterId || steersStory ? "journalUi.partyNote" : "journalUi.suggest");
 
   async function submit() {
     if (!body.trim() || busy) {
@@ -231,14 +232,14 @@ export function NoteComposer({
       });
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
-        setError(data.error || "Could not save the note.");
+        setError(data.error || messageTemplate("en", "journalUi.error.note"));
         return;
       }
       setTitle("");
       setBody("");
       await refreshNotes();
     } catch {
-      setError("Could not reach the server.");
+      setError(messageTemplate("en", "journalUi.error.network"));
     } finally {
       setBusy(false);
     }
@@ -249,7 +250,7 @@ export function NoteComposer({
       <div className="mb-1.5 flex gap-1">
         {(
           [
-            ["private", "Private note"],
+            ["private", t("journalUi.privateNote")],
             ["public", publicLabel],
           ] as Array<["private" | "public", string]>
         ).map(([value, label]) => (
@@ -273,27 +274,27 @@ export function NoteComposer({
           value={title}
           onChange={(event) => setTitle(event.target.value)}
           maxLength={120}
-          placeholder="Title (optional)"
+          placeholder={t("journalUi.title")}
           className="mb-1.5 w-full rounded border border-stone-700 bg-stone-900 px-2 py-1 text-xs outline-none focus:border-amber-600"
         />
       ) : null}
-      <DictateField label="Note" onTranscript={(text) => setBody((current) => appendDictation(current, text, 2000))}>
+      <DictateField label={t("journalUi.note")} onTranscript={(text) => setBody((current) => appendDictation(current, text, 2000))}>
         <textarea
           value={body}
           onChange={(event) => setBody(event.target.value)}
           rows={2}
           maxLength={2000}
           placeholder={
-            visibility === "private"
-              ? "Only you will see this"
+            t(visibility === "private"
+              ? "journalUi.privateHint"
               : steersStory || characterId
-                ? "Visible to the whole party"
-                : "Sent to the party lead for approval"
+                ? "journalUi.publicHint"
+                : "journalUi.suggestHint")
           }
           className="w-full rounded border border-stone-700 bg-stone-900 px-2 py-1 text-[11px] leading-4 outline-none focus:border-amber-600"
         />
       </DictateField>
-      {error ? <p className="motion-shake mt-1 text-[10px] text-red-400">{error}</p> : null}
+      {error ? <p className="motion-shake mt-1 text-[10px] text-red-400">{journalErrorText(error, locale, "journalUi.error.note")}</p> : null}
       <button
         type="button"
         onClick={submit}
@@ -301,7 +302,7 @@ export function NoteComposer({
         className="mt-1.5 flex w-full items-center justify-center gap-1 rounded border border-stone-700 py-1 text-[11px] text-stone-400 hover:bg-stone-900 disabled:opacity-50"
       >
         {busy ? <Loader2 className="size-3 animate-spin" /> : <StickyNote className="size-3" />}
-        Add note
+        {t("journalUi.add")}
       </button>
     </div>
   );
@@ -332,8 +333,9 @@ export function PendingNotesList({
   meUserId: string;
   refreshNotes: () => Promise<void>;
 }) {
+  const { t } = useLocale();
   const nameFor = (userId: string) =>
-    members.find((member) => member.userId === userId)?.username ?? "Unknown";
+    members.find((member) => member.userId === userId)?.username ?? t("journalUi.unknown");
   return (
     <ul className="stagger space-y-1.5">
       {notes.map((note) => (
@@ -341,12 +343,12 @@ export function PendingNotesList({
           key={note.id}
           campaignId={campaignId}
           note={note}
-          authorName={note.authorKind === "dm" ? "The DM" : nameFor(note.authorUserId)}
+          authorName={note.authorKind === "dm" ? t("journalUi.dm") : nameFor(note.authorUserId)}
           canEdit={note.authorUserId === meUserId}
           canDelete
           canPin={false}
           canApprove
-          deleteLabel="Reject suggestion"
+          deleteLabel={t("journalUi.reject")}
           refreshNotes={refreshNotes}
         />
       ))}
@@ -369,8 +371,9 @@ export function NotesPanel({
   steersStory: boolean;
   refreshNotes: () => Promise<void>;
 }) {
+  const { t } = useLocale();
   const nameFor = (userId: string) =>
-    members.find((member) => member.userId === userId)?.username ?? "Unknown";
+    members.find((member) => member.userId === userId)?.username ?? t("journalUi.unknown");
 
   const campaignNotes = notes.filter((note) => note.characterId === null);
   const partyNotes = campaignNotes
@@ -395,7 +398,7 @@ export function NotesPanel({
 
       {leadQueue.length ? (
         <div className="reveal space-y-1.5">
-          <h3 className={cn(section, "text-amber-400")}>Suggestions awaiting you</h3>
+          <h3 className={cn(section, "text-amber-400")}>{t("journalUi.awaitingYou")}</h3>
           <PendingNotesList
             campaignId={campaignId}
             notes={leadQueue}
@@ -408,19 +411,19 @@ export function NotesPanel({
 
       {mySuggestions.length ? (
         <div className="reveal space-y-1.5">
-          <h3 className={section}>My suggestions (awaiting the lead)</h3>
+          <h3 className={section}>{t("journalUi.mySuggestions")}</h3>
           <ul className="stagger space-y-1.5">
             {mySuggestions.map((note) => (
               <NoteCard
                 key={note.id}
                 campaignId={campaignId}
                 note={note}
-                authorName="You"
+                authorName={t("journalUi.you")}
                 canEdit
                 canDelete
                 canPin={false}
                 canApprove={false}
-                deleteLabel="Withdraw suggestion"
+                deleteLabel={t("journalUi.withdraw")}
                 refreshNotes={refreshNotes}
               />
             ))}
@@ -429,7 +432,7 @@ export function NotesPanel({
       ) : null}
 
       <div className="space-y-1.5">
-        <h3 className={section}>Party notes</h3>
+        <h3 className={section}>{t("journalUi.partyNotes")}</h3>
         {partyNotes.length ? (
           <ul className="stagger space-y-1.5">
             {partyNotes.map((note) => (
@@ -442,22 +445,20 @@ export function NotesPanel({
                 canDelete={steersStory || note.authorUserId === meUserId}
                 canPin={steersStory}
                 canApprove={false}
-                deleteLabel="Delete note"
+                deleteLabel={t("journalUi.delete")}
                 refreshNotes={refreshNotes}
               />
             ))}
           </ul>
         ) : (
           <p className="px-1 text-[11px] text-stone-600">
-            {steersStory
-              ? "Pin key events and facts here; the DM treats them as canon."
-              : "Nothing recorded yet. Suggest a note and the party lead can publish it."}
+            {t(steersStory ? "journalUi.partyEmptyLead" : "journalUi.partyEmpty")}
           </p>
         )}
       </div>
 
       <div className="space-y-1.5">
-        <h3 className={section}>My private notes</h3>
+        <h3 className={section}>{t("journalUi.myPrivate")}</h3>
         {myPrivate.length ? (
           <ul className="stagger space-y-1.5">
             {myPrivate.map((note) => (
@@ -465,18 +466,18 @@ export function NotesPanel({
                 key={note.id}
                 campaignId={campaignId}
                 note={note}
-                authorName="Only you can see this"
+                authorName={t("journalUi.onlyYou")}
                 canEdit
                 canDelete
                 canPin={false}
                 canApprove={false}
-                deleteLabel="Delete note"
+                deleteLabel={t("journalUi.delete")}
                 refreshNotes={refreshNotes}
               />
             ))}
           </ul>
         ) : (
-          <p className="px-1 text-[11px] text-stone-600">No private notes yet.</p>
+          <p className="px-1 text-[11px] text-stone-600">{t("journalUi.privateEmpty")}</p>
         )}
       </div>
     </div>

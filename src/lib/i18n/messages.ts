@@ -53,8 +53,10 @@ import { SHEET_RESOURCE_HELP_MESSAGES } from "./sheet-resource-help-messages.ts"
 import { AUTHORED_RESOURCE_MESSAGES } from "./authored-resource-messages.ts";
 import { ADDITIONAL_RESOURCE_MESSAGES } from "./additional-resource-messages.ts";
 import { TURN_CONTROL_MESSAGES } from "./turn-control-messages.ts";
+import { JOURNAL_MESSAGES } from "./journal-messages.ts";
 
 const en = {
+  ...JOURNAL_MESSAGES.en,
   ...TURN_CONTROL_MESSAGES.en,
   ...ADDITIONAL_RESOURCE_MESSAGES.en,
   ...AUTHORED_RESOURCE_MESSAGES.en,
@@ -137,6 +139,7 @@ export type MessageKey = keyof typeof en;
 type Messages = Record<MessageKey, string>;
 
 const zhCN: Messages = {
+  ...JOURNAL_MESSAGES["zh-CN"],
   ...TURN_CONTROL_MESSAGES["zh-CN"],
   ...ADDITIONAL_RESOURCE_MESSAGES["zh-CN"],
   ...AUTHORED_RESOURCE_MESSAGES["zh-CN"],

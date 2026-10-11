@@ -5,6 +5,9 @@ import { useState } from "react";
 import { cn } from "@/lib/cn";
 import { ui } from "@/lib/ui";
 import { Dialog } from "@/components/ui/Dialog";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { messageTemplate } from "@/lib/i18n/translator";
+import { journalErrorText } from "@/lib/i18n/journal-presentations";
 
 export type ReportTarget = {
   // The message being flagged, or nothing when a player is reported as such.
@@ -18,14 +21,9 @@ export type ReportTarget = {
   mode?: "report" | "block";
 };
 
-const REASONS: Array<{ value: string; label: string }> = [
-  { value: "harassment", label: "Harassment or bullying" },
-  { value: "sexual", label: "Sexual content" },
-  { value: "hate", label: "Hate or discrimination" },
-  { value: "violence", label: "Graphic violence or threats" },
-  { value: "spam", label: "Spam or off topic" },
-  { value: "other", label: "Something else" },
-];
+const REASONS = ["harassment", "sexual", "hate", "violence", "spam", "other"] as const;
+
+type ReportDone = { key: "journalUi.report.blocked" | "journalUi.report.both" | "journalUi.report.sent"; name: string };
 
 // Flags a passage, a message or a player to this server's admins, with the
 // option to block the player at the same time. There is no central service,
@@ -42,20 +40,23 @@ export function ReportDialog({
   // The block landed; the caller hides that player's messages at once.
   onBlocked?: (userId: string) => void;
 }) {
+  const { t, locale } = useLocale();
   const [reason, setReason] = useState("harassment");
   const [details, setDetails] = useState("");
   const [block, setBlock] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  const [done, setDone] = useState("");
+  const [done, setDone] = useState<ReportDone | null>(null);
   const blockOnly = target?.mode === "block";
+  const targetLabel = target?.authorType === "dm" && target.label === messageTemplate("en", "journalUi.report.dmLabel")
+    ? t("journalUi.report.dmLabel") : target?.label ?? "";
 
   function close() {
     setReason("harassment");
     setDetails("");
     setBlock(false);
     setError("");
-    setDone("");
+    setDone(null);
     onClose();
   }
 
@@ -67,7 +68,7 @@ export function ReportDialog({
     });
     if (!response.ok) {
       const data = await response.json().catch(() => ({}));
-      setError(data.error || "Could not block that player.");
+      setError(data.error || messageTemplate("en", "journalUi.error.block"));
       return false;
     }
     onBlocked?.(userId);
@@ -81,7 +82,7 @@ export function ReportDialog({
     try {
       if (blockOnly) {
         if (target.userId && (await blockUser(target.userId))) {
-          setDone(`${target.label} is blocked. Their messages are hidden from you, and neither of you can message or friend the other.`);
+          setDone({ key: "journalUi.report.blocked", name: target.label });
         }
         return;
       }
@@ -97,17 +98,13 @@ export function ReportDialog({
       });
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
-        setError(data.error || "Could not send the report.");
+        setError(data.error || messageTemplate("en", "journalUi.error.report"));
         return;
       }
       if (block && target.userId && !(await blockUser(target.userId))) {
         return;
       }
-      setDone(
-        block && target.userId
-          ? `Reported, and ${target.label} is blocked. The admins of this server will review it.`
-          : "Reported. The admins of this server will review it.",
-      );
+      setDone({ key: block && target.userId ? "journalUi.report.both" : "journalUi.report.sent", name: target.label });
     } finally {
       setBusy(false);
     }
@@ -117,29 +114,27 @@ export function ReportDialog({
     <Dialog
       open={Boolean(target)}
       onOpenChange={(open) => !open && close()}
-      title={blockOnly ? `Block ${target?.label ?? ""}` : `Report ${target?.label ?? ""}`}
+      title={t(blockOnly ? "journalUi.report.blockTitle" : "journalUi.report.title", { name: targetLabel })}
       icon={blockOnly ? <ShieldBan className="size-4 text-red-300" /> : <Flag className="size-4 text-amber-300" />}
     >
       {done ? (
         <div className="reveal space-y-4">
-          <p className="text-sm text-stone-300">{done}</p>
+          <p className="text-sm text-stone-300">{t(done.key, { name: done.name })}</p>
           <div className="flex justify-end">
             <button type="button" onClick={close} className={ui.btnPrimary}>
-              Done
+              {t("journalUi.report.done")}
             </button>
           </div>
         </div>
       ) : blockOnly ? (
         <div className="reveal space-y-4">
           <p className="text-sm leading-6 text-stone-400">
-            Blocking hides {target?.label}&apos;s table messages from you on this server, and
-            stops either of you from opening a private chat or sending a friend request.
-            You can undo it any time from Account settings.
+            {t("journalUi.report.blockHint", { name: targetLabel })}
           </p>
-          {error ? <p className="motion-shake text-sm text-red-400">{error}</p> : null}
+          {error ? <p className="motion-shake text-sm text-red-400">{journalErrorText(error, locale, "journalUi.error.block")}</p> : null}
           <div className="flex justify-end gap-2">
             <button type="button" onClick={close} className={ui.btnSmall} disabled={busy} aria-busy={busy}>
-              Cancel
+              {t("common.cancel")}
             </button>
             <button
               type="button"
@@ -148,38 +143,36 @@ export function ReportDialog({
               className={cn(ui.btnPrimary, "from-red-200 via-red-300 to-red-500 text-red-950")}
             >
               {busy ? <Loader2 className="size-4 animate-spin" /> : <ShieldBan className="size-4" />}
-              Block
+              {t("journalUi.report.block")}
             </button>
           </div>
         </div>
       ) : (
         <div className="space-y-4">
           <p className="text-sm leading-6 text-stone-400">
-            {target?.authorType === "dm"
-              ? "This flags the passage to the admins of this server. Generated narration is only as good as the model behind it, and this is how the operator finds out when it crosses a line."
-              : "This flags the message to the admins of this server, who can act on it. The player is not told who reported them."}
+            {t(target?.authorType === "dm" ? "journalUi.report.dmHint" : "journalUi.report.playerHint")}
           </p>
           <fieldset className="space-y-1.5">
-            <legend className="mb-1 text-xs uppercase tracking-wide text-stone-500">Reason</legend>
+            <legend className="mb-1 text-xs uppercase tracking-wide text-stone-500">{t("journalUi.report.reason")}</legend>
             {REASONS.map((entry) => (
               <label
-                key={entry.value}
+                key={entry}
                 className="flex cursor-pointer items-center gap-2 text-sm text-stone-300"
               >
                 <input
                   type="radio"
                   name="report-reason"
-                  value={entry.value}
-                  checked={reason === entry.value}
-                  onChange={() => setReason(entry.value)}
+                  value={entry}
+                  checked={reason === entry}
+                  onChange={() => setReason(entry)}
                   className="accent-amber-400"
                 />
-                {entry.label}
+                {t(`journalUi.report.reason.${entry}`)}
               </label>
             ))}
           </fieldset>
           <label className="block text-xs text-stone-400">
-            Anything the admins should know (optional)
+            {t("journalUi.report.details")}
             <textarea
               value={details}
               onChange={(event) => setDetails(event.target.value)}
@@ -196,17 +189,17 @@ export function ReportDialog({
                 onChange={(event) => setBlock(event.target.checked)}
                 className="accent-amber-400"
               />
-              Also block {target.label}
+              {t("journalUi.report.alsoBlock", { name: targetLabel })}
             </label>
           ) : null}
-          {error ? <p className="motion-shake text-sm text-red-400">{error}</p> : null}
+          {error ? <p className="motion-shake text-sm text-red-400">{journalErrorText(error, locale, "journalUi.error.report")}</p> : null}
           <div className="flex justify-end gap-2">
             <button type="button" onClick={close} className={ui.btnSmall} disabled={busy} aria-busy={busy}>
-              Cancel
+              {t("common.cancel")}
             </button>
             <button type="button" onClick={submit} disabled={busy} aria-busy={busy} className={ui.btnPrimary}>
               {busy ? <Loader2 className="size-4 animate-spin" /> : <Flag className="size-4" />}
-              Send report
+              {t("journalUi.report.send")}
             </button>
           </div>
         </div>

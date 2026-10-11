@@ -15,6 +15,7 @@ import type { Note } from "@/lib/db/notes";
 import type { CharacterSheet } from "@/lib/schemas/sheet";
 import { DictateField } from "@/components/DictateField";
 import { appendDictation } from "@/lib/dictation";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 // Notes attached to one character: public party notes (anyone can write;
 // the author, the party lead, and the character's owner can delete) and the
@@ -34,6 +35,7 @@ function CharacterNoteRow({
   canDelete: boolean;
   refreshNotes: () => Promise<void>;
 }) {
+  const { t } = useLocale();
   const [editing, setEditing] = useState(false);
   const [body, setBody] = useState(note.body);
   const [busy, setBusy] = useState(false);
@@ -52,13 +54,13 @@ function CharacterNoteRow({
     <li className={panelRow}>
       {editing ? (
         <div className="reveal space-y-1.5">
-          <DictateField label="Note" onTranscript={(text) => setBody((current) => appendDictation(current, text, 2000))}>
+          <DictateField label={t("journalUi.note")} onTranscript={(text) => setBody((current) => appendDictation(current, text, 2000))}>
             <textarea
               value={body}
               onChange={(event) => setBody(event.target.value)}
               rows={2}
               maxLength={2000}
-              aria-label="Note"
+              aria-label={t("journalUi.note")}
               className={cn(panelField, "leading-5")}
             />
           </DictateField>
@@ -79,7 +81,7 @@ function CharacterNoteRow({
               }}
             >
               {busy ? null : <Check className="size-3.5" />}
-              Save
+              {t("journalUi.save")}
             </KitButton>
             <KitButton
               onClick={() => {
@@ -87,7 +89,7 @@ function CharacterNoteRow({
                 setBody(note.body);
               }}
             >
-              <X className="size-3.5" /> Cancel
+              <X className="size-3.5" /> {t("common.cancel")}
             </KitButton>
           </div>
         </div>
@@ -98,7 +100,7 @@ function CharacterNoteRow({
             <span className="truncate">{authorName}</span>
             <span className="ml-auto flex shrink-0 items-center gap-0.5">
               {canEdit ? (
-                <KitButton tone="icon" always onClick={() => setEditing(true)} title="Edit" aria-label="Edit">
+                <KitButton tone="icon" always onClick={() => setEditing(true)} title={t("journalUi.edit")} aria-label={t("journalUi.edit")}>
                   <Pencil className="size-3.5" />
                 </KitButton>
               ) : null}
@@ -108,7 +110,7 @@ function CharacterNoteRow({
                   always
                   disabled={busy}
                   busy={busy}
-                  aria-label="Delete note"
+                  aria-label={t("journalUi.delete")}
                   onClick={() =>
                     run(() =>
                       fetch(`/api/campaigns/${campaignId}/notes/${note.id}`, {
@@ -116,7 +118,7 @@ function CharacterNoteRow({
                       }),
                     )
                   }
-                  title="Delete note"
+                  title={t("journalUi.delete")}
                 >
                   {busy ? null : <Trash2 className="size-3.5" />}
                 </KitButton>
@@ -148,10 +150,11 @@ export function CharacterNotesDialog({
   refreshNotes: () => Promise<void>;
   onClose: () => void;
 }) {
+  const { t } = useLocale();
   const nameFor = (userId: string) =>
     userId === meUserId
-      ? "You"
-      : members.find((member) => member.userId === userId)?.username ?? "Unknown";
+      ? t("journalUi.you")
+      : members.find((member) => member.userId === userId)?.username ?? t("journalUi.unknown");
 
   const characterNotes = notes.filter((note) => note.characterId === sheet.id);
   const publicNotes = characterNotes
@@ -175,9 +178,9 @@ export function CharacterNotesDialog({
           <div className="mb-3 flex items-center justify-between">
             <Dialog.Title className="flex items-center gap-2 font-display text-lg tracking-wide">
               <GameIcon icon={{ kind: "glyph", key: "tab-notes" }} size="size-7" />
-              <span className="gold-title">Notes on {sheet.name}</span>
+              <span className="gold-title">{t("journalUi.characterTitle", { name: sheet.name })}</span>
             </Dialog.Title>
-            <Dialog.Close aria-label="Close" className="pk-tap rounded p-1 text-stone-500 hover:text-amber-200 motion-nudge">
+            <Dialog.Close aria-label={t("common.close")} className="pk-tap rounded p-1 text-stone-500 hover:text-amber-200 motion-nudge">
               <X className="size-4" />
             </Dialog.Close>
           </div>
@@ -191,7 +194,7 @@ export function CharacterNotesDialog({
             />
 
             <div className="space-y-1.5">
-              <SectionHead title="Party notes" glyph="tab-party" aside={publicNotes.length || null} />
+              <SectionHead title={t("journalUi.partyNotes")} glyph="tab-party" aside={publicNotes.length || null} />
               {publicNotes.length ? (
                 <ul className="stagger space-y-1.5">
                   {publicNotes.map((note) => (
@@ -207,12 +210,12 @@ export function CharacterNotesDialog({
                   ))}
                 </ul>
               ) : (
-                <EmptyState size="sm" art="scrolls" title={`No party notes on ${sheet.name} yet.`} />
+                <EmptyState size="sm" art="scrolls" title={t("journalUi.characterEmpty", { name: sheet.name })} />
               )}
             </div>
 
             <div className="space-y-1.5">
-              <SectionHead title="My notes (only you see these)" glyph="tab-journal" aside={myNotes.length || null} />
+              <SectionHead title={t("journalUi.characterPrivate")} glyph="tab-journal" aside={myNotes.length || null} />
               {myNotes.length ? (
                 <ul className="stagger space-y-1.5">
                   {myNotes.map((note) => (
@@ -220,7 +223,7 @@ export function CharacterNotesDialog({
                       key={note.id}
                       campaignId={campaignId}
                       note={note}
-                      authorName="You"
+                      authorName={t("journalUi.you")}
                       canEdit
                       canDelete
                       refreshNotes={refreshNotes}
@@ -228,7 +231,7 @@ export function CharacterNotesDialog({
                   ))}
                 </ul>
               ) : (
-                <EmptyState size="sm" art="scrolls" title="No private notes yet." />
+                <EmptyState size="sm" art="scrolls" title={t("journalUi.privateEmpty")} />
               )}
             </div>
           </div>

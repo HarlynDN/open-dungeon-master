@@ -8,6 +8,7 @@ import { SectionHead } from "@/components/ui/SectionHead";
 import { cn } from "@/lib/cn";
 import { PanelLoading } from "./PanelKit";
 import type { FriendshipTier, RomanceStage } from "@/lib/dm/relationship-logic";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 // Where each character stands with the people they have dealt with. The
 // server sends a tier WORD rather than the raw meter (the party lead also
@@ -53,27 +54,8 @@ const TIER_GLYPH: Record<FriendshipTier, string> = {
   devoted: "attitude-allied",
 };
 
-const TIER_WORD: Record<FriendshipTier, string> = {
-  hostile: "Hostile",
-  disliked: "Dislikes",
-  wary: "Wary",
-  neutral: "Neutral",
-  cordial: "Cordial",
-  friendly: "Friendly",
-  close: "Close",
-  devoted: "Devoted",
-};
-
-const ROMANCE_WORD: Record<RomanceStage, string> = {
-  none: "",
-  interested: "Interested",
-  courting: "Courting",
-  together: "Together",
-  betrothed: "Betrothed",
-  married: "Married",
-};
-
 function BondRow({ bond }: { bond: RelationshipView }) {
+  const { t, locale } = useLocale();
   return (
     <li className="panel rounded-lg px-2.5 py-2">
       <div className="flex items-center gap-2">
@@ -81,15 +63,15 @@ function BondRow({ bond }: { bond: RelationshipView }) {
         <span className="min-w-0 flex-1 text-sm text-stone-200">
           {bond.subjectName}
           <span className="eyebrow ml-1.5 text-[10px] text-amber-400/70">
-            {bond.subjectKind === "companion" ? "companion" : "npc"}
+            {t(bond.subjectKind === "companion" ? "journalUi.bond.companion" : "journalUi.bond.npc")}
           </span>
           {bond.status === "parted" ? (
             <span className="ml-1.5 text-[11px] text-stone-500">
-              away{bond.apartChapters > 0 ? ` ${bond.apartChapters}ch` : ""}
+              {bond.apartChapters > 0 ? t("journalUi.bond.awayChapters", { count: bond.apartChapters }) : t("journalUi.bond.away")}
             </span>
           ) : null}
           {bond.status === "ended" ? (
-            <span className="ml-1.5 text-[11px] text-stone-500">ended</span>
+            <span className="ml-1.5 text-[11px] text-stone-500">{t("journalUi.bond.ended")}</span>
           ) : null}
         </span>
         <span
@@ -97,22 +79,22 @@ function BondRow({ bond }: { bond: RelationshipView }) {
             "shrink-0 rounded-full border px-2 py-0.5 text-[11px]",
             TIER_STYLES[bond.tier],
           )}
-          title={bond.tierLabel}
+          title={locale === "en" ? bond.tierLabel : t(`journalUi.bond.hint.${bond.tier}`)}
         >
-          {TIER_WORD[bond.tier]}
+          {t(`journalUi.bond.tier.${bond.tier}`)}
           {bond.approval === undefined ? "" : ` ${bond.approval > 0 ? "+" : ""}${bond.approval}`}
         </span>
         {bond.romance !== "none" ? (
           <span
             className="flex shrink-0 items-center gap-1 rounded-full border border-rose-900/60 bg-rose-950/30 px-2 py-0.5 text-[11px] text-rose-200"
-            title={`Romance: ${ROMANCE_WORD[bond.romance]}`}
+            title={t("journalUi.bond.romanceHint", { stage: t(`journalUi.bond.romance.${bond.romance}`) })}
           >
             {bond.status === "ended" ? (
               <HeartCrack className="size-2.5" />
             ) : (
               <Heart className="size-2.5" />
             )}
-            {ROMANCE_WORD[bond.romance]}
+            {t(`journalUi.bond.romance.${bond.romance}`)}
           </span>
         ) : null}
       </div>
@@ -126,6 +108,7 @@ function BondRow({ bond }: { bond: RelationshipView }) {
 }
 
 export function BondsPanel({ campaignId, refreshKey }: { campaignId: string; refreshKey: number }) {
+  const { t } = useLocale();
   const [bonds, setBonds] = useState<RelationshipView[]>([]);
   const [enabled, setEnabled] = useState(true);
   const [loading, setLoading] = useState(true);
@@ -151,16 +134,16 @@ export function BondsPanel({ campaignId, refreshKey }: { campaignId: string; ref
   }, [load, refreshKey]);
 
   if (loading) {
-    return <PanelLoading label="Reading the room..." />;
+    return <PanelLoading label={t("journalUi.bond.loading")} />;
   }
   if (!enabled) {
     return (
-      <EmptyState size="sm" art="board" title="Relationship tracking is off for this campaign. The party lead can turn it on in Setup." />
+      <EmptyState size="sm" art="board" title={t("journalUi.bond.disabled")} />
     );
   }
   if (!bonds.length) {
     return (
-      <EmptyState size="sm" art="board" title="Nobody has an opinion yet. How NPCs and companions feel about each character builds as you deal with them, and shows up here." />
+      <EmptyState size="sm" art="board" title={t("journalUi.bond.empty")} />
     );
   }
 

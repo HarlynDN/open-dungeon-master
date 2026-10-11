@@ -8,6 +8,9 @@ import { ui } from "@/lib/ui";
 import { DisclosureHead } from "@/app/campaigns/[campaignId]/DmConsoleParts";
 import type { DmWhisper } from "@/lib/db/dm-whispers";
 import type { CharacterSheet } from "@/lib/schemas/sheet";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { messageTemplate } from "@/lib/i18n/translator";
+import { journalErrorText } from "@/lib/i18n/journal-presentations";
 
 const PENDING_CAP = 2;
 
@@ -29,6 +32,7 @@ export function DmWhisperPanel({
   sheets: CharacterSheet[];
   refreshWhispers: () => Promise<void>;
 }) {
+  const { t, locale } = useLocale();
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState("");
   const [sending, setSending] = useState(false);
@@ -58,7 +62,7 @@ export function DmWhisperPanel({
     const date = new Date(iso);
     return Number.isNaN(date.getTime())
       ? ""
-      : date.toLocaleString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
+      : date.toLocaleString(locale, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
   }
 
   async function sendWhisper() {
@@ -76,7 +80,7 @@ export function DmWhisperPanel({
       });
       if (!response.ok) {
         const body = (await response.json().catch(() => ({}))) as { error?: string };
-        setError(body.error ?? "The whisper did not go through.");
+        setError(body.error ?? messageTemplate("en", "journalUi.error.whisper"));
         return;
       }
       setDraft("");
@@ -92,7 +96,7 @@ export function DmWhisperPanel({
         open={open}
         onToggle={() => setOpen((current) => !current)}
         glyph="tab-dm"
-        title="Private line to the DM"
+        title={t("journalUi.whisper.title")}
         aside={
           unread > 0 ? (
             <span key={unread} className="count-pop rounded-full bg-gradient-to-b from-amber-300 to-amber-500 px-1.5 text-[10px] font-semibold text-amber-950 shadow-glow-gold">
@@ -104,8 +108,7 @@ export function DmWhisperPanel({
       {open ? (
         <div className="reveal space-y-2 border-t border-amber-500/20 px-2 py-2">
           <p className="text-[11px] leading-4 text-amber-200/70">
-            Only you and the DM can see this. Whisper here to act in secret; the DM answers
-            privately and the table only sees what their characters could.
+            {t("journalUi.whisper.hint")}
           </p>
           {whispers.length ? (
             <ul className="stagger space-y-2">
@@ -122,7 +125,7 @@ export function DmWhisperPanel({
                       <p className="mt-1 text-[10px] text-stone-500">
                         {formatWhen(whisper.createdAt)}
                         {" | "}
-                        {whisper.answered ? "Seen by the DM" : "Waiting on the DM"}
+                        {t(whisper.answered ? "journalUi.whisper.seen" : "journalUi.whisper.waiting")}
                       </p>
                     </li>
                   );
@@ -141,7 +144,7 @@ export function DmWhisperPanel({
                     </p>
                     <p className="mt-1 text-[10px] text-stone-500">
                       {formatWhen(whisper.createdAt)}
-                      {others.length ? ` | also sent to ${others.join(", ")}` : ""}
+                      {others.length ? t("journalUi.whisper.others", { names: others.join(", ") }) : ""}
                     </p>
                   </li>
                 );
@@ -164,11 +167,9 @@ export function DmWhisperPanel({
                 rows={2}
                 disabled={capped || sending}
                 placeholder={
-                  capped
-                    ? "Wait for the DM to answer your last whispers."
-                    : "Whisper to the DM..."
+                  t(capped ? "journalUi.whisper.cap" : "journalUi.whisper.placeholder")
                 }
-                aria-label="Whisper to the DM"
+                aria-label={t("journalUi.whisper.label")}
                 className={cn(ui.input, "min-h-[3rem] flex-1 resize-none disabled:opacity-60")}
               />
               <button
@@ -176,12 +177,12 @@ export function DmWhisperPanel({
                 onClick={() => void sendWhisper()}
                 disabled={!draft.trim() || capped || sending}
                 className={cn(ui.btnSecondary, "size-10 shrink-0 px-0 text-amber-200")}
-                aria-label="Send private message to the DM"
+                aria-label={t("journalUi.whisper.send")}
               >
                 <Send className="size-4" />
               </button>
             </div>
-            {error ? <p className="motion-shake text-[11px] text-red-400">{error}</p> : null}
+            {error ? <p className="motion-shake text-[11px] text-red-400">{journalErrorText(error, locale, "journalUi.error.whisper")}</p> : null}
           </div>
         </div>
       ) : null}

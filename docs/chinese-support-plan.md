@@ -29,7 +29,7 @@ flow remains incomplete; the review-repair checkpoint is a separate scoped task.
 | Locale foundation | Registry, persistence, browser fallback, typed complete catalogs, model locale policy, classified token proxy, chapter budget, CJK retrieval, IME protection | Real prompt-usage calibration; keep legacy campaign/history regressions |
 | DM safety | Per-event engine conclusions with English/Chinese renderers; AI prose separated; one text-only correction and safe fallback; shared localized enemy names and held-resource names/IDs; scoped resource aliases and ambiguity retries; real Codex combat/resource acceptance | Untracked feature/reaction options and broader spell/condition/pack coverage; conservative regex coverage is not full language understanding |
 | Embeddings | Original English deployment default retained; explicit multilingual opt-in; fixed bilingual calibration/holdout and hard-negative policy | Broader pack quality; opt-in affects English campaigns and rebuilds indexes |
-| UI | **132/437** covered files, **3180** pending literal sites, **6805** message keys; scoped AST gate; initiative/roster/board and roll captions, cinematic owned UI, turn/floor/retry controls, fight summary, character menu and hand budget/tutorial | Remaining hand actions/reactions, general play/inventory/rest/level-up/save/resume surfaces, full sheet/party dialogs and native feature/reaction names; file fraction is not overall completion or an effort estimate |
+| UI | **138/437** covered files, **3093** pending literal sites, **6928** message keys; scoped AST gate; initiative/roster/board and roll captions, cinematic owned UI, turn/floor/retry controls, fight summary, character menu, hand budget/tutorial, campaign/character notes, bonds, private DM line and dispute/report forms | Remaining hand actions/reactions, general play/inventory/rest/level-up/save/resume surfaces, full sheet/party dialogs and native feature/reaction names; file fraction is not overall completion or an effort estimate |
 | Character creation/material | Identity, ancestry, class introductions, ability allocation, gear, spell book/preparation and finish preview; 517 spell and 228 equipment names; 257-entry contextual terminology policy and lint gate; 415/415 static registered resource names and guidance shared with DM references; original-source review records | Remaining feature/feat and magic-item material; dynamic free-cast resources and user-authored/pack text remain outside the static resource review |
 | Player system logs | Structured rule diagnostics and engine-generated combat conclusions retain English protocol semantics with localized presentation | General player-visible log templates; model-facing English tool results remain independent |
 | Resource delivery | UI vs content namespaces; character/campaign boundaries; generated resources checked by lint; production Turbopack build and anonymous bilingual browser switch/reload succeed; home/character/campaign SSR and initial-script payloads measured | Hydrated/lazy network totals, authenticated campaign switching and active-play browser acceptance; route-level JS payload remains large |
@@ -58,6 +58,13 @@ Message (传讯术); those are different contexts. Current default Turbopack bui
 attempts were blocked at its internal port binding by the execution environment,
 including the escalated attempt; this batch does not claim a passing production
 build. Keep that gate for the next phase boundary rather than retrying per batch.
+
+The journal/privacy/forms copy batch uses the existing typed content namespace
+delivery. One focused in-memory rendering/transport check confirmed matching
+English/Chinese note bodies, original report/block enums and IDs, success-message
+locale switching and relationship labels; catalog/AST/type checks passed. No new
+golden files, full regression or production build were run for this copy batch.
+Authored note/whisper contents, names and relationship history stay unchanged.
 
 ## Compatibility contracts
 

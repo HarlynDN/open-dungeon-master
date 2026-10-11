@@ -151,7 +151,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/BondsPanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned relationship tiers, built-in tier tooltips, romance stages, absence/loading/empty states localized by enum. Subject/player names, approval values and history remain original. Engine tiers/glyphs/styles and grouping unchanged."
     },
     {
       "path": "src/app/campaigns/[campaignId]/CalendarSection.tsx",
@@ -169,7 +170,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/CharacterNotesDialog.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned character-note editor, headings and accessibility localized, including the shared NoteComposer. Authored names/body, ownership/private filters, note IDs and callbacks unchanged; imported children retain their own scope."
     },
     {
       "path": "src/app/campaigns/[campaignId]/CharacterSheetDialog.tsx",
@@ -220,7 +222,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/DisputeDialog.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned dispute form/help and known server refusals localized. Message IDs, authored reason, limits, permissions and submission unchanged."
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmActionFields.tsx",
@@ -305,7 +308,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmWhisperPanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned private-line help, status, recipient templates, compose labels and known refusals localized. Dates follow UI locale; contents/names, recipient filtering, pending cap, IME guard and private request transport unchanged. Imported children retain their own scope."
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmWorkbenchPanel.tsx",
@@ -562,7 +566,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/NotesPanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned note editor/composer, approvals, authors, empty states and known API failures localized. Raw API diagnostics remain in state for language changes; visibility/status enums, note text, filtering and mutations unchanged. Child dictation UI keeps its own scope."
     },
     {
       "path": "src/app/campaigns/[campaignId]/NpcFields.tsx",
@@ -629,7 +634,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/ReportDialog.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned report/block forms, reason labels and success/refusal templates localized. Stable reason enums and requests unchanged; success state holds a template key and original name to rerender on language switch. Only the typed DM generic label is localized; player names stay original."
     },
     {
       "path": "src/app/campaigns/[campaignId]/RollCard.tsx",
