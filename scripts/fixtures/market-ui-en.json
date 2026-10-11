@@ -1,0 +1,21 @@
+{
+  "sourceCommit": "cec47720",
+  "sha256": {
+    "loading": "2832572f79f2eedc33d74ef3512d3b3b566f33fd99d511499397993b1445296c",
+    "empty": "be3490749d182ea65663d761937d7037a8b832716fdafdfeaf92f3c5517e4b95",
+    "player": "6cffbbd677fc427429cea3e4837132c4a72f61749dac2a29c7b5927f52a0a971",
+    "prep": "7edf26c12bafaa6432e4baa140d529b67f2f117bc9e4fe7c2d785b241b4ebc45",
+    "opening": "ec596a9faa245565d3593544c77bca21ea74df63eff0404cf311ee1f119961a9",
+    "cannot-buy": "6dea9bbb661d0d24498e127970cdc9b6e7903cbff1a3ba10bb37e8560f434af6",
+    "haggle": "03f1c655c14218a309ec13895d3e085781abc69d6329dac011b6cc327bfc5ae0",
+    "refusal": "4720a612ca4cfd334855212d5e2caae456022d1d53c368585cfb2eb947fba410",
+    "editor": "eab1f322acc6d05575e21cdcb27f3e92778092a072411c63fdf31f6f2e3728ce",
+    "editor-empty": "e24e7f467c5df324f949f7fe5ea915dcdbd9166912cdb121b4f03c76fd08f829",
+    "editor-busy": "e5d202588973f4deeada3e59eaeeb3c1e513c531526fdddf5400a17e06b26b5d",
+    "editor-unnamed": "f35ad2988fd751ddd58cda42b13856019ef204dffbd9efbb1e870dc95e09335b",
+    "editor-refusal": "e72ad194e3a39258442e1abd1009196b3127ade0884270b2760753f75f5b2c0a",
+    "coin": "1fa01ba734ee2399632c0296b32abecab85e692955cc04acb1faaaee0c740247",
+    "coin-draft": "97e233c73c6b37e9bf8f5c8279d2d38e964cc786f64bcbe65287cdb6f882a8f0",
+    "catalog": "5e779ec0e50ebd8ff2d2d6a85cc16c4d97ff2aea0bd7605bd2a08042614d6b6a"
+  }
+}

@@ -1,5 +1,9 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { createTranslator } from "@/lib/i18n/translator";
+import { referenceDisplayName } from "@/lib/i18n/references";
+import { marketCoinText, marketKindLabel, marketSizeLabel, marketText } from "@/lib/i18n/market-presentations";
 import { readLoad, useLoadStatus } from "@/lib/load-state";
 import { EmptyState } from "@/components/EmptyState";
 import { ChevronDown, Pencil, Plus, Trash2 } from "lucide-react";
@@ -11,7 +15,6 @@ import { useEffect, useState } from "react";
 import { appConfirm } from "@/components/ui/ConfirmDialog";
 import { cn } from "@/lib/cn";
 import type { CharacterSheet } from "@/lib/schemas/sheet";
-import { formatCopper } from "@/lib/srd/currency";
 import { KitButton, LoadFailed, panelField, PanelLoading, SettingToggle } from "./PanelKit";
 import { MarketShopEditor, type Named } from "./MarketShopEditor";
 import type { StockLine } from "@/lib/dm/shop-logic";
@@ -45,8 +48,6 @@ type ShopView = {
 
 const KINDS = ["general", "smith", "apothecary", "outfitter", "curiosities"] as const;
 const SIZES = ["hamlet", "village", "town", "city"] as const;
-const KIND_OPTIONS = KINDS.map((kind) => ({ value: kind as string, label: kind }));
-const SIZE_OPTIONS = SIZES.map((size) => ({ value: size as string, label: size }));
 
 // The coin a price is mostly made of, so a chip leads with the right metal.
 function coinGlyph(copper: number): string {
@@ -71,6 +72,7 @@ export function MarketPanel({
   refreshKey?: number;
   coins?: { characterId: string; direction: "in" | "out"; at: number } | null;
 }) {
+  const { locale, t } = useLocale();
   const [shops, setShops] = useState<ShopView[] | null>(null);
   const [here, setHere] = useState<{ id: string; name: string } | null>(null);
   const [places, setPlaces] = useState<Named[]>([]);
@@ -121,11 +123,13 @@ export function MarketPanel({
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
-        setError(String(data.error ?? "The keeper shakes their head."));
+        setError(String(data.error ?? createTranslator("en")("marketUi.error.refused")));
       } else if (action === "haggle") {
-        setError(data.result?.success ? `Haggled well: prices ${data.result.prices}.` : `The keeper is unmoved: prices ${data.result?.prices ?? "rise"}.`);
+        setError(data.result?.success ? createTranslator("en")("marketUi.haggle.good", { prices: data.result.prices }) : createTranslator("en")("marketUi.haggle.bad", { prices: data.result?.prices ?? "rise" }));
       }
       setReload((current) => current + 1);
+    } catch {
+      setError(createTranslator("en")("marketUi.error.network"));
     } finally {
       setBusy("");
     }
@@ -145,7 +149,7 @@ export function MarketPanel({
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
-        setError(String(data.error ?? "The shop could not be opened."));
+        setError(String(data.error ?? createTranslator("en")("marketUi.error.open")));
         return;
       }
       setOpening(false);
@@ -155,17 +159,28 @@ export function MarketPanel({
         setEditing(String(data.shop.id));
       }
       setReload((current) => current + 1);
+    } catch {
+      setError(createTranslator("en")("marketUi.error.network"));
     } finally {
       setBusy("");
     }
   }
 
   async function close(shop: ShopView) {
-    if (!(await appConfirm(`Close ${shop.name} for good?`, { actionLabel: "Close it", tone: "danger" }))) {
+    if (!(await appConfirm(t("marketUi.closeConfirm", { name: shop.name }), { actionLabel: t("marketUi.closeAction"), tone: "danger" }))) {
       return;
     }
-    await fetch(`/api/campaigns/${campaignId}/shops/${shop.id}`, { method: "DELETE" });
-    setReload((current) => current + 1);
+    try {
+      const response = await fetch(`/api/campaigns/${campaignId}/shops/${shop.id}`, { method: "DELETE" });
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        setError(String(data.error ?? createTranslator("en")("marketUi.error.close")));
+        return;
+      }
+      setReload(current => current + 1);
+    } catch {
+      setError(createTranslator("en")("marketUi.error.network"));
+    }
   }
 
   const purse = mySheet ? mySheet.gold * 100 + mySheet.copper : 0;
@@ -173,41 +188,42 @@ export function MarketPanel({
 
   if (shops === null && loadError) {
 
-    return <LoadFailed error={loadError} onRetry={() => setReload((current) => current + 1)} />;
+    return <LoadFailed error={marketText(loadError, locale)} onRetry={() => setReload((current) => current + 1)} />;
 
   }
 
   if (shops === null) {
-    return <PanelLoading label="Looking over the stalls..." />;
+    return <PanelLoading label={t("marketUi.panel.0")} />;
   }
   return (
     <div className="space-y-2">
       <SectionHead
-        title="Market"
+        title={t("marketUi.panel.1")}
         glyph="tab-market"
         aside={
           mySheet ? (
             <span key={coinFx?.at ?? 0} className="pk-chip relative py-0.5 text-xs text-amber-200">
-              <GameIcon icon={{ kind: "glyph", key: "coin-purse" }} size="size-5" /> {formatCopper(purse)}
+              <GameIcon icon={{ kind: "glyph", key: "coin-purse" }} size="size-5" /> {marketCoinText(purse, locale)}
               {coinFx ? <span aria-hidden className={cn("coin-arc pointer-events-none absolute -left-3 top-1/2 text-amber-300", coinFx.direction === "out" && "coin-arc-out")}>●</span> : null}
             </span>
           ) : null
         }
       />
-      {here ? <p className="-mt-1 text-xs text-stone-500">at {here.name}</p> : null}
-      {error ? <p role="status" className="live-in text-xs text-amber-300/90">{error}</p> : null}
+      {shops.length && loadError ? <LoadFailed error={marketText(loadError, locale)} onRetry={() => setReload(current => current + 1)} /> : null}
+      {here ? <p className="-mt-1 text-xs text-stone-500">{t("marketUi.at", { place: here.name })}</p> : null}
+      {error ? <p role="status" className="live-in text-xs text-amber-300/90">{marketText(error, locale)}</p> : null}
       {canPrep ? (
         opening ? (
           <div className="panel reveal flex flex-wrap items-center gap-1.5 rounded-lg p-2.5">
-            <input value={draft.name} onChange={(event) => setDraft({ ...draft, name: event.target.value })} maxLength={80} placeholder="Marla's Sundries" aria-label="Shop name" className={cn(panelField, "min-w-[9rem] flex-1")} />
-            <Select size="sm" label="Kind of shop" value={draft.kind} options={KIND_OPTIONS} onChange={(kind) => setDraft({ ...draft, kind })} className="pk-w-28" />
-            <Select size="sm" label="Size of the place" value={draft.size} options={SIZE_OPTIONS} onChange={(size) => setDraft({ ...draft, size })} className="pk-w-24" />
+            <input value={draft.name} onChange={(event) => setDraft({ ...draft, name: event.target.value })} maxLength={80} placeholder={t("marketUi.panel.2")} aria-label={t("marketUi.panel.3")} className={cn(panelField, "min-w-[9rem] flex-1")} />
+            <Select size="sm" label={t("marketUi.panel.4")} value={draft.kind} options={KINDS.map(kind => ({ value: kind as string, label: marketKindLabel(kind, locale) }))} onChange={(kind) => setDraft({ ...draft, kind })} className="pk-w-28" />
+            <Select size="sm" label={t("marketUi.panel.5")} value={draft.size} options={SIZES.map(size => ({ value: size as string, label: marketSizeLabel(size, locale) }))} onChange={(size) => setDraft({ ...draft, size })} className="pk-w-24" />
             {places.length ? (
               <Select
                 size="sm"
-                label="Where it stands"
+                label={t("marketUi.panel.6")}
                 value={draft.locationId || here?.id || ""}
-                options={[{ value: "", label: "No place yet" }, ...places.map((place) => ({ value: place.id, label: place.name, icon: { kind: "glyph" as const, key: "tab-map" } }))]}
+                options={[{ value: "", label: t("marketUi.panel.7") }, ...places.map((place) => ({ value: place.id, label: place.name, icon: { kind: "glyph" as const, key: "tab-map" } }))]}
                 onChange={(locationId) => setDraft({ ...draft, locationId })}
                 className="min-w-[9rem] flex-1"
               />
@@ -215,41 +231,37 @@ export function MarketPanel({
             {keepers.length ? (
               <Select
                 size="sm"
-                label="Who keeps it"
+                label={t("marketUi.panel.8")}
                 value={draft.keeperNpcId}
-                options={[{ value: "", label: "Nobody named" }, ...keepers.map((npc) => ({ value: npc.id, label: npc.name, icon: { kind: "glyph" as const, key: "system-cast" } }))]}
+                options={[{ value: "", label: t("marketUi.panel.9") }, ...keepers.map((npc) => ({ value: npc.id, label: npc.name, icon: { kind: "glyph" as const, key: "system-cast" } }))]}
                 onChange={(keeperNpcId) => setDraft({ ...draft, keeperNpcId })}
                 className="min-w-[9rem] flex-1"
               />
             ) : null}
-            <SettingToggle on={draft.stockFromPack} onToggle={() => setDraft({ ...draft, stockFromPack: !draft.stockFromPack })}>
-              Stock the shelves from the content pack
-            </SettingToggle>
-            {draft.stockFromPack ? null : <span className="live-in basis-full text-[11px] text-stone-500">It opens bare, straight into its shelf, for you to write line by line.</span>}
-            <KitButton tone="primary" disabled={busy === "open" || !draft.name.trim()} busy={busy === "open"} onClick={() => void open()}>
-              Open it
-            </KitButton>
-            <KitButton onClick={() => setOpening(false)}>Cancel</KitButton>
+            <SettingToggle on={draft.stockFromPack} onToggle={() => setDraft({ ...draft, stockFromPack: !draft.stockFromPack })}>{t("marketUi.panel.10")}</SettingToggle>
+            {draft.stockFromPack ? null : <span className="live-in basis-full text-[11px] text-stone-500">{t("marketUi.panel.11")}</span>}
+            <KitButton tone="primary" disabled={busy === "open" || !draft.name.trim()} busy={busy === "open"} onClick={() => void open()}>{t("marketUi.panel.12")}</KitButton>
+            <KitButton onClick={() => setOpening(false)}>{t("marketUi.panel.13")}</KitButton>
           </div>
         ) : (
           <KitButton onClick={() => setOpening(true)}>
-            <Plus className="size-3.5" /> Open a shop {here ? `at ${here.name}` : ""}
+            <Plus className="size-3.5" /> {t("marketUi.openShop", { place: here ? t("marketUi.at", { place: here.name }) : "" })}
           </KitButton>
         )
       ) : null}
       {!shops.length ? (
         loadError ? (
-          <LoadFailed error={loadError} onRetry={() => setReload((current) => current + 1)} />
+          <LoadFailed error={marketText(loadError, locale)} onRetry={() => setReload((current) => current + 1)} />
         ) : loaded ? (
-          <EmptyState size="sm" art="chest" title={here ? `No shops at ${here.name}.` : canPrep ? "No shops yet. Open one and give it a shelf." : "The party is nowhere with a market yet."} />
+          <EmptyState size="sm" art="chest" title={here ? t("marketUi.emptyPlace", { place: here.name }) : t(canPrep ? "marketUi.emptyPrep" : "marketUi.emptyParty")} />
         ) : null
       ) : null}
       {shops.map((shop) => {
         const canHaggle = Boolean(mySheet && !shop.haggledBy.includes(mySheet.id));
         const shopItems: ContextMenuItem[] = [
-          ...(canHaggle ? [{ id: "haggle", label: "Haggle", glyph: "skill-persuasion", disabled: Boolean(busy), onSelect: () => void counter(shop, "haggle") }] : []),
-          ...(canPrep ? [{ id: "edit", label: "Edit the shop and its shelf", glyph: "tab-shop", separated: canHaggle, onSelect: () => setEditing(shop.id) }] : []),
-          ...(canPrep ? [{ id: "close", label: `Close ${shop.name}`, glyph: "quest-failed", tone: "danger" as const, onSelect: () => void close(shop) }] : []),
+          ...(canHaggle ? [{ id: "haggle", label: t("marketUi.panel.14"), glyph: "skill-persuasion", disabled: Boolean(busy), onSelect: () => void counter(shop, "haggle") }] : []),
+          ...(canPrep ? [{ id: "edit", label: t("marketUi.panel.15"), glyph: "tab-shop", separated: canHaggle, onSelect: () => setEditing(shop.id) }] : []),
+          ...(canPrep ? [{ id: "close", label: t("marketUi.closeNamed", { name: shop.name }), glyph: "quest-failed", tone: "danger" as const, onSelect: () => void close(shop) }] : []),
         ];
         if (editing === shop.id) {
           return (
@@ -281,23 +293,21 @@ export function MarketPanel({
               <div className="min-w-0 flex-1">
                 <p className="gold-title truncate text-sm">{shop.name}</p>
                 <p className="truncate text-[11px] text-stone-500">
-                  {shop.kind}
-                  {shop.keeperName ? `, kept by ${shop.keeperName}` : ""}
-                  {steersStory && shop.locationName ? ` at ${shop.locationName}` : ""}
-                  {shop.markup !== 1 ? ` (prices ${shop.markup > 1 ? "+" : ""}${Math.round((shop.markup - 1) * 100)}%)` : ""}
+                  {marketKindLabel(shop.kind, locale)}
+                  {shop.keeperName ? t("marketUi.keeper", { name: shop.keeperName }) : ""}
+                  {steersStory && shop.locationName ? t("marketUi.shopPlace", { place: shop.locationName }) : ""}
+                  {shop.markup !== 1 ? t("marketUi.prices", { percent: `${shop.markup > 1 ? "+" : ""}${Math.round((shop.markup - 1) * 100)}` }) : ""}
                 </p>
               </div>
               {canHaggle ? (
-                <KitButton disabled={Boolean(busy)} busy={busy === `${shop.id}:haggle:`} onClick={() => void counter(shop, "haggle")}>
-                  Haggle
-                </KitButton>
+                <KitButton disabled={Boolean(busy)} busy={busy === `${shop.id}:haggle:`} onClick={() => void counter(shop, "haggle")}>{t("marketUi.panel.14")}</KitButton>
               ) : null}
               {canPrep ? (
                 <>
-                  <KitButton tone="icon" always aria-label={`Edit ${shop.name}`} onClick={() => setEditing(shop.id)}>
+                  <KitButton tone="icon" always aria-label={t("marketUi.editNamed", { name: shop.name })} onClick={() => setEditing(shop.id)}>
                     <Pencil className="size-3.5" />
                   </KitButton>
-                  <KitButton tone="iconDanger" always aria-label={`Close ${shop.name}`} onClick={() => void close(shop)}>
+                  <KitButton tone="iconDanger" always aria-label={t("marketUi.closeNamed", { name: shop.name })} onClick={() => void close(shop)}>
                     <Trash2 className="size-3.5" />
                   </KitButton>
                 </>
@@ -314,44 +324,43 @@ export function MarketPanel({
                   <ContextMenu
                     as="li"
                     key={line.itemName}
-                    label={line.itemName}
-                    items={mySheet ? [{ id: "buy", label: `Buy for ${formatCopper(line.askingCp)}`, glyph: coinGlyph(line.askingCp), disabled: cannotBuy, onSelect: () => void counter(shop, "buy", line.itemName) }] : []}
+                    label={referenceDisplayName("equipment", line.itemName, locale)}
+                    items={mySheet ? [{ id: "buy", label: t("marketUi.buyFor", { price: marketCoinText(line.askingCp, locale) }), glyph: coinGlyph(line.askingCp), disabled: cannotBuy, onSelect: () => void counter(shop, "buy", line.itemName) }] : []}
                     className="flex flex-col justify-between rounded-lg border border-stone-700/60 bg-stone-900/50 p-2 transition-transform duration-[var(--dur-quick,150ms)] hover:-translate-y-0.5 hover:border-amber-500/40"
                   >
-                    <span className="flex min-w-0 items-center gap-1.5 text-xs text-stone-200" title={line.note || line.itemName}>
+                    <span className="flex min-w-0 items-center gap-1.5 text-xs text-stone-200" title={line.note || referenceDisplayName("equipment", line.itemName, locale)}>
                       <GameIcon icon={{ kind: "item", key: line.itemName, family: "item-gear" }} size="size-7" />
-                      <span className="truncate">{line.itemName}</span>
+                      <span className="truncate">{referenceDisplayName("equipment", line.itemName, locale)}</span>
                     </span>
                     <span className="mt-1.5 flex flex-wrap items-center justify-between gap-1">
                       <span className="pk-chip max-w-full whitespace-normal text-amber-200">
                         <GameIcon icon={{ kind: "glyph", key: coinGlyph(line.askingCp) }} size="size-4" />
-                        {formatCopper(line.askingCp)}
+                        {marketCoinText(line.askingCp, locale)}
                       </span>
-                      <span className="text-[11px] tabular-nums text-stone-500">x{line.qty}</span>
+                      <span className="text-[11px] tabular-nums text-stone-500">{t("marketUi.stockCount", { count: line.qty })}</span>
                     </span>
                     {mySheet ? (
                       <KitButton disabled={cannotBuy} busy={buying} onClick={() => void counter(shop, "buy", line.itemName)} className="mt-1.5 w-full justify-center border-amber-500/30 text-amber-100">
-                        {buying ? null : "Buy"}
+                        {buying ? null : t("marketUi.buy")}
                       </KitButton>
                     ) : null}
                   </ContextMenu>
                 );
               })}
-              {!shop.stock.length ? <li className="col-span-full text-xs italic text-stone-500">Bare shelves.</li> : null}
+              {!shop.stock.length ? <li className="col-span-full text-xs italic text-stone-500">{t("marketUi.panel.16")}</li> : null}
             </ul>
             {shop.buys && mySheet?.equipment.length ? (
               <details className="group/sell text-xs">
                 <summary className="pk-link pk-tap flex cursor-pointer list-none items-center gap-1">
-                  <GameIcon icon={{ kind: "glyph", key: "tab-trade" }} size="size-5" /> Sell from your pack
-                  <ChevronDown className="size-3.5 transition-transform group-open/sell:rotate-180" />
+                  <GameIcon icon={{ kind: "glyph", key: "tab-trade" }} size="size-5" />{t("marketUi.panel.17")}<ChevronDown className="size-3.5 transition-transform group-open/sell:rotate-180" />
                 </summary>
                 <ul className="stagger mt-1.5 flex flex-wrap gap-1">
                   {mySheet.equipment.map((item) => (
                     <li key={item.name}>
                       <KitButton disabled={Boolean(busy)} onClick={() => void counter(shop, "sell", item.name)}>
                         <GameIcon icon={{ kind: "item", key: item.name, family: "item-gear" }} size="size-4" />
-                        {item.name}
-                        {item.qty > 1 ? ` x${item.qty}` : ""}
+                        {referenceDisplayName("equipment", item.name, locale)}
+                        {item.qty > 1 ? t("marketUi.itemCount", { count: item.qty }) : ""}
                       </KitButton>
                     </li>
                   ))}

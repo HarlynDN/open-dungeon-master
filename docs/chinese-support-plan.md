@@ -29,7 +29,7 @@ flow remains incomplete; the review-repair checkpoint is a separate scoped task.
 | Locale foundation | Registry, persistence, browser fallback, typed complete catalogs, model locale policy, classified token proxy, chapter budget, CJK retrieval, IME protection | Real prompt-usage calibration; keep legacy campaign/history regressions |
 | DM safety | Per-event engine conclusions with English/Chinese renderers; AI prose separated; one text-only correction and safe fallback; shared localized enemy names and held-resource names/IDs; scoped resource aliases and ambiguity retries; real Codex combat/resource acceptance | Untracked feature/reaction options and broader spell/condition/pack coverage; conservative regex coverage is not full language understanding |
 | Embeddings | Original English deployment default retained; explicit multilingual opt-in; fixed bilingual calibration/holdout and hard-negative policy | Broader pack quality; opt-in affects English campaigns and rebuilds indexes |
-| UI | **166/439** covered files, **2535** pending literal sites, **9374** message keys; scoped AST gate; earlier play/session surfaces plus hand labels/targets/area selection, campaign-locale action sentences, native previews, basic/reaction rules, common casting refusals, spell selectors, all 113 owned mechanic notes, 103 native technique and 23 maneuver labels, attack/bonus-route and material/ritual refusals, built-in form attack names and verified current-actor labels, correction/multi-picker chrome, native downtime facts and inventory/vitals approval/player-trade controls, guided progression chrome, rest/loot/travel moments and all native option summaries, owned generic feature/feat summaries, feat choice controls, campaign/map entry notices the complete app help walkthrough story/chronicle/arc controls, NPC roster review and campaign model controls | Remaining dynamic text keeps hand files pending; general play/inventory/rest/level-up/save/resume surfaces and full sheet/party dialogs; file fraction is not overall completion or an effort estimate |
+| UI | **168/439** covered files, **2444** pending literal sites, **9496** message keys; scoped AST gate; earlier play/session surfaces plus hand labels/targets/area selection, campaign-locale action sentences, native previews, basic/reaction rules, common casting refusals, spell selectors, all 113 owned mechanic notes, 103 native technique and 23 maneuver labels, attack/bonus-route and material/ritual refusals, built-in form attack names and verified current-actor labels, correction/multi-picker chrome, native downtime facts and inventory/vitals approval/player-trade controls, guided progression chrome, rest/loot/travel moments and all native option summaries, owned generic feature/feat summaries, feat choice controls, campaign/map entry notices the complete app help walkthrough story/chronicle/arc controls, NPC roster review, campaign model controls and market/shelf/trade controls | Remaining dynamic text keeps hand files pending; general play/inventory/rest/level-up/save/resume surfaces and full sheet/party dialogs; file fraction is not overall completion or an effort estimate |
 | Character creation/material | Identity, ancestry, class introductions, ability allocation, gear, spell book/preparation and finish preview; 517 spell and 228 equipment names; 257-entry contextual terminology policy and lint gate; 415/415 static registered resource names and guidance shared with DM references; 135/135 bundled option names/descriptions plus all 20 nonempty requirement frames; 146 shared/class-specific feature summaries, 54 native feat summaries and owned feat choice controls; original-source review records | Remaining specific/themed feature and magic-item material; dynamic free-cast resources and user-authored/pack text remain outside the static resource review |
 | Player system logs | Structured rule diagnostics and engine-generated combat conclusions retain English protocol semantics with localized presentation | General player-visible log templates; model-facing English tool results remain independent |
 | Resource delivery | UI/content/help scopes; selected-locale help loads independently on open, with retry; character/campaign boundaries; generated resources checked by lint; production Turbopack build and anonymous bilingual browser switch/reload succeed; home/character/campaign SSR and initial-script payloads measured | Hydrated/lazy network totals, authenticated campaign switching and active-play browser acceptance; route-level JS payload remains large |
@@ -59,7 +59,37 @@ attempts were blocked at its internal port binding by the execution environment,
 including the escalated attempt; this batch does not claim a passing production
 build. Keep that gate for the next phase boundary rather than retrying per batch.
 
-The latest roster/model-control checkpoint adds 102 content-only keys. NPC
+The latest market checkpoint adds 122 keys (120 content and two small shared
+picker labels): market/create/trade/haggle/close and shop/shelf/restock controls,
+native shop kinds/settlement sizes, price markup and currency display, recognized
+trade/refusal/load frames. Registered equipment names display in the viewer's
+locale; original item names, IDs, keys, stock notes, quantities and copper-based
+arithmetic remain intact. Unknown/authored names and diagnostics stay literal.
+
+The price editor accepts registered locale coin names plus existing English
+codes. A localized input adapter normalizes to the existing engine denominations;
+it rejects unknown/partial units instead of treating their numbers as gold.
+Chinese decimals/fullwidth digits and all five denominations round-trip to
+integer copper. A draft remembers its input locale across a UI-language switch.
+English valid formatting/parsing is retained. Failed market reloads keep shops;
+failed mutations now show a diagnostic. Closing still asks before issuing DELETE.
+
+The shared catalog picker now sends viewer locale to the existing item-alias
+search, projects registered item/spell/feat labels where content resources exist,
+and preserves source entries/references in callbacks. Its other kind/material
+coverage remains pending; neither external descriptions nor absent deferred
+editor resource boundaries are counted as finished.
+
+Lightweight validation passed: 16 frozen English market/editor/picker states,
+localized currency round-trips/invalid inputs/held input locale, actual Chinese
+buy/sell/haggle/create/save/restock requests and catalog selection/query metadata,
+confirmation cancellation and retained stock on failed reload (mocked transport
+only), types and catalog/AST/terminology. English fingerprints occupy 1397 bytes.
+Current coverage is 168/439 files, 2444 pending literal sites, 9496 keys, zero
+terminology errors and 150 contextual warnings. No real trade, shop deletion,
+model/audio, settled-name check or full tests/lint/build ran for this batch.
+
+The preceding roster/model-control checkpoint adds 102 content-only keys. NPC
 review now localizes manual merge/dismiss/rename controls, archived/alias status,
 three native attitudes, native refusal/load messages and retry. Names, aliases,
 merge direction/IDs and historical prose stay raw. A failed first read no longer

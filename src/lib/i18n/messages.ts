@@ -1,3 +1,4 @@
+import { MARKET_MESSAGES } from "./market-messages.ts";
 import { STORY_CONTROL_MESSAGES } from "./story-control-messages.ts";
 import { STORY_MESSAGES } from "./story-messages.ts";
 import { APP_HELP_MESSAGES } from "./app-help-messages.ts";
@@ -81,6 +82,7 @@ const en = {
     ...APP_HELP_MESSAGES.en,
     ...STORY_MESSAGES.en,
     ...STORY_CONTROL_MESSAGES.en,
+    ...MARKET_MESSAGES.en,
   ...PLAY_EDIT_MESSAGES.en,
   ...HAND_CASTING_MESSAGES.en,
   ...HAND_FEATURE_MESSAGES.en,
@@ -180,6 +182,7 @@ const zhCN: Messages = {
     ...APP_HELP_MESSAGES["zh-CN"],
     ...STORY_MESSAGES["zh-CN"],
     ...STORY_CONTROL_MESSAGES["zh-CN"],
+    ...MARKET_MESSAGES["zh-CN"],
   ...PLAY_EDIT_MESSAGES["zh-CN"],
   ...HAND_CASTING_MESSAGES["zh-CN"],
   ...HAND_FEATURE_MESSAGES["zh-CN"],

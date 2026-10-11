@@ -1,5 +1,9 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { catalogFor } from "@/lib/i18n/translator";
+import { pickerName, gearRarity, gearKind } from "@/lib/i18n/gear-ui-presentations";
+import { nativeFeatHelp } from "@/lib/i18n/feature-material-presentations";
 import { useEffect, useRef } from "react";
 import { Loader2, Search } from "lucide-react";
 import { InfoButton } from "@/components/ui/InfoDialog";
@@ -37,9 +41,13 @@ export function ContentPick({
   className?: string;
   extraParams?: Record<string, string>;
 }) {
+  const { locale, t } = useLocale();
+  // Shared deferred editors without content resources keep their source names.
+  const hasNames = locale !== "en" && Object.keys(catalogFor(locale, "equipmentName.")).length > 0;
+  const displayName = (entry: PickerEntry) => hasNames && ["items", "spells", "feats"].includes(kind) ? pickerName(kind, entry, locale) : entry.name;
   const { query, setQuery, results, open, setOpen, loading, unavailable } = useContentSearch(
     kind,
-    extraParams ?? {},
+    { ...extraParams, locale },
   );
   const container = useRef<HTMLDivElement>(null);
 
@@ -73,7 +81,7 @@ export function ContentPick({
       </div>
       {open && !results.length && query.trim() && !loading ? (
         <p className="reveal mt-1 rounded-lg border border-stone-800 bg-stone-950/60 px-3 py-1.5 text-[11px] text-stone-500">
-          Nothing matched &quot;{query.trim()}&quot;. Try fewer letters.
+          {t("catalogPick.noMatch", { query: query.trim() })}
         </p>
       ) : null}
       {open && results.length ? (
@@ -89,15 +97,15 @@ export function ContentPick({
                 }}
                 className="flex grow items-center justify-between gap-2 px-3 py-1.5 text-left text-sm"
               >
-                <span className={cn(entry.source === "homebrew" && "text-amber-300")}>{entry.name}</span>
+                <span className={cn(entry.source === "homebrew" && "text-amber-300")}>{displayName(entry)}</span>
                 <span className="text-[11px] text-stone-500">
-                  {entry.level !== undefined ? `level ${entry.level}` : entry.rarity || entry.kind || ""}
+                  {entry.level !== undefined ? t("catalogPick.level", { level: entry.level }) : (entry.rarity ? hasNames ? gearRarity(entry.rarity, locale) : entry.rarity : entry.kind ? hasNames ? gearKind(entry.kind, locale) : entry.kind : "")}
                 </span>
               </button>
               <InfoButton
-                label={entry.name}
+                label={displayName(entry)}
                 meta={kind === "spells" ? spellSummary(entry.data) : undefined}
-                text={describeContentEntry(entry.data)}
+                text={kind === "feats" && hasNames && entry.source !== "homebrew" ? nativeFeatHelp(entry.name, describeContentEntry(entry.data), locale) : describeContentEntry(entry.data)}
                 reference={
                   entry.source === "homebrew" ? undefined : { kind, slug: entry.slug, name: entry.name }
                 }

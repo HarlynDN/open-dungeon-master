@@ -523,11 +523,13 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/MarketPanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned market/create/buy/sell/haggle/close chrome, native shop kind/size labels, known trade/refusal frames and player currency display localized. Registered equipment display names separated from original item names/keys. Canonical trade/create/delete fields, price arithmetic and confirmation preserved; failed reload retains shops and failed mutations surface a diagnostic. Frozen English states and actual Chinese callbacks checked with mocked transport; authored notes/names and unknown diagnostics remain literal."
     },
     {
       "path": "src/app/campaigns/[campaignId]/MarketShopEditor.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned shop/shelf/stock/restock controls, price markup labels and native coin display/input adapter localized. Prices still submit integer copper; language-specific coin names normalize through the engine parser, unknown/partial units reject, and draft input locale survives a UI switch. Native IDs, kinds/sizes, item names, quantities, notes and save/restock shapes unchanged. Frozen English states, Chinese currency round-trips/IME and canonical callbacks checked. Authored values and deferred catalog material stay raw."
     },
     {
       "path": "src/app/campaigns/[campaignId]/MessageActions.tsx",
@@ -1824,7 +1826,8 @@
     },
     {
       "path": "src/components/ui/ContentPick.tsx",
-      "state": "pending"
+      "state": "pending",
+      "review": "Owned no-match/level chrome localized and viewer locale forwarded to existing localized item search. Campaign content boundaries project registered item/spell/feat names; selections and references retain source names. Other kind labels/descriptions and deferred-editor content boundaries remain pending; this shared owner is not complete."
     },
     {
       "path": "src/components/ui/ContextMenu.tsx",
