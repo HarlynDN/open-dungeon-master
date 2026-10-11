@@ -39,6 +39,8 @@ export type SpellFacts = {
 export type FeatFacts = { name: string; prerequisite: string; desc: string; runsAs?: string };
 
 export type LegalityContext = {
+  // Optional display diagnostics; never affects the rule verdict or sheet.
+  onProblem?: import("@/lib/characters/problems").RuleProblemSink;
   door: Door;
   // The level the sheet is judged at: the table's starting level, or the
   // library character's own.

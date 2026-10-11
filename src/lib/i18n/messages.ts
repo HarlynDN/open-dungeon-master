@@ -1,0 +1,180 @@
+import { registerMessages } from "./translator.ts";
+import { ABILITY_UI_MESSAGES } from "./ability-ui-messages.ts";
+import { SPELL_UI_MESSAGES } from "./spell-ui-messages.ts";
+import { SPELL_NAME_MESSAGES } from "./spell-name-messages.ts";
+import { SPELL_MATERIAL_MESSAGES } from "./spell-material-messages.ts";
+import { GEAR_UI_MESSAGES } from "./gear-ui-messages.ts";
+import { EQUIPMENT_NAME_MESSAGES } from "./equipment-name-messages.ts";
+import { EQUIPMENT_HELP_MESSAGES } from "./equipment-help-messages.ts";
+import { BUILDER_IDENTITY_MESSAGES } from "./builder-identity-messages.ts";
+import { LINEAGE_UI_MESSAGES } from "./lineage-ui-messages.ts";
+import { LINEAGE_MATERIAL_MESSAGES } from "./lineage-material-messages.ts";
+import { RACIAL_UI_MESSAGES } from "./racial-ui-messages.ts";
+import { GAME_HELP_MESSAGES } from "./game-help-messages.ts";
+import { CLOSED_GAME_HELP_MESSAGES } from "./closed-game-help-messages.ts";
+import { CALLING_UI_MESSAGES } from "./calling-ui-messages.ts";
+import { CALLING_MATERIAL_MESSAGES } from "./calling-material-messages.ts";
+import { BUILDER_PICKER_MESSAGES } from "./builder-picker-messages.ts";
+import { BUILDER_MESSAGES } from "./builder-messages.ts";
+import { CHARACTER_SPELL_GEAR_NAME_MESSAGES } from "./character-spell-gear-name-messages.ts";
+import { CHARACTER_FEAT_NAME_MESSAGES } from "./character-feat-name-messages.ts";
+import type { AppLocale } from "./locales.ts";
+import { AUTH_MESSAGES } from "./auth-messages.ts";
+import { ONBOARDING_MESSAGES } from "./onboarding-messages.ts";
+import { HOME_MESSAGES } from "./home-messages.ts";
+import { SETTINGS_MESSAGES } from "./settings-messages.ts";
+import { CREATION_MESSAGES } from "./creation-messages.ts";
+import { TABLE_MESSAGES } from "./table-messages.ts";
+import { LOBBY_MESSAGES } from "./lobby-messages.ts";
+import { CHARACTER_RULE_MESSAGES } from "./character-rule-messages.ts";
+import { CHARACTER_TRAINING_NAME_MESSAGES } from "./character-training-name-messages.ts";
+import { CHARACTER_UI_MESSAGES } from "./character-ui-messages.ts";
+import { CHARACTER_EXTRA_NAME_MESSAGES } from "./character-extra-name-messages.ts";
+import { CHARACTER_NAME_MESSAGES } from "./character-name-messages.ts";
+import { PANEL_MESSAGES } from "./panel-messages.ts";
+import { PANEL_METADATA_MESSAGES } from "./panel-metadata-messages.ts";
+import { ACCOUNT_MESSAGES } from "./account-messages.ts";
+import { VOICE_MESSAGES } from "./voice-messages.ts";
+import { PREP_MESSAGES } from "./prep-messages.ts";
+import { WORLD_MESSAGES } from "./world-messages.ts";
+
+const en = {
+  ...AUTH_MESSAGES.en,
+  ...ONBOARDING_MESSAGES.en,
+  ...HOME_MESSAGES.en,
+  ...SETTINGS_MESSAGES.en,
+  ...CREATION_MESSAGES.en,
+  ...WORLD_MESSAGES.en,
+  ...TABLE_MESSAGES.en,
+  ...LOBBY_MESSAGES.en,
+  ...CHARACTER_NAME_MESSAGES.en,
+  ...CHARACTER_EXTRA_NAME_MESSAGES.en,
+  ...CHARACTER_UI_MESSAGES.en,
+  ...BUILDER_MESSAGES.en,
+  ...BUILDER_IDENTITY_MESSAGES.en,
+  ...LINEAGE_UI_MESSAGES.en,
+  ...LINEAGE_MATERIAL_MESSAGES.en,
+  ...RACIAL_UI_MESSAGES.en,
+  ...GAME_HELP_MESSAGES.en,
+  ...CLOSED_GAME_HELP_MESSAGES.en,
+  ...CALLING_UI_MESSAGES.en,
+  ...CALLING_MATERIAL_MESSAGES.en,
+  ...ABILITY_UI_MESSAGES.en,
+  ...SPELL_UI_MESSAGES.en,
+  ...SPELL_NAME_MESSAGES.en,
+  ...SPELL_MATERIAL_MESSAGES.en,
+  ...GEAR_UI_MESSAGES.en,
+  ...EQUIPMENT_NAME_MESSAGES.en,
+  ...EQUIPMENT_HELP_MESSAGES.en,
+  ...BUILDER_PICKER_MESSAGES.en,
+  ...CHARACTER_RULE_MESSAGES.en,
+  ...CHARACTER_TRAINING_NAME_MESSAGES.en,
+  ...CHARACTER_FEAT_NAME_MESSAGES.en,
+  ...CHARACTER_SPELL_GEAR_NAME_MESSAGES.en,
+  ...PANEL_MESSAGES.en,
+  ...PANEL_METADATA_MESSAGES.en,
+  ...PREP_MESSAGES.en,
+  ...VOICE_MESSAGES.en,
+  ...ACCOUNT_MESSAGES.en,
+  "locale.interface": "Interface language",
+  "locale.interfaceHint": "Menus follow your preference. Each campaign chooses its own story language.",
+  "locale.campaign": "Campaign language",
+  "locale.campaignHint": "New narration and game text follow this language. Existing history stays as written.",
+  "locale.saveError": "Language changed on this device, but your account preference could not be saved.",
+  "locale.saving": "Saving…",
+  "account.menu": "Account and app menu",
+  "account.label": "Account",
+  "account.keeper": "Keeper of this server",
+  "account.adventurer": "Adventurer",
+  "nav.campaigns": "All campaigns",
+  "nav.characters": "Characters",
+  "nav.rulebook": "Rulebook",
+  "nav.friends": "Friends",
+  "nav.settings": "Settings",
+  "nav.admin": "Admin panel",
+  "nav.help": "Help",
+  "nav.about": "About",
+  "nav.aboutServer": "About this server",
+  "nav.appHome": "App home",
+  "nav.appHomeHint": "Back to the app's home screen",
+  "nav.appSettings": "App settings",
+  "nav.appGuide": "App guide",
+  "nav.logout": "Log out",
+  "theme.night": "Arcane night",
+  "theme.day": "Parchment day",
+} as const;
+
+export type MessageKey = keyof typeof en;
+type Messages = Record<MessageKey, string>;
+
+const zhCN: Messages = {
+  ...AUTH_MESSAGES["zh-CN"],
+  ...ONBOARDING_MESSAGES["zh-CN"],
+  ...HOME_MESSAGES["zh-CN"],
+  ...SETTINGS_MESSAGES["zh-CN"],
+  ...CREATION_MESSAGES["zh-CN"],
+  ...WORLD_MESSAGES["zh-CN"],
+  ...TABLE_MESSAGES["zh-CN"],
+  ...LOBBY_MESSAGES["zh-CN"],
+  ...CHARACTER_NAME_MESSAGES["zh-CN"],
+  ...CHARACTER_EXTRA_NAME_MESSAGES["zh-CN"],
+  ...CHARACTER_UI_MESSAGES["zh-CN"],
+  ...BUILDER_MESSAGES["zh-CN"],
+  ...BUILDER_IDENTITY_MESSAGES["zh-CN"],
+  ...LINEAGE_UI_MESSAGES["zh-CN"],
+  ...LINEAGE_MATERIAL_MESSAGES["zh-CN"],
+  ...RACIAL_UI_MESSAGES["zh-CN"],
+  ...GAME_HELP_MESSAGES["zh-CN"],
+  ...CLOSED_GAME_HELP_MESSAGES["zh-CN"],
+  ...CALLING_UI_MESSAGES["zh-CN"],
+  ...CALLING_MATERIAL_MESSAGES["zh-CN"],
+  ...ABILITY_UI_MESSAGES["zh-CN"],
+  ...SPELL_UI_MESSAGES["zh-CN"],
+  ...SPELL_NAME_MESSAGES["zh-CN"],
+  ...SPELL_MATERIAL_MESSAGES["zh-CN"],
+  ...GEAR_UI_MESSAGES["zh-CN"],
+  ...EQUIPMENT_NAME_MESSAGES["zh-CN"],
+  ...EQUIPMENT_HELP_MESSAGES["zh-CN"],
+  ...BUILDER_PICKER_MESSAGES["zh-CN"],
+  ...CHARACTER_RULE_MESSAGES["zh-CN"],
+  ...CHARACTER_TRAINING_NAME_MESSAGES["zh-CN"],
+  ...CHARACTER_FEAT_NAME_MESSAGES["zh-CN"],
+  ...CHARACTER_SPELL_GEAR_NAME_MESSAGES["zh-CN"],
+  ...PANEL_MESSAGES["zh-CN"],
+  ...PANEL_METADATA_MESSAGES["zh-CN"],
+  ...PREP_MESSAGES["zh-CN"],
+  ...VOICE_MESSAGES["zh-CN"],
+  ...ACCOUNT_MESSAGES["zh-CN"],
+  "locale.interface": "界面语言",
+  "locale.interfaceHint": "菜单使用你的偏好语言。每个战役可单独选择故事语言。",
+  "locale.campaign": "战役语言",
+  "locale.campaignHint": "后续叙事和游戏文本使用此语言，已有历史保留原文。",
+  "locale.saveError": "已切换此设备的语言，但未能保存到账户。",
+  "locale.saving": "正在保存…",
+  "account.menu": "账户与应用菜单",
+  "account.label": "账户",
+  "account.keeper": "服务器管理员",
+  "account.adventurer": "冒险者",
+  "nav.campaigns": "所有战役",
+  "nav.characters": "角色",
+  "nav.rulebook": "规则书",
+  "nav.friends": "好友",
+  "nav.settings": "设置",
+  "nav.admin": "管理面板",
+  "nav.help": "帮助",
+  "nav.about": "关于",
+  "nav.aboutServer": "关于此服务器",
+  "nav.appHome": "应用首页",
+  "nav.appHomeHint": "返回应用首页",
+  "nav.appSettings": "应用设置",
+  "nav.appGuide": "应用指南",
+  "nav.logout": "退出登录",
+  "theme.night": "奥术之夜",
+  "theme.day": "羊皮纸之昼",
+};
+
+// Complete catalogs are a server/offline entry point. Client components use
+// translator.ts and receive only their namespace's selected locale resources.
+export const MESSAGE_CATALOGS: Record<AppLocale, Messages> = { en, "zh-CN": zhCN };
+registerMessages(MESSAGE_CATALOGS);
+export { createTranslator, messageTemplate } from "./translator.ts";

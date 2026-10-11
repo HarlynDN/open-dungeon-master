@@ -7,6 +7,7 @@
 // own list at a level its slots reach, a caster who knows spells prepares
 // none, a wizard prepares from the book, and the counts are the tables'
 // (src/lib/srd/spell-prep.ts spellListProblems).
+import { ruleReporter, ruleTerm, type RuleProblemSink } from "@/lib/characters/problems";
 import { spellClassFor } from "@/lib/classes";
 import { featSpellNames, withFeatSpells, type FeatSpellGrant } from "@/lib/srd/feat-spells";
 import type { AbilityScores, ClassEntry, Spellcasting } from "@/lib/schemas/sheet";
@@ -90,6 +91,7 @@ export function derivedSlots(
 }
 
 export type NameRules = {
+  onProblem?: RuleProblemSink;
   spellOf: (name: string) => SpellFacts | null;
   // Names the character already holds: earned, so not judged again.
   held: Set<string>;
@@ -104,6 +106,7 @@ const labelOf = (view: CasterView) => `level ${view.level} ${view.classId.replac
 // above its level.
 export function spellNameProblems(view: CasterView, list: string, rules: NameRules): string[] {
   const problems: string[] = [];
+  const report = ruleReporter(problems, rules.onProblem);
   const granted = new Set(grantedSpellsOf(view).map(lower));
   const racial = new Map(rules.racialCantrips.map((entry) => [lower(entry.name), entry.list]));
   const top = maxSpellLevelOf(view);
@@ -114,34 +117,34 @@ export function spellNameProblems(view: CasterView, list: string, rules: NameRul
     }
     const spell = rules.spellOf(name);
     if (!spell) {
-      problems.push(`${name} is not a spell this server knows; pick one from the class's spell list.`);
+      report("ruleProblem.spellUnknown", { spell: ruleTerm("spell", name) }, `${name} is not a spell this server knows; pick one from the class's spell list.`);
       return;
     }
     if (asCantrip && spell.level !== 0) {
-      problems.push(`${spell.name} is a level ${spell.level} spell, not a cantrip; it cannot sit on the cantrip list.`);
+      report("ruleProblem.spellNotCantrip", { spell: ruleTerm("spell", spell.name), level: spell.level }, `${spell.name} is a level ${spell.level} spell, not a cantrip; it cannot sit on the cantrip list.`);
       return;
     }
     if (!asCantrip && spell.level === 0) {
-      problems.push(`${spell.name} is a cantrip; it belongs on the cantrip list, not among the spells.`);
+      report("ruleProblem.spellCantripFiled", { spell: ruleTerm("spell", spell.name) }, `${spell.name} is a cantrip; it belongs on the cantrip list, not among the spells.`);
       return;
     }
     const lists = spell.classes.map(lower);
     const racialList = racial.get(key);
     if (racialList !== undefined) {
       if (spell.level !== 0 || !lists.includes(lower(racialList))) {
-        problems.push(`${spell.name} is not a ${racialList} cantrip, which is what the race's cantrip must be.`);
+        report("ruleProblem.spellRacialList", { spell: ruleTerm("spell", spell.name), list: ruleTerm("class", racialList) }, `${spell.name} is not a ${racialList} cantrip, which is what the race's cantrip must be.`);
       }
       return;
     }
     if (!lists.includes(list)) {
-      problems.push(`${spell.name} is not on the ${list} spell list, so a ${labelOf(view)} cannot learn or prepare it.`);
+      report("ruleProblem.spellClassList", { spell: ruleTerm("spell", spell.name), list: ruleTerm("class", list), class: ruleTerm("class", view.classId), level: view.level }, `${spell.name} is not on the ${list} spell list, so a ${labelOf(view)} cannot learn or prepare it.`);
       return;
     }
     // The counts check (spellListProblems) holds the level ceiling for every
     // spell the bundled checklist names; this is for the ones only the
     // content pack knows.
     if (spellLevelOf(name) === null && spell.level > top) {
-      problems.push(`${spell.name} is a level ${spell.level} spell; a ${labelOf(view)} casts up to level ${top}.`);
+      report("ruleProblem.spellLevel", { spell: ruleTerm("spell", spell.name), actual: spell.level, class: ruleTerm("class", view.classId), level: view.level, top }, `${spell.name} is a level ${spell.level} spell; a ${labelOf(view)} casts up to level ${top}.`);
     }
   };
   for (const name of dedupeNames(view.cantrips)) {
@@ -156,8 +159,9 @@ export function spellNameProblems(view: CasterView, list: string, rules: NameRul
 // How one caster's lists are filed: a caster who knows spells keeps them in
 // `known` and prepares nothing. (A wizard's prepared spells are always in
 // the book: the book is written to hold them, and then counted.)
-export function spellFilingProblems(view: CasterView): string[] {
+export function spellFilingProblems(view: CasterView, onProblem?: RuleProblemSink): string[] {
   const problems: string[] = [];
+  const report = ruleReporter(problems, onProblem);
   const granted = new Set(grantedSpellsOf(view).map(lower));
   if (view.style === "known") {
     const known = new Set(view.known.map(lower));
@@ -165,7 +169,7 @@ export function spellFilingProblems(view: CasterView): string[] {
       (name) => !known.has(lower(name)) && !granted.has(lower(name)),
     );
     if (view.known.length && apart.length) {
-      problems.push(
+      report("ruleProblem.spellKnownFiling", { class: ruleTerm("class", view.classId), level: view.level, spells: apart.map(name => ruleTerm("spell", name)) },
         `A ${labelOf(view)} knows its spells and prepares none; ${apart.join(", ")} must be among the spells known or come off the sheet.`,
       );
     }
@@ -174,6 +178,7 @@ export function spellFilingProblems(view: CasterView): string[] {
 }
 
 export type SpellcastingInput = {
+  onProblem?: RuleProblemSink;
   sent: Spellcasting;
   classes: ClassEntry[];
   classOf: (classId: string) => ClassGrants | null;
@@ -239,13 +244,11 @@ export function judgeSpellcasting(input: SpellcastingInput): SpellcastingVerdict
       taught ? [...(taught.cantrips ?? []), ...taught.known, ...(taught.spellbook ?? [])].map(lower) : [],
     );
     const names = dedupeNames(namesOf(input.sent)).filter((name) => !allowed.has(lower(name)));
-    return {
-      problems:
-        names.length && input.judgeLists
-          ? [
-              `A ${first.id.replace(/[_-]+/g, " ")} has no Spellcasting feature, so ${names.slice(0, 3).join(", ")} cannot be on the sheet.`,
-            ]
-          : [],
+    const problems: string[] = [];
+    if (names.length && input.judgeLists) ruleReporter(problems, input.onProblem)("ruleProblem.spellNoCasting", {
+      class: ruleTerm("class", first.id), spells: names.slice(0, 3).map(name => ruleTerm("spell", name)),
+    }, `A ${first.id.replace(/[_-]+/g, " ")} has no Spellcasting feature, so ${names.slice(0, 3).join(", ")} cannot be on the sheet.`);
+    return { problems,
       spellcasting: taught,
     };
   }
@@ -362,11 +365,12 @@ export function judgeSpellcasting(input: SpellcastingInput): SpellcastingVerdict
       const list = casting.find((entry) => lower(entry.entry.id) === lower(view.classId))?.list ?? "";
       problems.push(
         ...spellNameProblems(view, list, {
+          onProblem: input.onProblem,
           spellOf: input.spellOf,
           held,
           racialCantrips: racial?.name ? [racial] : [],
         }),
-        ...spellFilingProblems(view),
+        ...spellFilingProblems(view, input.onProblem),
       );
       // An Eldritch Knight or Arcane Trickster learns from two schools, a few
       // picks from any other; only adding past both is refused.
@@ -376,6 +380,7 @@ export function judgeSpellcasting(input: SpellcastingInput): SpellcastingVerdict
           .filter((spell) => spell.level > 0);
       const heldNames = namesOf(input.held ?? null).filter((name) => !free.some((entry) => lower(entry) === lower(name)));
       const schools = thirdCasterSchoolProblem({
+        onProblem: input.onProblem,
         classId: view.classId,
         subclass: casting.find((entry) => lower(entry.entry.id) === lower(view.classId))?.entry.subclass,
         level: view.level,
@@ -393,6 +398,7 @@ export function judgeSpellcasting(input: SpellcastingInput): SpellcastingVerdict
       ...spellListProblems(
         { ...sheetLike, spellcasting: written },
         {
+          onProblem: input.onProblem,
           bookAllowance: input.bookAllowance,
           freeCantrips: [...(racial?.name ? [racial.name] : []), ...innate, ...taught.cantrips],
           freeSpells: taught.spells,

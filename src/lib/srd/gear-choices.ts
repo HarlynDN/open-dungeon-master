@@ -22,6 +22,7 @@
 // Anything else stays as written, as before. Pure, and shared by the builder
 // (what the chips show) and the server (what the free kit is), so the two
 // can never disagree about what the character carries.
+import { ruleReporter, ruleTerm, type RuleProblemSink } from "@/lib/characters/problems";
 import { matchGear, resolveGearLine } from "@/lib/srd/adventuring-gear";
 import type { KitItem } from "@/lib/srd/starting-kit";
 import { ARTISANS_TOOLS, GAMING_SETS, MUSICAL_INSTRUMENTS, splitToolGrants } from "@/lib/srd/tool-choices";
@@ -267,12 +268,13 @@ export type BackgroundKit = {
 // chosen alternative of each either-or line by its words, in order.
 export function expandBackgroundGear(
   equipment: string[] | undefined,
-  input: { tools: string[]; backgroundTools: string[]; picks: string[] },
+  input: { tools: string[]; backgroundTools: string[]; picks: string[]; onProblem?: RuleProblemSink },
 ): BackgroundKit {
   const names: string[] = [];
   const choices: BackgroundGearChoice[] = [];
   const toolLines: BackgroundKit["toolLines"] = [];
   const problems: string[] = [];
+  const report = ruleReporter(problems, input.onProblem);
   const used = new Set<string>();
   for (const line of equipment ?? []) {
     if (/^\s*\d[\d,]*\s*gp\s*$/i.test(line)) {
@@ -305,7 +307,7 @@ export function expandBackgroundGear(
       named = alternatives[chosen]?.options?.find((name) => lower(name) === lower(asked));
     }
     if (chosen < 0) {
-      problems.push(
+      report("ruleProblem.gearBackgroundChoice", { item: ruleTerm("equipment", asked), choices: { kind: "gearAlternatives", alternatives: alternatives.map(entry => ({ items: entry.items, tools: entry.options ?? null })) } },
         `The background's kit offers ${alternatives.map((entry) => entry.label.toLowerCase()).join(" or ")}; "${asked}" is not one of them.`,
       );
       chosen = 0;

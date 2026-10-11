@@ -1,3 +1,4 @@
+import { ruleReporter, ruleTerm } from "@/lib/characters/problems";
 // Are these six ability scores ones a character could have?
 //
 // SRD 5.1: scores come from the standard array, a 27 point buy, or six throws
@@ -21,6 +22,7 @@ export const ROLL_MIN = 3;
 export const ROLL_MAX = 18;
 
 export type AbilityCheck = {
+  onProblem?: import("@/lib/characters/problems").RuleProblemSink;
   scores: AbilityScores;
   // The race's increase, fixed and chosen, per ability.
   racial: Partial<Record<Ability, number>>;
@@ -150,12 +152,11 @@ function fitsBounds(spans: Span[], freePoints: number): boolean {
 
 export function abilityProblems(check: AbilityCheck): string[] {
   const problems: string[] = [];
+  const report = ruleReporter(problems, check.onProblem);
   for (const ability of ABILITIES) {
     const cap = ABILITY_SCORE_CAP + (check.grants?.[ability] ?? 0);
     if (check.scores[ability] > cap) {
-      problems.push(
-        `${ABILITY_NAMES[ability]} is ${check.scores[ability]}; no score passes ${cap} without a feature or an item that says so. Lower it to ${cap} or less.`,
-      );
+      report("ruleProblem.abilityCap", { ability: ruleTerm("ability", ability), actual: check.scores[ability], limit: cap }, `${ABILITY_NAMES[ability]} is ${check.scores[ability]}; no score passes ${cap} without a feature or an item that says so. Lower it to ${cap} or less.`);
     }
   }
   if (problems.length) {
@@ -166,9 +167,7 @@ export function abilityProblems(check: AbilityCheck): string[] {
   const written = ABILITIES.map((ability) => spans[ability].lo).join(", ");
   if (check.mode === "bounds") {
     if (!fitsBounds(ordered, check.freePoints)) {
-      problems.push(
-        `Before the race's increase and the improvements earned, the ability scores are ${written}. No method gives a score under ${ROLL_MIN} or over ${ROLL_MAX}; bring each inside that range.`,
-      );
+      report("ruleProblem.abilityBounds", { scores: ABILITIES.map(ability => spans[ability].lo), min: ROLL_MIN, max: ROLL_MAX }, `Before the race's increase and the improvements earned, the ability scores are ${written}. No method gives a score under ${ROLL_MIN} or over ${ROLL_MAX}; bring each inside that range.`);
     }
     return problems;
   }
@@ -177,9 +176,7 @@ export function abilityProblems(check: AbilityCheck): string[] {
     check.pools.some((pool) => fitsPool(pool, ordered, check.freePoints)) ||
     fitsPointBuy(ordered, check.freePoints);
   if (!fits) {
-    problems.push(
-      `Before the race's increase the ability scores are ${written}. They must be the standard array (${STANDARD_ARRAY.join(", ")}), a ${POINT_BUY_BUDGET} point buy of scores from ${POINT_BUY_MIN} to ${POINT_BUY_MAX}, or the six totals the server rolled for this character.`,
-    );
+    report("ruleProblem.abilityMethod", { scores: ABILITIES.map(ability => spans[ability].lo), array: STANDARD_ARRAY, budget: POINT_BUY_BUDGET, min: POINT_BUY_MIN, max: POINT_BUY_MAX }, `Before the race's increase the ability scores are ${written}. They must be the standard array (${STANDARD_ARRAY.join(", ")}), a ${POINT_BUY_BUDGET} point buy of scores from ${POINT_BUY_MIN} to ${POINT_BUY_MAX}, or the six totals the server rolled for this character.`);
   }
   return problems;
 }

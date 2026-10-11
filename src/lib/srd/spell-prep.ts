@@ -1,3 +1,4 @@
+import { ruleReporter, ruleTerm, type RuleProblemSink } from "@/lib/characters/problems";
 import { findCustomClass, spellClassFor } from "@/lib/classes";
 import { suggestedCantripCount, suggestedSpellCount } from "@/lib/content/mechanics";
 import type { CharacterSheet } from "@/lib/schemas/sheet";
@@ -403,9 +404,10 @@ function arcanumTop(view: Pick<CasterView, "classId" | "level">): number {
 // are left out of the count.
 export function spellListProblems(
   sheet: SheetLike & { abilities: CharacterSheet["abilities"] },
-  options: { bookAllowance?: boolean; freeCantrips?: string[]; freeCantripCount?: number; freeSpells?: string[] } = {},
+  options: { onProblem?: RuleProblemSink; bookAllowance?: boolean; freeCantrips?: string[]; freeCantripCount?: number; freeSpells?: string[] } = {},
 ): string[] {
   const problems: string[] = [];
+  const report = ruleReporter(problems, options.onProblem);
   const free = new Set((options.freeCantrips ?? []).map(lower).filter(Boolean));
   // Spells a feat teaches (Fey Touched's misty step) are known on top of
   // the class's own and from any list, so they are left out of the count
@@ -422,27 +424,27 @@ export function spellListProblems(
     const cantrips = named.slice(0, Math.max(0, named.length - freeCount));
     freeCount = 0;
     if (cantripCap !== null && cantrips.length > cantripCap) {
-      problems.push(`A ${label} knows ${cantripCap} ${cantripCap === 1 ? "cantrip" : "cantrips"}; that list has ${cantrips.length}.`);
+      report("ruleProblem.spellCantripLimit", { class: ruleTerm("class", view.classId), level: view.level, limit: cantripCap, count: cantrips.length }, `A ${label} knows ${cantripCap} ${cantripCap === 1 ? "cantrip" : "cantrips"}; that list has ${cantrips.length}.`);
     }
     const granted = grantedSpellsOf(view);
     const held = dedupeNames([...heldSpells(view), ...view.pending]).filter((name) => !isCantripName(name) && !freeSpells.has(lower(name)));
     const cap = spellCapOf(view, sheet.abilities);
     const counted = spellsAgainstLimit(held, granted);
     if (cap && counted > cap.count) {
-      problems.push(`A ${label} may hold ${cap.count} ${cap.label}; that list has ${counted}.`);
+      report("ruleProblem.spellCountLimit", { class: ruleTerm("class", view.classId), level: view.level, limit: cap.count, count: counted, kind: ruleTerm("spellCountKind", cap.label) }, `A ${label} may hold ${cap.count} ${cap.label}; that list has ${counted}.`);
     }
     if (view.style === "spellbook" && options.bookAllowance !== false) {
       const book = spellbookOf(view);
       const allowance = spellbookAllowance(view.level);
       if (book.length > allowance) {
-        problems.push(`A ${label} starts with ${allowance} spells in the spellbook; that book has ${book.length}.`);
+        report("ruleProblem.spellBookLimit", { class: ruleTerm("class", view.classId), level: view.level, limit: allowance, count: book.length }, `A ${label} starts with ${allowance} spells in the spellbook; that book has ${book.length}.`);
       }
     }
     const top = Math.max(maxSpellLevelOf(view), arcanumTop(view));
     for (const name of dedupeNames([...held, ...view.spellbook]).filter((name) => !freeSpells.has(lower(name)))) {
       const spellLevel = spellLevelOf(name);
       if (spellLevel !== null && spellLevel > top) {
-        problems.push(
+        report(top === 0 ? "ruleProblem.spellNoSlots" : "ruleProblem.spellLevel", { class: ruleTerm("class", view.classId), level: view.level, spell: ruleTerm("spell", name), actual: spellLevel, top },
           top === 0
             ? `A ${label} has no spell slots yet, so ${name} cannot be on the list.`
             : `${name} is a level ${spellLevel} spell; a ${label} casts up to level ${top}.`,

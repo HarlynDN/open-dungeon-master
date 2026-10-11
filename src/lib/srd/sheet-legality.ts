@@ -1,3 +1,4 @@
+import { ruleReporter, ruleTerm } from "@/lib/characters/problems";
 // One legality check for every door a character sheet comes through.
 //
 // "What is wrong with this sheet as a level N character of this table", in
@@ -17,13 +18,14 @@
 // character stored before this check existed, was rolled and played where
 // this server could not see: it is held to what dice and levels could have
 // given, and keeps what it holds.
-import type {
-  Ability,
-  AsiChoice,
-  ClassEntry,
-  CreateSheetInput,
-  HitDicePool,
-  SheetFeature,
+import {
+  ABILITIES,
+  type Ability,
+  type AsiChoice,
+  type ClassEntry,
+  type CreateSheetInput,
+  type HitDicePool,
+  type SheetFeature,
 } from "@/lib/schemas/sheet";
 import { earnedAsiCountFor } from "@/lib/srd/asi";
 import { legacyAsiTaken, readAsiLedger, withAsiLedger } from "@/lib/srd/asi-ledger";
@@ -37,7 +39,7 @@ import {
   levelHpGain,
   type HpClass,
 } from "@/lib/srd/hit-points";
-import { MULTICLASS_CAP, describePrereq, meetsPrereq } from "@/lib/srd/multiclass";
+import { MULTICLASS_CAP, MULTICLASS_MIN_SCORE, multiclassPrereq, describePrereq, meetsPrereq } from "@/lib/srd/multiclass";
 import {
   featureAbilityGrants,
   featureHitPoints,
@@ -108,6 +110,7 @@ function classListOf(
   keeps: boolean,
   problems: string[],
 ): ClassEntry[] {
+  const report = ruleReporter(problems, context.onProblem);
   const sent = input.classes ?? [];
   const single = [{ id: input.class, subclass: input.subclass ?? "", level: context.level }];
   if (!keeps || sent.length < 2) {
@@ -115,43 +118,37 @@ function classListOf(
   }
   const ids = new Set(sent.map((entry) => lower(entry.id)));
   if (ids.size !== sent.length) {
-    problems.push("A character holds each class once; the class list names one twice.");
+    report("ruleProblem.classDuplicate", {}, "A character holds each class once; the class list names one twice.");
     return single;
   }
   if (sent.length > MULTICLASS_CAP) {
-    problems.push(`A character has at most ${MULTICLASS_CAP} classes here; that list has ${sent.length}.`);
+    report("ruleProblem.classLimit", { limit: MULTICLASS_CAP, count: sent.length }, `A character has at most ${MULTICLASS_CAP} classes here; that list has ${sent.length}.`);
     return single;
   }
   if (lower(sent[0].id) !== lower(input.class)) {
-    problems.push(`The first class on the list (${sent[0].id}) must be the character's class (${input.class}).`);
+    report("ruleProblem.classOrder", { first: ruleTerm("class", sent[0].id), primary: ruleTerm("class", input.class) }, `The first class on the list (${sent[0].id}) must be the character's class (${input.class}).`);
     return single;
   }
   const total = sent.reduce((sum, entry) => sum + entry.level, 0);
   if (total !== context.level) {
-    problems.push(
-      `The class levels add up to ${total} and the character is level ${context.level}; they must be equal.`,
-    );
+    report("ruleProblem.classLevels", { total, level: context.level }, `The class levels add up to ${total} and the character is level ${context.level}; they must be equal.`);
     return single;
   }
   const baseline = context.baseline?.sheet.classes ?? [];
   for (const entry of sent) {
     if (!context.classOf(entry.id)) {
-      problems.push(`"${entry.id}" is not a class this server knows.`);
+      report("ruleProblem.classUnknownSecond", { class: ruleTerm("class", entry.id) }, `"${entry.id}" is not a class this server knows.`);
       continue;
     }
     if (context.door === "library") {
       // An edit keeps the split the character earned and adds nothing to it.
       const earned = baseline.find((held) => lower(held.id) === lower(entry.id));
       if (!earned || (entry !== sent[0] && entry.level > earned.level)) {
-        problems.push(
-          `A second class is taken at a level-up in play; ${entry.id} ${entry.level} is more than this character earned there.`,
-        );
+        report("ruleProblem.classUnearned", { class: ruleTerm("class", entry.id), level: entry.level }, `A second class is taken at a level-up in play; ${entry.id} ${entry.level} is more than this character earned there.`);
       }
     }
     if (!meetsPrereq(input.abilities, entry.id)) {
-      problems.push(
-        `Holding levels in ${context.classOf(entry.id)?.name ?? entry.id} beside another class requires ${describePrereq(entry.id)}.`,
-      );
+      report("ruleProblem.classPrerequisite", { class: ruleTerm("class", context.classOf(entry.id)?.name ?? entry.id), requirement: { kind: "abilityRequirement", alternatives: multiclassPrereq(entry.id) ?? [], minimum: MULTICLASS_MIN_SCORE } }, `Holding levels in ${context.classOf(entry.id)?.name ?? entry.id} beside another class requires ${describePrereq(entry.id)}.`);
     }
   }
   return sent.map((entry) => ({ ...entry }));
@@ -162,6 +159,7 @@ function subclassesOf(
   context: LegalityContext,
   problems: string[],
 ): ClassEntry[] {
+  const report = ruleReporter(problems, context.onProblem);
   return classes.map((entry) => {
     const name = (entry.subclass ?? "").trim();
     if (!name) {
@@ -173,9 +171,7 @@ function subclassesOf(
       return { ...entry, subclass: "" };
     }
     if (!context.subclassOffered(entry.id, name)) {
-      problems.push(
-        `${name} is not a subclass of the ${context.classOf(entry.id)?.name ?? entry.id}; pick one from that class's list.`,
-      );
+      report("ruleProblem.subclassUnknown", { subclass: name, class: ruleTerm("class", context.classOf(entry.id)?.name ?? entry.id) }, `${name} is not a subclass of the ${context.classOf(entry.id)?.name ?? entry.id}; pick one from that class's list.`);
     }
     return { ...entry, subclass: name };
   });
@@ -186,6 +182,7 @@ function racialIncrease(
   context: LegalityContext,
   problems: string[],
 ): { racial: Partial<Record<Ability, number>>; picks: Ability[] } {
+  const report = ruleReporter(problems, context.onProblem);
   const race = context.race!;
   const racial: Partial<Record<Ability, number>> = { ...race.asi };
   const sent = input.racialChoices?.asi ?? [];
@@ -198,9 +195,7 @@ function racialIncrease(
     const fixed = (race.asi[ability] ?? 0) !== 0;
     const offered = !choice.from || choice.from.includes(ability);
     if (picks.includes(ability) || fixed || !offered || picks.length >= choice.count) {
-      problems.push(
-        `The ${race.name}'s increase of the player's choice goes to ${choice.count} different ${choice.count === 1 ? "ability" : "abilities"}${choice.from ? ` among ${choice.from.join(", ")}` : ""} the race does not already raise; ${ability} cannot take it.`,
-      );
+      report("ruleProblem.racialIncrease", { race: ruleTerm("race", race.name), count: choice.count, choices: (choice.from ?? ABILITIES).map(value => ruleTerm("ability", value)), ability: ruleTerm("ability", ability) }, `The ${race.name}'s increase of the player's choice goes to ${choice.count} different ${choice.count === 1 ? "ability" : "abilities"}${choice.from ? ` among ${choice.from.join(", ")}` : ""} the race does not already raise; ${ability} cannot take it.`);
       continue;
     }
     picks.push(ability);
@@ -231,17 +226,20 @@ function freeKitOf(
   background: LegalityContext["background"],
   input: CreateSheetInput,
   who: { armor: string[]; weapons: string[]; tools: string[]; subclass: string },
+  onProblem: LegalityContext["onProblem"],
 ) {
   const kit = startingKitFor(
     { id: klass.id, armor: who.armor, weapons: who.weapons },
     input.kitChoices,
     who.subclass,
     klass.name,
+    onProblem,
   );
   // The background's kit with its choice lines answered: a tool line from
   // the training the character holds, an either-or line from the pick the
   // sheet records (issue #127).
   const backgroundKit = expandBackgroundGear(background?.equipment, {
+    onProblem,
     tools: who.tools,
     backgroundTools: background?.tools ?? [],
     picks: input.backgroundChoices?.gear ?? [],
@@ -255,6 +253,7 @@ function freeKitOf(
 
 export function legalizeSheet(input: CreateSheetInput, context: LegalityContext): Legalized {
   const problems: string[] = [];
+  const report = ruleReporter(problems, context.onProblem);
   const policy = policyFor(context);
   const level = Math.max(1, Math.min(20, Math.floor(context.level)));
   const klass = context.classOf(input.class);
@@ -266,17 +265,13 @@ export function legalizeSheet(input: CreateSheetInput, context: LegalityContext)
     return { problems: [], sheet: input };
   }
   if (!klass) {
-    problems.push(
-      `"${input.class}" is not a class this server knows; pick one from the builder's list.`,
-    );
+    report("ruleProblem.classUnknown", { class: ruleTerm("class", input.class) }, `"${input.class}" is not a class this server knows; pick one from the builder's list.`);
   }
   if (!race) {
-    problems.push(`"${input.race}" is not a race this server knows; pick one from the builder's list.`);
+    report("ruleProblem.raceUnknown", { race: ruleTerm("race", input.race) }, `"${input.race}" is not a race this server knows; pick one from the builder's list.`);
   }
   if (input.background.trim() && !background && context.door !== "stored") {
-    problems.push(
-      `"${input.background}" is not a background this server knows; pick one from the builder's list.`,
-    );
+    report("ruleProblem.backgroundUnknown", { background: ruleTerm("background", input.background) }, `"${input.background}" is not a background this server knows; pick one from the builder's list.`);
   }
   if (!klass || !race) {
     return { problems, sheet: input };
@@ -295,15 +290,14 @@ export function legalizeSheet(input: CreateSheetInput, context: LegalityContext)
   const earned = earnedAsiCountFor(classes);
   const recorded: AsiChoice[] = (input.asiChoices ?? []).slice();
   if (recorded.length > earned) {
-    problems.push(
-      `This character has earned ${earned} Ability Score Improvement${earned === 1 ? "" : "s"} at its level; ${recorded.length} are recorded.`,
-    );
+    report("ruleProblem.improvementCount", { earned, count: recorded.length }, `This character has earned ${earned} Ability Score Improvement${earned === 1 ? "" : "s"} at its level; ${recorded.length} are recorded.`);
   }
   const unrecorded = Math.max(0, earned - recorded.length);
   const casts = castingClassesOf(classes, context.classOf).length > 0;
   const feats = policy.trustsHeld
     ? { problems: [], feats: input.feats ?? [], slotsUsed: 0 }
     : judgeFeats({
+        onProblem: context.onProblem,
         sent: input.feats ?? [],
         recorded: recorded.flatMap((choice) => (choice.mode === "feat" ? [choice.feat] : [])),
         racialFeats: race.feats,
@@ -332,9 +326,7 @@ export function legalizeSheet(input: CreateSheetInput, context: LegalityContext)
     );
     const racial = feats.feats.filter((name) => !recordedFeats.has(lower(name)));
     if (racial.length < race.feats) {
-      problems.push(
-        `A ${race.name} starts with ${race.feats === 1 ? "a feat" : `${race.feats} feats`} of their choice; pick ${race.feats === 1 ? "one" : "them"} from the feat list.`,
-      );
+      report("ruleProblem.racialFeatMissing", { race: ruleTerm("race", race.name), count: race.feats }, `A ${race.name} starts with ${race.feats === 1 ? "a feat" : `${race.feats} feats`} of their choice; pick ${race.feats === 1 ? "one" : "them"} from the feat list.`);
     }
   }
   // Half-feats (Actor's Charisma, Resilient's score and save). A character
@@ -362,6 +354,7 @@ export function legalizeSheet(input: CreateSheetInput, context: LegalityContext)
     : null;
   problems.push(
     ...abilityProblems({
+      onProblem: context.onProblem,
       scores: input.abilities,
       racial: increase.racial,
       recorded,
@@ -387,7 +380,7 @@ export function legalizeSheet(input: CreateSheetInput, context: LegalityContext)
   let abilities = primalHeld ? withoutPrimalChampion(input.abilities) : input.abilities;
   let featSaves = halfFeatPoints(halfFeats.filter((pick) => featSaveProficiency(pick.feat, pick.ability, pick.desc)));
   if (takesHalfFeats) {
-    const applied = applyHalfFeats(abilities, halfFeats);
+    const applied = applyHalfFeats(abilities, halfFeats, context.onProblem);
     if ("error" in applied) {
       problems.push(applied.error);
     } else {
@@ -445,9 +438,7 @@ export function legalizeSheet(input: CreateSheetInput, context: LegalityContext)
       before.sheet.maxHp === maxHp;
     maxHp = same ? maxHp : derivedMaxHp("average", hpInput);
   } else if (!inRange) {
-    problems.push(
-      `A level ${level} ${klass.name} with Constitution ${abilities.con} has between ${range.min} and ${range.max} hit points; the sheet says ${input.maxHp}.`,
-    );
+    report("ruleProblem.hitPointRange", { level, class: ruleTerm("class", klass.name), constitution: abilities.con, min: range.min, max: range.max, actual: input.maxHp }, `A level ${level} ${klass.name} with Constitution ${abilities.con} has between ${range.min} and ${range.max} hit points; the sheet says ${input.maxHp}.`);
   }
   const hitDice = { die: dieOf(klass), total: level, spent: 0 };
   const hitDicePools: HitDicePool[] | null = multiclass
@@ -461,6 +452,7 @@ export function legalizeSheet(input: CreateSheetInput, context: LegalityContext)
 
   // ---- training, skills, languages ----
   const trained = judgeProficiencies({
+    onProblem: policy.judgesPicks ? context.onProblem : undefined,
     // The builder's preview already holds its feats' picks (Skilled's
     // thieves' tools); they come off here, since the class and background
     // never offered them, and go back on with the grants below (issue #147).
@@ -491,6 +483,7 @@ export function legalizeSheet(input: CreateSheetInput, context: LegalityContext)
   // imported, names every pick; a stored one or an engine's companion is
   // read as it is (issue #125).
   const granted = applyFeatGrants({
+    onProblem: policy.judgesPicks ? context.onProblem : undefined,
     proficiencies: trained.proficiencies,
     feats: feats.feats.map((name) => ({ name, desc: context.featOf(name)?.desc ?? "" })),
     choices: input.featChoices ?? {},
@@ -506,6 +499,7 @@ export function legalizeSheet(input: CreateSheetInput, context: LegalityContext)
   // class's counts, and each free cast becomes a feature the counters read.
   const raisedByFeat = (feat: string) => halfFeats.find((pick) => lower(pick.feat) === lower(feat))?.ability ?? null;
   const taught = featSpellGrants({
+    onProblem: policy.judgesPicks ? context.onProblem : undefined,
     feats: feats.feats.map((name) => ({ name, desc: context.featOf(name)?.desc ?? "" })),
     choices: input.featChoices ?? {},
     raisedAbility: raisedByFeat,
@@ -528,6 +522,7 @@ export function legalizeSheet(input: CreateSheetInput, context: LegalityContext)
   const racialCantrip =
     race.cantripChoice && cantripPick ? { name: cantripPick, list: race.cantripChoice.list } : null;
   const spells = judgeSpellcasting({
+    onProblem: context.onProblem,
     sent: input.spellcasting ?? null,
     classes,
     classOf: context.classOf,
@@ -546,9 +541,7 @@ export function legalizeSheet(input: CreateSheetInput, context: LegalityContext)
   if (racialCantrip && !casts && policy.judgesPicks) {
     const spell = context.spellOf(racialCantrip.name);
     if (!spell || spell.level !== 0 || !spell.classes.map(lower).includes(lower(racialCantrip.list))) {
-      problems.push(
-        `${racialCantrip.name} is not a ${racialCantrip.list} cantrip, which is what the ${race.name}'s cantrip must be.`,
-      );
+      report("ruleProblem.racialCantrip", { race: ruleTerm("race", race.name), class: ruleTerm("class", racialCantrip.list), spell: ruleTerm("spell", racialCantrip.name) }, `${racialCantrip.name} is not a ${racialCantrip.list} cantrip, which is what the ${race.name}'s cantrip must be.`);
     }
   }
 
@@ -565,9 +558,9 @@ export function legalizeSheet(input: CreateSheetInput, context: LegalityContext)
     const refusal =
       "A dragonborn chooses a draconic ancestry: one of black, blue, brass, bronze, copper, gold, green, red, silver or white.";
     if (picked && !findDraconicAncestry(picked)) {
-      problems.push(refusal);
+      report(picked ? "ruleProblem.ancestryInvalid" : "ruleProblem.ancestryMissing", picked ? { choice: picked } : {}, refusal);
     } else if (!ancestry && (policy.made || policy.edit) && context.door !== "engine") {
-      problems.push(refusal);
+      report(picked ? "ruleProblem.ancestryInvalid" : "ruleProblem.ancestryMissing", picked ? { choice: picked } : {}, refusal);
     } else if (!ancestry && context.door === "engine") {
       // A companion the engine drafts with none named rolls on the table
       // (add_companion already does; this covers any other engine draft).
@@ -580,6 +573,7 @@ export function legalizeSheet(input: CreateSheetInput, context: LegalityContext)
   const featured = policy.trustsHeld
     ? { problems: [], features: withFreeCasts(input.features ?? [], freeCasts) }
     : judgeFeatures({
+        onProblem: context.onProblem,
         sent: (input.features ?? []).filter((feature) => !isAncestry(feature) && !featDerived(feature.name)),
         held: (held?.features ?? []).filter((feature) => !featDerived(feature.name)),
         raceTraits: bundledTraits ? [] : race.traitNames,
@@ -623,7 +617,7 @@ export function legalizeSheet(input: CreateSheetInput, context: LegalityContext)
       weapons: training.weapons,
       tools: training.tools,
       subclass: classes[0].subclass ?? "",
-    });
+    }, context.onProblem);
   if (policy.made && context.door !== "engine") {
     const rolled = context.startingWealth === "rolled";
     const coinCopper = rolled
@@ -632,6 +626,7 @@ export function legalizeSheet(input: CreateSheetInput, context: LegalityContext)
     const kit = rolled ? null : kitOf();
     kitChoices = kit ? kit.choices : undefined;
     const verdict = judgeStartingGear({
+      onProblem: context.onProblem,
       equipment,
       freeKit: kit?.names ?? [],
       coinCopper,
@@ -657,6 +652,7 @@ export function legalizeSheet(input: CreateSheetInput, context: LegalityContext)
     const kit = sameKit ? null : kitOf();
     kitChoices = kit ? kit.choices : (input.kitChoices ?? before.kitChoices);
     const verdict = judgeStartingGear({
+      onProblem: context.onProblem,
       equipment,
       freeKit: [
         ...(before.equipment ?? []).flatMap((item) =>
@@ -674,9 +670,7 @@ export function legalizeSheet(input: CreateSheetInput, context: LegalityContext)
   } else if (context.door === "import") {
     const ceiling = wealthCeilingGold(level);
     if (gold > ceiling) {
-      problems.push(
-        `A level ${level} character arriving from a file carries at most ${ceiling} gp; the file says ${gold}. Lower it, and let whoever runs the table award the rest.`,
-      );
+      report("ruleProblem.importGold", { level, limit: ceiling, actual: gold }, `A level ${level} character arriving from a file carries at most ${ceiling} gp; the file says ${gold}. Lower it, and let whoever runs the table award the rest.`);
     }
   }
   let attuned = 0;
@@ -689,9 +683,7 @@ export function legalizeSheet(input: CreateSheetInput, context: LegalityContext)
     return attuned <= attunementCap ? item : { ...item, attuned: false };
   });
   if (context.door === "import" && attuned > attunementCap) {
-    problems.push(
-      `This character is attuned to at most ${attunementCap} magic items; the file attunes ${attuned}.`,
-    );
+    report("ruleProblem.importAttunement", { limit: attunementCap, actual: attuned }, `This character is attuned to at most ${attunementCap} magic items; the file attunes ${attuned}.`);
   }
 
   // ---- armor class ----

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { isComposingInput } from "@/lib/input-composition";
 
 // Drag as a second way (docs/vtt-parity-implementation-plan.md section
 // 10.2). Pointer events, an 8 px threshold before a press becomes a drag
@@ -78,6 +79,7 @@ export function useDrag<T>(options: {
       },
       onPointerCancel: () => cancel(),
       onKeyDown: (event: React.KeyboardEvent) => {
+        if (isComposingInput(event)) return;
         if (event.key === "Escape") {
           cancel();
         }

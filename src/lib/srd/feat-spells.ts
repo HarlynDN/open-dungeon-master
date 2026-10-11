@@ -15,6 +15,7 @@
 // Free cast feature ("Free cast: Misty Step (Fey Touched)"), which
 // class-resources.ts turns into a once-per-long-rest counter the cast guard
 // spends instead of a slot. Pure.
+import { ruleDetail, ruleReporter, ruleTerm, type RuleProblemSink } from "@/lib/characters/problems";
 import type { Ability } from "@/lib/schemas/sheet";
 
 // The scores a spell is cast with.
@@ -213,7 +214,7 @@ const ordinal = (level: number) => (level === 1 ? "1st" : level === 2 ? "2nd" : 
 
 // What the player has yet to name for the feat's spells, as the sentence
 // the gate shows, or null.
-export function featSpellsOwed(feat: string, spec: FeatSpellSpec, picks: FeatSpellPicks | undefined): string | null {
+export function featSpellsOwed(feat: string, spec: FeatSpellSpec, picks: FeatSpellPicks | undefined, onProblem?: RuleProblemSink): string | null {
   if (!featSpellsAnything(spec)) {
     return null;
   }
@@ -232,7 +233,15 @@ export function featSpellsOwed(feat: string, spec: FeatSpellSpec, picks: FeatSpe
     const kind = spec.schools.length ? `${spec.schools.join(" or ")} ` : "";
     owed.push(plural(spec.spells - has(picks?.spells), `${ordinal(spec.spellLevel)}-level ${kind}${spec.ritualBook ? "ritual " : ""}spell`));
   }
-  return owed.length ? `${feat}: pick ${owed.join(", ")}.` : null;
+  const problem = owed.length ? `${feat}: pick ${owed.join(", ")}.` : null;
+  if (problem) onProblem?.(ruleDetail("ruleProblem.featSpellPicksMissing", {
+    feat: ruleTerm("feat", feat), choices: { kind: "featSpellPicks",
+      classList: spec.listChoice && !(picks?.list ?? "").trim(), ability: spec.ability === "choice" && !picks?.ability,
+      cantrips: Math.max(0, spec.cantrips - has(picks?.cantrips)), attackCantrip: spec.attackCantrip,
+      spells: Math.max(0, spec.spells - has(picks?.spells)), spellLevel: spec.spellLevel, schools: spec.schools, ritual: spec.ritualBook,
+    },
+  }, problem));
+  return problem;
 }
 
 // A spell the legality judge can see: its level, class lists, school and
@@ -254,6 +263,7 @@ export type FeatSpellGrant = {
 };
 
 export type FeatSpellInput = {
+  onProblem?: RuleProblemSink;
   feats: Array<{ name: string; desc: string }>;
   choices: Record<string, FeatSpellPicks | undefined>;
   // The score a half-feat raised, for the feats whose spells use it.
@@ -270,6 +280,7 @@ export type FeatSpellVerdict = { grants: FeatSpellGrant[]; problems: string[] };
 // The spells every feat on the sheet teaches, with the picks as recorded.
 export function featSpellGrants(input: FeatSpellInput): FeatSpellVerdict {
   const problems: string[] = [];
+  const report = ruleReporter(problems, input.onProblem);
   const grants: FeatSpellGrant[] = [];
   for (const feat of input.feats) {
     const spec = featSpellSpec(feat.desc);
@@ -278,14 +289,14 @@ export function featSpellGrants(input: FeatSpellInput): FeatSpellVerdict {
     }
     const picks = input.choices[lower(feat.name)] ?? input.choices[feat.name] ?? {};
     if (input.strict) {
-      const owed = featSpellsOwed(feat.name, spec, picks);
+      const owed = featSpellsOwed(feat.name, spec, picks, input.onProblem);
       if (owed) {
         problems.push(owed);
       }
     }
     const list = spec.listChoice ? lower(picks.list ?? "") || null : null;
     if (input.strict && list && spec.lists.length && !spec.lists.includes(list)) {
-      problems.push(`${feat.name}'s spells come from the ${spec.lists.join(", ")} list; "${picks.list}" is not one of them.`);
+      report("ruleProblem.featSpellListOffered", { feat: ruleTerm("feat", feat.name), list: ruleTerm("class", picks.list ?? ""), choices: spec.lists.map(list => ruleTerm("class", list)) }, `${feat.name}'s spells come from the ${spec.lists.join(", ")} list; "${picks.list}" is not one of them.`);
     }
     const allowedLists = list ? [list] : spec.lists;
     const check = (name: string, level: number, kind: string): KnownSpell | null => {
@@ -294,14 +305,14 @@ export function featSpellGrants(input: FeatSpellInput): FeatSpellVerdict {
         return known;
       }
       if (!known) {
-        problems.push(`"${name}" is not a spell the server knows; ${feat.name}'s ${kind} is picked from the spell list.`);
+        report("ruleProblem.featSpellUnknown", { feat: ruleTerm("feat", feat.name), spell: ruleTerm("spell", name), kind: ruleTerm("spellKind", kind) }, `"${name}" is not a spell the server knows; ${feat.name}'s ${kind} is picked from the spell list.`);
         return null;
       }
       if (known.level !== level) {
-        problems.push(`${known.name} is a ${known.level === 0 ? "cantrip" : `level ${known.level} spell`}; ${feat.name}'s ${kind} is ${level === 0 ? "a cantrip" : `a ${ordinal(level)}-level spell`}.`);
+        report("ruleProblem.featSpellLevel", { feat: ruleTerm("feat", feat.name), spell: ruleTerm("spell", known.name), actual: known.level, expected: level, kind: ruleTerm("spellKind", kind) }, `${known.name} is a ${known.level === 0 ? "cantrip" : `level ${known.level} spell`}; ${feat.name}'s ${kind} is ${level === 0 ? "a cantrip" : `a ${ordinal(level)}-level spell`}.`);
       }
       if (allowedLists.length && !known.classes.some((entry) => allowedLists.includes(lower(entry)))) {
-        problems.push(`${known.name} is not on the ${allowedLists.join(" or ")} list, which is where ${feat.name}'s ${kind} comes from.`);
+        report("ruleProblem.featSpellClassList", { feat: ruleTerm("feat", feat.name), spell: ruleTerm("spell", known.name), choices: allowedLists.map(list => ruleTerm("class", list)), kind: ruleTerm("spellKind", kind) }, `${known.name} is not on the ${allowedLists.join(" or ")} list, which is where ${feat.name}'s ${kind} comes from.`);
       }
       return known;
     };
@@ -313,10 +324,10 @@ export function featSpellGrants(input: FeatSpellInput): FeatSpellVerdict {
     for (const name of picked) {
       const known = check(name, spec.spellLevel, spec.ritualBook ? "ritual spell" : "spell");
       if (input.strict && known && spec.schools.length && known.school && !spec.schools.includes(lower(known.school))) {
-        problems.push(`${known.name} is a ${lower(known.school)} spell; ${feat.name}'s spell is picked from ${spec.schools.join(" or ")}.`);
+        report("ruleProblem.featSpellSchool", { feat: ruleTerm("feat", feat.name), spell: ruleTerm("spell", known.name), school: ruleTerm("school", lower(known.school)), choices: spec.schools.map(school => ruleTerm("school", school)) }, `${known.name} is a ${lower(known.school)} spell; ${feat.name}'s spell is picked from ${spec.schools.join(" or ")}.`);
       }
       if (input.strict && known && spec.ritualBook && known.ritual === false) {
-        problems.push(`${known.name} has no ritual tag; ${feat.name}'s book holds rituals only.`);
+        report("ruleProblem.featSpellRitual", { feat: ruleTerm("feat", feat.name), spell: ruleTerm("spell", known.name) }, `${known.name} has no ritual tag; ${feat.name}'s book holds rituals only.`);
       }
     }
     const sorted = (names: string[], cantrip: boolean) =>

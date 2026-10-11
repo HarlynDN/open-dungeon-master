@@ -1,8 +1,9 @@
 // The two subclasses that cast at a third of a full caster's pace: the
 // fighter's Eldritch Knight and the rogue's Arcane Trickster. Neither is in
 // SRD 5.1; ODM ships both (src/lib/srd/subclasses.json), so their tables are
-// here in the SRD's own shape. Import-free, so src/lib/srd/index.ts and the
-// multiclass table can both read it without a cycle.
+// here in the SRD's own shape. The optional display collector has no rule-table
+// or UI imports at runtime, so index.ts and the multiclass table share it.
+import { ruleDetail, ruleTerm, type RuleProblemSink } from "@/lib/characters/problems";
 
 const THIRD_CASTERS: Record<string, string> = {
   fighter: "eldritch knight",
@@ -98,6 +99,7 @@ export function thirdCasterOutside(classId: string, spells: Array<{ school: unkn
 // when nothing is wrong or the class casts no third-caster magic. The level
 // up route, the sheet legality check and the level-up picker all ask this.
 export function thirdCasterSchoolProblem(input: {
+  onProblem?: RuleProblemSink;
   classId: string;
   subclass: string | null | undefined;
   level: number;
@@ -115,5 +117,7 @@ export function thirdCasterSchoolProblem(input: {
   }
   const who = normalize(input.classId) === "fighter" ? "An Eldritch Knight" : "An Arcane Trickster";
   const any = thirdCasterAnySchoolPicks(input.level);
-  return `${who} of level ${input.level} learns ${schools[0]} and ${schools[1]} spells, and ${any} from any other school; this would make ${outside}. Pick an ${schools[0]} or ${schools[1]} spell instead.`;
+  const problem = `${who} of level ${input.level} learns ${schools[0]} and ${schools[1]} spells, and ${any} from any other school; this would make ${outside}. Pick an ${schools[0]} or ${schools[1]} spell instead.`;
+  input.onProblem?.(ruleDetail("ruleProblem.spellSchoolLimit", { class: ruleTerm("class", input.classId), subclass: { kind: "subclass", classId: input.classId, value: input.subclass ?? "" }, level: input.level, choices: schools.map(school => ruleTerm("school", school)), limit: any, count: outside }, problem));
+  return problem;
 }

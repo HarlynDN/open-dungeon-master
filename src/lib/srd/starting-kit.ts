@@ -5,6 +5,7 @@
 // weapon table. The server (src/lib/srd/sheet-legality.ts), the builder
 // (src/app/characters/builder) and the engine's companions all resolve a kit
 // here, so the three can never disagree about what a class starts with.
+import { ruleReporter, ruleTerm, type RuleProblemSink } from "@/lib/characters/problems";
 import { defaultArmor } from "@/lib/srd/armor";
 import { GENRE_KITS } from "@/lib/srd/genre-kits";
 import {
@@ -124,8 +125,10 @@ export function resolveKit(
   sent: Partial<KitChoices> | null | undefined,
   who: KitTraining,
   className = "class",
+  onProblem?: RuleProblemSink,
 ): ResolvedKit {
   const problems: string[] = [];
+  const report = ruleReporter(problems, onProblem);
   const options: number[] = [];
   const picks: string[] = [];
   const sentPicks = sent?.picks ?? [];
@@ -134,14 +137,14 @@ export function resolveKit(
     const asked = sent?.options?.[index];
     let chosen = typeof asked === "number" ? asked : 0;
     if (!line.options[chosen]) {
-      problems.push(
+      report("ruleProblem.gearKitOptions", { class: ruleTerm("class", className), choices: line.options.map(option => ruleTerm("kitOption", option.label)) },
         `The ${className}'s starting equipment offers ${line.options.map((option) => option.label).join(" or ")}; choose one of them.`,
       );
       chosen = 0;
     }
     const option = line.options[chosen];
     if (!optionAllowed(option, who)) {
-      problems.push(
+      report("ruleProblem.gearKitTraining", { class: ruleTerm("class", className), option: ruleTerm("kitOption", option.label), choices: line.options.filter(other => other !== option && optionAllowed(other, who)).map(other => ruleTerm("kitOption", other.label)) },
         `The ${className}'s starting equipment gives ${option.label} only to a character trained for it; choose ${line.options.filter((other) => other !== option && optionAllowed(other, who)).map((other) => other.label).join(" or ")}.`,
       );
     }
@@ -152,7 +155,7 @@ export function resolveKit(
       const allowed = slotChoices(slot);
       const match = named ? allowed.find((name) => lower(name) === lower(named)) : slot.default;
       if (!match) {
-        problems.push(
+        report("ruleProblem.gearKitSlot", { class: ruleTerm("class", className), item: ruleTerm(slot.filter === "instrument" ? "tool" : "equipment", named), slot: { kind: "kitSlot", filter: slot.filter, except: slot.except ?? [] }, option: ruleTerm("kitOption", option.label) },
           `${named} is not ${describeSlot(slot)}, which is what the ${className}'s "${option.label}" gives; choose one from the weapon table.`,
         );
       }
@@ -178,11 +181,12 @@ export function startingKitFor(
   sent: Partial<KitChoices> | null | undefined,
   subclass = "",
   className?: string,
+  onProblem?: RuleProblemSink,
 ): ResolvedKit & { tabled: boolean } {
   const kit = classKitFor(klass.id);
   if (kit) {
     return {
-      ...resolveKit(kit, sent, { armor: klass.armor, weapons: klass.weapons, subclass }, className ?? klass.id),
+      ...resolveKit(kit, sent, { armor: klass.armor, weapons: klass.weapons, subclass }, className ?? klass.id, onProblem),
       tabled: true,
     };
   }

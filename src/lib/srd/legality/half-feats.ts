@@ -8,6 +8,7 @@
 // The builder sends the scores before those points; the creation check adds
 // them the same way the level-up does. A stored sheet already holds them, so
 // the check takes them back off before asking which method gave the scores.
+import type { RuleProblemSink } from "@/lib/characters/problems";
 import type { Ability, AbilityScores, AsiChoice } from "@/lib/schemas/sheet";
 import {
   applyFeatIncrease,
@@ -82,11 +83,12 @@ export function halfFeatPoints(picks: HalfFeatPick[]): Ability[] {
 export function applyHalfFeats(
   abilities: AbilityScores,
   picks: HalfFeatPick[],
+  onProblem?: RuleProblemSink,
 ): { abilities: AbilityScores; saves: Ability[] } | { error: string } {
   let next = { ...abilities };
   const saves: Ability[] = [];
   for (const pick of picks) {
-    const raised = applyFeatIncrease(next, pick.feat, pick.ability, pick.desc);
+    const raised = applyFeatIncrease(next, pick.feat, pick.ability, pick.desc, onProblem);
     if ("error" in raised) {
       return { error: raised.error };
     }

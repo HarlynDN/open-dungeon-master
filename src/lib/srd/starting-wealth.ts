@@ -11,6 +11,7 @@
 //
 // Nothing magical and nothing without a listed price can be bought at
 // creation: such things are found or granted in play.
+import { ruleReporter, ruleTerm, type RuleProblemSink } from "@/lib/characters/problems";
 import { gearPriceCopper } from "@/lib/srd/adventuring-gear";
 import { parseCoins } from "@/lib/srd/currency";
 import { matchMagicItem } from "@/lib/srd/magic-items";
@@ -165,21 +166,25 @@ export type GearVerdict = {
   spentCopper: number;
 };
 
-const gp = (copper: number) => {
+const gpAmount = (copper: number) => {
   const gold = copper / 100;
-  return `${Number.isInteger(gold) ? gold : gold.toFixed(2)} gp`;
+  return String(Number.isInteger(gold) ? gold : gold.toFixed(2));
 };
+
+const gp = (copper: number) => `${gpAmount(copper)} gp`;
 
 // Holds a new character's pack to what its coin could buy. `freeKit` is the
 // gear that costs nothing (the class's and the background's, under
 // "equipment"); everything else is paid for from `coinCopper`.
 export function judgeStartingGear(input: {
+  onProblem?: RuleProblemSink;
   equipment: GearItem[];
   freeKit: string[];
   coinCopper: number;
   priceOf: PriceLookup;
 }): GearVerdict {
   const problems: string[] = [];
+  const report = ruleReporter(problems, input.onProblem);
   const free = new Map<string, number>();
   for (const name of input.freeKit) {
     free.set(key(name), (free.get(key(name)) ?? 0) + 1);
@@ -196,20 +201,20 @@ export function judgeStartingGear(input: {
       continue;
     }
     if (item.slug?.startsWith("homebrew:")) {
-      problems.push(
+      report("ruleProblem.gearHomebrew", { item: ruleTerm("equipment", item.name) },
         `${item.name} is homebrew gear, which whoever runs the table grants in play; a new character starts with listed gear only.`,
       );
       continue;
     }
     const price = input.priceOf(item.name);
     if (price.magic) {
-      problems.push(
+      report("ruleProblem.gearMagic", { item: ruleTerm("equipment", item.name) },
         `${item.name} is a magic item, and those are found in play; a new character starts with mundane gear.`,
       );
       continue;
     }
     if (price.copper === null) {
-      problems.push(
+      report("ruleProblem.gearNoPrice", { item: ruleTerm("equipment", item.name) },
         `${item.name} has no listed price, so it cannot be bought at creation; ask whoever runs the table to grant it in play.`,
       );
       continue;
@@ -217,7 +222,7 @@ export function judgeStartingGear(input: {
     spentCopper += price.copper * bought;
   }
   if (!problems.length && spentCopper > input.coinCopper) {
-    problems.push(
+    report("ruleProblem.gearBudget", { cost: gpAmount(spentCopper), purse: gpAmount(input.coinCopper), remove: gpAmount(spentCopper - input.coinCopper) },
       `That gear costs ${gp(spentCopper)} beyond the starting kit and the character has ${gp(input.coinCopper)} to spend; remove ${gp(spentCopper - input.coinCopper)} of it.`,
     );
   }

@@ -8,6 +8,7 @@
 // PLAYER's request may keep the ones the stored character already holds and
 // may add none, because the engines read features by name and a name like
 // "Extra Attack (3)" carries the real mechanic whatever its source says.
+import { ruleReporter, ruleTerm, type RuleFeatCondition, type RuleFeatPrerequisite, type RuleProblemSink } from "@/lib/characters/problems";
 import type { Ability, AbilityScores, SheetFeature } from "@/lib/schemas/sheet";
 import { ALL_CLASSES, SRD_RACES } from "@/lib/srd";
 import { ALL_SKILLS } from "@/lib/content/mechanics";
@@ -92,6 +93,7 @@ export function isChoiceFeature(name: string): boolean {
 }
 
 export type FeatureInput = {
+  onProblem?: RuleProblemSink;
   sent: SheetFeature[];
   // Features the stored character holds, on an edit.
   held: SheetFeature[];
@@ -114,6 +116,7 @@ export type FeatureVerdict = { problems: string[]; features: SheetFeature[] };
 
 export function judgeFeatures(input: FeatureInput): FeatureVerdict {
   const problems: string[] = [];
+  const report = ruleReporter(problems, input.onProblem);
   const features: SheetFeature[] = [];
   const held = new Map(input.held.map((feature) => [lower(feature.name), feature]));
   const derived = new Set(input.derived.map(lower));
@@ -151,7 +154,7 @@ export function judgeFeatures(input: FeatureInput): FeatureVerdict {
       features.push({ name: feature.name, source: feature.source });
       continue;
     }
-    problems.push(
+    report("ruleProblem.featureUnearned", { feature: feature.name, source: ruleTerm("featureSource", feature.source) },
       `"${feature.name}" is a ${feature.source} feature, and those are granted in play by whoever runs the table; a character's features come from its class, race and background. Remove it.`,
     );
   }
@@ -180,6 +183,7 @@ export function judgeFeatures(input: FeatureInput): FeatureVerdict {
 // ---- feats ----
 
 export type FeatInput = {
+  onProblem?: RuleProblemSink;
   sent: string[];
   // Feats taken with an improvement, as the sheet records them.
   recorded: string[];
@@ -233,52 +237,61 @@ const RANGED_WEAPONS = SRD_WEAPONS.filter((weapon) => weapon.kind === "ranged").
 
 // Whether one requirement is not met. A requirement of a kind the server
 // cannot check (a prestige rating, a class feature by name) is met.
-function requirementUnmet(requirement: string, who: FeatCandidate): boolean {
+// Classify the prerequisite source once for both enforcement and display.
+// An uncheckable condition retains its source; it is never silently omitted.
+function requirementOf(requirement: string): RuleFeatCondition {
   const part = requirement.toLowerCase().replace(/^(?:the|a|an) /, "").trim();
   const scores = /^(\w+)(?: or (\w+))? (\d+)(?: or higher)?$/.exec(part);
   if (scores) {
-    const abilities = [scores[1], scores[2]]
-      .filter(Boolean)
-      .map((name) => ABILITY_BY_NAME[name.toLowerCase()])
-      .filter(Boolean);
-    return abilities.length > 0 && !abilities.some((ability) => who.abilities[ability] >= Number(scores[3]));
+    const abilities = [scores[1], scores[2]].filter(Boolean)
+      .map((name) => ABILITY_BY_NAME[name.toLowerCase()]).filter(Boolean);
+    return abilities.length ? { type: "abilities", abilities, minimum: Number(scores[3]) } : { type: "source", value: requirement };
   }
   const armor = /^proficiency with (light|medium|heavy) armor$/.exec(part);
-  if (armor) {
-    const sample = { light: "Leather", medium: "Breastplate", heavy: "Plate" }[armor[1] as "light" | "medium" | "heavy"];
-    const piece = SRD_ARMOR.find((entry) => entry.name === sample);
-    return !(piece && isArmorProficient(who.armor, piece));
-  }
-  if (/^(?:ability to cast (?:at least )?one spell|ability to cast spells|spellcasting or pact magic)$/.test(part)) {
-    return !who.casts;
-  }
-  if (/^elf or half-elf$/.test(part)) {
-    return !/elf|drow/i.test(`${who.raceId} ${who.raceName}`);
-  }
+  if (armor) return { type: "armor", weight: armor[1] as "light" | "medium" | "heavy" };
+  if (/^(?:ability to cast (?:at least )?one spell|ability to cast spells|spellcasting or pact magic)$/.test(part)) return { type: "casting" };
+  if (/^elf or half-elf$/.test(part)) return { type: "elf" };
   const level = /^(\d+)(?:st|nd|rd|th) level or higher$/.exec(part);
-  if (level) {
-    return who.level !== undefined && who.level < Number(level[1]);
-  }
+  if (level) return { type: "level", minimum: Number(level[1]) };
   const trained = /^proficiency (?:in|with) (?:at least )?(?:one of the following skills: )?(.+?)(?: skills?)?$/.exec(part);
-  if (!trained) {
-    return false;
-  }
+  if (!trained) return { type: "source", value: requirement };
   const wanted = trained[1];
   const skills = ALL_SKILLS.filter((id) => new RegExp(`\\b${id.replace(/_/g, " ")}\\b`).test(wanted));
-  if (skills.length) {
-    return who.skills !== undefined && !skills.some((skill) => who.skills!.some((held) => lower(held) === skill));
-  }
-  if (/\btype of vehicle\b|\bvehicles?\b/.test(wanted)) {
-    return who.tools !== undefined && !who.tools.some((tool) => /vehicle/i.test(tool));
-  }
+  if (skills.length) return { type: "skills", skills };
+  if (/\btype of vehicle\b|\bvehicles?\b/.test(wanted)) return { type: "vehicle" };
   const weapon = /^(?:one |a )?(martial|simple|ranged|melee)(?: (ranged|melee))? weapons?$/.exec(wanted);
-  if (weapon && who.weapons !== undefined) {
-    const held = who.weapons.map(lower);
-    const names = weapon[1] === "martial" ? MARTIAL_WEAPONS : weapon[1] === "ranged" || weapon[2] === "ranged" ? RANGED_WEAPONS : [];
-    const broad = weapon[1] === "simple" ? ["simple", "martial"] : weapon[1] === "martial" ? ["martial"] : ["simple", "martial"];
-    return !(held.some((entry) => broad.includes(entry)) || held.some((entry) => names.includes(entry)));
+  if (weapon) return { type: "weapons", category: weapon[1] as "martial" | "simple" | "ranged" | "melee", form: weapon[2] as "ranged" | "melee" || null };
+  return { type: "source", value: requirement };
+}
+
+function requirementUnmet(requirement: RuleFeatCondition, who: FeatCandidate): boolean {
+  switch (requirement.type) {
+    case "abilities": return !requirement.abilities.some((ability) => who.abilities[ability] >= requirement.minimum);
+    case "armor": {
+      const sample = { light: "Leather", medium: "Breastplate", heavy: "Plate" }[requirement.weight];
+      const piece = SRD_ARMOR.find((entry) => entry.name === sample);
+      return !(piece && isArmorProficient(who.armor, piece));
+    }
+    case "casting": return !who.casts;
+    case "elf": return !/elf|drow/i.test(`${who.raceId} ${who.raceName}`);
+    case "level": return who.level !== undefined && who.level < requirement.minimum;
+    case "skills": return who.skills !== undefined && !requirement.skills.some((skill) => who.skills!.some((held) => lower(held) === skill));
+    case "vehicle": return who.tools !== undefined && !who.tools.some((tool) => /vehicle/i.test(tool));
+    case "weapons": {
+      if (who.weapons === undefined) return false;
+      const held = who.weapons.map(lower);
+      const names = requirement.category === "martial" ? MARTIAL_WEAPONS : requirement.category === "ranged" || requirement.form === "ranged" ? RANGED_WEAPONS : [];
+      const broad = requirement.category === "simple" ? ["simple", "martial"] : requirement.category === "martial" ? ["martial"] : ["simple", "martial"];
+      return !(held.some((entry) => broad.includes(entry)) || held.some((entry) => names.includes(entry)));
+    }
+    case "source": return false;
   }
-  return false;
+}
+
+function prerequisiteParts(text: string): RuleFeatPrerequisite {
+  return { kind: "featPrerequisite", parts: text
+    .split(/\s+and\s+|,\s*(?=(?:proficien|strength|dexterity|constitution|intelligence|wisdom|charisma|the ability|ability)\b|\d)/i)
+    .map((entry) => entry.trim()).filter(Boolean).map(requirementOf) };
 }
 
 // What a feat's prerequisite asks that this character does not meet, or
@@ -290,17 +303,14 @@ export function unmetPrerequisite(prerequisite: string, who: FeatCandidate): str
   if (!text) {
     return null;
   }
-  const requirements = text
-    .split(/\s+and\s+|,\s*(?=(?:proficien|strength|dexterity|constitution|intelligence|wisdom|charisma|the ability|ability)\b|\d)/i)
-    .map((entry) => entry.trim())
-    .filter(Boolean);
-  return requirements.some((requirement) => requirementUnmet(requirement, who)) ? text : null;
+  return prerequisiteParts(text).parts.some((requirement) => requirementUnmet(requirement, who)) ? text : null;
 }
 
 export type FeatVerdict = { problems: string[]; feats: string[]; slotsUsed: number };
 
 export function judgeFeats(input: FeatInput): FeatVerdict {
   const problems: string[] = [];
+  const report = ruleReporter(problems, input.onProblem);
   const held = new Set(input.held.map(lower));
   const seen = new Set<string>();
   const feats: string[] = [];
@@ -316,7 +326,7 @@ export function judgeFeats(input: FeatInput): FeatVerdict {
   const extra = feats.filter((name) => !recorded.has(lower(name)) && !held.has(lower(name)));
   const room = input.racialFeats + input.unrecordedSlots;
   if (extra.length > room) {
-    problems.push(
+    report(room ? "ruleProblem.featLimit" : "ruleProblem.featNoImprovement", { count: extra.length, room, feats: extra.map(name => ruleTerm("feat", name)) },
       room
         ? `This character has room for ${room} feat${room === 1 ? "" : "s"} beyond the improvements on record; ${extra.join(", ")} ${extra.length === 1 ? "is" : "are"} too many.`
         : `A feat is taken in place of an Ability Score Improvement; ${extra.join(", ")} ${extra.length === 1 ? "has" : "have"} no improvement behind ${extra.length === 1 ? "it" : "them"}.`,
@@ -328,12 +338,12 @@ export function judgeFeats(input: FeatInput): FeatVerdict {
     }
     const facts = input.featOf(name);
     if (!facts) {
-      problems.push(`"${name}" is not a feat this server knows; pick one from the feat list.`);
+      report("ruleProblem.featUnknown", { feat: ruleTerm("feat", name) }, `"${name}" is not a feat this server knows; pick one from the feat list.`);
       continue;
     }
     const unmet = unmetPrerequisite(facts.prerequisite, input.who);
     if (unmet) {
-      problems.push(`${facts.name} requires ${unmet}, which this character does not have.`);
+      report("ruleProblem.featPrerequisite", { feat: ruleTerm("feat", facts.name), requirement: prerequisiteParts(unmet) }, `${facts.name} requires ${unmet}, which this character does not have.`);
     }
   }
   // Feats beyond the race's own were paid for with improvements taken in play.

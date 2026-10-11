@@ -1,3 +1,5 @@
+import { createTranslator } from "@/lib/i18n/messages";
+import { DEFAULT_LOCALE, type AppLocale } from "@/lib/i18n/locales";
 import { getDatabase, nowIso, parseJson } from "@/lib/db/core";
 import { createSheet, getSheetById, getSheetForUser } from "@/lib/db/sheets";
 import { adaptSheetToLevel } from "@/lib/characters/adapt";
@@ -480,7 +482,7 @@ export function listAssignmentsForCharacter(
 // The portrait travels as a path, like a prepared map's backdrop: it points
 // at a file in public/uploads that both copies can read, and duplicating the
 // image would cost megabytes to show the same face.
-export function duplicateCharacter(userId: string, id: string): LibraryCharacter | null {
+export function duplicateCharacter(userId: string, id: string, locale: AppLocale = DEFAULT_LOCALE): LibraryCharacter | null {
   const source = getCharacterForUser(userId, id);
   if (!source) {
     return null;
@@ -489,7 +491,7 @@ export function duplicateCharacter(userId: string, id: string): LibraryCharacter
     listCharactersForUser(userId).map((character) => character.name.trim().toLowerCase()),
   );
   // Trimmed before the numbering so a long name cannot lose the "(2)".
-  const name = dedupeName(`${source.name} (copy)`.slice(0, 72), taken);
+  const name = dedupeName(createTranslator(locale)("library.copyName", { name: source.name }).slice(0, 72), taken);
   const copyId = crypto.randomUUID();
   const now = nowIso();
   getDatabase()

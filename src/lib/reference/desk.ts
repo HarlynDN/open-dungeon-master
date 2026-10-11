@@ -8,6 +8,8 @@ import {
 } from "@/lib/content";
 import { normalizeSettings } from "@/lib/db/settings";
 import { requestUtilityMessage } from "@/lib/dm/model";
+import { getUserSettings } from "@/lib/db/users";
+import { normalizeLocale } from "@/lib/i18n/locales";
 import { enqueueDmJob } from "@/lib/dm/queue";
 import { describeContentEntry, glossaryTerms } from "@/lib/help";
 import { arcTextTimeoutMs } from "@/lib/model-client";
@@ -152,7 +154,7 @@ export async function runRulesDesk(
           ].join("\n\n"),
         },
       ],
-      { timeoutMs: arcTextTimeoutMs() },
+      { locale: normalizeLocale(getUserSettings(request.userId).uiLocale), timeoutMs: arcTextTimeoutMs() },
     );
     if (error) {
       return;

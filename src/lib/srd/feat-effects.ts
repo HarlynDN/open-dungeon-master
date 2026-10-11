@@ -6,6 +6,7 @@
 // Elven Accuracy rolled two dice, Actor left Charisma where it was, Tough
 // added nothing. The numbers live here, pure, so the level-up route, the hit
 // point rule and the speed rule each read the same answer.
+import { ruleDetail, ruleTerm, type RuleProblemSink } from "@/lib/characters/problems";
 import authoredFeatsJson from "@/lib/srd/authored-feats.json";
 import type { Ability } from "@/lib/schemas/sheet";
 
@@ -234,6 +235,7 @@ export function applyFeatIncrease(
   feat: string,
   chosen?: Ability | null,
   desc?: string | null,
+  onProblem?: RuleProblemSink,
 ): { abilities: Record<Ability, number>; raised: Ability | null } | { error: string } {
   const increase = featAbilityIncrease(feat, desc);
   if (!increase) {
@@ -241,9 +243,9 @@ export function applyFeatIncrease(
   }
   const ability = increase.from.length === 1 ? increase.from[0] : chosen ?? null;
   if (!ability || !increase.from.includes(ability)) {
-    return {
-      error: `${featRow(feat)?.name ?? feat} raises one of ${increase.from.map((entry) => entry.toUpperCase()).join(", ")} by 1; choose which.`,
-    };
+    const error = `${featRow(feat)?.name ?? feat} raises one of ${increase.from.map((entry) => entry.toUpperCase()).join(", ")} by 1; choose which.`;
+    onProblem?.(ruleDetail("ruleProblem.featAbilityMissing", { feat: ruleTerm("feat", featRow(feat)?.name ?? feat), choices: increase.from.map(ability => ruleTerm("ability", ability)), amount: 1 }, error));
+    return { error };
   }
   return {
     abilities: { ...abilities, [ability]: Math.min(20, abilities[ability] + increase.amount) },

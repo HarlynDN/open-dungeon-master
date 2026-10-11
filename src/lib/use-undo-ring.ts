@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { isComposingInput } from "@/lib/input-composition";
 
 // Undo everywhere (docs/vtt-parity-implementation-plan.md section 10.3).
 // A ring of the full objects the server returned after each change; undo
@@ -89,6 +90,7 @@ export function useUndoRing<T>(
       return;
     }
     const onKey = (event: KeyboardEvent) => {
+      if (isComposingInput(event)) return;
       const target = event.target as HTMLElement | null;
       if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable)) {
         return;

@@ -8,6 +8,7 @@ import { legalityContextsFor, type ContextInput } from "@/lib/characters/catalog
 import { spendAbilityPool, spendWealthRolls } from "@/lib/db/creation-rolls";
 import type { CreateSheetInput } from "@/lib/schemas/sheet";
 import { legalizeSheet } from "@/lib/srd/sheet-legality";
+import { completeRuleDetails, type RuleProblem, type RuleProblemDetail } from "./problems.ts";
 
 export type Admitted =
   | {
@@ -19,7 +20,7 @@ export type Admitted =
       // spent, so the next character throws its own.
       settle: () => void;
     }
-  | { ok: false; problems: string[] };
+  | { ok: false; problems: string[]; problemDetails: RuleProblemDetail[] };
 
 export function admitSheet(
   input: Omit<ContextInput, "sheet"> & { sheet: CreateSheetInput },
@@ -28,13 +29,18 @@ export function admitSheet(
   // raceCandidatesFor): the sheet passes when it is legal under one of them,
   // and is otherwise told what is wrong under the first.
   const contexts = legalityContextsFor(input);
-  const verdicts = contexts.map((candidate) => ({
-    context: candidate,
-    judged: legalizeSheet(input.sheet, candidate),
-  }));
+  const verdicts = contexts.map((candidate) => {
+    const reported: RuleProblem[] = [];
+    return {
+      context: candidate,
+      judged: legalizeSheet(input.sheet, { ...candidate, onProblem: detail => reported.push(detail) }),
+      reported,
+    };
+  });
   const passed = verdicts.find((verdict) => !verdict.judged.problems.length);
   if (!passed) {
-    return { ok: false, problems: verdicts[0].judged.problems };
+    const first = verdicts[0];
+    return { ok: false, problems: first.judged.problems, problemDetails: completeRuleDetails(first.judged.problems, first.reported) };
   }
   const { context, judged } = passed;
   // Whether the scores needed the pool the server rolled: they did when the
@@ -59,9 +65,9 @@ export function admitSheet(
 
 // The refusal every door answers with: the first problem as the message a
 // screen shows, and the whole list for one that can show more.
-export function refusal(problems: string[], status = 400): Response {
+export function refusal(problems: string[], status = 400, problemDetails?: RuleProblemDetail[]): Response {
   return Response.json(
-    { error: problems[0] ?? "That character is not within the rules.", problems },
+    { error: problems[0] ?? "That character is not within the rules.", problems, ...(problemDetails ? { problemDetails } : {}) },
     { status },
   );
 }

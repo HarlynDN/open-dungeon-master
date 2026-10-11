@@ -7,6 +7,7 @@
 // the server. Skills, expertise and chosen languages are the player's picks,
 // so they are checked: every pick needs a grant that offers it.
 import type { Ability, ClassEntry, Proficiencies } from "@/lib/schemas/sheet";
+import { ruleReporter, ruleTerm, type RuleProblem, type RuleProblemSink, type RuleTerm } from "@/lib/characters/problems";
 import { findSkill } from "@/lib/srd";
 import { expertiseAllowed, expertiseSlotsFor } from "@/lib/srd/features";
 import { multiclassGrantsFor } from "@/lib/srd/multiclass";
@@ -26,6 +27,7 @@ import {
 } from "@/lib/srd/legality/types";
 
 export type ProficiencyInput = {
+  onProblem?: RuleProblemSink;
   sent: Proficiencies;
   classes: ClassEntry[];
   classOf: (classId: string) => ClassGrants | null;
@@ -42,7 +44,7 @@ export type ProficiencyInput = {
 
 export type ProficiencyVerdict = { problems: string[]; proficiencies: Proficiencies };
 
-type Slot = { label: string; count: number; from: Set<string> | null };
+type Slot = { label: string; source: RuleTerm | "repeated"; count: number; from: Set<string> | null };
 
 // Every pick placed on a slot that offers it, or null when they cannot all
 // be. The lists are a handful long, so plain backtracking is enough.
@@ -78,6 +80,7 @@ function plural(count: number, word: string) {
 
 export function judgeProficiencies(input: ProficiencyInput): ProficiencyVerdict {
   const problems: string[] = [];
+  const report = ruleReporter(problems, input.onProblem);
   const { sent, race, background, held } = input;
   const [first, ...others] = input.classes;
   const primary = input.classOf(first.id);
@@ -104,7 +107,9 @@ export function judgeProficiencies(input: ProficiencyInput): ProficiencyVerdict 
       ? input.racialTool
       : "";
   if (input.racialTool && !racialTool) {
-    problems.push(
+    report(toolChoice ? "ruleProblem.trainingRacialToolOffered" : "ruleProblem.trainingRacialToolNone", {
+      tool: ruleTerm("tool", input.racialTool), race: ruleTerm("race", race.name), choices: (toolChoice?.from ?? []).map(name => ruleTerm("tool", name)),
+    },
       `${input.racialTool} is not a tool the ${race.name} may choose${toolChoice ? `; pick one of ${toolChoice.from.join(", ")}` : ""}.`,
     );
   }
@@ -127,7 +132,7 @@ export function judgeProficiencies(input: ProficiencyInput): ProficiencyVerdict 
   ).map(lower);
   let chosenTools: string[] = [];
   if (granted.choices.length && toolPicks.length) {
-    const problem = toolPickProblem(granted.choices, toolPicks);
+    const problem = toolPickProblem(granted.choices, toolPicks, input.onProblem);
     if (problem) {
       problems.push(problem);
     }
@@ -136,9 +141,11 @@ export function judgeProficiencies(input: ProficiencyInput): ProficiencyVerdict 
   if (input.requireToolPicks && granted.choices.length) {
     // Picks kept from the stored character (an edit) answer their choice too.
     const named = (sent.tools ?? []).filter((tool) => !toolChoiceOf(tool) && !fixedToolKeys.has(lower(tool)));
-    const owed = toolPicksOwed(granted.choices, named);
+    let owedDetail: RuleProblem | undefined;
+    const owed = toolPicksOwed(granted.choices, named, input.onProblem ? detail => { owedDetail = detail; } : undefined);
     if (owed && !problems.some((problem) => problem.startsWith("Choose "))) {
       problems.push(owed);
+      if (owedDetail) input.onProblem?.(owedDetail);
     }
   }
   // In the grants' own order; the named picks take the place of the words.
@@ -159,7 +166,7 @@ export function judgeProficiencies(input: ProficiencyInput): ProficiencyVerdict 
   const sentSkills = uniqueNames(sent.skills.map(lower));
   for (const skill of sentSkills) {
     if (!findSkill(skill)) {
-      problems.push(`"${skill}" is not one of the eighteen skills.`);
+      report("ruleProblem.trainingSkillUnknown", { skill: ruleTerm("skill", skill), count: 18 }, `"${skill}" is not one of the eighteen skills.`);
     }
   }
   const picks = sentSkills.filter(
@@ -169,6 +176,7 @@ export function judgeProficiencies(input: ProficiencyInput): ProficiencyVerdict 
   if (background?.skillChoice) {
     slots.push({
       label: `${background.name}`,
+      source: ruleTerm("background", background.name),
       count: background.skillChoice.count,
       from: new Set(background.skillChoice.from.map(lower)),
     });
@@ -176,6 +184,7 @@ export function judgeProficiencies(input: ProficiencyInput): ProficiencyVerdict 
   if (primary) {
     slots.push({
       label: primary.name,
+      source: ruleTerm("class", primary.name),
       count: primary.skillChoices.count,
       from: primary.skillChoices.from.length
         ? new Set(primary.skillChoices.from.map(lower))
@@ -183,18 +192,19 @@ export function judgeProficiencies(input: ProficiencyInput): ProficiencyVerdict 
     });
   }
   if (race.skillChoice) {
-    slots.push({ label: race.name, count: race.skillChoice.count, from: null });
+    slots.push({ label: race.name, source: ruleTerm("race", race.name), count: race.skillChoice.count, from: null });
   }
   // The same skill from the background and the race: the player chooses
   // another in its place (SRD 5.1, Backgrounds).
   const repeated = repeatedGrants(background?.skills, race.skills).length;
   if (repeated) {
-    slots.push({ label: "the repeated grant", count: repeated, from: null });
+    slots.push({ label: "the repeated grant", source: "repeated", count: repeated, from: null });
   }
   secondary.forEach((grant, index) => {
     if (grant.skillChoice) {
       slots.push({
         label: others[index].id,
+        source: ruleTerm("class", others[index].id),
         count: grant.skillChoice.count,
         from: grant.skillChoice.from.length ? new Set(grant.skillChoice.from.map(lower)) : null,
       });
@@ -207,7 +217,10 @@ export function judgeProficiencies(input: ProficiencyInput): ProficiencyVerdict 
           `${plural(slot.count, "skill")} from ${slot.label}${slot.from ? ` (${[...slot.from].join(", ")})` : " (any)"}`,
       )
       .join("; ");
-    problems.push(
+    report("ruleProblem.trainingSkillsOffered", {
+      choices: picks.map(id => ruleTerm("skill", id)),
+      offers: { kind: "skillOffers", offers: slots.map(slot => ({ source: slot.source, count: slot.count, from: slot.from ? [...slot.from] : null })), fixed },
+    },
       `The skills chosen (${picks.join(", ")}) are more than, or other than, what this character is offered: ${offered || "no skill of their choice"}. ${fixed.length ? `${fixed.join(" and ")} come with the background and race.` : ""}`.trim(),
     );
   }
@@ -223,7 +236,7 @@ export function judgeProficiencies(input: ProficiencyInput): ProficiencyVerdict 
   const classIds = input.classes.map((entry) => entry.id);
   const unproficient = expertise.filter((skill) => !expertiseAllowed(skill, skills, classIds));
   if (unproficient.length) {
-    problems.push(
+    report("ruleProblem.trainingExpertiseUntrained", { choices: unproficient.map(id => ruleTerm("skill", id)) },
       `Expertise doubles a proficiency the character has; ${unproficient.join(", ")} ${unproficient.length === 1 ? "is" : "are"} not among their skills.`,
     );
   }
@@ -233,7 +246,7 @@ export function judgeProficiencies(input: ProficiencyInput): ProficiencyVerdict 
   );
   const expertisePicks = expertise.filter((skill) => !heldExpertise.has(skill));
   if (expertisePicks.length > Math.max(0, expertiseSlots - heldExpertise.size)) {
-    problems.push(
+    report(expertiseSlots ? "ruleProblem.trainingExpertiseLimit" : "ruleProblem.trainingExpertiseNone", { earned: expertiseSlots, count: expertise.length },
       expertiseSlots
         ? `This character has earned expertise in ${plural(expertiseSlots, "skill")}, not ${expertise.length}.`
         : `Expertise is a rogue's feature (1st and 6th level) and a bard's (3rd and 10th); this character has none to pick.`,
@@ -252,7 +265,10 @@ export function judgeProficiencies(input: ProficiencyInput): ProficiencyVerdict 
   );
   const languageSlots = (race.bonusLanguages ?? 0) + (background?.languages ?? 0);
   if (chosen.length > languageSlots) {
-    problems.push(
+    report("ruleProblem.trainingLanguageLimit", {
+      sources: [ruleTerm("race", race.name), ...(background ? [ruleTerm("background", background.name)] : [])],
+      limit: languageSlots, count: chosen.length, choices: chosen.map(name => ruleTerm("language", name)),
+    },
       `${race.name}${background ? ` and ${background.name}` : ""} give ${plural(languageSlots, "language")} of the player's choice; ${chosen.length} were chosen (${chosen.join(", ")}).`,
     );
   }

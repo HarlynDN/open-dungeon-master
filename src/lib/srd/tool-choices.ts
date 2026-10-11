@@ -1,3 +1,5 @@
+import { ruleDetail, type RuleProblemSink } from "@/lib/characters/problems";
+
 // A tool proficiency the rules leave to the player ("three musical
 // instruments of your choice", "one artisan's tools", "one gaming set") is a
 // choice among named tools, and the sheet should name the ones chosen: a
@@ -102,7 +104,7 @@ export function splitToolGrants(tools: string[]): { fixed: string[]; choices: To
 // fit, as the sentence a player acts on, or null when every choice is
 // answered. Tools that fit no open choice are passed over: this asks only
 // whether anything is owed (a character made here must name its tools).
-export function toolPicksOwed(choices: ToolChoice[], tools: string[]): string | null {
+export function toolPicksOwed(choices: ToolChoice[], tools: string[], onProblem?: RuleProblemSink): string | null {
   const left = choices.map((choice) => choice.count);
   for (const tool of tools.map((entry) => entry.trim().toLowerCase())) {
     const slot = choices.findIndex((choice, index) => left[index] > 0 && choice.from.includes(tool));
@@ -113,21 +115,29 @@ export function toolPicksOwed(choices: ToolChoice[], tools: string[]): string | 
   const owed = choices
     .map((choice, index) => ({ choice, left: left[index] }))
     .filter((entry) => entry.left > 0);
-  return owed.length
-    ? `Choose ${owed.map((entry) => `${entry.left} ${entry.choice.label}${entry.left === 1 ? "" : "s"}`).join(" and ")} to be proficient with.`
-    : null;
+  if (!owed.length) return null;
+  const english = `Choose ${owed.map((entry) => `${entry.left} ${entry.choice.label}${entry.left === 1 ? "" : "s"}`).join(" and ")} to be proficient with.`;
+  onProblem?.(ruleDetail("ruleProblem.trainingToolsMissing", {
+    offers: { kind: "toolOffers", offers: owed.map(entry => ({ count: entry.left, label: entry.choice.label, from: entry.choice.from })) },
+  }, english));
+  return english;
 }
 
 // Why these picks do not answer these choices, or null. Each pick must be a
 // tool one of the choices offers, a choice takes no more picks than its
 // count, and every choice is answered in full.
-export function toolPickProblem(choices: ToolChoice[], picks: string[]): string | null {
+export function toolPickProblem(choices: ToolChoice[], picks: string[], onProblem?: RuleProblemSink): string | null {
   const left = choices.map((choice) => choice.count);
   const wanted = picks.map((pick) => pick.trim().toLowerCase()).filter(Boolean);
   for (const pick of wanted) {
     const slot = choices.findIndex((choice, index) => left[index] > 0 && choice.from.includes(pick));
     if (slot < 0) {
-      return `${pick} is not a tool this character may choose; the choices are ${choices.map((choice) => `${choice.count} ${choice.label}`).join(" and ")}.`;
+      const english = `${pick} is not a tool this character may choose; the choices are ${choices.map((choice) => `${choice.count} ${choice.label}`).join(" and ")}.`;
+      onProblem?.(ruleDetail("ruleProblem.trainingToolNotOffered", {
+        tool: { kind: "term", type: "tool", value: pick },
+        offers: { kind: "toolOffers", offers: choices.map(choice => ({ count: choice.count, label: choice.label, from: choice.from })) },
+      }, english));
+      return english;
     }
     left[slot] -= 1;
   }
@@ -135,7 +145,11 @@ export function toolPickProblem(choices: ToolChoice[], picks: string[]): string 
     .map((choice, index) => ({ choice, left: left[index] }))
     .filter((entry) => entry.left > 0);
   if (owed.length) {
-    return `Choose ${owed.map((entry) => `${entry.left} more ${entry.choice.label}`).join(" and ")}.`;
+    const english = `Choose ${owed.map((entry) => `${entry.left} more ${entry.choice.label}`).join(" and ")}.`;
+    onProblem?.(ruleDetail("ruleProblem.trainingToolsMissing", {
+      offers: { kind: "toolOffers", offers: owed.map(entry => ({ count: entry.left, label: entry.choice.label, from: entry.choice.from })) },
+    }, english));
+    return english;
   }
   return null;
 }

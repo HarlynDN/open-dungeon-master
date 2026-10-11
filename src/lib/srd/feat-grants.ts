@@ -12,6 +12,7 @@
 // when the sheet is made, edited or levelled (src/lib/srd/sheet-legality.ts,
 // src/lib/srd/level-up.ts); the builder applies them to its preview. The
 // reading of the text is src/lib/srd/feat-grant-text.ts. Pure.
+import { ruleDetail, ruleReporter, ruleTerm, type RuleFeatPicks, type RuleProblemSink } from "@/lib/characters/problems";
 import type { Proficiencies } from "@/lib/schemas/sheet";
 import { ALL_SKILLS } from "@/lib/content/mechanics";
 import { featSpellsOwed, type CastingAbility } from "@/lib/srd/feat-spells";
@@ -63,42 +64,53 @@ export function pickSlots(spec: FeatGrantSpec, picks: FeatPicks | undefined, kin
 }
 
 // What the feat still waits for, as the sentence the gate shows, or null.
-export function featPicksOwed(feat: string, spec: FeatGrantSpec, picks: FeatPicks | undefined): string | null {
+export function featPicksOwed(feat: string, spec: FeatGrantSpec, picks: FeatPicks | undefined, onProblem?: RuleProblemSink): string | null {
   const has = (list: string[] | undefined) => named(list).length;
   const owed: string[] = [];
+  const display: RuleFeatPicks = { kind: "featPicks", picks: [] };
   if (spec.languages > has(picks?.languages)) {
+    display.picks.push({ count: spec.languages - has(picks?.languages), kinds: ["languages"] });
     owed.push(plural(spec.languages - has(picks?.languages), "language"));
   }
   if (spec.skills > has(picks?.skills)) {
+    display.picks.push({ count: spec.skills - has(picks?.skills), kinds: ["skills"] });
     owed.push(plural(spec.skills - has(picks?.skills), "skill"));
   }
   if (spec.expertise > has(picks?.expertise)) {
+    display.picks.push({ count: spec.expertise - has(picks?.expertise), kinds: ["expertise"] });
     owed.push(`expertise in ${plural(spec.expertise - has(picks?.expertise), "skill")}`);
   }
   if (spec.weapons > has(picks?.weapons)) {
+    display.picks.push({ count: spec.weapons - has(picks?.weapons), kinds: ["weapons"] });
     owed.push(plural(spec.weapons - has(picks?.weapons), "weapon"));
   }
   if (spec.tools > has(picks?.tools)) {
+    display.picks.push({ count: spec.tools - has(picks?.tools), kinds: ["tools"] });
     owed.push(plural(spec.tools - has(picks?.tools), "tool"));
   }
   const shared = spec.any - anyPicksMade(spec, picks);
   if (shared > 0) {
+    display.picks.push({ count: shared, kinds: spec.anyKinds });
     const kinds = spec.anyKinds.map((kind) => (shared === 1 ? SINGULAR[kind] : kind === "armor" ? "armor" : kind));
     owed.push(`${shared} ${kinds.join(" or ")}`);
   }
   if (spec.damageTypes.length && !(picks?.damageType ?? "").trim()) {
+    display.picks.push({ count: 1, kinds: ["damage"] });
     owed.push("a damage type");
   }
-  return owed.length ? `${feat}: pick ${owed.join(", ")}.` : null;
+  const problem = owed.length ? `${feat}: pick ${owed.join(", ")}.` : null;
+  if (problem) onProblem?.(ruleDetail("ruleProblem.featPicksMissing", { feat: ruleTerm("feat", feat), choices: display }, problem));
+  return problem;
 }
 
 // Everything a feat still waits for, training and spells alike: the one
 // sentence the builder's gate and the level-up dialog show.
-export function featOwed(feat: string, spec: FeatGrantSpec, picks: FeatPicks | undefined): string | null {
-  return featPicksOwed(feat, spec, picks) ?? featSpellsOwed(feat, spec.taught, picks);
+export function featOwed(feat: string, spec: FeatGrantSpec, picks: FeatPicks | undefined, onProblem?: RuleProblemSink): string | null {
+  return featPicksOwed(feat, spec, picks, onProblem) ?? featSpellsOwed(feat, spec.taught, picks, onProblem);
 }
 
 export type FeatGrantInput = {
+  onProblem?: RuleProblemSink;
   proficiencies: Proficiencies;
   // The feats on the sheet, each with its text (empty when the catalog has
   // no row for it, which grants nothing).
@@ -120,6 +132,7 @@ const weaponName = (name: string) => SRD_WEAPONS.find((weapon) => lower(weapon.n
 // picks as the sheet records them, held to the feat's text when strict.
 export function applyFeatGrants(input: FeatGrantInput): FeatGrantVerdict {
   const problems: string[] = [];
+  const report = ruleReporter(problems, input.onProblem);
   let languages = [...input.proficiencies.languages];
   let skills = [...input.proficiencies.skills];
   let expertise = [...(input.proficiencies.expertise ?? [])];
@@ -161,13 +174,13 @@ export function applyFeatGrants(input: FeatGrantInput): FeatGrantVerdict {
       }
     }
     if (input.strict) {
-      const owed = featPicksOwed(feat.name, spec, picks);
+      const owed = featPicksOwed(feat.name, spec, picks, input.onProblem);
       if (owed) {
         problems.push(owed);
       }
       const element = lower(picks.damageType ?? "");
       if (spec.damageTypes.length && element && !spec.damageTypes.includes(element)) {
-        problems.push(`"${picks.damageType}" is not a damage type ${feat.name} offers; pick one of ${spec.damageTypes.join(", ")}.`);
+        report("ruleProblem.featDamageOffered", { feat: ruleTerm("feat", feat.name), damage: ruleTerm("damage", picks.damageType ?? ""), choices: spec.damageTypes.map(value => ruleTerm("damage", value)) }, `"${picks.damageType}" is not a damage type ${feat.name} offers; pick one of ${spec.damageTypes.join(", ")}.`);
       }
     }
     // Each kind takes its own count, then what is left of the shared one
@@ -186,13 +199,13 @@ export function applyFeatGrants(input: FeatGrantInput): FeatGrantVerdict {
     for (const skill of pickedSkills) {
       if (!ALL_SKILLS.includes(skill as (typeof ALL_SKILLS)[number])) {
         if (input.strict) {
-          problems.push(`"${skill}" is not a skill; ${feat.name}'s skill is picked from the skill list.`);
+          report("ruleProblem.featSkillUnknown", { feat: ruleTerm("feat", feat.name), skill: ruleTerm("skill", skill) }, `"${skill}" is not a skill; ${feat.name}'s skill is picked from the skill list.`);
         }
         continue;
       }
       if (has(skills, skill)) {
         if (input.strict) {
-          problems.push(`${feat.name} grants a new skill; this character is already proficient in ${skill}.`);
+          report("ruleProblem.featSkillDuplicate", { feat: ruleTerm("feat", feat.name), skill: ruleTerm("skill", skill) }, `${feat.name} grants a new skill; this character is already proficient in ${skill}.`);
         }
         continue;
       }
@@ -203,7 +216,7 @@ export function applyFeatGrants(input: FeatGrantInput): FeatGrantVerdict {
     for (const language of pickedLanguages) {
       if (has(languages, language)) {
         if (input.strict) {
-          problems.push(`${feat.name}'s languages are new ones; this character already speaks ${language}.`);
+          report("ruleProblem.featLanguageDuplicate", { feat: ruleTerm("feat", feat.name), language: ruleTerm("language", language) }, `${feat.name}'s languages are new ones; this character already speaks ${language}.`);
         }
         continue;
       }
@@ -214,13 +227,13 @@ export function applyFeatGrants(input: FeatGrantInput): FeatGrantVerdict {
     for (const skill of pickedExpertise) {
       if (!has(skills, skill)) {
         if (input.strict) {
-          problems.push(`${feat.name}'s expertise doubles a skill the character has; ${skill} is not among them.`);
+          report("ruleProblem.featExpertiseUntrained", { feat: ruleTerm("feat", feat.name), skill: ruleTerm("skill", skill) }, `${feat.name}'s expertise doubles a skill the character has; ${skill} is not among them.`);
         }
         continue;
       }
       if (has(expertise, skill)) {
         if (input.strict) {
-          problems.push(`This character already has expertise in ${skill}; ${feat.name}'s goes on another skill.`);
+          report("ruleProblem.featExpertiseDuplicate", { feat: ruleTerm("feat", feat.name), skill: ruleTerm("skill", skill) }, `This character already has expertise in ${skill}; ${feat.name}'s goes on another skill.`);
         }
         continue;
       }
@@ -231,13 +244,13 @@ export function applyFeatGrants(input: FeatGrantInput): FeatGrantVerdict {
     for (const tool of pickedTools) {
       if (spec.toolsFrom.length && !spec.toolsFrom.includes(tool)) {
         if (input.strict) {
-          problems.push(`"${tool}" is not a tool ${feat.name} offers.`);
+          report("ruleProblem.featToolOffered", { feat: ruleTerm("feat", feat.name), tool: ruleTerm("tool", tool), choices: spec.toolsFrom.map(value => ruleTerm("tool", value)) }, `"${tool}" is not a tool ${feat.name} offers.`);
         }
         continue;
       }
       if (has(tools, tool)) {
         if (input.strict) {
-          problems.push(`${feat.name} grants a new tool; this character already has ${tool}.`);
+          report("ruleProblem.featToolDuplicate", { feat: ruleTerm("feat", feat.name), tool: ruleTerm("tool", tool) }, `${feat.name} grants a new tool; this character already has ${tool}.`);
         }
         continue;
       }
@@ -250,13 +263,13 @@ export function applyFeatGrants(input: FeatGrantInput): FeatGrantVerdict {
       const name = weaponName(weapon);
       if (!name || !WEAPON_NAMES.has(lower(name))) {
         if (input.strict) {
-          problems.push(`"${weapon}" is not a weapon on the table; ${feat.name}'s weapons are picked from it.`);
+          report("ruleProblem.featWeaponUnknown", { feat: ruleTerm("feat", feat.name), weapon: ruleTerm("equipment", weapon) }, `"${weapon}" is not a weapon on the table; ${feat.name}'s weapons are picked from it.`);
         }
         continue;
       }
       if (spec.weaponsFrom.length && !spec.weaponsFrom.some((offered) => lower(offered) === lower(name))) {
         if (input.strict) {
-          problems.push(`${name} is not a weapon ${feat.name} offers.`);
+          report("ruleProblem.featWeaponOffered", { feat: ruleTerm("feat", feat.name), weapon: ruleTerm("equipment", name), choices: spec.weaponsFrom.map(value => ruleTerm("equipment", value)) }, `${name} is not a weapon ${feat.name} offers.`);
         }
         continue;
       }
@@ -270,13 +283,13 @@ export function applyFeatGrants(input: FeatGrantInput): FeatGrantVerdict {
     for (const piece of pickedArmor) {
       if (!spec.armorFrom.includes(piece)) {
         if (input.strict) {
-          problems.push(`"${piece}" is not armor ${feat.name} offers.`);
+          report("ruleProblem.featArmorOffered", { feat: ruleTerm("feat", feat.name), armor: ruleTerm("armorTraining", piece), choices: spec.armorFrom.map(value => ruleTerm("armorTraining", value)) }, `"${piece}" is not armor ${feat.name} offers.`);
         }
         continue;
       }
       if (has(armor, piece)) {
         if (input.strict) {
-          problems.push(`${feat.name} grants new armor training; this character already has ${piece}.`);
+          report("ruleProblem.featArmorDuplicate", { feat: ruleTerm("feat", feat.name), armor: ruleTerm("armorTraining", piece) }, `${feat.name} grants new armor training; this character already has ${piece}.`);
         }
         continue;
       }
