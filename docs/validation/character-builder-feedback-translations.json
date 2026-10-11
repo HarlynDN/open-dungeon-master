@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "status": "source-compared-by-implementation-agent",
+  "scope": "32 gate templates, six-step wizard chrome, drop kinds/reasons, eleven option kinds, six fighting styles, generic casting words and all 28 bundled casting labels. Full option/class/style descriptions and deep builder child components remain pending.",
+  "provenance": "Original Chinese prose drafted against current repository English gates, option labels, style names and class/world casting labels. No proprietary Chinese rulebook translation used.",
+  "review": "Implementation agent compared numeric/count/method/filing semantics, unchanged source English and catalog names with their repository sources. Not human or external approval.",
+  "sources": {
+    "src/app/characters/builder/submit.ts": "87583860ba64030390052b1f4e390e31af778db7659549984c07a69008443992",
+    "src/app/characters/builder/reconcile.ts": "809d7b82512f778e6a2bf5cc34902e6fdd6a30154e722369ffd67ffecb349ea7",
+    "src/lib/srd/options.json": "282c28e994ebab973231ced19e6caeea7a3ae102338a04309fc26e3103919a9d",
+    "src/lib/srd/feature-effects.ts": "0a7f3b483608a2207bfd8af110edc36e8f4c96b7e0a5fc51e1e874e979a1b95e",
+    "src/lib/classes/cyberpunk-features.json": "6a7362e5dbd22df1b421b334f343aed0389d4e3851a42bc062f73b5e132b5c82",
+    "src/lib/classes/cyberpunk.json": "9918ef4bd03fd200506b3c26e3900f6454a35ff12004454e77802917e64647cd",
+    "src/lib/classes/dark-fantasy-features.json": "fecb4e7cec4249835d65ab3b14e9c724c203f16f841eaebe9fb79e0c142575c3",
+    "src/lib/classes/dark-fantasy.json": "e6267320cccc3aee66c87cbb5e4472c2c0659d22963b983c85c84a97e26c5694",
+    "src/lib/classes/horror-features.json": "8c8d2564610086c0abddffe3df74a11fef337885fbbc27c5e11943992f5b3db1",
+    "src/lib/classes/horror.json": "18e0498680279d8fd9f2dc8988096225b689dcf5f71ac37f0eead8d08a0e4804",
+    "src/lib/classes/magic-items.json": "93ab723e439790b0fb5e4ae370267362db41a4a23ce7db24207e4f9dc039f242",
+    "src/lib/classes/mystery-features.json": "ba53738a4012b7e2bbb27eb2408085d9908d4319d3248084e055e4463d116cee",
+    "src/lib/classes/mystery.json": "0a63a7296002b19ea650b2483b6af511c3c731b37d895fd25eae4453a5aa8b73",
+    "src/lib/classes/post-apocalyptic-features.json": "82ff0381a8e9f98ece335a1d3c16d9a303539fdcaa14a3a43aa27bb35aa98591",
+    "src/lib/classes/post-apocalyptic.json": "4fef630fa7bed7fb48b5191977ab9bfa25b75abfbcbea89f09d965d98d2170ef",
+    "src/lib/classes/resources.json": "d50bca1b6efecb6abc30de5ef3f0d9f2b3e35ae45783a497e47762bc848cf5a9",
+    "src/lib/classes/steampunk-features.json": "7793dd7b5280309f798868bd685e63e7df237e921bc035fc34f2f94ef5c52221",
+    "src/lib/classes/steampunk.json": "8713ba8905dfdedbab59c34ac0d18668033a52f3bdd7040c184b138afeb831d7",
+    "src/lib/worlds/bundled/saltmarch.json": "e4583a2f5a97a89b7b8b59993ce4d6e23882d314f57e8f484cef46e1f506f4a8"
+  },
+  "catalog": "src/lib/i18n/builder-messages.ts",
+  "catalogSha256": "3afa36215f042dfcde361ed43c9183a6e94ed1f317f029d20374e9dab377af46"
+}

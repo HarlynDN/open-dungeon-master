@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "status": "source-compared-by-implementation-agent",
+  "scope": "Equipment creator controls, all class/genre kit alternatives, native mundane equipment/background fragment names, picker/catalog chrome, purse/AC display and item detail chrome/closed weapon rules. Full spell/feat/magic-item/third-party descriptions and FinishStep remain pending.",
+  "provenance": "Original Chinese translations compared with repository equipment UI, native names and SRD 5.1-derived rules. Existing repository CC-BY attribution retained; no external Chinese PHB text used.",
+  "review": "113 actual English gear/kit/browse/search projections and 185 actual English ItemBody cards frozen before migration. Compared quantities, native descriptions, strict armor caps, 10-foot speed penalty, weapon rules, prices, source-matched property/damage explanations, exact authored source, server-roll callback/dice and canonical selection references. Original rule/item helpers untouched. This is implementation-agent source comparison, not human or independent approval. Saved-item help now requests native catalog fallback, so kit entries with a guessed slug recover native cost/weight without a pack. Browser export preserved kit options [1,0,0,0], canonical names, AC 15, HP 13 and gold 5.",
+  "sources": {
+    "src/app/characters/builder/EquipmentSection.tsx": "b681c5b497ab99c07071519d7f2146fb544ed3127b27933836b1f93abe291d24",
+    "src/app/characters/builder/KitChoicesSection.tsx": "c220596a5df835cf5c4d051ee593ae972889e880ff49e856f081a06d06508578",
+    "src/app/characters/builder/BackgroundKitSection.tsx": "91c51c6a7deb28339283bf9c29ffd587974b58a188f0cfd7cd0e8a169e650441",
+    "src/app/characters/builder/ContentPicker.tsx": "f0bc1b6c19f37f664df352db9d024b4963cc28ac072f9a68b48cd4cb7588fbcf",
+    "src/app/characters/builder/CatalogBrowser.tsx": "da63fe7df638d53829f28c15d031a043f313334baaa9542bde43443df35a87d4",
+    "src/app/characters/builder/steps/SpellsGearStep.tsx": "c0b08ea47e76e8fc46924efcf21b04850d9fcc23e37a7ccb3ca62bf487a3a768",
+    "src/components/ui/InfoDialog.tsx": "fc043ac44f7278233435733949fb92b5cbb0aa303756845efe4f6532a245806c",
+    "src/lib/i18n/equipment-presentations.ts": "7b5cc62cf0d7348b25f0baf693af129e7ce8e911b94255c932553b392a9645d6",
+    "src/lib/i18n/gear-ui-presentations.ts": "7f5e42e0c8d41b35948beefea931bff76257146f50bd2b722638b24ee182ca80",
+    "src/lib/i18n/equipment-help-presentations.ts": "8e0cbb2471312fa9c85dc6f253af275ea9be8c885985f0ded40f61a893ceee41",
+    "src/lib/i18n/reference-names.ts": "339580a3ea95ebcb2185ace6558f203eb907caefe0b5e7a25c90abcf4aa095bd",
+    "src/lib/content/native-equipment-search.ts": "6ade2d40d22e64f6d1ac6e4e1bbd05e4d40e0d38991f06cbc14504bef1218d32",
+    "src/app/api/content/[kind]/route.ts": "e8990c888a6a6a04db0943709610be63fbcc59d70f0eef36cf975636c8201d89"
+  },
+  "catalogs": {
+    "src/lib/i18n/gear-ui-messages.ts": "72c709098612fe489f29895896bd02cf9ca8ff088114e0fe56e56d4fc70ba681",
+    "src/lib/i18n/equipment-name-messages.ts": "babb7d54d96715a26d809cc1256a23a76a041578d62e61b1e57464113f0acb3a",
+    "src/lib/i18n/equipment-help-messages.ts": "aabd782f86396dbff1ef58e2121daf529ea4179a916f6130300a9f28496f51ee"
+  },
+  "reviewRepair": "2026-10-11: browser imports now use scoped resource runtime; co-located catalog construction marked pure. All English/Chinese templates independently compared equal to the pre-repair archive; original golden bytes preserved. See localization-review-repairs.md."
+}

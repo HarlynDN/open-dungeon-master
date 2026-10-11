@@ -1,3 +1,4 @@
+import "../src/lib/i18n/messages.ts";
 // The campaign creator's pure halves (docs/visual-overhaul-plan.md 8.5): the
 // world portals, the theme that types itself, the table sheet and the cover.
 // The rule under test throughout is that the new presentation reads the same
@@ -91,6 +92,30 @@ test("exactly one portal is chosen, and it is the draft's genre", () => {
     const chosen = portalCards(preset.id).filter((card) => card.chosen);
     assert.deepEqual(chosen.map((card) => card.id), [preset.id]);
   }
+});
+
+test("Chinese portal presentation preserves preset IDs, mechanics and art prompts", () => {
+  const snapshot = structuredClone(GENRE_PRESETS);
+  const cards = portalCards("mystery", "zh-CN");
+  assert.deepEqual(cards.map(card => card.id), GENRE_PRESETS.map(preset => preset.id));
+  assert.equal(cards.find(card => card.chosen).name, "悬疑");
+  assert.equal(cards[0].climate, "温带");
+  assert.match(cards[0].blurb, /刀剑/);
+  assert.deepEqual(worldFacts("high_fantasy", "zh-CN").map(fact => fact.key), ["地图", "名称", "世界居民", "天气"]);
+  assert.match(dmFlavorText("cyberpunk", "zh-CN"), /所有 5e 机制保持原样/);
+  assert.deepEqual(GENRE_PRESETS, snapshot, "display translations cannot rewrite model-facing presets");
+});
+
+test("automatic themes follow campaign locale and protect user and pack text", () => {
+  const draft = { ...DRAFT, locale: "zh-CN" };
+  const localized = presetTheme(draft);
+  assert.equal(localized.theme, "一个有着王国、荒野边境和埋藏遗迹的传奇国度");
+  assert.equal(arrivalTypeIn(localized).text, localized.theme);
+  assert.match(typeInPlan(localized, "horror").text, /古老而饥饿/);
+  assert.equal(presetTheme({ ...localized, locale: "en" }).theme, GENRE_PRESETS[0].defaultTheme);
+  assert.equal(presetTheme({ ...draft, theme: "My English notes", themeTouched: true }).theme, "My English notes");
+  assert.equal(presetTheme({ ...draft, theme: "Pack-authored words", worldPack: "sample" }).theme, "Pack-authored words");
+  assert.equal(presetTheme({ ...draft, genre: "custom" }).theme, "");
 });
 
 test("every portal's plate is a file that exists", () => {

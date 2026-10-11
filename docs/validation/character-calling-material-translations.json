@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "status": "source-compared-by-implementation-agent",
+  "scope": "All 49 complete bundled class introductions and 117 complete native subclass introductions across 153 native subclass projections. Original 36 missing blurbs remain absent. Builder class cards/selector/subclass summaries and LevelUp subclass help use localized display. Full feature/option rules, background prose, class/subclass content-pack text and remaining owner chrome remain pending.",
+  "provenance": "Original Chinese translations from the repository bundled classes/subclass brief descriptions. Original source licenses and attribution retained; no proprietary Chinese rulebook translations copied.",
+  "review": "Implementation-agent comparison of every full original introduction, genre flavor, numeric mechanics (10-foot aura, 19 critical), rests, healing, armor, spell preparation, option order and canonical IDs. English projections and all 13 previous picker goldens stay exact. Complete pack/workshop descriptions retain precedence and verbatim braces/newlines; native summaries match both original name/ID and original full source before class translation. Native subclass alias normalization remains in the original resolver. Source comparison is not human or external approval.",
+  "sources": {
+    "src/lib/characters/options.ts": "e0294a844664240604091c945104e20adc08bcbf7d0fc32bafacfff70174c31c",
+    "src/lib/classes/cyberpunk-features.json": "6a7362e5dbd22df1b421b334f343aed0389d4e3851a42bc062f73b5e132b5c82",
+    "src/lib/classes/cyberpunk.json": "9918ef4bd03fd200506b3c26e3900f6454a35ff12004454e77802917e64647cd",
+    "src/lib/classes/dark-fantasy-features.json": "fecb4e7cec4249835d65ab3b14e9c724c203f16f841eaebe9fb79e0c142575c3",
+    "src/lib/classes/dark-fantasy.json": "e6267320cccc3aee66c87cbb5e4472c2c0659d22963b983c85c84a97e26c5694",
+    "src/lib/classes/horror-features.json": "8c8d2564610086c0abddffe3df74a11fef337885fbbc27c5e11943992f5b3db1",
+    "src/lib/classes/horror.json": "18e0498680279d8fd9f2dc8988096225b689dcf5f71ac37f0eead8d08a0e4804",
+    "src/lib/classes/index.ts": "78ecb3271ba8e4f69f069e601db1f2874a05f6b016c755ffb88e2e3ca611ba87",
+    "src/lib/classes/mystery-features.json": "ba53738a4012b7e2bbb27eb2408085d9908d4319d3248084e055e4463d116cee",
+    "src/lib/classes/mystery.json": "0a63a7296002b19ea650b2483b6af511c3c731b37d895fd25eae4453a5aa8b73",
+    "src/lib/classes/post-apocalyptic-features.json": "82ff0381a8e9f98ece335a1d3c16d9a303539fdcaa14a3a43aa27bb35aa98591",
+    "src/lib/classes/post-apocalyptic.json": "4fef630fa7bed7fb48b5191977ab9bfa25b75abfbcbea89f09d965d98d2170ef",
+    "src/lib/classes/steampunk-features.json": "7793dd7b5280309f798868bd685e63e7df237e921bc035fc34f2f94ef5c52221",
+    "src/lib/classes/steampunk.json": "8713ba8905dfdedbab59c34ac0d18668033a52f3bdd7040c184b138afeb831d7",
+    "src/lib/srd/class-features.json": "81d5ca1c44046f8df09d347ac1af1ce3e580e5e6572cfb92dd4fc269f36714ac",
+    "src/lib/srd/classes.json": "f0de0db010ca49668953488018d510917444f582fb58587a88a1b3bdf83e5371",
+    "src/lib/srd/features.ts": "1251dbd9e5a05fbf052ef5cafb0ef458ffa6a48e914d1f6b86bb444d8ebac84f",
+    "src/lib/srd/subclasses.json": "94f65f85c8e39d4b2c15979a74ec835967d620dff69013284f14fe64764230cb",
+    "src/lib/help/index.ts": "56503b4dba185a71c14e60cff2017a2b4ce0d0b0e947bca3a09a4bcb5c6156a2",
+    "src/lib/i18n/calling-material-presentations.ts": "346c94a1985437e9bcf4c296ac229dd8579ee6e31d77afc87c8e24754f4f2750",
+    "src/app/characters/builder/usePickerGroups.ts": "d271803b233c0f3fd4add709fb4b4247c0c622a9dfd9e63f543c59ebc987a5f1",
+    "src/app/characters/builder/steps/CallingStep.tsx": "dddfac30b09eef862b1c05da0f2ec8b07dd9062c71f6f37c0483260f87c3aaa7",
+    "src/app/campaigns/[campaignId]/LevelUpDialog.tsx": "1804e1a2653dd71483f1151cd55a3a0af4d28396951a7a4f95ac04a59607e17d",
+    "src/lib/i18n/messages.ts": "3411351b3d607241ad39bf728fd1fff4d0675a2cdc3009c60cbb6f75eedd4c52"
+  },
+  "catalogs": {
+    "src/lib/i18n/calling-material-messages.ts": "ec47158c485f6091804d2c1a8f4f9df890875ad11c528eafae40c882916247c4"
+  },
+  "abilityCatalogIntegration": "Shared catalog fingerprint refreshed for a separate ability UI corpus; the original review scope is unchanged.",
+  "catalogMaintenance": "Shared messages.ts only gains independent equipment UI/name/help catalogs; original calling catalog values and the reviewed calling scope are unchanged. Fingerprint refreshed for these additions, not an expanded review.",
+  "reviewRepair": "2026-10-11: browser imports now use scoped resource runtime; co-located catalog construction marked pure. All English/Chinese templates independently compared equal to the pre-repair archive; original golden bytes preserved. See localization-review-repairs.md."
+}

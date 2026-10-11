@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "date": "2026-10-11",
+  "status": "basic-live-story-and-utility-pass",
+  "runtime": {
+    "cli": "Codex CLI",
+    "version": "0.162.1",
+    "authKind": "ChatGPT subscription",
+    "model": "gpt-6-astra",
+    "selection": "Resolved by app-server thread/start from the existing default, then pinned only in the disposable database. Real server configuration and login were not changed."
+  },
+  "probePrograms": {
+    "docs/validation/codex-chinese-live-probe.mjs": "73d9645826a65cda316002e401dab8351f45426d82d6e0a9000d181676e2d937",
+    "docs/validation/codex-chinese-utility-probe.mjs": "294e74ecc22e959a3ba477cbb36370084ef0f08ee95c8f8b6b6475a7a52c6f57"
+  },
+  "connectionStages": [
+    "found",
+    "signedIn",
+    "handshake",
+    "toolCall",
+    "lockdown",
+    "streaming"
+  ],
+  "turns": [
+    {
+      "turn": 1,
+      "seconds": 52,
+      "narration": "[roll:2b5abd11-f7d4-40e5-9dd3-6223019e8c47]\n\nAvery，你攀上头车，越过近岸坡沿，清楚地辨出了对岸的动静：柳丛边有人反复挥动一块浅色布料，另一只手指着水边。\n\n顺着那人指的方向，你看见一辆歪斜的货车横在渡口出口，挡住了商队上岸的通路。那人没有走近浅滩，只在原地不停挥布。"
+    },
+    {
+      "turn": 2,
+      "seconds": 60,
+      "narration": "[roll:b6db031d-71f2-4199-94b1-34479fd21a0c]\n\nAvery，你握紧短剑，从头车下来，涉入近岸浅水。“出来！”喊声越过河面，但柳丛边挥布的人没有依言走到开阔处，只将布料举得更高。\n\n“我就在这儿！我是布兰，这辆货车的车夫。”他仍指着横在出口的歪斜货车。“你先把剑放低些。我需要人帮忙挪车，不是来打架的。”\n\n河水绕过你的腿，商队还停在身后的坡道上。你要隔水问清情况，还是继续向对岸靠近？"
+    }
+  ],
+  "successfulEngineRolls": 2,
+  "toolActivity": "request_player_input(refused), social_check, set_npc, move_party, update_location, request_roll, move_party, table_check",
+  "utility": {
+    "status": "PASS",
+    "model": "gpt-6-astra",
+    "role": "utility",
+    "locale": "zh-CN",
+    "ms": 9494,
+    "streamed": true,
+    "result": {
+      "summary": "角色 char_123 位于渡口，需要人帮助搬走挡路的货车。",
+      "characterId": "char_123",
+      "hp": 8,
+      "needsHelp": true
+    }
+  },
+  "cleanup": "Both programs exited 0; the probe closes its MCP listener and live conversations, then removes the disposable database directory. The utility completion releases its session. Neither modifies actual campaigns.",
+  "unconfiguredMedia": [
+    "Kokoro speech request to 127.0.0.1:8880 failed with ECONNREFUSED, matching the user-confirmed absence of TTS configuration.",
+    "Background map jobs could not reach ComfyUI at 127.0.0.1:8188. Images are outside this story/utility check."
+  ],
+  "limits": [
+    "Two ordinary Chinese exploration/social turns and one structured utility completion are basic runtime acceptance only.",
+    "Real English switching, combat/contradiction rewrites, casting/alias calls, chapter compaction and whole UI flow remain to be exercised.",
+    "The connection probe observed the existing contained-tool policy; this record does not assert complete Codex tool inventory or a separate canary-file audit.",
+    "Chinese Kokoro speech, local deployment and audio quality remain unaccepted.",
+    "Archived probe programs are exact copies of the executed machine-specific scratch programs, use absolute repository import paths and are not portable deployment entrypoints."
+  ],
+  "sources": {
+    "src/lib/harness/adapters/codex.ts": "d1e9f3ac244c38adeddf6cec3107ea1749b3bccdfa8903ad4969bc3856ce6348",
+    "src/lib/harness/bridge.ts": "b6aab6bfc4e1673a09f8fc9313a3e62a589a7576ec819999776906f48a58776e",
+    "src/lib/harness/test-run.ts": "439c68424dc11fe63558ca4c98a7360b812ca5ffbd97e09ba661ade05a5dfbb7",
+    "src/lib/harness/child-env.ts": "229fcb03b66f3f119331badfc6946284a3d80996de281b9eebdf60b60da820f8",
+    "src/lib/harness/policy.ts": "c9fe0e7f9e38030b4d5140614e375acc5db2f0441a52f36688cbe05bd07c2ce8",
+    "src/lib/agents/mcp-server.ts": "0cc2a004a79526271f42138b4075fe4ce7bc87b832c20fc0e157df4ceb09354f",
+    "src/lib/dm/turn.ts": "56faf2b5fa36294260d8aa800d896b885ec12a44cf008a8002ec902e0e3a6345",
+    "src/lib/dm/model.ts": "7be932071f17e03c60c92209445e09cbefa352166714bb05110a015bdad3decf",
+    "src/lib/dm/prompt.ts": "7f4d3796ea76800c9908ea087e45be48f66196fcffcb899762d196b15a07579b",
+    "src/lib/i18n/generation.ts": "e47c101389979530982537f53e112f0f5cb8441604521f5ead2c71f3ca4e1e99",
+    "src/lib/dm/engine-boundary.ts": "aca92be0f02b6347666c1ccd3614899fdfd6b0943a359c56e640903832d894b5",
+    "package.json": "7eaf49a1fb0da0829aecf4a851ded42e5bf22327c094c68533ffa9f46fa368c3"
+  },
+  "commands": [
+    "HARNESS=codex HARNESS_TURNS=2 node docs/validation/codex-chinese-live-probe.mjs",
+    "node docs/validation/codex-chinese-utility-probe.mjs"
+  ],
+  "reviewRepair": "2026-10-11: browser imports now use scoped resource runtime; co-located catalog construction marked pure. All English/Chinese templates independently compared equal to the pre-repair archive; original golden bytes preserved. See localization-review-repairs.md."
+}

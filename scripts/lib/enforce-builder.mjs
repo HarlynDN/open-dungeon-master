@@ -38,7 +38,9 @@ export function standardScores(order = ["str", "dex", "con", "int", "wis", "cha"
 
 export async function openBuilder() {
   const src = (file) => import(new URL(`../../src/${file}`, import.meta.url).href);
-  const options = await src("app/characters/builder/useBuilderOptions.ts");
+  // The client hook re-exports these same production option builders. Read
+  // their shared source directly so plain Node tests do not load TSX context.
+  const options = await src("lib/characters/options.ts");
   const { useBuilderDerived } = await src("app/characters/builder/useBuilderDerived.ts");
   const submit = await src("app/characters/builder/submit.ts");
   const { splitToolGrants } = await src("lib/srd/tool-choices.ts");

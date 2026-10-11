@@ -1,0 +1,19 @@
+{
+  "character-ability-dice-goldens.json": "6d7f335216de42e7ef2a869c78edadfdd92fbd62e43e944bade87bbee2a5fd41",
+  "character-ability-ui-goldens.json": "43f9cc9a571bdf43205af9b17b2423b632fba309d10906dd69a90cf68b8ec4f2",
+  "character-builder-ui-goldens.json": "5568cd7f290795c176be379f60cd3567ea0b2c0fbf22e20724a36d8344362284",
+  "character-calling-material-ui-goldens.json": "e18a846ac39a60b5e813a8048e42302a0dcd9b68ea22d4b9f7d82f6680cebcbb",
+  "character-calling-ui-goldens.json": "5247e3860cf212bc18c76a3ce11aa131462357374cc5d5038af021af7f56d648",
+  "character-feat-goldens.json": "53f93677540c660d1e977593e432278d0ca4f18699f2dd02596ed3db0c4ee43c",
+  "character-gear-goldens.json": "f53704e4923c8817e9d7ee48b65d11f444c4795aab05159c238890cd78ad5aa4",
+  "character-gear-help-goldens.json": "5def972bc89f872566313256564e3bb3b005d073d6a4e8cbaf24a2d836f6a605",
+  "character-gear-ui-goldens.json": "f17283180b1683255a84e31b9de27dadd4023d0a2e04b3094f4f20db3f4b7bc3",
+  "character-lineage-ui-goldens.json": "8d1551e3e2bf6cf3ad097b93720efd8ee50cfe7cdfecc41d1d57ed811e5aa2dd",
+  "character-picker-ui-goldens.json": "3fea17733878761e91f602d578fef4eeddc30976444a81e79e5751fa00bd878e",
+  "character-rule-goldens.json": "9780174acefe6d4b6e0e4cd3a23e6d5412e3f22bd8747605e39e63f98868ee46",
+  "character-spell-goldens.json": "bc79134f1225e6e8ad1c567918c0b2677cf9494e3f4bcc4cc8dca4492f626b3a",
+  "character-spell-ui-goldens.json": "10d983a7bd47f8b86521abef2c86bd84baedc960b74645294451879c24f7f02c",
+  "character-training-goldens.json": "398b65e73f5b3b1d774c3f39ce93e9c1a1698bbd5a9d9402dec395a4d65c5ddf",
+  "closed-game-help-ui-goldens.json": "27af1e78e6c9fc422114e615f939ab4e4ba5f4daafc5274c2d9ac66872612dd2",
+  "game-help-ui-goldens.json": "3b7b8443f965590b37aecc6850fdf2aa1454cd14d30f8b929f66257628b395da"
+}

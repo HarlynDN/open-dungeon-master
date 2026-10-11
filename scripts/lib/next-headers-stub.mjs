@@ -7,5 +7,12 @@ export async function headers() {
 }
 
 export async function cookies() {
-  return { get: () => undefined };
+  // Optional jar for auth-flow suites. Every other suite keeps the old
+  // bearer-only behavior; no cookies survive outside that suite's globals.
+  const jar = globalThis.__odmTestCookies;
+  return {
+    get: key => jar?.has(key) ? { name: key, value: jar.get(key) } : undefined,
+    set: (key, value) => jar?.set(key, value),
+    delete: key => jar?.delete(key),
+  };
 }

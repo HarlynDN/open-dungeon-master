@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "status": "source-compared-by-implementation-agent",
+  "scope": "All 43 core gameplay glossary term/short/long records, 18 skill explanations, 55 condition/school/weapon-property/damage/size entries, legacy skill and nine alignment glossary lists; GameTerm and OptionGlossary display and six builder/level-up skill-help owners. Caller-owned labels, feature/material prose, ItemBody and other InfoDialog branches remain pending.",
+  "provenance": "Original Chinese translation from repository-authored src/lib/help/glossary.json and src/lib/help/terms.ts. Existing source declarations and docs/LICENSES.md retained; no proprietary Chinese rulebook text copied.",
+  "review": "Implementation agent compared every complete heading and brief/long body against source, numeric/sign/dice/count/distance/rest semantics and existing character terminology. Original 43 term records, 18 skill-help projections and 55 closed source definitions were frozen before display migration. Source comparison is not independent human or external approval. Default English rules/model helpers and their original data are unchanged. Calling owner captions and six style descriptions are tracked separately in character-calling-translations.json; all class/subclass/features/options full material remains pending. Native class/subclass brief help is now separately source-compared in character-calling-material-translations.json; only display calls change, with exact English projection and canonical selection regression retained.",
+  "sources": {
+    "src/lib/help/glossary.json": "b212308b557edb04f27d3f137c34179bffdd48ea3f3473ce929e319fbe20c1c7",
+    "src/lib/help/terms.ts": "ebdc3142237d2c70376111b0d9fee867777bd54b2b640d4210ade61c7fbb0af9",
+    "src/lib/help/index.ts": "56503b4dba185a71c14e60cff2017a2b4ce0d0b0e947bca3a09a4bcb5c6156a2",
+    "src/lib/srd/skills.json": "e78ba58d83aeed41533161c3bd3b559411b042a4f019fc4ee45183843ceba7fd",
+    "src/components/ui/GameTerm.tsx": "667de8c1b5ebb1e01932f99b0892e7166f9779b4ffd88ecd02261b0063c1f1bc",
+    "src/components/ui/OptionGlossary.tsx": "25d1d31cb0a9ad0880ca8ea30d7d0dddcaa360a11b53dd8522b6ae606445d9ab",
+    "src/lib/i18n/game-help-presentations.ts": "8870d1ba521286fe2b1bc1a9f1121b5f068377aa620c426a70631aa161281d33",
+    "src/lib/i18n/closed-game-help-presentations.ts": "609afbeb2bc293a488a69b61357859f2897430fd0dde38d36f31e72e79c27d66",
+    "src/app/characters/builder/steps/IdentityStep.tsx": "7f6bcf73b0a2c7db740b023f2669c663d9fca0bbb885dff386928f1450d1117a",
+    "src/app/characters/builder/RacialChoicesSection.tsx": "bf2db286b025eed1b7b05758fd1c6f3f1c6aaa9edf08853e579286ac797a68a6",
+    "src/app/characters/builder/steps/CallingStep.tsx": "dddfac30b09eef862b1c05da0f2ec8b07dd9062c71f6f37c0483260f87c3aaa7",
+    "src/app/characters/builder/steps/ClassChoices.tsx": "7868b1b011a7aba5ad04ca9fe8e76f65e7e5f5d8d209f4445cfba1b6ba355697",
+    "src/app/characters/builder/FeatChoicesFields.tsx": "4d38545846377dc2063480237dfcc71a5f397e09292ea0cdf1771d010f9fca59",
+    "src/app/campaigns/[campaignId]/LevelUpDialog.tsx": "1804e1a2653dd71483f1151cd55a3a0af4d28396951a7a4f95ac04a59607e17d"
+  },
+  "catalogs": {
+    "src/lib/i18n/game-help-messages.ts": "98b8f16d4479d05d69d5c34279d56884b88fff05ce208f2c861f96f95242cb67",
+    "src/lib/i18n/closed-game-help-messages.ts": "32cebe37e719f39267f3d5f49bde070f1e5f57fe3844a5ed0fe06f05ddccaca4"
+  },
+  "reviewRepair": "2026-10-11: browser imports now use scoped resource runtime; co-located catalog construction marked pure. All English/Chinese templates independently compared equal to the pre-repair archive; original golden bytes preserved. See localization-review-repairs.md."
+}

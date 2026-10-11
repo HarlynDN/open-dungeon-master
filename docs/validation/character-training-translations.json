@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "status": "source-compared-by-implementation-agent",
+  "scope": "38 canonical tool names, 22 fictional languages and 8 generated tool-category labels; display names only, not rulebook or material-description translation.",
+  "provenance": "Original Chinese labels drafted from repository English names; no proprietary Chinese rulebook or unverified community translation used.",
+  "review": "Separate comparison by the implementation agent against tool/language source inventories, canonical name preservation, category alternatives and diagnostic numeric/choice semantics. Not external or human approval.",
+  "sourceSha256": {
+    "src/lib/srd/tool-choices.ts": "990b5abb3a93d82e3731f95b93a314375467226906f87519c18caae8d558c582",
+    "src/lib/srd/races.json": "a3661913715291b4ca72cc730f4d261b4da98cd6d9240490bbf5fa0550e6871e",
+    "src/lib/srd/classes.json": "f0de0db010ca49668953488018d510917444f582fb58587a88a1b3bdf83e5371",
+    "src/lib/srd/backgrounds.json": "d4a3ff20a0a5cc802fd28b409b40d338f867c61e9a49e5d71c012e14c7210c1d",
+    "src/lib/content/mechanics.ts": "7f76eafcbb4de4630c176e57d5620bb5fc86411b8ba2a40b22b310d43318b7c2"
+  },
+  "catalogSha256": "8f0c782dea03da62e7dd052f14d18c169746f264d1d76475986e9becbaecfeb9",
+  "catalog": "src/lib/i18n/character-training-name-messages.ts",
+  "reviewRepair": "Catalog construction marked pure for namespace loading; templates match the pre-repair archive exactly."
+}

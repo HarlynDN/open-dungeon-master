@@ -1,0 +1,121 @@
+{
+  "provenance": "Synthetic temporary character saved through the actual browser, then read from the resulting UI export. Export artifact is evidence, not a production user record.",
+  "name": "柳风",
+  "level": 1,
+  "class": "fighter",
+  "race": "hill_dwarf",
+  "background": "acolyte",
+  "gold": 5,
+  "ac": 15,
+  "maxHp": 13,
+  "abilities": {
+    "str": 15,
+    "dex": 14,
+    "con": 15,
+    "int": 12,
+    "wis": 11,
+    "cha": 8
+  },
+  "kitChoices": {
+    "options": [
+      1,
+      0,
+      0,
+      0
+    ],
+    "picks": [
+      "Longsword"
+    ]
+  },
+  "equipment": [
+    {
+      "name": "Leather",
+      "qty": 1
+    },
+    {
+      "name": "Longbow",
+      "qty": 1
+    },
+    {
+      "name": "Arrows",
+      "qty": 20
+    },
+    {
+      "name": "Shield",
+      "qty": 1
+    },
+    {
+      "name": "Longsword",
+      "qty": 1
+    },
+    {
+      "name": "Light Crossbow",
+      "qty": 1
+    },
+    {
+      "name": "Crossbow Bolts",
+      "qty": 20
+    },
+    {
+      "name": "Backpack",
+      "qty": 1
+    },
+    {
+      "name": "Crowbar",
+      "qty": 1
+    },
+    {
+      "name": "Hammer",
+      "qty": 1
+    },
+    {
+      "name": "Piton",
+      "qty": 10
+    },
+    {
+      "name": "Torch",
+      "qty": 10
+    },
+    {
+      "name": "Tinderbox",
+      "qty": 1
+    },
+    {
+      "name": "Rations (1 day)",
+      "qty": 10
+    },
+    {
+      "name": "Waterskin",
+      "qty": 1
+    },
+    {
+      "name": "Rope, Hempen (50 feet)",
+      "qty": 1
+    },
+    {
+      "name": "Holy Symbol",
+      "qty": 1
+    },
+    {
+      "name": "Book",
+      "qty": 1
+    },
+    {
+      "name": "5 sticks of incense",
+      "qty": 1
+    },
+    {
+      "name": "Vestments",
+      "qty": 1
+    },
+    {
+      "name": "Clothes, Common",
+      "qty": 1
+    },
+    {
+      "name": "Rope, Silk (50 feet)",
+      "qty": 1,
+      "slug": "srd-gear:rope-silk-50-feet"
+    }
+  ]
+}

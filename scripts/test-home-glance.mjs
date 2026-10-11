@@ -1,3 +1,4 @@
+import "../src/lib/i18n/messages.ts";
 // The title screen's glance at a table (src/lib/db/home-glance.ts) and the
 // home's own helpers (src/app/home/types.ts): what "when last we left" says,
 // which table the screen opens on, and the lines under the save slots.
@@ -120,7 +121,7 @@ test("pickContinue prefers a live table and falls back to the newest finished on
 });
 
 test("seatLine says who you are at the table", () => {
-  assert.equal(seatLine(base({ status: "lobby", playerCount: 3, maxPlayers: 4 }), "u1"), "Lobby · 3 of 4 ready");
+  assert.equal(seatLine(base({ status: "lobby", playerCount: 3, maxPlayers: 4 }), "u1"), "Lobby · 3 of 4 seats");
   assert.equal(seatLine(base({ playingAs: "Thane Ordwin" }), "u1"), "Playing as Thane Ordwin · 4 of 5 seats");
   assert.equal(seatLine(base({ dmUserId: "u1" }), "u1"), "Running the table · 4 of 5 seats");
   assert.equal(seatLine(base({ maxPlayers: 1, playerCount: 1, playingAs: "Sera" }), "u1"), "Playing as Sera · solo");
@@ -139,10 +140,25 @@ test("chapterLine reads the chapter, then the scene, then the description", () =
 });
 
 test("slotLine states the table in a few words", () => {
-  assert.equal(slotLine(base({ status: "lobby", playerCount: 3, maxPlayers: 4 }), "u1"), "3 of 4 ready");
+  assert.equal(slotLine(base({ status: "lobby", playerCount: 3, maxPlayers: 4 }), "u1"), "3 of 4 seats");
   assert.match(slotLine(base({ status: "ended" }), "u1"), /^Finished /);
   assert.equal(slotLine(base({ dmUserId: "u1" }), "u1"), "Running the table");
   assert.match(slotLine(base({}), "u9"), /^Last played /);
+});
+
+test("Chinese home summaries translate structure while preserving campaign text and names", () => {
+  const before = base({ playingAs: "Thane Ordwin", glance: { chapter: { index: 3, act: 2, title: "The Drowned Lantern" } } });
+  const snapshot = structuredClone(before);
+  assert.equal(seatLine(before, "u1", "zh-CN"), "扮演Thane Ordwin · 已入座 4/5 人");
+  assert.equal(chapterLine(before, "zh-CN"), "第 2 幕，第 3 章 · The Drowned Lantern");
+  assert.equal(seatLine(base({ status: "lobby", playerCount: 3, maxPlayers: 4 }), "u1", "zh-CN"), "大厅 · 已入座 3/4 人");
+  assert.equal(slotLine(base({ dmUserId: "u1" }), "u1", "zh-CN"), "主持战役");
+  assert.equal(agoLabel(iso(-5 * day), now, "zh-CN"), "5天前");
+  assert.equal(agoLabel(iso(-day), now, "zh-CN"), "昨天");
+  assert.equal(agoLabel(iso(0), now, "zh-CN"), "刚刚");
+  assert.equal(agoLabel("not a date", now, "zh-CN"), "");
+  assert.equal(chapterLine(base({}), "zh-CN"), before.description);
+  assert.deepEqual(before, snapshot, "formatting must never rewrite a saved campaign or its history");
 });
 
 // ---- the glance against a real table ----

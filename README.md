@@ -802,6 +802,21 @@ random. So the database records which model and dtype built its vectors, and you
 can change `EMBEDDING_MODEL` or `EMBEDDING_DTYPE` at any time: set the new values and
 restart the server.
 
+The default remains `Xenova/all-MiniLM-L6-v2@fp32`, preserving existing English
+indexes and semantic waypoint/fact behavior. Chinese recall across English
+sources requires explicit opt-in to
+`Xenova/paraphrase-multilingual-MiniLM-L12-v2@q8` in `.env.server`.
+Selection affects every campaign on the deployment. Retrieval floors are
+selected by model/dtype.
+The bilingual calibration retains the lore/scene floors, but disables automatic
+waypoint ticks and fact retirement based only on cosine: different places,
+numbers and negated facts can have very similar vectors. Exact tool/name
+matches, the waypoint judge and fact insertion remain available. Unknown
+model/dtype configurations also disable those semantic mutation shortcuts.
+The multilingual configuration is optional; switching it on rebuilds indexes.
+See [the bounded calibration results](docs/validation/bilingual-embeddings.md)
+and run `node scripts/calibrate-bilingual-embeddings.mjs` to reproduce them.
+
 At its next start the server sees the change before it serves anything, clears the
 old vectors and re-embeds the whole story (lore, notes, house rules, facts, chapter
 summaries and every scene) in the background, logging a line when it starts and when

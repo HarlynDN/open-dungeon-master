@@ -359,6 +359,9 @@ function fightState(world) {
   return JSON.stringify({ sheets, enemies });
 }
 
+const { VARIANT_TOGGLES } = await import("../src/lib/i18n/variant-metadata.ts");
+const { createTranslator } = await import("../src/lib/i18n/messages.ts");
+
 for (const key of ["criticalFumbles", "lingeringInjuries"]) {
   await test(`${key} is labelled and prompted as narration, and no engine reads it`, () => {
     assert.ok(NARRATED_VARIANT_RULES.includes(key));
@@ -366,10 +369,15 @@ for (const key of ["criticalFumbles", "lingeringInjuries"]) {
     assert.match(VARIANT_RULE_LINES[key], /narration only/i);
     assert.match(VARIANT_RULE_LINES[key], /server (applies nothing|tracks no injury)/i);
     const panel = fs.readFileSync(new URL("../src/app/campaigns/[campaignId]/RulesPanel.tsx", import.meta.url), "utf8");
-    const entry = new RegExp(`key: "${key}",\\s*label: "([^"]+)",\\s*tip: "([^"]+)"`).exec(panel);
+    assert.match(panel, /VARIANT_TOGGLES\.map/, "the panel renders the shared metadata");
+    const entry = VARIANT_TOGGLES.find(toggle => toggle.key === key);
     assert.ok(entry, `the settings panel lists ${key}`);
-    assert.match(entry[1], /narrated/i);
-    assert.match(entry[2], /narration only/i);
+    assert.match(entry.label, /narrated/i);
+    assert.match(entry.tip, /narration only/i);
+    assert.match(createTranslator("en")(`variant.${key}.label`), /narrated/i);
+    assert.match(createTranslator("en")(`variant.${key}.tip`), /narration only/i);
+    assert.match(createTranslator("zh-CN")(`variant.${key}.label`), /叙事/);
+    assert.match(createTranslator("zh-CN")(`variant.${key}.tip`), /(?:服务器不|不会).*(?:数值|伤势)/);
     // A reader added later makes the label a lie: this is where that shows.
     assert.equal(readByAnEngine(key), false, `an engine reads variantRules.${key}`);
   });

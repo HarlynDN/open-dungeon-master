@@ -1,0 +1,37 @@
+{
+  "fullRegression": {
+    "scriptSuites": 516,
+    "passed": 516,
+    "seconds": 254.6
+  },
+  "typescript": "passed",
+  "lint": {
+    "errors": 0,
+    "existingWarnings": 12
+  },
+  "uiLocalization": {
+    "coveredFiles": 117,
+    "scopeFiles": 437,
+    "pendingLiteralSites": 3596,
+    "messageKeys": 4563
+  },
+  "resourceParity": "passed",
+  "preRepairTemplateParity": "all English and Chinese templates identical",
+  "goldenCompression": {
+    "files": 17,
+    "originalBytesPreserved": true,
+    "regenerated": false
+  },
+  "frozenCodeSha256": "963241c163048787bfec54b7ce90f1b6baf31bb1f3e969121eebb7a2efffef12",
+  "build": {
+    "turbopack": "blocked: local PostCSS worker port permission",
+    "webpackFallback": "failed: pre-existing client node:crypto path",
+    "applicationBuildSuccess": false
+  },
+  "runtime": {
+    "codexFullPlayFlow": "pending",
+    "guardProductionRecall": "not measured; recorded turns contain no eligible combat contradictions",
+    "tokenCoefficientCalibration": "provisional; not calibrated with Codex usage",
+    "chineseTTS": "unconfigured"
+  }
+}

@@ -116,7 +116,7 @@ const ROWS = [
   ["scene_chunks", "scene-1"],
 ];
 
-await test("an install left on the defaults keys the index as the original model", () => {
+await test("an install left on the defaults keeps the original English model and index", () => {
   // A child with no EMBEDDING_* in its environment and no .env.server in its
   // working directory: exactly a default install.
   const env = { ...process.env };
@@ -313,7 +313,8 @@ await test("concurrent catch-up requests share one pass", async () => {
   assert.equal(calls.filter((text) => text.startsWith("The Sundering")).length, 1);
 });
 
-await test("the semantic fact dedup still embeds, then retires a near-duplicate", async () => {
+await test("the legacy default still retires a newer near-duplicate fact by its existing threshold", async () => {
+  reconcileEmbeddingModel(LEGACY_EMBEDDING_KEY);
   const insert = db.prepare(
     `INSERT INTO world_facts (id, campaign_id, category, subject, fact, status, created_at, updated_at)
      VALUES (?, ?, 'location', 'Mill', ?, 'active', ?, ?)`,

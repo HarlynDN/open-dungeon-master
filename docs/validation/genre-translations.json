@@ -1,0 +1,65 @@
+{
+  "locale": "zh-CN",
+  "source": "src/lib/genres.ts",
+  "sourceLicense": "Project MIT license; copyright retained in LICENSE",
+  "translations": "src/lib/i18n/world-messages.ts; genre names in auth-messages.ts and creation-messages.ts",
+  "method": "Drafted from the checked-out project text, then compared in a separate review pass. No third-party Chinese rulebook text used.",
+  "entries": [
+    {
+      "id": "high_fantasy",
+      "sourceHash": "21f42c53e37836b641077602b333bd1f93d0e0d70e2890ce1bc88b2b2c27dc45",
+      "review": "source-compared",
+      "reviewer": "implementation agent",
+      "notes": "Compared translated presentation meaning to the repository original; canonical engine and art prompts remain English. Custom empty fields retain documented no-default behavior."
+    },
+    {
+      "id": "dark_fantasy",
+      "sourceHash": "721e55fee649e0bc12bd226bd91338b1f1f545449cd99e8b40ad58efec8ac637",
+      "review": "source-compared",
+      "reviewer": "implementation agent",
+      "notes": "Compared translated presentation meaning to the repository original; canonical engine and art prompts remain English. Custom empty fields retain documented no-default behavior."
+    },
+    {
+      "id": "mystery",
+      "sourceHash": "d6b662f5bc7f85d4df78af62db4cfaff28b192634febce0aa00301eec106e674",
+      "review": "source-compared",
+      "reviewer": "implementation agent",
+      "notes": "Compared translated presentation meaning to the repository original; canonical engine and art prompts remain English. Custom empty fields retain documented no-default behavior."
+    },
+    {
+      "id": "horror",
+      "sourceHash": "8b3df74b95f8fcf1336e43e5bcd15f3a90b1a6fe4e8ed491c4c81929aa80cdc7",
+      "review": "source-compared",
+      "reviewer": "implementation agent",
+      "notes": "Compared translated presentation meaning to the repository original; canonical engine and art prompts remain English. Custom empty fields retain documented no-default behavior."
+    },
+    {
+      "id": "cyberpunk",
+      "sourceHash": "e3b2e0c3c67fb0fe2217b16a96aca2114be240f0ae25ced0b657d1de8b6cb9a2",
+      "review": "source-compared",
+      "reviewer": "implementation agent",
+      "notes": "Compared translated presentation meaning to the repository original; canonical engine and art prompts remain English. Custom empty fields retain documented no-default behavior."
+    },
+    {
+      "id": "steampunk",
+      "sourceHash": "163e197d7f8a77c6b44a60697ec953d89907f8452c7c0424ab41b19eae5a1c6a",
+      "review": "source-compared",
+      "reviewer": "implementation agent",
+      "notes": "Compared translated presentation meaning to the repository original; canonical engine and art prompts remain English. Custom empty fields retain documented no-default behavior."
+    },
+    {
+      "id": "post_apocalyptic",
+      "sourceHash": "9a9b8d08a9de589ce0bd926e9beae2d2e9bd7942d56bff33a825a77e1ed7ff86",
+      "review": "source-compared",
+      "reviewer": "implementation agent",
+      "notes": "Compared translated presentation meaning to the repository original; canonical engine and art prompts remain English. Custom empty fields retain documented no-default behavior."
+    },
+    {
+      "id": "custom",
+      "sourceHash": "7497248a849204ae124590a36becc96d2a38d28971d70bb9c18d94656a1904f6",
+      "review": "source-compared",
+      "reviewer": "implementation agent",
+      "notes": "Compared translated presentation meaning to the repository original; canonical engine and art prompts remain English. Custom empty fields retain documented no-default behavior."
+    }
+  ]
+}

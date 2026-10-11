@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "status": "source-compared-by-implementation-agent",
+  "scope": "Complete ability-score method controls and descriptions, raw server-roll refusals, kept-roll/reroll/assignment hints, localized gain/summary display, health explainer and ASI choice chrome in builder and shared LevelUp. Full feat/option corpus and peripheral picker content are still pending.",
+  "provenance": "Original Chinese translations from repository UI/explainer prose; mechanical source helpers and canonical dice/protocol values are unchanged.",
+  "review": "Compared full original prose, 27-point budget, standard array, strict lower-than reroll threshold, server-kept dice, capped gains including +0, 20-point ASI cap, half-feat choices, per-level health floor and overrides, authored braces/markup, and English singular/plural variants. Forty-four original actual JSX projections frozen before migration. Implementation-agent source comparison, not external or human approval. Actual native DiceRow source and five original English SVG/accessibility renders compared separately; Chinese face/drop description changes only the aria label.",
+  "sources": {
+    "src/app/characters/builder/AbilityEditor.tsx": "b6fe29aaa026e1cbfab18ae22482c7825b111c6ffde54cc4aa75a8dbf3082db1",
+    "src/app/characters/builder/AbilitySummary.tsx": "3d4162d4ebbe6ec8e4683900b8fa3b112be34c2fb2705df1dbeef69aa63ee182",
+    "src/app/characters/builder/AbilityExplainers.tsx": "0c5a9bc000b3acb4e07f6ba4e521e832e0896a7ccaeb7910bbf7b4167d586081",
+    "src/app/characters/builder/AsiFeatEditor.tsx": "0cb81ddf57c417828d210409213f37039e02d860b399a79cfd5740871b7fdc41",
+    "src/app/characters/builder/steps/AbilitiesStep.tsx": "c9e117d5c0df1eec373b80ac04d1b52df03c801f1e8190938674b2f349adfa58",
+    "src/app/characters/builder/steps/FinishStep.tsx": "c21709faab972c02f4a3233114d8eb867ce3118802a664a48448fbab9431245a",
+    "src/app/characters/builder/abilityDice.ts": "2274f564b6a0516d8ef6940acd4074711a4809654d21ea14420d59375c148aec",
+    "src/app/characters/builder/abilityGains.ts": "db7adcd8fd8e9a46cf1c2851da4c80a5162d25d472674c10e86c13bebbad45ab",
+    "src/app/characters/builder/useTableRules.ts": "29068b9cce2bb1754412e479b29e54ba927e907f21c4416942589ceef342e750",
+    "src/app/api/characters/rolls/route.ts": "8ada7f9282076e5204a93dbc35e811a903d9564598ffbee9666a888ae7217c3a",
+    "src/lib/i18n/ability-ui-presentations.ts": "20b5234266e6d6ebd5ebccc2a4001e6c5ec84d7857f75ba4bb1cccfa82524794",
+    "src/app/characters/builder/Dice.tsx": "e4ff37631e1d8026397e8bb265f05fbad402dddf6a94f3fb39e00a6c7966c497"
+  },
+  "catalogs": {
+    "src/lib/i18n/ability-ui-messages.ts": "d2b7d2a19215cc6a2f0aff19281ecfd149e0aff04354a7fbe4554016d90858b3"
+  },
+  "reviewRepair": "2026-10-11: browser imports now use scoped resource runtime; co-located catalog construction marked pure. All English/Chinese templates independently compared equal to the pre-repair archive; original golden bytes preserved. See localization-review-repairs.md."
+}

@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "status": "source-compared-by-implementation-agent",
+  "scope": "54 stock feat names; 13 damage types, four armor-training categories, two feature sources and one additional feat-granted tool. Display labels and structured rule explanations only; full feat descriptions, feature-name catalogs and shared input aliases remain pending.",
+  "provenance": "Original Chinese translations drafted against current repository English source. No proprietary Chinese rulebook or unverified community translation used.",
+  "review": "Separate source comparison by the implementation agent: every stock feat name/prerequisite, complete AND/OR prerequisite structure, numeric limits, shared skill/tool pick budgets and specific training choices. Uncheckable pack prerequisite source remains explicitly marked as pending rather than being omitted. Not external or human approval.",
+  "sources": {
+    "src/lib/srd/authored-feats.json": "8662c971767a46120e4c2465e6bdd4fd421b65611575706812afcaa0f265399d",
+    "src/lib/srd/feat-grant-text.ts": "25ba28960ee0d982df26663d1490d6aa19fabdd3ca286ac4423c1caee93cd575",
+    "src/lib/srd/legality/features.ts": "f05f22417ea00f966e094905b0c37f3045a2ff97c3e67677263345c4cf261780",
+    "src/lib/srd/feat-effects.ts": "7aca41d9d82fbbae1d4176d45a83a09ab20971babbebdc51d33335dad6667185"
+  },
+  "catalog": "src/lib/i18n/character-feat-name-messages.ts",
+  "catalogSha256": "d07f024aff52df1bb57fa1b3fd8431699216265a1142c3e4f7e6c09f31efa26a"
+}

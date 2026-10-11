@@ -1,0 +1,1903 @@
+{
+  "version": 1,
+  "note": "Exact main-flow import closure. Pending files remain visible and fail the final completion gate. Covered means syntax check plus manual dynamic/error/content review, not merely no JSX text.",
+  "entrypoints": [
+    "src/app/layout.tsx",
+    "src/app/page.tsx",
+    "src/app/join/[code]/page.tsx",
+    "src/app/characters/page.tsx",
+    "src/app/characters/new/page.tsx",
+    "src/app/characters/[characterId]/page.tsx",
+    "src/app/campaigns/[campaignId]/page.tsx",
+    "src/app/campaigns/[campaignId]/table/page.tsx",
+    "src/app/campaigns/[campaignId]/character/page.tsx",
+    "src/app/settings/page.tsx",
+    "src/app/friends/page.tsx",
+    "src/app/reference/page.tsx",
+    "src/app/rulebook/page.tsx",
+    "src/app/workshop/page.tsx",
+    "src/app/setup/page.tsx"
+  ],
+  "additionalSources": [
+    "src/lib/i18n/LocalizedText.tsx"
+  ],
+  "deferred": [
+    {
+      "path": "src/app/workshop/",
+      "reason": "Standalone deep Workshop routes are not entrypoints. Shared editors/components imported by the main journey are included, regardless of directory."
+    },
+    {
+      "path": "src/components/admin/",
+      "reason": "Standalone administration routes beyond initial setup are not entrypoints. Shared setup components imported by the main journey are included."
+    }
+  ],
+  "invariantText": [
+    "Open Dungeon Master",
+    "GitHub",
+    "Discord",
+    "D&D",
+    "ODM-XXXXXXXXXX",
+    "XXXX-XXXX-XXXX-XXXX"
+  ],
+  "files": [
+    {
+      "path": "src/app/AuthForm.tsx",
+      "state": "covered",
+      "review": "Static prose and accessibility audited; auth responses use stable codes, brand and user-supplied names preserved. Imported child files have their own coverage state."
+    },
+    {
+      "path": "src/app/ChangePasswordForm.tsx",
+      "state": "covered",
+      "review": "Static prose and accessibility audited; auth responses use stable codes, brand and user-supplied names preserved. Imported child files have their own coverage state."
+    },
+    {
+      "path": "src/app/CreateCampaignDialog.tsx",
+      "state": "covered",
+      "review": "Reviewed shell, all step headings/blurb, header summary, errors and final buttons; each step content has independent coverage. Untouched automatic themes follow campaign locale; user/pack text preserved."
+    },
+    {
+      "path": "src/app/TopoBackground.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/WorldSetupFields.tsx",
+      "state": "covered",
+      "review": "Own fields, category display and counts localized; submitted lore categories remain canonical and authored rules/lore remain verbatim. Scratch browser creation read these values back."
+    },
+    {
+      "path": "src/app/admin/AdminInvitesSection.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/admin/AdminSettingsFields.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/admin/BackendProbe.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/admin/BuiltinSpeechCard.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/admin/HarnessPictureTest.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/admin/HarnessTestPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/AskPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/BattleMapGrid.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/BattleMapPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/BoardAreaAim.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/BoardChrome.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/BoardDelivery.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/BoardFlipbook.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/BoardFx.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/BoardIntent.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/BoardMoveModes.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/BoardMoveNotes.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/BoardPanelParts.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/BoardStage.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/BoardStageLayers.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/BoardZoneLayer.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/BondsPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/CalendarSection.tsx",
+      "state": "covered",
+      "review": "Reviewed own UI copy, conditional labels, accessibility, date/count projections and rerendered failures. Authored titles/body/tags/names and canonical protocol values are preserved. Imported child UI and adjacent panels have separate coverage."
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/CharacterGate.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/CharacterMenu.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/CharacterNotesDialog.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/CharacterSheetDialog.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/CharacterVoices.tsx",
+      "state": "covered",
+      "review": "Reviewed group labels, counts, speaker controls, accessibility and rerendered request errors; canonical roster keys, voice IDs and authored names preserved. Chinese single-narrator policy and TTS transport remain pending in unit 4."
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/CinematicParts.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/CompanionBuilderDialog.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/Composer.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/ConsoleOutcomeBanner.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/ContextPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/DiceOverlay.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/DiceSourcesDialog.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/DiceTrayDialog.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/DirectorPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/DisputeDialog.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/DmActionFields.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/DmActionForm.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/DmAssistPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/DmBeatComposer.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/DmBestiaryPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/DmBoardControls.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/DmConsolePanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/DmConsoleParts.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/DmDelegationPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/DmEncounterPrepPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/DmEnemyHpCard.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/DmInboxPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/DmInitiativePanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/DmMapLibraryPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/DmMapStudioPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/DmNpcForgePanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/DmOddsPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/DmSquarePick.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/DmStoryboardPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/DmTablesPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/DmWhisperPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/DmWorkbenchPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/EditCampaignDialog.tsx",
+      "state": "covered",
+      "review": "Own UI, dynamic seat/readiness/difficulty/name projections and request errors compared in both locales; imported child modules have independent pending entries."
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/EncounterPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/EventLog.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/ExportMenu.tsx",
+      "state": "covered",
+      "review": "Reviewed trigger accessibility and all labels/hints; download format and server document contents are separate from this menu."
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/FactionsPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/FactsPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/FightSummaryCard.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/FloorBanners.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/GameSettingsPanel.tsx",
+      "state": "covered",
+      "review": "Reviewed editable labels, tooltips, conditional rows, read-only summary and rerendered request failures; canonical settings, campaign locale and authored pack/world text preserved. Stage/delegation source comparisons enforced. Imported child UI is reviewed independently."
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/HaltedTurnBanner.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/Hand.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/HandAimBar.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/HandCardFace.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/HandMoreSheet.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/HandPips.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/HandReactPrompt.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/HandSpells.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/HandTutorial.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/InlineMessageEditor.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/ItemProposalBar.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/LabelSheet.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/LeadEditDialog.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/LeadEditParts.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/LeadFloorControl.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/LeadPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/Lobby.tsx",
+      "state": "covered",
+      "review": "Own UI, dynamic seat/readiness/difficulty/name projections and request errors compared in both locales; imported child modules have independent pending entries."
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/LobbyActions.tsx",
+      "state": "covered",
+      "review": "Own UI, dynamic seat/readiness/difficulty/name projections and request errors compared in both locales; imported child modules have independent pending entries."
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/LobbyParty.tsx",
+      "state": "covered",
+      "review": "Own UI, dynamic seat/readiness/difficulty/name projections and request errors compared in both locales; imported child modules have independent pending entries."
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/LobbyPieces.tsx",
+      "state": "covered",
+      "review": "Own UI, dynamic seat/readiness/difficulty/name projections and request errors compared in both locales; imported child modules have independent pending entries."
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/LobbyRoomCode.tsx",
+      "state": "covered",
+      "review": "Own UI, dynamic seat/readiness/difficulty/name projections and request errors compared in both locales; imported child modules have independent pending entries."
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/LoreCheckDialog.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/LorePanel.tsx",
+      "state": "covered",
+      "review": "Reviewed own UI copy, conditional labels, accessibility, date/count projections and rerendered failures. Authored titles/body/tags/names and canonical protocol values are preserved. Imported child UI and adjacent panels have separate coverage."
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/MapEditorShell.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/MapInspector.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/MapLayersPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/MapOptions.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/MapPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/MapRail.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/MapSceneTools.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/MapTilesetPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/MapToasts.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/MapToolbox.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/MapTools.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/MarketPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/MarketShopEditor.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/MessageActions.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/MessageContent.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/MessageItem.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/MessageList.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/MessageParts.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/Moments.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/MonsterFields.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/MonsterHand.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/MonsterKitFields.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/MonsterRosterPicker.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/NarrationFailureBanner.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/NarrationNote.tsx",
+      "state": "covered",
+      "review": "Reviewed narration and image provenance/availability for unknown, off, local and external capabilities; never probes or changes service configuration. Actual service acceptance remains pending."
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/NewAdventurerBanner.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/NotesPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/NpcFields.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/NpcReviewPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/OverworldAuthoring.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/OverworldPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/OverworldTools.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/PanelKit.tsx",
+      "state": "covered",
+      "review": "Reviewed own action-menu accessibility and retry copy. Caller-provided labels and errors require caller coverage; no inference from an empty literal scan."
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/PartyPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/PendingRollCard.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/PinsPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/PregenPicker.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/Prose.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/PushToTalk.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/QuestsPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/RelationGraph.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/RenarrateDialog.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/ReportDialog.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/RollCard.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/RulesPanel.tsx",
+      "state": "covered",
+      "review": "Reviewed own UI copy, conditional labels, accessibility, date/count projections and rerendered failures. Authored titles/body/tags/names and canonical protocol values are preserved. Imported child UI and adjacent panels have separate coverage."
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/RulingBar.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/SafetyPause.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/SessionBanner.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/SessionChatColumn.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/SessionGlyph.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/SessionHeader.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/SessionSettings.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/SessionTabs.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/SessionView.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/SideChatPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/SidePanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/SidePanelRouter.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/SkillCheckCard.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/SpeakerPicker.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/SpeechLine.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/StampPicker.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/StoryAiPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/StoryNudge.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/StoryPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/TerrainCanvas.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/TheatreInserts.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/TimelinePanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/TokenHud.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/TradeDialog.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/UtilityCallStrip.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/VoiceDock.tsx",
+      "state": "covered",
+      "review": "Own copy, accessibility and dynamic voice errors reviewed in both locales; stock table/floor/microphone metadata source-compared, authored names and canonical transport/floor/range/room IDs preserved. Availability loading/error/off differentiated; room action failure retains draft. Browser preview uses disposable data and simulated roster, without microphone capture; live media transport is not end-to-end accepted."
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/VoicePanel.tsx",
+      "state": "covered",
+      "review": "Own copy, accessibility and dynamic voice errors reviewed in both locales; stock table/floor/microphone metadata source-compared, authored names and canonical transport/floor/range/room IDs preserved. Availability loading/error/off differentiated; room action failure retains draft. Browser preview uses disposable data and simulated roster, without microphone capture; live media transport is not end-to-end accepted."
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/VoicePanelParts.tsx",
+      "state": "covered",
+      "review": "Own copy, accessibility and dynamic voice errors reviewed in both locales; stock table/floor/microphone metadata source-compared, authored names and canonical transport/floor/range/room IDs preserved. Availability loading/error/off differentiated; room action failure retains draft. Browser preview uses disposable data and simulated roster, without microphone capture; live media transport is not end-to-end accepted."
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/VoicePeerRow.tsx",
+      "state": "covered",
+      "review": "Own copy, accessibility and dynamic voice errors reviewed in both locales; stock table/floor/microphone metadata source-compared, authored names and canonical transport/floor/range/room IDs preserved. Availability loading/error/off differentiated; room action failure retains draft. Browser preview uses disposable data and simulated roster, without microphone capture; live media transport is not end-to-end accepted."
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/battleMapCells.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/character/page.tsx",
+      "state": "covered",
+      "review": "Reviewed campaign creation/selection/edit/replacement host, registered identity names, adaptation notices and load/write failures. All three actual context reads required; failures cannot guess level one. Mode/campaign changes reset state. Builder steps and detailed Chinese legality remain pending."
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/coalesce.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/composerGate.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/dmStatusPhrases.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/handTargets.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/headerButton.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/lead-edit-logic.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/liveStore.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/mapCatalogue.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/mapToolState.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/mapUi.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/overworldDraw.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/page.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/sessionGlyphs.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/streamWatchdog.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/table/page.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/terrainCanvasParts.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/terrainDraw.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/transcript-capture.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/useAmbienceAudio.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/useBoardCamera.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/useCampaignStream.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/useChatChime.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/useHandChoices.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/useLingeringEncounter.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/useMapPaint.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/useMapSelection.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/useNarrationAudio.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/useOverworldView.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/usePaintedMap.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/usePainter.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/useTableAudio.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/useVoicePrefs.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/useVoiceRoom.ts",
+      "state": "covered",
+      "review": "Own copy, accessibility and dynamic voice errors reviewed in both locales; stock table/floor/microphone metadata source-compared, authored names and canonical transport/floor/range/room IDs preserved. Availability loading/error/off differentiated; room action failure retains draft. Browser preview uses disposable data and simulated roster, without microphone capture; live media transport is not end-to-end accepted."
+    },
+    {
+      "path": "src/app/characters/[characterId]/SheetSections.tsx",
+      "state": "covered",
+      "review": "Reviewed section headings, ability/derived calculation labels, vitals/units, dates and known event kinds. Arithmetic, authored event summaries and backstories preserved. SheetParts/material/spell children retain independent pending coverage."
+    },
+    {
+      "path": "src/app/characters/[characterId]/UseInCampaignDialog.tsx",
+      "state": "covered",
+      "review": "Reviewed dialog shell, translated load/write failures, retry, known conflicts, and full level-adaptation sentences against actual API seating. Campaign titles stay authored; canonical libraryCharacterId unchanged."
+    },
+    {
+      "path": "src/app/characters/[characterId]/page.tsx",
+      "state": "covered",
+      "review": "Reviewed detail shell, canonical identity projection, action/status/export/portrait errors, load and poll retry, and campaign assignments. Portrait writes and generation wait for server acknowledgment. PDF contents and materials remain independent pending work."
+    },
+    {
+      "path": "src/app/characters/builder/AbilityEditor.tsx",
+      "state": "covered",
+      "review": "Own complete method, assignment, budget, gain/summary, ASI choice chrome, health prose and accessibility source-compared in both locales; frozen original English JSX/SVG projections and actual mobile server-roll flow verified. Canonical scores, dice, IDs, engine helpers and authored source remain unchanged. Full feat/option corpus and imported peripheral content have separate pending coverage."
+    },
+    {
+      "path": "src/app/characters/builder/AbilityExplainers.tsx",
+      "state": "covered",
+      "review": "Own complete method, assignment, budget, gain/summary, ASI choice chrome, health prose and accessibility source-compared in both locales; frozen original English JSX/SVG projections and actual mobile server-roll flow verified. Canonical scores, dice, IDs, engine helpers and authored source remain unchanged. Full feat/option corpus and imported peripheral content have separate pending coverage."
+    },
+    {
+      "path": "src/app/characters/builder/AbilitySummary.tsx",
+      "state": "covered",
+      "review": "Own complete method, assignment, budget, gain/summary, ASI choice chrome, health prose and accessibility source-compared in both locales; frozen original English JSX/SVG projections and actual mobile server-roll flow verified. Canonical scores, dice, IDs, engine helpers and authored source remain unchanged. Full feat/option corpus and imported peripheral content have separate pending coverage."
+    },
+    {
+      "path": "src/app/characters/builder/AsiFeatEditor.tsx",
+      "state": "covered",
+      "review": "Own complete method, assignment, budget, gain/summary, ASI choice chrome, health prose and accessibility source-compared in both locales; frozen original English JSX/SVG projections and actual mobile server-roll flow verified. Canonical scores, dice, IDs, engine helpers and authored source remain unchanged. Full feat/option corpus and imported peripheral content have separate pending coverage."
+    },
+    {
+      "path": "src/app/characters/builder/BackgroundKitSection.tsx",
+      "state": "covered",
+      "review": "Complete owned equipment controls, aria/errors, native name/kit options, source-derived coin/AC display reviewed against frozen English JSX. Canonical references, callbacks and quantities preserved; authored/homebrew wording kept. Actual browser saved Chinese-search equipment with original names and matching price/AC."
+    },
+    {
+      "path": "src/app/characters/builder/CatalogBrowser.tsx",
+      "state": "pending",
+      "review": "Equipment names and owned browse/search/item-help chrome migrated; generic native spell/feat/magic-item summaries/descriptions or spell step content remain pending. This owner is deliberately not complete."
+    },
+    {
+      "path": "src/app/characters/builder/CharacterBuilder.tsx",
+      "state": "covered",
+      "review": "Reviewed all six wizard headings, help, summary/portrait chrome, locale-aware 32 coded gates and rule failures, dropped-choice notifications and final local errors. Frozen 45 original verdicts, target routing and submitted payloads are unchanged. Child step UI and material prose remain separately pending."
+    },
+    {
+      "path": "src/app/characters/builder/ContentPicker.tsx",
+      "state": "pending",
+      "review": "Equipment names and owned browse/search/item-help chrome migrated; generic native spell/feat/magic-item summaries/descriptions or spell step content remain pending. This owner is deliberately not complete."
+    },
+    {
+      "path": "src/app/characters/builder/Dice.tsx",
+      "state": "covered",
+      "review": "Own complete method, assignment, budget, gain/summary, ASI choice chrome, health prose and accessibility source-compared in both locales; frozen original English JSX/SVG projections and actual mobile server-roll flow verified. Canonical scores, dice, IDs, engine helpers and authored source remain unchanged. Full feat/option corpus and imported peripheral content have separate pending coverage."
+    },
+    {
+      "path": "src/app/characters/builder/EquipmentSection.tsx",
+      "state": "covered",
+      "review": "Complete owned equipment controls, aria/errors, native name/kit options, source-derived coin/AC display reviewed against frozen English JSX. Canonical references, callbacks and quantities preserved; authored/homebrew wording kept. Actual browser saved Chinese-search equipment with original names and matching price/AC."
+    },
+    {
+      "path": "src/app/characters/builder/FeatChoicesFields.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/characters/builder/KitChoicesSection.tsx",
+      "state": "covered",
+      "review": "Complete owned equipment controls, aria/errors, native name/kit options, source-derived coin/AC display reviewed against frozen English JSX. Canonical references, callbacks and quantities preserved; authored/homebrew wording kept. Actual browser saved Chinese-search equipment with original names and matching price/AC."
+    },
+    {
+      "path": "src/app/characters/builder/LineageCarousel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/characters/builder/MultiContentPicker.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/characters/builder/OptionCardGrid.tsx",
+      "state": "covered",
+      "review": "Own search/empty/fold/card/accessibility text reviewed; bilingual canonical search terms preserve prior results, order, chosen IDs and art. Caller-supplied groups/content retain caller coverage."
+    },
+    {
+      "path": "src/app/characters/builder/OptionPicker.tsx",
+      "state": "covered",
+      "review": "Reviewed default placeholder, recommended badge/title and accessible copy. Option IDs stay canonical. Display names/groups/help/source references belong to the producing picker hook, whose material help remains pending; no source content is translated implicitly here."
+    },
+    {
+      "path": "src/app/characters/builder/RacialChoicesSection.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/characters/builder/abilityDice.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/characters/builder/abilityGains.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/characters/builder/casting.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/characters/builder/derivedReasons.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/characters/builder/lineage.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/characters/builder/pickerRows.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/characters/builder/reconcile.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/characters/builder/refusal.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/characters/builder/steps/AbilitiesStep.tsx",
+      "state": "covered",
+      "review": "Own complete method, assignment, budget, gain/summary, ASI choice chrome, health prose and accessibility source-compared in both locales; frozen original English JSX/SVG projections and actual mobile server-roll flow verified. Canonical scores, dice, IDs, engine helpers and authored source remain unchanged. Full feat/option corpus and imported peripheral content have separate pending coverage."
+    },
+    {
+      "path": "src/app/characters/builder/steps/AncestryStep.tsx",
+      "state": "covered",
+      "review": "Own ancestry/native-summary/bonus-language instructions reviewed. All 31 native races and 90 brief trait forms have source-compared Chinese displays; 1552 original English language projections remain frozen. Language/race IDs, values, callbacks and source art hints preserved. RacialChoices/carousel children and world-pack prose have independent pending coverage."
+    },
+    {
+      "path": "src/app/characters/builder/steps/CallingStep.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/characters/builder/steps/ClassChoices.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/characters/builder/steps/FinishStep.tsx",
+      "state": "covered",
+      "review": "Portrait/appearance/backstory/feats/stats/HP/AC/purse and local table-rule failure chrome reviewed; original authored values and complete server diagnostics preserved. Feat/feature description content is tracked separately."
+    },
+    {
+      "path": "src/app/characters/builder/steps/IdentityStep.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/characters/builder/steps/SpellsGearStep.tsx",
+      "state": "covered",
+      "review": "Own spell controls/help, granted/source/cap notes, typed notices rerender on locale change and class/genre labels reviewed; owned equipment callers retain canonical IDs. Full spell rules live in separately pending content/info owners."
+    },
+    {
+      "path": "src/app/characters/builder/steps/shared.tsx",
+      "state": "covered",
+      "review": "Reviewed removable-chip aria label with exact caller display name. Step/field/pill labels and help are caller-owned, whose individual files retain separate coverage status. No remaining component-authored visible copy."
+    },
+    {
+      "path": "src/app/characters/builder/submit.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/characters/builder/useBuilderDerived.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/characters/builder/useBuilderOptions.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/characters/builder/useBuilderState.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/characters/builder/useContentSearch.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/characters/builder/useFeatDescs.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/characters/builder/usePickerGroups.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/characters/builder/useTableRules.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/characters/new/page.tsx",
+      "state": "covered",
+      "review": "Reviewed creation host title, navigation, submit and structured error display. Actual returned character required before navigation. Builder steps and individual Chinese legality diagnoses are pending independent work. Interface language picker is available during creation; mobile live switching preserves filled name and gender. Original rule payloads remain covered by frozen builder fixtures."
+    },
+    {
+      "path": "src/app/characters/page.tsx",
+      "state": "covered",
+      "review": "Reviewed library shell, card/menu/import/delete/portrait controls, typed read/write failures and retry. Registered stock identity names are projected; authored names and mechanism IDs preserved. Details/materials have independent child coverage."
+    },
+    {
+      "path": "src/app/create-campaign/AdvancedStep.tsx",
+      "state": "covered",
+      "review": "Own section copy localized; variant controls translated; each shared child has independent coverage. ContentImportPicker dynamic import warnings/results remain pending."
+    },
+    {
+      "path": "src/app/create-campaign/FeelStep.tsx",
+      "state": "covered",
+      "review": "All feature labels/hints/groups/counts and shared explainers localized; pure tableSheet preserves engine values, gates and counts. Child voice service behavior remains unit 4."
+    },
+    {
+      "path": "src/app/create-campaign/NarratorFields.tsx",
+      "state": "covered",
+      "review": "Own allies, limits, voice and pace chrome localized; enum values remain canonical. Voice discovery/Chinese preview and single narrator enforcement remain unit 4 in shared voice children."
+    },
+    {
+      "path": "src/app/create-campaign/PartyStep.tsx",
+      "state": "covered",
+      "review": "Reviewed counts, difficulty help, HP, wealth, story length and dice copy/options; stable protocol values retained."
+    },
+    {
+      "path": "src/app/create-campaign/PremiseStep.tsx",
+      "state": "covered",
+      "review": "Reviewed locale/title/mode/pack labels, hints and alerts; existing community pack titles/blurbs stay original within deferred third-party content scope; child picker has independent state."
+    },
+    {
+      "path": "src/app/create-campaign/ReviewStep.tsx",
+      "state": "covered",
+      "review": "Summary rows, chips, difficulty, DM mode, defaults, notices and genre display localized; custom title/theme and world-pack names stay verbatim."
+    },
+    {
+      "path": "src/app/create-campaign/SafetyFields.tsx",
+      "state": "covered",
+      "review": "Wrapper passes canonical safety, tone and voice settings; child SafetyToneFields translates its own UI. Locale voice policy remains unit 4."
+    },
+    {
+      "path": "src/app/create-campaign/VoiceChatFields.tsx",
+      "state": "covered",
+      "review": "All controls/hints/range units localized; turn and proximity protocol values and feet measurements unchanged. Chinese transcription is deferred."
+    },
+    {
+      "path": "src/app/create-campaign/WorldStep.tsx",
+      "state": "covered",
+      "review": "Reviewed all own copy, accessibility, eight preset presentations, custom inputs and helper calls; typed/player/pack prose stays original."
+    },
+    {
+      "path": "src/app/create-campaign/cover-sheet.ts",
+      "state": "covered",
+      "review": "Localized draft projection explicitly takes UI locale independently of campaign locale. English defaults tested unchanged; user text/pack names preserved."
+    },
+    {
+      "path": "src/app/create-campaign/draft.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/create-campaign/fields.tsx",
+      "state": "covered",
+      "review": "Own module contains no display prose; labels/hints come from callers tracked separately."
+    },
+    {
+      "path": "src/app/create-campaign/portals.ts",
+      "state": "covered",
+      "review": "Reviewed translated display adapters and campaign-language automatic themes; canonical preset IDs, art prompts and ownership/type-in behavior regression passed."
+    },
+    {
+      "path": "src/app/create-campaign/table-sheet.ts",
+      "state": "covered",
+      "review": "Translated display only; feature IDs, gates, transitions and counts retain original values. English optional locale default is backward compatible."
+    },
+    {
+      "path": "src/app/friends/page.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/home/CampaignList.tsx",
+      "state": "covered",
+      "review": "Reviewed status/difficulty enum display, counts, tooltips, context menu, export links and slot helpers; protocol IDs and download formats remain canonical."
+    },
+    {
+      "path": "src/app/home/ContinueHero.tsx",
+      "state": "covered",
+      "review": "Reviewed headings, recap defaults, initiative labels, buttons and locale-aware helper calls; player names and saved recap remain verbatim."
+    },
+    {
+      "path": "src/app/home/Dashboard.tsx",
+      "state": "covered",
+      "review": "Reviewed heading/accessibility, model reachability labels, delete confirmation and errors held as data for locale changes; child sources retain independent coverage states."
+    },
+    {
+      "path": "src/app/home/HomeFooter.tsx",
+      "state": "covered",
+      "review": "Static prose and accessibility audited; auth responses use stable codes, brand and user-supplied names preserved. Imported child files have their own coverage state."
+    },
+    {
+      "path": "src/app/home/JoinCard.tsx",
+      "state": "covered",
+      "review": "Room-code labels, progress, network and coded API refusals localized; code characters and navigation preserved."
+    },
+    {
+      "path": "src/app/home/QuickTiles.tsx",
+      "state": "covered",
+      "review": "Menu labels and accessibility/default dialog chrome audited. Caller-provided dialog messages retain per-caller coverage."
+    },
+    {
+      "path": "src/app/home/SetupNudge.tsx",
+      "state": "covered",
+      "review": "Reviewed admin setup prompt and actions; dismissal protocol unchanged."
+    },
+    {
+      "path": "src/app/home/StarterDialog.tsx",
+      "state": "pending",
+      "review": "Own chrome/errors localized; pending authored starter adventure and pregen API localization (content unit 3)."
+    },
+    {
+      "path": "src/app/home/WorkshopSection.tsx",
+      "state": "covered",
+      "review": "Reviewed own copy, empty state, scoped menu actions and party/level counts; community/user workshop titles remain original."
+    },
+    {
+      "path": "src/app/home/types.ts",
+      "state": "covered",
+      "review": "Reviewed all dynamic summary paths; localized counts/chapters/relative time retain original history/names. English relative-time wording intentionally preserved; bilingual regression passed."
+    },
+    {
+      "path": "src/app/join/[code]/page.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/layout.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/page.tsx",
+      "state": "covered",
+      "review": "Static prose and accessibility audited; auth responses use stable codes, brand and user-supplied names preserved. Imported child files have their own coverage state."
+    },
+    {
+      "path": "src/app/reference/CalculatorsPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/reference/CategoryRail.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/reference/ComparePanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/reference/DeskPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/reference/ResultBadges.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/reference/page.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/rulebook/page.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/settings/AppearanceSection.tsx",
+      "state": "covered"
+    },
+    {
+      "path": "src/app/settings/AvatarCropDialog.tsx",
+      "state": "covered"
+    },
+    {
+      "path": "src/app/settings/BlockedPlayersSection.tsx",
+      "state": "covered"
+    },
+    {
+      "path": "src/app/settings/ConnectedAgentsSection.tsx",
+      "state": "covered"
+    },
+    {
+      "path": "src/app/settings/DeleteAccountDialog.tsx",
+      "state": "covered"
+    },
+    {
+      "path": "src/app/settings/page.tsx",
+      "state": "covered"
+    },
+    {
+      "path": "src/app/setup/AgentPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/setup/MediaSteps.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/setup/PlayersStep.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/setup/ReadyStep.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/setup/SetupParts.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/setup/SetupWizard.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/setup/StorytellerStep.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/setup/WelcomeStep.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/setup/YourAgentStep.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/setup/draft.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/setup/page.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/ContentImportPicker.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/ImportBundleButton.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/ListHead.tsx",
+      "state": "covered",
+      "review": "Reviewed own UI copy, conditional labels, accessibility, date/count projections and rerendered failures. Authored titles/body/tags/names and canonical protocol values are preserved. Imported child UI and adjacent panels have separate coverage."
+    },
+    {
+      "path": "src/app/workshop/bestiary/AttackDetails.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/bestiary/BlockActionFields.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/bestiary/BorrowParts.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/bestiary/MonsterBuildControls.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/bestiary/MonsterEditor.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/bestiary/MonsterRows.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/bestiary/PrintedBlockView.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/bestiary/SpellcastingFields.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/bestiary/StatBlockFields.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/bestiary/types.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/cast/CastList.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/cast/NpcEditorFields.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/encounters/EncounterExtras.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/encounters/EncounterForm.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/encounters/EncounterRows.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/encounters/budget-bar.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/encounters/types.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/kit.tsx",
+      "state": "covered",
+      "review": "Reviewed own unset/clear and row-menu accessibility copy; authored row names and action callbacks preserved. Caller fields/menu item labels and kit children retain independent coverage."
+    },
+    {
+      "path": "src/app/workshop/lore/LoreEditorForm.tsx",
+      "state": "covered",
+      "review": "Reviewed own UI copy, conditional labels, accessibility, date/count projections and rerendered failures. Authored titles/body/tags/names and canonical protocol values are preserved. Imported child UI and adjacent panels have separate coverage."
+    },
+    {
+      "path": "src/app/workshop/lore/LoreEntryActions.tsx",
+      "state": "covered",
+      "review": "Reviewed own UI copy, conditional labels, accessibility, date/count projections and rerendered failures. Authored titles/body/tags/names and canonical protocol values are preserved. Imported child UI and adjacent panels have separate coverage."
+    },
+    {
+      "path": "src/app/workshop/lore/LoreEntryRow.tsx",
+      "state": "covered",
+      "review": "Reviewed own UI copy, conditional labels, accessibility, date/count projections and rerendered failures. Authored titles/body/tags/names and canonical protocol values are preserved. Imported child UI and adjacent panels have separate coverage."
+    },
+    {
+      "path": "src/app/workshop/lore/LoreFields.tsx",
+      "state": "covered",
+      "review": "Reviewed own UI copy, conditional labels, accessibility, date/count projections and rerendered failures. Authored titles/body/tags/names and canonical protocol values are preserved. Imported child UI and adjacent panels have separate coverage."
+    },
+    {
+      "path": "src/app/workshop/lore/LoreRows.tsx",
+      "state": "covered",
+      "review": "Reviewed own UI copy, conditional labels, accessibility, date/count projections and rerendered failures. Authored titles/body/tags/names and canonical protocol values are preserved. Imported child UI and adjacent panels have separate coverage."
+    },
+    {
+      "path": "src/app/workshop/lore/types.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/maps/ForgePreview.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/maps/MapCreateControls.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/maps/MapDetails.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/maps/MapEditor.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/maps/MapForge.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/maps/MapGallery.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/maps/MapRollPanel.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/maps/forge.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/maps/types.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/page.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/plates.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/storyboard/BeatBoard.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/storyboard/BeatEditor.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/storyboard/BoardAsides.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/storyboard/beat-fields.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/tables/RefPicker.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/tables/StatblockFinder.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/tables/TableRows.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/workshop/types.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/AboutDialog.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/AccountMenu.tsx",
+      "state": "covered",
+      "review": "Static prose and accessibility audited; auth responses use stable codes, brand and user-supplied names preserved. Imported child files have their own coverage state."
+    },
+    {
+      "path": "src/components/AgentConnectLines.tsx",
+      "state": "covered"
+    },
+    {
+      "path": "src/components/AppHeader.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/AssistantLink.tsx",
+      "state": "covered"
+    },
+    {
+      "path": "src/components/CampaignCover.tsx",
+      "state": "covered",
+      "review": "Reviewed real-image alt, placeholder and pending accessibility; verified English aria leak corrected on rendered home."
+    },
+    {
+      "path": "src/components/CommandPalette.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/CopyLine.tsx",
+      "state": "covered"
+    },
+    {
+      "path": "src/components/DeletionBanner.tsx",
+      "state": "covered",
+      "review": "Reviewed localized date, notice/actions and render-time error text."
+    },
+    {
+      "path": "src/components/DiceLookEditor.tsx",
+      "state": "covered"
+    },
+    {
+      "path": "src/components/DictateField.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/EmptyState.tsx",
+      "state": "covered",
+      "review": "No own display prose; all titles/hints/actions follow callers tracked separately."
+    },
+    {
+      "path": "src/components/HandoutStage.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/HelpDialog.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/HelpParts.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/HowToPlayDialog.tsx",
+      "state": "covered",
+      "review": "Static prose and accessibility audited; auth responses use stable codes, brand and user-supplied names preserved. Imported child files have their own coverage state."
+    },
+    {
+      "path": "src/components/InviteShareDialog.tsx",
+      "state": "covered",
+      "review": "Own UI, dynamic seat/readiness/difficulty/name projections and request errors compared in both locales; imported child modules have independent pending entries."
+    },
+    {
+      "path": "src/components/KebabMenu.tsx",
+      "state": "covered",
+      "review": "Copy-free shared menu; caller supplies all accessible labels, hints and row text. Reviewed full source; no protocol or authored content transformations."
+    },
+    {
+      "path": "src/components/LocalePicker.tsx",
+      "state": "covered",
+      "review": "Static prose and accessibility audited; auth responses use stable codes, brand and user-supplied names preserved. Imported child files have their own coverage state."
+    },
+    {
+      "path": "src/components/NotificationBell.tsx",
+      "state": "pending",
+      "review": "Own chrome/empty state/time localized; pending stored notification body localization (system-text unit 2c)."
+    },
+    {
+      "path": "src/components/PageShell.tsx",
+      "state": "covered"
+    },
+    {
+      "path": "src/components/PageSkeleton.tsx",
+      "state": "covered",
+      "review": "Menu labels and accessibility/default dialog chrome audited. Caller-provided dialog messages retain per-caller coverage."
+    },
+    {
+      "path": "src/components/ParticleCanvas.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/SafetyToneFields.tsx",
+      "state": "covered",
+      "review": "Own boundary/strictness/tone/preset labels localized; source-matched server stock presets only; custom presets preserved. Chinese separators normalize saved boundaries. Voice sample transport has its own pending state."
+    },
+    {
+      "path": "src/components/SceneTitle.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/ScheduleSection.tsx",
+      "state": "covered",
+      "review": "Reviewed own UI copy, conditional labels, accessibility, date/count projections and rerendered failures. Authored titles/body/tags/names and canonical protocol values are preserved. Imported child UI and adjacent panels have separate coverage."
+    },
+    {
+      "path": "src/components/ServerAddressButton.tsx",
+      "state": "covered",
+      "review": "Static prose and accessibility audited; auth responses use stable codes, brand and user-supplied names preserved. Imported child files have their own coverage state."
+    },
+    {
+      "path": "src/components/SkyLayer.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/TranslatedText.tsx",
+      "state": "covered",
+      "review": "Static prose and accessibility audited; auth responses use stable codes, brand and user-supplied names preserved. Imported child files have their own coverage state."
+    },
+    {
+      "path": "src/components/UnofficialPackNotice.tsx",
+      "state": "covered",
+      "review": "Reviewed disclaimer interpolation and all own labels; third-party holder/inspired-by source text preserved."
+    },
+    {
+      "path": "src/components/VoicePicker.tsx",
+      "state": "covered",
+      "review": "Reviewed own menu, custom-input accessibility, backend examples and source-matched stock display names. Server/custom labels, IDs, blends and language-neutral cached rows preserved; locale-aware TTS voice selection remains pending in unit 4."
+    },
+    {
+      "path": "src/components/VoicePreviewButton.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/WorkshopHelpDialog.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/WorldPackGallery.tsx",
+      "state": "covered",
+      "review": "Reviewed own Places/Factions labels; pack-authored names, URLs and artwork are preserved, with world-pack material translation tracked separately."
+    },
+    {
+      "path": "src/components/rulebook/PagePrep.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/rulebook/RulebookContents.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/rulebook/RulebookDialog.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/rulebook/RulebookPage.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/rulebook/RulebookReader.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/sheet/SheetBetween.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/sheet/SheetChoices.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/sheet/SheetCounters.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/sheet/SheetGearRow.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/sheet/SheetParts.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/sheet/SheetSpells.tsx",
+      "state": "covered",
+      "review": "Own caster/preparation/counters/rest timing/empty states and raw preparation response display reviewed. English server response/audit and submitted canonical action/name/class/sheet IDs unchanged; unfamiliar authored diagnostic preserved in full."
+    },
+    {
+      "path": "src/components/sheet/SheetState.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/sheet/SpellBook.tsx",
+      "state": "covered",
+      "review": "Shared owned spell state/tabs/search/ARIA/empty chrome and canonical callback reviewed. All bundled fact-only spell names/aliases localize with homebrew/reskin guards; existing source-matched manual-cast notes translated. Caller-supplied authored notes/full spell prose remain separately pending."
+    },
+    {
+      "path": "src/components/sheet/sheet-state.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/sheet/useSpellPool.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/ui/AddFromList.tsx",
+      "state": "covered",
+      "review": "Reviewed own UI copy, conditional labels, accessibility, date/count projections and rerendered failures. Authored titles/body/tags/names and canonical protocol values are preserved. Imported child UI and adjacent panels have separate coverage."
+    },
+    {
+      "path": "src/components/ui/Book.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/ui/ConfirmDialog.tsx",
+      "state": "covered",
+      "review": "Menu labels and accessibility/default dialog chrome audited. Caller-provided dialog messages retain per-caller coverage."
+    },
+    {
+      "path": "src/components/ui/ContentPick.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/ui/ContextMenu.tsx",
+      "state": "covered",
+      "review": "Copy-free shared menu; caller supplies labels and actions. Reviewed full source and accessibility; no UI text owned by this component."
+    },
+    {
+      "path": "src/components/ui/D20Spinner.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/ui/DateTimePicker.tsx",
+      "state": "covered",
+      "review": "Reviewed own UI copy, conditional labels, accessibility, date/count projections and rerendered failures. Authored titles/body/tags/names and canonical protocol values are preserved. Imported child UI and adjacent panels have separate coverage."
+    },
+    {
+      "path": "src/components/ui/Dialog.tsx",
+      "state": "covered",
+      "review": "Static prose and accessibility audited; auth responses use stable codes, brand and user-supplied names preserved. Imported child files have their own coverage state."
+    },
+    {
+      "path": "src/components/ui/DiamondStepper.tsx",
+      "state": "covered",
+      "review": "Reviewed step navigation accessibility; supplied labels follow callers."
+    },
+    {
+      "path": "src/components/ui/FxSprite.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/ui/GameIcon.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/ui/GameTerm.tsx",
+      "state": "covered",
+      "review": "All 43 source glossary terms/short/long bodies have independent locale projections. Unknown IDs preserve the original caller-child fallback, authored children retain caller coverage; original model/rule glossary APIs stay English."
+    },
+    {
+      "path": "src/components/ui/GoldTitle.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/ui/GuidedTour.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/ui/HostSvgImage.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/ui/HotkeyOverlay.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/ui/IconRail.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/ui/ImageLightbox.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/ui/InfoDialog.tsx",
+      "state": "pending",
+      "review": "Equipment names and owned browse/search/item-help chrome migrated; generic native spell/feat/magic-item summaries/descriptions or spell step content remain pending. This owner is deliberately not complete."
+    },
+    {
+      "path": "src/components/ui/ListControls.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/ui/Markdown.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/ui/NumberStepper.tsx",
+      "state": "covered",
+      "review": "Reviewed plus/minus accessibility and inherited unit/label; IME handling retained and numeric behavior unchanged."
+    },
+    {
+      "path": "src/components/ui/OptionGlossary.tsx",
+      "state": "covered",
+      "review": "Reviewed 55 closed-vocabulary entries plus legacy skill/nine alignment list projections and seven known list titles; exact full-source matching preserves authored explanations, list membership and original English capitalization. Caller-owned labels and unknown content retain caller coverage."
+    },
+    {
+      "path": "src/components/ui/PromptDialog.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/ui/Reveal.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/ui/Ribbon.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/ui/Scroll.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/ui/SectionHead.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/ui/SegmentedControl.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/ui/Select.tsx",
+      "state": "covered",
+      "review": "Reviewed default choose label; supplied options and accessible label follow callers; values/typeahead unchanged."
+    },
+    {
+      "path": "src/components/ui/SelectionBar.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/ui/Sheet.tsx",
+      "state": "covered",
+      "review": "Reviewed own UI copy, conditional labels, accessibility, date/count projections and rerendered failures. Authored titles/body/tags/names and canonical protocol values are preserved. Imported child UI and adjacent panels have separate coverage."
+    },
+    {
+      "path": "src/components/ui/Slider.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/ui/StepWipe.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/ui/Switch.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/ui/Tooltip.tsx",
+      "state": "pending"
+    },
+    {
+      "path": "src/components/ui/Wizard.tsx",
+      "state": "covered",
+      "review": "Reviewed all default navigation, notices, progress, fallback step and accessibility labels; caller content tracked separately."
+    },
+    {
+      "path": "src/lib/i18n/LocalizedText.tsx",
+      "state": "covered",
+      "review": "Copy-free rich message owner: typed catalog keys, complete locale templates and single-pass node interpolation. Actual component and provider render in both locales; browser creation flow verifies interactive glossary links. Authored values are rendered as React text, with no HTML parsing or rule-ID mutation."
+    }
+  ]
+}

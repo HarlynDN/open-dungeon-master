@@ -286,15 +286,16 @@ if (hasPack) {
 
 const { gameSettingsSchema } = await import("../src/lib/schemas/game-settings.ts");
 const { readFileSync } = await import("node:fs");
+const { VARIANT_TOGGLES } = await import("../src/lib/i18n/variant-metadata.ts");
 
 await test("the settings screen and the create-campaign wizard offer every on/off variant rule, food and water included", () => {
   const defaults = gameSettingsSchema.parse({}).variantRules;
   const booleans = Object.entries(defaults).filter(([, value]) => typeof value === "boolean").map(([key]) => key).sort();
   assert.ok(booleans.includes("supplies"), "the supplies variant is in the schema");
   const panel = readFileSync(new URL("../src/app/campaigns/[campaignId]/RulesPanel.tsx", import.meta.url), "utf8");
-  const block = /VARIANT_TOGGLES[^=]*=\s*\[([\s\S]*?)\n\];/.exec(panel);
-  assert.ok(block, "VARIANT_TOGGLES not found");
-  const offered = [...block[1].matchAll(/key:\s*"([A-Za-z]+)"/g)].map((match) => match[1]).sort();
+  assert.match(panel, /import \{ VARIANT_TOGGLES, REST_LABELS \} from "@\/lib\/i18n\/variant-metadata"/);
+  assert.equal((panel.match(/VARIANT_TOGGLES\.map/g) ?? []).length, 2, "both the settings panel and wizard controls render the shared options");
+  const offered = VARIANT_TOGGLES.map(toggle => toggle.key).sort();
   assert.deepEqual(offered, booleans);
 });
 

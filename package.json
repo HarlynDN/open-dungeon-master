@@ -13,7 +13,10 @@
     "build": "next build",
     "start": "next start",
     "start:lan": "next start -H 0.0.0.0 -p 3005",
-    "lint": "eslint",
+    "lint": "eslint && node scripts/check-ui-localization.mjs && node scripts/generate-ui-catalogs.mjs --check",
+    "i18n:check": "node scripts/check-ui-localization.mjs && node scripts/generate-ui-catalogs.mjs --check",
+    "i18n:inventory": "node scripts/check-ui-localization.mjs --inventory",
+    "i18n:final": "node scripts/check-ui-localization.mjs --final",
     "test": "vitest run",
     "coverage": "vitest run --coverage",
     "resources:generate": "node scripts/generate-class-resources.mjs",
@@ -21,7 +24,8 @@
     "setup": "node scripts/setup.mjs",
     "fetch-model": "node scripts/fetch-embedding-model.mjs",
     "fetch-ambience": "node scripts/fetch-ambience.mjs",
-    "postinstall": "node scripts/copy-dice-assets.mjs"
+    "postinstall": "node scripts/copy-dice-assets.mjs",
+    "i18n:generate": "node scripts/generate-ui-catalogs.mjs"
   },
   "dependencies": {
     "@3d-dice/dice-box-threejs": "^0.0.12",

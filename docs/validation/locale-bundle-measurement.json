@@ -1,0 +1,71 @@
+{
+  "method": "Next bundled webpack, production minification, isolated LocaleProvider graph; React external; JSON payloads exclude Flight/HTML framing",
+  "results": {
+    "before": {
+      "initialBytes": 512906,
+      "initialGzipBytes": 169209,
+      "assets": [
+        {
+          "name": "locale.js",
+          "initial": true,
+          "bytes": 512906,
+          "gzipBytes": 169209
+        }
+      ]
+    },
+    "after": {
+      "initialBytes": 6339,
+      "initialGzipBytes": 3004,
+      "assets": [
+        {
+          "name": "380.js",
+          "initial": false,
+          "bytes": 145760,
+          "gzipBytes": 49531
+        },
+        {
+          "name": "581.js",
+          "initial": false,
+          "bytes": 143846,
+          "gzipBytes": 43947
+        },
+        {
+          "name": "428.js",
+          "initial": false,
+          "bytes": 132116,
+          "gzipBytes": 39191
+        },
+        {
+          "name": "283.js",
+          "initial": false,
+          "bytes": 129785,
+          "gzipBytes": 43146
+        },
+        {
+          "name": "locale.js",
+          "initial": true,
+          "bytes": 6339,
+          "gzipBytes": 3004
+        }
+      ]
+    }
+  },
+  "payloads": {
+    "en.ui": {
+      "jsonBytes": 143543,
+      "gzipBytes": 43824
+    },
+    "en.content": {
+      "jsonBytes": 131819,
+      "gzipBytes": 39067
+    },
+    "zh-CN.ui": {
+      "jsonBytes": 289129,
+      "gzipBytes": 93616
+    },
+    "zh-CN.content": {
+      "jsonBytes": 261464,
+      "gzipBytes": 82842
+    }
+  }
+}

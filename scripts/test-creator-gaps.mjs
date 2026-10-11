@@ -183,7 +183,10 @@ await test("each step blocker names the block that holds the missing pick (issue
     racialCantrip: "", racialAncestry: "", repeatSkills: [], chosenSkills: [], subclass: "", stylePicks: [],
     expertisePicks: [], method: "standard", scores: {}, rollPool: [],
   };
-  assert.deepEqual(submit.identityBlocker(state, background("acolyte")), { target: "name", message: "Give your character a name." });
+  assert.deepEqual(submit.identityBlocker(state, background("acolyte")), {
+    target: "name", message: "Give your character a name.",
+    presentation: { kind: "gate", code: "builderGate.name", args: {} },
+  });
   const named = { ...state, name: "Vex" };
   assert.equal(submit.identityBlocker(named, background("acolyte")), null);
   // An acolyte's two languages, picked on the ancestry step.

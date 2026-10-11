@@ -1,0 +1,210 @@
+{
+  "provenance": "Actual browser creation/save/UI export from a disposable local test account/database; synthetic character. No DM or TTS service.",
+  "checks": [
+    "canonical spell names, book/cantrip/prepared arrays",
+    "unchanged abilities, HP, AC and purse",
+    "authored Chinese appearance and backstory"
+  ],
+  "exported": {
+    "kind": "odm.character",
+    "version": 1,
+    "exportedAt": "2026-10-11T06:01:47.252Z",
+    "name": "苏叶",
+    "level": 1,
+    "xp": 0,
+    "sheet": {
+      "name": "苏叶",
+      "race": "human",
+      "class": "wizard",
+      "subclass": "",
+      "background": "acolyte",
+      "alignment": "N",
+      "gender": "",
+      "appearance": "银发的人类法师，穿着朴素长袍。",
+      "abilities": {
+        "str": 9,
+        "dex": 15,
+        "con": 14,
+        "int": 16,
+        "wis": 13,
+        "cha": 11
+      },
+      "maxHp": 8,
+      "ac": 12,
+      "acOverride": false,
+      "speed": 30,
+      "hitDice": {
+        "die": "d6",
+        "total": 1,
+        "spent": 0
+      },
+      "classes": [],
+      "hitDicePools": null,
+      "proficiencies": {
+        "saves": [
+          "int",
+          "wis"
+        ],
+        "skills": [
+          "insight",
+          "religion",
+          "arcana",
+          "history"
+        ],
+        "expertise": [],
+        "languages": [
+          "Common",
+          "Elvish",
+          "Celestial",
+          "Draconic"
+        ],
+        "tools": [],
+        "armor": [],
+        "weapons": [
+          "daggers",
+          "darts",
+          "slings",
+          "quarterstaffs",
+          "light crossbows"
+        ]
+      },
+      "equipment": [
+        {
+          "name": "Quarterstaff",
+          "qty": 1
+        },
+        {
+          "name": "Component Pouch",
+          "qty": 1
+        },
+        {
+          "name": "Backpack",
+          "qty": 1
+        },
+        {
+          "name": "Book",
+          "qty": 2
+        },
+        {
+          "name": "Ink (1 ounce bottle)",
+          "qty": 1
+        },
+        {
+          "name": "Ink Pen",
+          "qty": 1
+        },
+        {
+          "name": "Parchment (one sheet)",
+          "qty": 10
+        },
+        {
+          "name": "Little Bag of Sand",
+          "qty": 1
+        },
+        {
+          "name": "Small Knife",
+          "qty": 1
+        },
+        {
+          "name": "Spellbook",
+          "qty": 1
+        },
+        {
+          "name": "Holy Symbol",
+          "qty": 1
+        },
+        {
+          "name": "5 sticks of incense",
+          "qty": 1
+        },
+        {
+          "name": "Vestments",
+          "qty": 1
+        },
+        {
+          "name": "Clothes, Common",
+          "qty": 1
+        }
+      ],
+      "gold": 15,
+      "copper": 0,
+      "feats": [],
+      "features": [
+        {
+          "name": "Spellcasting",
+          "source": "class",
+          "level": 1,
+          "classId": "wizard"
+        },
+        {
+          "name": "Arcane Recovery",
+          "source": "class",
+          "level": 1,
+          "classId": "wizard"
+        },
+        {
+          "name": "One extra language",
+          "source": "race"
+        },
+        {
+          "name": "Shelter of the Faithful (Acolyte)",
+          "source": "background"
+        }
+      ],
+      "asiChoices": [],
+      "racialChoices": {
+        "asi": [],
+        "skills": [],
+        "cantrip": "",
+        "tool": "",
+        "ancestry": ""
+      },
+      "featChoices": {},
+      "backgroundChoices": {
+        "skills": [],
+        "gear": []
+      },
+      "kitChoices": {
+        "options": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "picks": []
+      },
+      "spellcasting": {
+        "ability": "int",
+        "slots": {
+          "1": {
+            "max": 2,
+            "used": 0
+          }
+        },
+        "prepared": [
+          "Shield",
+          "Magic Missile",
+          "Sleep",
+          "Mage Armor"
+        ],
+        "known": [],
+        "cantrips": [
+          "Fire Bolt",
+          "Mage Hand",
+          "Prestidigitation"
+        ],
+        "spellbook": [
+          "Shield",
+          "Magic Missile",
+          "Sleep",
+          "Detect Magic",
+          "Mage Armor",
+          "Identify"
+        ]
+      },
+      "portrait": null,
+      "notes": "",
+      "backstory": "苏叶离开神殿，寻找遗失的古老法术书。"
+    }
+  }
+}

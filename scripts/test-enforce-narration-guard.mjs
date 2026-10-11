@@ -60,6 +60,10 @@ const kinds = (narration, exchanges) =>
     .map((entry) => entry.kind)
     .sort();
 
+const zhKinds = (narration, exchanges) =>
+  checkNarration({ locale: "zh-CN", conversation: conversationOf(exchanges), narration, partyNames: party })
+    .map((entry) => entry.kind).sort();
+
 // A resolved player attack, as an exchange.
 async function attack(faces) {
   await kit.endFight();
@@ -79,6 +83,8 @@ await test("a hit written on a miss is caught", async () => {
   assert.equal(enemy.currentHp, enemy.maxHp);
   assert.deepEqual(kinds("Kara's blade bites into the goblin, and it staggers back.", [exchange]), ["hit"]);
   assert.deepEqual(kinds("Kara's blade whistles past the goblin.", [exchange]), []);
+  assert.deepEqual(zhKinds("Kara击中了哥布林。", [exchange]), ["hit"]);
+  assert.deepEqual(zhKinds("Kara没有命中哥布林。", [exchange]), []);
 });
 
 await test("a miss written on a hit is caught", async () => {
@@ -86,6 +92,8 @@ await test("a miss written on a hit is caught", async () => {
   assert.equal(exchange.result.hit, true);
   assert.deepEqual(kinds("Kara's swing misses the goblin entirely.", [exchange]), ["miss"]);
   assert.deepEqual(kinds("Kara's blade bites into the goblin.", [exchange]), []);
+  assert.deepEqual(zhKinds("Kara没有命中哥布林。", [exchange]), ["miss"]);
+  assert.deepEqual(zhKinds("Kara击中了哥布林。", [exchange]), []);
 });
 
 await test("a death the hit points deny is caught", async () => {
@@ -93,6 +101,7 @@ await test("a death the hit points deny is caught", async () => {
   assert.equal(enemy.status, "alive");
   assert.equal(enemy.currentHp, 40 - 7);
   assert.deepEqual(kinds("The goblin crumples, dead before it hits the floor.", [exchange]), ["death"]);
+  assert.deepEqual(zhKinds("哥布林死了。", [exchange]), ["death"]);
 });
 
 await test("a death the engine reported is not a contradiction", async () => {
@@ -109,6 +118,7 @@ await test("a death the engine reported is not a contradiction", async () => {
     kinds("The goblin crumples, dead before it hits the floor.", [{ name: "pc_attack", args, result: swing.result }]),
     [],
   );
+  assert.deepEqual(zhKinds("哥布林死了。", [{ name: "pc_attack", args, result: swing.result }]), []);
 });
 
 await test("a damage figure no die rolled is caught", async () => {
@@ -116,12 +126,15 @@ await test("a damage figure no die rolled is caught", async () => {
   assert.equal(exchange.result.damage, 7);
   assert.deepEqual(kinds("The blow lands for 12 damage.", [exchange]), ["number"]);
   assert.deepEqual(kinds("The blow lands for 7 damage.", [exchange]), []);
+  assert.deepEqual(zhKinds("造成十二点伤害。", [exchange]), ["number"]);
+  assert.deepEqual(zhKinds("造成七点伤害。", [exchange]), []);
 });
 
 await test("a spell nothing paid for is caught, and a paid one is not", async () => {
   await kit.endFight();
   const before = world.sheet(mira.id).spellcasting.slots[3].used;
   assert.deepEqual(kinds("Mira casts Fireball into the press of bodies.", []), ["spell"]);
+  assert.deepEqual(zhKinds("Mira施放了火球术。", []), ["spell"]);
   assert.equal(world.sheet(mira.id).spellcasting.slots[3].used, before);
   const args = { characterId: mira.id, level: 3, spell: "Fireball" };
   const spent = await world.invoke("use_spell_slot", args);
@@ -131,6 +144,7 @@ await test("a spell nothing paid for is caught, and a paid one is not", async ()
     kinds("Mira casts Fireball into the press of bodies.", [{ name: "use_spell_slot", args, result: spent.result }]),
     [],
   );
+  assert.deepEqual(zhKinds("Mira施放了火球术。", [{ name: "use_spell_slot", args, result: spent.result }]), []);
 });
 
 await test("the guard changes no state", async () => {

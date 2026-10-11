@@ -12,6 +12,8 @@
 
 # testing
 /coverage
+# Generated string inventory; the reviewed scope manifest is committed.
+/docs/validation/ui-localization-inventory.json
 
 # next.js
 /.next/
@@ -70,3 +72,11 @@ public/generated-audio
 # .dev.vars files hold local secrets. Neither belongs in history.
 .wrangler/
 .dev.vars*
+
+# Local visual QA outputs; compact reviewed evidence lives in docs/validation.
+/.local-validation/
+/docs/validation/ui-preview/
+/docs/validation/**/*.png
+/docs/validation/**/*.jpg
+/docs/validation/**/*.jpeg
+/docs/validation/**/*.webp

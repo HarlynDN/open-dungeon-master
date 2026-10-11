@@ -1,0 +1,278 @@
+{
+  "reason": "Browser imports use namespace runtime; catalog construction marked PURE. Templates compared exactly equal to pre-repair archive; all original English golden bytes retained.",
+  "changes": [
+    {
+      "record": "character-calling-translations.json",
+      "field": "sources",
+      "file": "src/lib/i18n/calling-presentations.ts",
+      "before": "667cf728ebee0703f9627f1a40737ba704a7d20a798567a12c15cf6010047729",
+      "after": "ade448880d3d3f8f9df1565840bcf6af20236154c68a6b04f0f392d26463d170"
+    },
+    {
+      "record": "character-calling-translations.json",
+      "field": "sources",
+      "file": "src/lib/i18n/LocalizedText.tsx",
+      "before": "2a2206f3c3ae07890bf444fd82ba6c4513c87abd7399f4a807976a77b0e38370",
+      "after": "fab7c8c6447d08ee06c7e3ff0f43e3c8a95af40d18e248eb0e038bdcbad9118f"
+    },
+    {
+      "record": "character-calling-translations.json",
+      "field": "sources",
+      "file": "src/lib/i18n/messages.ts",
+      "before": "56560b82207b166db785ce9e8525900f52c08d8976535804a4e72f5e8009c9a4",
+      "after": "3411351b3d607241ad39bf728fd1fff4d0675a2cdc3009c60cbb6f75eedd4c52"
+    },
+    {
+      "record": "character-calling-translations.json",
+      "field": "catalogs",
+      "file": "src/lib/i18n/calling-ui-messages.ts",
+      "before": "2fe44c319efca048b20871e9e03e7b9cb40dc9e0e194db8f340feaa10fa7cec1",
+      "after": "41d8b40085b668c294fb469f55f443d26a33a5f0f6f9d652ca5e85f6c1507dfc"
+    },
+    {
+      "record": "character-gear-translations.json",
+      "field": "sources",
+      "file": "src/lib/i18n/equipment-presentations.ts",
+      "before": "01ae98fd21244c700b382ce89a1264c9bf79c6cbdf672b9d60a748a660b5b0e4",
+      "after": "7b5cc62cf0d7348b25f0baf693af129e7ce8e911b94255c932553b392a9645d6"
+    },
+    {
+      "record": "character-gear-translations.json",
+      "field": "sources",
+      "file": "src/lib/i18n/gear-ui-presentations.ts",
+      "before": "810dfe90aaed11ccad971dc10e2be4cbfad450c541ae9275bc4c48a6aa27ed1f",
+      "after": "7f5e42e0c8d41b35948beefea931bff76257146f50bd2b722638b24ee182ca80"
+    },
+    {
+      "record": "character-gear-translations.json",
+      "field": "sources",
+      "file": "src/lib/i18n/equipment-help-presentations.ts",
+      "before": "935c33753e405de1e2efad9ffe033a32ad214e1397b4143a1a24855d1d5e0183",
+      "after": "8e0cbb2471312fa9c85dc6f253af275ea9be8c885985f0ded40f61a893ceee41"
+    },
+    {
+      "record": "character-gear-translations.json",
+      "field": "catalogs",
+      "file": "src/lib/i18n/gear-ui-messages.ts",
+      "before": "b74ccfcdb2f6ed3548b01311c48bb31b68dee2203d775d7f8e6fda2bc15f345a",
+      "after": "72c709098612fe489f29895896bd02cf9ca8ff088114e0fe56e56d4fc70ba681"
+    },
+    {
+      "record": "character-gear-translations.json",
+      "field": "catalogs",
+      "file": "src/lib/i18n/equipment-name-messages.ts",
+      "before": "9bd8793c69bc7ce77d0adf4aa80f42ab8f7fe2e9aebb4611e56449fc328f4d59",
+      "after": "babb7d54d96715a26d809cc1256a23a76a041578d62e61b1e57464113f0acb3a"
+    },
+    {
+      "record": "character-gear-translations.json",
+      "field": "catalogs",
+      "file": "src/lib/i18n/equipment-help-messages.ts",
+      "before": "03bcbbce69e73bb505f667c4ba9a8a9c30311557009e40035fbe56724766093f",
+      "after": "aabd782f86396dbff1ef58e2121daf529ea4179a916f6130300a9f28496f51ee"
+    },
+    {
+      "record": "character-calling-material-translations.json",
+      "field": "sources",
+      "file": "src/lib/i18n/calling-material-presentations.ts",
+      "before": "de38d985bc9bb0018727ec6191e8b0c661adbb7707fe8edc6ea378c1587f938c",
+      "after": "346c94a1985437e9bcf4c296ac229dd8579ee6e31d77afc87c8e24754f4f2750"
+    },
+    {
+      "record": "character-calling-material-translations.json",
+      "field": "sources",
+      "file": "src/app/characters/builder/usePickerGroups.ts",
+      "before": "dee3ffff3e926cc079d51053dc0e729b062876777a8a7449236b581c3c8b044e",
+      "after": "d271803b233c0f3fd4add709fb4b4247c0c622a9dfd9e63f543c59ebc987a5f1"
+    },
+    {
+      "record": "character-calling-material-translations.json",
+      "field": "sources",
+      "file": "src/lib/i18n/messages.ts",
+      "before": "56560b82207b166db785ce9e8525900f52c08d8976535804a4e72f5e8009c9a4",
+      "after": "3411351b3d607241ad39bf728fd1fff4d0675a2cdc3009c60cbb6f75eedd4c52"
+    },
+    {
+      "record": "character-calling-material-translations.json",
+      "field": "catalogs",
+      "file": "src/lib/i18n/calling-material-messages.ts",
+      "before": "861a36ada3be60af4083e54cb0100251f53febc32c844d742891b2a7fefb62da",
+      "after": "ec47158c485f6091804d2c1a8f4f9df890875ad11c528eafae40c882916247c4"
+    },
+    {
+      "record": "character-builder-identity-translations.json",
+      "field": "sources",
+      "file": "src/app/characters/builder/usePickerGroups.ts",
+      "before": "dee3ffff3e926cc079d51053dc0e729b062876777a8a7449236b581c3c8b044e",
+      "after": "d271803b233c0f3fd4add709fb4b4247c0c622a9dfd9e63f543c59ebc987a5f1"
+    },
+    {
+      "record": "character-builder-identity-translations.json",
+      "field": "catalogs",
+      "file": "src/lib/i18n/builder-identity-messages.ts",
+      "before": "dae5c23a287b777eebb3877862f939a5547f3cb02c52848005b722af7ae45f02",
+      "after": "f7c9035a41d2b79a5d1fabe54e654f539241e07fc53c5a79757cb04b3da3d008"
+    },
+    {
+      "record": "character-builder-identity-translations.json",
+      "field": "catalogs",
+      "file": "src/lib/i18n/builder-picker-messages.ts",
+      "before": "d88df794a6b4674429bae5bea74ccf3f65e3ce2b93c02226c25a0649dcef2072",
+      "after": "50affb9cfe9ec80d2f121d971f65f4f315211e61e66db33653751c2fcf5a42ee"
+    },
+    {
+      "record": "character-lineage-translations.json",
+      "field": "sources",
+      "file": "src/lib/i18n/lineage-presentations.ts",
+      "before": "090a3b6d051d36672622e2a03b6c526c7d9f049f54c4614eafe9c2726e9f621e",
+      "after": "14c6c88eb6200584eb6b8c7c5a46ba99de1cdc98838747f42528a40a95ed4a8b"
+    },
+    {
+      "record": "character-lineage-translations.json",
+      "field": "sources",
+      "file": "src/lib/i18n/racial-presentations.ts",
+      "before": "5e87a9e5b65277389d890b476c0a27fef5397a421cacf1d20f19de8f55715c38",
+      "after": "6dfcacdffbb4c3e35110b24ed972a12dd87092bbfa4ae51b22688440558c9b27"
+    },
+    {
+      "record": "character-lineage-translations.json",
+      "field": "catalogs",
+      "file": "src/lib/i18n/lineage-ui-messages.ts",
+      "before": "eae857558703c65b277c1c845f5162ddb4074167856175c756743fd1c262a961",
+      "after": "7e7e9477291558288c1ca424d20e76fc371ae1fe9c4cca38f44a5bd518e64945"
+    },
+    {
+      "record": "character-lineage-translations.json",
+      "field": "catalogs",
+      "file": "src/lib/i18n/lineage-material-messages.ts",
+      "before": "639abdc1c07f9bffc3f42283fc4c6aed40c0371839e763f8fc228e79613a517f",
+      "after": "65ccba753fe3995347fa21606026ee46df0ee0143fccc4d8caaa86d7101205ea"
+    },
+    {
+      "record": "character-lineage-translations.json",
+      "field": "catalogs",
+      "file": "src/lib/i18n/racial-ui-messages.ts",
+      "before": "4ca098d3f148ae66b4d68df5ff0df70d2333c52c4145626f3705bd06ea340b26",
+      "after": "33870629adbf14cd14e51760a0b857cd04aa8fac4cbf5ca0b788cef86e14e3eb"
+    },
+    {
+      "record": "character-feat-translations.json",
+      "field": "catalogSha256",
+      "file": "src/lib/i18n/character-feat-name-messages.ts",
+      "before": "b5c193c5c8b056ae77058a1ff7d7bd702acb62696e00a1b43e1c6814bbb6017b",
+      "after": "d07f024aff52df1bb57fa1b3fd8431699216265a1142c3e4f7e6c09f31efa26a"
+    },
+    {
+      "record": "character-builder-feedback-translations.json",
+      "field": "catalogSha256",
+      "file": "src/lib/i18n/builder-messages.ts",
+      "before": "7bda6864e27d665e5dbf42a64b4e0ac45a3c081ce5679a793776f12aebc992e8",
+      "after": "3afa36215f042dfcde361ed43c9183a6e94ed1f317f029d20374e9dab377af46"
+    },
+    {
+      "record": "character-ability-translations.json",
+      "field": "sources",
+      "file": "src/app/characters/builder/AsiFeatEditor.tsx",
+      "before": "c8bf3c84efd7b9f80273f7000611e748f039c56f08f9ebb9e7b5a43e968e8b87",
+      "after": "0cb81ddf57c417828d210409213f37039e02d860b399a79cfd5740871b7fdc41"
+    },
+    {
+      "record": "character-ability-translations.json",
+      "field": "sources",
+      "file": "src/lib/i18n/ability-ui-presentations.ts",
+      "before": "71f151819c9eeda7d226ee826482dd3833087aca17f797d75be83818dabaf993",
+      "after": "20b5234266e6d6ebd5ebccc2a4001e6c5ec84d7857f75ba4bb1cccfa82524794"
+    },
+    {
+      "record": "character-ability-translations.json",
+      "field": "catalogs",
+      "file": "src/lib/i18n/ability-ui-messages.ts",
+      "before": "89dd2a6002a13659c7bf52a7a8c44726d6c4d591c817e5cb7445aa4afc613806",
+      "after": "d2b7d2a19215cc6a2f0aff19281ecfd149e0aff04354a7fbe4554016d90858b3"
+    },
+    {
+      "record": "codex-chinese-runtime.json",
+      "field": "sources",
+      "file": "src/lib/i18n/generation.ts",
+      "before": "cb54986593ed50cdd71352d09612950581dd8a2b1f7c0652a8c4c34724738850",
+      "after": "e47c101389979530982537f53e112f0f5cb8441604521f5ead2c71f3ca4e1e99"
+    },
+    {
+      "record": "codex-chinese-runtime.json",
+      "field": "sources",
+      "file": "src/lib/dm/engine-boundary.ts",
+      "before": "9f2d2401f2b6836c82446f2732f105f7bfde365ab0e6c8b6e615b8a53d3046a6",
+      "after": "aca92be0f02b6347666c1ccd3614899fdfd6b0943a359c56e640903832d894b5"
+    },
+    {
+      "record": "codex-chinese-runtime.json",
+      "field": "sources",
+      "file": "package.json",
+      "before": "999eb6c9db33b1d5a58342c6accecf5f1465a5d0da5fbcdac5354325375baccf",
+      "after": "7eaf49a1fb0da0829aecf4a851ded42e5bf22327c094c68533ffa9f46fa368c3"
+    },
+    {
+      "record": "character-training-translations.json",
+      "field": "catalogSha256",
+      "file": "src/lib/i18n/character-training-name-messages.ts",
+      "before": "2f0d6919530690a1575b3971f2d25cd33968697544831ce03bee9b4320941a9d",
+      "after": "8f0c782dea03da62e7dd052f14d18c169746f264d1d76475986e9becbaecfeb9"
+    },
+    {
+      "record": "game-help-translations.json",
+      "field": "sources",
+      "file": "src/lib/i18n/game-help-presentations.ts",
+      "before": "6b20297186b661bf4bc504c8594e0cab81b47003ff679639dd9ef9c58c13783a",
+      "after": "8870d1ba521286fe2b1bc1a9f1121b5f068377aa620c426a70631aa161281d33"
+    },
+    {
+      "record": "game-help-translations.json",
+      "field": "sources",
+      "file": "src/lib/i18n/closed-game-help-presentations.ts",
+      "before": "6ac5e7b13b4e8b1d1a9c19d92de94665fcb70beea190abb59847e3ffa8ad67de",
+      "after": "609afbeb2bc293a488a69b61357859f2897430fd0dde38d36f31e72e79c27d66"
+    },
+    {
+      "record": "game-help-translations.json",
+      "field": "catalogs",
+      "file": "src/lib/i18n/game-help-messages.ts",
+      "before": "d6fd602e05ed780b05db130987fee647824741c8b7ecf7a806a5ec6aac442f3e",
+      "after": "98b8f16d4479d05d69d5c34279d56884b88fff05ce208f2c861f96f95242cb67"
+    },
+    {
+      "record": "game-help-translations.json",
+      "field": "catalogs",
+      "file": "src/lib/i18n/closed-game-help-messages.ts",
+      "before": "d72aff92d27eb435a3d44cade2cdd917e7a861c350e57eeba8378df6fbc823b7",
+      "after": "32cebe37e719f39267f3d5f49bde070f1e5f57fe3844a5ed0fe06f05ddccaca4"
+    },
+    {
+      "record": "character-spell-gear-translations.json",
+      "field": "catalogSha256",
+      "file": "src/lib/i18n/character-spell-gear-name-messages.ts",
+      "before": "22bfcf777fe42b315e725a9b580abd6f92d3bec4d04b85b6024da896b4062bcd",
+      "after": "6aa64bb1208772cc7b0e26a35463d130c6a7850a31948a23ef42afc7f383426b"
+    },
+    {
+      "record": "character-spell-ui-translations.json",
+      "field": "sources",
+      "file": "src/components/sheet/SheetSpells.tsx",
+      "before": "bbe1c8c3d3a889a3faee0b4a86295cbbe91e9fc46d1cd9a9c5f21aa5552c7751",
+      "after": "cc2fce11dad14ebc37d4e8daef0750b2210f9f9b4833a480ac74278d4deb1f18"
+    },
+    {
+      "record": "character-spell-ui-translations.json",
+      "field": "sources",
+      "file": "src/lib/i18n/spell-ui-presentations.ts",
+      "before": "76c2a27f45f87f24a7243174f4c4b535c95439be042a88d216e2406a0de4967c",
+      "after": "eb1fd9296404e3a28ee85803b29a78909bd70d688d82064c7ab9e5ccd435d094"
+    },
+    {
+      "record": "character-spell-ui-translations.json",
+      "field": "sources",
+      "file": "src/lib/i18n/finish-ui-presentations.ts",
+      "before": "295bdfc9dd2e33fa0dda6945daa20f1f553b0b1f7ebd833ba8ec287e8a5d8b75",
+      "after": "98d109c684bdd35fd25929c3de3c161250cd3f7fb1f55fba65a535f6a368d9df"
+    }
+  ]
+}

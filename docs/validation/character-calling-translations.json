@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "status": "source-compared-by-implementation-agent",
+  "scope": "Calling/ClassChoices owner captions, subclass level/count/skill/source advice, tool/expertise labels, 49 stock class-card fact projections, six complete fighting-style descriptions, and locale-orderable rich term links. Full class/subclass/feature/option material and content-pack text remain pending; both owner files remain pending in the final UI gate.",
+  "provenance": "Original Chinese translation of repository UI and six source fighting-style descriptions, with original source license declarations retained. No proprietary Chinese rulebook translation used.",
+  "review": "Implementation-agent source comparison of full copied English captions, counts and locked-subclass levels, 49 pre-migration class-card facts and six original style records. Callbacks, canonical names used by grantingTrait, class/subclass/style/option selection values and stored feature fields remain original. Rich messages interpolate once, keep authored braces literal and permit different node order in future locales. Not independent human or external approval. Actual LocalizedText and LocaleProvider are JSX-transpiled from source and server-rendered together in English/Chinese to exercise the complete template path; strict plain-string parameter checks are retained. Native class/subclass brief help is now separately source-compared in character-calling-material-translations.json; only display calls change, with exact English projection and canonical selection regression retained.",
+  "sources": {
+    "src/app/characters/builder/steps/CallingStep.tsx": "dddfac30b09eef862b1c05da0f2ec8b07dd9062c71f6f37c0483260f87c3aaa7",
+    "src/app/characters/builder/steps/ClassChoices.tsx": "7868b1b011a7aba5ad04ca9fe8e76f65e7e5f5d8d209f4445cfba1b6ba355697",
+    "src/lib/i18n/calling-presentations.ts": "ade448880d3d3f8f9df1565840bcf6af20236154c68a6b04f0f392d26463d170",
+    "src/lib/i18n/LocalizedText.tsx": "fab7c8c6447d08ee06c7e3ff0f43e3c8a95af40d18e248eb0e038bdcbad9118f",
+    "src/lib/i18n/message-parts.ts": "97ef99a7024c5e46f97c2091bb019ac76fa1e1234b0d176ba1c416116aad8938",
+    "src/lib/srd/feature-effects.ts": "0a7f3b483608a2207bfd8af110edc36e8f4c96b7e0a5fc51e1e874e979a1b95e",
+    "src/lib/characters/options.ts": "e0294a844664240604091c945104e20adc08bcbf7d0fc32bafacfff70174c31c",
+    "src/lib/i18n/builder-picker-presentations.ts": "728ad42accc71a7f52efb7f8c38493ff357ff2c956a182edb6e0263af0a8b539",
+    "src/lib/i18n/messages.ts": "3411351b3d607241ad39bf728fd1fff4d0675a2cdc3009c60cbb6f75eedd4c52"
+  },
+  "catalogs": {
+    "src/lib/i18n/calling-ui-messages.ts": "41d8b40085b668c294fb469f55f443d26a33a5f0f6f9d652ca5e85f6c1507dfc"
+  },
+  "abilityCatalogIntegration": "Shared catalog fingerprint refreshed for a separate ability UI corpus; the original review scope is unchanged.",
+  "catalogMaintenance": "Shared messages.ts only gains independent equipment UI/name/help catalogs; original calling catalog values and the reviewed calling scope are unchanged. Fingerprint refreshed for these additions, not an expanded review.",
+  "reviewRepair": "2026-10-11: browser imports now use scoped resource runtime; co-located catalog construction marked pure. All English/Chinese templates independently compared equal to the pre-repair archive; original golden bytes preserved. See localization-review-repairs.md."
+}
