@@ -108,7 +108,7 @@ export type PublicEncounter = {
   // Who the pointer rests on, so a client can ask the engine's own canAct
   // (src/lib/dm/can-act.ts) the question the server will ask. The id is a
   // character's; any other combatant is named but not identified.
-  acting?: { id: string; name: string } | null;
+  acting?: { id: string; name: string; concealed?: true } | null;
   // Characters surprised in round 1: those who may not act yet, and those who
   // may not react yet (isSurprised in can-act.ts, asked on the server).
   surprised?: { acting: string[]; reacting: string[] };
@@ -201,6 +201,7 @@ function actingView(encounter: Encounter, hidden: Set<string>, showNumbers: bool
       ? {
           id: current.kind === "pc" ? current.characterId : "",
           name: concealed ? "someone unseen" : current.name,
+          ...(concealed ? { concealed: true as const } : {}),
         }
       : null,
     surprised: {

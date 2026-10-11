@@ -74,6 +74,8 @@ export type HandCard = {
   // Native rule-note boundaries for display adapters. Never sent as intent.
   // Kept alongside the original joined English text for compatibility.
   ruleSegments?: readonly string[];
+  // Verified built-in form attack provenance, for display only. Not an intent.
+  naturalAttack?: { form: string; name: string };
   // Slot, uses or ammunition ("Slot 1 · 3/4"); "" when the card costs nothing.
   resource: string;
   // The condition applied, or "Concentration".

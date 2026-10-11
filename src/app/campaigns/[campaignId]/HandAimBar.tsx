@@ -1,5 +1,6 @@
 "use client";
 
+import type { HandTurnContext } from "@/lib/i18n/hand-presentations";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { handCardName, handAimName, handTermLabel, handAreaDescription, handAreaHintText } from "@/lib/i18n/hand-presentations";
 import { handChoiceLabel, handFactText, handRefusalText, handRuleText, handTargetNote } from "@/lib/i18n/hand-material-presentations";
@@ -75,6 +76,7 @@ function HandOptionChip({
 // action costs the table a DM turn and cannot be taken back.
 export function HandAimBar({
   card,
+  turnContext,
   targets,
   aim,
   onAim,
@@ -99,6 +101,7 @@ export function HandAimBar({
   onCommit,
 }: {
   card: HandCard;
+  turnContext?: HandTurnContext;
   targets: HandTargetChip[];
   aim: HandAim | null;
   onAim: (target: HandTargetChip) => void;
@@ -344,7 +347,7 @@ export function HandAimBar({
             </Tooltip>
             <Tooltip
               content={
-                (blocked ? handRefusalText(blocked, locale) : null) ??
+                (blocked ? handRefusalText(blocked, locale, turnContext) : null) ??
                 (ready
                   ? t("handUi.aim.sendHint")
                   : needsTrigger

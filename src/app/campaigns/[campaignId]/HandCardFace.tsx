@@ -3,7 +3,7 @@
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { createTranslator } from "@/lib/i18n/translator";
 import type { AppLocale } from "@/lib/i18n/locales";
-import { handCardName, handAimName } from "@/lib/i18n/hand-presentations";
+import { handCardName, handAimName, type HandTurnContext } from "@/lib/i18n/hand-presentations";
 import { handCardMaterial, handPreviewRow } from "@/lib/i18n/hand-material-presentations";
 import * as RadixTooltip from "@radix-ui/react-tooltip";
 import { memo, useMemo } from "react";
@@ -94,6 +94,7 @@ export function HandPlayedCard({ card }: { card: HandCard }) {
 
 function HandCardFaceInner({
   card,
+  turnContext,
   index,
   offset,
   step,
@@ -106,6 +107,7 @@ function HandCardFaceInner({
   onPick,
 }: {
   card: HandCard;
+  turnContext?: HandTurnContext;
   index: number;
   // Seats from the middle of the fan, and the degrees between neighbours.
   offset: number;
@@ -126,7 +128,7 @@ function HandCardFaceInner({
 }) {
   const { locale, t } = useLocale();
   const displayName = handCardName(card, locale);
-  const material = handCardMaterial(card, locale);
+  const material = handCardMaterial(card, locale, turnContext);
   const rows = useMemo(() => previewRows(card, aim, conditions), [card, aim, conditions]);
   const aimName = aim && card.target === "enemy" && aim.kind === "enemy" ? handAimName(aim, locale) : "";
   const slotStyle = {

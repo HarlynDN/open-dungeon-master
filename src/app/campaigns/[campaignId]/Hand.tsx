@@ -2,7 +2,7 @@
 
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import type { AppLocale } from "@/lib/i18n/locales";
-import { handSentence, handCardName } from "@/lib/i18n/hand-presentations";
+import { handSentence, handCardName, handCurrentActorName } from "@/lib/i18n/hand-presentations";
 import { handRefusalText, HAND_SEND_FAILURE, HAND_NETWORK_FAILURE } from "@/lib/i18n/hand-material-presentations";
 import { ChevronDown, CircleHelp } from "lucide-react";
 import { isComposingInput } from "@/lib/input-composition";
@@ -129,7 +129,8 @@ function HandInner({
     [encounter, sheet, floorTurn, floorName],
   );
   const myTurn = turn?.myTurn ?? floorTurn;
-  const currentName = turn?.currentName ?? floorName;
+  const nativeCurrentName = turn?.currentName ?? floorName;
+  const currentName = nativeCurrentName ? handCurrentActorName(nativeCurrentName, locale, encounter) : undefined;
   const signature = turn ? turnSignature(turn) : "";
 
   const spells = useHandSpells(sheet);
@@ -447,6 +448,7 @@ function HandInner({
           >
             {shown.map((card, index) => (
               <HandCardFace
+                turnContext={encounter}
                 key={card.id}
                 card={card}
                 index={index}
@@ -476,6 +478,7 @@ function HandInner({
           {played ? <HandPlayedCard key={played.seq} card={played.card} /> : null}
           {picked ? (
             <HandAimBar
+              turnContext={encounter}
               card={picked}
               targets={offered}
               aim={aim}
@@ -507,9 +510,10 @@ function HandInner({
         </>
       )}
       <p ref={noticeRef} role="status" className={cn("mt-1 text-xs text-amber-300", notice ? "" : "hidden")}>
-        {handRefusalText(notice, locale)}
+        {handRefusalText(notice, locale, encounter)}
       </p>
       <HandMoreSheet
+        turnContext={encounter}
         open={moreOpen}
         onOpenChange={setMoreOpen}
         cards={more}

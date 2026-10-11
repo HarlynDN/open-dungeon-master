@@ -1,6 +1,6 @@
 import type { AppLocale } from "./locales.ts";
 import { catalogFor, createTranslator, type MessageKey } from "./translator.ts";
-import { handCostLabel, handTermLabel } from "./hand-presentations.ts";
+import { handCostLabel, handTermLabel, handCurrentActorName, type HandTurnContext } from "./hand-presentations.ts";
 import { combatTermLabel } from "./combat-ui-presentations.ts";
 import { conditionLabel } from "./condition-presentations.ts";
 import { referenceDisplayName } from "./references.ts";
@@ -93,7 +93,7 @@ export function handComponentText(raw: string, locale: AppLocale): string {
   return count ? t("handMaterial.component.count", { count: count[1], material }) : material;
 }
 
-export function handRefusalText(raw: string, locale: AppLocale): string {
+export function handRefusalText(raw: string, locale: AppLocale, context?: HandTurnContext): string {
   if (locale === "en" || !raw) return raw;
   const frame = nativeFrame(raw, "handMaterial.error.");
   if (!frame) {
@@ -110,10 +110,11 @@ export function handRefusalText(raw: string, locale: AppLocale): string {
       base = base.slice(0, -(found[1]!.length + 1));
     }
     if (!hints.length) return raw;
-    const translated = handRefusalText(base, locale);
+    const translated = handRefusalText(base, locale, context);
     return translated === base ? raw : [translated, ...hints.map(key => createTranslator(locale)(key))].join(" ");
   }
   const args = { ...frame.args };
+  if (args.current) args.current = handCurrentActorName(args.current, locale, context);
   if (args.act) {
     const act = exactLabel(args.act, "handMaterial.act.", locale);
     if (act === args.act) return raw;
@@ -229,7 +230,7 @@ export function handTargetNote(raw: string, locale: AppLocale): string {
 }
 
 type CardMaterial = Pick<HandCard, "range" | "dice" | "roll" | "rules" | "resource" | "condition" | "disabled">;
-export function handCardMaterial(card: HandCard, locale: AppLocale): CardMaterial {
+export function handCardMaterial(card: HandCard, locale: AppLocale, context?: HandTurnContext): CardMaterial {
   let rules = handRuleText(card.rules, locale);
   // Generated spell notes can contain several sentences. Their native
   // boundaries let us project complete owned notes without splitting prose.
@@ -246,7 +247,7 @@ export function handCardMaterial(card: HandCard, locale: AppLocale): CardMateria
   }
   return { range: handFactText(card.range, locale), dice: handFactText(card.dice, locale), roll: handFactText(card.roll, locale), rules,
     resource: handResourceText(card.resource, locale, card.intent.card === "feature" ? card.intent.resourceId : undefined),
-    condition: handFactText(card.condition, locale), disabled: card.disabled ? handRefusalText(card.disabled, locale) : null };
+    condition: handFactText(card.condition, locale), disabled: card.disabled ? handRefusalText(card.disabled, locale, context) : null };
 }
 
 export function handPreviewRow(row: PreviewRow, locale: AppLocale): PreviewRow {

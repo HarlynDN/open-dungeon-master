@@ -18,6 +18,7 @@ import { AMMO_LABELS, ammoKindForWeapon, findAmmo } from "@/lib/srd/ammunition";
 import { conditionOnHitDice } from "@/lib/srd/condition-effects";
 import { combatRiders, type CombatRiders } from "@/lib/srd/feature-effects";
 import { matchWeapon, type SrdWeapon } from "@/lib/srd/weapons";
+import { BEAST_FORMS } from "@/lib/srd/beast-forms";
 
 import {
   FRESH_TURN,
@@ -99,13 +100,16 @@ function attackCards(sheet: CharacterSheet, turn: HandTurn, riders: CombatRiders
 
   // A beast form swings with its statblock, not with the sheet's gear.
   if (sheet.wildShape?.attacks?.length) {
+    const form = BEAST_FORMS.find(entry => entry.name === sheet.wildShape?.form);
     for (const attack of sheet.wildShape.attacks) {
+      const nativeAttack = form?.attacks.some(entry => entry.name === attack.name && entry.toHit === attack.toHit && entry.damage === attack.damage && entry.type === attack.type);
       cards.push(
         gated(
           {
             ...base,
             id: `attack:${spellKey(attack.name)}`,
             name: attack.name,
+            ...(nativeAttack ? { naturalAttack: { form: form!.name, name: attack.name } } : {}),
             range: "5 ft",
             dice: `${attack.damage} ${attack.type}`.trim(),
             roll: `${signed(attack.toHit)} to hit`,

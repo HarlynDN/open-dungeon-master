@@ -8,6 +8,29 @@ import { sheetChoiceOption } from "./sheet-dialog-presentations.ts";
 import { chosenValue, composeSentence, costLabel, type HandAim, type HandChoices } from "../battlemap/hand-play.ts";
 import { describePick, hasPick, type HandArea, type AreaPick } from "../battlemap/hand-area.ts";
 import type { HandAttackOptionId, HandCard, HandCost } from "../battlemap/hand-core.ts";
+import type { PublicEncounter } from "../db/encounter-view.ts";
+
+export type HandTurnContext = Pick<PublicEncounter, "acting" | "order" | "enemies" | "orderReady">;
+
+// The public order is filtered: turnIndex indexes the server's full order,
+// not this list. Require an unambiguous visible identity instead.
+export function handCurrentActorName(name: string, locale: AppLocale, context?: HandTurnContext): string {
+  const acting = context?.acting;
+  if (locale === "en" || !context?.orderReady || !acting || acting.name !== name) return name;
+  if (acting.concealed && name === "someone unseen") return createTranslator(locale)("handUi.ui.unseenActor");
+  if (acting.id) return name;
+  const candidates = context.order.filter(entry => entry.name === name);
+  if (candidates.length !== 1 || candidates[0].kind !== "enemy") return name;
+  const enemy = context.enemies.find(entry => entry.id === candidates[0].id && entry.name === name);
+  return enemy ? referenceDisplayName("monster", name, locale) : name;
+}
+
+const NATURAL_ATTACK_KEYS: Record<string, MessageKey> = {
+  Bite: "combatRoll.action.bite", Claw: "combatRoll.action.claw", Claws: "combatRoll.action.claw",
+  Beak: "combatRoll.action.beak", Fist: "combatRoll.action.fist", Gore: "combatRoll.action.gore", Tail: "combatRoll.action.tail",
+  Tentacles: "combatRoll.action.tentacle", Tusk: "handMaterial.naturalAttack.tusk", Ram: "handMaterial.naturalAttack.ram",
+  Talons: "handMaterial.naturalAttack.talons", Constrict: "handMaterial.naturalAttack.constrict",
+};
 
 export function handTermLabel(name: string, locale: AppLocale): string {
   if (locale === "en") return name;
@@ -20,9 +43,17 @@ export function handTermLabel(name: string, locale: AppLocale): string {
   return labels.length === 1 ? labels[0] : name;
 }
 
+function naturalAttackName(card: HandCard, locale: AppLocale): string | null {
+  if (card.intent.card !== "attack" || card.naturalAttack?.name !== card.name || card.intent.weapon !== card.name || card.rules !== `${card.naturalAttack.form} form.`) return null;
+  const key = NATURAL_ATTACK_KEYS[card.name];
+  return key ? createTranslator(locale)(key) : null;
+}
+
 export function handCardName(card: HandCard, locale: AppLocale): string {
   if (locale === "en") return card.name;
   const intent = card.intent;
+  const natural = naturalAttackName(card, locale);
+  if (natural) return natural;
   if ((intent.card === "spell" || intent.card === "reaction") && intent.spell === card.name) return referenceDisplayName("spell", card.name, locale);
   if (intent.card === "attack" && intent.weapon.toLowerCase() === card.name.toLowerCase()) return referenceDisplayName("equipment", intent.weapon, locale);
   const t = createTranslator(locale);
@@ -95,7 +126,7 @@ const catalogSentence: SentenceRenderer = (card, aim, riders, choices, locale) =
   const choice = label ? t("handUi.sent.choice", { choice: handChoiceLabel(card, label, locale) }) : "";
   if (intent.card === "attack") {
     const weapon = intent.weapon === "Unarmed strike" ? t("handUi.sent.unarmed")
-      : t("handUi.sent.weapon", { weapon: referenceDisplayName("equipment", intent.weapon, locale) });
+      : t("handUi.sent.weapon", { weapon: naturalAttackName(card, locale) ?? referenceDisplayName("equipment", intent.weapon, locale) });
     const bonus = intent.attack?.bonusAttack;
     const feature = bonus === "frenzy" ? t("handUi.term.frenzy") : bonus === "martial arts" ? t("handUi.term.martialArts") : named(card.name.replace(/ attack$/, ""));
     const lead = intent.offHand ? t("handUi.sent.offhand", { weapon, against: who ? t("handUi.sent.against", { who }) : "" })

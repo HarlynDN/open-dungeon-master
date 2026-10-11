@@ -113,6 +113,7 @@ export const HAND_MESSAGES = /*#__PURE__*/ defineMessages({
   "handUi.option.openHandPush": { en: " If it hits, Open Hand Technique pushes them away.", "zh-CN": "若命中，我用散打技巧将目标推开。" },
   "handUi.option.openHandReaction": { en: " If it hits, Open Hand Technique takes their reactions.", "zh-CN": "若命中，我用散打技巧使目标无法使用反应。" },
   "handUi.more.title": { en: "The rest of your hand", "zh-CN": "其余手牌" },
+  "handUi.ui.unseenActor": { en: "someone unseen", "zh-CN": "尚未现身的行动者" },
   "handUi.more.wait": { en: " Read them over and plan your turn in the meantime.", "zh-CN": "等待期间可以查看手牌，规划自己的回合。" },
   "handUi.more.pick": { en: "Pick one and it takes a seat in your hand, ready to aim.", "zh-CN": "选择一张手牌，将其放入牌列并选择目标。" },
   "handUi.term.frenzy": { en: "Frenzy", "zh-CN": "狂乱" },

@@ -1,7 +1,7 @@
 "use client";
 
 import { useLocale } from "@/lib/i18n/LocaleProvider";
-import { handCardName, handCostLabel } from "@/lib/i18n/hand-presentations";
+import { handCardName, handCostLabel, type HandTurnContext } from "@/lib/i18n/hand-presentations";
 import { handCardMaterial, handRefusalText } from "@/lib/i18n/hand-material-presentations";
 import type { CSSProperties } from "react";
 import { GameIcon } from "@/components/ui/GameIcon";
@@ -21,6 +21,7 @@ import { HandPreviewRows, typeLabel } from "@/app/campaigns/[campaignId]/HandCar
 // so they are laid out to be read, and the reason none can be played is said
 // once above them rather than in place of every card's own words.
 export function HandMoreSheet({
+  turnContext,
   open,
   onOpenChange,
   cards,
@@ -30,6 +31,7 @@ export function HandMoreSheet({
   aim,
   conditions,
 }: {
+  turnContext?: HandTurnContext;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   cards: HandCard[];
@@ -49,7 +51,7 @@ export function HandMoreSheet({
     <Sheet open={open} onOpenChange={onOpenChange} title={t("handUi.more.title")}>
       {waitingNote ? (
         <p role="status" className="reveal mb-3 rounded-lg border border-amber-500/25 bg-amber-500/5 px-3 py-2 text-sm text-amber-100/90">
-          {handRefusalText(waitingNote, locale)}{t("handUi.more.wait")}
+          {handRefusalText(waitingNote, locale, turnContext)}{t("handUi.more.wait")}
         </p>
       ) : (
         <p className="mb-3 text-sm text-stone-400">{t("handUi.more.pick")}</p>
@@ -60,7 +62,7 @@ export function HandMoreSheet({
           // line is not spent repeating what the note above already said.
           const waiting = isWaiting(card);
           const rows = previewRows(card, card.intent.card === "reaction" ? null : aim, conditions);
-          const material = handCardMaterial(card, locale);
+          const material = handCardMaterial(card, locale, turnContext);
           const facts = [material.dice, material.roll, material.range].filter(Boolean).join(" · ");
           return (
             <li key={card.id} className="hand-more-row" style={{ "--i": index } as CSSProperties}>
