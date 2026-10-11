@@ -8,6 +8,10 @@ import { featureChoices } from "@/lib/battlemap/hand-subclass";
 import { otherSpeedsLine } from "@/components/sheet/sheet-state";
 import type { CharacterSheet } from "@/lib/schemas/sheet";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { DEFAULT_LOCALE, type AppLocale } from "@/lib/i18n/locales";
+import { createTranslator, messageTemplate } from "@/lib/i18n/translator";
+import { loadLocaleMessages } from "@/lib/i18n/client-catalogs";
+import { sheetFeatureChoice, sheetChoiceOption, sheetUsageMessage } from "@/lib/i18n/sheet-dialog-presentations";
 
 // Flying and swimming speeds a subclass grants (SheetDerived.speeds), as
 // chips under the vitals; nothing when the character has none.
@@ -30,8 +34,6 @@ export function OtherSpeeds({ speeds }: { speeds: { fly?: number; swim?: number 
   );
 }
 
-const titleCase = (value: string) => value.replace(/\b\w/g, (c) => c.toUpperCase());
-
 // The once-chosen options of the subclass features the character holds
 // (Totem Spirit, Aspect of the Beast, Totemic Attunement, Transmuter's Stone,
 // Elemental Gift, Armor Model). The engine takes the choice through
@@ -42,11 +44,15 @@ export function FeatureChoicePicker({
   sheet,
   mine,
   inCombat,
+  campaignLocale = DEFAULT_LOCALE,
 }: {
   sheet: CharacterSheet;
   mine: boolean;
   inCombat: boolean;
+  campaignLocale?: AppLocale;
 }) {
+  const { locale, t } = useLocale();
+  const contentT = createTranslator(campaignLocale);
   const choices = featureChoices(sheet);
   const campaignId = sheet.campaignId;
   const [busy, setBusy] = useState<string | null>(null);
@@ -59,24 +65,27 @@ export function FeatureChoicePicker({
     setBusy(`${spend}:${option}`);
     setRefusal(null);
     try {
+      // The campaign may use a different locale from the viewer's UI. Its
+      // action wording must be available before posting the player message.
+      await loadLocaleMessages(campaignLocale, "content");
       const response = await fetch(`/api/campaigns/${campaignId}/actions`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          content: `I choose ${titleCase(option)} for ${spend}.`,
+          content: contentT("sheetDialog.choice.action", { option: sheetChoiceOption(option, campaignLocale), feature: sheetFeatureChoice(spend, campaignLocale) }),
           kind: "do",
           intent: { card: "feature", resourceId: spend, variant: option },
         }),
       });
       if (!response.ok) {
         const data = (await response.json().catch(() => ({}))) as { error?: string };
-        setRefusal(data.error || "The choice was refused.");
+        setRefusal(typeof data.error === "string" && data.error ? data.error : messageTemplate("en", "sheetDialog.choice.error.refused"));
         replayAnimation(refusalRef.current, "shake-x var(--dur-beat) var(--ease-snap) both");
         return;
       }
       setSent((current) => ({ ...current, [spend]: option }));
     } catch {
-      setRefusal("Could not reach the server.");
+      setRefusal(messageTemplate("en", "sheetDialog.choice.error.network"));
     } finally {
       setBusy(null);
     }
@@ -89,13 +98,13 @@ export function FeatureChoicePicker({
         const open = mine && !choice.chosen && !inCombat;
         return (
           <div key={choice.spend} className="flex flex-wrap items-center gap-1.5 text-xs">
-            <span className="w-36 shrink-0 text-stone-400">{choice.feature}</span>
+            <span className="w-36 shrink-0 text-stone-400">{sheetFeatureChoice(choice.feature, locale)}</span>
             {choice.chosen ? (
               <span className="motion-pop inline-flex items-center gap-1 rounded-full border border-amber-500/50 bg-amber-500/10 px-2.5 py-0.5 text-amber-100">
-                <Check className="size-3" /> {titleCase(choice.chosen)}
+                <Check className="size-3" /> {sheetChoiceOption(choice.chosen, locale)}
               </span>
             ) : (
-              <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label={choice.feature} data-pill-group>
+              <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label={sheetFeatureChoice(choice.feature, locale)} data-pill-group>
                 {choice.options.map((option, index) => {
                   const on = waiting === option;
                   return (
@@ -110,12 +119,12 @@ export function FeatureChoicePicker({
                       onClick={() => void choose(choice.spend, option)}
                       title={
                         !mine
-                          ? "The character's own player chooses."
+                          ? t("sheetDialog.choice.owner")
                           : inCombat
-                            ? "Chosen outside a fight."
+                            ? t("sheetDialog.choice.outside")
                             : waiting
-                              ? "Sent. The DM resolves it."
-                              : `Choose ${titleCase(option)}`
+                              ? t("sheetDialog.choice.sent")
+                              : t("sheetDialog.choice.choose", { option: sheetChoiceOption(option, locale) })
                       }
                       className={cn(
                         "hand-option motion-press inline-flex min-h-9 items-center gap-1 rounded-full border px-3 sm:min-h-8",
@@ -125,7 +134,7 @@ export function FeatureChoicePicker({
                       )}
                     >
                       {busy === `${choice.spend}:${option}` ? <Loader2 className="size-3 animate-spin" /> : null}
-                      {titleCase(option)}
+                      {sheetChoiceOption(option, locale)}
                     </button>
                   );
                 })}
@@ -136,7 +145,7 @@ export function FeatureChoicePicker({
       })}
       {refusal ? (
         <p ref={refusalRef} role="alert" className="animate-fade-up text-[11px] text-amber-300">
-          {refusal}
+          {sheetUsageMessage(refusal, locale)}
         </p>
       ) : null}
     </div>

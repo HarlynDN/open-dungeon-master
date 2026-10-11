@@ -389,6 +389,7 @@ export function SidePanelRouter({
                 refreshNotes={refreshNotes}
                 onMessageUser={onMessageUser}
                 realDiceAllowed={campaign?.gameSettings?.dicePolicy === "real_allowed"}
+                campaignLocale={campaign?.gameSettings?.locale}
                 encumbranceRule={Boolean(campaign?.gameSettings?.variantRules?.encumbrance)}
                 inCombat={Boolean(encounter)}
                 encounter={encounter ?? null}

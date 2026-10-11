@@ -48,8 +48,12 @@ import { CHECK_ROLL_MESSAGES } from "./check-roll-messages.ts";
 
 import { CINEMATIC_MESSAGES } from "./cinematic-messages.ts";
 import { SHEET_PLAY_MESSAGES } from "./sheet-play-messages.ts";
+import { SHEET_DIALOG_MESSAGES } from "./sheet-dialog-messages.ts";
+import { SHEET_RESOURCE_HELP_MESSAGES } from "./sheet-resource-help-messages.ts";
 
 const en = {
+  ...SHEET_RESOURCE_HELP_MESSAGES.en,
+  ...SHEET_DIALOG_MESSAGES.en,
   ...SHEET_PLAY_MESSAGES.en,
   ...AUTH_MESSAGES.en,
   ...COMBAT_UI_MESSAGES.en,
@@ -127,6 +131,8 @@ export type MessageKey = keyof typeof en;
 type Messages = Record<MessageKey, string>;
 
 const zhCN: Messages = {
+  ...SHEET_RESOURCE_HELP_MESSAGES["zh-CN"],
+  ...SHEET_DIALOG_MESSAGES["zh-CN"],
   ...SHEET_PLAY_MESSAGES["zh-CN"],
   ...AUTH_MESSAGES["zh-CN"],
   ...COMBAT_UI_MESSAGES["zh-CN"],

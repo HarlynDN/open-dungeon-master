@@ -1,6 +1,7 @@
 "use client";
 
 import { Bot, Check, Crown, Heart, ImagePlus, PawPrint, Save, Sparkles, UserPlus } from "lucide-react";
+import type { AppLocale } from "@/lib/i18n/locales";
 import { isComposingInput } from "@/lib/input-composition";
 import { describeExhaustion } from "@/lib/dm/condition-logic";
 import { namesLookup } from "@/lib/battlemap/condition-notes";
@@ -189,6 +190,7 @@ export function PartyPanel({
   inCombat = false,
   encounter = null,
   campaignId = "",
+  campaignLocale,
   companionsAvailable = false,
   companionBuildAvailable = false,
   humanDmTable = false,
@@ -230,6 +232,7 @@ export function PartyPanel({
   encounter?: PublicEncounter | null;
   // AI companions: when a party or guest slot is free, show the request button.
   campaignId?: string;
+  campaignLocale?: AppLocale;
   companionsAvailable?: boolean;
   // Manual build (lasting party companion) is offered only when the table
   // allows party companions and a party slot is free.
@@ -752,6 +755,7 @@ export function PartyPanel({
       {viewingSheet ? (
         <CharacterSheetDialog
           sheet={viewingSheet}
+          campaignLocale={campaignLocale}
           mine={viewingSheet.userId === meUserId}
           steersStory={steersStory}
           // Who corrects a counter: whoever runs the story (the DM, or the

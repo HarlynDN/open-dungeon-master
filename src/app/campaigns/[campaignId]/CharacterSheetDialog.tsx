@@ -15,7 +15,6 @@ import {
   computeSheetDerived,
   formatModifier,
   sizeForRace,
-  type DerivedPart,
 } from "@/lib/srd";
 import { attunementSlotsFor, matchArmor } from "@/lib/srd/armor";
 import { encumbranceFor } from "@/lib/srd/encumbrance";
@@ -43,14 +42,20 @@ import { ResourceRow, SlotRow, STEP_BUTTON } from "@/components/sheet/SheetCount
 import { namesLookup } from "@/lib/battlemap/condition-notes";
 import { conditionNamesLookup } from "@/lib/battlemap/condition-presentation";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { abilityLabel } from "@/lib/i18n/character-presentations";
+import { DEFAULT_LOCALE, type AppLocale } from "@/lib/i18n/locales";
+import { messageTemplate } from "@/lib/i18n/translator";
+import { referenceDisplayName } from "@/lib/i18n/references";
+import { damageListLabel, resourceLabel } from "@/lib/i18n/sheet-play-presentations";
+import { sheetArmorParts, sheetDerivedParts, sheetIdentity, sheetLoadNote, sheetOwedChoice, sheetResourceHelp, sheetTimePassed, sheetUsageMessage } from "@/lib/i18n/sheet-dialog-presentations";
 
 function titleCase(value: string) {
   return value.replace(/[-_]/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
 const RESOURCE_NAMES = new Map(RESOURCE_DEFS.map((def) => [def.id, def.displayName]));
-// Every resource already carries a line explaining what spending it does; it
-// was written for the DM model and reads just as well for the player.
+// Original model guidance remains the English fallback; reviewed player
+// explanations are selected only for exact native resource IDs and wording.
 const RESOURCE_HELP = new Map(RESOURCE_DEFS.map((def) => [def.id, def.guidance]));
 
 // Full character sheet, opened by selecting any party member. Read-only,
@@ -62,10 +67,6 @@ const RESOURCE_HELP = new Map(RESOURCE_DEFS.map((def) => [def.id, def.guidance])
 // Every derived number's working, the way AC has always shown its own.
 // computeSheetDerived returns the parts it summed, so a hover can say where a
 // +7 came from without this file knowing a single rule.
-function explainParts(parts: DerivedPart[]): string {
-  return parts.map((part) => `${formatModifier(part.value)} ${part.label}`).join(", ");
-}
-
 const ROMAN = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"];
 
 export function CharacterSheetDialog({
@@ -77,6 +78,7 @@ export function CharacterSheetDialog({
   inCombat = false,
   myTurn = false,
   names = [],
+  campaignLocale = DEFAULT_LOCALE,
   portraitFallback,
   onAdjust,
   onClose,
@@ -102,10 +104,11 @@ export function CharacterSheetDialog({
   // Who a condition's "until X's turn" or "from X" may name: the party and
   // the enemies the viewer can see.
   names?: Array<{ id: string; name: string; kind?: string }>;
+  campaignLocale?: AppLocale;
   onAdjust?: () => void;
   onClose: () => void;
 }) {
-  const { locale } = useLocale();
+  const { locale, t } = useLocale();
   const derived = computeSheetDerived(sheet);
   const armor = acBreakdownFor(sheet);
   const attunedCount = sheet.equipment.filter((item) => item.attuned).length;
@@ -142,7 +145,7 @@ export function CharacterSheetDialog({
     wearer: sheet,
   });
   const anyEquipped = sheet.equipment.some((item) => item.equipped);
-  const speedNote = speedState.notes.length ? speedState.notes.join(" ") : "Their walking speed.";
+  const speedNote = speedState.notes.length ? speedState.notes.join(" ") : t("sheetDialog.walking");
   const [busy, setBusy] = useState(false);
   const [pdfBusy, setPdfBusy] = useState(false);
   // The server's reason when it refuses an adjustment, shown under the
@@ -154,7 +157,7 @@ export function CharacterSheetDialog({
   const [timeNote, setTimeNote] = useState<string | null>(null);
   const spends = mine || corrects;
   // The usage route's own refusal for a dead character's spend.
-  const deadNote = dead && !corrects ? `${sheet.name} is dead and spends nothing.` : null;
+  const deadNote = dead && !corrects ? t("sheetDialog.error.deadNote", { name: sheet.name }) : null;
 
   async function handleDownloadPdf() {
     setPdfBusy(true);
@@ -180,14 +183,14 @@ export function CharacterSheetDialog({
       });
       const data = await response.json().catch(() => null);
       if (!response.ok) {
-        setRefusal({ text: typeof data?.error === "string" ? data.error : "That change was refused.", at });
+        setRefusal({ text: typeof data?.error === "string" ? data.error : messageTemplate("en", "sheetDialog.error.refused"), at });
       } else if (typeof data?.timePassed === "string") {
         // Out of a fight armor takes minutes to put on or take off, and the
         // route moved the table's clock by them (src/lib/dm/don-doff.ts).
         setTimeNote(data.timePassed);
       }
     } catch {
-      setRefusal({ text: "The change did not reach the server.", at });
+      setRefusal({ text: messageTemplate("en", "sheetDialog.error.network"), at });
     } finally {
       setBusy(false);
     }
@@ -227,14 +230,7 @@ export function CharacterSheetDialog({
                   {sheet.name}
                 </Dialog.Title>
                 <p className="text-xs text-stone-400">
-                  Level {sheet.level} {titleCase(sheet.race)}{" "}
-                  {(sheet.classes?.length ?? 0) > 1
-                    ? (sheet.classes ?? [])
-                        .map((entry) => `${titleCase(entry.id)} ${entry.level}`)
-                        .join(" / ")
-                    : `${titleCase(sheet.class)}${sheet.subclass ? ` (${titleCase(sheet.subclass)})` : ""}`}
-                  {sheet.background ? ` · ${titleCase(sheet.background)}` : ""}
-                  {sheet.alignment ? ` · ${sheet.alignment}` : ""}
+                  {sheetIdentity(sheet, locale)}
                 </p>
               </div>
             </div>
@@ -249,53 +245,47 @@ export function CharacterSheetDialog({
               vitals={[
                 {
                   glyph: "rest-ac",
-                  label: <GameTerm id="armor_class">Armor class</GameTerm>,
+                  label: <GameTerm id="armor_class">{t("sheetDialog.ac")}</GameTerm>,
                   value: sheet.ac,
-                  title: sheet.acOverride ? "Set by hand; armor does not change it." : armor.parts.join(" + "),
+                  title: sheet.acOverride ? t("sheetDialog.ac.manual") : sheetArmorParts(armor.parts, locale),
                 },
                 {
                   glyph: "rest-speed",
-                  label: "Speed",
-                  value: `${speed} ft`,
+                  label: t("sheetDialog.speed"),
+                  value: t("sheetDialog.feet", { speed }),
                   title: [speedNote, ...otherSpeedsLine(derived.speeds, locale)].join(" "),
                   tone: speed < speedState.base ? "warn" : "plain",
                 },
                 {
                   glyph: "rest-initiative",
-                  label: <GameTerm id="initiative">Initiative</GameTerm>,
+                  label: <GameTerm id="initiative">{t("sheetDialog.initiative")}</GameTerm>,
                   value: formatModifier(derived.initiative),
-                  title: explainParts(derived.parts.initiative),
+                  title: sheetDerivedParts(derived.parts.initiative, locale),
                 },
                 {
                   glyph: "sense-passive-perception",
-                  label: <GameTerm id="passive_perception">Passive perception</GameTerm>,
+                  label: <GameTerm id="passive_perception">{t("sheetDialog.passive")}</GameTerm>,
                   value: derived.passivePerception,
-                  title: explainParts(derived.parts.passivePerception),
+                  title: sheetDerivedParts(derived.parts.passivePerception, locale),
                 },
-                { glyph: "rest-proficiency", label: "Proficiency", value: formatModifier(derived.proficiencyBonus) },
-                { glyph: "coin-gp", label: "Gold", value: `${sheet.gold} gp` },
-                { glyph: "rest-xp", label: "Experience", value: `${sheet.xp} XP` },
+                { glyph: "rest-proficiency", label: t("sheetDialog.proficiency"), value: formatModifier(derived.proficiencyBonus) },
+                { glyph: "coin-gp", label: t("sheetDialog.gold"), value: t("sheetDialog.goldValue", { gold: sheet.gold }) },
+                { glyph: "rest-xp", label: t("sheetDialog.experience"), value: t("sheetDialog.xp", { xp: sheet.xp }) },
                 {
                   glyph: `die-${sheet.hitDice.die}`,
-                  label: <GameTerm id="hit_dice">Hit dice</GameTerm>,
+                  label: <GameTerm id="hit_dice">{t("sheetDialog.hitDice")}</GameTerm>,
                   // Every pool of a multiclass character, not only the first.
                   value: hitDiceLine(sheet),
                 },
                 {
                   glyph: "coin-purse",
-                  label: "Carried",
-                  value: `${load.carriedLb}${load.unweighed ? "+" : ""}/${load.capacityLb} lb`,
+                  label: t("sheetDialog.carried"),
+                  value: t("sheetDialog.pounds", { carried: load.carriedLb, unknown: load.unweighed ? "+" : "", capacity: load.capacityLb }),
                   tone: load.overCapacity || (encumbranceRule && load.tier !== "unencumbered") ? "warn" : "plain",
                   // Past the capacity (Strength x 15) the load can only be
                   // dragged at 5 feet, whatever the table's encumbrance rule
                   // (src/lib/dm/load-rules.ts, speedFor).
-                  title: `${
-                    load.overCapacity
-                      ? `Past their carrying capacity of ${load.capacityLb} lb: they can only drag this load, at a speed of 5 feet, and nothing more can be given to them.`
-                      : encumbranceRule
-                        ? `${load.note ?? "Not encumbered"}. Capacity ${load.capacityLb} lb.`
-                        : `Carrying capacity ${load.capacityLb} lb. Encumbrance is off for this table, so weight up to the capacity costs nothing.`
-                  }${load.unweighed ? ` ${load.unweighed} item${load.unweighed === 1 ? "" : "s"} of unknown weight are not counted.` : ""}`,
+                  title: sheetLoadNote(load, encumbranceRule, locale),
                 },
               ]}
             />
@@ -305,15 +295,14 @@ export function CharacterSheetDialog({
           {sheet.wildShape ? (
             <div className="reveal mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border border-lime-800/60 bg-lime-950/40 px-3 py-2 text-sm text-lime-200">
               <span className="flex items-center gap-1.5 font-medium capitalize">
-                <PawPrint className="size-4" /> Wild Shaped: {sheet.wildShape.form}
+                <PawPrint className="size-4" /> {t("sheetDialog.shape", { form: referenceDisplayName("monster", sheet.wildShape.form, locale) })}
               </span>
               <span className="font-mono text-xs">
-                {sheet.wildShape.beastHp}/{sheet.wildShape.beastMaxHp} beast HP
+                {t("sheetDialog.shape.hp", { current: sheet.wildShape.beastHp, max: sheet.wildShape.beastMaxHp })}
               </span>
-              <span className="font-mono text-xs">AC {sheet.wildShape.beastAc}</span>
+              <span className="font-mono text-xs">{t("sheetDialog.shape.ac", { ac: sheet.wildShape.beastAc })}</span>
               <span className="w-full text-xs text-lime-400/80">
-                Damage hits the beast&apos;s hit points first. The {sheet.currentHp}/{hp.max} HP
-                above is what {sheet.name} returns to when the form breaks.
+                {t("sheetDialog.shape.note", { current: sheet.currentHp, max: hp.max, name: sheet.name })}
               </span>
             </div>
           ) : null}
@@ -333,10 +322,10 @@ export function CharacterSheetDialog({
 
           <SheetBlock
             className="mt-4"
-            title="Abilities"
+            title={t("sheetDialog.abilities")}
             aside={
               <>
-                <GameTerm id="saving_throw">Saving throws</GameTerm> ride each tile
+                <GameTerm id="saving_throw">{t("sheetDialog.saves")}</GameTerm>{t("sheetDialog.saves.aside")}
               </>
             }
           >
@@ -345,36 +334,36 @@ export function CharacterSheetDialog({
               mods={derived.abilityMods}
               saves={derived.saves}
               saveProficiencies={sheet.proficiencies.saves}
-              explainSave={(ability) => explainParts(derived.parts.saves[ability])}
+              explainSave={(ability) => sheetDerivedParts(derived.parts.saves[ability], locale)}
             />
           </SheetBlock>
 
-          <SheetBlock className="mt-4" title={<GameTerm id="skill">Skills</GameTerm>}>
+          <SheetBlock className="mt-4" title={<GameTerm id="skill">{t("sheetDialog.skills")}</GameTerm>}>
             <SkillRows
               skills={derived.skills}
               proficient={sheet.proficiencies.skills}
-              explain={(skillId) => explainParts(derived.parts.skills[skillId])}
+              explain={(skillId) => sheetDerivedParts(derived.parts.skills[skillId], locale)}
             />
           </SheetBlock>
 
-          <SheetBlock className="mt-4" title="Languages and training">
+          <SheetBlock className="mt-4" title={t("sheetDialog.training")}>
             <TrainingLines proficiencies={sheet.proficiencies} />
           </SheetBlock>
 
           {sheet.spellcasting ? (
             <SheetBlock
               className="mt-4"
-              title="Spellcasting"
+              title={t("sheetDialog.casting")}
               hint={
                 derived.parts.spellSaveDc.length
-                  ? `Save DC: ${explainParts(derived.parts.spellSaveDc)}. To hit: ${explainParts(derived.parts.spellAttack)}`
+                  ? t("sheetDialog.casting.hint", { save: sheetDerivedParts(derived.parts.spellSaveDc, locale), attack: sheetDerivedParts(derived.parts.spellAttack, locale) })
                   : undefined
               }
               aside={
                 <>
-                  {sheet.spellcasting.ability.toUpperCase()}
-                  {derived.spellSaveDc ? ` · DC ${derived.spellSaveDc}` : ""}
-                  {derived.spellAttack !== null ? ` · ${formatModifier(derived.spellAttack)} to hit` : ""}
+                  {locale === "en" ? sheet.spellcasting.ability.toUpperCase() : abilityLabel(sheet.spellcasting.ability, locale, true)}
+                  {derived.spellSaveDc ? t("sheetDialog.casting.dc", { dc: derived.spellSaveDc }) : ""}
+                  {derived.spellAttack !== null ? t("sheetDialog.casting.attack", { attack: formatModifier(derived.spellAttack) }) : ""}
                 </>
               }
             >
@@ -382,14 +371,14 @@ export function CharacterSheetDialog({
                 <div className="reveal space-y-1.5 text-xs text-stone-300">
                   <p className="flex items-center gap-1 text-stone-400">
                     <GameIcon icon={{ kind: "glyph", key: "rest-spell-slot" }} size="size-5" />
-                    <GameTerm id="spell_slot">Spell slots</GameTerm>
-                    <span className="text-stone-500">: the magic left today</span>
+                    <GameTerm id="spell_slot">{t("sheetDialog.slots")}</GameTerm>
+                    <span className="text-stone-500">{t("sheetDialog.slots.tail")}</span>
                   </p>
                   <div className="flex flex-wrap gap-1.5">
                     {Object.entries(sheet.spellcasting.slots).map(([slotLevel, slot]) => (
                       <SlotRow
                         key={slotLevel}
-                        label={`Level ${ROMAN[Number(slotLevel)] ?? slotLevel}`}
+                        label={t("sheetDialog.slots.level", { level: locale === "en" ? ROMAN[Number(slotLevel)] ?? slotLevel : slotLevel })}
                         left={slot.max - slot.used}
                         max={slot.max}
                         spends={spends}
@@ -401,7 +390,7 @@ export function CharacterSheetDialog({
                     ))}
                     {sheet.spellcasting.pact ? (
                       <SlotRow
-                        label={`Pact, level ${ROMAN[sheet.spellcasting.pact.level] ?? sheet.spellcasting.pact.level}`}
+                        label={t("sheetDialog.slots.pact", { level: locale === "en" ? ROMAN[sheet.spellcasting.pact.level] ?? sheet.spellcasting.pact.level : sheet.spellcasting.pact.level })}
                         left={sheet.spellcasting.pact.max - sheet.spellcasting.pact.used}
                         max={sheet.spellcasting.pact.max}
                         spends={spends}
@@ -413,15 +402,10 @@ export function CharacterSheetDialog({
                     ) : null}
                   </div>
                   <p className="text-[11px] leading-snug text-stone-500">
-                    Casting a spell of level I or higher uses up one slot of that level (or a higher
-                    one, to cast it stronger); cantrips never use one. Filled marks are slots still
-                    available, empty ones are spent. They all come back after a long rest
-                    {sheet.class === "warlock" || sheet.spellcasting.pact ? " (a warlock's pact slots after a short rest too)" : ""}.
-                    {corrects
-                      ? " The DM marks them as spells are cast; the buttons correct the count."
-                      : mine
-                        ? " The DM marks them as you cast; the button marks one the count missed."
-                        : ""}
+                    {t("sheetDialog.slots.help", {
+                      pact: sheet.class === "warlock" || sheet.spellcasting.pact ? t("sheetDialog.slots.pactRest") : "",
+                      correction: corrects ? t("sheetDialog.slots.corrects") : mine ? t("sheetDialog.slots.mine") : "",
+                    })}
                   </p>
                 </div>
               ) : null}
@@ -432,11 +416,11 @@ export function CharacterSheetDialog({
           ) : null}
 
           {spends || Object.keys(sheet.resources).length ? (
-            <SheetBlock className="mt-4" title="Hit dice and resources">
+            <SheetBlock className="mt-4" title={t("sheetDialog.resources")}>
               <div className="space-y-1.5 text-xs text-stone-300">
                 <div className="flex items-start gap-2">
                   <span className="w-36 shrink-0 pt-1 text-stone-400">
-                    <GameTerm id="hit_dice">Hit dice</GameTerm>
+                    <GameTerm id="hit_dice">{t("sheetDialog.hitDice")}</GameTerm>
                   </span>
                   {/* SRD 5.1: hit dice are spent at the end of a short rest.
                       A player at the table chooses their own while the rest's
@@ -448,7 +432,7 @@ export function CharacterSheetDialog({
                       type="button"
                       className={STEP_BUTTON}
                       disabled={busy || sheet.hitDice.spent >= sheet.hitDice.total}
-                      title="Correction: mark a hit die as spent"
+                      title={t("sheetDialog.hitDice.spendCorrection")}
                       onClick={() => adjustUsage({ hitDiceSpent: sheet.hitDice.spent + 1 })}
                     >
                       <Minus className="size-3" />
@@ -459,7 +443,7 @@ export function CharacterSheetDialog({
                       type="button"
                       className={STEP_BUTTON}
                       disabled={busy || sheet.hitDice.spent <= 0}
-                      title="Correction: give a hit die back"
+                      title={t("sheetDialog.hitDice.recoverCorrection")}
                       onClick={() => adjustUsage({ hitDiceSpent: sheet.hitDice.spent - 1 })}
                     >
                       <Plus className="size-3" />
@@ -471,8 +455,8 @@ export function CharacterSheetDialog({
                     key={id}
                     id={id}
                     pool={pool}
-                    name={RESOURCE_NAMES.get(id) ?? titleCase(id)}
-                    help={RESOURCE_HELP.get(id)}
+                    name={resourceLabel(id, RESOURCE_NAMES.get(id) ?? titleCase(id), locale)}
+                    help={sheetResourceHelp(id, RESOURCE_HELP.get(id), locale)}
                     spends={spends}
                     corrects={corrects}
                     busy={busy}
@@ -484,22 +468,20 @@ export function CharacterSheetDialog({
               </div>
               {spends ? (
                 <p className="reveal mt-1.5 text-[11px] text-stone-500">
-                  {corrects
-                    ? "Minus spends, plus hands a use back as a correction."
-                    : "Minus marks a use spent. Uses come back at rests; the DM or the party lead corrects a wrong count."}{" "}
-                  Changes are logged to the session event log.
+                  {t(corrects ? "sheetDialog.resources.corrects" : "sheetDialog.resources.mine")}{" "}
+                  {t("sheetDialog.resources.log")}
                 </p>
               ) : null}
               {refusal?.at === "usage" ? (
                 <p role="alert" className="reveal mt-1.5 text-[11px] text-amber-300">
-                  {refusal.text}
+                  {sheetUsageMessage(refusal.text, locale)}
                 </p>
               ) : null}
             </SheetBlock>
           ) : null}
 
           {sheet.equipment.length ? (
-            <SheetBlock className="mt-4" title="Equipment" aside={`Attuned ${attunedCount}/${attunementSlotsFor(sheet)}`}>
+            <SheetBlock className="mt-4" title={t("sheetDialog.equipment")} aside={t("sheetDialog.attuned", { count: attunedCount, max: attunementSlotsFor(sheet) })}>
               <EquipmentChips
                 equipment={sheet.equipment}
                 extra={(index) => {
@@ -510,22 +492,20 @@ export function CharacterSheetDialog({
               {mine && wearable.length ? (
                 <div className="reveal mt-2 space-y-1">
                   <p className="text-[11px] text-stone-500">
-                    Worn gear sets your AC ({sheet.acOverride ? "pinned by hand" : armor.parts.join(" + ")}
-                    ). Attuned {attunedCount}/{attunementSlotsFor(sheet)}.
+                    {t("sheetDialog.gear.note", { armor: sheet.acOverride ? t("sheetDialog.gear.pinned") : sheetArmorParts(armor.parts, locale), count: attunedCount, max: attunementSlotsFor(sheet) })}
                   </p>
                   {magic.sources.length ? (
                     <p className="reveal text-[11px] text-sky-400/80">
-                      Active magic:{" "}
-                      {[
-                        magic.acBonus ? `+${magic.acBonus} AC` : null,
-                        magic.saveBonus ? `+${magic.saveBonus} saves` : null,
+                      {t("sheetDialog.magic", { effects: [
+                        magic.acBonus ? t("sheetDialog.magic.ac", { bonus: magic.acBonus }) : null,
+                        magic.saveBonus ? t("sheetDialog.magic.saves", { bonus: magic.saveBonus }) : null,
                         ...Object.entries(magic.abilitySet).map(
-                          ([ability, score]) => `${ability.toUpperCase()} ${score}`,
+                          ([ability, score]) => `${locale === "en" ? ability.toUpperCase() : abilityLabel(ability, locale, true)} ${score}`,
                         ),
-                        magic.resistances.length ? `resist ${magic.resistances.join(", ")}` : null,
+                        magic.resistances.length ? t("sheetDialog.magic.resist", { types: damageListLabel(magic.resistances.join(", "), locale) }) : null,
                       ]
                         .filter(Boolean)
-                        .join(" \u00b7 ") || "worn"}
+                        .join(" \u00b7 ") || t("sheetDialog.magic.worn") })}
                     </p>
                   ) : null}
                   {wearable.map((item) => (
@@ -543,12 +523,12 @@ export function CharacterSheetDialog({
                   ))}
                   {refusal?.at === "gear" ? (
                     <p role="alert" className="reveal text-[11px] text-amber-300">
-                      {refusal.text}
+                      {sheetUsageMessage(refusal.text, locale)}
                     </p>
                   ) : null}
                   {timeNote ? (
                     <p key={timeNote} role="status" className="animate-fade-up text-[11px] text-sky-200/90">
-                      {timeNote}
+                      {sheetTimePassed(timeNote, locale)}
                     </p>
                   ) : null}
                 </div>
@@ -557,33 +537,33 @@ export function CharacterSheetDialog({
           ) : null}
 
           {owedChoices(sheet).length ? (
-            <SheetBlock className="mt-4" title="Choices owed">
+            <SheetBlock className="mt-4" title={t("sheetDialog.owed")}>
               <p className="text-sm text-amber-200/90">
-                Earned and not yet made: {owedChoices(sheet).join("; ")}. The next level-up takes them.
+                {t("sheetDialog.owed.note", { choices: owedChoices(sheet).map(choice => sheetOwedChoice(choice, locale)).join("; ") })}
               </p>
             </SheetBlock>
           ) : null}
           {sheet.features.length ? (
-            <SheetBlock className="mt-4" title="Features and traits">
+            <SheetBlock className="mt-4" title={t("sheetDialog.features")}>
               <FeatureChips features={sheet.features} classId={sheet.class} subclass={sheet.subclass} />
-              <FeatureChoicePicker sheet={sheet} mine={mine} inCombat={inCombat} />
+              <FeatureChoicePicker sheet={sheet} mine={mine} inCombat={inCombat} campaignLocale={campaignLocale} />
             </SheetBlock>
           ) : null}
 
           {sheet.feats.length ? (
-            <SheetBlock className="mt-4" title="Feats">
+            <SheetBlock className="mt-4" title={t("sheetDialog.feats")}>
               <FeatChips feats={sheet.feats} classId={sheet.class} subclass={sheet.subclass} />
             </SheetBlock>
           ) : null}
 
           {sheet.backstory ? (
-            <SheetBlock className="mt-4" title="Backstory">
+            <SheetBlock className="mt-4" title={t("sheetDialog.backstory")}>
               <p className="whitespace-pre-wrap font-serif text-sm leading-relaxed text-stone-300">{sheet.backstory}</p>
             </SheetBlock>
           ) : null}
 
           {mine && sheet.notes ? (
-            <SheetBlock className="mt-4" title="Notes" aside="only you see these">
+            <SheetBlock className="mt-4" title={t("sheetDialog.notes")} aside={t("sheetDialog.notes.private")}>
               <p className="whitespace-pre-wrap text-xs text-stone-300">{sheet.notes}</p>
             </SheetBlock>
           ) : null}
@@ -594,18 +574,18 @@ export function CharacterSheetDialog({
               onClick={handleDownloadPdf}
               disabled={pdfBusy}
               className={ui.btnSmall}
-              title="Download this character sheet as a fillable PDF"
+              title={t("sheetDialog.pdf.tip")}
             >
-              <FileDown className="size-3.5" /> {pdfBusy ? "Preparing..." : "Download PDF"}
+              <FileDown className="size-3.5" /> {t(pdfBusy ? "sheetDialog.pdf.preparing" : "sheetDialog.pdf.download")}
             </button>
             {steersStory && onAdjust ? (
               <button
                 type="button"
                 onClick={onAdjust}
                 className={ui.btnSmall}
-                title="Party lead: correct this character's stats, items, and spells"
+                title={t("sheetDialog.adjust.tip")}
               >
-                <Wrench className="size-3.5" /> Adjust
+                <Wrench className="size-3.5" /> {t("sheetDialog.adjust")}
               </button>
             ) : null}
           </div>

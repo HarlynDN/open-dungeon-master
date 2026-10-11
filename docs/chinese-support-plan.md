@@ -29,7 +29,7 @@ flow remains incomplete; the review-repair checkpoint is a separate scoped task.
 | Locale foundation | Registry, persistence, browser fallback, typed complete catalogs, model locale policy, classified token proxy, chapter budget, CJK retrieval, IME protection | Real prompt-usage calibration; keep legacy campaign/history regressions |
 | DM safety | Per-event engine conclusions with English/Chinese renderers; AI prose separated; one text-only correction and safe fallback; shared localized enemy names in roster/initiative/prose/guard; real Codex combat acceptance | Broader spell/condition/pack coverage; conservative regex coverage is not full language understanding |
 | Embeddings | Original English deployment default retained; explicit multilingual opt-in; fixed bilingual calibration/holdout and hard-negative policy | Broader pack quality; opt-in affects English campaigns and rebuilds indexes |
-| UI | **124/437** covered files, **3354** pending literal sites, **5702** message keys; scoped AST gate; pending checks, initiative controls, encounter roster, board conditions, structured attack/area/death/check/save/special/initiative/social captions and cinematic owned UI | Remaining play/action/combat/inventory/rest/level-up/save/resume surfaces, full sheet/party dialogs and native resource guidance, native feature/reaction names; file fraction is not overall completion or an effort estimate |
+| UI | **125/437** covered files, **3262** pending literal sites, **5929** message keys; scoped AST gate; pending checks, initiative controls, encounter roster, board conditions, structured attack/area/death/check/save/special/initiative/social captions and cinematic owned UI | Remaining play/action/combat/inventory/rest/level-up/save/resume surfaces, full sheet/party dialogs and native resource guidance, native feature/reaction names; file fraction is not overall completion or an effort estimate |
 | Character creation/material | Identity, ancestry, class introductions, ability allocation, gear, spell book/preparation and finish preview; 517 spell and 228 equipment names; 257-entry contextual terminology policy and lint gate; original-source review records | Remaining material beyond reviewed names/creator snippets; authored/pack text retains original language |
 | Player system logs | Structured rule diagnostics and engine-generated combat conclusions retain English protocol semantics with localized presentation | General player-visible log templates; model-facing English tool results remain independent |
 | Resource delivery | UI vs content namespaces; character/campaign boundaries; generated resources checked by lint; production Turbopack build and anonymous bilingual browser switch/reload succeed; home/character/campaign SSR and initial-script payloads measured | Hydrated/lazy network totals, authenticated campaign switching and active-play browser acceptance; route-level JS payload remains large |
@@ -205,8 +205,16 @@ pending. All 528 script suites pass (274.65 seconds), as do independent
 TypeScript, lint and the default production Turbopack build. Validation outcomes
 are recorded in its adjacent review JSON.
 
-1. Complete full sheet/party dialog copy, native resource names/guidance and
-   feature choices; finish native feature/reaction names and authored paired-damage
+The [sheet dialog batch](validation/chinese-sheet-dialog.md) adds owned dialog and
+gear copy, six native feature choices, 34 resource explanations and independent
+campaign/UI locale handling for generated choice actions, including cold resource
+loading. The original 26 dialog renders and 28 earlier compressed baselines are
+retained. SheetChoices joins covered files; remaining native material keeps full
+sheet/gear/party flows pending. Focused checks and consolidated gate sequencing
+are recorded in the linked note.
+
+1. Complete remaining native resource names/guidance and full sheet/party
+   material; finish native feature/reaction names and authored paired-damage
    frames, preserving proper/authored names, canonical IDs and English render parity.
 2. Continue the remaining main play UI and parameterized player logs in bounded
    commits, each with relevant English regression and translation-source review.

@@ -53,7 +53,6 @@
     "src/lib/i18n/check-roll-messages.ts": "22c2f41bd26ab8aa4c9f198e42e530c37e0adab54ad8227f878ee4ce766353a4",
     "src/lib/i18n/special-roll-messages.ts": "2da4569d2861de7be61a703df37bccfa9d0317bd4c41d9f24b65df8c7a2a5833",
     "src/lib/i18n/glossary.zh-CN.ts": "356a38e27c23d45dbb0318802b35b7e928158f0a3888ea040976a217ed2d1f4d",
-    "src/lib/i18n/resource-scope.ts": "69ac97fecf5c508828cd1070c285e98cd67114b5e675a1420399862d33e10a50",
     "scripts/lib/special-caption-fixtures.mjs": "8c37932032e361c72af04e557a71c6383a8d86c2f4651834b4a9077a454e815a",
     "scripts/lib/special-caption-contracts.mjs": "68ab118a2d22851acb3c52065c74f90759619f9efa9fb1151f6310f631c8db3d"
   },
@@ -161,7 +160,9 @@
     "baselineCommit": "bf87a494",
     "reason": "Fixed reviewed key/value/placeholder and delivery-scope projections replace aggregate byte locks; unrelated imports, formatting and new namespaces do not expand this review.",
     "files": {
-      "src/lib/i18n/messages.ts": "97e5f9c8b717474524fb4c752d1d22a33f869063623f4493ff0ee7225ec3e31d"
-    }
+      "src/lib/i18n/messages.ts": "97e5f9c8b717474524fb4c752d1d22a33f869063623f4493ff0ee7225ec3e31d",
+      "src/lib/i18n/resource-scope.ts": "69ac97fecf5c508828cd1070c285e98cd67114b5e675a1420399862d33e10a50"
+    },
+    "scopeNote": "The fixed reviewed key-to-scope projections already verify the delivery boundary; adding sheetDialog does not alter those reviewed mappings."
   }
 }

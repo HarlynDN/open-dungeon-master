@@ -173,7 +173,7 @@
     {
       "path": "src/app/campaigns/[campaignId]/CharacterSheetDialog.tsx",
       "state": "pending",
-      "review": "Locale-aware HP/speed/condition/charge helpers wired; full dialog chrome, material descriptions and controls remain pending."
+      "review": "Owned identity/vitals/derived/load/wild-shape/slot/resource/equipment/owed-choice/notes/export chrome and native usage refusals localized; 34/415 resource explanations reviewed. Remaining native resource names/help, magic-item names, feature/feat material and Chinese PDF output keep the full dialog pending."
     },
     {
       "path": "src/app/campaigns/[campaignId]/CharacterVoices.tsx",
@@ -1706,8 +1706,8 @@
     },
     {
       "path": "src/components/sheet/SheetChoices.tsx",
-      "state": "pending",
-      "review": "OtherSpeeds localized; FeatureChoicePicker copy and option display remain pending."
+      "state": "covered",
+      "review": "OtherSpeeds and the six native subclass-choice labels/options/ARIA/gates/refusals reviewed. Canonical feature/variant IDs and English requests unchanged; generated action text follows campaign locale separately from UI locale. Unknown diagnostics and authored text retained."
     },
     {
       "path": "src/components/sheet/SheetCounters.tsx",
@@ -1716,7 +1716,8 @@
     },
     {
       "path": "src/components/sheet/SheetGearRow.tsx",
-      "state": "pending"
+      "state": "pending",
+      "review": "Owned wear/attune/charge/timing/death/combat/curse UI and known native refusals localized with original callbacks retained. Magic item catalog names and source material beyond existing aliases remain pending."
     },
     {
       "path": "src/components/sheet/SheetParts.tsx",

@@ -125,7 +125,6 @@
     "src/app/campaigns/[campaignId]/BoardChrome.tsx": "166a8056c783ef3c53c3f2e4413e5fae4a2c114b3f049a9c62dee6085bfec994",
     "src/lib/i18n/combat-ui-messages.ts": "e5c8fb25470e41472ea0d6c45095cee6f6c78f223492df0c78bbe1730060c9bd",
     "src/lib/i18n/combat-ui-presentations.ts": "f0380c5693827cdb2c2c72e89ffc3b76cdbe0f7c7b404e63b97bbdd764cd29d4",
-    "src/lib/i18n/resource-scope.ts": "69ac97fecf5c508828cd1070c285e98cd67114b5e675a1420399862d33e10a50",
     "scripts/lib/combat-ui-fixtures.mjs": "c30d098937f9b7b4abc82b696b792f46d23c13639c8faa76acbe6406467f7a7b",
     "scripts/test-chinese-combat-ui.mjs": "b4b833409a9e21340611b3a0941e1496400a51f752c8f40b9428a43ec9dcc7c6"
   },
@@ -184,7 +183,9 @@
     "files": {
       "src/lib/i18n/messages.ts": "97e5f9c8b717474524fb4c752d1d22a33f869063623f4493ff0ee7225ec3e31d",
       "src/lib/i18n/resources/en.content.json": "76defd68abbbfffaa772619605c11f1ddf89bf205849fb283f79c40de0d7c0e6",
-      "src/lib/i18n/resources/zh-CN.content.json": "0cf31a54cf427438439f5b7a90f7b417b9ede83dcb214c1dbf535792cb5f088d"
-    }
+      "src/lib/i18n/resources/zh-CN.content.json": "0cf31a54cf427438439f5b7a90f7b417b9ede83dcb214c1dbf535792cb5f088d",
+      "src/lib/i18n/resource-scope.ts": "69ac97fecf5c508828cd1070c285e98cd67114b5e675a1420399862d33e10a50"
+    },
+    "scopeNote": "The fixed reviewed key-to-scope projections already verify the delivery boundary; adding sheetDialog does not alter those reviewed mappings."
   }
 }

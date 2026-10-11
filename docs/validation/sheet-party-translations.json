@@ -17,14 +17,13 @@
     "scripts/lib/combat-ui-fixtures.mjs": "c30d098937f9b7b4abc82b696b792f46d23c13639c8faa76acbe6406467f7a7b",
     "scripts/lib/sheet-party-fixtures.mjs": "85ffb69a377fa633acbd680fd8c6bfc05c70c1b6719a1d07b5cbdeb2455e3bd8",
     "src/app/api/campaigns/[campaignId]/sheet/route.ts": "f38e06d5e7120fbe65521fdd8ca2dc8ebd4b37e09d0ee91f5641df6bf4e71c43",
-    "src/app/campaigns/[campaignId]/CharacterSheetDialog.tsx": "cab611ffd0f4baba4f0b24ae42ea8b6428c98e1a662815933bf75ec5299cda4d",
-    "src/app/campaigns/[campaignId]/PartyPanel.tsx": "d8ba7ee34768ef7fdaf333e73f40d5eb2c2b52cc6aa023379ebb3f2378a3ae27",
-    "src/components/sheet/SheetChoices.tsx": "8589bf5762754172c6d5c57b854a6a4c5bdcd41eacbabe369d34eeadb1c0876d",
+    "src/app/campaigns/[campaignId]/CharacterSheetDialog.tsx": "d582cce066ecf1701ac1900b82d14986ec1105cba2ae0a4297cd1c041d1dd5b2",
+    "src/app/campaigns/[campaignId]/PartyPanel.tsx": "2bb148a325e0661352856dbf50ec0972d422275f3bdaad0f3abe97c1b1abd726",
+    "src/components/sheet/SheetChoices.tsx": "c69cbce9c5be6af8d7dc83146f908b342db38423fde595e852c847307c974568",
     "src/components/sheet/SheetCounters.tsx": "e9b1d6783e426f2ebb634f9112c59878a6698069f70b2aa57361f97ef671382c",
     "src/components/sheet/SheetParts.tsx": "e47623ce33dfbf4f8f4ea14bafa08f253d2fa6e6e95af05be55d4deebb3ae363",
     "src/components/sheet/SheetState.tsx": "d664ff1c154de748ef0605e2dc44a05ae5b534b4c071070d6cc6a3da2621906b",
     "src/components/sheet/sheet-state.ts": "213c086dd18e14a7036c09029752c7793907085889f97eea90257fd8c577ce56",
-    "src/lib/i18n/resource-scope.ts": "69ac97fecf5c508828cd1070c285e98cd67114b5e675a1420399862d33e10a50",
     "src/lib/i18n/roll-presentations.ts": "3999299af4647b88f15531dfeca1c5bae09350bbd2479b877eba0c8d7706d582",
     "src/lib/i18n/sheet-play-messages.ts": "bb0d4fedc82ddce4fbd7bb8703182b085c97eb17532ac9251424cd01581056ff",
     "src/lib/i18n/sheet-play-presentations.ts": "5c0500769004e486e789698dc2e72aa2852153280a67cf2b1fc5d5b67add6622",
@@ -59,7 +58,17 @@
     "files": {
       "src/lib/i18n/messages.ts": "97e5f9c8b717474524fb4c752d1d22a33f869063623f4493ff0ee7225ec3e31d",
       "src/lib/i18n/resources/en.content.json": "76defd68abbbfffaa772619605c11f1ddf89bf205849fb283f79c40de0d7c0e6",
-      "src/lib/i18n/resources/zh-CN.content.json": "0cf31a54cf427438439f5b7a90f7b417b9ede83dcb214c1dbf535792cb5f088d"
+      "src/lib/i18n/resources/zh-CN.content.json": "0cf31a54cf427438439f5b7a90f7b417b9ede83dcb214c1dbf535792cb5f088d",
+      "src/lib/i18n/resource-scope.ts": "69ac97fecf5c508828cd1070c285e98cd67114b5e675a1420399862d33e10a50"
+    },
+    "scopeNote": "The fixed reviewed key-to-scope projections already verify the delivery boundary; adding sheetDialog does not alter those reviewed mappings."
+  },
+  "sourceReviewUpdates": {
+    "review": "These shared component diffs were compared against the 26 frozen original sheet-dialog renders and the existing 32 party/state renders. New focused tests exercise canonical counter/gear/choice requests, proper names and privacy; old English outputs and reviewed values are retained.",
+    "priorComponentSha256": {
+      "src/app/campaigns/[campaignId]/CharacterSheetDialog.tsx": "cab611ffd0f4baba4f0b24ae42ea8b6428c98e1a662815933bf75ec5299cda4d",
+      "src/app/campaigns/[campaignId]/PartyPanel.tsx": "d8ba7ee34768ef7fdaf333e73f40d5eb2c2b52cc6aa023379ebb3f2378a3ae27",
+      "src/components/sheet/SheetChoices.tsx": "8589bf5762754172c6d5c57b854a6a4c5bdcd41eacbabe369d34eeadb1c0876d"
     }
   }
 }
