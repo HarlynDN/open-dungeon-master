@@ -173,7 +173,7 @@
     {
       "path": "src/app/campaigns/[campaignId]/CharacterSheetDialog.tsx",
       "state": "pending",
-      "review": "Owned identity/vitals/derived/load/wild-shape/slot/resource/equipment/owed-choice/notes/export chrome and native usage refusals localized; 174/415 resource explanations and names reviewed (all 140 authored subclass/lineage counters included). 241 remaining native resource names/help, magic-item names, feature/feat material and Chinese PDF output keep the full dialog pending."
+      "review": "Owned identity/vitals/derived/load/wild-shape/slot/resource/equipment/owed-choice/notes/export chrome and native usage refusals localized; all 415 static registered resource explanations and names reviewed (including 140 authored subclass/lineage counters and six native themes). Dynamic free-cast resources, magic-item names, feature/feat material and Chinese PDF output keep the full dialog pending."
     },
     {
       "path": "src/app/campaigns/[campaignId]/CharacterVoices.tsx",

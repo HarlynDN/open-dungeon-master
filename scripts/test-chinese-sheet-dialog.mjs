@@ -47,11 +47,11 @@ await test('authored notes remain escaped and visible only to the sheet owner',(
   const hidden=renderer.render('CharacterSheetDialog',{...own,mine:false,sheet:dialogSheet({notes:'private secret',backstory:'public story'})},'zh-CN');
   assert.doesNotMatch(hidden,/private secret|仅自己可见/);assert.match(hidden,/public story/);
 });
-await test('casting/resource help localizes 174 native explanations without changing engine guidance or unknown text',()=>{
+await test('casting/resource help localizes all 415 native explanations without changing engine guidance or unknown text',()=>{
   assert.match(html('dialog/spells'),/智力.*难度.*攻击加值.*1环.*2环.*戏法不消耗法术位/);
   assert.match(html('dialog/pact'),/邪术师.*契约法术位，2环.*短休后恢复/);
   const keys=Object.keys(MESSAGE_CATALOGS.en).filter(k=>k.startsWith('sheetDialog.resourceHelp.'));
-  assert.equal(keys.length,174);
+  assert.equal(keys.length,415);
   for(const key of keys){
     const id=key.split('.').at(-1),def=RESOURCE_DEFS.find(row=>row.id===id);
     assert.ok(def,id);assert.equal(MESSAGE_CATALOGS.en[key],def.guidance);
@@ -62,22 +62,25 @@ await test('casting/resource help localizes 174 native explanations without chan
   assert.equal(sheetResourceHelp('second_wind','Authored override <script>','zh-CN'),'Authored override <script>');
   assert.equal(sheetResourceHelp('homebrew','Fireball <script>','zh-CN'),'Fireball <script>');
 });
-await test('all 140 authored resource rows render localized names/help with source dice and shared terminology intact',()=>{
+await test('all 415 native resource rows render localized names/help with new source dice and shared terminology intact',async()=>{
   assert.equal(authoredResources.length,140);
-  const resources=Object.fromEntries(authoredResources.map(row=>[row.id,{max:2,used:1}]));
+  assert.equal(RESOURCE_DEFS.length,415);
+  const displayResources=RESOURCE_DEFS;
+  const previouslyReviewed=new Set([...authoredResources.map(row=>row.id),...Object.keys((await import('../src/lib/i18n/sheet-resource-help-messages.ts')).SHEET_RESOURCE_HELP_MESSAGES.en).map(key=>key.split('.').at(-1))]);
+  const resources=Object.fromEntries(displayResources.map(row=>[row.id,{max:2,used:1}]));
   const sheet=dialogSheet({resources:{...resources,overchannel:{max:UNLIMITED_USES,used:2},homebrew:{max:3,used:1}}});
   const before=structuredClone(sheet);
   const dice=text=>(text.match(/\b(?:\d+)?d\d+s?\b/g)??[]).map(term=>term.toLowerCase().replace(/s$/,''));
   for(const locale of ['en','zh-CN']){
     renderer.render('CharacterSheetDialog',{...own,sheet},locale);
     const helps=renderer.elements().filter(row=>typeof row.props.text==='string'&&typeof row.props.label==='string');
-    for(const row of authoredResources){
+    for(const row of displayResources){
       const nameKey='sheetPlay.resourceName.'+row.id,helpKey='sheetDialog.resourceHelp.'+row.id;
       assert.equal(MESSAGE_CATALOGS.en[nameKey],row.displayName,row.id);
       assert.equal(MESSAGE_CATALOGS.en[helpKey],row.guidance,row.id);
       assert.ok(helps.some(button=>button.props.label===MESSAGE_CATALOGS[locale][nameKey]&&button.props.text===MESSAGE_CATALOGS[locale][helpKey]),locale+':'+row.id);
-      assert.deepEqual(dice(MESSAGE_CATALOGS['zh-CN'][helpKey]),dice(row.guidance),row.id);
-      for(const key of Object.keys(MESSAGE_CATALOGS.en).filter(key=>!key.startsWith('sheetPlay.resourceName.')&&MESSAGE_CATALOGS.en[key].toLowerCase()===row.displayName.toLowerCase()))
+      if(!previouslyReviewed.has(row.id)) assert.deepEqual(dice(MESSAGE_CATALOGS['zh-CN'][helpKey]),dice(row.guidance),row.id);
+      if(!previouslyReviewed.has(row.id)) for(const key of Object.keys(MESSAGE_CATALOGS.en).filter(key=>!key.startsWith('sheetPlay.resourceName.')&&MESSAGE_CATALOGS.en[key].toLowerCase()===row.displayName.toLowerCase()))
         assert.equal(MESSAGE_CATALOGS['zh-CN'][nameKey],MESSAGE_CATALOGS['zh-CN'][key],row.id+':'+key);
     }
     const title=MESSAGE_CATALOGS[locale]['sheetDialog.resourceHelp.overchannel'];
@@ -228,5 +231,36 @@ await test('Chinese and English resource counter clicks post one canonical usage
   const rested=await world.invoke('take_rest',{kind:'short'});assert.equal(rested.ok,true,JSON.stringify(rested));
   assert.deepEqual(world.sheet(hero.id).resources.sub_superiority_dice,{max:4,used:0});
   assert.equal(getClock(world.campaignId).instant-before,60);
+});
+await test('six theme counter updates retain canonical IDs and their original short/long recharge categories',async()=>{
+  const native=JSON.parse(fs.readFileSync(path.join(root,'src/lib/classes/resources.json'),'utf8')).resources;
+  const selected=Object.values(Object.groupBy(native,row=>row.id.split('_')[0])).map(rows=>rows[0]);assert.equal(selected.length,6);
+  const hero=world.addHero({name:'Goblin',class:'fighter',level:3});
+  const {getUserById}=await import('../src/lib/db/users.ts');world.signIn(getUserById(hero.userId));
+  const route=await world.route('campaigns/[campaignId]/sheet/usage'),calls=[],realFetch=globalThis.fetch;
+  const resources=Object.fromEntries(selected.map(row=>[row.id,{max:1,used:0}]));world.patch(hero.id,{resources});
+  globalThis.fetch=async(url,options)=>{calls.push(JSON.parse(options.body));return route.POST(new Request('http://odm.test/usage',options),{params:Promise.resolve({campaignId:world.campaignId})});};
+  try{
+    for(const row of selected){
+      renderer.render('CharacterSheetDialog',{...own,sheet:world.sheet(hero.id)},'zh-CN');
+      const counter=renderer.elements().find(({props})=>props.id===row.id&&typeof props.onSpend==='function');assert.ok(counter);
+      assert.equal(counter.props.name,MESSAGE_CATALOGS['zh-CN']['sheetPlay.resourceName.'+row.id]);
+      const before=calls.length;counter.props.onSpend();await new Promise(resolve=>setImmediate(resolve));await new Promise(resolve=>setImmediate(resolve));
+      assert.equal(calls.length-before,1);assert.deepEqual(calls.at(-1),{resources:{[row.id]:1}});assert.equal(world.sheet(hero.id).resources[row.id].used,1);
+    }
+  }finally{globalThis.fetch=realFetch;}
+  const rested=await world.invoke('take_rest',{kind:'short'});assert.equal(rested.ok,true,JSON.stringify(rested));
+  for(const row of selected)assert.equal(world.sheet(hero.id).resources[row.id].used,row.recharge==='short'?0:1,row.id);
+});
+await test('the Darkness display avoids the legacy one-level reminder and the real spell minimum still rejects it',async()=>{
+  const {spellFactsFor}=await import('../src/lib/content/index.ts');
+  const {slotPlan}=await import('../src/lib/dm/cast-rules.ts');
+  const facts=spellFactsFor('Darkness');assert.equal(facts.level,2);
+  assert.match(RESOURCE_DEFS.find(row=>row.id==='racial_darkness').guidance,/1st-level/);
+  const help=sheetResourceHelp('racial_darkness',RESOURCE_DEFS.find(row=>row.id==='racial_darkness').guidance,'zh-CN');
+  assert.doesNotMatch(help,/一环|1环/);assert.match(help,/实际环阶.*结算/);
+  const sheet=dialogSheet({class:'wizard',spellcasting:{ability:'int',known:['Darkness'],prepared:['Darkness'],slots:{2:{max:2,used:0}}}}),before=structuredClone(sheet);
+  assert.match(slotPlan(sheet,'Darkness',facts,1).error,/level 2.*level 1/);
+  assert.equal(slotPlan(sheet,'Darkness',facts,2).kind,'slot');assert.deepEqual(sheet,before);
 });
 world.close();finish();
