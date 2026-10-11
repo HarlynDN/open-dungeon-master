@@ -1,0 +1,9 @@
+{
+  "sourceCommit": "f76b48b6",
+  "choiceStates": 60,
+  "labelStates": 4,
+  "sha256": {
+    "choices": "f812c7c9143401ecd08863cf69e7aa649791cd6c60d58f4de19dc0743978fb12",
+    "labels": "a59439313faa24e0315815b9de7c20e4fd37fdc30ed42b5f817dcc50d09d034c"
+  }
+}

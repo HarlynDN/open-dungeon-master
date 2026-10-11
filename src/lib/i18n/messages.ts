@@ -1,3 +1,4 @@
+import { FEAT_CHOICE_MESSAGES } from "./feat-choice-messages.ts";
 import { FEATURE_MATERIAL_MESSAGES } from "./feature-material-messages.ts";
 import { CLASS_OPTION_MESSAGES } from "./class-option-messages.ts";
 import { LEVEL_UP_MESSAGES } from "./level-up-messages.ts";
@@ -73,6 +74,7 @@ const en = {
     ...LEVEL_UP_MESSAGES.en,
     ...CLASS_OPTION_MESSAGES.en,
     ...FEATURE_MATERIAL_MESSAGES.en,
+    ...FEAT_CHOICE_MESSAGES.en,
   ...PLAY_EDIT_MESSAGES.en,
   ...HAND_CASTING_MESSAGES.en,
   ...HAND_FEATURE_MESSAGES.en,
@@ -168,6 +170,7 @@ const zhCN: Messages = {
     ...LEVEL_UP_MESSAGES["zh-CN"],
     ...CLASS_OPTION_MESSAGES["zh-CN"],
     ...FEATURE_MATERIAL_MESSAGES["zh-CN"],
+    ...FEAT_CHOICE_MESSAGES["zh-CN"],
   ...PLAY_EDIT_MESSAGES["zh-CN"],
   ...HAND_CASTING_MESSAGES["zh-CN"],
   ...HAND_FEATURE_MESSAGES["zh-CN"],

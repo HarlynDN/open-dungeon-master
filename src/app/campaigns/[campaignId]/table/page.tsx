@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { campaignEntryError } from "@/lib/i18n/campaign-entry-presentations";
 import { PageSkeleton } from "@/components/PageSkeleton";
 import { EmptyState } from "@/components/EmptyState";
 import { use } from "react";
@@ -15,6 +17,7 @@ import { SceneTitle } from "@/components/SceneTitle";
 // reads the same stream as any member's browser, so it can never show a
 // thing the server withheld from a player.
 export default function TablePage({ params }: { params: Promise<{ campaignId: string }> }) {
+  const { locale, t } = useLocale();
   const { campaignId } = use(params);
   const { state, refreshBattleMap, markFxPlayed, markCameraDone, markTitleCardShown } = useCampaignStream(campaignId);
 
@@ -26,7 +29,7 @@ export default function TablePage({ params }: { params: Promise<{ campaignId: st
   if (state.error || !state.campaign || !state.me) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-stone-950">
-        <EmptyState art="map" title={state.error || "Sign in as a member of this table to show it."} />
+        <EmptyState art="map" title={state.error ? campaignEntryError(state.error, locale) : t("sessionUi.open.tableSignIn")} />
       </main>
     );
   }

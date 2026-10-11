@@ -416,7 +416,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/LabelSheet.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Loading/missing-entry copy localized; lore/map titles and bodies stay authored. Four frozen English states, Chinese status copy and loaded/plain source preservation checked. Fetch and visibility behavior unchanged."
     },
     {
       "path": "src/app/campaigns/[campaignId]/LeadEditDialog.tsx",
@@ -858,7 +859,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/page.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned campaign-entry fallback/return/origin labels localized. Snapshot refusal/network/password messages project at render time; unknown errors remain verbatim. Campaign IDs, links, stream and lobby/session children unchanged; child owners retain independent coverage."
     },
     {
       "path": "src/app/campaigns/[campaignId]/sessionGlyphs.ts",
@@ -870,7 +872,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/table/page.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned table sign-in fallback and recognized snapshot errors localized at render time. Membership handling, stream and displayed board/map/handout children unchanged; child owners retain independent coverage."
     },
     {
       "path": "src/app/campaigns/[campaignId]/terrainCanvasParts.tsx",
@@ -1012,7 +1015,8 @@
     },
     {
       "path": "src/app/characters/builder/FeatChoicesFields.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned native feat-choice chrome/coverage, skill/expertise/language/tool/weapon/armor/damage/class/ability names, spell slot captions and selected spell names reviewed. Canonical picks, shared limits, stored source descriptions and API filters unchanged. 60 frozen English render states and actual Chinese callback payloads checked. Authored/pack-specific names retain raw fallback; third-party prose is outside first-release scope."
     },
     {
       "path": "src/app/characters/builder/KitChoicesSection.tsx",

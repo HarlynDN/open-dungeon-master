@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { campaignEntryError } from "@/lib/i18n/campaign-entry-presentations";
 import { PageSkeleton } from "@/components/PageSkeleton";
 import { EmptyState } from "@/components/EmptyState";
 import { ui } from "@/lib/ui";
@@ -16,6 +18,7 @@ export default function CampaignPage({
 }: {
   params: Promise<{ campaignId: string }>;
 }) {
+  const { locale, t } = useLocale();
   const { campaignId } = use(params);
   const {
     state,
@@ -43,11 +46,11 @@ export default function CampaignPage({
       <main className="flex flex-1 flex-col items-center justify-center gap-3 p-6">
         <EmptyState
           art="map"
-          title={state.error || "Campaign not found."}
-          hint={state.answeredBy ? `Answered by ${state.answeredBy}` : undefined}
+          title={state.error ? campaignEntryError(state.error, locale) : t("sessionUi.open.missing")}
+          hint={state.answeredBy ? t("sessionUi.open.answered", { origin: state.answeredBy }) : undefined}
           action={
             <Link href="/" className={ui.btnSecondary}>
-              Back to campaigns
+              {t("sessionUi.open.back")}
             </Link>
           }
         />

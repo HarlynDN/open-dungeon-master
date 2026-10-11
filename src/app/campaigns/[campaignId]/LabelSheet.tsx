@@ -1,5 +1,6 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { useEffect, useState } from "react";
 import { Sheet } from "@/components/ui/Sheet";
 import { Markdown } from "@/components/ui/Markdown";
@@ -21,6 +22,7 @@ export function LabelSheet({
   label: MapLabel | null;
   onClose: () => void;
 }) {
+  const { t } = useLocale();
   const [entry, setEntry] = useState<Entry | null>(null);
   const [loading, setLoading] = useState(false);
   const [missing, setMissing] = useState(false);
@@ -74,12 +76,12 @@ export function LabelSheet({
       <div className="space-y-2 text-sm text-stone-200">
         {ref?.kind === "lore" ? (
           loading ? (
-            <p className="reveal text-xs text-stone-500">Opening the entry...</p>
+            <p className="reveal text-xs text-stone-500">{t("sessionUi.entry.loading")}</p>
           ) : entry ? (
             <Markdown source={entry.body} className="prose-sm" />
           ) : missing ? (
             <p className="reveal text-xs text-stone-500">
-              That entry is not one you can read, or it has been removed.
+              {t("sessionUi.entry.missing")}
             </p>
           ) : null
         ) : (

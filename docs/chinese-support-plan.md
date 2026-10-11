@@ -29,8 +29,8 @@ flow remains incomplete; the review-repair checkpoint is a separate scoped task.
 | Locale foundation | Registry, persistence, browser fallback, typed complete catalogs, model locale policy, classified token proxy, chapter budget, CJK retrieval, IME protection | Real prompt-usage calibration; keep legacy campaign/history regressions |
 | DM safety | Per-event engine conclusions with English/Chinese renderers; AI prose separated; one text-only correction and safe fallback; shared localized enemy names and held-resource names/IDs; scoped resource aliases and ambiguity retries; real Codex combat/resource acceptance | Untracked feature/reaction options and broader spell/condition/pack coverage; conservative regex coverage is not full language understanding |
 | Embeddings | Original English deployment default retained; explicit multilingual opt-in; fixed bilingual calibration/holdout and hard-negative policy | Broader pack quality; opt-in affects English campaigns and rebuilds indexes |
-| UI | **157/439** covered files, **2902** pending literal sites, **8936** message keys; scoped AST gate; earlier play/session surfaces plus hand labels/targets/area selection, campaign-locale action sentences, native previews, basic/reaction rules, common casting refusals, spell selectors, all 113 owned mechanic notes, 103 native technique and 23 maneuver labels, attack/bonus-route and material/ritual refusals, built-in form attack names and verified current-actor labels, correction/multi-picker chrome, native downtime facts and inventory/vitals approval/player-trade controls, guided progression chrome, rest/loot/travel moments and all native option summaries, owned generic feature and feat summaries | Remaining dynamic text keeps hand files pending; general play/inventory/rest/level-up/save/resume surfaces and full sheet/party dialogs; file fraction is not overall completion or an effort estimate |
-| Character creation/material | Identity, ancestry, class introductions, ability allocation, gear, spell book/preparation and finish preview; 517 spell and 228 equipment names; 257-entry contextual terminology policy and lint gate; 415/415 static registered resource names and guidance shared with DM references; 135/135 bundled option names/descriptions plus all 20 nonempty requirement frames; original-source review records | Remaining feature/feat and magic-item material; dynamic free-cast resources and user-authored/pack text remain outside the static resource review |
+| UI | **161/439** covered files, **2844** pending literal sites, **9007** message keys; scoped AST gate; earlier play/session surfaces plus hand labels/targets/area selection, campaign-locale action sentences, native previews, basic/reaction rules, common casting refusals, spell selectors, all 113 owned mechanic notes, 103 native technique and 23 maneuver labels, attack/bonus-route and material/ritual refusals, built-in form attack names and verified current-actor labels, correction/multi-picker chrome, native downtime facts and inventory/vitals approval/player-trade controls, guided progression chrome, rest/loot/travel moments and all native option summaries, owned generic feature/feat summaries, feat choice controls and campaign/map entry notices | Remaining dynamic text keeps hand files pending; general play/inventory/rest/level-up/save/resume surfaces and full sheet/party dialogs; file fraction is not overall completion or an effort estimate |
+| Character creation/material | Identity, ancestry, class introductions, ability allocation, gear, spell book/preparation and finish preview; 517 spell and 228 equipment names; 257-entry contextual terminology policy and lint gate; 415/415 static registered resource names and guidance shared with DM references; 135/135 bundled option names/descriptions plus all 20 nonempty requirement frames; 146 shared/class-specific feature summaries, 54 native feat summaries and owned feat choice controls; original-source review records | Remaining specific/themed feature and magic-item material; dynamic free-cast resources and user-authored/pack text remain outside the static resource review |
 | Player system logs | Structured rule diagnostics and engine-generated combat conclusions retain English protocol semantics with localized presentation | General player-visible log templates; model-facing English tool results remain independent |
 | Resource delivery | UI vs content namespaces; character/campaign boundaries; generated resources checked by lint; production Turbopack build and anonymous bilingual browser switch/reload succeed; home/character/campaign SSR and initial-script payloads measured | Hydrated/lazy network totals, authenticated campaign switching and active-play browser acceptance; route-level JS payload remains large |
 | Local Chinese TTS | Locale capability/voice preferences planned | Service not configured; implement/validate Unicode segmentation, voice discovery, locale-sensitive cache, numbers/units/names and real playback |
@@ -59,7 +59,30 @@ attempts were blocked at its internal port binding by the execution environment,
 including the escalated attempt; this batch does not claim a passing production
 build. Keep that gate for the next phase boundary rather than retrying per batch.
 
-The latest feature-material checkpoint adds 355 content-only keys: 144 shared
+The latest choice/entry checkpoint adds 71 content-only keys. Native feat
+selection now displays localized skills/expertise, fictional languages, weapons,
+tools, armor training, damage types, class lists, casting abilities and chosen
+spells. Spell captions and the explanation of automatically applied effects
+localize too; Chinese coverage text shows player-readable actions rather than
+machine tool tags. Canonical IDs/names, source descriptions, shared limits,
+choice resets and content filters are unchanged. Unknown authored names remain
+literal; deferred pack prose is not counted as translated.
+
+Campaign and table entry fallbacks, responding origin, return link, recognized
+snapshot/network/password errors and map-lore loading/missing notices localize
+at render time. Stream state stays raw; map/lore titles and bodies remain authored.
+Child lobby/session/board/map owners retain their independent pending status.
+These four owners are now covered; the AST gate protects their own chrome.
+
+Lightweight validation passed: 60 frozen English choice states (54 native feats
+plus six selected/mixed-grant fixtures), four English map-entry states, actual
+Chinese canonical selection/reset/filter callbacks, shared-count limits, authored
+content/error preservation, types and catalog/AST/terminology. The two aggregate
+English fingerprints occupy 258 bytes. Current coverage is 161/439 files, 2844
+pending literal sites, 9007 keys, zero terminology errors and 128 contextual
+warnings. No model/audio calls, settled name recheck or full tests/lint/build ran.
+
+The preceding feature-material checkpoint adds 355 content-only keys: 144 shared
 feature names/summaries, two class-specific Timeless Body summaries, and all
 54 project-owned feat descriptions plus nine distinct prerequisite templates.
 Sources are `src/lib/help/srd-features.json` and
