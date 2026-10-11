@@ -42,11 +42,17 @@ import { CONDITION_UI_MESSAGES } from "./condition-ui-messages.ts";
 import { ROLL_PRESENTATION_MESSAGES } from "./roll-presentation-messages.ts";
 import { CONDITION_MATERIAL_MESSAGES } from "./condition-material-messages.ts";
 
+import { CHECK_ROLL_MESSAGES } from "./check-roll-messages.ts";
+
+import { CINEMATIC_MESSAGES } from "./cinematic-messages.ts";
+
 const en = {
   ...AUTH_MESSAGES.en,
   ...COMBAT_UI_MESSAGES.en,
   ...CONDITION_UI_MESSAGES.en,
   ...ROLL_PRESENTATION_MESSAGES.en,
+  ...CHECK_ROLL_MESSAGES.en,
+  ...CINEMATIC_MESSAGES.en,
   ...CONDITION_MATERIAL_MESSAGES.en,
   ...ONBOARDING_MESSAGES.en,
   ...HOME_MESSAGES.en,
@@ -120,6 +126,8 @@ const zhCN: Messages = {
   ...COMBAT_UI_MESSAGES["zh-CN"],
   ...CONDITION_UI_MESSAGES["zh-CN"],
   ...ROLL_PRESENTATION_MESSAGES["zh-CN"],
+  ...CHECK_ROLL_MESSAGES["zh-CN"],
+  ...CINEMATIC_MESSAGES["zh-CN"],
   ...CONDITION_MATERIAL_MESSAGES["zh-CN"],
   ...ONBOARDING_MESSAGES["zh-CN"],
   ...HOME_MESSAGES["zh-CN"],

@@ -4,6 +4,7 @@
 // apply_damage so audit, undo and the death engine all run. Split from
 // aoe-damage.ts, which rolls the blast once and calls this with it.
 
+import { checkRoll } from "@/lib/roll-labels";
 import type { Campaign } from "@/lib/db/campaigns";
 import type { DmTurn } from "@/lib/db/dm-turns";
 import { getSheetById } from "@/lib/db/sheets";
@@ -55,7 +56,7 @@ export function aoeOnCharacters(input: {
       sheet,
       ability,
       input.dc,
-      `${ability.toUpperCase()} save vs area effect`,
+      checkRoll(`${ability.toUpperCase()} save vs area effect`, "ability", ability, { kind: "save-against", name: input.spell ?? "area effect" }),
       // What the save resists, so a trait keyed to it applies (a dwarf
       // against poison, a gnome against a spell).
       // An enemy's spell names its caster's type (Holy Nimbus).

@@ -14,6 +14,7 @@ export function rollActionLabel(what: string, locale: AppLocale): string {
     const keys = { "opportunity attack": "opportunity", "half on a miss": "halfMiss", "second burn": "secondBurn", CRIT: "crit" };
     return t(`combatRoll.suffix.${keys[suffix[2] as keyof typeof keys]}` as MessageKey, { name: rollActionLabel(suffix[1], locale) });
   }
+  if (what === "the effect") return t("combatCheck.effect");
   if (what === "area effect") return t("combatRoll.areaEffect");
   let frame = /^(\d+) ft fall \((\d+d\d+) bludgeoning\)$/.exec(what);
   if (frame) return t("combatRoll.fall", { feet: frame[1], dice: frame[2] });
@@ -61,6 +62,14 @@ export function rollNoteLabel(note: string, locale: AppLocale): string {
   return note;
 }
 
+export function rollCheckTerm(kind: "skill" | "ability", value: string, locale: AppLocale): string {
+  if (value === "athletics_or_acrobatics") return createTranslator(locale)("combatCheck.either");
+  const prefix = `sheet.${kind}.`, source = catalogFor("en", prefix);
+  const direct = `${prefix}${value.trim().toLowerCase().replace(/[ -]+/g, "_")}`;
+  const key = Object.hasOwn(source, direct) ? direct : Object.keys(source).find(key => source[key as MessageKey]?.toLowerCase() === value.trim().toLowerCase());
+  return key ? createTranslator(locale)(key as MessageKey) : value;
+}
+
 export function rollPresentationLabel(raw: unknown, locale: AppLocale): string | undefined {
   const p = parseRollPresentation(raw);
   if (!p) return;
@@ -83,13 +92,26 @@ export function rollPresentationLabel(raw: unknown, locale: AppLocale): string |
       if (p.notes.length) detail = t("combatRoll.notes", { detail, notes: p.notes.map(note => rollNoteLabel(note, locale)).join(t("combatRoll.noteSeparator")) });
       break;
     }
+    case "check": {
+      const term = rollCheckTerm(p.term.kind, p.term.key, locale), c = p.context;
+      if (!c) { detail = term; break; }
+      const values: Record<string, string | number> = { term };
+      if ("target" in c && c.target) values.target = c.target.kind === "enemy" ? referenceDisplayName("monster", c.target.name, locale) : c.target.name;
+      if ("name" in c) values.name = rollActionLabel(c.name, locale);
+      if ("text" in c) values.text = c.text;
+      const frame = c.kind === "escape-grapple" && c.target && typeof c.difficulty === "number" ? "escape-grapple-target" : c.kind;
+      if ("difficulty" in c && typeof c.difficulty === "number") values.difficulty = c.difficulty;
+      detail = t(`combatCheck.${frame}`, values);
+      break;
+    }
     case "stable-recovery": detail = t("combatRoll.recovery", { name: p.name }); break;
   }
   return p.physical ? t("combatRoll.physical", { detail }) : detail;
 }
 
-export function unseenRollActor(presentation: RollPresentation | undefined, locale: AppLocale): string | undefined {
+export function rollPresentationActor(presentation: RollPresentation | undefined, locale: AppLocale): string | undefined {
   const p = parseRollPresentation(presentation);
+  if (p?.kind === "check" && p.owner) return p.owner.kind === "enemy" ? referenceDisplayName("monster", p.owner.name, locale) : p.owner.name;
   return p?.kind === "area" && p.actorUnseen ? createTranslator(locale)("combatRoll.someoneUnseen") : undefined;
 }
 

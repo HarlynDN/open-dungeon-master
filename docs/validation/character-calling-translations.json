@@ -13,7 +13,7 @@
     "src/lib/srd/feature-effects.ts": "0a7f3b483608a2207bfd8af110edc36e8f4c96b7e0a5fc51e1e874e979a1b95e",
     "src/lib/characters/options.ts": "e0294a844664240604091c945104e20adc08bcbf7d0fc32bafacfff70174c31c",
     "src/lib/i18n/builder-picker-presentations.ts": "728ad42accc71a7f52efb7f8c38493ff357ff2c956a182edb6e0263af0a8b539",
-    "src/lib/i18n/messages.ts": "5eb51d6f6c4d5f486e1b0750d1dcbc68a0022bb868c0c9046e01a5f65028c5fe"
+    "src/lib/i18n/messages.ts": "d292e2a3cebce25757e55beaa05454c99b7780f5e7824a24ecac770179a3250c"
   },
   "catalogs": {
     "src/lib/i18n/calling-ui-messages.ts": "6ee79c641a5e39a5240764e9c90d68718c8d7b822a72e46d1776391177444280"
@@ -38,5 +38,10 @@
     "date": "2026-10-11",
     "review": "The shared messages entrypoint only adds 46 combatRoll keys. All 10716 existing bilingual UI/content values and 19 compressed English baselines match aeccfe1f. Calling sources, catalogs, rules and original review scope are unchanged.",
     "previousEntrypointSha256": "4161275d8342bc5782a51f2fc9341fa6fc869e8b9ec648e7030089f8f9d87de6"
+  },
+  "checkCinematicCatalogIntegration": {
+    "date": "2026-10-11",
+    "review": "The shared entrypoint only appends 47 combatCheck/cinematic keys. All 10808 existing bilingual values and 20 prior compressed English baselines match c2d86838. Original calling sources, catalogs, mechanisms and review scope are unchanged.",
+    "previousEntrypointSha256": "5eb51d6f6c4d5f486e1b0750d1dcbc68a0022bb868c0c9046e01a5f65028c5fe"
   }
 }

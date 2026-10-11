@@ -144,6 +144,7 @@ export function searchAction(
     sheet,
     { skill },
     `${sheet.name}: Search (${skill === "perception" ? "Perception" : "Investigation"})`,
+    { kind: "search" },
   );
   if (check.rollId) {
     turn.rollIds.push(check.rollId);

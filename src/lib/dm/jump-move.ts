@@ -70,7 +70,7 @@ export function jumpMove(input: {
   releaseGrapplesOutOfReach(campaign);
   let landed = "on their feet";
   if (plan.landsInDifficult) {
-    const check = rollCharacterCheck(campaign, sheet, { skill: "acrobatics" }, `${sheet.name}: Acrobatics to land the jump (DC 10)`);
+    const check = rollCharacterCheck(campaign, sheet, { skill: "acrobatics" }, `${sheet.name}: Acrobatics to land the jump (DC 10)`, { kind: "land-jump" });
     if (check.autoFailed || check.total < 10) {
       const fresh = getSheetById(sheet.id) ?? sheet;
       const updated = patchSheet(sheet.id, { conditions: [...fresh.conditions, "prone"] });

@@ -66,7 +66,7 @@ export function hide(
   spend();
   // A Stealth check like any other (src/lib/dm/contest-roll.ts): noisy
   // armor, Reliable Talent, a held inspiration die, Guidance.
-  const stealth = rollCharacterCheck(campaign, sheet, { skill: "stealth" }, `${sheet.name}: Stealth to hide`);
+  const stealth = rollCharacterCheck(campaign, sheet, { skill: "stealth" }, `${sheet.name}: Stealth to hide`, { kind: "hide" });
   if (stealth.rollId) {
     turn.rollIds.push(stealth.rollId);
   }
@@ -181,11 +181,11 @@ export function contest(
   // SRD contest: the attacker's Athletics, a check like any other
   // (src/lib/dm/contest-roll.ts), against the target's better of Athletics
   // (STR) and Acrobatics (DEX).
-  const mine = rollCharacterCheck(campaign, sheet, { skill: "athletics" }, `${sheet.name}: Athletics to ${action} ${enemy.displayName}`);
+  const mine = rollCharacterCheck(campaign, sheet, { skill: "athletics" }, `${sheet.name}: Athletics to ${action} ${enemy.displayName}`, { kind: action, target: { name: enemy.displayName, kind: "enemy" } });
   if (mine.rollId) {
     turn.rollIds.push(mine.rollId);
   }
-  const theirs = rollEnemyContest(campaign, turn, enemy, "either", `${enemy.displayName}: contest against the ${action}`);
+  const theirs = rollEnemyContest(campaign, turn, enemy, "either", `${enemy.displayName}: contest against the ${action}`, { kind: "contest" });
   const contested = `${mine.total} vs ${theirs}`;
 
   // Ties go to the defender, per the SRD contest rule.

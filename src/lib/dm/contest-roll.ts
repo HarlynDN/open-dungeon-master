@@ -7,6 +7,8 @@
 // checks, conditions, exhaustion, armor, and the items that ride checks.
 // The roll is stored and published like any other.
 
+import { checkRoll } from "@/lib/roll-labels";
+import type { RollCheckContext } from "@/lib/roll-presentation";
 import { rollCard } from "@/lib/dm/roll-card";
 import { allocateSeq, type Campaign } from "@/lib/db/campaigns";
 import { insertRoll } from "@/lib/db/rolls";
@@ -34,6 +36,7 @@ export function rollCharacterCheck(
   stale: CharacterSheet,
   check: { skill?: string; ability?: Ability; advantage?: "advantage" | "disadvantage"; dc?: number },
   detail: string,
+  context: RollCheckContext = { kind: "authored", text: detail },
 ): CharacterCheck {
   const sheet = getSheetById(stale.id) ?? stale;
   const args = (
@@ -48,7 +51,7 @@ export function rollCharacterCheck(
   );
   if ("error" in resolved) {
     // An unknown skill: fall back to the plain ability, never to nothing.
-    const outcome = rollCard(campaign, null, sheet.id, check.skill ? "skill_check" : "ability_check", `${detail}: ${check.skill ?? check.ability ?? "check"}`, d20Expression(0, check.advantage ?? "none"), null);
+    const outcome = rollCard(campaign, null, sheet.id, check.skill ? "skill_check" : "ability_check", checkRoll(`${detail}: ${check.skill ?? check.ability ?? "check"}`, check.skill ? "skill" : "ability", check.skill ?? check.ability ?? "check", context, { name: sheet.name, kind: "proper" }), d20Expression(0, check.advantage ?? "none"), null);
     return { total: outcome.total, expression: "1d20", notes: [resolved.error], rollId: null };
   }
   if ("autoFail" in resolved) {
@@ -61,7 +64,7 @@ export function rollCharacterCheck(
     characterId: sheet.id,
     requestedBy: "dm",
     kind: check.skill ? "skill_check" : "ability_check",
-    detail: `${detail}: ${resolved.detail}`.slice(0, 120),
+    ...checkRoll(`${detail}: ${resolved.detail}`.slice(0, 120), check.skill ? "skill" : "ability", resolved.detail, context, { name: sheet.name, kind: "proper" }),
     ...(check.dc ? { dc: check.dc } : {}),
     result: outcome,
   });
@@ -109,7 +112,7 @@ export function rollFeatureSave(
     characterId: sheet.id,
     requestedBy: "dm",
     kind: "saving_throw",
-    detail: `${sheet.name}: ${ability.toUpperCase()} save, ${detail}`.slice(0, 120),
+    ...checkRoll(`${sheet.name}: ${ability.toUpperCase()} save, ${detail}`.slice(0, 120), "ability", ability, { kind: "feature-save", name: detail }, { name: sheet.name, kind: "proper" }),
     dc,
     result: outcome,
   });

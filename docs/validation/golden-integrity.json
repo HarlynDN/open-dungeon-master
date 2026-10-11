@@ -18,5 +18,6 @@
   "game-help-ui-goldens.json": "3b7b8443f965590b37aecc6850fdf2aa1454cd14d30f8b929f66257628b395da",
   "combat-ui-goldens.json": "60b09271195c776a7b291647294e44d85692d41774a1f0a69b675a4446fdcd7a",
   "condition-ui-goldens.json": "dfc53e390b828f1917e038266e9e0c65bbb89b963aa1b7ec4038e7851872a5f3",
-  "roll-presentation-goldens.json": "e6e7532b8b39e5d0fd8219ebe19b8a3b66f1664174d259b9b3ac35b1bc34de51"
+  "roll-presentation-goldens.json": "e6e7532b8b39e5d0fd8219ebe19b8a3b66f1664174d259b9b3ac35b1bc34de51",
+  "check-cinematic-goldens.json": "363d0d729fc1b3da63ca875e4a2b62d06c1e94f80253ec16ec7d7df13f283da5"
 }

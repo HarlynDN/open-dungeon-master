@@ -364,7 +364,7 @@ export function resolveSpendEffect(ctx: SpendContext, does: SpendDoes): Resoluti
       if ("error" in enemy) {
         return enemy;
       }
-      const insight = rollCharacterCheck(campaign, sheet, { skill: "insight" }, `${sheet.name}: Insight against ${enemy.displayName}'s Deception`);
+      const insight = rollCharacterCheck(campaign, sheet, { skill: "insight" }, `${sheet.name}: Insight against ${enemy.displayName}'s Deception`, { kind: "insight-deception", target: { name: enemy.displayName, kind: "enemy" } });
       const skills = enemy.stats.skills as Record<string, number> | undefined;
       const deceptionMod = Number(skills?.deception ?? Math.floor(((enemy.stats.abilities?.cha ?? 10) - 10) / 2));
       // A contest the table sees, as every enemy's contest roll is (action-common.ts).

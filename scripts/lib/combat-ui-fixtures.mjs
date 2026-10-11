@@ -54,7 +54,7 @@ export async function openCombatRenderer({sourceOf=file=>fs.readFileSync(path.jo
   };
   const provider=moduleUrl('src/lib/i18n/LocaleProvider.tsx');aliases['@/lib/i18n/LocaleProvider']=provider;
   const components={};
-  for(const file of ['RollCard','PendingRollCard','SkillCheckCard','EncounterPanel','DmInitiativePanel','BoardChrome'])Object.assign(components,await import(moduleUrl(`src/app/campaigns/[campaignId]/${file}.tsx`)));
+  for(const file of ['RollCard','PendingRollCard','SkillCheckCard','EncounterPanel','DmInitiativePanel','BoardChrome','CinematicParts'])Object.assign(components,await import(moduleUrl(`src/app/campaigns/[campaignId]/${file}.tsx`)));
   const {LocaleProvider}=await import(provider);
   const render=(component,props,locale='en',options={})=>{
     state.queues=structuredClone(options.queues??{});state.diceSources=options.diceSources??{};state.pixels=options.pixels??[];

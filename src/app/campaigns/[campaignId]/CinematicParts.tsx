@@ -19,7 +19,9 @@ import type { CharacterSheet } from "@/lib/schemas/sheet";
 import { TokenFace } from "@/app/campaigns/[campaignId]/BoardChrome";
 import { DictateField } from "@/components/DictateField";
 import { appendDictation } from "@/lib/dictation";
-import { ROLL_KIND_LABELS, rollChronicleLead, rollToastLead } from "@/lib/roll-labels";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { combatName, rollKindLabel, localizedRollChronicleLead, localizedRollToastLead } from "@/lib/i18n/combat-ui-presentations";
+import { characterLabel } from "@/lib/i18n/character-presentations";
 
 // The cinematic table ("ODM World Concepts", round 3b): the scene's own
 // painting fills the screen, the chrome shrinks to its edges, and the fight
@@ -116,6 +118,7 @@ export function InitiativeRibbon({
   genre: string | null | undefined;
   onOpen?: () => void;
 }) {
+  const { locale, t } = useLocale();
   const orderRef = useRef<HTMLOListElement>(null);
   const ready = encounter.orderReady && encounter.order.length > 0;
   const shown = ready ? encounter.order.filter((entry) => !entry.hidden) : [];
@@ -134,8 +137,8 @@ export function InitiativeRibbon({
     return null;
   }
   return (
-    <div className="cine-ribbon" role="group" aria-label={`Round ${encounter.round}, turn order`} data-tour="initiative-ribbon">
-      <span className="cine-ribbon-round">Round {encounter.round}</span>
+    <div className="cine-ribbon" role="group" aria-label={t("cinematic.orderAria", { round: encounter.round })} data-tour="initiative-ribbon">
+      <span className="cine-ribbon-round">{t("combatUi.board.round", { round: encounter.round })}</span>
       <ol
         ref={orderRef}
         className="cine-ribbon-order"
@@ -153,10 +156,10 @@ export function InitiativeRibbon({
               data-done={index < encounter.turnIndex ? "true" : undefined}
               data-foe={entry.kind === "enemy" ? "true" : undefined}
             >
-              <button type="button" className="cine-ribbon-face" onClick={onOpen} aria-label={`${entry.name}${current ? ", their turn" : ""}`} aria-current={current ? "step" : undefined} data-no-motion>
-                <TokenFace candidates={facesFor(entry, sheets, encounter.enemies, genre)} name={entry.name} enemy={entry.kind === "enemy"} className="cine-ribbon-img" />
+              <button type="button" className="cine-ribbon-face" onClick={onOpen} aria-label={current ? t("cinematic.turn", { name: combatName(entry.name, entry.kind, locale) }) : combatName(entry.name, entry.kind, locale)} aria-current={current ? "step" : undefined} data-no-motion>
+                <TokenFace candidates={facesFor(entry, sheets, encounter.enemies, genre)} name={combatName(entry.name, entry.kind, locale)} enemy={entry.kind === "enemy"} className="cine-ribbon-img" />
               </button>
-              <span className="cine-ribbon-name">{shortName(entry.name)}</span>
+              <span className="cine-ribbon-name">{shortName(combatName(entry.name, entry.kind, locale))}</span>
             </li>
           );
         })}
@@ -194,6 +197,7 @@ export function PartyRail({
   // The last hit points seen per hero, so a change plays as a beat: an
   // ember pulse and a lingering ghost bar for damage, a green pulse for
   // healing. State from props during render; a reload simply starts quiet.
+  const { locale, t } = useLocale();
   const [memory, setMemory] = useState<Record<string, { hp: number; dir?: "up" | "down" }>>({});
   const party = sheets.filter((sheet) => !sheet.isCompanion);
   const next: Record<string, { hp: number; dir?: "up" | "down" }> = { ...memory };
@@ -222,7 +226,7 @@ export function PartyRail({
         : encounter.order[encounter.turnIndex]?.id
       : undefined;
   return (
-    <aside className="cine-party" aria-label="The party" data-tour="party-rail">
+    <aside className="cine-party" aria-label={t("cinematic.party")} data-tour="party-rail">
       {party.map((sheet, index) => {
         const max = Math.max(1, effectiveMaxHp(sheet));
         const hp = Math.max(0, Math.min(max, sheet.currentHp ?? max));
@@ -239,7 +243,7 @@ export function PartyRail({
             data-mine={sheet.userId === meUserId ? "true" : undefined}
             data-down={hp === 0 ? "true" : undefined}
             style={{ animationDelay: `${120 + index * 70}ms` }}
-            aria-label={`${sheet.name}, ${hp} of ${max} hit points. Open the party.`}
+            aria-label={t("cinematic.partyOpen", { name: sheet.name, hp, max })}
             data-no-motion
           >
             <span key={`pulse-${hp}`} className="cine-party-pulse" data-dir={dir} aria-hidden="true" />
@@ -258,7 +262,7 @@ export function PartyRail({
                 <span className="cine-party-fill" data-low={ratio <= 0.34 ? "true" : undefined} style={{ width: pct }} />
               </span>
               <span className="cine-party-class">
-                {sheet.class} {sheet.level}
+                {characterLabel("class", sheet.class, locale)} {sheet.level}
               </span>
             </span>
           </button>
@@ -284,6 +288,7 @@ export function RollToast({
   latestRoll: { roll: StoredRoll; seq: number } | null;
   sheets: ReadonlyArray<CharacterSheet>;
 }) {
+  const { locale, t } = useLocale();
   const [shown, setShown] = useState<{ roll: StoredRoll; seq: number } | null>(null);
   // Each roll is judged once, during the render it arrives in (state from
   // props). The roll the snapshot arrived with is history, not news, so the
@@ -313,20 +318,20 @@ export function RollToast({
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src="/assets/icons/glyph/tab-dice.webp" alt="" className="cine-roll-die" />
       <span className="cine-roll-text">
-        {rollToastLead(roll, sheetName)} ·{" "}
+        {localizedRollToastLead(roll, sheetName, locale)} ·{" "}
         <span className="cine-roll-math">
           {roll.expression} = {roll.total}
         </span>
       </span>
-      {crit ? <span className="cine-roll-crit">{crit === "nat20" ? "Natural 20" : "Natural 1"}</span> : null}
+      {crit ? <span className="cine-roll-crit">{crit === "nat20" ? t("cinematic.natural20") : t("cinematic.natural1")}</span> : null}
       {secret ? (
         <span className="cine-roll-secret">
           <EyeOff className="size-3.5" aria-hidden="true" />
-          Secret
+          {t("cinematic.secret")}
         </span>
       ) : null}
       {roll.dc !== null && roll.success !== null && !crit ? (
-        <span className="cine-roll-crit" data-quiet="true">{roll.success ? "Success" : "Miss"}</span>
+        <span className="cine-roll-crit" data-quiet="true">{roll.success ? t("cinematic.success") : t(roll.kind === "attack" ? "cinematic.miss" : "cinematic.toastFailure")}</span>
       ) : null}
     </div>
   );
@@ -338,6 +343,7 @@ export function RollToast({
 // the concept: "QUEST · THE DROWNED LANTERN" and its first sentence. A tap
 // opens the story's quests.
 export function QuestGlance({ quests, onOpen }: { quests: ReadonlyArray<string>; onOpen: () => void }) {
+  const { t } = useLocale();
   const first = quests.find((quest) => quest.trim().length > 0)?.trim();
   if (!first) {
     return null;
@@ -346,8 +352,8 @@ export function QuestGlance({ quests, onOpen }: { quests: ReadonlyArray<string>;
   const title = colon > 0 && colon < 60 ? first.slice(0, colon).trim() : "";
   const body = colon > 0 && colon < 60 ? first.slice(colon + 1).trim() : first;
   return (
-    <button type="button" onClick={onOpen} className="cine-quest" aria-label={`Quest: ${title || body}. Open the quests.`} data-tour="quest-glance" data-no-motion>
-      <span className="cine-quest-eyebrow">Quest{title ? ` · ${title}` : ""}</span>
+    <button type="button" onClick={onOpen} className="cine-quest" aria-label={t("cinematic.questOpen", { name: title || body })} data-tour="quest-glance" data-no-motion>
+      <span className="cine-quest-eyebrow">{t("cinematic.quest")}{title ? ` · ${title}` : ""}</span>
       <span className="cine-quest-body">{body}</span>
     </button>
   );
@@ -364,20 +370,21 @@ export function TabletopOrder({
   faceOf: (entry: { id: string; kind: string; name: string }) => Array<string | null | undefined>;
   children?: ReactNode;
 }) {
+  const { locale, t } = useLocale();
   if (!encounter?.orderReady || encounter.order.length === 0) {
     return null;
   }
   return (
-    <aside className="cine-order" aria-label={`Round ${encounter.round}, turn order`}>
-      <span className="cine-order-round">Round {encounter.round}</span>
+    <aside className="cine-order" aria-label={t("cinematic.orderAria", { round: encounter.round })}>
+      <span className="cine-order-round">{t("combatUi.board.round", { round: encounter.round })}</span>
       <ol className="cine-order-list">
         {encounter.order.map((entry, index) => (
           <li key={`${entry.id}-${index}`} className="cine-order-row" data-current={index === encounter.turnIndex ? "true" : undefined} data-foe={entry.kind === "enemy" ? "true" : undefined}>
-            <TokenFace candidates={faceOf(entry)} name={entry.name} enemy={entry.kind === "enemy"} className="cine-order-face" />
+            <TokenFace candidates={faceOf(entry)} name={combatName(entry.name, entry.kind, locale)} enemy={entry.kind === "enemy"} className="cine-order-face" />
             <span className="cine-order-name">
-              {entry.name}
-              {entry.hidden ? " (hidden)" : ""}
-              {entry.reflex ? <sup className="motion-pop ml-0.5 text-[9px] text-amber-300" title="Thief's Reflexes: a second turn this round">2nd</sup> : null}
+              {combatName(entry.name, entry.kind, locale)}
+              {entry.hidden ? t("combatUi.board.hidden") : ""}
+              {entry.reflex ? <sup className="motion-pop ml-0.5 text-[9px] text-amber-300" title={t("cinematic.reflexHint")}>{t("cinematic.second")}</sup> : null}
             </span>
             {typeof entry.initiative === "number" ? <span className="cine-order-init">{entry.initiative}</span> : null}
           </li>
@@ -432,6 +439,7 @@ export function TabletopChronicle({
   // False on the fight stage, where the desk sits right under the board.
   composer?: boolean;
 }) {
+  const { t } = useLocale();
   const rollsById = useMemo(() => new Map(rolls.map((roll) => [roll.id, roll])), [rolls]);
   const recent = useMemo(
     () => messages.filter((message) => message.authorType !== "system" || !message.dmTurnId).slice(-CHRONICLE_ENTRIES),
@@ -446,18 +454,18 @@ export function TabletopChronicle({
     sheets.find((sheet) => sheet.id === message.characterId)?.name ??
     sheets.find((sheet) => sheet.userId === message.userId)?.name ??
     members.find((member) => member.userId === message.userId)?.username ??
-    "Someone";
+    t("combatUi.pending.someone");
   const modes: InputKind[] = isDm ? ["narrate", "ooc"] : ["do", "say", "ooc", ...(steersStory ? (["lead"] as InputKind[]) : [])];
-  const modeLabel: Record<string, string> = { do: "Do", say: "Say", ooc: "OOC", lead: "Direct", narrate: "Narrate" };
+  const modeLabel: Record<string, string> = { do: t("cinematic.mode.do"), say: t("cinematic.mode.say"), ooc: t("cinematic.mode.ooc"), lead: t("cinematic.mode.lead"), narrate: t("cinematic.mode.narrate") };
   // The drop cap goes to the first passage on the scroll, like a page.
   const firstPassageId = recent.find((message) => message.authorType === "dm")?.id;
   return (
-    <aside className="cine-chronicle" aria-label="The chronicle">
+    <aside className="cine-chronicle" aria-label={t("cinematic.chronicle")}>
       <span className="cine-chronicle-roller" aria-hidden="true" />
       <div className="cine-chronicle-page">
-        <span className="cine-chronicle-eyebrow">The chronicle</span>
+        <span className="cine-chronicle-eyebrow">{t("cinematic.chronicle")}</span>
         <div ref={logRef} className="cine-chronicle-log">
-          {recent.length === 0 ? <p className="cine-chronicle-quiet">The tale has not begun.</p> : null}
+          {recent.length === 0 ? <p className="cine-chronicle-quiet">{t("cinematic.quiet")}</p> : null}
           {recent.map((message) => {
             if (message.authorType === "dm") {
               const parts = message.content.split(ROLL_MARKER);
@@ -497,7 +505,7 @@ export function TabletopChronicle({
         </div>
         {composer ? (
         <form onSubmit={onSubmit} className="cine-chronicle-desk">
-          <div className="cine-chronicle-modes" data-pill-group="" role="group" aria-label="How you speak">
+          <div className="cine-chronicle-modes" data-pill-group="" role="group" aria-label={t("cinematic.speak")}>
             {modes.map((option) => (
               <button
                 key={option}
@@ -514,7 +522,7 @@ export function TabletopChronicle({
           </div>
           <div className="cine-chronicle-well">
             <DictateField
-              label="Your move"
+              label={t("cinematic.move")}
               disabled={inputBlocked}
               className="min-w-0 flex-1"
               onTranscript={(text) => setInput(appendDictation(input, text))}
@@ -532,12 +540,12 @@ export function TabletopChronicle({
                 rows={2}
                 disabled={inputBlocked}
                 placeholder={placeholder}
-                aria-label="Your move"
+                aria-label={t("cinematic.move")}
                 className="cine-chronicle-input"
               />
             </DictateField>
-            <button type="submit" disabled={sending || !input.trim() || inputBlocked} className="cine-chronicle-send" aria-label="Send">
-              Send <span aria-hidden="true">&#10230;</span>
+            <button type="submit" disabled={sending || !input.trim() || inputBlocked} className="cine-chronicle-send" aria-label={t("cinematic.send")}>
+              {t("cinematic.send")} <span aria-hidden="true">&#10230;</span>
             </button>
           </div>
         </form>
@@ -549,12 +557,16 @@ export function TabletopChronicle({
 }
 
 function ChronicleRoll({ roll, sheets }: { roll: StoredRoll; sheets: ReadonlyArray<CharacterSheet> }) {
+  const { locale, t } = useLocale();
   const sheetName = roll.characterId ? sheets.find((sheet) => sheet.id === roll.characterId)?.name : undefined;
   const crit = roll.breakdown?.crit;
-  const label = ROLL_KIND_LABELS[roll.kind] || "Roll";
-  const what = rollChronicleLead(roll, sheetName);
+  const label = rollKindLabel(roll.kind, locale);
+  const what = localizedRollChronicleLead(roll, sheetName, locale);
+  if ((roll as StoredRoll & { hidden?: boolean }).hidden || typeof roll.total !== "number") {
+    return <span className="cine-chronicle-roll"><span className="cine-chronicle-roll-head">{t("combatUi.roll.hidden")}</span><span className="cine-chronicle-roll-math">{what}</span></span>;
+  }
   const verdict =
-    crit === "nat20" ? "Natural 20" : crit === "nat1" ? "Natural 1" : roll.success === null ? label : roll.success ? (roll.kind === "attack" ? "Hit" : "Success") : roll.kind === "attack" ? "Miss" : "Failed";
+    crit === "nat20" ? t("cinematic.natural20") : crit === "nat1" ? t("cinematic.natural1") : roll.success === null ? label : roll.success ? (roll.kind === "attack" ? t("cinematic.hit") : t("cinematic.success")) : roll.kind === "attack" ? t("cinematic.miss") : t("cinematic.failed");
   return (
     <span className="cine-chronicle-roll" data-crit={crit ?? undefined}>
       <span className="cine-chronicle-roll-head">{verdict}</span>

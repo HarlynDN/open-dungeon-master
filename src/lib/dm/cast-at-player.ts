@@ -1,3 +1,4 @@
+import { checkRoll } from "@/lib/roll-labels";
 import { canAct } from "@/lib/dm/can-act";
 import { hasDungeonDelver, shieldMasterSaveBonus, spellSaveAdvantageReach } from "@/lib/srd/feat-combat";
 import { tilesBetween } from "@/lib/dm/attack-spatial";
@@ -264,7 +265,7 @@ export function handleCastAtPlayer(
     sheet,
     ability,
     dc,
-    `${sheet.name}: ${ability.toUpperCase()} save vs ${source}`,
+    checkRoll(`${sheet.name}: ${ability.toUpperCase()} save vs ${source}`, "ability", ability, { kind: "save-against", name: args.source ?? use?.name ?? args.spell ?? source }),
     saveAgainst({
       condition: conditionName,
       damageType,

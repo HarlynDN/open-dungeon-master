@@ -1,0 +1,23 @@
+import { defineMessages } from './catalog.ts';
+export const CHECK_ROLL_MESSAGES = /*#__PURE__*/ defineMessages({
+  'combatCheck.group': { en: 'group {term} check', 'zh-CN': '群体{term}检定' },
+  'combatCheck.contest': { en: '{term} (contest)', 'zh-CN': '{term}（对抗检定）' },
+  'combatCheck.hide': { en: '{term} to hide', 'zh-CN': '{term}检定以躲藏' },
+  'combatCheck.search': { en: 'Search ({term})', 'zh-CN': '搜索（{term}）' },
+  'combatCheck.escape-grapple': { en: '{term} to escape the grapple', 'zh-CN': '{term}检定以挣脱擒抱' },
+  'combatCheck.escape-grapple-target': { en: '{term} to escape {target}’s grapple (DC {difficulty})', 'zh-CN': '{term}检定以挣脱{target}的擒抱（难度 {difficulty}）' },
+  'combatCheck.hold-grapple': { en: '{term} to hold the grapple', 'zh-CN': '{term}检定以维持擒抱' },
+  'combatCheck.land-jump': { en: '{term} to land the jump (DC 10)', 'zh-CN': '{term}检定以在跳跃后平稳落地（难度 10）' },
+  'combatCheck.grapple': { en: '{term} to grapple {target}', 'zh-CN': '{term}检定以擒抱{target}' },
+  'combatCheck.shove': { en: '{term} to shove {target}', 'zh-CN': '{term}检定以推撞{target}' },
+  'combatCheck.insight-deception': { en: '{term} against {target}’s Deception', 'zh-CN': '{term}检定以看穿{target}的欺瞒' },
+  'combatCheck.dispel': { en: '{term} check to dispel {name}', 'zh-CN': '{term}检定以解除{name}' },
+  'combatCheck.counterspell': { en: '{term} check to counter {name}', 'zh-CN': '{term}检定以反制{name}' },
+  'combatCheck.escape-spell': { en: '{term} check to break free of {name}', 'zh-CN': '{term}检定以挣脱{name}' },
+  'combatCheck.save-against': { en: '{term} save against {name}', 'zh-CN': '{term}豁免以抵抗{name}' },
+  'combatCheck.concentration': { en: '{term} save to keep concentration ({name})', 'zh-CN': '{term}豁免以维持专注（{name}）' },
+  'combatCheck.feature-save': { en: '{term} save, {name}', 'zh-CN': '{term}豁免（{name}）' },
+  'combatCheck.authored': { en: '{text}: {term}', 'zh-CN': '{text}：{term}' },
+  'combatCheck.effect': { en: 'the effect', 'zh-CN': '该效果' },
+  'combatCheck.either': { en: 'Athletics or Acrobatics', 'zh-CN': '运动或特技' },
+});

@@ -264,6 +264,7 @@ export function handleGroupCheck(
       requestedBy: "dm",
       kind: args.skill ? "skill_check" : "ability_check",
       detail: `${sheet.name}: group ${args.skill ?? args.ability} check`,
+      presentation: { kind: "check", term: { kind: args.skill ? "skill" : "ability", key: args.skill ?? args.ability! }, owner: { name: sheet.name, kind: "proper" }, context: { kind: "group" } },
       dc: dc.dc,
       result: rolled,
     });

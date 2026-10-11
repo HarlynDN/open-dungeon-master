@@ -113,7 +113,7 @@ export function characterSpellEscape(
     return { ok: true, action: "escape", save: `${save.total} vs DC ${hold.dc}`, success: save.success, note: save.success ? `${sheet.name} breaks free of ${hold.spell}.` : `${sheet.name} is still ${hold.name} by ${hold.spell}.` };
   }
   const checks = hold.abilities.map((ability) =>
-    rollCharacterCheck(campaign, sheet, { ability }, `${sheet.name}: ${ability.toUpperCase()} check to break free of ${hold.spell}`),
+    rollCharacterCheck(campaign, sheet, { ability }, `${sheet.name}: ${ability.toUpperCase()} check to break free of ${hold.spell}`, { kind: "escape-spell", name: hold.spell }),
   );
   for (const check of checks) {
     if (check.rollId) {

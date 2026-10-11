@@ -7,7 +7,7 @@
 // Pure (type imports only), so client components and test scripts import it.
 
 import type { StoredRoll } from "@/lib/db/rolls";
-import type { RollDetail, RollDisplayName } from "./roll-presentation";
+import type { RollDetail, RollDisplayName, RollCheckContext } from "./roll-presentation";
 
 type Worded = Pick<StoredRoll, "kind" | "detail" | "attacker">;
 
@@ -32,6 +32,10 @@ export function againstRoll(what: string, target: string, kind: RollDisplayName[
 export function areaRoll(what: string, targets: RollDisplayName[], options: { damageType?: string; actorUnseen?: true } = {}): RollDetail {
   const legacy = `${what}${options.damageType ? ` (${options.damageType})` : ""}`;
   return { detail: rollOn(legacy, targets.map(target => target.name)), presentation: { kind: "area", what, targets, ...options } };
+}
+
+export function checkRoll(detail: string, kind: "skill" | "ability", key: string, context?: RollCheckContext, owner?: RollDisplayName): RollDetail {
+  return { detail, presentation: { kind: "check", term: { kind, key }, ...(context ? { context } : {}), ...(owner ? { owner } : {}) } };
 }
 
 // Who made the roll: its attacker, else the sheet it concerns.

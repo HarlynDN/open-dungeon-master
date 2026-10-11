@@ -3,6 +3,7 @@
 // block. Split from action-tools.ts so the grapple, object and reaction
 // modules can use them without importing the take_action handler.
 
+import type { RollCheckContext } from "@/lib/roll-presentation";
 import { enemyExhaustion } from "@/lib/dm/monster-abilities";
 import { allocateSeq, type Campaign } from "@/lib/db/campaigns";
 import type { EncounterEnemy } from "@/lib/db/encounters";
@@ -72,6 +73,7 @@ export function rollEnemyContest(
   enemy: EncounterEnemy,
   which: "either" | "athletics",
   detail: string,
+  context: RollCheckContext = { kind: "authored", text: detail },
 ): number {
   const worn = enemyExhaustion(enemy.conditions) >= 1;
   const advantage = mergeAdvantage([rollDerivation(enemy.conditions, "skill_check", "str").advantage, ...(worn ? ["disadvantage" as const] : [])]);
@@ -82,6 +84,7 @@ export function rollEnemyContest(
     requestedBy: "dm",
     kind: "skill_check",
     detail,
+    presentation: { kind: "check", term: { kind: "skill", key: which === "either" ? "athletics_or_acrobatics" : "athletics" }, owner: { name: enemy.displayName, kind: "enemy" }, context },
     result: outcome,
   });
   publishWithSeq(campaign.id, allocateSeq(campaign.id), "roll_result", { roll, source: "digital" });

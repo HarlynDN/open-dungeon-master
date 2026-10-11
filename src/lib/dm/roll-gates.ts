@@ -136,6 +136,7 @@ export function rollContest(
       requestedBy: "dm",
       kind: "skill_check",
       detail: `${opponent.name}: ${label} (contest)`.slice(0, 200),
+      presentation: { kind: "check", term: { kind: theirs ? "skill" : "ability", key: theirs ?? ability }, owner: { name: opponent.name, kind: "enemy" }, context: { kind: "contest" } },
       ...(advantage === "none" ? {} : { advantage }),
       result: outcome,
       visibility: "dm",

@@ -2,9 +2,9 @@ import { catalogFor, createTranslator, type MessageKey } from "./translator.ts";
 import type { AppLocale } from "./locales.ts";
 import { apiErrorText, type UiRequestError } from "./api-errors.ts";
 import { referenceDisplayName } from "./references.ts";
-import { rollCardLabel } from "../roll-labels.ts";
+import { rollCardLabel, rollToastLead, rollChronicleLead } from "../roll-labels.ts";
 import type { StoredRoll } from "../db/rolls.ts";
-import { rollPresentationLabel, unseenRollActor } from "./roll-presentations.ts";
+import { rollPresentationLabel, rollPresentationActor } from "./roll-presentations.ts";
 
 // Display projection only. Stored English details and all rule inputs remain
 // untouched; arbitrary prose/custom rolls are not translated by replacement.
@@ -54,7 +54,7 @@ export function rollDetailLabel(roll: RollDetailInput, locale: AppLocale, sheetN
 }
 export function localizedRollCardLabel(roll: RollLabelInput, sheetName: string | undefined, locale: AppLocale): string {
   if (locale === "en") return rollCardLabel(roll, sheetName);
-  const who = unseenRollActor(roll.presentation, locale) ?? (roll.attacker ? combatName(roll.attacker.name, roll.attacker.kind, locale) : sheetName);
+  const who = rollPresentationActor(roll.presentation, locale) ?? (roll.attacker ? combatName(roll.attacker.name, roll.attacker.kind, locale) : sheetName);
   const detail = rollPresentationLabel(roll.presentation, locale) ?? rollDetailLabel(roll, locale, sheetName);
   return `${who ? `${who} · ` : ""}${rollKindLabel(roll.kind, locale)}${detail ? `（${detail}）` : ""}`;
 }
@@ -130,4 +130,20 @@ export function combatErrorText(error: UiRequestError | string | null, locale: A
   match = raw && /^It is already (.*?)'s turn\.$/.exec(raw);
   if (match) return t("combatUi.error.orderCurrent", { name: match[1] });
   return apiErrorText(locale, ui.data, ui.fallback);
+}
+
+// Preserve the two existing English cinematic layouts. Localized captions
+// use typed roles when present, without inferring a target from its spelling.
+export function localizedRollToastLead(roll: RollLabelInput & Pick<StoredRoll, "requestedBy">, sheetName: string | undefined, locale: AppLocale): string {
+  if (locale === "en") return rollToastLead(roll, sheetName);
+  const who = rollPresentationActor(roll.presentation, locale) ?? (roll.attacker ? combatName(roll.attacker.name, roll.attacker.kind, locale) : sheetName);
+  const what = (roll.detail.trim() || roll.presentation) ? rollDetailLabel(roll, locale, sheetName) : rollKindLabel(roll.kind, locale);
+  return `${who ? `${who} · ` : roll.requestedBy === "dm" ? `${createTranslator(locale)("cinematic.dm")} · ` : ""}${what}`;
+}
+export function localizedRollChronicleLead(roll: RollLabelInput, sheetName: string | undefined, locale: AppLocale): string {
+  if (locale === "en") return rollChronicleLead(roll, sheetName);
+  const actor = rollPresentationActor(roll.presentation, locale);
+  const what = (roll.detail.trim() || roll.presentation) ? rollDetailLabel(roll, locale, sheetName) : rollKindLabel(roll.kind, locale);
+  if (actor || roll.attacker) return `${actor ?? combatName(roll.attacker!.name, roll.attacker!.kind, locale)} · ${what}`;
+  return roll.detail.trim() ? what : (sheetName ? `${sheetName} · ${what}` : what);
 }

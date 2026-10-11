@@ -8,6 +8,7 @@
 // request_roll (src/lib/dm/invoke-roll.ts), group_check and aoe_damage call
 // in here; cast_at_player and cast_at_enemy are meant to.
 
+import type { RollDetail } from "@/lib/roll-presentation";
 import { diehardSaveAdvantage, shieldMasterSaveBonus } from "@/lib/srd/feat-combat";
 import { LUCK_SPEND } from "@/lib/dm/roll-riders";
 import { spendLuckCounter } from "@/lib/srd/class-resources";
@@ -180,7 +181,7 @@ export function rollCharacterSave(
   stale: CharacterSheet,
   ability: SaveAbility,
   dc: number,
-  detail: string,
+  detail: string | RollDetail,
   against?: string,
   // The creature forcing the save, for the features that answer it
   // (Supernatural Defense against the Monster Slayer's prey).
@@ -194,9 +195,10 @@ export function rollCharacterSave(
   extra?: SaveExtra,
 ): ForcedSave {
   const sheet = getSheetById(stale.id) ?? stale;
+  const caption = typeof detail === "string" ? { detail } : detail;
   const shieldSave = single && ability === "dex" ? shieldMasterSaveBonus(sheet) : 0;
   // Diehard: advantage against what would exhaust them.
-  const diehard = diehardSaveAdvantage(sheet, `${detail} ${against ?? ""}`);
+  const diehard = diehardSaveAdvantage(sheet, `${caption.detail} ${against ?? ""}`);
   const claimed = claim ?? (diehard ? { advantage: "advantage" as const, reason: "Diehard: advantage against exhaustion" } : null);
   const resolved = resolveRollExpression(
     {
@@ -230,7 +232,8 @@ export function rollCharacterSave(
     characterId: sheet.id,
     requestedBy: "dm",
     kind: "saving_throw",
-    detail: detail.slice(0, 200),
+    ...caption,
+    detail: caption.detail.slice(0, 200),
     dc,
     result: outcome,
   });

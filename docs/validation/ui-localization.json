@@ -181,7 +181,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/CinematicParts.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Reviewed owned round/party/quest/chronicle/composer/dice labels and accessibility, typed enemy names and stock class display, with 30 original English renders and actual input/mode callback checks. Proper names, quests, authored/historical prose, system-message contents, canonical mode values and dice data stay literal; remaining engine log templates and special roll captions have their own pending scope. Imported child UI and full active-play browser acceptance are separate gates."
     },
     {
       "path": "src/app/campaigns/[campaignId]/CompanionBuilderDialog.tsx",
@@ -624,7 +625,7 @@
     {
       "path": "src/app/campaigns/[campaignId]/RollCard.tsx",
       "state": "pending",
-      "review": "Owned verdict/DC/hidden/natural-roll strings, stock skill/ability labels and structured attack/area/death-save/stable-recovery captions now localize with frozen English parity. Typed targets preserve proper names; area metadata retains existing visibility filters, and physical roll captions persist across restart. Still pending: group/contested checks, source-bearing saves and remaining feature/special roll variants. Unknown authored text and legacy rows retain original detail."
+      "review": "Owned verdict/DC/hidden/natural-roll strings and structured attack/area/death/stable/group/opposing/grapple/search/spell-check captions now localize with frozen English parity. Principal PC source/concentration save paths and ordinary requested/physical checks carry metadata. Typed targets preserve proper names and visibility filters. Still pending: other forced-save producers, native feature names and special roll variants. Unknown authored text and legacy rows retain original detail."
     },
     {
       "path": "src/app/campaigns/[campaignId]/RulesPanel.tsx",

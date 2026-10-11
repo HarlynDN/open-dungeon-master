@@ -111,6 +111,7 @@ export function characterEscape(
     held.escapeDc && enemyHolder
       ? `${sheet.name}: ${skill} to escape ${holderName}'s grapple (DC ${held.escapeDc})`
       : `${sheet.name}: ${skill} to escape the grapple`,
+    { kind: "escape-grapple", ...(held.escapeDc && enemyHolder ? { target: { name: holderName, kind: "enemy" as const }, difficulty: held.escapeDc } : {}) },
   );
   if (mine.rollId) {
     turn.rollIds.push(mine.rollId);
@@ -121,9 +122,9 @@ export function characterEscape(
     held.escapeDc && enemyHolder
       ? null
       : enemyHolder
-        ? rollEnemyContest(campaign, turn, enemyHolder, "athletics", `${holderName}: Athletics to hold the grapple`)
+        ? rollEnemyContest(campaign, turn, enemyHolder, "athletics", `${holderName}: Athletics to hold the grapple`, { kind: "hold-grapple" })
         : (() => {
-            const check = rollCharacterCheck(campaign, sheetHolder!, { skill: "athletics" }, `${holderName}: Athletics to hold the grapple`);
+            const check = rollCharacterCheck(campaign, sheetHolder!, { skill: "athletics" }, `${holderName}: Athletics to hold the grapple`, { kind: "hold-grapple" });
             if (check.rollId) {
               turn.rollIds.push(check.rollId);
             }
@@ -186,8 +187,8 @@ export function enemyEscape(
   }
   spendEnemyAction(encounter, enemy.id);
   saveEncounter(encounter);
-  const theirs = rollEnemyContest(campaign, turn, enemy, "either", `${enemy.displayName}: escape the grapple`);
-  const hold = rollCharacterCheck(campaign, holder, { skill: "athletics" }, `${holder.name}: Athletics to hold the grapple`);
+  const theirs = rollEnemyContest(campaign, turn, enemy, "either", `${enemy.displayName}: escape the grapple`, { kind: "escape-grapple" });
+  const hold = rollCharacterCheck(campaign, holder, { skill: "athletics" }, `${holder.name}: Athletics to hold the grapple`, { kind: "hold-grapple" });
   if (hold.rollId) {
     turn.rollIds.push(hold.rollId);
   }

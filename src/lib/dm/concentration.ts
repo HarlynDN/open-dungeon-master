@@ -1,3 +1,4 @@
+import { checkRoll } from "@/lib/roll-labels";
 import { concentrationFeat } from "@/lib/srd/feat-combat";
 import { allocateSeq, type Campaign } from "@/lib/db/campaigns";
 import { getSheetById, listSheets, patchSheet } from "@/lib/db/sheets";
@@ -285,7 +286,7 @@ export function concentrationDamageHook(
     fresh,
     "con",
     dc,
-    `CON save to keep concentration (${spell})`,
+    checkRoll(`CON save to keep concentration (${spell})`, "ability", "con", { kind: "concentration", name: spell }),
     undefined,
     null,
     warCaster ? { advantage: "advantage", reason: "War Caster: advantage to keep concentration" } : null,
