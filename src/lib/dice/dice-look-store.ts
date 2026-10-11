@@ -5,11 +5,13 @@
 // reads, synchronously and offline; the account copy exists so a second
 // device shows the same dice. Hydrate once per page load, write every
 // change through on a short debounce (colour pickers fire continuously),
-// and let a failed fetch in either direction change nothing visible.
+// and retain local choices when a fetch fails. The editor observes sync
+// status separately so a failed account write is not a silent success.
 
 import { useSyncExternalStore } from "react";
 import {
   DEFAULT_DICE_LOOK,
+  isValidDiceLook,
   parseDiceLook,
   sameDiceLook,
   type DiceLook,
@@ -26,6 +28,14 @@ let pending: DiceLook | null = null;
 let flushTimer: ReturnType<typeof setTimeout> | null = null;
 let hydration: Promise<void> | null = null;
 let locallyWritten = false;
+export type DiceLookSyncStatus = "idle" | "loading" | "saving" | "synced" | "load-error" | "save-error";
+let syncStatus: DiceLookSyncStatus = "idle";
+let revision = 0;
+let flushing = false;
+function publishSync(status: DiceLookSyncStatus) {
+  syncStatus = status;
+  window.dispatchEvent(new Event(DICE_LOOK_EVENT));
+}
 
 // Parsed once per distinct stored string so useSyncExternalStore sees a
 // stable object between changes.
@@ -34,7 +44,8 @@ export function readDiceLook(): DiceLook {
   try {
     raw = window.localStorage.getItem(DICE_LOOK_KEY);
   } catch {
-    // Storage unavailable: the default stands.
+    // Storage unavailable: retain this tab's last choice.
+    return cached ?? DEFAULT_DICE_LOOK;
   }
   if (raw === cachedRaw && cached) {
     return cached;
@@ -53,36 +64,45 @@ function safeJson(raw: string): unknown {
 }
 
 function store(look: DiceLook) {
+  const raw = JSON.stringify(look);
   try {
-    window.localStorage.setItem(DICE_LOOK_KEY, JSON.stringify(look));
+    window.localStorage.setItem(DICE_LOOK_KEY, raw);
+    cachedRaw = raw;
   } catch {
-    // Private browsing: the event still reaches this tab's subscribers.
+    // Keep the old storage witness so reads retain the in-memory choice
+    // until another tab changes the stored value.
   }
+  cached = look;
   window.dispatchEvent(new Event(DICE_LOOK_EVENT));
 }
 
 async function flush() {
-  const look = pending;
-  if (!look) {
-    return;
-  }
-  pending = null;
+  if (flushing || !pending) return;
+  flushing = true;
   try {
-    const response = await fetch("/api/profile", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ settings: { diceLook: look } }),
-    });
-    if (!response.ok) {
-      throw new Error(String(response.status));
+    while (pending) {
+      const look = pending;
+      const attemptedRevision = revision;
+      pending = null;
+      try {
+        publishSync("saving");
+        const response = await fetch("/api/profile", {
+          method: "PATCH", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ settings: { diceLook: look } }),
+        });
+        if (!response.ok) throw new Error(String(response.status));
+        const data = await response.json();
+        if (!isValidDiceLook(data?.settings?.diceLook) || !sameDiceLook(data.settings.diceLook, look)) throw new Error("Dice look was not acknowledged.");
+        // Requests are serialized, so an older look cannot arrive last.
+        if (!pending && attemptedRevision === revision) publishSync("synced");
+      } catch {
+        if (attemptedRevision !== revision) continue;
+        if (!pending) pending = look;
+        publishSync("save-error");
+        break;
+      }
     }
-  } catch {
-    // Offline or rejected: keep it for the next change to resend, unless a
-    // newer look arrived meanwhile.
-    if (!pending) {
-      pending = look;
-    }
-  }
+  } finally { flushing = false; }
 }
 
 // Local write plus debounced write-through: the only setter, so the cache
@@ -92,8 +112,10 @@ export function writeDiceLook(look: DiceLook) {
     return;
   }
   locallyWritten = true;
+  revision += 1;
   store(look);
   pending = look;
+  publishSync("saving");
   if (flushTimer) {
     clearTimeout(flushTimer);
   }
@@ -107,11 +129,16 @@ export function writeDiceLook(look: DiceLook) {
 // changed here while the fetch was in flight wins over the account's.
 export function hydrateDiceLook() {
   if (hydration) {
-    return;
+    return hydration;
   }
+  const startedRevision = revision;
+  publishSync("loading");
   hydration = fetch("/api/profile")
-    .then((response) => (response.ok ? response.json() : null))
+    .then((response) => { if (!response.ok) throw new Error(String(response.status)); return response.json(); })
     .then((data) => {
+      if (!data || typeof data !== "object" || !data.settings || typeof data.settings !== "object") throw new Error("Malformed profile response.");
+      if (data.settings.diceLook !== undefined && !isValidDiceLook(data.settings.diceLook)) throw new Error("Malformed dice look response.");
+      if (startedRevision === revision) publishSync("synced");
       const remote = data?.settings?.diceLook;
       if (!remote || locallyWritten) {
         return;
@@ -123,7 +150,23 @@ export function hydrateDiceLook() {
     })
     .catch(() => {
       // The local copy stands.
+      if (startedRevision === revision) publishSync("load-error");
     });
+  return hydration;
+}
+
+export async function retryDiceLookSync() {
+  if (pending) {
+    if (flushTimer) { clearTimeout(flushTimer); flushTimer = null; }
+    await flush();
+  } else {
+    hydration = null;
+    await hydrateDiceLook();
+  }
+}
+export function readDiceLookSyncStatus(): DiceLookSyncStatus { return syncStatus; }
+export function useDiceLookSyncStatus(): DiceLookSyncStatus {
+  return useSyncExternalStore(subscribe, readDiceLookSyncStatus, () => "idle");
 }
 
 function subscribe(listener: () => void) {
