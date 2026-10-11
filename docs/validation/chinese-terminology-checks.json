@@ -1,0 +1,169 @@
+{
+  "version": 1,
+  "date": "2026-10-11",
+  "status": "scoped-repair-verified",
+  "baseCommit": "294b8f6597934eb90adf34c3e28effbae9281cbd",
+  "review": "Implementation-agent comparison with repository English sources and engine results; not independent human review or a production recall study.",
+  "changes": {
+    "contextualTerminologyEntries": 225,
+    "changedChineseMessageKeys": 62,
+    "translatedCatalogKeys": 4563,
+    "englishResourcesUnchanged": true,
+    "toolIdentifiersAndStoredHistoryUnchanged": true,
+    "knownMonsterTerms": 18
+  },
+  "checks": {
+    "typeScript": {
+      "command": "npx tsc --noEmit",
+      "exitCode": 0
+    },
+    "lint": {
+      "command": "npm run lint",
+      "exitCode": 0,
+      "eslintErrors": 0,
+      "existingEslintWarnings": 12,
+      "terminologyErrors": 0,
+      "contextWarnings": 61,
+      "contextWarningPolicy": "Same short English text with different translations is advisory; Loading, Goblin, Shield and Mute have distinct meanings."
+    },
+    "resources": {
+      "generatedCatalogsVerified": true,
+      "coveredUiFiles": 117,
+      "totalUiFiles": 437,
+      "pendingLiteralSites": 3596,
+      "sourceAndCatalogFingerprintsVerified": 118,
+      "revisedReviewRecords": 8
+    },
+    "fullRegression": {
+      "command": "npx vitest run",
+      "scriptFiles": 520,
+      "passed": 519,
+      "failed": 1,
+      "seconds": 268.52,
+      "failedFile": "scripts/test-character-training-diagnostics.mjs",
+      "failure": "Old 游戏器具 expectation and the reviewed catalog fingerprint were stale after the intended 游戏用具 change.",
+      "resolution": "Corrected the Chinese expectation and reviewed fingerprint, unified compound gaming labels, then reran this suite and five affected dependent suites. No frozen English golden was changed.",
+      "singleFullRunAllGreen": false
+    },
+    "finalAffectedRegression": {
+      "command": "npx vitest run scripts/test-character-training-diagnostics.mjs scripts/test-terminology.mjs scripts/test-localization-review-repairs.mjs scripts/test-chinese-tool-references.mjs scripts/test-chinese-builder-feedback.mjs scripts/test-chinese-gear-ui.mjs",
+      "passedScriptFiles": 6,
+      "failedScriptFiles": 0,
+      "seconds": 16.71
+    },
+    "combatFlow": {
+      "suite": "scripts/test-combat-narration-flow.mjs",
+      "passedInFullRegression": true,
+      "cases": [
+        "corrected narration",
+        "still contradictory rewrite",
+        "empty rewrite",
+        "backend failure"
+      ],
+      "coverage": "Final player text/persistence/TTS inputs fall back safely; no duplicated engine action or resource consumption."
+    },
+    "realCombat": {
+      "backend": "codex subscription",
+      "model": "gpt-6.1-sol",
+      "cliVersion": "0.162.1",
+      "locale": "zh-CN",
+      "forcedDice": true,
+      "cases": [
+        {
+          "id": "miss",
+          "passed": true,
+          "calls": 3,
+          "seconds": 22.28
+        },
+        {
+          "id": "hit-survives",
+          "passed": true,
+          "calls": 3,
+          "seconds": 20.54
+        },
+        {
+          "id": "death",
+          "passed": true,
+          "calls": 3,
+          "seconds": 18.86
+        },
+        {
+          "id": "nonlethal",
+          "passed": true,
+          "calls": 2,
+          "seconds": 15.29
+        },
+        {
+          "id": "second-identical-enemy",
+          "passed": true,
+          "calls": 3,
+          "seconds": 18.88
+        },
+        {
+          "id": "spell-slot",
+          "passed": true,
+          "calls": 3,
+          "seconds": 23.19
+        }
+      ],
+      "correction": {
+        "injectedWrongNarration": true,
+        "realCodexRewrite": true,
+        "finalText": "阿明的长剑朝地精胸前刺去，剑锋却从它身侧掠过，只带起一阵破空声。地精发出一声尖利的叫嚷，仍然挡在阿明面前。",
+        "additionalCalls": 1,
+        "additionalRolls": 0,
+        "hpUnchanged": true
+      },
+      "isolatedRemainderPassed": 4,
+      "initialAttempt": "Third case reported the preceding case target ID. The old script did not assert a fresh DM message, so root cause remains unproven. Original evidence retained; fresh-message assertion added and four isolated plus six full cases subsequently passed without loosening target-ID assertions.",
+      "assertions": [
+        "Canonical localized monster name in AI prose and final player/TTS text",
+        "Second identical enemy ID and narration designator agree",
+        "Engine actions and spell-slot consumption occur once",
+        "Text correction adds no dice and changes no HP"
+      ]
+    },
+    "diffCheck": {
+      "command": "git diff --check",
+      "exitCode": 0
+    },
+    "productionBuild": {
+      "runInThisRepair": false,
+      "reason": "Previously recorded repository build blockers remain outside this scoped terminology/name repair."
+    },
+    "localTtsAudio": {
+      "run": false,
+      "reason": "Local TTS is not configured. Controlled input-path tests do not establish pronunciation or real playback."
+    }
+  },
+  "preserved": {
+    "originalRealCombatRuntimeSha256": "561415875e07936bcf744eb90d9442dd07753020f608a4c10b4f0d813ea6ed0a",
+    "frozenEnglishGoldensUnchanged": true
+  },
+  "sourceSha256": {
+    "package.json": "73e9af1d57b14ee221c17f9ef77928bda2449221413f3a4e3bbd6eb2fda36929",
+    "src/lib/i18n/glossary.zh-CN.ts": "95cf42ea4f377627569b081ea02aea050bca02bd79225bcc843b852a31a979e3",
+    "src/lib/i18n/terminology.ts": "753b97325f63a6ae4b4f4209971b40d27730eeaa087247741989df96a7660aee",
+    "src/lib/i18n/terminology-audit.ts": "c600db16247c349c44c044af647599b3929b9f1717cf38b9e0a5245af3324e7a",
+    "src/lib/i18n/reference-names.ts": "8811aa04f8ddcf46bbba5853186751b3140e84b4c398fd19ff47e4fe03946c7e",
+    "src/lib/i18n/references.ts": "8b1cb625ca377b33704b4c763c37a21c3762c6804adcbc44e1a8771ad7442ce5",
+    "src/lib/i18n/generation.ts": "36cf11c8c1614ff07293394cfcaea5b51dfe34b5e004f84b6690fe27914580f0",
+    "src/lib/i18n/resources/zh-CN.ui.json": "96f1ee532aa62b64e4384f413b1ee2745f0d6d1a6f934fe77835b75d9bf3f943",
+    "src/lib/i18n/resources/zh-CN.content.json": "b862470b229d37f0714df1df4353e6fbe3dae5ad89ed6a2eadc9fb7f54e76081",
+    "src/lib/dm/prompt.ts": "4b10de0802600521504874ef3e259adaf21027f3bd9f83d03b257e5345c02aa1",
+    "src/lib/dm/turn.ts": "84b7d3bea3fd3d6c0b1c7ecf315345f4961363e70d4c7f8c3bb6754681c5a2e6",
+    "src/lib/dm/engine-boundary.ts": "6901240f84da69d25c49b508d2f87b579f9362b7094cfff74b34a4f2119c3488",
+    "src/lib/dm/combat-narration.ts": "533a30d4ef96e518f8c2b33f78aabf4530aebeae091d41d1f24859ddf49e61c5",
+    "scripts/check-terminology.mjs": "aaaf992c40de58a248be77895bac894ac4a2260419b0b2fe410acb247cdb933a",
+    "scripts/test-terminology.mjs": "02ecb9f891959146374f67e3edf0c344a6a1d737283f688256137cbced712ef2",
+    "scripts/test-localized-combat-prompt.mjs": "f1655399c7edefa8d3d196e4d431cad9b6c65d22176390dd8333fadaba549a1f",
+    "scripts/test-combat-narration.mjs": "9428adb99a37f9658e73f780954d0cac59b927cd7f16d089be32d8a72181568e",
+    "scripts/accept-chinese-combat.mjs": "0168b999b183b1657206a8f9d68094540f34226c1f00d53b2dad2eeec35e7d80"
+  },
+  "artifactSha256": {
+    "docs/validation/chinese-combat-terminology-attempt.json": "f83942f785fe2bd505b3c254b19a129c4c16796dffd44978ac6e3b36d16be806",
+    "docs/validation/chinese-combat-terminology-remainder.json": "f5f39f1c64774f583bebb5237628cef4ddb055b35b8ec300836948c95d6b38e5",
+    "docs/validation/chinese-combat-terminology-runtime.json": "69cfed21654ab5fda2a06a51483c6d8d67eaaa4aa2bc12ddcac447afa8396703"
+  },
+  "implementationCommit": "6c3b2d3009c852d5c0e43d7164670c81a1ee2181"
+}

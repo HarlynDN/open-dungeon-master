@@ -1,0 +1,248 @@
+{
+  "model": "gpt-6.1-sol",
+  "cliVersion": "0.162.1",
+  "locale": "zh-CN",
+  "backend": "codex subscription",
+  "forcedDice": true,
+  "cases": [
+    {
+      "id": "death",
+      "seconds": 16.36,
+      "calls": 2,
+      "facts": [
+        {
+          "kind": "attack",
+          "actor": {
+            "id": "39cb7b2b-ec10-46d2-a06f-688a3f3b29d2",
+            "name": "阿明",
+            "kind": "proper"
+          },
+          "target": {
+            "id": "001d1720-d20e-4bbd-90c0-a07db9606d40",
+            "name": "Goblin",
+            "kind": "monster"
+          },
+          "hit": true,
+          "damage": 7,
+          "critical": false,
+          "id": "0:result:attack",
+          "source": {
+            "exchange": 0,
+            "tool": "pc_attack",
+            "path": "result"
+          }
+        },
+        {
+          "kind": "state",
+          "target": {
+            "id": "001d1720-d20e-4bbd-90c0-a07db9606d40",
+            "name": "Goblin",
+            "kind": "monster"
+          },
+          "state": "dead",
+          "id": "0:result:state",
+          "source": {
+            "exchange": 0,
+            "tool": "pc_attack",
+            "path": "result"
+          }
+        }
+      ],
+      "narration": "阿明，你挥出长剑，剑锋划过地精的防守。地精倒地，手中的木棒滚落，再无声息。你收住这一剑，尚未采取其他行动。",
+      "finalText": "**战斗结果**\n阿明对地精的这次攻击命中。 地精受到 7 点伤害。\n地精已经死亡。\n\n[roll:82941eb2-0daa-4db7-a647-0516a83523f3]\n[roll:42fe7659-2a63-4913-85c4-69267cc4bdc6]\n\n阿明，你挥出长剑，剑锋划过地精的防守。地精倒地，手中的木棒滚落，再无声息。你收住这一剑，尚未采取其他行动。",
+      "rolls": [
+        {
+          "sides": 20,
+          "face": 15,
+          "forced": true
+        },
+        {
+          "sides": 8,
+          "face": 4,
+          "forced": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "id": "nonlethal",
+      "seconds": 15.86,
+      "calls": 2,
+      "facts": [
+        {
+          "kind": "attack",
+          "actor": {
+            "id": "39cb7b2b-ec10-46d2-a06f-688a3f3b29d2",
+            "name": "阿明",
+            "kind": "proper"
+          },
+          "target": {
+            "id": "f8d71a9e-e3ab-4657-a48a-7beb560f679e",
+            "name": "Goblin",
+            "kind": "monster"
+          },
+          "hit": true,
+          "damage": 7,
+          "critical": false,
+          "id": "0:result:attack",
+          "source": {
+            "exchange": 0,
+            "tool": "pc_attack",
+            "path": "result"
+          }
+        },
+        {
+          "kind": "state",
+          "target": {
+            "id": "f8d71a9e-e3ab-4657-a48a-7beb560f679e",
+            "name": "Goblin",
+            "kind": "monster"
+          },
+          "state": "downed",
+          "unconscious": true,
+          "id": "0:result:state",
+          "source": {
+            "exchange": 0,
+            "tool": "pc_attack",
+            "path": "result"
+          }
+        }
+      ],
+      "narration": "阿明，你挥出长剑，在最后一刻收转剑锋，用剑身拍向地精。地精瘫倒在地，失去了意识，胸口仍有呼吸。\n\n你收住这一剑，没有采取其他行动。",
+      "finalText": "**战斗结果**\n阿明对地精的这次攻击命中。 地精受到 7 点伤害。\n地精倒地失去意识，仍然活着。\n\n[roll:6bd9c3c0-35be-465d-9f09-5b0adb899dbe]\n[roll:9382b6c1-4a73-448e-ab64-5e941da7d590]\n\n阿明，你挥出长剑，在最后一刻收转剑锋，用剑身拍向地精。地精瘫倒在地，失去了意识，胸口仍有呼吸。\n\n你收住这一剑，没有采取其他行动。",
+      "rolls": [
+        {
+          "sides": 20,
+          "face": 15,
+          "forced": true
+        },
+        {
+          "sides": 8,
+          "face": 4,
+          "forced": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "id": "second-identical-enemy",
+      "seconds": 15.82,
+      "calls": 2,
+      "facts": [
+        {
+          "kind": "attack",
+          "actor": {
+            "id": "39cb7b2b-ec10-46d2-a06f-688a3f3b29d2",
+            "name": "阿明",
+            "kind": "proper"
+          },
+          "target": {
+            "id": "e3e5a660-330e-4eff-84a3-a124a3b5d179",
+            "name": "Goblin 2",
+            "kind": "monster"
+          },
+          "hit": true,
+          "damage": 7,
+          "critical": false,
+          "id": "0:result:attack",
+          "source": {
+            "exchange": 0,
+            "tool": "pc_attack",
+            "path": "result"
+          }
+        }
+      ],
+      "narration": "阿明，你挥动长剑，剑锋划过地精 2 的防守，留下一道伤口。地精 2 仍站在你面前，紧握木棒。\n\n你收住这一剑，尚未采取其他行动，回合仍未结束。",
+      "finalText": "**战斗结果**\n阿明对地精 2 的这次攻击命中。 地精 2 受到 7 点伤害。\n\n[roll:11d900ab-f43a-4510-ac13-781798171ffc]\n[roll:0058fa45-8a98-489d-9ecd-be838c035440]\n\n阿明，你挥动长剑，剑锋划过地精 2 的防守，留下一道伤口。地精 2 仍站在你面前，紧握木棒。\n\n你收住这一剑，尚未采取其他行动，回合仍未结束。",
+      "rolls": [
+        {
+          "sides": 20,
+          "face": 15,
+          "forced": true
+        },
+        {
+          "sides": 8,
+          "face": 4,
+          "forced": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "id": "spell-slot",
+      "seconds": 23.54,
+      "calls": 3,
+      "facts": [
+        {
+          "kind": "resource",
+          "actor": {
+            "id": "2e456ff2-6d5e-410b-8416-2ecf2b6ebcca",
+            "name": "米拉",
+            "kind": "proper"
+          },
+          "resource": "spellSlot",
+          "level": 1,
+          "id": "0:slot:resource",
+          "source": {
+            "exchange": 0,
+            "tool": "cast_at_enemy",
+            "path": "slot"
+          }
+        },
+        {
+          "kind": "damage",
+          "target": {
+            "id": "4393ad81-fe53-45bc-bfbf-c56468fc3db3",
+            "name": "Goblin",
+            "kind": "monster"
+          },
+          "amount": 9,
+          "id": "0:result:damage",
+          "source": {
+            "exchange": 0,
+            "tool": "cast_at_enemy",
+            "path": "result"
+          }
+        },
+        {
+          "kind": "spell",
+          "actor": {
+            "id": "2e456ff2-6d5e-410b-8416-2ecf2b6ebcca",
+            "name": "米拉",
+            "kind": "proper"
+          },
+          "spell": "Magic Missile",
+          "resolution": "cast",
+          "id": "0:spell:spell",
+          "source": {
+            "exchange": 0,
+            "tool": "cast_at_enemy",
+            "path": "spell"
+          }
+        }
+      ],
+      "narration": "米拉，你释放出三枚闪耀的魔法飞弹，光弧划过你们面前，接连撞向地精，迸出短促的光芒。地精仍站着，紧握木棒。\n\n米拉，你还要移动或采取可用的附赠动作吗？你的回合尚未结束。",
+      "finalText": "**战斗结果**\n米拉消耗了 1 个 1 环法术位。\n地精受到 9 点伤害。\n米拉施放了魔法飞弹。\n\n[roll:b4538021-bb63-488c-bc31-365685ae87cf]\n\n米拉，你释放出三枚闪耀的魔法飞弹，光弧划过你们面前，接连撞向地精，迸出短促的光芒。地精仍站着，紧握木棒。\n\n米拉，你还要移动或采取可用的附赠动作吗？你的回合尚未结束。",
+      "rolls": [
+        {
+          "sides": 4,
+          "face": 2,
+          "forced": true
+        },
+        {
+          "sides": 4,
+          "face": 2,
+          "forced": true
+        },
+        {
+          "sides": 4,
+          "face": 2,
+          "forced": true
+        }
+      ],
+      "passed": true
+    }
+  ],
+  "correction": null,
+  "tts": "not configured; only final text contract tested elsewhere"
+}

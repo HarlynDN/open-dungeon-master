@@ -1,0 +1,114 @@
+{
+  "model": "gpt-6.1-sol",
+  "cliVersion": "0.162.1",
+  "locale": "zh-CN",
+  "backend": "codex subscription",
+  "forcedDice": true,
+  "cases": [
+    {
+      "id": "miss",
+      "seconds": 105.11,
+      "calls": 3,
+      "facts": [
+        {
+          "kind": "attack",
+          "actor": {
+            "id": "47e0fe80-e0b4-4567-be64-fe42b72b7cc2",
+            "name": "阿明",
+            "kind": "proper"
+          },
+          "target": {
+            "id": "bac04fac-2798-4576-b3f2-8aaff79db58c",
+            "name": "Goblin",
+            "kind": "monster"
+          },
+          "hit": false,
+          "critical": false,
+          "id": "0:result:attack",
+          "source": {
+            "exchange": 0,
+            "tool": "pc_attack",
+            "path": "result"
+          }
+        }
+      ],
+      "narration": "阿明，你挥起长剑，剑锋划过地精身旁，却未能触及它。地精仍握着木棒，与你近身对峙。\n\n你还要做什么？",
+      "finalText": "**战斗结果**\n阿明对地精的这次攻击未命中。\n\n[roll:4e5c2158-e70d-46ca-90a6-9cb61a515c77]\n\n阿明，你挥起长剑，剑锋划过地精身旁，却未能触及它。地精仍握着木棒，与你近身对峙。\n\n你还要做什么？",
+      "rolls": [
+        {
+          "sides": 20,
+          "face": 1,
+          "forced": true
+        }
+      ],
+      "passed": true
+    },
+    {
+      "id": "hit-survives",
+      "seconds": 22.02,
+      "calls": 3,
+      "facts": [
+        {
+          "kind": "attack",
+          "actor": {
+            "id": "47e0fe80-e0b4-4567-be64-fe42b72b7cc2",
+            "name": "阿明",
+            "kind": "proper"
+          },
+          "target": {
+            "id": "18d78015-d71b-48ac-ad08-684106a81d9c",
+            "name": "Goblin",
+            "kind": "monster"
+          },
+          "hit": true,
+          "damage": 7,
+          "critical": false,
+          "id": "0:result:attack",
+          "source": {
+            "exchange": 0,
+            "tool": "pc_attack",
+            "path": "result"
+          }
+        }
+      ],
+      "narration": "阿明，你挥动长剑，剑锋掠过地精的身体，带起一道血痕。地精仍紧握木棒，与你近身对峙。\n\n你还要做什么？",
+      "finalText": "**战斗结果**\n阿明对地精的这次攻击命中。 地精受到 7 点伤害。\n\n[roll:ebc00fd9-34b8-45a6-b022-b35d6c7e93f2]\n[roll:7ff328cb-2d77-44ec-935e-9f2e9e048b93]\n\n阿明，你挥动长剑，剑锋掠过地精的身体，带起一道血痕。地精仍紧握木棒，与你近身对峙。\n\n你还要做什么？",
+      "rolls": [
+        {
+          "sides": 20,
+          "face": 15,
+          "forced": true
+        },
+        {
+          "sides": 8,
+          "face": 4,
+          "forced": true
+        }
+      ],
+      "passed": true
+    }
+  ],
+  "correction": {
+    "injectedWrongNarration": true,
+    "realCodexRewrite": true,
+    "finalText": "阿明的长剑从地精身侧刺过，剑刃划破空气，带起一声锐响。地精发出一声刺耳的叫嚷，仍然挡在阿明面前。",
+    "additionalCalls": 1,
+    "additionalRolls": 0,
+    "hpUnchanged": true
+  },
+  "tts": "not configured; only final text contract tested elsewhere",
+  "failure": {
+    "scenario": "death",
+    "assertion": "Observed targetEnemyId differed from current fixture target",
+    "actual": "18d78015-d71b-48ac-ad08-684106a81d9c",
+    "expected": "b2bb492c-1ee7-41ea-842a-7ac4557356fb",
+    "diagnosis": "The actual ID belongs to the preceding hit-survives turn. The original script did not prove that a new DM message was produced, so these data cannot establish whether this was a model targeting failure or a previous-message read. No persistent failure reproduced."
+  },
+  "followup": {
+    "freshMessageAssertionAdded": true,
+    "isolatedRemainderCasesPassed": 4,
+    "fullFreshRunCasesPassed": 6,
+    "record": "chinese-combat-terminology-runtime.json",
+    "independentHumanReview": false
+  }
+}
