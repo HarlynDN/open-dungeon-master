@@ -378,12 +378,12 @@
     {
       "path": "src/app/campaigns/[campaignId]/HandCardFace.tsx",
       "state": "pending",
-      "review": "Type/cost labels, known/composite names including Martial Arts strike, native facts/previews, basic/reaction rules, matching registered resource guidance and common casting refusals reviewed; native card callbacks retained. Spell/rider prose, uncommon subclass and priced-material/ritual frames remain pending."
+      "review": "Type/cost labels, known/composite names, native facts/previews, basic/reaction/registered-resource rules, common casting refusals and all 113 owned spell mechanic notes reviewed. Generated spell-note boundaries preserve multi-sentence source and ignore stale metadata; authored notes and native card callbacks retained. Uncommon names, shape/attack-option/bonus-route and priced-material/ritual frames remain pending."
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandMoreSheet.tsx",
       "state": "pending",
-      "review": "Owned labels, known names/types/costs, native facts/previews, waiting/common casting refusals and basic/reaction/registered-resource rules reviewed. Remaining spell/rider/subclass/ritual/priced-material text keeps this file pending."
+      "review": "Owned labels, known names/types/costs, native facts/previews, waiting/common casting refusals and basic/reaction/registered-resource/spell-note rules reviewed. Uncommon names/choices and remaining shape, attack-option, bonus-route, ritual and priced-material text keeps this file pending."
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandPips.tsx",

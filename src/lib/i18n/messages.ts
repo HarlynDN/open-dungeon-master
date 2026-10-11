@@ -58,8 +58,10 @@ import { COMPOSE_MESSAGES } from "./compose-messages.ts";
 import { SESSION_MESSAGES } from "./session-messages.ts";
 import { HAND_MESSAGES } from "./hand-messages.ts";
 import { HAND_MATERIAL_MESSAGES } from "./hand-material-messages.ts";
+import { HAND_SPELL_MESSAGES } from "./hand-spell-messages.ts";
 
 const en = {
+  ...HAND_SPELL_MESSAGES.en,
   ...HAND_MATERIAL_MESSAGES.en,
   ...HAND_MESSAGES.en,
   ...SESSION_MESSAGES.en,
@@ -147,6 +149,7 @@ export type MessageKey = keyof typeof en;
 type Messages = Record<MessageKey, string>;
 
 const zhCN: Messages = {
+  ...HAND_SPELL_MESSAGES["zh-CN"],
   ...HAND_MATERIAL_MESSAGES["zh-CN"],
   ...HAND_MESSAGES["zh-CN"],
   ...SESSION_MESSAGES["zh-CN"],

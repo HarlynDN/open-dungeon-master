@@ -71,6 +71,9 @@ export type HandCard = {
   // The roll line under it ("+5 to hit", "no roll", "on a hit").
   roll: string;
   rules: string;
+  // Native rule-note boundaries for display adapters. Never sent as intent.
+  // Kept alongside the original joined English text for compatibility.
+  ruleSegments?: readonly string[];
   // Slot, uses or ammunition ("Slot 1 · 3/4"); "" when the card costs nothing.
   resource: string;
   // The condition applied, or "Concentration".

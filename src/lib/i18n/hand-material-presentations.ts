@@ -172,6 +172,12 @@ export function handTargetNote(raw: string, locale: AppLocale): string {
 type CardMaterial = Pick<HandCard, "range" | "dice" | "roll" | "rules" | "resource" | "condition" | "disabled">;
 export function handCardMaterial(card: HandCard, locale: AppLocale): CardMaterial {
   let rules = handRuleText(card.rules, locale);
+  // Generated spell notes can contain several sentences. Their native
+  // boundaries let us project complete owned notes without splitting prose.
+  // Ignore stale metadata if a caller has replaced the joined rule text.
+  if (card.ruleSegments?.join(" ") === card.rules) {
+    rules = card.ruleSegments.map(note => handRuleText(note, locale)).join(" ");
+  }
   if (locale !== "en" && card.intent.card === "feature") {
     const key = `sheetDialog.resourceHelp.${card.intent.resourceId}` as MessageKey;
     const source = catalogFor("en", "sheetDialog.resourceHelp.")[key];
