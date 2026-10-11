@@ -164,7 +164,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/CharacterMenu.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned menu labels/tooltips/accessibility and all permission branches reviewed. Canonical entity IDs, moderation requests, modal deferral and callbacks unchanged; dialogs retain their own coverage state."
     },
     {
       "path": "src/app/campaigns/[campaignId]/CharacterNotesDialog.tsx",
@@ -339,11 +340,13 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/FightSummaryCard.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned statistics and built-in outcome labels reviewed; quantities, fighter names and custom outcomes retained. Summary/dismiss handlers unchanged."
     },
     {
       "path": "src/app/campaigns/[campaignId]/FloorBanners.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned controls, initiative names by entity role, turn/hold/spotlight templates and known end-turn refusals reviewed. Stored refusal data rerenders on locale switch; supplied prompts and player names remain literal."
     },
     {
       "path": "src/app/campaigns/[campaignId]/GameSettingsPanel.tsx",
@@ -352,7 +355,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/HaltedTurnBanner.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned recovery UI and known retry/network refusals reviewed; stored error data rerenders on locale switch. Original backend diagnostics/history remain verbatim for troubleshooting."
     },
     {
       "path": "src/app/campaigns/[campaignId]/Hand.tsx",
@@ -372,7 +376,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandPips.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Known engine pip labels, availability/spent status and Flurry count reviewed. Unknown/custom budget labels remain literal; original pip keys and usage counts preserved."
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandReactPrompt.tsx",
@@ -384,7 +389,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandTutorial.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned tutorial copy and accessibility reviewed; both dismissal callbacks and persistent tutorial ID unchanged."
     },
     {
       "path": "src/app/campaigns/[campaignId]/InlineMessageEditor.tsx",
@@ -408,7 +414,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/LeadFloorControl.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned mode/action/accessibility templates and known refusal messages reviewed; IDs, floor enums and user-authored prompts remain canonical. Imported child files retain their own coverage state."
     },
     {
       "path": "src/app/campaigns/[campaignId]/LeadPanel.tsx",

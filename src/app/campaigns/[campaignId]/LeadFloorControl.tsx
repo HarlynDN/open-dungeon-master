@@ -7,8 +7,12 @@ import { SectionHead } from "@/components/ui/SectionHead";
 import { PanelError, kitButtonClass, panelField } from "./PanelKit";
 import type { Floor } from "@/lib/db/campaigns";
 import type { PublicEncounter } from "@/lib/db/encounter-view";
-import { REFLEX_LABEL, orderRowKey } from "@/lib/battlemap/initiative-rows";
+import { orderRowKey } from "@/lib/battlemap/initiative-rows";
 import type { CharacterSheet } from "@/lib/schemas/sheet";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import type { UiRequestError } from "@/lib/i18n/api-errors";
+import { combatName } from "@/lib/i18n/combat-ui-presentations";
+import { turnControlErrorText } from "@/lib/i18n/turn-control-presentations";
 
 // Who may speak right now, from the lead's desk. The same route the DM
 // console's FloorControl and the composer banners call, with the one thing
@@ -30,19 +34,6 @@ const chip = kitButtonClass("small", "disabled:opacity-40");
 const chipOn = "border-amber-500/60 bg-amber-400/10 text-amber-100 disabled:opacity-100";
 const chipOff = "";
 
-function modeLabel(floor: Floor): string {
-  switch (floor.mode) {
-    case "open":
-      return "Open: anyone may act.";
-    case "hold":
-      return "Held: nobody acts until you open it.";
-    case "spotlight":
-      return "Spotlight: only the named players may act.";
-    case "initiative":
-      return "The initiative order has the floor while the fight runs.";
-  }
-}
-
 export function LeadFloorControl({
   campaignId,
   floor,
@@ -54,8 +45,10 @@ export function LeadFloorControl({
   sheets: CharacterSheet[];
   encounter?: PublicEncounter | null;
 }) {
+  const { t, locale } = useLocale();
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<UiRequestError | null>(null);
+  const errorText = turnControlErrorText(error, locale);
   // Character ids, which is what the route takes; it resolves them to the
   // players behind them and drops companions itself.
   const [picked, setPicked] = useState<string[]>([]);
@@ -70,7 +63,7 @@ export function LeadFloorControl({
 
   async function post(body: FloorRequest): Promise<boolean> {
     setBusy(true);
-    setError("");
+    setError(null);
     try {
       const response = await fetch(`/api/campaigns/${campaignId}/floor`, {
         method: "POST",
@@ -79,12 +72,12 @@ export function LeadFloorControl({
       });
       if (!response.ok) {
         const data = (await response.json().catch(() => ({}))) as { error?: string };
-        setError(data.error ?? "The floor did not change.");
+        setError({ data, fallback: "turnUi.error.floor" });
         return false;
       }
       return true;
     } catch {
-      setError("Could not reach the table.");
+      setError({ data: {}, fallback: "turnUi.error.table" });
       return false;
     } finally {
       setBusy(false);
@@ -104,13 +97,13 @@ export function LeadFloorControl({
 
   return (
     <div className="panel mb-3 rounded-lg p-3">
-      <SectionHead title="The floor" glyph="rest-initiative" />
-      <p className="text-xs text-stone-300">{modeLabel(floor)}</p>
+      <SectionHead title={t("turnUi.floor")} glyph="rest-initiative" />
+      <p className="text-xs text-stone-300">{t(`turnUi.mode.${floor.mode}`)}</p>
 
       {floor.mode === "initiative" ? (
         <div className="reveal mt-2 space-y-1.5">
           <p className="text-xs text-stone-500">
-            Round {floor.round}
+            {t("turnUi.round", { round: floor.round })}
             {encounter?.orderReady && encounter.order.length ? (
               <>
                 {" · "}
@@ -118,66 +111,64 @@ export function LeadFloorControl({
                   // Keyed by position: a thief's second round-1 turn repeats the id.
                   <span
                     key={orderRowKey(entry, index)}
-                    title={entry.reflex ? REFLEX_LABEL : undefined}
+                    title={entry.reflex ? t("turnUi.reflex") : undefined}
                     className={cn(
                       "transition-colors duration-200",
                       index === encounter.turnIndex ? "font-medium text-amber-200" : undefined,
                     )}
                   >
                     {index > 0 ? " > " : ""}
-                    {entry.name}
-                    {entry.reflex ? <sup className="motion-pop ml-0.5 text-[9px] text-amber-300">2nd</sup> : null}
+                    {combatName(entry.name, entry.kind, locale)}
+                    {entry.reflex ? <sup className="motion-pop ml-0.5 text-[9px] text-amber-300">{t("turnUi.second")}</sup> : null}
                   </span>
                 ))}
               </>
             ) : (
-              <> · {floor.currentName}&apos;s turn</>
+              <> · {t("turnUi.current", { name: floor.currentName })}</>
             )}
           </p>
           <button
             type="button"
             disabled={busy} aria-busy={busy}
             onClick={() => post({})}
-            title="Skip the current player's turn"
+            title={t("turnUi.skipHint")}
             className={cn(chip, chipOff)}
           >
-            Skip turn
+            {t("turnUi.skip")}
           </button>
         </div>
       ) : (
         <>
-          <div data-pill-group="" role="group" aria-label="Floor mode" className="mt-2 flex flex-wrap gap-1.5">
+          <div data-pill-group="" role="group" aria-label={t("turnUi.modeLabel")} className="mt-2 flex flex-wrap gap-1.5">
             <button data-on={floor.mode === "open" ? "" : undefined}
               type="button"
               disabled={busy || floor.mode === "open"}
               onClick={() => post({ set: "open" })}
-              title="Let anyone act"
+              title={t("turnUi.openHint")}
               className={cn(chip, floor.mode === "open" ? chipOn : chipOff)}
             >
-              Open floor
+              {t("turnUi.open")}
             </button>
             <button data-on={floor.mode === "hold" ? "" : undefined}
               type="button"
               disabled={busy || floor.mode === "hold"}
               onClick={() => post({ set: "hold" })}
-              title="Hold every response while the table talks it over"
+              title={t("turnUi.holdHint")}
               className={cn(chip, floor.mode === "hold" ? chipOn : chipOff)}
             >
-              Hold for talk
+              {t("turnUi.hold")}
             </button>
           </div>
 
           {floor.mode === "hold" && floor.next.mode === "spotlight" ? (
             <p className="reveal mt-1.5 text-xs text-stone-500">
-              On release: spotlight on{" "}
-              {players
+              {t("turnUi.releaseSpotlight", { names: players
                 .filter(
                   (sheet) =>
                     floor.next.mode === "spotlight" && floor.next.userIds.includes(sheet.userId),
                 )
                 .map((sheet) => sheet.name)
-                .join(", ") || "someone"}
-              .
+                .join(", ") || t("turnUi.someone") })}
             </p>
           ) : null}
 
@@ -206,7 +197,7 @@ export function LeadFloorControl({
                       )}
                       {sheet.name}
                       <span className="text-[11px] text-stone-500">
-                        {answered ? "answered" : "waiting"}
+                        {t(answered ? "turnUi.answered" : "turnUi.waiting")}
                       </span>
                     </li>
                   );
@@ -216,15 +207,15 @@ export function LeadFloorControl({
                 type="button"
                 disabled={busy} aria-busy={busy}
                 onClick={() => post({})}
-                title="Open the floor now; whatever has been answered goes to the DM"
+                title={t("turnUi.releaseHint")}
                 className={cn(chip, chipOff, "mt-1.5")}
               >
-                Release
+                {t("turnUi.release")}
               </button>
             </div>
           ) : null}
 
-          <SectionHead title="Give the floor" glyph="tab-party" level="h4" className="mt-3" aside={picked.length ? `${picked.length} picked` : null} />
+          <SectionHead title={t("turnUi.give")} glyph="tab-party" level="h4" className="mt-3" aside={picked.length ? t("turnUi.picked", { count: picked.length }) : null} />
           <div className="flex flex-wrap gap-1.5">
             {players.length ? (
               players.map((sheet) => {
@@ -256,7 +247,7 @@ export function LeadFloorControl({
                 );
               })
             ) : (
-              <span className="text-xs text-stone-500">No player characters yet.</span>
+              <span className="text-xs text-stone-500">{t("turnUi.noPlayers")}</span>
             )}
           </div>
           <div className="mt-1.5 flex gap-1.5">
@@ -264,25 +255,25 @@ export function LeadFloorControl({
               value={prompt}
               onChange={(event) => setPrompt(event.target.value)}
               maxLength={300}
-              placeholder="What are you asking them? (optional)"
-              aria-label="What are you asking them? (optional)"
+              placeholder={t("turnUi.question")}
+              aria-label={t("turnUi.question")}
               className={cn(panelField, "w-auto min-w-0 flex-1")}
             />
             <button
               type="button"
               disabled={busy || !picked.length}
               onClick={spotlight}
-              title="Only the picked players may act until each has answered or you release"
+              title={t("turnUi.spotlightHint")}
               className={kitButtonClass("primary", "shrink-0")}
             >
               {busy ? <Loader2 className="size-3.5 animate-spin" /> : null}
-              Spotlight
+              {t("turnUi.spotlight")}
             </button>
           </div>
         </>
       )}
 
-      {error ? <PanelError className="mt-1.5">{error}</PanelError> : null}
+      {errorText ? <PanelError className="mt-1.5">{errorText}</PanelError> : null}
     </div>
   );
 }
