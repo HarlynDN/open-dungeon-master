@@ -1,0 +1,32 @@
+{
+  "sourceCommit": "7b325887",
+  "note": "Pre-edit English JSX; portals/device discovery and large child pickers stubbed.",
+  "sha256": {
+    "hp/average": "8e28c11ac857bc7a27d13b41e251c81c7a6781f5e91fefc542592b4a18454ff8",
+    "hp/max": "a7158d344b3dd24345528fd8dc613b75bbde3117cf7d09e65d5ccee333f3cd68",
+    "hp/rolled": "08ca7df6c49a77b75f1af6fe194acc1d0f94bd55c3ccdfdee849693cd68f7248",
+    "blocked/dead": "8ed0cbf0ec318f77858b3522ad07e5c14785c5c2d7be33ce8604243ad2b94a08",
+    "blocked/zero": "9446812f1ed15f55a929750ce52c1b7a106842844f668f7720b9a40035a449c4",
+    "blocked/xp": "49a8f95818d232755693a946dd20e770f3c0c85a2f005ae6e76c830f25f9aae0",
+    "blocked/cap": "7cc028f36fe37312cff418e2b522807169f77f1fc5432c53d217f5b3a526282b",
+    "multiclass": "e8a17a36c8449997730e878d00e267d8dc6ea338a0de88a0923b465f5bc4f4c5",
+    "asi": "cc70f90e273f44cd41d5facf99f9bb9edbfee24c2a50e3bf326184317ec5eb9b",
+    "subclass": "3cbc6d8bb5fc68adc0473bbf89858fa53a424c8572e9daae842b8984d3073d6a",
+    "style": "a54c3df53c1a6692f43d91121fc4b6ecdce1fdc9ca4fda5aa02ebd22556378d8",
+    "spells": "9a6cbe239c83eeffcb4abbc1659ae61a147d03f511476ebff4b20989fbe2c700",
+    "result/roll": "1b0898e544aaae8466e9c9a077c972fdd21c2824fb6bb231129a197ec34f7fcb",
+    "result/average": "8366b7f8d0f469d476c04a5133d98fc4ecc387292dfad54d8c5c8d3ce5494169",
+    "result/max": "1d9501a5e8e2dec0f94266290161d6d711a737640795a5adaeff803fa02173af",
+    "expertise": "55e0a28d413632a5f354eb93c007103c54da32e8fd87a1815dd0bb75d8339dcc",
+    "options": "65dc8a429e17bba14211201fecbc7132f48f3b74c4df400a1c6033128ebe4a5b",
+    "moment/level": "1528b08392b34ddd3fd65b2bc2f0ff20c1388cfabe71eb173a334af9e7e2236e",
+    "moment/rest/short": "13210a2a7107a6e584364ec81332d4749b798344d469b0181c2a5b2290d62dce",
+    "moment/rest/long": "cab5b0f63f9981134126d69a668328ebabf8a4bb2781e9249b9484705a030d7a",
+    "moment/rest/reason": "e9f6a1d6d2968243e1848f0170140ef56b63f45f8f7a9d7fc1ccd7e0e71f82dc",
+    "moment/loot/Longsword": "c2cec97c8ca19d400ba021f60d5fff8545fc62bf5a18232a037c6217ca417221",
+    "moment/loot/Authored treasure": "f3867ea632134271e337051e1080fb7bd4d0c21bd10cf7942523bfa6f89829a0",
+    "moment/loot/Longsword +2": "761cb874d38c0358c7b43f4e41128103799c6d26cee36414b759c0defdff1a53",
+    "moment/travel/true": "07aa98c18a5630e673c1b027d519d37786d71dda72c35cd1292c3adceb273c22",
+    "moment/travel/false": "02df3a1ab7f9d99b5d644726f9b84125b14f441880fd89c75b565eeab01c61a5"
+  }
+}

@@ -1,5 +1,9 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { createTranslator } from "@/lib/i18n/translator";
+import type { AppLocale } from "@/lib/i18n/locales";
+import { referenceDisplayName } from "@/lib/i18n/references";
 import { useEffect, useMemo, useState } from "react";
 import { PortraitMedallion } from "@/components/sheet/SheetParts";
 import { FxSprite } from "@/components/ui/FxSprite";
@@ -38,6 +42,7 @@ export function MomentVeil() {
 const LEVEL_UP_MS = 2600;
 
 export function LevelUpMoment({ sheet, level, onDone }: { sheet: CharacterSheet; level: number; onDone: () => void }) {
+  const { t } = useLocale();
   useEffect(() => {
     const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const timer = window.setTimeout(onDone, still ? 900 : LEVEL_UP_MS);
@@ -55,10 +60,10 @@ export function LevelUpMoment({ sheet, level, onDone }: { sheet: CharacterSheet;
         </PortraitMedallion>
       </div>
       <p className="moment-kicker">
-        <GameIcon icon={{ kind: "glyph", key: "rest-level-up" }} size="size-7" /> Level up
+        <GameIcon icon={{ kind: "glyph", key: "rest-level-up" }} size="size-7" /> {t("sessionUi.moment.level")}
       </p>
       <p className="gold-title moment-title">
-        {sheet.name} reaches level {level}
+        {t("sessionUi.moment.reaches", { name: sheet.name, level })}
       </p>
     </div>
   );
@@ -66,15 +71,16 @@ export function LevelUpMoment({ sheet, level, onDone }: { sheet: CharacterSheet;
 
 const REST_MS = 7000;
 
-function restLine(entry: AuditEntry, sheet: CharacterSheet | undefined): string {
+function restLine(entry: AuditEntry, sheet: CharacterSheet | undefined, locale: AppLocale): string {
+  const t = createTranslator(locale);
   if (entry.kind === "rest_long") {
-    return "fully restored";
+    return t("sessionUi.moment.restored");
   }
   const hp = typeof entry.delta.currentHp === "number" ? entry.delta.currentHp : null;
   if (hp !== null && sheet) {
-    return `${hp}/${effectiveMaxHp(sheet)} hit points`;
+    return t("sessionUi.moment.hp", { hp, max: effectiveMaxHp(sheet) });
   }
-  return entry.reason || "rested";
+  return entry.reason || t("sessionUi.moment.rested");
 }
 
 // Watches the audit log for a rest the engine just recorded and gathers the
@@ -82,6 +88,7 @@ function restLine(entry: AuditEntry, sheet: CharacterSheet | undefined): string 
 // is what the log says. A rest already in the log when the table opened does
 // not replay.
 export function RestMoment({ auditLog, sheets }: { auditLog: AuditEntry[]; sheets: CharacterSheet[] }) {
+  const { locale, t } = useLocale();
   const rests = useMemo(() => auditLog.filter((entry) => entry.kind.startsWith("rest_")), [auditLog]);
   const stamp = rests.map((entry) => entry.id).join(",");
   const [seen, setSeen] = useState(stamp);
@@ -106,7 +113,7 @@ export function RestMoment({ auditLog, sheets }: { auditLog: AuditEntry[]; sheet
     <div className="moment-stage" role="status" onClick={() => setSeen(stamp)}>
       <p className="moment-kicker">
         <GameIcon icon={{ kind: "glyph", key: long ? "rest-long" : "rest-short" }} size="size-7" />
-        {long ? "A long rest" : "A short rest"}
+        {t(long ? "sessionUi.moment.long" : "sessionUi.moment.short")}
       </p>
       <div className="moment-rest">
         <FxSprite sheetId="loop-campfire" loop className="moment-rest-fire" />
@@ -121,12 +128,12 @@ export function RestMoment({ auditLog, sheets }: { auditLog: AuditEntry[]; sheet
                 <Face sheet={sheet} />
               </PortraitMedallion>
               <span className="font-display text-sm text-amber-50">{sheet.name}</span>
-              <span className="text-[11px] text-amber-200/80">{entry ? restLine(entry, sheet) : ""}</span>
+              <span className="text-[11px] text-amber-200/80">{entry ? restLine(entry, sheet, locale) : ""}</span>
             </li>
           );
         })}
       </ul>
-      <p className="mt-4 text-[11px] text-stone-400">Select anywhere to return to the table</p>
+      <p className="mt-4 text-[11px] text-stone-400">{t("sessionUi.moment.return")}</p>
     </div>
   );
 }
@@ -157,6 +164,7 @@ function packOf(sheet: CharacterSheet): Map<string, number> {
 // with its painted icon. Read off the sheet itself, so every way an item can
 // arrive is covered and nothing about how it arrives changes.
 export function LootMoment({ sheet }: { sheet: CharacterSheet | null | undefined }) {
+  const { locale, t } = useLocale();
   const signature = sheet ? `${sheet.id}|${sheet.equipment.map((item) => `${item.name}x${item.qty}`).join("|")}` : "";
   const [known, setKnown] = useState({ signature, id: sheet?.id ?? "", pack: sheet ? packOf(sheet) : new Map<string, number>() });
   const [queue, setQueue] = useState<Gain[]>([]);
@@ -193,10 +201,10 @@ export function LootMoment({ sheet }: { sheet: CharacterSheet | null | undefined
         <span className="moment-loot-plate">
           <GameIcon icon={{ kind: "item", key: current.name, family: "item-gear" }} size="size-20" />
         </span>
-        <span className="moment-loot-kicker">{tier === "epic" ? "A treasure" : tier === "rare" ? "A rare find" : "Added to your pack"}</span>
+        <span className="moment-loot-kicker">{t(tier === "epic" ? "sessionUi.moment.treasure" : tier === "rare" ? "sessionUi.moment.rare" : "sessionUi.moment.pack")}</span>
         <span className="moment-loot-name">
-          {current.name}
-          {current.qty > 1 ? ` x${current.qty}` : ""}
+          {referenceDisplayName("equipment", current.name, locale)}
+          {current.qty > 1 ? t("sessionUi.moment.qty", { qty: current.qty }) : ""}
         </span>
       </div>
     </div>
@@ -209,6 +217,7 @@ const TRAVEL_MS = 3400;
 // is open, its name rides in under a compass rose. A place already current
 // when the table opened is not announced.
 export function TravelBanner({ locations }: { locations: CampaignLocation[] }) {
+  const { t } = useLocale();
   const place = locations.find((location) => location.isCurrent) ?? null;
   const visited = locations.filter((location) => location.visited).map((location) => location.id).join(",");
   const [known, setKnown] = useState({ id: place?.id ?? "", visited });
@@ -237,7 +246,7 @@ export function TravelBanner({ locations }: { locations: CampaignLocation[] }) {
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src="/assets/ui/compass-rose.webp" alt="" className="moment-travel-rose" />
       <span className="min-w-0">
-        <span className="moment-travel-kicker">{shown.firstVisit ? "New place discovered" : "The party arrives"}</span>
+        <span className="moment-travel-kicker">{t(shown.firstVisit ? "sessionUi.moment.newPlace" : "sessionUi.moment.arrives")}</span>
         <span className="gold-title moment-travel-name">{shown.name}</span>
       </span>
     </div>

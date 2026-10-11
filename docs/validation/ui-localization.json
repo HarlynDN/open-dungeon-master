@@ -439,7 +439,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/LevelUpDialog.tsx",
-      "state": "pending"
+      "state": "pending",
+      "review": "Owned guided progression copy, rolled/fixed/max HP choices and results, XP/dead/zero-HP blockers, class/subclass/skill/style/spell display labels and multiclass grant/refusal frames reviewed. Canonical rolled/ASI/spell PATCH shapes and 26 frozen English JSX states including moments checked. Unknown authored diagnostics and complete native option requirements/descriptions/feature help remain pending; child picker coverage is independent."
     },
     {
       "path": "src/app/campaigns/[campaignId]/Lobby.tsx",
@@ -550,7 +551,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/Moments.tsx",
-      "state": "pending"
+      "state": "pending",
+      "review": "Owned upgrade/rest/loot/travel text reviewed with original timers, queueing, audit inputs, icon keys and proper/authored names unchanged. Chinese long-rest label confirms completion rather than falsely asserting complete recovery. Registered equipment display names are localized; full magic-item names remain pending. Existing in-fiction audit reasons stay original."
     },
     {
       "path": "src/app/campaigns/[campaignId]/MonsterFields.tsx",

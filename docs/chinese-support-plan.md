@@ -29,7 +29,7 @@ flow remains incomplete; the review-repair checkpoint is a separate scoped task.
 | Locale foundation | Registry, persistence, browser fallback, typed complete catalogs, model locale policy, classified token proxy, chapter budget, CJK retrieval, IME protection | Real prompt-usage calibration; keep legacy campaign/history regressions |
 | DM safety | Per-event engine conclusions with English/Chinese renderers; AI prose separated; one text-only correction and safe fallback; shared localized enemy names and held-resource names/IDs; scoped resource aliases and ambiguity retries; real Codex combat/resource acceptance | Untracked feature/reaction options and broader spell/condition/pack coverage; conservative regex coverage is not full language understanding |
 | Embeddings | Original English deployment default retained; explicit multilingual opt-in; fixed bilingual calibration/holdout and hard-negative policy | Broader pack quality; opt-in affects English campaigns and rebuilds indexes |
-| UI | **155/437** covered files, **2861** pending literal sites, **8164** message keys; scoped AST gate; earlier play/session surfaces plus hand labels/targets/area selection, campaign-locale action sentences, native previews, basic/reaction rules, common casting refusals, spell selectors, all 113 owned mechanic notes, 103 native technique and 23 maneuver labels, attack/bonus-route and material/ritual refusals, built-in form attack names and verified current-actor labels, correction/multi-picker chrome, native downtime facts and inventory/vitals approval/player-trade controls | Remaining dynamic text keeps hand files pending; general play/inventory/rest/level-up/save/resume surfaces and full sheet/party dialogs; file fraction is not overall completion or an effort estimate |
+| UI | **155/439** covered files, **2903** pending literal sites, **8289** message keys; scoped AST gate; earlier play/session surfaces plus hand labels/targets/area selection, campaign-locale action sentences, native previews, basic/reaction rules, common casting refusals, spell selectors, all 113 owned mechanic notes, 103 native technique and 23 maneuver labels, attack/bonus-route and material/ritual refusals, built-in form attack names and verified current-actor labels, correction/multi-picker chrome, native downtime facts and inventory/vitals approval/player-trade controls, guided progression chrome and rest/loot/travel moments | Remaining dynamic text keeps hand files pending; general play/inventory/rest/level-up/save/resume surfaces and full sheet/party dialogs; file fraction is not overall completion or an effort estimate |
 | Character creation/material | Identity, ancestry, class introductions, ability allocation, gear, spell book/preparation and finish preview; 517 spell and 228 equipment names; 257-entry contextual terminology policy and lint gate; 415/415 static registered resource names and guidance shared with DM references; original-source review records | Remaining feature/feat and magic-item material; dynamic free-cast resources and user-authored/pack text remain outside the static resource review |
 | Player system logs | Structured rule diagnostics and engine-generated combat conclusions retain English protocol semantics with localized presentation | General player-visible log templates; model-facing English tool results remain independent |
 | Resource delivery | UI vs content namespaces; character/campaign boundaries; generated resources checked by lint; production Turbopack build and anonymous bilingual browser switch/reload succeed; home/character/campaign SSR and initial-script payloads measured | Hydrated/lazy network totals, authenticated campaign switching and active-play browser acceptance; route-level JS payload remains large |
@@ -59,7 +59,31 @@ attempts were blocked at its internal port binding by the execution environment,
 including the escalated attempt; this batch does not claim a passing production
 build. Keep that gate for the next phase boundary rather than retrying per batch.
 
-The latest approval/trade checkpoint adds 55 content-only keys. Item/gold,
+The latest progression checkpoint adds 125 content-only keys: level-up
+navigation, class/subclass/skill/style/spell labels, XP/dead/zero-HP blockers,
+fixed/max/rolled HP choices and results, native multiclass prerequisites/grants/
+refusals, and rest/loot/travel moments. Original choice payloads, engine math,
+audit/history text, timers and icon keys are unchanged. Raw server/spell notices
+rerender by viewer locale. The Chinese long-rest caption says the rest ended;
+it does not incorrectly promise full restoration under affliction rules.
+Registered grant names reuse equipment/tool translations, with 15 additional
+native terms; proper/authored names stay literal. Complete option descriptions,
+requirements and native feature help remain pending, as do full magic-item names.
+
+The main-flow checker now follows literal lazy/dynamic imports, including import
+options and non-interpolated template strings. It does not guess computed paths.
+This adds `LevelUpDialog` and its preview helper, previously omitted, as pending;
+the corrected denominator is 439. Its small parser/actual-import check passes.
+The progression check passes 26 frozen pre-edit English JSX states, Chinese
+progression/moments, native multiclass/school refusals, actual rolled/ASI/spell
+PATCH callbacks and network recovery (about one second). Catalog/AST/terminology
+and types pass: 155/439 covered, 2903 pending literal sites, 8289 keys, zero
+terminology errors and 122 contextual warnings. The pending-site count now
+includes the formerly omitted level-up source; it is not comparable to the old
+2861 count without adjusting that scope. No model/audio calls, repeated Goblin
+checks or full regression/build were run for this batch.
+
+The preceding approval/trade checkpoint adds 55 content-only keys. Item/gold,
 purchase, damage/healing and condition confirmations use read-only metadata
 bound to the exact original native summary; canonical mutation arguments and
 stored English history are unchanged. Trade item/coin refusals carry optional
