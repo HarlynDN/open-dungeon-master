@@ -1,6 +1,7 @@
 "use client";
 
-import { classOptionView, classOptionFeatureName, classOptionHelp } from "@/lib/i18n/class-option-presentations";
+import { classOptionView } from "@/lib/i18n/class-option-presentations";
+import { nativeFeatureName, nativeFeatureHelp } from "@/lib/i18n/feature-material-presentations";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { trainingLabel } from "@/lib/i18n/training-presentations";
 import { characterLabel, subclassLabel, skillLabel } from "@/lib/i18n/character-presentations";
@@ -739,8 +740,8 @@ export function LevelUpDialog({
                       <InfoChipList
                         items={newFeatureNames.map((name) => ({
                           id: name,
-                          name: classOptionFeatureName(sheetFeatureChoice(name, locale), locale),
-                          text: classOptionHelp(name, describeFeature(classChoice, effectiveSubclass, name), locale),
+                          name: nativeFeatureName(sheetFeatureChoice(name, locale), locale),
+                          text: nativeFeatureHelp(classChoice, name, describeFeature(classChoice, effectiveSubclass, name), locale),
                         }))}
                       />
                     </div>

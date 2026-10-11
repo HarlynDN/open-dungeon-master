@@ -440,7 +440,7 @@
     {
       "path": "src/app/campaigns/[campaignId]/LevelUpDialog.tsx",
       "state": "pending",
-      "review": "Owned progression chrome, labels, native grants/refusals and all 135 bundled option names/descriptions/requirements reviewed. Canonical rolled/ASI/spell PATCH shapes, native option keys and 26 frozen English JSX states checked. Selected native option help localizes; canonical feature IDs and icon keys stay original. Remaining generic feature help and other server refusal material remain pending; authored overrides stay raw."
+      "review": "Owned progression chrome, labels, native grants/refusals and all 135 bundled option names/descriptions/requirements reviewed. Canonical rolled/ASI/spell PATCH shapes, native option keys and 26 frozen English JSX states checked. Selected option and shared/class-specific native feature help localize by complete source; canonical feature IDs stay original. Specific/themed feature help and other server refusals remain pending; authored overrides stay raw."
     },
     {
       "path": "src/app/campaigns/[campaignId]/Lobby.tsx",
@@ -988,7 +988,7 @@
     {
       "path": "src/app/characters/builder/CatalogBrowser.tsx",
       "state": "pending",
-      "review": "Equipment names and owned browse/search/item-help chrome migrated; generic native spell/feat/magic-item summaries/descriptions or spell step content remain pending. This owner is deliberately not complete."
+      "review": "Equipment names and owned browse/search/item-help chrome migrated. Exact project-owned feat descriptions now localize without changing selection data or homebrew text. Other native spell/magic-item and pack material remain pending; this owner is not complete."
     },
     {
       "path": "src/app/characters/builder/CharacterBuilder.tsx",
@@ -998,7 +998,7 @@
     {
       "path": "src/app/characters/builder/ContentPicker.tsx",
       "state": "pending",
-      "review": "Equipment names and owned browse/search/item-help chrome migrated; generic native spell/feat/magic-item summaries/descriptions or spell step content remain pending. This owner is deliberately not complete."
+      "review": "Equipment names and owned browse/search/item-help chrome migrated. Exact project-owned feat descriptions now localize without changing selection data or homebrew text. Other native spell/magic-item and pack material remain pending; this owner is not complete."
     },
     {
       "path": "src/app/characters/builder/Dice.tsx",
@@ -1773,7 +1773,7 @@
     {
       "path": "src/components/sheet/SheetParts.tsx",
       "state": "pending",
-      "review": "Owned earlier identity/vitals/ability chrome retains independent review. This batch localizes canonical option-feature chip names/help for all 135 bundled options, with source-bound descriptions and frozen English render. Original icon keys and story/authored names stay literal. Other feat/feature help and full material remain pending."
+      "review": "Owned identity/vitals/ability chrome, canonical option-feature names/help, shared native feature/class-specific Timeless Body summaries and feat names reviewed. Full-source display bindings preserve English, modified/story descriptions, stable chip IDs, icon keys and canonical lazy-help references. Three frozen English material renders and parser-input parity checked. Other specific/themed feature help and full material remain pending."
     },
     {
       "path": "src/components/sheet/SheetSpells.tsx",
@@ -1881,7 +1881,7 @@
     {
       "path": "src/components/ui/InfoDialog.tsx",
       "state": "pending",
-      "review": "Equipment names and owned browse/search/item-help chrome migrated; generic native spell/feat/magic-item summaries/descriptions or spell step content remain pending. This owner is deliberately not complete."
+      "review": "Equipment names and owned item-help chrome migrated. Exact project-owned feat summaries now localize at render time from raw loaded state, preserving English and authored replacements. Generic spell/magic-item/pack prose remains pending; this owner is not complete."
     },
     {
       "path": "src/components/ui/ListControls.tsx",

@@ -11,6 +11,7 @@ import { Dialog } from "@/components/ui/Dialog";
 import type { ItemSheet } from "@/lib/help/item-sheet";
 import { firstSentence, parseRulesBlocks } from "@/lib/help/rules-text";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { nativeFeatHelp } from "@/lib/i18n/feature-material-presentations";
 import { itemSheetView } from "@/lib/i18n/equipment-help-presentations";
 
 // The "what does this do?" affordance, used everywhere a game term appears.
@@ -102,7 +103,7 @@ export function renderRules(text: string): ReactNode {
 // Loads a content-pack entry's description on first open, so opening a sheet
 // with forty spells on it costs nothing until one is actually inspected.
 function ContentBody({ reference }: { reference: ContentRef }) {
-  const { t } = useLocale();
+  const { locale, t } = useLocale();
   // The table the dialog opened at reads its DMs' homebrew.
   const campaignId = useContentCampaign();
   const [state, setState] = useState<{ text: string | null; loading: boolean }>({
@@ -167,7 +168,7 @@ function ContentBody({ reference }: { reference: ContentRef }) {
       </p>
     );
   }
-  return <>{renderRules(state.text)}</>;
+  return <>{renderRules(reference.kind === "feats" ? nativeFeatHelp(reference.name, state.text, locale) ?? state.text : state.text)}</>;
 }
 
 function StatTile({ label, value, note }: { label: string; value: string | null; note?: string | null }) {

@@ -2,6 +2,7 @@
 
 import { Loader2, Plus } from "lucide-react";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { nativeFeatHelp } from "@/lib/i18n/feature-material-presentations";
 import { pickerName } from "@/lib/i18n/gear-ui-presentations";
 import { useEffect, useRef } from "react";
 import { cn } from "@/lib/cn";
@@ -114,7 +115,7 @@ export default function ContentPicker({
               <InfoButton
                 label={pickerName(kind, entry, locale)}
                 meta={kind === "spells" ? spellSummary(entry.data) : undefined}
-                text={describeContentEntry(entry.data)}
+                text={kind === "feats" && entry.source !== "homebrew" ? nativeFeatHelp(entry.name, describeContentEntry(entry.data), locale) : describeContentEntry(entry.data)}
                 reference={
                   entry.source === "homebrew" ? undefined : { kind, slug: entry.slug }
                 }

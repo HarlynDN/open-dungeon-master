@@ -1,6 +1,7 @@
 "use client";
 
-import { classOptionFeatureName, classOptionHelp } from "@/lib/i18n/class-option-presentations";
+import { nativeFeatureName, nativeFeatureHelp, nativeFeatHelp } from "@/lib/i18n/feature-material-presentations";
+import { featTermLabel } from "@/lib/i18n/feat-presentations";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { abilityLabel, skillLabel, characterLabel } from "@/lib/i18n/character-presentations";
 import { referenceDisplayName } from "@/lib/i18n/references";
@@ -309,23 +310,25 @@ export function FeatureChips({
     <InfoChipList
       items={features.map((feature) => ({
         id: feature.name,
-        name: feature.source === "story" ? feature.name : classOptionFeatureName(feature.name, locale),
+        name: feature.source === "story" ? feature.name : nativeFeatureName(feature.name, locale),
         icon: { kind: "feature" as const, key: feature.name, family: `class-${classId.toLowerCase()}` },
         note: feature.source === "story" ? t("sheet.storySource") : undefined,
         meta: feature.level ? t("library.level", { level: feature.level }) : undefined,
-        text: (feature.source === "story" ? describeFeature(classId, subclass ?? "", feature.name) : classOptionHelp(feature.name, describeFeature(classId, subclass ?? "", feature.name), locale)) ?? undefined,
+        text: (feature.source === "story" ? describeFeature(classId, subclass ?? "", feature.name) : nativeFeatureHelp(classId, feature.name, describeFeature(classId, subclass ?? "", feature.name), locale)) ?? undefined,
       }))}
     />
   );
 }
 
 export function FeatChips({ feats, classId, subclass }: { feats: string[]; classId: string; subclass?: string | null }) {
+  const { locale } = useLocale();
   return (
     <InfoChipList
       items={feats.map((feat) => ({
-        name: feat,
+        id: feat,
+        name: featTermLabel("feat", feat, locale),
         icon: { kind: "feat" as const, key: feat },
-        text: describeFeature(classId, subclass ?? "", feat) ?? undefined,
+        text: nativeFeatHelp(feat, describeFeature(classId, subclass ?? "", feat), locale) ?? undefined,
         reference: { kind: "feats", slug: contentSlug(feat), name: feat },
       }))}
     />

@@ -20,6 +20,7 @@ import { AGENT_PROGRAMS, agentSetupLine } from "../src/lib/agents/setup-line.ts"
 import { DICE_LOOK_PRESETS, DICE_TEXTURES, DICE_MATERIALS } from "../src/lib/dice/dice-look.ts";
 import { TTS_VOICES } from "../src/lib/tts-voices.ts";
 import { CLASS_OPTION_MATERIAL } from "../src/lib/i18n/class-option-metadata.ts";
+import { NATIVE_FEATURE_MATERIAL, NATIVE_FEAT_MATERIAL } from "../src/lib/i18n/feature-material-metadata.ts";
 import { CHARACTER_SUBCLASS_METADATA } from "../src/lib/i18n/character-subclass-metadata.ts";
 
 // Calendar normalization shares pure helpers through the project alias.
@@ -72,6 +73,27 @@ for (const native of nativeOptions) {
   const matches = CLASS_OPTION_MATERIAL.filter(row => row.kind === native.k && row.name === native.n);
   const row = matches[0];
   if (matches.length !== 1 || MESSAGE_CATALOGS.en[row?.nameKey] !== native.n || MESSAGE_CATALOGS.en[row?.descriptionKey] !== native.d || (row?.requirementKey ? MESSAGE_CATALOGS.en[row.requirementKey] : row?.emptyRequirement ? "" : undefined) !== native.req) problems.push(`Unreviewed native option material: ${native.k}/${native.n}`);
+}
+
+// Whole-source bindings for owned summaries; names alone cannot certify that
+// a changed mechanic or added prerequisite has a current translation.
+const featureSource = JSON.parse(fs.readFileSync(path.join(root, "src/lib/help/srd-features.json"), "utf8"));
+const featureRows = [
+  ...Object.entries(featureSource.features).map(([name, description]) => ({ name, description })),
+  ...Object.entries(featureSource.byClass).flatMap(([classId, rows]) => Object.entries(rows).map(([name, description]) => ({ classId, name, description }))),
+];
+if (NATIVE_FEATURE_MATERIAL.length !== featureRows.length) problems.push("Native feature material count changed; review the new/removed rows.");
+for (const native of featureRows) {
+  const matches = NATIVE_FEATURE_MATERIAL.filter(row => row.name === native.name && row.classId === native.classId);
+  const row = matches[0];
+  if (matches.length !== 1 || MESSAGE_CATALOGS.en[row?.nameKey] !== native.name || MESSAGE_CATALOGS.en[row?.descriptionKey] !== native.description) problems.push(`Unreviewed native feature summary: ${native.classId ?? "shared"}/${native.name}`);
+}
+const featRows = JSON.parse(fs.readFileSync(path.join(root, "src/lib/srd/authored-feats.json"), "utf8")).feats;
+if (NATIVE_FEAT_MATERIAL.length !== featRows.length) problems.push("Native feat material count changed; review the new/removed rows.");
+for (const native of featRows) {
+  const matches = NATIVE_FEAT_MATERIAL.filter(row => row.name === native.name);
+  const row = matches[0];
+  if (matches.length !== 1 || MESSAGE_CATALOGS.en[row?.descriptionKey] !== native.desc || (row?.prerequisiteKey ? MESSAGE_CATALOGS.en[row.prerequisiteKey] : row?.emptyPrerequisite ? "" : undefined) !== native.prerequisite) problems.push(`Unreviewed native feat summary: ${native.name}`);
 }
 
 // Native condition material renders indirectly from server-projected metadata.

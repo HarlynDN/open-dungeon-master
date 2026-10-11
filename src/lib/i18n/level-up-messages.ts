@@ -116,7 +116,7 @@ export const LEVEL_UP_MESSAGES = defineMessages({
   },
   "sessionUi.level.primal": {
     "en": "Primal Champion: +4 Strength and Constitution (to 24)",
-    "zh-CN": "原初冠军：力量和体质各 +4（上限 24）"
+    "zh-CN": "原初勇士：力量和体质各 +4（上限 24）"
   },
   "sessionUi.level.chooseClass": {
     "en": "Which class takes level {level}? Advance one {name} already has, or multiclass into a new one.",
