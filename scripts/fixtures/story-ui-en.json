@@ -1,0 +1,23 @@
+{
+  "sourceCommit": "db0765ab",
+  "note": "Empty-story corruption is intentionally excluded; fixed load/error/empty states are asserted separately.",
+  "sha256": {
+    "chapter-collapsed": "893e6382ba47c2a676efa0fb4c1fa81e436ad34455bff55bf81f0b91a62ee968",
+    "chapter-expanded": "e5c67745b600572346122fbb1d92e2cc7a037cc5ba3271721589287d3b23fe1f",
+    "chapter-editing": "f704f601a7267b1bd5e3614c88657c914983cf0213d6754463e72aafc12b7442",
+    "chapter-no-summary": "2f22f87bc85bda32c1bd719959c5c4c0618b999c437a5aa898596557651a7502",
+    "act-heading": "79a946683548620e75a4987e41f844a851dbf86e93030a527f021531214425b8",
+    "arc-full": "b4d7b402286c940c42dfbc53ba3249a0050ab217389a4d79c64765e0703bf06f",
+    "arc-loading": "33590e99655cc418166a7b3feb3890899039ce256cf71c13d1fc40a766006ed3",
+    "arc-empty": "7bf073cca12fa6c6b229b184bfb85486df84e90dc79725d61a540785ed5fbb0b",
+    "arc-outline": "ef06a2ebf7eb1af01118bfd7671c6bc711208f06fe794248639629887ebac627",
+    "arc-editing": "b7b20293e66776141eba7ee2e84c7b422ce1c5ad7f695379faedfd5a0a370bad",
+    "arc-adding": "d77642d6ad00c0734f576902040cbf18c67caf44deafc919177f6d091128db07",
+    "arc-busy": "9dfcc5ebe4a20f150e6fd04c26462a4675143a80fb4dc6591de334ba02ac433f",
+    "arc-refusal": "0ea2ff897e892f28bddc7ae6e42f2c4c0b76d8581c768ff466144d29bb165e9f",
+    "story-player": "f964cc98eab6a4779376e4d7682aaa42e71b07329fc1d9642369b65782f5ab2d",
+    "story-lead": "6940466cae0bff250fa56db836986fe469edd736a1782dad99b858133655c944",
+    "story-book": "a31e9cdbb8b85b4acf34404d249c695973ad8913dc7b4c1f4005bbe7a6159e09",
+    "confirm-rewind": "9a0ab895f5c932b916cfd8dae8a0b8401830426723ecf4dac8572f0984ea6746"
+  }
+}

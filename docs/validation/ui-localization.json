@@ -751,7 +751,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/StoryPanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned chapter/chronicle/secret-arc chrome, labels, 6 waypoint and 7 event kinds, native edit refusals and rollback consequence summaries localized at render time. Recorded/authored narrative, IDs, protocol strings and mutation payloads stay raw. 17 frozen English states plus actual Chinese PATCH/IME/confirmation/retry callbacks checked with mocked requests. Empty-state JSX corruption fixed; failed reload keeps chapters visible with retry. NpcReviewPanel, Book and other child owners retain independent coverage; full external prose not claimed."
     },
     {
       "path": "src/app/campaigns/[campaignId]/TerrainCanvas.tsx",

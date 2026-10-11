@@ -66,6 +66,21 @@ if (args.has("--sync")) {
   process.exit(0);
 }
 const problems = [];
+// Story edit refusals are rendered from English protocol text. New/reworded
+// native refusals need an explicit display translation before this owner stays
+// covered; count limits use the parameterized frame instead of a fixed number.
+const arcEditFile = "src/lib/dm/arc-edit-logic.ts";
+const arcEditAst = parseUiSource(arcEditFile, fs.readFileSync(path.join(root, arcEditFile), "utf8"));
+const arcErrorSource = Object.entries(MESSAGE_CATALOGS.en).filter(([key]) => key.startsWith("storyUi.error.")).map(([, text]) => text);
+function collectArcErrors(node) {
+  if (ts.isPropertyAssignment(node) && node.name.getText(arcEditAst) === "error") {
+    const source = node.initializer;
+    const frame = ts.isStringLiteral(source) ? source.text : ts.isTemplateExpression(source) && source.templateSpans.length === 1 ? `${source.head.text}{count}${source.templateSpans[0].literal.text}` : null;
+    if (!frame || !arcErrorSource.includes(frame)) problems.push(`Unreviewed native arc edit refusal: ${frame ?? source.getText(arcEditAst)}`);
+  }
+  ts.forEachChild(node, collectArcErrors);
+}
+collectArcErrors(arcEditAst);
 // Small source bindings support the lazy help scope without downloading a
 // second complete language. Reject stale topic/tour bindings on source edits.
 for (const topic of HELP_TOPICS) if (MESSAGE_CATALOGS.en[topic.key] !== topic.canonical) problems.push(`Help topic source changed: ${topic.canonical}`);

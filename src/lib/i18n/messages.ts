@@ -1,3 +1,4 @@
+import { STORY_MESSAGES } from "./story-messages.ts";
 import { APP_HELP_MESSAGES } from "./app-help-messages.ts";
 import { FEAT_CHOICE_MESSAGES } from "./feat-choice-messages.ts";
 import { FEATURE_MATERIAL_MESSAGES } from "./feature-material-messages.ts";
@@ -77,6 +78,7 @@ const en = {
     ...FEATURE_MATERIAL_MESSAGES.en,
     ...FEAT_CHOICE_MESSAGES.en,
     ...APP_HELP_MESSAGES.en,
+    ...STORY_MESSAGES.en,
   ...PLAY_EDIT_MESSAGES.en,
   ...HAND_CASTING_MESSAGES.en,
   ...HAND_FEATURE_MESSAGES.en,
@@ -174,6 +176,7 @@ const zhCN: Messages = {
     ...FEATURE_MATERIAL_MESSAGES["zh-CN"],
     ...FEAT_CHOICE_MESSAGES["zh-CN"],
     ...APP_HELP_MESSAGES["zh-CN"],
+    ...STORY_MESSAGES["zh-CN"],
   ...PLAY_EDIT_MESSAGES["zh-CN"],
   ...HAND_CASTING_MESSAGES["zh-CN"],
   ...HAND_FEATURE_MESSAGES["zh-CN"],
