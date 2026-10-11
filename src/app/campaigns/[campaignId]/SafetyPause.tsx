@@ -1,5 +1,6 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { Hand } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/cn";
@@ -19,6 +20,7 @@ export function SafetyPause({
   paused: boolean;
   steersStory: boolean;
 }) {
+  const { t } = useLocale();
   const [busy, setBusy] = useState<string | null>(null);
   if (!paused) {
     return null;
@@ -36,25 +38,21 @@ export function SafetyPause({
     }
   }
   return (
-    <div className="fixed inset-0 z-[52] flex items-center justify-center p-6" role="alertdialog" aria-label="The table is taking a breath">
+    <div className="fixed inset-0 z-[52] flex items-center justify-center p-6" role="alertdialog" aria-label={t("sessionUi.safety.title")}>
       <div className="handout-scrim-in absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(212,171,58,0.18),rgba(12,10,9,0.9))]" />
       <div className="handout-in relative max-w-md rounded-xl border border-amber-700/60 bg-stone-950/95 p-5 text-center shadow-elev-2">
         <Hand className="mx-auto mb-2 size-8 text-amber-300" />
-        <h2 className="font-display text-xl text-amber-50">The table is taking a breath</h2>
+        <h2 className="font-display text-xl text-amber-50">{t("sessionUi.safety.title")}</h2>
         <p className="mt-1 text-sm text-stone-400">
           {steersStory
-            ? "Someone raised the X-card. Nothing is said about who or why. Choose how to go on."
-            : "Someone raised the X-card. Nothing more needs saying. The story waits."}
+            ? t("sessionUi.safety.lead")
+            : t("sessionUi.safety.player")}
         </p>
         {steersStory ? (
           <div className="reveal mt-4 flex flex-wrap justify-center gap-2">
             {(
-              [
-                ["rewind", "Withdraw the last passage"],
-                ["reroll", "Write it again, elsewhere"],
-                ["continue", "Continue"],
-              ] as const
-            ).map(([action, label]) => (
+              ["rewind", "reroll", "continue"] as const
+            ).map((action) => (
               <button
                 key={action}
                 type="button"
@@ -66,7 +64,7 @@ export function SafetyPause({
                   busy === action && "opacity-60",
                 )}
               >
-                {label}
+                {t(`sessionUi.safety.${action}`)}
               </button>
             ))}
           </div>

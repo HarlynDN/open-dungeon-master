@@ -1,5 +1,6 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import Link from "next/link";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { Check } from "lucide-react";
@@ -168,13 +169,14 @@ export const SessionHeader = memo(function SessionHeader({
   // in the main column or the story there, with the board in its tab.
   stage?: { on: boolean; onToggle: () => void };
 }) {
+  const { t } = useLocale();
   const diceItem = "session-menu-row";
   return (
     <header className="glass session-header cine-header z-10 flex items-center gap-2 border-b border-stone-700/40 px-3 pb-2 pt-[calc(0.5rem+env(safe-area-inset-top))] sm:gap-3 sm:px-4">
       <div className="min-w-0 flex-1">
         <h1 className="gold-title session-title font-display">{title}</h1>
         <p key={scene} className="live-in truncate font-serif text-xs italic text-stone-400">
-          {scene || "The adventure unfolds"}
+          {scene || t("sessionUi.header.unfolds")}
         </p>
       </div>
       {ribbon ? <div className="cine-ribbon-slot hidden lg:flex">{ribbon}</div> : null}
@@ -187,11 +189,11 @@ export const SessionHeader = memo(function SessionHeader({
             the 3D animation switch, the player's own dice, and shake to
             roll on a phone. */}
         <DropdownMenu.Root>
-          <Tooltip content="Dice" side="bottom">
+          <Tooltip content={t("sessionUi.header.dice")} side="bottom">
             <DropdownMenu.Trigger asChild>
               <button
                 type="button"
-                aria-label="Dice"
+                aria-label={t("sessionUi.header.dice")}
                 data-tour="header-dice"
                 className={headerButtonClass(dice3d)}
               >
@@ -204,8 +206,8 @@ export const SessionHeader = memo(function SessionHeader({
               <DropdownMenu.Item className={diceItem} onSelect={onRollDice}>
                 <GameIcon icon={{ kind: "glyph", key: "die-d20" }} size="size-6" />
                 <span>
-                  Roll dice
-                  <span className="session-menu-hint">For the table, or in secret</span>
+                  {t("sessionUi.header.roll")}
+                  <span className="session-menu-hint">{t("sessionUi.header.rollHint")}</span>
                 </span>
               </DropdownMenu.Item>
               <DropdownMenu.Separator className="my-1 h-px bg-stone-700/60" />
@@ -219,7 +221,7 @@ export const SessionHeader = memo(function SessionHeader({
                     <Check className="size-3.5 text-amber-300" />
                   </DropdownMenu.ItemIndicator>
                 </span>
-                3D dice animation
+                {t("sessionUi.header.dice3d")}
               </DropdownMenu.CheckboxItem>
               {shake.supported ? (
                 <DropdownMenu.CheckboxItem
@@ -232,23 +234,23 @@ export const SessionHeader = memo(function SessionHeader({
                       <Check className="size-3.5 text-amber-300" />
                     </DropdownMenu.ItemIndicator>
                   </span>
-                  Shake to roll
+                  {t("sessionUi.header.shake")}
                 </DropdownMenu.CheckboxItem>
               ) : null}
               <DropdownMenu.Separator className="my-1 h-px bg-stone-700/60" />
               <DropdownMenu.Item className={diceItem} onSelect={onCustomizeDice}>
                 <GameIcon icon={{ kind: "glyph", key: "die-d20" }} size="size-6" />
-                Customise my dice
+                {t("sessionUi.header.customDice")}
               </DropdownMenu.Item>
             </DropdownMenu.Content>
           </DropdownMenu.Portal>
         </DropdownMenu.Root>
         {ttsEnabled ? (
           <HeaderAudioControl
-            onLabel="Mute narration"
-            offLabel="Unmute narration"
-            enableLabel="Enable narration audio"
-            volumeLabel="Narration volume"
+            onLabel={t("sessionUi.header.muteNarration")}
+            offLabel={t("sessionUi.header.unmuteNarration")}
+            enableLabel={t("sessionUi.header.enableNarration")}
+            volumeLabel={t("sessionUi.header.narrationVolume")}
             unlocked={narration.unlocked}
             muted={narration.muted}
             volume={narration.volume}
@@ -262,10 +264,10 @@ export const SessionHeader = memo(function SessionHeader({
         ) : null}
         {ambienceEnabled && ambience.installed ? (
           <HeaderAudioControl
-            onLabel="Mute ambience and music"
-            offLabel="Unmute ambience and music"
-            enableLabel="Enable ambience"
-            volumeLabel="Ambience and music volume"
+            onLabel={t("sessionUi.header.muteAmbience")}
+            offLabel={t("sessionUi.header.unmuteAmbience")}
+            enableLabel={t("sessionUi.header.enableAmbience")}
+            volumeLabel={t("sessionUi.header.ambienceVolume")}
             unlocked={ambience.unlocked}
             muted={ambience.muted}
             volume={ambience.volume}
@@ -278,11 +280,11 @@ export const SessionHeader = memo(function SessionHeader({
           />
         ) : null}
         {stage ? (
-          <Tooltip content={stage.on ? "Show the story here, with the board in its tab" : "Show the board here, with the story beside it"} side="bottom">
+          <Tooltip content={t(stage.on ? "sessionUi.header.storyHint" : "sessionUi.header.boardHint")} side="bottom">
             <button
               type="button"
               onClick={stage.onToggle}
-              aria-label={stage.on ? "Show the story" : "Show the board"}
+              aria-label={t(stage.on ? "sessionUi.header.story" : "sessionUi.header.board")}
               aria-pressed={stage.on}
               data-tour="header-stage"
               className={headerButtonClass(stage.on)}
@@ -292,11 +294,11 @@ export const SessionHeader = memo(function SessionHeader({
           </Tooltip>
         ) : null}
         <RulebookButton />
-        <Tooltip content="How everything works, and the guided tours" side="bottom">
+        <Tooltip content={t("sessionUi.header.helpHint")} side="bottom">
           <button
             type="button"
             onClick={onHelp}
-            aria-label="Help"
+            aria-label={t("sessionUi.header.help")}
             data-tour="header-help"
             className={headerButtonClass(false)}
           >
@@ -304,14 +306,14 @@ export const SessionHeader = memo(function SessionHeader({
           </button>
         </Tooltip>
         </div>
-        <Tooltip content="All campaigns" side="bottom">
+        <Tooltip content={t("sessionUi.header.all")} side="bottom">
           <Link
             href="/"
-            aria-label="All campaigns"
+            aria-label={t("sessionUi.header.all")}
             className={cn(ui.btnSmall, "hidden h-9 gap-1.5 py-0 pl-1 sm:inline-flex")}
           >
             <HeaderGlyph glyph="tab-campaigns" />
-            <span className="hidden md:inline">All campaigns</span>
+            <span className="hidden md:inline">{t("sessionUi.header.all")}</span>
           </Link>
         </Tooltip>
         <AppHomeButton className="hidden sm:block" />
@@ -324,14 +326,15 @@ export const SessionHeader = memo(function SessionHeader({
 // The rulebook, laid open over the table so a rule can be checked without
 // leaving the session.
 function RulebookButton() {
+  const { t } = useLocale();
   const [open, setOpen] = useState(false);
   return (
     <>
-      <Tooltip content="The rulebook: every rule, spell and monster" side="bottom">
+      <Tooltip content={t("sessionUi.header.rulebookHint")} side="bottom">
         <button
           type="button"
           onClick={() => setOpen(true)}
-          aria-label="Rulebook"
+          aria-label={t("sessionUi.header.rulebook")}
           data-tour="header-rulebook"
           className={headerButtonClass(open)}
         >

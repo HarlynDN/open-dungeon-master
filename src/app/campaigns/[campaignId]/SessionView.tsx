@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+
 import { LevelUpMoment, LootMoment, MomentVeil, RestMoment, TravelBanner } from "@/app/campaigns/[campaignId]/Moments";
 import { haptic, useEffectsRoot, useTurnChime } from "@/lib/effects-mode";
 import { levelForXp } from "@/lib/srd";
@@ -164,6 +166,7 @@ export function SessionView({
   markTitleCardShown?: (id: string) => void;
   playSting?: (cue: string) => void;
 }) {
+  const { locale } = useLocale();
   // The effects mode rides on <html data-effects> for CSS-only consumers.
   useEffectsRoot();
   const turnChime = useTurnChime();
@@ -400,8 +403,8 @@ export function SessionView({
         secretStory: caps.secretStory,
         adjudicates: caps.adjudicates,
         isLead,
-      }),
-    [state.battleMap, campaign, caps.secretStory, caps.adjudicates, isLead],
+      }, locale),
+    [state.battleMap, campaign, caps.secretStory, caps.adjudicates, isLead, locale],
   );
   // Gates the Bonds sub-tab inside the Party panel.
   const relationshipsEnabled = campaign?.gameSettings?.relationships !== "off";

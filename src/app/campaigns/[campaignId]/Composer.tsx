@@ -177,6 +177,8 @@ function ComposerInner({
           <NewAdventurerBanner
             campaignId={campaignId}
             text={joinBanner.text}
+            sheets={sheets}
+            members={members}
             onWriteIntro={joinBanner.onWriteIntro}
             onDismiss={joinBanner.onDismiss}
           />

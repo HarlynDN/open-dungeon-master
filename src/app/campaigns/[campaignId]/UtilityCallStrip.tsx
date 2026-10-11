@@ -1,8 +1,10 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { utilityCallLabel, utilityElapsed } from "@/lib/i18n/session-presentations";
 import { Loader2 } from "lucide-react";
 import { memo, useEffect, useState } from "react";
-import { describeCall, formatElapsed, type UtilityCall } from "@/lib/dm/call-tracker-logic";
+import { type UtilityCall } from "@/lib/dm/call-tracker-logic";
 
 // What the engine is doing between turns, as one chip per job.
 //
@@ -11,6 +13,7 @@ import { describeCall, formatElapsed, type UtilityCall } from "@/lib/dm/call-tra
 // seal, the world tick, a lore check, an Ask. On a local 35B any of those is
 // a minute of apparent nothing.
 function UtilityCallStripInner({ calls }: { calls: UtilityCall[] }) {
+  const { locale } = useLocale();
   // One shared ticker for the whole strip rather than one per chip, and only
   // while something is actually running.
   const [now, setNow] = useState(() => Date.now());
@@ -35,7 +38,7 @@ function UtilityCallStripInner({ calls }: { calls: UtilityCall[] }) {
   return (
     <div className="stagger flex flex-wrap items-center gap-1.5 px-3 py-1.5">
       {calls.map((call) => {
-        const elapsed = formatElapsed(call.startedAt, now);
+        const elapsed = utilityElapsed(call.startedAt, now, locale);
         return (
           <span
             key={call.id}
@@ -45,7 +48,7 @@ function UtilityCallStripInner({ calls }: { calls: UtilityCall[] }) {
             aria-live="polite"
           >
             <Loader2 className="size-3 animate-spin text-amber-400/70" />
-            {describeCall(call.kind)}
+            {utilityCallLabel(call.kind, locale)}
             {elapsed ? (
               <span className="tabular-nums text-stone-600">{elapsed}</span>
             ) : null}

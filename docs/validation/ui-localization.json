@@ -528,7 +528,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/MessageList.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned DM heading, all six native status phrase pools and native unread-audio hints localized. Original hash/pool selection and all stored prose/names unchanged; message-item/prose/actions children retain independent coverage."
     },
     {
       "path": "src/app/campaigns/[campaignId]/MessageParts.tsx",
@@ -556,7 +557,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/NarrationFailureBanner.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned unread/retry/dismiss UI, native playback/backend failures and replay fallback localized at display. Technical status/endpoint/host/detail preserved; stored diagnostics and narration POST remain English. Retry rejection resets busy and reports failure."
     },
     {
       "path": "src/app/campaigns/[campaignId]/NarrationNote.tsx",
@@ -565,7 +567,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/NewAdventurerBanner.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned intro/dismiss/actions/errors localized. Complete native join notes matched against already-visible member/sheet identities; names/backstory preserved and custom/ambiguous/old unmatched notes literal. English directive body unchanged; refusal/network failure keeps banner for retry."
     },
     {
       "path": "src/app/campaigns/[campaignId]/NotesPanel.tsx",
@@ -621,7 +624,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/PushToTalk.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned hold-to-talk/accessibility labels and native dictation/microphone/partial-failure hints localized. Recorder/recognizer selection, language, capture gestures and transcript delivery unchanged; Chinese speech recognition remains deferred."
     },
     {
       "path": "src/app/campaigns/[campaignId]/QuestsPanel.tsx",
@@ -657,7 +661,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/SafetyPause.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned pause explanation, dialog accessibility and resume actions localized. Anonymous pause, authority visibility, canonical resume actions and callbacks unchanged."
     },
     {
       "path": "src/app/campaigns/[campaignId]/SessionBanner.tsx",
@@ -673,7 +678,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/SessionHeader.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned dice, volume, board/story, help, rulebook and campaign-navigation labels localized. Authored title/scene literal; audio gestures/volume, menu callbacks, URLs and child component coverage unchanged."
     },
     {
       "path": "src/app/campaigns/[campaignId]/SessionSettings.tsx",
@@ -681,7 +687,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/SessionTabs.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "All native panel labels/tooltips, stock secondary labels and mobile Table label localized. Visible-tab rules, IDs/icons/order and selection state unchanged; buildPanelTabs default English preserved. Custom secondary labels stay literal."
     },
     {
       "path": "src/app/campaigns/[campaignId]/SessionView.tsx",
@@ -752,7 +759,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/UtilityCallStrip.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "All nine native utility-call kinds and elapsed labels localized. IDs, sorting, elapsed threshold, timer and event payloads unchanged."
     },
     {
       "path": "src/app/campaigns/[campaignId]/VoiceDock.tsx",

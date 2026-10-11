@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { speechFailureText } from "@/lib/i18n/session-presentations";
+import { messageTemplate } from "@/lib/i18n/translator";
 import { useCallback, useMemo, useState } from "react";
 import { SessionBanner, bannerButtonClass } from "@/app/campaigns/[campaignId]/SessionBanner";
 import { appNotice } from "@/components/ui/ConfirmDialog";
@@ -58,7 +61,7 @@ export function useNarrationReplay(
       const response = await fetch(`/api/campaigns/${campaignId}/messages/${messageId}/narrate`, { method: "POST" });
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
-        return data.error || "Could not read that passage aloud.";
+        return data.error || messageTemplate("en", "sessionUi.error.read");
       }
       const data = await response.json();
       play(messageId, data.url);
@@ -78,6 +81,7 @@ export function NarrationFailureBanner({
   status: Record<string, NarrationStatus> | undefined;
   onRetry: (messageId: string) => Promise<string | null>;
 }) {
+  const { locale, t } = useLocale();
   const [dismissed, setDismissed] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const failedId = useMemo(() => {
@@ -98,7 +102,7 @@ export function NarrationFailureBanner({
     <SessionBanner
       glyph="cue-horn"
       tone="quiet"
-      title="Not read aloud"
+      title={t("sessionUi.narration.title")}
       actions={
         <>
           <button
@@ -108,23 +112,26 @@ export function NarrationFailureBanner({
             className={bannerButtonClass(true)}
             onClick={async () => {
               setBusy(true);
-              const error = await onRetry(failedId);
-              setBusy(false);
-              if (error) {
-                void appNotice(error);
+              try {
+                const error = await onRetry(failedId);
+                if (error) void appNotice(speechFailureText(error, locale));
+              } catch {
+                void appNotice(t("composeUi.error.network"));
+              } finally {
+                setBusy(false);
               }
             }}
           >
-            {busy ? "Trying…" : "Try again"}
+            {t(busy ? "sessionUi.narration.trying" : "sessionUi.narration.retry")}
           </button>
           <button type="button" className={bannerButtonClass()} onClick={() => setDismissed(failedId)}>
-            Dismiss
+            {t("sessionUi.dismiss")}
           </button>
         </>
       }
     >
       <span role="status" className="block">
-        {status[failedId].reason || "The speech server did not return any audio."}
+        {speechFailureText(status[failedId].reason, locale)}
       </span>
     </SessionBanner>
   );

@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { dictationHintText } from "@/lib/i18n/session-presentations";
 import { Loader2, Mic } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { useDictation } from "@/lib/use-dictation";
@@ -16,6 +18,7 @@ export function PushToTalk({
   disabled: boolean;
   onTranscript: (text: string) => void;
 }) {
+  const { locale, t } = useLocale();
   const { state: rawState, hint, start, stop } = useDictation({ onTranscript });
   const state = rawState === "starting" ? "idle" : rawState;
 
@@ -33,8 +36,8 @@ export function PushToTalk({
         onPointerUp={stop}
         onPointerLeave={stop}
         onContextMenu={(event) => event.preventDefault()}
-        title="Hold to talk"
-        aria-label="Hold to talk"
+        title={t("sessionUi.dictation.hold")}
+        aria-label={t("sessionUi.dictation.hold")}
         data-tour="composer-talk"
         // The kit's secondary button without its magnet: a button that follows
         // the pointer would slide out from under a held finger and end the take.
@@ -53,7 +56,7 @@ export function PushToTalk({
       </button>
       {state === "error" && hint ? (
         <p className="reveal-pop absolute bottom-full right-0 mb-1 w-64 rounded bg-stone-900 px-2 py-1 text-xs text-red-400 shadow">
-          {hint}
+          {dictationHintText(hint, locale)}
         </p>
       ) : null}
     </div>

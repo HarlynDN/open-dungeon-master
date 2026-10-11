@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { sessionSourceText, speechFailureText } from "@/lib/i18n/session-presentations";
 import { memo, useCallback, useEffect, useMemo, useRef } from "react";
 import { SectionHead } from "@/components/ui/SectionHead";
 import { D20Spinner } from "@/components/ui/D20Spinner";
@@ -65,6 +67,7 @@ const DmDraftBubble = memo(function DmDraftBubble({
   statusPhrase: string;
   follow: (behavior: ScrollBehavior) => void;
 }) {
+  const { t } = useLocale();
   const dmDraft = useDmDraft();
   useEffect(() => {
     follow(dmDraft ? "auto" : "smooth");
@@ -73,7 +76,7 @@ const DmDraftBubble = memo(function DmDraftBubble({
   if (dmDraft) {
     return (
       <div className="session-dm animate-fade-up">
-        <SectionHead title="Dungeon Master" glyph="tab-dm" level="h4" />
+        <SectionHead title={t("sessionUi.dm")} glyph="tab-dm" level="h4" />
         <p className="session-dm-body whitespace-pre-wrap text-pretty font-serif text-base leading-relaxed text-stone-100">
           <Prose text={dmDraft} />
           <span className="stream-caret" aria-hidden="true" />
@@ -153,11 +156,12 @@ export function MessageList({
   onContinueScene?: (message: CampaignMessage) => void;
   onSelectVariant?: (message: CampaignMessage, index: number) => void;
 }) {
+  const { locale } = useLocale();
   const containerRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const nearBottomRef = useRef(true);
   const scrollPendingRef = useRef(false);
-  const statusPhrase = dmStatusPhrase(dmStatus, messages[messages.length - 1]?.id ?? "");
+  const statusPhrase = sessionSourceText(dmStatusPhrase(dmStatus, messages[messages.length - 1]?.id ?? ""), locale, "sessionUi.phrase.");
   const rollsById = useMemo(() => new Map(rolls.map((roll) => [roll.id, roll])), [rolls]);
   const sheetsById = useMemo(
     () => new Map(sheets.map((sheet) => [sheet.id, sheet])),
@@ -351,7 +355,7 @@ export function MessageList({
           mediaStatus={mediaStatus}
           narrationFailure={
             narrationStatus[message.id]?.state === "failed"
-              ? narrationStatus[message.id].reason || "The speech server did not return any audio."
+              ? speechFailureText(narrationStatus[message.id].reason, locale)
               : undefined
           }
           onReplayAudio={stableReplay}

@@ -32,6 +32,10 @@ export const ONE_SHOT_EVENT_IDS: readonly OneShotEventId[] = [
 // the DM's brief.
 export const MAX_ABSOLUTE_COMMAND_LENGTH = 600;
 
+// Machine-facing steer, independent of the viewer's UI locale. The model's
+// campaign locale policy governs the narration produced from this command.
+export const NEW_ADVENTURER_INTRO_DIRECTION = "Introduce the newly joined character into the scene now.";
+
 // Shared preamble for every one-shot, adapted from NE-P's
 // SHARED_INTRODUCTION_RULES (src/services/oneshot/oneShotEvents.ts, MIT).
 // The failure mode it prevents is the model treating "introduce an event" as

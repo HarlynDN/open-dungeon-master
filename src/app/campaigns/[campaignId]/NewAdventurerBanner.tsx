@@ -1,5 +1,10 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { newAdventurerText } from "@/lib/i18n/session-presentations";
+import { composeErrorText } from "@/lib/i18n/compose-presentations";
+import { messageTemplate } from "@/lib/i18n/translator";
+import { NEW_ADVENTURER_INTRO_DIRECTION } from "@/lib/dm/director-logic";
 import { X } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/cn";
@@ -11,14 +16,20 @@ import { SessionBanner, bannerButtonClass } from "@/app/campaigns/[campaignId]/S
 export function NewAdventurerBanner({
   campaignId,
   text,
+  sheets = [],
+  members = [],
   onWriteIntro,
   onDismiss,
 }: {
   campaignId: string;
   text: string;
+  sheets?: readonly { name: string; race: string; class: string; backstory: string }[];
+  members?: readonly { username: string }[];
   onWriteIntro: () => void;
   onDismiss: () => void;
 }) {
+  const { locale, t } = useLocale();
+  const [error, setError] = useState("");
   const [sending, setSending] = useState(false);
 
   async function letDmIntroduce() {
@@ -26,15 +37,23 @@ export function NewAdventurerBanner({
       return;
     }
     setSending(true);
+    setError("");
     try {
-      await fetch(`/api/campaigns/${campaignId}/lead-note`, {
+      const response = await fetch(`/api/campaigns/${campaignId}/lead-note`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          content: "Introduce the newly joined character into the scene now.",
+          content: NEW_ADVENTURER_INTRO_DIRECTION,
         }),
       });
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        setError(data.error || messageTemplate("en", "sessionUi.join.error"));
+        return;
+      }
       onDismiss();
+    } catch {
+      setError(messageTemplate("en", "composeUi.error.network"));
     } finally {
       setSending(false);
     }
@@ -43,11 +62,11 @@ export function NewAdventurerBanner({
   return (
     <SessionBanner
       glyph="system-party"
-      title="A new adventurer"
+      title={t("sessionUi.join.title")}
       actions={
         <>
           <button type="button" onClick={onWriteIntro} className={bannerButtonClass(true)}>
-            Write intro
+            {t("sessionUi.join.write")}
           </button>
           <button
             type="button"
@@ -55,13 +74,13 @@ export function NewAdventurerBanner({
             disabled={sending}
             className={bannerButtonClass()}
           >
-            Let the DM do it
+            {t("sessionUi.join.dm")}
           </button>
           <button
             type="button"
             onClick={onDismiss}
-            title="Dismiss"
-            aria-label="Dismiss"
+            title={t("sessionUi.dismiss")}
+            aria-label={t("sessionUi.dismiss")}
             className={cn(ui.iconAction, "opacity-100")}
           >
             <X className="size-4" />
@@ -69,7 +88,8 @@ export function NewAdventurerBanner({
         </>
       }
     >
-      <span className="block sm:truncate">{text}</span>
+      <span className="block sm:truncate">{newAdventurerText(text, sheets, members, locale)}</span>
+      {error ? <p role="alert" className="mt-1 text-red-400">{composeErrorText(error, locale, "sessionUi.join.error")}</p> : null}
     </SessionBanner>
   );
 }

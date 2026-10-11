@@ -1,5 +1,9 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { createTranslator } from "@/lib/i18n/translator";
+import type { AppLocale } from "@/lib/i18n/locales";
+import { sessionSubTabLabel, sessionSourceText } from "@/lib/i18n/session-presentations";
 import type { LucideIcon } from "lucide-react";
 import { memo, useState } from "react";
 import { cn } from "@/lib/cn";
@@ -43,6 +47,7 @@ export function SubTabs<T extends string>({
   value: T;
   onChange: (next: T) => void;
 }) {
+  const { locale } = useLocale();
   return (
     <div data-pill-group="" className="mb-3 flex flex-wrap items-center gap-1.5">
       {tabs.map(([option, label, Icon]) => (
@@ -60,7 +65,7 @@ export function SubTabs<T extends string>({
           ) : (
             <Icon className="size-3" />
           )}
-          {label}
+          {sessionSubTabLabel(option, label, locale)}
         </button>
       ))}
     </div>
@@ -116,8 +121,13 @@ const TAB_PRESENTATION: Record<PanelTab, [string, LucideIcon, string]> = {
 // Single source of truth for the panel tab list, shared by the desktop rail
 // strip and the mobile bottom bar. The gating flags are documented on
 // TableTabInput (src/lib/dm/table-tabs.ts).
-export function buildPanelTabs(input: TableTabInput): PanelTabDef[] {
-  return visiblePanelTabs(input).map((id) => [id, ...TAB_PRESENTATION[id]]);
+export function buildPanelTabs(input: TableTabInput, locale: AppLocale = "en"): PanelTabDef[] {
+  return visiblePanelTabs(input).map((id) => {
+    const [label, icon, hint] = TAB_PRESENTATION[id];
+    if (locale === "en") return [id, label, icon, hint];
+    const t = createTranslator(locale);
+    return [id, t(`sessionUi.tab.${id}.label`), icon, t(`sessionUi.tab.${id}.help`)];
+  });
 }
 
 // The lead tab is the one place in the rail that is not the DM's gold: the
@@ -216,6 +226,7 @@ function BottomTabBarInner({
   // quiet.
   steersStory: boolean;
 }) {
+  const { locale, t } = useLocale();
   return (
     <nav className="cine-bottombar glass no-scrollbar flex items-stretch gap-1 overflow-x-auto border-t border-stone-700/40 px-1 pb-[max(0.25rem,env(safe-area-inset-bottom))] pt-1 lg:hidden">
       <button
@@ -225,7 +236,7 @@ function BottomTabBarInner({
         className={cn(ui.railCell, "shrink-0 grow basis-auto", mobileView === "chat" && ui.railCellActive)}
       >
         <TableIcon />
-        <span className="eyebrow whitespace-nowrap text-[9px] leading-none">Table</span>
+        <span className="eyebrow whitespace-nowrap text-[9px] leading-none">{t("sessionUi.table")}</span>
       </button>
       {tabs.map(([value, label, Icon]) => {
         const active = mobileView === "panel" && panelTab === value;
@@ -241,7 +252,7 @@ function BottomTabBarInner({
             <Icon
               className={cn("size-5", value === "chat" && chatUnread > 0 && "animate-wiggle")}
             />
-            <span className="eyebrow whitespace-nowrap text-[9px] leading-none">{label}</span>
+            <span className="eyebrow whitespace-nowrap text-[9px] leading-none">{sessionSourceText(label, locale, "sessionUi.tab.")}</span>
             {value === "chat" && chatUnread > 0 ? (
               <span className="absolute left-1.5 top-1 size-1.5 rounded-full bg-red-500" />
             ) : null}

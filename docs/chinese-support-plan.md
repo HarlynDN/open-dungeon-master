@@ -29,7 +29,7 @@ flow remains incomplete; the review-repair checkpoint is a separate scoped task.
 | Locale foundation | Registry, persistence, browser fallback, typed complete catalogs, model locale policy, classified token proxy, chapter budget, CJK retrieval, IME protection | Real prompt-usage calibration; keep legacy campaign/history regressions |
 | DM safety | Per-event engine conclusions with English/Chinese renderers; AI prose separated; one text-only correction and safe fallback; shared localized enemy names and held-resource names/IDs; scoped resource aliases and ambiguity retries; real Codex combat/resource acceptance | Untracked feature/reaction options and broader spell/condition/pack coverage; conservative regex coverage is not full language understanding |
 | Embeddings | Original English deployment default retained; explicit multilingual opt-in; fixed bilingual calibration/holdout and hard-negative policy | Broader pack quality; opt-in affects English campaigns and rebuilds indexes |
-| UI | **144/437** covered files, **3028** pending literal sites, **7069** message keys; scoped AST gate; initiative/roster/board and roll captions, cinematic owned UI, turn/floor/retry controls, fight summary, character menu, hand budget/tutorial, campaign/character notes, bonds, private DM line and dispute/report forms, main composer/Ask, ruling votes, director presets, speaker selection and story-capture reminders | Remaining hand actions/reactions, general play/inventory/rest/level-up/save/resume surfaces, full sheet/party dialogs and native feature/reaction names; file fraction is not overall completion or an effort estimate |
+| UI | **152/437** covered files, **2990** pending literal sites, **7215** message keys; scoped AST gate; initiative/roster/board and roll captions, cinematic owned UI, turn/floor/retry controls, fight summary, character menu, hand budget/tutorial, campaign/character notes, bonds, private DM line and dispute/report forms, main composer/Ask, ruling votes, director presets, speaker selection and story-capture reminders, session header/navigation/status, new-character introduction, pause and unread-audio controls | Remaining hand actions/reactions, general play/inventory/rest/level-up/save/resume surfaces, full sheet/party dialogs and native feature/reaction names; file fraction is not overall completion or an effort estimate |
 | Character creation/material | Identity, ancestry, class introductions, ability allocation, gear, spell book/preparation and finish preview; 517 spell and 228 equipment names; 257-entry contextual terminology policy and lint gate; 415/415 static registered resource names and guidance shared with DM references; original-source review records | Remaining feature/feat and magic-item material; dynamic free-cast resources and user-authored/pack text remain outside the static resource review |
 | Player system logs | Structured rule diagnostics and engine-generated combat conclusions retain English protocol semantics with localized presentation | General player-visible log templates; model-facing English tool results remain independent |
 | Resource delivery | UI vs content namespaces; character/campaign boundaries; generated resources checked by lint; production Turbopack build and anonymous bilingual browser switch/reload succeed; home/character/campaign SSR and initial-script payloads measured | Hydrated/lazy network totals, authenticated campaign switching and active-play browser acceptance; route-level JS payload remains large |
@@ -59,29 +59,15 @@ attempts were blocked at its internal port binding by the execution environment,
 including the escalated attempt; this batch does not claim a passing production
 build. Keep that gate for the next phase boundary rather than retrying per batch.
 
-The journal/privacy/forms copy batch uses the existing typed content namespace
-delivery. One focused in-memory rendering/transport check confirmed matching
-English/Chinese note bodies, original report/block enums and IDs, success-message
-locale switching and relationship labels; catalog/AST/type checks passed. No new
-golden files, full regression or production build were run for this copy batch.
-Authored note/whisper contents, names and relationship history stay unchanged.
-
-The composer/Ask batch adds six covered files and 141 content-only keys.
-Native placeholder/count/error frames preserve captured names; authored questions,
-answers, commands, citation refs/quotes and wire enums remain original. Ruling
-votes now show a network failure rather than leaving an unhandled rejection.
-One in-memory bilingual render/transport check, type checking and catalog/AST/
-terminology checks passed. Later label-only alignments reuse the established
-mode/scope vocabulary; resources were regenerated without repeating tests.
-No Goblin acceptance, full regression, lint or production build was repeated.
-
-Ask now uses a typed locale adapter selected by the campaign locale for automatic
-question scope and archive eligibility. English defaults remain unchanged;
-Chinese sheet questions take priority over rules, and Chinese story questions
-conservatively use the existing bounded archive pass because Chinese names have
-no capitalization cue. This remains a heuristic, with explicit scope selection
-available. The existing Ask script passes all 10 checks, including Chinese and
-English questions, retrieval gating, parsing and the existing privacy guard.
+The latest session-status/navigation checkpoint adds eight covered UI files and
+146 content-only keys. Types and catalog/AST/terminology gates passed. A focused
+in-memory check (0.48 seconds) verified native status/navigation labels, preserved
+intro identity/backstory/directive data, failed introductions remaining visible
+and narration replay rejection resetting the retry button. Header/audio browser
+acceptance remains part of the final flow gate. Three label-only alignments reuse
+existing vocabulary; resources were regenerated without repeating tests. No
+Goblin, real model/audio acceptance, full regression, lint or production build
+was repeated. The earlier composer/Ask and journal checks remain recorded in Git.
 
 ## Compatibility contracts
 
@@ -90,6 +76,21 @@ locale and TTS capabilities in `src/lib/i18n/locales.ts`. Every source message
 must supply every registered locale; adding a language also extends the typed
 client loader table. Business logic preserves machine protocols and uses locale
 adapters for natural language rather than scattered Chinese-only conditions.
+
+Ask's typed locale adapter follows the campaign locale, with unchanged English
+defaults. Chinese sheet questions take priority over rules; Chinese story
+questions conservatively use the existing bounded archive pass because names
+lack a capitalization cue. Explicit scope selection remains available. The
+existing Ask script passed ten scope/retrieval/parsing/privacy checks.
+
+New-adventurer notices match complete native frames against identities already
+visible to the viewer. Species/class labels translate; names and the original
+backstory excerpt remain literal. Unknown/custom, ambiguous or no-longer-matching
+old notices retain their source. The intro directive remains English machine
+input. Native audio failures preserve HTTP codes, addresses and backend details
+in translated wrappers; unknown failures use localized feedback while original
+diagnostics remain in state. Audio gestures and speech-recognizer configuration
+are unchanged; Chinese speech recognition remains deferred.
 
 Source catalogs remain co-located for review. Browser consumers import the
 resource runtime, not the complete server/offline `messages.ts` entry. Root SSR
