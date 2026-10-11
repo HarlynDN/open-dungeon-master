@@ -1,0 +1,15 @@
+{
+  "sourceCommit": "08a64f33",
+  "note": "Corrected human-table role captions are asserted separately.",
+  "sha256": {
+    "invites-open": "2f21a332df8e911998bbbe11c377c546959d7c192b4a15639b636618354100d7",
+    "invites-closed": "e7a7aed5529dd228f61153c342e28b5ec390d56ccefafafdf53c0901bfd55bd2",
+    "invites-readonly": "2f481c4ee2561c419de27affe613507e9a05f0af7c0a56d44d48c705ddc1b52e",
+    "invites-refusal": "e9cfebbcf3e2d987a0952d104b3b4bc2be585104c0ed100c98c492f515f61956",
+    "seat": "c53b618e493537fe3dba974c35a38fc10f5855d991fee1146c02d0c97364f448",
+    "seat-empty": "53c78d671c7c8dda33fd66011564e5b2ada6c3cbfd7ea56d4b3a17c8ed8dff50",
+    "seat-refusal": "a6b758fe2a49b597580b4f3c094b2e291a2c9882d0d6b4d7509dbf0a7f1baff5",
+    "panel-ai": "c11bbcfeeb7b84fa04f1dc737f4a3f2f40e9af388d7d7906c24e20f98bb22551",
+    "panel-prep": "eab060077cddc756d0979aec1f47ac8b2e033ad19576a451eb976e5ba33dfe59"
+  }
+}

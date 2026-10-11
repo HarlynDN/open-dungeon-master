@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { createTranslator } from "@/lib/i18n/translator";
+import { leadErrorText } from "@/lib/i18n/lead-presentations";
 import { appConfirm } from "@/components/ui/ConfirmDialog";
 
 import { Check, Crown, Link as LinkIcon, Pencil, QrCode } from "lucide-react";
@@ -87,6 +90,7 @@ function InvitesCard({
   midGameJoinOpen: boolean;
   steersStory: boolean;
 }) {
+  const { locale, t } = useLocale();
   const [inviteCopied, setInviteCopied] = useState(false);
   const [inviteSharing, setInviteSharing] = useState(false);
   // The joining toggle has no optimistic state (midGameJoinOpen rides the
@@ -121,10 +125,10 @@ function InvitesCard({
       });
       if (!response.ok) {
         const data = (await response.json().catch(() => ({}))) as { error?: string };
-        setJoinToggleError(data.error ?? "That change was not saved.");
+        setJoinToggleError(data.error ?? createTranslator("en")("leadUi.error.join"));
       }
     } catch {
-      setJoinToggleError("Could not reach the table.");
+      setJoinToggleError(createTranslator("en")("leadUi.error.network"));
     }
   }
 
@@ -138,34 +142,34 @@ function InvitesCard({
   }
 
   return (
-    <Card glyph="tab-friends" title="Invites">
+    <Card glyph="tab-friends" title={t("leadUi.literal.0")}>
       <div className="flex flex-wrap items-center gap-1.5">
         {steersStory ? (
-          <span className="flex items-center gap-2 text-xs text-stone-300" title="Allow new players to join with the invite code mid-game">
-            <Switch on={midGameJoinOpen} onChange={() => void toggleMidGameJoin()} label="Allow new players to join with the invite code mid-game" />
-            Joining {midGameJoinOpen ? "open" : "closed"}
+          <span className="flex items-center gap-2 text-xs text-stone-300" title={t("leadUi.literal.1")}>
+            <Switch on={midGameJoinOpen} onChange={() => void toggleMidGameJoin()} label={t("leadUi.literal.1")} />
+            {t(midGameJoinOpen ? "leadUi.joinOpen" : "leadUi.joinClosed")}
           </span>
         ) : (
           // A lead at a human-DM table shares the code but the setting is
           // the DM's, so the state shows without a control the server would
           // refuse.
           <span className="pk-chip px-2 text-xs text-stone-400">
-            Joining {midGameJoinOpen ? "open" : "closed"}
+            {t(midGameJoinOpen ? "leadUi.joinOpen" : "leadUi.joinClosed")}
           </span>
         )}
         {midGameJoinOpen ? (
           <>
-            <KitButton onClick={copyInviteLink} title="Copy the invite link" className="font-mono">
+            <KitButton onClick={copyInviteLink} title={t("leadUi.literal.2")} className="font-mono">
               {inviteCopied ? <Check className="motion-pop size-3.5 text-emerald-400" /> : <LinkIcon className="size-3.5" />}
               {inviteCode}
             </KitButton>
-            <KitButton onClick={() => setInviteSharing(true)} title="Show the invite QR code and share options" aria-label="Show the invite QR code and share options">
+            <KitButton onClick={() => setInviteSharing(true)} title={t("leadUi.literal.3")} aria-label={t("leadUi.literal.3")}>
               <QrCode className="size-3.5" />
             </KitButton>
           </>
         ) : null}
       </div>
-      {joinToggleError ? <PanelError className="mt-1.5">{joinToggleError}</PanelError> : null}
+      {joinToggleError ? <PanelError className="mt-1.5">{leadErrorText(joinToggleError, locale)}</PanelError> : null}
       <InviteShareDialog
         open={inviteSharing}
         onOpenChange={setInviteSharing}
@@ -193,6 +197,7 @@ function LeadSeatCard({
   leadUserId: string;
   dmUserIds: string[];
 }) {
+  const { locale, t } = useLocale();
   const [busy, setBusy] = useState("");
   const [error, setError] = useState("");
   const candidates = members.filter(
@@ -202,7 +207,7 @@ function LeadSeatCard({
     sheets.find((sheet) => sheet.userId === userId && !sheet.isCompanion)?.name;
 
   async function makeLead(member: CampaignMember) {
-    if (!await appConfirm(`Make ${member.username} the party lead? You will lose this tab.`)) {
+    if (!await appConfirm(t("leadUi.transferConfirm", { name: member.username }))) {
       return;
     }
     setBusy(member.userId);
@@ -215,17 +220,17 @@ function LeadSeatCard({
       });
       if (!response.ok) {
         const data = (await response.json().catch(() => ({}))) as { error?: string };
-        setError(data.error ?? "The lead did not change.");
+        setError(data.error ?? createTranslator("en")("leadUi.error.transfer"));
       }
     } catch {
-      setError("Could not reach the table.");
+      setError(createTranslator("en")("leadUi.error.network"));
     } finally {
       setBusy("");
     }
   }
 
   return (
-    <Card glyph="tab-lead" title="The lead seat">
+    <Card glyph="tab-lead" title={t("leadUi.literal.4")}>
       {candidates.length ? (
         <ul className="stagger space-y-1">
           {candidates.map((member) => {
@@ -235,20 +240,18 @@ function LeadSeatCard({
                 <span className="min-w-0 flex-1 truncate text-stone-300">
                   {member.username}
                   {character ? (
-                    <span className="text-stone-500"> as {character}</span>
+                    <span className="text-stone-500">{t("leadUi.asCharacter", { name: character })}</span>
                   ) : null}
                 </span>
-                <KitButton disabled={busy !== ""} busy={busy === member.userId} onClick={() => makeLead(member)} className="shrink-0 disabled:opacity-40">
-                  Make lead
-                </KitButton>
+                <KitButton disabled={busy !== ""} busy={busy === member.userId} onClick={() => makeLead(member)} className="shrink-0 disabled:opacity-40">{t("leadUi.literal.5")}</KitButton>
               </li>
             );
           })}
         </ul>
       ) : (
-        <p className="text-xs text-stone-500">Nobody else at the table to hand it to.</p>
+        <p className="text-xs text-stone-500">{t("leadUi.literal.6")}</p>
       )}
-      {error ? <PanelError className="mt-1.5">{error}</PanelError> : null}
+      {error ? <PanelError className="mt-1.5">{leadErrorText(error, locale)}</PanelError> : null}
     </Card>
   );
 }
@@ -290,6 +293,7 @@ export function LeadPanel({
   // the same beat as the one above the composer.
   directorArm?: Parameters<typeof DirectorArmedBanner>[0]["armed"];
 }) {
+  const { locale, t } = useLocale();
   const [editing, setEditing] = useState(false);
   const [prepOpen, setPrepOpen] = useState(false);
   const pending = pendingCampaignNotes(notes);
@@ -310,9 +314,9 @@ export function LeadPanel({
       <div className="mb-3">
         <Ribbon tone="ember">
           <Crown className="mr-1 inline size-3" aria-hidden="true" />
-          Lead only
+          {t(isLead ? "leadUi.leadOnly" : steersStory ? "leadUi.storyControls" : "leadUi.campaignControls")}
         </Ribbon>
-        <p className="mt-1.5 text-xs text-stone-400">You steer this table.</p>
+        <p className="mt-1.5 text-xs text-stone-400">{t(steersStory ? "leadUi.steer" : isLead ? "leadUi.manage" : "leadUi.roleTools")}</p>
       </div>
 
       {steersStory ? (
@@ -327,7 +331,7 @@ export function LeadPanel({
       {steersStory ? (
         <Card
           glyph="tab-notes"
-          title="Notes to approve"
+          title={t("leadUi.literal.7")}
           aside={
             pending.length ? (
               <span key={pending.length} className="count-pop rounded-full bg-gradient-to-b from-amber-300 to-amber-500 px-1.5 text-[11px] font-semibold text-amber-950">
@@ -345,16 +349,14 @@ export function LeadPanel({
               refreshNotes={refreshNotes}
             />
           ) : (
-            <p className="text-xs text-stone-500">Nothing waiting for you.</p>
+            <p className="text-xs text-stone-500">{t("leadUi.literal.8")}</p>
           )}
         </Card>
       ) : null}
 
       {directsAi ? (
-        <Card glyph="system-cast" title="Direct the story">
-          <p className="mb-2 text-xs text-stone-500">
-            Pick Direct in the composer, then Private for a note only the DM sees.
-          </p>
+        <Card glyph="system-cast" title={t("leadUi.literal.9")}>
+          <p className="mb-2 text-xs text-stone-500">{t("leadUi.literal.10")}</p>
           <DirectorArmedBanner campaignId={campaignId} steersStory armed={directorArm} />
           <div className="flex flex-wrap gap-1.5">
             <DirectorPresets campaignId={campaignId} />
@@ -363,20 +365,16 @@ export function LeadPanel({
       ) : null}
 
       {steersStory && mode === "ai" ? (
-        <Card glyph="system-encounters" title="Prepared fights and maps">
-          <p className="text-xs text-stone-500">
-            What came in from a workshop, yours to finish: rosters, maps, rewards. Cue a fight and
-            the storyteller runs it, map and plan included, when the scene reaches it. The players
-            never see this.
-          </p>
+        <Card glyph="system-encounters" title={t("leadUi.literal.11")}>
+          <p className="text-xs text-stone-500">{t("leadUi.literal.12")}</p>
           {/* In the body, not the header: the panel is narrow and the title
               long, and an aside there was pushed past the card's edge. */}
           <KitButton
             onClick={() => setPrepOpen((open) => !open)}
-            title="The fights and maps this table was given"
+            title={t("leadUi.literal.13")}
             className="mt-2"
           >
-            {prepOpen ? "Close the prep" : "Open the prep"}
+            {t(prepOpen ? "leadUi.prepClose" : "leadUi.prepOpen")}
           </KitButton>
           {prepOpen ? (
             <div className="reveal mt-3 space-y-4">
@@ -409,17 +407,15 @@ export function LeadPanel({
       {isLead ? (
         <Card
           glyph="tab-campaigns"
-          title="Campaign details"
+          title={t("leadUi.literal.14")}
           aside={
-            <KitButton onClick={() => setEditing(true)} title="Edit title, premise, setting, difficulty, and player slots">
-              <Pencil className="size-3" /> Edit details
-            </KitButton>
+            <KitButton onClick={() => setEditing(true)} title={t("leadUi.literal.15")}>
+              <Pencil className="size-3" />{t("leadUi.literal.16")}</KitButton>
           }
         >
           <p className="gold-title truncate font-display">{campaign.title}</p>
           <p className="mt-1 text-xs text-stone-500">
-            Difficulty {campaign.difficulty} · Level {campaign.startingLevel} start · Up to{" "}
-            {campaign.maxPlayers} players
+            {t("leadUi.details", { difficulty: locale === "en" ? campaign.difficulty : t(`campaign.difficulty.${campaign.difficulty}`), level: campaign.startingLevel, players: campaign.maxPlayers })}
           </p>
         </Card>
       ) : null}

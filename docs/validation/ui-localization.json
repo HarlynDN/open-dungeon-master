@@ -436,7 +436,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/LeadPanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned invitations, lead-seat transfer, campaign summary, prep headings and authority captions localized. Raw names, invite addresses, role gates, canonical user IDs and PATCH/POST shapes preserved. Human-table captions now reflect actual permissions; imported children retain independent coverage. Focused display/callback validation uses mock transport only."
     },
     {
       "path": "src/app/campaigns/[campaignId]/LevelUpDialog.tsx",
