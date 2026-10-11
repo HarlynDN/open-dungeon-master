@@ -1,10 +1,14 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { createTranslator } from "@/lib/i18n/translator";
+import type { AppLocale } from "@/lib/i18n/locales";
+import { handCardName, handAimName } from "@/lib/i18n/hand-presentations";
 import * as RadixTooltip from "@radix-ui/react-tooltip";
 import { memo, useMemo } from "react";
 import type { CSSProperties } from "react";
 import { GameIcon } from "@/components/ui/GameIcon";
-import type { HandCard, HandCardType, HandCost } from "@/lib/battlemap/hand";
+import type { HandCard, HandCardType } from "@/lib/battlemap/hand";
 import { previewRows, type HandAim, type PreviewRow } from "@/lib/battlemap/hand-play";
 
 // One card of the Hand and the outcome preview that floats over it. Styles
@@ -34,16 +38,8 @@ const TYPE_TONE: Record<HandCardType, string> = {
   basic: "#d6cfc2",
 };
 
-const COST_SHORT: Record<HandCost, string> = {
-  action: "Action",
-  bonus: "Bonus",
-  reaction: "Reaction",
-  rider: "Rider",
-  free: "Free",
-};
-
-export function typeLabel(type: HandCardType): string {
-  return TYPE_LABEL[type];
+export function typeLabel(type: HandCardType, locale: AppLocale = "en"): string {
+  return locale === "en" ? TYPE_LABEL[type] : createTranslator(locale)(`handUi.type.${type}`);
 }
 
 export function typeTone(type: HandCardType): string {
@@ -71,15 +67,16 @@ export function HandPreviewRows({ rows }: { rows: PreviewRow[] }) {
 // mockup's card-play and card-spend, both in hand-motion.css. Decoration only,
 // the fan's own card is the one a screen reader hears about.
 export function HandPlayedCard({ card }: { card: HandCard }) {
+  const { locale, t } = useLocale();
   return (
     <div className="hand-played" aria-hidden="true">
       <span className="hand-played-top">
         <span className="hand-cost" data-cost={card.cost}>
-          {COST_SHORT[card.cost]}
+          {t(`handUi.cost.${card.cost}`)}
         </span>
         <span className="hand-range">{card.range}</span>
       </span>
-      <span className="hand-played-name">{card.name}</span>
+      <span className="hand-played-name">{handCardName(card, locale)}</span>
       {card.dice ? (
         <span className="hand-dice" data-heals={card.heals ? "true" : undefined}>
           {card.dice}
@@ -121,8 +118,10 @@ function HandCardFaceInner({
   waiting?: boolean;
   onPick: (card: HandCard) => void;
 }) {
+  const { locale, t } = useLocale();
+  const displayName = handCardName(card, locale);
   const rows = useMemo(() => previewRows(card, aim, conditions), [card, aim, conditions]);
-  const aimName = aim && card.target === "enemy" && aim.kind === "enemy" ? aim.name : "";
+  const aimName = aim && card.target === "enemy" && aim.kind === "enemy" ? handAimName(aim, locale) : "";
   const slotStyle = {
     "--i": index,
     "--rot": `${(offset * step).toFixed(2)}deg`,
@@ -141,26 +140,26 @@ function HandCardFaceInner({
       // hover, which is how it says why it cannot be played.
       aria-disabled={card.disabled ? "true" : undefined}
       aria-pressed={card.type === "rider" ? attached : undefined}
-      aria-label={`${card.name}, ${COST_SHORT[card.cost]}${card.disabled ? `. ${card.disabled}` : ""}`}
+      aria-label={`${displayName}, ${t(`handUi.cost.${card.cost}`)}${card.disabled ? `. ${card.disabled}` : ""}`}
       onClick={() => onPick(card)}
     >
       <span className="hand-card-frame" />
       <span className="hand-card-foil" />
       <span className="hand-card-sheen" />
-      <span className="hand-card-ribbon">{TYPE_LABEL[card.type]}</span>
+      <span className="hand-card-ribbon">{typeLabel(card.type, locale)}</span>
       <span className="hand-card-corner" data-at="tl" />
       <span className="hand-card-corner" data-at="br" />
       <span className="hand-card-body">
         <span className="hand-card-top">
           <span className="hand-cost" data-cost={card.cost}>
-            {COST_SHORT[card.cost]}
+            {t(`handUi.cost.${card.cost}`)}
           </span>
           <span className="hand-range">{card.range}</span>
         </span>
         <span className="hand-art">
           <GameIcon icon={card.icon} size="size-[52px] max-sm:size-9" className="hand-art-icon" />
         </span>
-        <span className="hand-name">{card.name}</span>
+        <span className="hand-name">{displayName}</span>
         <span className="hand-numbers">
           {card.dice ? (
             <span className="hand-dice" data-heals={card.heals ? "true" : undefined}>
@@ -205,9 +204,9 @@ function HandCardFaceInner({
         <span className="hand-preview" aria-hidden="true">
           <span className="hand-preview-head">
             <span className="hand-type-chip" style={{ "--chip-tone": TYPE_TONE[card.type] } as CSSProperties}>
-              {TYPE_LABEL[card.type]}
+              {typeLabel(card.type, locale)}
             </span>
-            <span className="hand-preview-name">{aimName ? `${card.name} · ${aimName}` : card.name}</span>
+            <span className="hand-preview-name">{aimName ? `${displayName} · ${aimName}` : displayName}</span>
           </span>
           <HandPreviewRows rows={rows} />
         </span>

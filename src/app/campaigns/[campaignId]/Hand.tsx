@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import type { AppLocale } from "@/lib/i18n/locales";
+import { handSentence, handCardName } from "@/lib/i18n/hand-presentations";
 import { ChevronDown, CircleHelp } from "lucide-react";
 import { isComposingInput } from "@/lib/input-composition";
 import { memo, useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
@@ -18,7 +21,6 @@ import { holdPendingCards, useHandChoices, useHandPending } from "@/app/campaign
 import { deriveHand, splitHand, waitingHand, type HandCard } from "@/lib/battlemap/hand";
 import {
   HAND_TARGET_EVENT,
-  composeSentence,
   intentBody,
   previewRows,
   targetFromComposedText,
@@ -76,6 +78,7 @@ function writeFlag(key: string, on: boolean) {
 
 function HandInner({
   campaignId,
+  campaignLocale = "en",
   sheets,
   meUserId,
   encounter,
@@ -91,6 +94,7 @@ function HandInner({
   edges,
 }: {
   campaignId: string;
+  campaignLocale?: AppLocale;
   sheets: CharacterSheet[];
   meUserId: string;
   encounter: PublicEncounter;
@@ -109,6 +113,7 @@ function HandInner({
   // keyed by enemy id; absent off the map.
   edges?: Record<string, TargetEdge>;
 }) {
+  const { locale, t } = useLocale();
   const sheet = useMemo(
     () => sheets.find((entry) => entry.userId === meUserId && !entry.isCompanion) ?? null,
     [sheets, meUserId],
@@ -201,7 +206,7 @@ function HandInner({
   // The options, trigger, choice and area the card carries; the board hears
   // of the raised card from here too (useHandChoices.ts).
   const { choices, resetChoices, barProps } = useHandChoices(picked);
-  const sentence = picked ? composeSentence(picked, aim, attachedRiders, choices) : "";
+  const sentence = picked ? handSentence(picked, aim, attachedRiders, choices, campaignLocale) : "";
   const rows = useMemo(
     () => (picked ? previewRows(picked, aim ?? (picked.target === "enemy" ? defaultAim : null), conditions, choices) : []),
     [picked, aim, defaultAim, conditions, choices],
@@ -340,7 +345,7 @@ function HandInner({
       className="hand"
       data-tour="battle-hand"
       data-tutorial={showTutorial ? "true" : undefined}
-      aria-label="Your hand"
+      aria-label={t("handUi.ui.title")}
       onKeyDown={(event) => {
         if (isComposingInput(event)) return;
         if (event.key === "Escape" && picked) {
@@ -356,27 +361,27 @@ function HandInner({
           key={myTurn ? "mine" : (currentName ?? "other")}
           className="hand-label min-w-0 break-words font-display text-[11px] uppercase tracking-[0.22em] text-amber-200/90"
         >
-          {myTurn ? "Your hand" : `${currentName ?? "Another hero"}'s turn`}
+          {myTurn ? t("handUi.ui.title") : t("handUi.ui.other", { name: currentName ?? t("handUi.ui.hero") })}
         </span>
         <span className="hidden text-[11px] text-stone-500 sm:inline">
-          {myTurn ? "Play a card, or type your move below." : "Look your cards over while you wait."}
+          {t(myTurn ? "handUi.ui.play" : "handUi.ui.wait")}
         </span>
         <span className="ml-auto flex items-center gap-1">
           <HandPips pips={pips} flurryStrikes={turn.flurryStrikes} />
-          <Tooltip content="How the hand works">
+          <Tooltip content={t("handUi.ui.help")}>
             <button
               type="button"
               onClick={() => {
                 if (collapsed) writeFlag(COLLAPSED_KEY, false);
                 setTutorialAsked(true);
               }}
-              aria-label="How the hand works"
+              aria-label={t("handUi.ui.help")}
               className="flex size-9 items-center justify-center rounded-lg text-stone-500 hover:text-amber-200 sm:size-7"
             >
               <CircleHelp className="size-4" />
             </button>
           </Tooltip>
-          <Tooltip content={collapsed ? "Show your hand" : "Put your hand away. The message box stays."}>
+          <Tooltip content={t(collapsed ? "handUi.ui.show" : "handUi.ui.hideHint")}>
             <button
               type="button"
               onClick={() => {
@@ -395,7 +400,7 @@ function HandInner({
                 }, FOLD_MS);
               }}
               aria-expanded={!collapsed}
-              aria-label={collapsed ? "Show your hand" : "Hide your hand"}
+              aria-label={t(collapsed ? "handUi.ui.show" : "handUi.ui.hide")}
               className="flex size-9 items-center justify-center rounded-lg text-stone-500 hover:text-amber-200 sm:size-7"
             >
               <ChevronDown className={cn("chevron-turn size-4", collapsed && "rotate-180")} />
@@ -436,7 +441,7 @@ function HandInner({
             data-more={more.length ? "true" : undefined}
             data-folding={folding || leaving ? "true" : undefined}
             role="group"
-            aria-label="Cards"
+            aria-label={t("handUi.ui.cards")}
           >
             {shown.map((card, index) => (
               <HandCardFace
@@ -460,9 +465,9 @@ function HandInner({
                 className="hand-more"
                 style={{ "--i": shown.length } as CSSProperties}
                 onClick={() => setMoreOpen(true)}
-                aria-label={`${more.length} more cards`}
+                aria-label={t("handUi.ui.more", { count: more.length })}
               >
-                +{more.length} more
+                {t("handUi.ui.moreShort", { count: more.length })}
               </button>
             ) : null}
           </div>
@@ -494,7 +499,7 @@ function HandInner({
             />
           ) : riders.length ? (
             <p className="mt-1 animate-fade-up text-xs text-amber-200/80">
-              {riders.map((rider) => rider.name).join(", ")} will ride your next attack card. Press it again to take it off.
+              {t("handUi.ui.riders", { names: riders.map(rider => handCardName(rider, locale)).join(", ") })}
             </p>
           ) : null}
         </>

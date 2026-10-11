@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { handCardName, handAimName, handTermLabel, handAreaDescription, handAreaHintText } from "@/lib/i18n/hand-presentations";
 import { ArrowLeft, Loader2, PencilLine, X } from "lucide-react";
 import { isComposingInput } from "@/lib/input-composition";
 import { useRef, type CSSProperties } from "react";
@@ -32,6 +34,7 @@ function HandOptionChip({
   onToggle?: (id: HandAttackOptionId) => void;
   onRefused?: (reason: string) => void;
 }) {
+  const { locale } = useLocale();
   const ref = useRef<HTMLButtonElement>(null);
   return (
     <Tooltip content={option.disabled ?? option.note}>
@@ -59,7 +62,7 @@ function HandOptionChip({
               : "border-stone-600 text-stone-300 hover:border-amber-500/60",
         )}
       >
-        {option.label}
+        {handTermLabel(option.label, locale)}
       </button>
     </Tooltip>
   );
@@ -124,6 +127,8 @@ export function HandAimBar({
   onEdit: () => void;
   onCommit: () => void;
 }) {
+  const { locale, t } = useLocale();
+  const displayName = handCardName(card, locale);
   const toggles = options.filter((option) => !option.group);
   const grouped = options.filter((option) => option.group);
   const needsTarget = card.target === "enemy" || card.target === "ally";
@@ -133,32 +138,32 @@ export function HandAimBar({
   const areaPicked = hasPick(card.area, areaPick);
   const ready = (!needsTarget || aim !== null || areaPicked) && !needsTrigger;
   const hint = needsTrigger
-    ? "Say what you wait for."
+    ? t("handUi.aim.triggerHint")
     : areaPicked && !aim
-      ? `Laid ${describePick(card.area!, areaPick)}.`
+      ? t("handUi.aim.laid", { area: handAreaDescription(card.area!, areaPick, locale) })
     : !needsTarget
     ? card.compose
-      ? "Finish the line in the box below."
-      : "Ready when you are."
+      ? t("handUi.aim.compose")
+      : t("handUi.aim.ready")
     : aim
-      ? `Lined up on ${aim.kind === "self" ? "yourself" : aim.name}.`
+      ? t("handUi.aim.targeted", { name: aim.kind === "self" ? t("handUi.aim.yourself") : handAimName(aim, locale) })
       : card.area && card.area.pick !== "none"
-        ? "Pick a target here, or tap the board where it goes."
+        ? t("handUi.aim.targetBoard")
       : card.target === "enemy"
-        ? "Pick a target, here or on the board."
-        : "Pick who it is for.";
+        ? t("handUi.aim.pickEnemy")
+        : t("handUi.aim.pickAlly");
   return (
     <div className="hand-aim mt-1 rounded-xl border border-amber-500/30 bg-stone-950/80 p-2.5 shadow-elev-1">
       <div className="flex min-w-0 items-center gap-2">
         <span className="hand-type-chip" style={{ "--chip-tone": typeTone(card.type) } as CSSProperties}>
-          {typeLabel(card.type)}
+          {typeLabel(card.type, locale)}
         </span>
-        <span className="min-w-0 truncate font-display text-sm font-semibold text-amber-100">{card.name}</span>
+        <span className="min-w-0 truncate font-display text-sm font-semibold text-amber-100">{displayName}</span>
         <span className="ml-auto min-w-0 truncate text-xs text-stone-400">{hint}</span>
       </div>
 
       {needsTarget ? (
-        <div className="mt-2 flex flex-wrap gap-1.5" role="group" aria-label="Targets">
+        <div className="mt-2 flex flex-wrap gap-1.5" role="group" aria-label={t("handUi.aim.targets")}>
           {targets.length ? (
             targets.map((target, index) => (
               <button
@@ -173,7 +178,7 @@ export function HandAimBar({
                 )}
               >
                 <span className="text-[13px] leading-tight text-stone-200">
-                  {target.kind === "self" ? `${target.name} (you)` : target.name}
+                  {target.kind === "self" ? t("handUi.aim.you", { name: target.name }) : handAimName(target, locale)}
                 </span>
                 {target.note ? (
                   <span className="font-mono text-[10px] leading-tight text-stone-500">{target.note}</span>
@@ -181,7 +186,7 @@ export function HandAimBar({
               </button>
             ))
           ) : (
-            <span className="text-xs text-stone-500">Nobody to aim at. Type your move instead.</span>
+            <span className="text-xs text-stone-500">{t("handUi.aim.empty")}</span>
           )}
         </div>
       ) : null}
@@ -189,33 +194,33 @@ export function HandAimBar({
       {/* An area spell: where it is laid, picked on the board, which draws
           the squares as the pointer moves (BoardAreaAim.tsx). */}
       {card.area ? (
-        <div className="hand-choice mt-2 flex flex-wrap items-center gap-1.5" role="group" aria-label="Where the area is laid">
-          <span className="text-[11px] uppercase tracking-wider text-stone-500">Area</span>
+        <div className="hand-choice mt-2 flex flex-wrap items-center gap-1.5" role="group" aria-label={t("handUi.aim.areaLabel")}>
+          <span className="text-[11px] uppercase tracking-wider text-stone-500">{t("handUi.aim.area")}</span>
           {areaPicked ? (
             <span
               key={describePick(card.area, areaPick)}
               className="motion-pop inline-flex min-h-8 items-center rounded-full border border-amber-400/70 bg-amber-500/15 px-3 text-xs text-amber-100"
             >
-              {describePick(card.area, areaPick)}
+              {handAreaDescription(card.area, areaPick, locale)}
             </span>
           ) : null}
-          <span className="text-xs text-stone-400">{pickHint(card.area, areaPick)}</span>
+          <span className="text-xs text-stone-400">{handAreaHintText(pickHint(card.area, areaPick), locale)}</span>
           {areaPicked && onClearArea ? (
             <button
               type="button"
               onClick={onClearArea}
-              aria-label="Clear the square picked for the area"
+              aria-label={t("handUi.aim.clearArea")}
               className="hand-option motion-press inline-flex min-h-8 items-center gap-1 rounded-full border border-stone-600 px-2.5 text-xs text-stone-300 hover:border-amber-500/60"
             >
-              <X className="size-3" /> Clear
+              <X className="size-3" /> {t("handUi.aim.clear")}
             </button>
           ) : null}
         </div>
       ) : null}
 
       {toggles.length ? (
-        <div className="mt-2 flex flex-wrap items-center gap-1.5" role="group" aria-label="Attack options">
-          <span className="text-[11px] uppercase tracking-wider text-stone-500">With it</span>
+        <div className="mt-2 flex flex-wrap items-center gap-1.5" role="group" aria-label={t("handUi.aim.options")}>
+          <span className="text-[11px] uppercase tracking-wider text-stone-500">{t("handUi.aim.with")}</span>
           {toggles.map((option, index) => (
             <HandOptionChip
               key={option.id}
@@ -269,7 +274,7 @@ export function HandAimBar({
                       on ? "border-amber-400/70 bg-amber-500/20 text-amber-100" : "border-stone-600 text-stone-300 hover:border-amber-500/60",
                     )}
                   >
-                    {option.label}
+                    {handTermLabel(option.label, locale)}
                   </button>
                 </Tooltip>
               );
@@ -280,7 +285,7 @@ export function HandAimBar({
 
       {trigger !== null ? (
         <label className="hand-trigger mt-2 flex flex-col gap-1 text-[11px] uppercase tracking-wider text-stone-500">
-          Trigger
+          {t("handUi.aim.trigger")}
           <input
             type="text"
             value={trigger}
@@ -294,7 +299,7 @@ export function HandAimBar({
                 onCommit();
               }
             }}
-            placeholder="the ogre steps through the door"
+            placeholder={t("handUi.aim.triggerPlaceholder")}
             className={cn(ui.input, "normal-case tracking-normal")}
           />
         </label>
@@ -324,28 +329,28 @@ export function HandAimBar({
         </div>
         <div className="flex min-w-0 flex-col justify-between gap-2">
           <p className="font-serif text-sm italic leading-snug text-stone-300">
-            <span className="not-italic text-stone-500">Sends: </span>
+            <span className="not-italic text-stone-500">{t("handUi.aim.sends")}</span>
             {sentence}
           </p>
           <div className="flex flex-wrap items-center justify-end gap-2">
             <button type="button" onClick={onBack} className={cn(ui.btnSmall, "min-h-10")}>
-              <ArrowLeft className="size-4" /> Back
+              <ArrowLeft className="size-4" /> {t("handUi.aim.back")}
             </button>
-            <Tooltip content="Put this sentence in the message box so you can change it before sending.">
+            <Tooltip content={t("handUi.aim.editHint")}>
               <button type="button" onClick={onEdit} className={cn(ui.btnSmall, "min-h-10")}>
-                <PencilLine className="size-4" /> Edit
+                <PencilLine className="size-4" /> {t("handUi.aim.edit")}
               </button>
             </Tooltip>
             <Tooltip
               content={
                 blocked ??
                 (ready
-                  ? "Send this to the Dungeon Master."
+                  ? t("handUi.aim.sendHint")
                   : needsTrigger
-                    ? "Name the trigger first."
+                    ? t("handUi.aim.needTrigger")
                     : card.area
-                      ? "Pick a target, or a square on the board."
-                      : "Pick a target first.")
+                      ? t("handUi.aim.needArea")
+                      : t("handUi.aim.needTarget"))
               }
             >
               <button
@@ -355,7 +360,7 @@ export function HandAimBar({
                 className={cn(ui.btnPrimary, "max-w-full")}
               >
                 {sending ? <Loader2 className="size-4 animate-spin" /> : null}
-                <span className="truncate">{card.compose ? "Write it" : card.name}</span>
+                <span className="truncate">{card.compose ? t("handUi.aim.write") : displayName}</span>
               </button>
             </Tooltip>
           </div>

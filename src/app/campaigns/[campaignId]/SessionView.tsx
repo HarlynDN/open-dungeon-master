@@ -796,6 +796,7 @@ export function SessionView({
           ) : (
             <Composer
               campaignId={campaign.id}
+              campaignLocale={campaign.gameSettings.locale}
               trackAmmo={campaign.gameSettings?.variantRules?.ammunition ?? false}
               edges={state.battleMap?.edges}
               sheets={sheets}

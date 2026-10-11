@@ -2,6 +2,7 @@
 
 import { Eye, EyeOff, Hand, Loader2, Send } from "lucide-react";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
+import type { AppLocale } from "@/lib/i18n/locales";
 import { composeErrorText, composerPlaceholderText } from "@/lib/i18n/compose-presentations";
 import { isComposingInput } from "@/lib/input-composition";
 import { memo, type ReactNode } from "react";
@@ -46,6 +47,7 @@ export type { InputKind };
 // apart, which is exactly what it used to be.
 function ComposerInner({
   campaignId,
+  campaignLocale = "en",
   sheets,
   meUserId,
   steersStory,
@@ -85,6 +87,7 @@ function ComposerInner({
   onSubmit,
 }: {
   campaignId: string;
+  campaignLocale?: AppLocale;
   sheets: CampaignState["sheets"];
   meUserId: string;
   steersStory: boolean;
@@ -200,6 +203,7 @@ function ComposerInner({
         {!isDm && hand.encounter ? (
           <CombatHand
             campaignId={campaignId}
+            campaignLocale={campaignLocale}
             sheets={sheets}
             meUserId={meUserId}
             encounter={hand.encounter}

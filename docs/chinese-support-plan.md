@@ -29,7 +29,7 @@ flow remains incomplete; the review-repair checkpoint is a separate scoped task.
 | Locale foundation | Registry, persistence, browser fallback, typed complete catalogs, model locale policy, classified token proxy, chapter budget, CJK retrieval, IME protection | Real prompt-usage calibration; keep legacy campaign/history regressions |
 | DM safety | Per-event engine conclusions with English/Chinese renderers; AI prose separated; one text-only correction and safe fallback; shared localized enemy names and held-resource names/IDs; scoped resource aliases and ambiguity retries; real Codex combat/resource acceptance | Untracked feature/reaction options and broader spell/condition/pack coverage; conservative regex coverage is not full language understanding |
 | Embeddings | Original English deployment default retained; explicit multilingual opt-in; fixed bilingual calibration/holdout and hard-negative policy | Broader pack quality; opt-in affects English campaigns and rebuilds indexes |
-| UI | **152/437** covered files, **2990** pending literal sites, **7215** message keys; scoped AST gate; initiative/roster/board and roll captions, cinematic owned UI, turn/floor/retry controls, fight summary, character menu, hand budget/tutorial, campaign/character notes, bonds, private DM line and dispute/report forms, main composer/Ask, ruling votes, director presets, speaker selection and story-capture reminders, session header/navigation/status, new-character introduction, pause and unread-audio controls | Remaining hand actions/reactions, general play/inventory/rest/level-up/save/resume surfaces, full sheet/party dialogs and native feature/reaction names; file fraction is not overall completion or an effort estimate |
+| UI | **152/437** covered files, **2942** pending literal sites, **7362** message keys; scoped AST gate; earlier play/session surfaces plus partial hand labels, targets, area selection and campaign-locale action sentences | Hand rules/refusals, choice variants, preview facts and reaction prompts remain pending; general play/inventory/rest/level-up/save/resume surfaces, full sheet/party dialogs and native feature/reaction names; file fraction is not overall completion or an effort estimate |
 | Character creation/material | Identity, ancestry, class introductions, ability allocation, gear, spell book/preparation and finish preview; 517 spell and 228 equipment names; 257-entry contextual terminology policy and lint gate; 415/415 static registered resource names and guidance shared with DM references; original-source review records | Remaining feature/feat and magic-item material; dynamic free-cast resources and user-authored/pack text remain outside the static resource review |
 | Player system logs | Structured rule diagnostics and engine-generated combat conclusions retain English protocol semantics with localized presentation | General player-visible log templates; model-facing English tool results remain independent |
 | Resource delivery | UI vs content namespaces; character/campaign boundaries; generated resources checked by lint; production Turbopack build and anonymous bilingual browser switch/reload succeed; home/character/campaign SSR and initial-script payloads measured | Hydrated/lazy network totals, authenticated campaign switching and active-play browser acceptance; route-level JS payload remains large |
@@ -59,15 +59,17 @@ attempts were blocked at its internal port binding by the execution environment,
 including the escalated attempt; this batch does not claim a passing production
 build. Keep that gate for the next phase boundary rather than retrying per batch.
 
-The latest session-status/navigation checkpoint adds eight covered UI files and
-146 content-only keys. Types and catalog/AST/terminology gates passed. A focused
-in-memory check (0.48 seconds) verified native status/navigation labels, preserved
-intro identity/backstory/directive data, failed introductions remaining visible
-and narration replay rejection resetting the retry button. Header/audio browser
-acceptance remains part of the final flow gate. Three label-only alignments reuse
-existing vocabulary; resources were regenerated without repeating tests. No
-Goblin, real model/audio acceptance, full regression, lint or production build
-was repeated. The earlier composer/Ask and journal checks remain recorded in Git.
+The latest hand checkpoint adds 147 content-only keys. Types and catalog/AST
+checks passed; the earlier terminology pass had no errors. A focused in-memory
+check (0.49 seconds) verified 17 native action/locale cases, original English
+sentences, unchanged structured intents and target callbacks, and actual Hand
+POST bodies with opposite UI/campaign locales. Quantity prompts retain the
+caret gap and do not describe ki/point spending as healing. Four partial hand
+files remain pending, with
+their remaining material documented in the coverage manifest. One label-only
+alignment reuses tutorial vocabulary; resources were regenerated without
+repeating tests. No Goblin, real model/audio acceptance, full regression, lint
+or production build was repeated. Earlier checkpoint evidence remains in Git.
 
 ## Compatibility contracts
 
@@ -82,6 +84,12 @@ defaults. Chinese sheet questions take priority over rules; Chinese story
 questions conservatively use the existing bounded archive pass because names
 lack a capitalization cue. Explicit scope selection remains available. The
 existing Ask script passed ten scope/retrieval/parsing/privacy checks.
+
+Hand sentence renderers are registered by locale and follow the campaign locale;
+card labels and controls follow the viewer's UI locale. English still delegates
+to the native sentence helper. Cards, target IDs, spell names, slots, options,
+variants and coordinates retain their canonical values in the structured intent.
+Localized names apply to presentation only; unknown authored terms stay literal.
 
 New-adventurer notices match complete native frames against identities already
 visible to the viewer. Species/class labels translate; names and the original

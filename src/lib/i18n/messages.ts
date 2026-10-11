@@ -56,8 +56,10 @@ import { TURN_CONTROL_MESSAGES } from "./turn-control-messages.ts";
 import { JOURNAL_MESSAGES } from "./journal-messages.ts";
 import { COMPOSE_MESSAGES } from "./compose-messages.ts";
 import { SESSION_MESSAGES } from "./session-messages.ts";
+import { HAND_MESSAGES } from "./hand-messages.ts";
 
 const en = {
+  ...HAND_MESSAGES.en,
   ...SESSION_MESSAGES.en,
   ...COMPOSE_MESSAGES.en,
   ...JOURNAL_MESSAGES.en,
@@ -143,6 +145,7 @@ export type MessageKey = keyof typeof en;
 type Messages = Record<MessageKey, string>;
 
 const zhCN: Messages = {
+  ...HAND_MESSAGES["zh-CN"],
   ...SESSION_MESSAGES["zh-CN"],
   ...COMPOSE_MESSAGES["zh-CN"],
   ...JOURNAL_MESSAGES["zh-CN"],

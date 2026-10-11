@@ -367,19 +367,23 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/Hand.tsx",
-      "state": "pending"
+      "state": "pending",
+      "review": "Owned hand labels and campaign-locale sentences reviewed; structured intent unchanged. Native waiting/refusal/network messages remain pending."
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandAimBar.tsx",
-      "state": "pending"
+      "state": "pending",
+      "review": "Owned aim/area/target/send controls reviewed; target callbacks preserve native IDs. Choice variants, option notes/refusals, health notes and preview material remain pending."
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandCardFace.tsx",
-      "state": "pending"
+      "state": "pending",
+      "review": "Card type/cost labels and known names reviewed; native card callbacks retained. Composite feature names, rules, roll/resource/condition facts, previews and refusals remain pending."
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandMoreSheet.tsx",
-      "state": "pending"
+      "state": "pending",
+      "review": "Owned sheet labels and known card names/types/costs reviewed. Native waiting reasons, rules/facts, previews and refusals remain pending."
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandPips.tsx",
