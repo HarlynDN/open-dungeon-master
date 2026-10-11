@@ -9,7 +9,7 @@ export const SHEET_RESOURCE_HELP_MESSAGES = /*#__PURE__*/ defineMessages({
   },
   "sheetDialog.resourceHelp.ki": {
     "en": "Ki fuels Flurry of Blows (a bonus-action pair of unarmed strikes: resolve each with pc_attack), Patient Defense (Dodge), and Step of the Wind (Dash or Disengage, doubled jump).",
-    "zh-CN": "气可用于疾风连击（消耗附赠动作，进行两次徒手攻击）、闪避术（采取闪避），以及疾风步（采取疾走或撤离，跳跃距离翻倍）。"
+    "zh-CN": "气可用于疾风连击（消耗附赠动作，进行两次徒手打击）、闪避术（采取闪避），以及疾风步（采取疾跑或撤离，跳跃距离翻倍）。"
   },
   "sheetDialog.resourceHelp.sorcery_points": {
     "en": "Sorcery points buy Metamagic on a spell being cast (spend with amount), or convert to and from spell slots: call use_resource with variant like 'create a 2nd-level slot' (costs 2/3/5/6/7 points for levels 1-5) or 'convert my 3rd-level slot into points' and the server moves the points and slots. Created slots vanish on a long rest. Quickened Spell: call use_resource with variant 'Quickened Spell' before the cast; the server spends 2 points and the next spell of one action this turn takes the bonus action. The spell itself still goes through use_spell_slot or cast_at_enemy as normal.",

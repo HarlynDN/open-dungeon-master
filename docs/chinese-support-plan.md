@@ -29,7 +29,7 @@ flow remains incomplete; the review-repair checkpoint is a separate scoped task.
 | Locale foundation | Registry, persistence, browser fallback, typed complete catalogs, model locale policy, classified token proxy, chapter budget, CJK retrieval, IME protection | Real prompt-usage calibration; keep legacy campaign/history regressions |
 | DM safety | Per-event engine conclusions with English/Chinese renderers; AI prose separated; one text-only correction and safe fallback; shared localized enemy names and held-resource names/IDs; scoped resource aliases and ambiguity retries; real Codex combat/resource acceptance | Untracked feature/reaction options and broader spell/condition/pack coverage; conservative regex coverage is not full language understanding |
 | Embeddings | Original English deployment default retained; explicit multilingual opt-in; fixed bilingual calibration/holdout and hard-negative policy | Broader pack quality; opt-in affects English campaigns and rebuilds indexes |
-| UI | **152/437** covered files, **2935** pending literal sites, **7581** message keys; scoped AST gate; earlier play/session surfaces plus hand labels/targets/area selection, campaign-locale action sentences, native previews, basic/reaction rules and common engine refusals | Untranslated spell-mechanics/rider notes, uncommon subclass names/choices and casting/material refusals keep hand files pending; general play/inventory/rest/level-up/save/resume surfaces and full sheet/party dialogs; file fraction is not overall completion or an effort estimate |
+| UI | **152/437** covered files, **2935** pending literal sites, **7619** message keys; scoped AST gate; earlier play/session surfaces plus hand labels/targets/area selection, campaign-locale action sentences, native previews, basic/reaction rules, common casting refusals and spell selectors | Untranslated spell-mechanics/rider notes, uncommon subclass names/choices, priced-material and ritual refusals keep hand files pending; general play/inventory/rest/level-up/save/resume surfaces and full sheet/party dialogs; file fraction is not overall completion or an effort estimate |
 | Character creation/material | Identity, ancestry, class introductions, ability allocation, gear, spell book/preparation and finish preview; 517 spell and 228 equipment names; 257-entry contextual terminology policy and lint gate; 415/415 static registered resource names and guidance shared with DM references; original-source review records | Remaining feature/feat and magic-item material; dynamic free-cast resources and user-authored/pack text remain outside the static resource review |
 | Player system logs | Structured rule diagnostics and engine-generated combat conclusions retain English protocol semantics with localized presentation | General player-visible log templates; model-facing English tool results remain independent |
 | Resource delivery | UI vs content namespaces; character/campaign boundaries; generated resources checked by lint; production Turbopack build and anonymous bilingual browser switch/reload succeed; home/character/campaign SSR and initial-script payloads measured | Hydrated/lazy network totals, authenticated campaign switching and active-play browser acceptance; route-level JS payload remains large |
@@ -59,20 +59,19 @@ attempts were blocked at its internal port binding by the execution environment,
 including the escalated attempt; this batch does not claim a passing production
 build. Keep that gate for the next phase boundary rather than retrying per batch.
 
-The latest hand-material checkpoint adds 219 content-only keys. Types and
-catalog/AST/terminology gates passed (zero terminology errors; context warnings
-remain). Its focused check (0.87 seconds) preserved native preview numbers/tones,
-checked ten real engine refusals, matched reaction prompts to the current hit
-record, compared four complete pre-edit English renders, and verified native
-choice/reaction callbacks. Parser corrections prevent generic save frames from
-swallowing half-on-save text, names from being treated as health counters, and
-compound bonus-action rules from splitting a feature name. The compact
-`scripts/test-hand-locales.mjs` retains those behavior contracts; it also passed.
-Label-only Touch and count-format alignments reuse existing spell vocabulary
-and retain native numeric notation; resources were regenerated without repeating
-checks. Hand files remain pending for their
-remaining native material. No Goblin, real model/audio acceptance, full
-regression, lint or production build was repeated. Earlier evidence is in Git.
+The latest hand checkpoint adds 38 content-only keys for caster state, free
+hands/materials, missing focus, slot limits, core class action names and spell
+choices. Shared display helpers reuse the existing condition and ability names;
+unknown options, focus kinds, equipment and authored prose stay literal. Native
+intent values and English error strings are unchanged. The focused check passed
+in under one second, including 17 native casting refusals and real spell selectors
+(curses, commands and buffs), alongside existing lightweight Hand contracts.
+Types and catalog/AST/terminology checks passed. Six duplicate buff-name entries
+were removed after the terminology warning, reusing reviewed condition names;
+resources and the affected lightweight test were refreshed. No settled Goblin,
+real model/audio acceptance, full regression, lint or production build was repeated.
+Hand files remain pending for priced-component/ritual refusals, spell/rider prose
+and uncommon subclass material; custom material descriptions stay verbatim.
 
 ## Compatibility contracts
 

@@ -368,22 +368,22 @@
     {
       "path": "src/app/campaigns/[campaignId]/Hand.tsx",
       "state": "pending",
-      "review": "Owned labels, campaign-locale sentences and common engine/network refusals reviewed; structured intent unchanged. Uncommon casting/material/feature refusal frames remain pending."
+      "review": "Owned labels, campaign-locale sentences, common engine/network and casting-state/component/focus/slot refusals reviewed; structured intent unchanged. Priced-material, ritual and uncommon feature refusal frames remain pending; authored material descriptions stay verbatim."
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandAimBar.tsx",
       "state": "pending",
-      "review": "Owned aim/area/target/send/rider controls, native previews, health notes and common option rules reviewed; callbacks preserve native IDs/choice values. Remaining native choice variants and uncommon refusal frames remain pending."
+      "review": "Owned aim/area/target/send/rider controls, native previews, health notes and common option rules reviewed; callbacks preserve native IDs/choice values. Core spell selectors reuse condition/ability terms; unknown choices stay literal. Uncommon subclass and remaining refusal frames remain pending."
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandCardFace.tsx",
       "state": "pending",
-      "review": "Type/cost labels, known/composite names, native facts/previews, basic/reaction rules and matching registered resource guidance reviewed; native card callbacks retained. Spell/rider notes, uncommon subclass names and casting/refusal frames remain pending."
+      "review": "Type/cost labels, known/composite names including Martial Arts strike, native facts/previews, basic/reaction rules, matching registered resource guidance and common casting refusals reviewed; native card callbacks retained. Spell/rider prose, uncommon subclass and priced-material/ritual frames remain pending."
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandMoreSheet.tsx",
       "state": "pending",
-      "review": "Owned labels, known names/types/costs, native facts/previews, waiting/common refusals and basic/reaction/registered-resource rules reviewed. Remaining spell/rider/subclass/casting material keeps this file pending."
+      "review": "Owned labels, known names/types/costs, native facts/previews, waiting/common casting refusals and basic/reaction/registered-resource rules reviewed. Remaining spell/rider/subclass/ritual/priced-material text keeps this file pending."
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandPips.tsx",

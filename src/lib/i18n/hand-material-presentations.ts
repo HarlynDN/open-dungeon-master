@@ -54,6 +54,10 @@ function ability(text: string, locale: AppLocale): string {
   return combatTermLabel("ability", ids[text] ?? text, locale);
 }
 function mechanic(text: string, locale: AppLocale): string {
+  const casting = nativeFrame(text, "handMaterial.term.");
+  if (casting?.key === "handMaterial.term.cast") return createTranslator(locale)(casting.key, {
+    spell: referenceDisplayName("spell", casting.args.spell, locale),
+  });
   const term = handTermLabel(text, locale);
   if (term !== text) return term;
   const spell = referenceDisplayName("spell", text, locale);
@@ -73,6 +77,20 @@ export function handRefusalText(raw: string, locale: AppLocale): string {
   if (args.condition) args.condition = conditionLabel(args.condition, locale);
   for (const key of ["what", "feature"] as const) if (args[key]) args[key] = mechanic(args[key], locale);
   if (args.spell) args.spell = referenceDisplayName("spell", args.spell, locale);
+  if (args.form) args.form = referenceDisplayName("monster", args.form, locale);
+  if (args.armor) {
+    const items = args.armor.split(" and ");
+    const labels = items.map(value => mechanic(value, locale));
+    if (labels.every((value, index) => value !== items[index])) args.armor = labels.join(createTranslator(locale)("handMaterial.join.and"));
+  }
+  if (args.focus) {
+    const foci = args.focus.split(" or ");
+    const labels = foci.map(value => exactLabel(value, "handMaterial.focus.", locale));
+    // Unknown focus kinds may be authored content. Keep the complete native
+    // message instead of guessing its meaning or dropping a requirement.
+    if (labels.some((value, index) => value === foci[index])) return raw;
+    args.focus = labels.join(createTranslator(locale)("handMaterial.join.or"));
+  }
   return createTranslator(locale)(frame.key, args);
 }
 

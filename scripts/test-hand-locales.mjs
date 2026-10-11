@@ -7,7 +7,11 @@ const {canAct}=await import('../src/lib/dm/can-act.ts');
 const {freshBudget,spendAction}=await import('../src/lib/dm/action-budget.ts');
 const {reactionCards,reactionHitText}=await import('../src/lib/battlemap/hand-react.ts');
 const material=await import('../src/lib/i18n/hand-material-presentations.ts');
-const {handSentence}=await import('../src/lib/i18n/hand-presentations.ts');
+const {handSentence,handCardName}=await import('../src/lib/i18n/hand-presentations.ts');
+const {casterStateProblem,componentProblem,focusProblem,slotPlan,reactionSpellOnOwnTurn,BONUS_SPELL}=await import('../src/lib/dm/cast-rules.ts');
+const {bundledSpellFacts}=await import('../src/lib/srd/spell-facts.ts');
+const {MECH_OVERRIDES}=await import('../src/lib/srd/spell-mechanics.ts');
+const {spellChoice}=await import('../src/lib/battlemap/hand-spells.ts');
 // A complete native character fixture; no server, model or device access.
 const makeSheet=(overrides={})=>({
  id:'s1',campaignId:'c1',userId:'u1',libraryCharacterId:null,name:'Aria',race:'human',class:'fighter',subclass:'',background:'',alignment:'',gender:'',
@@ -65,6 +69,46 @@ const choiceBefore=structuredClone(card);
 assert.match(handSentence(card,aim,[],{choice:'armor'},'zh-CN'),/穿着的护甲/);
 assert.equal(intentBody(card,aim,[],{choice:'armor'}).variant,'armor');
 assert.deepEqual(card,choiceBefore);
+// Newly localized casting paths: read actual native refusals, retaining names
+// and numerical requirements. No model call, server or full rules suite.
+let castRefusals=0;
+const castSheet=makeSheet({name:actor,class:'wizard',spellcasting:{ability:'int',slots:{1:{max:2,used:0}}}});
+const fireball=bundledSpellFacts('Fireball');assert(fireball);
+const checkCast=(raw,word)=>{
+ assert.equal(typeof raw,'string');
+ const zh=material.handRefusalText(raw,'zh-CN');assert.notEqual(zh,raw);assert(zh.includes(word),zh);
+ assert.equal(material.handRefusalText(raw,'en'),raw);
+ assert.deepEqual(numbers(zh),numbers(raw));castRefusals++;
+};
+for(const kind of ['polymorph','wild shape'])checkCast(casterStateProblem({...castSheet,wildShape:{kind,form:'Wolf'}}),'狼');
+checkCast(casterStateProblem({...castSheet,equipment:[{name:'Plate',qty:1,equipped:true},{name:'Shield',qty:1,equipped:true}]}),'板甲');
+const full={...castSheet,equipment:[{name:'Longsword',qty:1,equipped:true},{name:'Shield',qty:1,equipped:true}]};
+checkCast(componentProblem(full,{...fireball,material:false}),'做姿势');
+for(const somatic of [false,true])for(const feats of [[],['War Caster']]){
+ const raw=componentProblem({...full,feats},{...fireball,somatic});checkCast(raw,'处理材料');
+ assert.equal(material.handRefusalText(raw,'zh-CN').includes('战场施法者'),feats.length>0);
+}
+for(const cls of ['wizard','cleric','druid','bard','artificer','ranger'])checkCast(focusProblem({...castSheet,class:cls},fireball),'未消耗法术位');
+checkCast(focusProblem({...castSheet,classes:[{id:'cleric',level:1}]},fireball),'奥术法器或圣徽');
+checkCast(slotPlan(castSheet,'Fireball',fireball,1).error,'3 环');
+checkCast(reactionSpellOnOwnTurn({...freshBudget({ownerId:castSheet.id,round:1}),oncePerTurn:[BONUS_SPELL]},actor,'Shield').error,'护盾术');
+assert.equal(material.handRefusalText('Authored armor and staff prevents casting.','zh-CN'),'Authored armor and staff prevents casting.');
+// Real spell selectors cover ability-valued curses, command words and buffs;
+// labels may change while native choice values and payloads remain unchanged.
+for(const spell of ['bestow curse','command','enhance ability','fire shield']){
+ const choice=spellChoice(MECH_OVERRIDES[spell]);assert(choice,spell);
+ const native={...card,name:spell,intent:{card:'spell',spell,slotLevel:3},choice};
+ const snapshot=structuredClone(native);
+ for(const option of choice.options){
+  assert.equal(material.handChoiceLabel(native,option.label,'en'),option.label);
+  assert.notEqual(material.handChoiceLabel(native,option.label,'zh-CN'),option.label,spell+': '+option.label);
+  assert.equal(intentBody(native,aim,[],{choice:option.value})[choice.arg],option.value);
+ }
+ assert.deepEqual(native,snapshot);
+ assert.equal(material.handChoiceLabel(native,'authored option','zh-CN'),'authored option');
+}
+const monkStrike={...attack,name:'Martial Arts strike',intent:{card:'attack',weapon:'Unarmed strike',attack:{bonusAttack:'martial arts'}}};
+assert.equal(handCardName(monkStrike,'zh-CN'),'武艺打击');assert.equal(handCardName(monkStrike,'en'),monkStrike.name);
 const files=['HandCardFace','HandAimBar','HandReactPrompt','HandMoreSheet'].map(name=>'src/app/campaigns/[campaignId]/'+name+'.tsx');
 const data=s=>'data:text/javascript;base64,'+Buffer.from(s).toString('base64');
 const stubs={'@/components/ui/Sheet':data('import {createElement} from '+JSON.stringify(import.meta.resolve('react'))+';export const Sheet=({children,title})=>createElement("section",null,title,children);')};
@@ -82,5 +126,5 @@ const choiceButton=renderer.elements().find(e=>e.type==='button'&&e.props.role==
 let picked;renderer.render('HandReactPrompt',{...fixtures[2][1],onPick:value=>picked=value},'zh-CN');
 renderer.elements().find(e=>e.type==='button').props.onClick();assert.equal(picked,react[0]);
 const html=renderer.render('HandCardFace',fixtures[0][1],'zh-CN');assert(!html.includes('slashing'));assert(html.includes('英尺'));
-console.log('PASS: native hand facts/preview numbers, '+refused+' engine refusal cases, source-record reaction matching, English card fields, canonical choice/reaction callbacks.');
+console.log('PASS: native hand facts/preview numbers, '+refused+' action and '+castRefusals+' casting refusals, English card fields, native spell selectors and canonical choice/reaction callbacks.');
 

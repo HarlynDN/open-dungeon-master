@@ -3,6 +3,7 @@ import type { AppLocale } from "./locales.ts";
 import { referenceDisplayName } from "./references.ts";
 import { sessionSourceText } from "./session-presentations.ts";
 import { conditionLabel } from "./condition-presentations.ts";
+import { combatTermLabel } from "./combat-ui-presentations.ts";
 import { sheetChoiceOption } from "./sheet-dialog-presentations.ts";
 import { chosenValue, composeSentence, costLabel, type HandAim, type HandChoices } from "../battlemap/hand-play.ts";
 import { describePick, hasPick, type HandArea, type AreaPick } from "../battlemap/hand-area.ts";
@@ -11,7 +12,7 @@ import type { HandAttackOptionId, HandCard, HandCost } from "../battlemap/hand-c
 export function handTermLabel(name: string, locale: AppLocale): string {
   if (locale === "en") return name;
   const t = createTranslator(locale);
-  const matches = ["handUi.term.", "handMaterial.term.", "sheetPlay.resourceName."].flatMap(prefix =>
+  const matches = ["handUi.term.", "handMaterial.term.", "sheetPlay.resourceName.", "combatCheck.feature.", "combatSpecial.name."].flatMap(prefix =>
     Object.entries(catalogFor("en", prefix)).filter(([, source]) => source.toLowerCase() === name.toLowerCase())
       .map(([key]) => t(key as MessageKey)),
   );
@@ -26,11 +27,12 @@ export function handCardName(card: HandCard, locale: AppLocale): string {
   if (intent.card === "attack" && intent.weapon.toLowerCase() === card.name.toLowerCase()) return referenceDisplayName("equipment", intent.weapon, locale);
   const t = createTranslator(locale);
   if (intent.card === "attack" && intent.offHand && card.name === `Off-hand ${intent.weapon}`) return t("handMaterial.name.offhand", { weapon: referenceDisplayName("equipment", intent.weapon, locale) });
+  if (intent.card === "attack" && intent.attack?.bonusAttack === "martial arts" && card.name === "Martial Arts strike") return t("handMaterial.name.martialArtsStrike");
   if (intent.card === "attack" && intent.attack?.bonusAttack && card.name.endsWith(" attack")) return t("handMaterial.name.attackBonus", { feature: handTermLabel(card.name.slice(0, -7), locale) });
   if (intent.card === "basic" && intent.action === "escape" && card.name.startsWith("Escape: ")) return t("handMaterial.name.escape", { spell: referenceDisplayName("spell", card.name.slice(8), locale) });
   if (intent.card === "basic" && intent.bonus) {
     const parts = card.name.split(": ");
-    if (parts.length === 2) return t("handMaterial.name.bonus", { feature: handTermLabel(parts[0], locale), action: handTermLabel(parts[1], locale) });
+    if (parts.length === 2) return t("handMaterial.name.bonus", { feature: referenceDisplayName("spell", handTermLabel(parts[0], locale), locale), action: handTermLabel(parts[1], locale) });
   }
   return handTermLabel(card.name, locale);
 }
@@ -40,8 +42,14 @@ export function handChoiceLabel(card: HandCard, label: string, locale: AppLocale
   const key = Object.entries(catalogFor("en", "handMaterial.choice.")).find(([, source]) => source === label)?.[0];
   if (key) return createTranslator(locale)(key as MessageKey);
   if (card.choice?.arg === "readySpell") return referenceDisplayName("spell", label, locale);
-  if (card.choice?.arg === "condition") return conditionLabel(label, locale);
-  return sheetChoiceOption(label, locale);
+  // Condition selectors also carry ability names and command words. Only
+  // project recognized labels; callbacks keep the original option value.
+  const condition = conditionLabel(label, locale);
+  if (condition !== label) return condition;
+  const ability = combatTermLabel("ability", label, locale);
+  if (ability !== label) return ability;
+  const option = sheetChoiceOption(label, locale);
+  return option === label.replace(/\b\w/g, letter => letter.toUpperCase()) ? label : option;
 }
 
 export function handAimName(aim: HandAim, locale: AppLocale): string {
