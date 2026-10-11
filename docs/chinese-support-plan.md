@@ -26,10 +26,10 @@ flow remains incomplete; the review-repair checkpoint is a separate scoped task.
 | Locale foundation | Registry, persistence, browser fallback, typed complete catalogs, model locale policy, classified token proxy, chapter budget, CJK retrieval, IME protection | Real prompt-usage calibration; keep legacy campaign/history regressions |
 | DM safety | Per-event engine conclusions with English/Chinese renderers; AI prose separated; one text-only correction and safe fallback; shared localized enemy names in roster/initiative/prose/guard; real Codex combat acceptance | Broader spell/condition/pack coverage; conservative regex coverage is not full language understanding |
 | Embeddings | Original English deployment default retained; explicit multilingual opt-in; fixed bilingual calibration/holdout and hard-negative policy | Broader pack quality; opt-in affects English campaigns and rebuilds indexes |
-| UI | **117/437** covered files, **3596** pending literal sites, **4563** message keys; scoped AST gate | Remaining play/action/combat/inventory/rest/level-up/save/resume surfaces and dynamic import warnings; file fraction is not overall completion or an effort estimate |
+| UI | **121/437** covered files, **3466** pending literal sites, **4746** message keys; scoped AST gate; localized pending checks, initiative controls and encounter roster | Remaining play/action/combat/inventory/rest/level-up/save/resume surfaces, structured condition notes and area/death-save roll details; file fraction is not overall completion or an effort estimate |
 | Character creation/material | Identity, ancestry, class introductions, ability allocation, gear, spell book/preparation and finish preview; 517 spell and 228 equipment names; 225-entry contextual terminology policy and lint gate; original-source review records | Remaining material beyond reviewed names/creator snippets; authored/pack text retains original language |
 | Player system logs | Structured rule diagnostics and engine-generated combat conclusions retain English protocol semantics with localized presentation | General player-visible log templates; model-facing English tool results remain independent |
-| Resource delivery | UI vs content namespaces; character/campaign boundaries; locale chunks loaded before switching; generated resources checked by lint | Full production page payload/first-load measurement and browser switching smoke test |
+| Resource delivery | UI vs content namespaces; character/campaign boundaries; generated resources checked by lint; production Turbopack build and anonymous bilingual browser switch/reload succeed; home/character/campaign SSR and initial-script payloads measured | Hydrated/lazy network totals, authenticated campaign switching and active-play browser acceptance; route-level JS payload remains large |
 | Local Chinese TTS | Locale capability/voice preferences planned | Service not configured; implement/validate Unicode segmentation, voice discovery, locale-sensitive cache, numbers/units/names and real playback |
 | Final play flow | Recorded Chinese exploration/social/utility and combat/slot/correction acceptance on Codex | Complete Chinese journey, English regression and real local TTS acceptance |
 
@@ -82,11 +82,14 @@ proprietary Chinese rulebooks. Review records distinguish implementation-agent
 source comparison from external/human approval. Preserve names, mechanisms,
 numbers, dice, units, placeholders and content-pack override boundaries. Retain
 source fingerprints and immutable English golden results; never refresh goldens
-to hide regressions. The 17 compressed baselines preserve exact original bytes
+to hide regressions. The 18 compressed baselines preserve exact original bytes
 and verify SHA-256 when loaded.
 
-Runtime evidence names Codex CLI 0.162.1 and current `gpt-6-astra` subscription
-configuration. It proves bounded Chinese exploration/social/tool/utility and combat operation,
+Runtime evidence names Codex CLI 0.162.1: earlier exploration/social/utility
+acceptance used `gpt-6-astra`, and the latest six-case combat/terminology acceptance
+used `gpt-6.1-sol`. Future acceptance follows the user's current subscription
+configuration and records the actual model. These runs prove bounded Chinese
+exploration/social/tool/utility and combat operation,
 not complete play, production guard recall, full English UI parity or local-model capability.
 [Combat acceptance](validation/chinese-combat-narration.md) records engine conclusions,
 correction fallback, speech-input checks and the actual Codex narratives.
@@ -101,11 +104,31 @@ full-page size and real audio acceptance are separate from TypeScript/unit check
 
 ## Next execution order and user involvement
 
-1. Finish and commit this compatibility/stability review checkpoint.
+The active goal can continue with its approved release scope. It does not need
+to be recreated or reduced: the combat-safety and terminology corrections fit
+the original playable-flow requirement. The successful default production build
+removes the earlier build blocker. Local TTS remains an unverified release gate,
+not a reason to stop independent UI/log work. Keep each checkpoint distinct from
+completion of the full goal.
+
+The [combat UI checkpoint](validation/chinese-combat-ui.md) now covers pending
+checks, initiative controls and the encounter roster, with frozen English
+renders and actual button-payload regression. The prior compatibility/stability
+and terminology checkpoints are committed; this combat UI implementation is
+committed separately as `c89eec1a` and passes all 521 script suites.
+
+1. Complete structured condition duration/source notes, stock effect names and
+   area/death-save roll details. Preserve proper/authored names, canonical target
+   IDs and English render parity; `BoardChrome` and `RollCard` remain pending
+   until these dynamic display paths pass review.
 2. Continue the remaining main play UI and parameterized player logs in bounded
    commits, each with relevant English regression and translation-source review.
 3. Complete configured Codex Chinese combat/tools/compaction/save-resume and
    English regression; collect useful prompt-usage and narration-guard evidence.
+   Decisive combat facts come from the engine; AI supplies descriptive prose.
+   Contradictory prose gets one text-only correction, then a safe fallback if the
+   correction fails, remains contradictory or returns no text. Neither path may
+   repeat an action, roll dice, change HP or spend a resource a second time.
 4. Configure and validate local Chinese single-narrator TTS, then perform the
    complete Chinese journey and bilingual switch/save-resume acceptance.
 

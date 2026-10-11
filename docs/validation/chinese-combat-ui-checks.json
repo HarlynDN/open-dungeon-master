@@ -1,0 +1,147 @@
+{
+  "version": 1,
+  "date": "2026-10-11T11:16:12.632Z",
+  "status": "scoped-checkpoint-verified",
+  "baseCommit": "b7217a84",
+  "scope": "Pending checks, initiative controls, encounter roster and partial board/roll display. This is a scoped checkpoint; full Chinese play and real TTS are incomplete.",
+  "catalogs": {
+    "addedCombatUiKeys": 183,
+    "totalMessageKeys": 4746,
+    "allPreexistingEnglishAndChineseValuesUnchanged": true,
+    "rootUiResourcesUnchanged": true,
+    "review": "Implementation-agent source comparison, not independent human approval."
+  },
+  "coverage": {
+    "coveredFiles": 121,
+    "mainFlowFiles": 437,
+    "pendingLiteralSites": 3466,
+    "newlyCovered": [
+      "PendingRollCard",
+      "SkillCheckCard",
+      "DmInitiativePanel",
+      "EncounterPanel"
+    ],
+    "stillPending": {
+      "BoardChrome": "Registry effect names/summaries and structured condition duration/source notes.",
+      "RollCard": "Area/death-save variants and identity-safe target details."
+    },
+    "note": "File fraction and AST literal sites are not overall effort or completion."
+  },
+  "golden": {
+    "englishRenderCount": 38,
+    "baseCommit": "b7217a84",
+    "uncompressedSha256": "60b09271195c776a7b291647294e44d85692d41774a1f0a69b675a4446fdcd7a",
+    "compressedBytes": 8652,
+    "previousCompressedGoldenCount": 17,
+    "allPreviousGoldenFilesAndChecksumsUnchanged": true
+  },
+  "validation": {
+    "targeted": {
+      "command": "npx vitest run scripts/test-chinese-calling-material.mjs scripts/test-chinese-game-help.mjs scripts/test-chinese-combat-ui.mjs",
+      "exitCode": 0,
+      "suitesPassed": 3,
+      "combatRegressionGroups": 7,
+      "durationSeconds": 7.83
+    },
+    "typescript": {
+      "command": "npx tsc --noEmit --incremental false",
+      "exitCode": 0
+    },
+    "lint": {
+      "command": "npm run lint",
+      "exitCode": 0,
+      "eslintErrors": 0,
+      "eslintWarnings": 12,
+      "terminologyErrors": 0,
+      "terminologyContextWarnings": 64
+    },
+    "resourceCheck": {
+      "command": "node scripts/check-ui-localization.mjs && node scripts/generate-ui-catalogs.mjs --check",
+      "exitCode": 0
+    },
+    "fullRegression": {
+      "status": "passed",
+      "command": "npx vitest run",
+      "previousRuns": [
+        {
+          "result": "terminated",
+          "exitCode": 143,
+          "reason": "Sandbox EPERM on a local HTTP listener; confirmed waiting worker before terminating the owned process."
+        },
+        {
+          "suitesPassed": 519,
+          "suitesFailed": 2,
+          "totalSuites": 521,
+          "durationSeconds": 257.57,
+          "reason": "Shared messages.ts fingerprints outdated in two calling review records."
+        },
+        {
+          "suitesPassed": 520,
+          "suitesFailed": 1,
+          "totalSuites": 521,
+          "durationSeconds": 270.94,
+          "reason": "Calling-material review fingerprint still outdated. Updated only the shared entrypoint fingerprint after original catalog/golden comparisons; test assertions retained."
+        }
+      ],
+      "exitCode": 0,
+      "suitesPassed": 521,
+      "suitesFailed": 0,
+      "totalSuites": 521,
+      "durationSeconds": 263.8
+    },
+    "build": {
+      "command": "npm run build",
+      "exitCode": 0,
+      "nextVersion": "16.3.8",
+      "bundler": "Turbopack",
+      "buildId": "UhzioyN9_bcTuzdeDrJ_7",
+      "note": "Default build succeeds. Alternate webpack path not revalidated."
+    },
+    "postVerificationCleanup": "Removed one extra blank line at combat-ui-presentations.ts EOF for git diff --check. TypeScript transpilation before/after is byte-identical; no executable change."
+  },
+  "production": {
+    "pageMetrics": "production-locale-pages.json",
+    "pageCases": 5,
+    "disposableEncryptedDatabase": true,
+    "anonymousBrowserSwitchAndReloadPassed": true,
+    "languages": [
+      "zh-CN",
+      "en"
+    ],
+    "observedConsoleErrors": 0,
+    "screenshotStoredOutsideGit": true,
+    "limitations": [
+      "Browser interaction covers anonymous home only. Authenticated page cases are SSR/header checks.",
+      "Script payload and computed gzip figures exclude hydration/lazy requests, images and fonts; not measured transferSize.",
+      "No new real DM run or real audio acceptance is established by this UI checkpoint."
+    ]
+  },
+  "sources": {
+    "src/app/campaigns/[campaignId]/PendingRollCard.tsx": "3f90609768f1a9e177d78104be39dc2b658f4ecf455c563d5cd570d49a1ca138",
+    "src/app/campaigns/[campaignId]/SkillCheckCard.tsx": "1a85dc6841d5e1324da683b1e7198b80ff5de2fcdaf1824ddcf88495800a57e4",
+    "src/app/campaigns/[campaignId]/DmInitiativePanel.tsx": "18b4800230d0c4441567ad34342a436be2a278421ef8c94a02072db6ae611efe",
+    "src/app/campaigns/[campaignId]/EncounterPanel.tsx": "b02eb2e6495173d2d65e9f5f428d5918198752f83cc645317225d0ea7507f858",
+    "src/app/campaigns/[campaignId]/RollCard.tsx": "f5d9bde0e64424ae5ccee9bee17a4e954b9d90c030667335dab1027c5f25ef7a",
+    "src/app/campaigns/[campaignId]/BoardChrome.tsx": "166a8056c783ef3c53c3f2e4413e5fae4a2c114b3f049a9c62dee6085bfec994",
+    "src/lib/i18n/combat-ui-messages.ts": "e5c8fb25470e41472ea0d6c45095cee6f6c78f223492df0c78bbe1730060c9bd",
+    "src/lib/i18n/combat-ui-presentations.ts": "f0380c5693827cdb2c2c72e89ffc3b76cdbe0f7c7b404e63b97bbdd764cd29d4",
+    "src/lib/i18n/messages.ts": "1a15d595090f2451d909c790b6bf34a06c92488ad5bef8663cf66e2d290741dd",
+    "src/lib/i18n/resource-scope.ts": "5362e6d41d03f95f1902755a95b700c9c53a213b40210a40f0d9252ef1cfe7e4",
+    "src/lib/i18n/resources/en.content.json": "8f9fbfc1a63a1f3f7b1dc2b98cdbd4426529033a096ed43df9f3f0aa49ccaf71",
+    "src/lib/i18n/resources/zh-CN.content.json": "dddd575c47206f8633ba688c45c57cad5698bcfd680f5d7d7423457757b890ea",
+    "scripts/lib/combat-ui-fixtures.mjs": "a95d4021133acd51aba1380a8ec110c85c515ff56329bee52a1967ece1046261",
+    "scripts/test-chinese-combat-ui.mjs": "b4b833409a9e21340611b3a0941e1496400a51f752c8f40b9428a43ec9dcc7c6"
+  },
+  "artifacts": {
+    "combat-ui-goldens.json.gz": "e157ed9c2f3c5db534f877dc6c014d4237dc1c9404914b08553815b0a6ed340a",
+    "production-locale-pages.json": "b44eeade3d2a28eae2aa0448a24751e1e575d3717ec17a890dbf9f69ff6946d5"
+  },
+  "goalAssessment": {
+    "status": "active",
+    "objectiveChangeRequired": false,
+    "plan": "docs/chinese-support-plan.md",
+    "next": "Dynamic condition and roll details, remaining play UI/player logs, configured Codex regression, local single-narrator TTS and complete bilingual play acceptance.",
+    "note": "Unconfigured TTS is an outstanding release gate, not a blocker to independent code work."
+  },
+  "implementationCommit": "c89eec1a24261f6f0bb08387d4f3d1b6f37f12c4"
+}

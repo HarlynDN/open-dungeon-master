@@ -35,6 +35,14 @@ webpack application build also failed on the pre-existing client path
 Neither failure establishes that the repaired app built successfully. No source
 changes were made to hide those failures or force a different bundler.
 
+Later continuation: the default Turbopack production build succeeded on
+2026-10-11, including the new combat UI unit. The
+[combat UI checkpoint](chinese-combat-ui.md) records the successful build,
+production-server SSR, bounded browser switching and full-page/initial-script
+measurements. The failure paragraph above describes this earlier repair run;
+it is no longer a current default-build blocker. The alternate webpack path
+has not been independently repaired or revalidated.
+
 ## Runtime acceptance boundaries
 
 Recorded real DM evidence is Codex CLI 0.162.1, subscription sign-in, the current

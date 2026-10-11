@@ -1,0 +1,67 @@
+{
+  "date": "2026-10-11T10:59:00.729Z",
+  "method": "Fresh Next 16.3.8 production server and disposable encrypted database. HTML includes Flight framing; script URLs from the initial HTML are fetched once per page. Gzip sizes are computed diagnostics, not browser transferSize or hydrated/lazy network totals.",
+  "buildId": "UhzioyN9_bcTuzdeDrJ_7",
+  "rows": [
+    {
+      "name": "anonymous/browser-zh",
+      "route": "/",
+      "status": 200,
+      "lang": "zh-CN",
+      "combatContentInSsr": false,
+      "decodedHtmlBytes": 327210,
+      "computedHtmlGzipBytes": 99601,
+      "initialScriptCount": 25,
+      "initialJsBytes": 2924069,
+      "computedInitialJsGzipBytes": 839203
+    },
+    {
+      "name": "anonymous/device-en",
+      "route": "/",
+      "status": 200,
+      "lang": "en",
+      "combatContentInSsr": false,
+      "decodedHtmlBytes": 171488,
+      "computedHtmlGzipBytes": 49003,
+      "initialScriptCount": 25,
+      "initialJsBytes": 2924069,
+      "computedInitialJsGzipBytes": 839203
+    },
+    {
+      "name": "account/zh-home",
+      "route": "/",
+      "status": 200,
+      "lang": "zh-CN",
+      "combatContentInSsr": false,
+      "decodedHtmlBytes": 327210,
+      "computedHtmlGzipBytes": 99601,
+      "initialScriptCount": 25,
+      "initialJsBytes": 2924069,
+      "computedInitialJsGzipBytes": 839203
+    },
+    {
+      "name": "account/zh-characters",
+      "route": "/characters",
+      "status": 200,
+      "lang": "zh-CN",
+      "combatContentInSsr": true,
+      "decodedHtmlBytes": 630572,
+      "computedHtmlGzipBytes": 190986,
+      "initialScriptCount": 19,
+      "initialJsBytes": 1920953,
+      "computedInitialJsGzipBytes": 563275
+    },
+    {
+      "name": "account/zh-campaign",
+      "route": "/campaigns/<disposable-id>",
+      "status": 200,
+      "lang": "zh-CN",
+      "combatContentInSsr": true,
+      "decodedHtmlBytes": 631867,
+      "computedHtmlGzipBytes": 190245,
+      "initialScriptCount": 39,
+      "initialJsBytes": 4983071,
+      "computedInitialJsGzipBytes": 1439660
+    }
+  ]
+}
