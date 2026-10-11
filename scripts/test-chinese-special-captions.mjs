@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import {assertReviewedMessages} from './lib/reviewed-messages.mjs';
 import fs from 'node:fs';import path from 'node:path';import {createHash} from 'node:crypto';
 import {openWorld} from './lib/enforce-world.mjs';import {suite} from './lib/enforce-harness.mjs';
 import {openCombatRenderer} from './lib/combat-ui-fixtures.mjs';import {specialCaptionRows,specialCaptionFixtures} from './lib/special-caption-fixtures.mjs';import {specialCallContracts} from './lib/special-caption-contracts.mjs';import {readValidationJson} from './lib/validation-json.mjs';
@@ -70,5 +71,6 @@ await test('real enemy spell escape uses the original best ability modifier and 
 await test('source-reviewed fingerprints remain exact',()=>{
  const review=JSON.parse(fs.readFileSync(path.join(root,'docs/validation/special-caption-translations.json')));
  for(const [file,hash] of Object.entries(review.sourceSha256))assert.equal(createHash('sha256').update(fs.readFileSync(path.join(root,file))).digest('hex'),hash,file);
+ assertReviewedMessages(review);
 });
 world.close();finish();

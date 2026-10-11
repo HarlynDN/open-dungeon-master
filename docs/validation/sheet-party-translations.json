@@ -24,10 +24,7 @@
     "src/components/sheet/SheetParts.tsx": "e47623ce33dfbf4f8f4ea14bafa08f253d2fa6e6e95af05be55d4deebb3ae363",
     "src/components/sheet/SheetState.tsx": "d664ff1c154de748ef0605e2dc44a05ae5b534b4c071070d6cc6a3da2621906b",
     "src/components/sheet/sheet-state.ts": "213c086dd18e14a7036c09029752c7793907085889f97eea90257fd8c577ce56",
-    "src/lib/i18n/messages.ts": "97e5f9c8b717474524fb4c752d1d22a33f869063623f4493ff0ee7225ec3e31d",
     "src/lib/i18n/resource-scope.ts": "69ac97fecf5c508828cd1070c285e98cd67114b5e675a1420399862d33e10a50",
-    "src/lib/i18n/resources/en.content.json": "76defd68abbbfffaa772619605c11f1ddf89bf205849fb283f79c40de0d7c0e6",
-    "src/lib/i18n/resources/zh-CN.content.json": "0cf31a54cf427438439f5b7a90f7b417b9ede83dcb214c1dbf535792cb5f088d",
     "src/lib/i18n/roll-presentations.ts": "3999299af4647b88f15531dfeca1c5bae09350bbd2479b877eba0c8d7706d582",
     "src/lib/i18n/sheet-play-messages.ts": "bb0d4fedc82ddce4fbd7bb8703182b085c97eb17532ac9251424cd01581056ff",
     "src/lib/i18n/sheet-play-presentations.ts": "5c0500769004e486e789698dc2e72aa2852153280a67cf2b1fc5d5b67add6622",
@@ -52,5 +49,17 @@
       "npm test",
       "npm run build"
     ]
+  },
+  "semanticReviews": [
+    "sheet-party"
+  ],
+  "retiredSharedByteFingerprints": {
+    "baselineCommit": "bf87a494",
+    "reason": "Fixed reviewed key/value/placeholder and delivery-scope projections replace aggregate byte locks; unrelated imports, formatting and new namespaces do not expand this review.",
+    "files": {
+      "src/lib/i18n/messages.ts": "97e5f9c8b717474524fb4c752d1d22a33f869063623f4493ff0ee7225ec3e31d",
+      "src/lib/i18n/resources/en.content.json": "76defd68abbbfffaa772619605c11f1ddf89bf205849fb283f79c40de0d7c0e6",
+      "src/lib/i18n/resources/zh-CN.content.json": "0cf31a54cf427438439f5b7a90f7b417b9ede83dcb214c1dbf535792cb5f088d"
+    }
   }
 }

@@ -27,8 +27,7 @@
     "src/lib/i18n/calling-material-presentations.ts": "346c94a1985437e9bcf4c296ac229dd8579ee6e31d77afc87c8e24754f4f2750",
     "src/app/characters/builder/usePickerGroups.ts": "d271803b233c0f3fd4add709fb4b4247c0c622a9dfd9e63f543c59ebc987a5f1",
     "src/app/characters/builder/steps/CallingStep.tsx": "dddfac30b09eef862b1c05da0f2ec8b07dd9062c71f6f37c0483260f87c3aaa7",
-    "src/app/campaigns/[campaignId]/LevelUpDialog.tsx": "1804e1a2653dd71483f1151cd55a3a0af4d28396951a7a4f95ac04a59607e17d",
-    "src/lib/i18n/messages.ts": "97e5f9c8b717474524fb4c752d1d22a33f869063623f4493ff0ee7225ec3e31d"
+    "src/app/campaigns/[campaignId]/LevelUpDialog.tsx": "1804e1a2653dd71483f1151cd55a3a0af4d28396951a7a4f95ac04a59607e17d"
   },
   "catalogs": {
     "src/lib/i18n/calling-material-messages.ts": "6387a3295a5426eca343f1fe331857d5381d98476cd15a38f9c3085ba3add814"
@@ -79,5 +78,15 @@
         }
       ]
     }
-  ]
+  ],
+  "semanticReviews": [
+    "calling-material"
+  ],
+  "retiredSharedByteFingerprints": {
+    "baselineCommit": "bf87a494",
+    "reason": "Fixed reviewed key/value/placeholder and delivery-scope projections replace aggregate byte locks; unrelated imports, formatting and new namespaces do not expand this review.",
+    "files": {
+      "src/lib/i18n/messages.ts": "97e5f9c8b717474524fb4c752d1d22a33f869063623f4493ff0ee7225ec3e31d"
+    }
+  }
 }

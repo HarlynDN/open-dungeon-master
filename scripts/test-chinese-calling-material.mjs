@@ -1,4 +1,5 @@
 import { readValidationJson } from "./lib/validation-json.mjs";
+import {assertReviewedMessages} from './lib/reviewed-messages.mjs';
 import "../src/lib/i18n/messages.ts";
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -101,5 +102,7 @@ await test('the real picker hook keeps every frozen English projection and binds
 await test('original mechanism sources and source-compared translation fingerprints stay current',()=>{
  const review=read('docs/validation/character-calling-material-translations.json');
  for(const[file,hash]of Object.entries({...before.sources,...review.sources,...review.catalogs}))assert.equal(createHash('sha256').update(fs.readFileSync(path.join(root,file))).digest('hex'),hash,file);
+ assertReviewedMessages(review);
+ assertReviewedMessages(read('docs/validation/character-calling-translations.json'));
 });
 finish();

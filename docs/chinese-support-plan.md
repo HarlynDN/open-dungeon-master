@@ -105,6 +105,33 @@ The [review repair report](validation/localization-review-repairs.md) records
 current fixes, bundle measurement and build limits. Production build success,
 full-page size and real audio acceptance are separate from TypeScript/unit checks.
 
+## Development and validation workflow
+
+Batch work by playable feature chain. Pure copy changes use affected key/value,
+placeholder and mapping checks. UI changes add affected English renders and
+button payload regressions, plus TypeScript when types or interfaces change.
+Preserve meaningful checks for dice, HP, resources, secrets, proper names,
+persisted history and English behavior. Never regenerate a golden or weaken an
+assertion to hide a failure.
+
+`npm run lint` includes repository-wide ESLint, UI coverage, generated-resource
+consistency and terminology. It is a full gate, not cheap file-level lint.
+Run full tests, full lint and production build at meaningful stage boundaries,
+shared infrastructure changes needing broad regression, or a concrete failure
+requiring wider investigation. During a batch, use focused ESLint and related
+scripts. Keep progress notes short; do not add checkpoint systems or layers of
+guards without an actual need.
+
+Six legacy reviews now check their fixed reviewed message keys, bilingual values,
+parameters and delivery scopes through `scripts/lib/reviewed-messages.mjs` and
+`docs/validation/reviewed-message-scopes.json`. Their baseline is committed,
+verified `bf87a494`, rather than current in-progress output. Unrelated imports,
+formatting and new unreviewed keys cannot invalidate an old review. Reviewed
+value/removal/parameter changes and stale generated values still fail. Private
+source/mapping checks and original English golden integrity remain. The old UI
+fingerprint differed only by the two approved Goblin terms; its original evidence
+is retained without reinstating a whole-file lock.
+
 ## Next execution order and user involvement
 
 The active goal can continue with its approved release scope. It does not need

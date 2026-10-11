@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import {assertReviewedMessages} from './lib/reviewed-messages.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
@@ -184,6 +185,7 @@ await test('malformed optional caption metadata cannot reinterpret legacy or aut
 await test('source-compared fingerprints and the content delivery boundary remain current', () => {
   const review = JSON.parse(fs.readFileSync(path.join(root, 'docs/validation/sheet-party-translations.json')));
   for (const [file, hash] of Object.entries(review.sourceSha256)) assert.equal(createHash('sha256').update(fs.readFileSync(path.join(root, file))).digest('hex'), hash, file);
+  assertReviewedMessages(review);
   for (const locale of ['en', 'zh-CN']) {
     const ui = JSON.parse(fs.readFileSync(path.join(root, `src/lib/i18n/resources/${locale}.ui.json`)));
     const content = JSON.parse(fs.readFileSync(path.join(root, `src/lib/i18n/resources/${locale}.content.json`)));

@@ -12,8 +12,7 @@
     "src/lib/i18n/message-parts.ts": "97ef99a7024c5e46f97c2091bb019ac76fa1e1234b0d176ba1c416116aad8938",
     "src/lib/srd/feature-effects.ts": "0a7f3b483608a2207bfd8af110edc36e8f4c96b7e0a5fc51e1e874e979a1b95e",
     "src/lib/characters/options.ts": "e0294a844664240604091c945104e20adc08bcbf7d0fc32bafacfff70174c31c",
-    "src/lib/i18n/builder-picker-presentations.ts": "728ad42accc71a7f52efb7f8c38493ff357ff2c956a182edb6e0263af0a8b539",
-    "src/lib/i18n/messages.ts": "97e5f9c8b717474524fb4c752d1d22a33f869063623f4493ff0ee7225ec3e31d"
+    "src/lib/i18n/builder-picker-presentations.ts": "728ad42accc71a7f52efb7f8c38493ff357ff2c956a182edb6e0263af0a8b539"
   },
   "catalogs": {
     "src/lib/i18n/calling-ui-messages.ts": "6ee79c641a5e39a5240764e9c90d68718c8d7b822a72e46d1776391177444280"
@@ -64,5 +63,15 @@
         }
       ]
     }
-  ]
+  ],
+  "semanticReviews": [
+    "calling-ui"
+  ],
+  "retiredSharedByteFingerprints": {
+    "baselineCommit": "bf87a494",
+    "reason": "Fixed reviewed key/value/placeholder and delivery-scope projections replace aggregate byte locks; unrelated imports, formatting and new namespaces do not expand this review.",
+    "files": {
+      "src/lib/i18n/messages.ts": "97e5f9c8b717474524fb4c752d1d22a33f869063623f4493ff0ee7225ec3e31d"
+    }
+  }
 }
