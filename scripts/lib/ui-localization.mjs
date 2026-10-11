@@ -96,3 +96,11 @@ export function translationKeys(file, source) {
   visit(ast);
   return keys;
 }
+
+// Static module references, including lazy(() => import("...")) and Next
+// dynamic imports. Computed paths are deliberately not guessed.
+export function uiModuleSpecifier(node) {
+  if ((ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) && node.moduleSpecifier && ts.isStringLiteralLike(node.moduleSpecifier)) return node.moduleSpecifier.text;
+  if (ts.isCallExpression(node) && node.expression.kind === ts.SyntaxKind.ImportKeyword && node.arguments.length >= 1 && ts.isStringLiteralLike(node.arguments[0])) return node.arguments[0].text;
+  return null;
+}

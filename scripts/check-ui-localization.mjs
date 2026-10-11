@@ -3,7 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import ts from "typescript";
 import { createHash } from "node:crypto";
-import { parseUiSource, uiLiterals, translationKeys } from "./lib/ui-localization.mjs";
+import { parseUiSource, uiLiterals, translationKeys, uiModuleSpecifier } from "./lib/ui-localization.mjs";
 import { MESSAGE_CATALOGS } from "../src/lib/i18n/messages.ts";
 import { GENRE_PRESETS } from "../src/lib/genres.ts";
 import { genreLabel } from "../src/lib/i18n/settings.ts";
@@ -39,8 +39,8 @@ function reachable(file) {
   const source = fs.readFileSync(path.join(root, file), "utf8");
   const ast = parseUiSource(file, source);
   const visit = node => {
-    if ((ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) && node.moduleSpecifier && ts.isStringLiteral(node.moduleSpecifier)) {
-      const specifier = node.moduleSpecifier.text;
+    const specifier = uiModuleSpecifier(node);
+    if (specifier !== null) {
       const base = specifier.startsWith("@/") ? `src/${specifier.slice(2)}`
         : specifier.startsWith(".") ? path.posix.normalize(path.posix.join(path.posix.dirname(file), specifier)) : null;
       if (base && (base.startsWith("src/app/") && !base.startsWith("src/app/api/") || base.startsWith("src/components/"))) {

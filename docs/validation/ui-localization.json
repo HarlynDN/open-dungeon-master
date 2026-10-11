@@ -438,6 +438,10 @@
       "state": "pending"
     },
     {
+      "path": "src/app/campaigns/[campaignId]/LevelUpDialog.tsx",
+      "state": "pending"
+    },
+    {
       "path": "src/app/campaigns/[campaignId]/Lobby.tsx",
       "state": "covered",
       "review": "Own UI, dynamic seat/readiness/difficulty/name projections and request errors compared in both locales; imported child modules have independent pending entries."
@@ -823,6 +827,10 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/lead-edit-logic.ts",
+      "state": "pending"
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/level-up-preview.ts",
       "state": "pending"
     },
     {
