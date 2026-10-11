@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { pickerName } from "@/lib/i18n/gear-ui-presentations";
+import { spellSummaryView } from "@/lib/i18n/spell-ui-presentations";
 import { Check, Loader2, Plus, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
@@ -33,9 +36,10 @@ export default function MultiContentPicker({
   onAdd: (entries: MultiPick[]) => void;
   renderMeta?: (entry: PickerEntry) => string;
 }) {
+  const { locale, t } = useLocale();
   const { query, setQuery, results, setResults, open, setOpen, loading, unavailable, unadmitted } =
     useContentSearch(kind, extraParams);
-  const [pending, setPending] = useState<MultiPick[]>([]);
+  const [pending, setPending] = useState<Array<MultiPick & { source?: PickerEntry["source"] }>>([]);
   const container = useRef<HTMLDivElement>(null);
 
   // The browse list opens on focus, so clicking elsewhere must collapse it
@@ -53,13 +57,14 @@ export default function MultiContentPicker({
   const selectedLower = new Set(selectedNames.map((name) => name.trim().toLowerCase()));
   const pendingLower = new Set(pending.map((pick) => pick.name.trim().toLowerCase()));
   const trimmedQuery = query.trim();
+  const pendingName = (pick: MultiPick & { source?: PickerEntry["source"] }) => pickerName(kind, { name: pick.name, source: pick.source ?? "homebrew" }, locale);
 
   function togglePending(entry: PickerEntry) {
     const key = entry.name.trim().toLowerCase();
     setPending((picks) =>
       picks.some((pick) => pick.name.trim().toLowerCase() === key)
         ? picks.filter((pick) => pick.name.trim().toLowerCase() !== key)
-        : [...picks, { name: entry.name, slug: entry.slug, level: entry.level }],
+        : [...picks, { name: entry.name, slug: entry.slug, level: entry.level, source: entry.source }],
     );
   }
 
@@ -68,7 +73,7 @@ export default function MultiContentPicker({
     if (!key || selectedLower.has(key) || pendingLower.has(key)) {
       return;
     }
-    setPending((picks) => [...picks, { name: trimmedQuery }]);
+    setPending((picks) => [...picks, { name: trimmedQuery, source: "homebrew" }]);
     setQuery("");
     setResults([]);
     setOpen(false);
@@ -78,7 +83,12 @@ export default function MultiContentPicker({
     if (!pending.length) {
       return;
     }
-    onAdd(pending);
+    // Display provenance is internal; callbacks retain the original shape.
+    onAdd(pending.map(pick => {
+      const value = { ...pick };
+      delete value.source;
+      return value;
+    }));
     setPending([]);
     setQuery("");
     setResults([]);
@@ -102,6 +112,7 @@ export default function MultiContentPicker({
       {open && (results.length || trimmedQuery || unavailable) ? (
         <ul className="mt-1 max-h-48 overflow-y-auto rounded-lg panel panel-smoke">
           {results.map((entry) => {
+            const displayName = pickerName(kind, entry, locale);
             const key = entry.name.trim().toLowerCase();
             const alreadyOn = selectedLower.has(key);
             const picked = pendingLower.has(key);
@@ -126,47 +137,47 @@ export default function MultiContentPicker({
                       <Plus className="size-3.5 shrink-0 text-stone-600" />
                     )}
                     <span className={cn(entry.source === "homebrew" && "text-amber-300")}>
-                      {entry.name}
+                      {displayName}
                     </span>
                   </span>
                   <span className="shrink-0 text-xs text-stone-500">
                     {alreadyOn
-                      ? "already added"
+                      ? t("gearUi.multi.already")
                       : entry.source === "homebrew"
-                        ? "homebrew"
+                        ? t("gearUi.multi.homebrew")
                         : (renderMeta?.(entry) ?? "")}
                   </span>
                 </button>
                 <InfoButton
-                  label={entry.name}
-                  meta={kind === "spells" ? spellSummary(entry.data) : undefined}
+                  label={displayName}
+                  meta={kind === "spells" ? (locale === "en" ? spellSummary(entry.data) : spellSummaryView(entry.data, locale, entry.source === "homebrew")) : undefined}
                   text={describeContentEntry(entry.data)}
-                  reference={entry.source === "homebrew" ? undefined : { kind, slug: entry.slug }}
+                  reference={entry.source === "homebrew" ? undefined : { kind, slug: entry.slug, name: entry.name }}
                 />
               </li>
             );
           })}
           {trimmedQuery &&
           !selectedLower.has(trimmedQuery.toLowerCase()) &&
-          !results.some((entry) => entry.name.trim().toLowerCase() === trimmedQuery.toLowerCase()) ? (
+          !results.some((entry) => entry.name.trim().toLowerCase() === trimmedQuery.toLowerCase() || pickerName(kind, entry, locale).trim().toLowerCase() === trimmedQuery.toLowerCase()) ? (
             <li className="border-t border-stone-800">
               <button
                 type="button"
                 onClick={addCustom}
                 className="flex w-full items-center gap-1.5 px-3 py-1.5 text-left text-sm text-amber-300 hover:bg-stone-800"
               >
-                <Plus className="size-3.5 shrink-0" /> Add &quot;{trimmedQuery}&quot; as custom
+                <Plus className="size-3.5 shrink-0" /> {t("gearUi.multi.custom", { name: trimmedQuery })}
               </button>
             </li>
           ) : null}
           {unavailable ? (
             <li className="px-3 py-1.5 text-xs text-stone-500">
-              Content pack not installed; add entries by name instead.
+              {t("gearUi.multi.packMissing")}
             </li>
           ) : null}
           {unadmitted.length ? (
             <li className="px-3 py-1.5 text-[11px] text-stone-500">
-              Your own {unadmitted.join(", ")} {unadmitted.length === 1 ? "is" : "are"} not offered at this table: whoever runs it keeps a copy to admit one.
+              {t(unadmitted.length === 1 ? "gearUi.multi.unadmittedOne" : "gearUi.multi.unadmittedMany", { names: unadmitted.join(", ") })}
             </li>
           ) : null}
         </ul>
@@ -178,13 +189,13 @@ export default function MultiContentPicker({
               key={pick.name}
               className="flex items-center gap-1 rounded-full bg-stone-800 px-2 py-0.5 text-xs text-stone-200"
             >
-              {pick.name}
+              {pendingName(pick)}
               <button
                 type="button"
                 onClick={() =>
                   setPending((picks) => picks.filter((entry) => entry.name !== pick.name))
                 }
-                aria-label={`Remove ${pick.name}`}
+                aria-label={t("gearUi.multi.remove", { name: pendingName(pick) })}
                 className="text-stone-500 hover:text-red-400"
               >
                 <X className="size-3" />
@@ -196,7 +207,7 @@ export default function MultiContentPicker({
             onClick={commit}
             className="rounded-full bg-amber-300 px-2.5 py-0.5 text-xs font-medium text-stone-950 hover:bg-amber-200"
           >
-            Add {pending.length}
+            {t("gearUi.multi.add", { count: pending.length })}
           </button>
         </div>
       ) : null}

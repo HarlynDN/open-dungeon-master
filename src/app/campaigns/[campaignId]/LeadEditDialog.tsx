@@ -1,5 +1,10 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { referenceDisplayName } from "@/lib/i18n/references";
+import { gearKind, gearRarity, gearCostText } from "@/lib/i18n/gear-ui-presentations";
+import { sheetArmorParts } from "@/lib/i18n/sheet-dialog-presentations";
+import { playEditNotice, editConditionDisplay, editConditionDraft, editConditionValues } from "@/lib/i18n/play-edit-presentations";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Trash2, X } from "lucide-react";
 import { useState } from "react";
@@ -41,6 +46,7 @@ export function LeadEditDialog({
   sheet: CharacterSheet;
   onClose: () => void;
 }) {
+  const { locale, t } = useLocale();
   const [currentHp, setCurrentHp] = useState(String(sheet.currentHp));
   const [tempHp, setTempHp] = useState(String(sheet.tempHp));
   const [maxHp, setMaxHp] = useState(String(sheet.maxHp));
@@ -112,13 +118,6 @@ export function LeadEditDialog({
     setItems((rows) => rows.map((row, i) => (i === index ? { ...row, ...patch } : row)));
   }
 
-  function splitList(raw: string): string[] {
-    return raw
-      .split(",")
-      .map((entry) => entry.trim())
-      .filter(Boolean);
-  }
-
   function save() {
     setBusy(true);
     setError("");
@@ -141,7 +140,7 @@ export function LeadEditDialog({
     if (pinned !== sheet.acOverride) {
       patch.acOverride = pinned;
     }
-    const nextConditions = splitList(conditions);
+    const nextConditions = editConditionValues(conditions, locale);
     if (nextConditions.join("|") !== sheet.conditions.join("|")) {
       patch.conditions = nextConditions;
     }
@@ -240,25 +239,24 @@ export function LeadEditDialog({
           <div className="mb-3 flex items-center justify-between">
             <Dialog.Title className="flex items-center gap-2 font-display text-lg tracking-wide">
               <GameIcon icon={{ kind: "glyph", key: "tab-lead" }} size="size-7" />
-              <span className="gold-title">Adjust {sheet.name}</span>
+              <span className="gold-title">{t("sheetDialog.edit.title", { name: sheet.name })}</span>
             </Dialog.Title>
-            <Dialog.Close aria-label="Close" className="pk-tap rounded p-1 text-stone-500 hover:text-amber-200 motion-nudge">
+            <Dialog.Close aria-label={t("common.close")} className="pk-tap rounded p-1 text-stone-500 hover:text-amber-200 motion-nudge">
               <X className="size-4" />
             </Dialog.Close>
           </div>
           <p className="mb-3 text-xs text-stone-500">
-            Party lead correction of stats, items, and spells. Changes are logged to the session
-            event log.
+            {t("sheetDialog.edit.intro")}
           </p>
-          <SectionHead title="Numbers" glyph="rest-hp" level="h3" />
+          <SectionHead title={t("sheetDialog.edit.numbers")} glyph="rest-hp" level="h3" />
           <div className="grid grid-cols-2 gap-2 text-xs sm:grid-cols-3">
             {(
               [
-                ["HP", currentHp, setCurrentHp, "rest-hp"],
-                ["Temp HP", tempHp, setTempHp, "rest-temp-hp"],
-                ["Max HP", maxHp, setMaxHp, "rest-hp"],
-                ["Gold", gold, setGold, "coin-gp"],
-                ["XP", xp, setXp, "rest-xp"],
+                [t("sheetDialog.edit.hp"), currentHp, setCurrentHp, "rest-hp"],
+                [t("sheetDialog.edit.tempHp"), tempHp, setTempHp, "rest-temp-hp"],
+                [t("sheetDialog.edit.maxHp"), maxHp, setMaxHp, "rest-hp"],
+                [t("sheetDialog.edit.gold"), gold, setGold, "coin-gp"],
+                [t("sheetDialog.edit.xp"), xp, setXp, "rest-xp"],
               ] as Array<[string, string, (value: string) => void, string]>
             ).map(([label, value, setter, glyph]) => (
               <div key={label} className="space-y-1">
@@ -272,57 +270,57 @@ export function LeadEditDialog({
           <div className="mt-2 space-y-1.5 rounded-lg border border-stone-700/50 bg-stone-950/40 p-2 text-xs">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <span className="flex items-center gap-1 text-stone-400">
-                <GameIcon icon={{ kind: "glyph", key: "rest-ac" }} size="size-4" /> AC
+                <GameIcon icon={{ kind: "glyph", key: "rest-ac" }} size="size-4" /> {t("sheetDialog.edit.ac")}
               </span>
-              <Switch on={pinned} onChange={setPinned} label="Pin the armor class by hand" />
+              <Switch on={pinned} onChange={setPinned} label={t("sheetDialog.edit.pin")} />
             </div>
             {pinned ? (
               <div className="reveal flex flex-wrap items-center gap-2">
-                <NumberStepper size="sm" value={Number(ac) || 0} min={1} max={40} onChange={(next) => setAc(String(next))} label="AC" />
+                <NumberStepper size="sm" value={Number(ac) || 0} min={1} max={40} onChange={(next) => setAc(String(next))} label={t("sheetDialog.edit.ac")} />
                 <span className="text-[11px] text-stone-500">
-                  Pinned. Armor would set {derived.ac}. Unpin to hand it back.
+                  {t("sheetDialog.edit.pinned", { ac: derived.ac })}
                 </span>
               </div>
             ) : (
               <p className="reveal text-[11px] text-stone-400">
-                Armor sets it: <span className="text-stone-100">{derived.ac}</span>
-                {derived.parts.length ? ` (${derived.parts.join(", ")})` : ""}
+                {t("sheetDialog.edit.armor")} <span className="text-stone-100">{derived.ac}</span>
+                {derived.parts.length ? ` (${locale === "en" ? derived.parts.join(", ") : sheetArmorParts(derived.parts, locale)})` : ""}
               </p>
             )}
             {facing !== (pinned ? Number(ac) : derived.ac) ? (
               <p className="live-in text-[11px] text-sky-300/90">
-                Attacks face {facing} right now: spells and forms on top ride along.
+                {t("sheetDialog.edit.facing", { ac: facing })}
               </p>
             ) : null}
           </div>
           <label className="mt-2 block space-y-1 text-xs">
-            <span className="text-stone-400">Conditions (comma separated)</span>
+            <span className="text-stone-400">{t("sheetDialog.edit.conditions")}</span>
             <input
-              value={conditions}
-              onChange={(event) => setConditions(event.target.value)}
-              placeholder="poisoned, prone"
+              value={editConditionDisplay(conditions, locale)}
+              onChange={(event) => setConditions(editConditionDraft(event.target.value, locale))}
+              placeholder={t("sheetDialog.edit.conditionExample")}
               className={field}
             />
           </label>
 
           <div className="mt-3 space-y-1 text-xs">
-            <SectionHead title="Items" glyph="tab-loot" level="h3" aside={items.length || null} />
+            <SectionHead title={t("sheetDialog.edit.items")} glyph="tab-loot" level="h3" aside={items.length || null} />
             {items.map((row, index) => (
               <div key={index} className="live-in space-y-0.5">
               <div className="flex items-center gap-2">
                 <GameIcon icon={{ kind: "item", key: row.name, family: "item-gear" }} size="size-6" className="shrink-0" />
                 {row.base.slug ? (
-                  <span className={cn(field, "truncate")}>{row.name}</span>
+                  <span className={cn(field, "truncate")}>{referenceDisplayName("equipment", row.name, locale)}</span>
                 ) : (
                   <input
                     value={row.name}
                     onChange={(event) => setItem(index, { name: event.target.value })}
-                    placeholder="Item name"
+                    placeholder={t("sheetDialog.edit.itemName")}
                     className={field}
                   />
                 )}
-                <NumberStepper size="sm" min={1} value={Number(row.qty) || 1} onChange={(next) => setItem(index, { qty: String(next) })} label={`Quantity of ${row.name || "item"}`} className="shrink-0" />
-                <KitButton tone="iconDanger" always onClick={() => setItems((rows) => rows.filter((_, i) => i !== index))} className="shrink-0" aria-label="Remove item">
+                <NumberStepper size="sm" min={1} value={Number(row.qty) || 1} onChange={(next) => setItem(index, { qty: String(next) })} label={t("sheetDialog.edit.quantity", { name: row.name ? referenceDisplayName("equipment", row.name, locale) : t("sheetDialog.edit.item") })} className="shrink-0" />
+                <KitButton tone="iconDanger" always onClick={() => setItems((rows) => rows.filter((_, i) => i !== index))} className="shrink-0" aria-label={t("sheetDialog.edit.removeItem")}>
                   <Trash2 className="size-4" />
                 </KitButton>
               </div>
@@ -332,7 +330,7 @@ export function LeadEditDialog({
             <div className="mt-1">
               <MultiContentPicker
                 kind="items"
-                placeholder="Search items to add"
+                placeholder={t("sheetDialog.edit.searchItems")}
                 selectedNames={items.map((row) => row.name)}
                 onAdd={(entries) =>
                   setItems((rows) => [
@@ -345,7 +343,7 @@ export function LeadEditDialog({
                   ])
                 }
                 renderMeta={(entry) =>
-                  [entry.kind, entry.rarity ?? entry.cost].filter(Boolean).join(" · ")
+                  [entry.kind ? gearKind(entry.kind, locale) : "", entry.rarity ? gearRarity(entry.rarity, locale) : entry.cost ? gearCostText(entry.cost, locale) : ""].filter(Boolean).join(" · ")
                 }
               />
             </div>
@@ -353,10 +351,11 @@ export function LeadEditDialog({
 
           {sheet.spellcasting ? (
             <div className="reveal mt-3 space-y-2 text-xs">
-              <SectionHead title="Spells" glyph="rest-spell-slot" level="h3" />
+              <SectionHead title={t("sheetDialog.edit.spells")} glyph="rest-spell-slot" level="h3" />
               <div className="space-y-1">
-                <span className="eyebrow text-[10px] text-amber-400/80">Cantrips</span>
+                <span className="eyebrow text-[10px] text-amber-400/80">{t("sheetDialog.edit.cantrips")}</span>
                 <ChipList
+                  kind="spell"
                   values={cantrips}
                   onRemove={(value) =>
                     setCantrips((list) => list.filter((entry) => entry !== value))
@@ -365,36 +364,38 @@ export function LeadEditDialog({
                 <MultiContentPicker
                   kind="spells"
                   extraParams={{ class: listClass, level: "0" }}
-                  placeholder="Search cantrips to add"
+                  placeholder={t("sheetDialog.edit.searchCantrips")}
                   selectedNames={cantrips}
                   onAdd={(entries) => addCantrips(entries)}
-                  renderMeta={() => "cantrip"}
+                  renderMeta={() => t("sheetDialog.edit.cantrip")}
                 />
               </div>
               {style === "known" || known.length ? (
               <div className="space-y-1">
-                <span className="eyebrow text-[10px] text-amber-400/80">Known</span>
+                <span className="eyebrow text-[10px] text-amber-400/80">{t("sheetDialog.edit.known")}</span>
                 <ChipList
+                  kind="spell"
                   values={known}
                   onRemove={(value) => setKnown((list) => list.filter((entry) => entry !== value))}
                 />
                 <MultiContentPicker
                   kind="spells"
                   extraParams={{ class: listClass, level: topLevel }}
-                  placeholder="Search spells to add as known"
+                  placeholder={t("sheetDialog.edit.searchKnown")}
                   selectedNames={known}
                   onAdd={(entries) => {
                     addCantrips(entries);
                     setKnown((list) => [...list, ...spellNamesOf(entries)]);
                   }}
-                  renderMeta={levelMeta}
+                  renderMeta={(entry) => levelMeta(entry, locale)}
                 />
               </div>
               ) : null}
               {style === "spellbook" || spellbook.length ? (
                 <div className="space-y-1">
-                  <span className="eyebrow text-[10px] text-amber-400/80">Spellbook</span>
+                  <span className="eyebrow text-[10px] text-amber-400/80">{t("sheetDialog.edit.spellbook")}</span>
                   <ChipList
+                    kind="spell"
                     values={spellbook}
                     onRemove={(value) => {
                       setSpellbook((list) => list.filter((entry) => entry !== value));
@@ -404,20 +405,21 @@ export function LeadEditDialog({
                   <MultiContentPicker
                     kind="spells"
                     extraParams={{ class: listClass, level: topLevel }}
-                    placeholder="Search spells to write in the spellbook"
+                    placeholder={t("sheetDialog.edit.searchBook")}
                     selectedNames={spellbook}
                     onAdd={(entries) => {
                       addCantrips(entries);
                       setSpellbook((list) => [...list, ...spellNamesOf(entries)]);
                     }}
-                    renderMeta={levelMeta}
+                    renderMeta={(entry) => levelMeta(entry, locale)}
                   />
                 </div>
               ) : null}
               {style !== "known" || prepared.length ? (
               <div className="space-y-1">
-                <span className="eyebrow text-[10px] text-amber-400/80">Prepared</span>
+                <span className="eyebrow text-[10px] text-amber-400/80">{t("sheetDialog.edit.prepared")}</span>
                 <ChipList
+                  kind="spell"
                   values={prepared}
                   onRemove={(value) =>
                     setPrepared((list) => list.filter((entry) => entry !== value))
@@ -426,7 +428,7 @@ export function LeadEditDialog({
                 <MultiContentPicker
                   kind="spells"
                   extraParams={{ class: listClass, level: topLevel }}
-                  placeholder="Search spells to add as prepared"
+                  placeholder={t("sheetDialog.edit.searchPrepared")}
                   selectedNames={prepared}
                   onAdd={(entries) => {
                     addCantrips(entries);
@@ -437,14 +439,15 @@ export function LeadEditDialog({
                       setSpellbook((list) => [...list, ...names.filter((name) => !list.includes(name))]);
                     }
                   }}
-                  renderMeta={levelMeta}
+                  renderMeta={(entry) => levelMeta(entry, locale)}
                 />
               </div>
               ) : null}
               {pending.length ? (
                 <div className="space-y-1">
-                  <span className="eyebrow text-[10px] text-sky-300/80">Prepared at the next long rest</span>
+                  <span className="eyebrow text-[10px] text-sky-300/80">{t("sheetDialog.edit.pending")}</span>
                   <ChipList
+                    kind="spell"
                     values={pending}
                     onRemove={(value) => setPending((list) => list.filter((entry) => entry !== value))}
                   />
@@ -455,14 +458,15 @@ export function LeadEditDialog({
           ) : null}
 
           <div className="mt-3 space-y-1 text-xs">
-            <SectionHead title="Feats" glyph="rest-level-up" level="h3" aside={feats.length || null} />
+            <SectionHead title={t("sheetDialog.edit.feats")} glyph="rest-level-up" level="h3" aside={feats.length || null} />
             <ChipList
+              kind="feat"
               values={feats}
               onRemove={(value) => setFeats((list) => list.filter((entry) => entry !== value))}
             />
             <MultiContentPicker
               kind="feats"
-              placeholder="Search feats to add"
+              placeholder={t("sheetDialog.edit.searchFeats")}
               selectedNames={feats}
               onAdd={(entries) =>
                 setFeats((list) => [...list, ...entries.map((entry) => entry.name)])
@@ -470,22 +474,22 @@ export function LeadEditDialog({
             />
           </div>
           <label className="mt-2 block space-y-1 text-xs">
-            <span className="text-stone-400">Reason (shown in the log)</span>
+            <span className="text-stone-400">{t("sheetDialog.edit.reason")}</span>
             <input
               value={reason}
               onChange={(event) => setReason(event.target.value)}
               maxLength={300}
-              placeholder="DM double-counted the goblin's hit"
+              placeholder={t("sheetDialog.edit.reasonExample")}
               className={field}
             />
           </label>
-          {error ? <PanelError className="mt-2">{error}</PanelError> : null}
+          {error ? <PanelError className="mt-2">{playEditNotice(error, locale)}</PanelError> : null}
           {held.length ? (
             <div role="status" className="reveal mt-2 space-y-1 rounded-lg border border-amber-500/30 bg-amber-950/20 p-2 text-xs text-amber-100">
-              <p>Saved. The server held these to what the sheet has:</p>
+              <p>{t("sheetDialog.edit.held")}</p>
               <ul className="stagger list-disc space-y-0.5 pl-4 text-amber-200/90">
                 {held.map((line) => (
-                  <li key={line}>{line}</li>
+                  <li key={line}>{playEditNotice(line, locale)}</li>
                 ))}
               </ul>
             </div>
@@ -493,15 +497,15 @@ export function LeadEditDialog({
           <div className="mt-4 flex justify-end gap-2">
             {held.length ? (
               <KitButton tone="primary" onClick={onClose} className="h-10 px-4 text-[13px]">
-                Done
+                {t("sheetDialog.edit.done")}
               </KitButton>
             ) : (
               <>
                 <button type="button" onClick={onClose} className={ui.btnSmall}>
-                  Cancel
+                  {t("common.cancel")}
                 </button>
                 <KitButton tone="primary" onClick={save} disabled={busy} busy={busy} className="h-10 px-4 text-[13px]">
-                  Save
+                  {t("sheetDialog.edit.save")}
                 </KitButton>
               </>
             )}

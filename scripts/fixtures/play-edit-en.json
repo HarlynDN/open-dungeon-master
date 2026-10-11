@@ -1,0 +1,11 @@
+{
+  "sourceCommit": "ed66e9e7",
+  "note": "Five actual pre-edit English JSX renders; transport, portal and content-discovery surfaces stubbed.",
+  "sha256": {
+    "ItemFlags": "de81c98179480cb0ac032e383bb594d0853670bbc914b7731424bf041de4843b",
+    "ChipList": "4057852490dbd1fceff820a2b0df4b8473708637938074f6306b950aab8e948c",
+    "SlotSteppers": "267dcc0931d3c5b1af4dea1e1b56cb4aa2a24035e8c5e12457b54e4a237fabd1",
+    "LeadEditDialog": "01d14aa30e67a47d4ccfe9ebe86258c1e22a8086524608eaaf3fcd10996e2992",
+    "SheetBetween": "863a342b763404996a5fa80d3db5ba6548b67801a761bcc5bdae252fcc8199d4"
+  }
+}

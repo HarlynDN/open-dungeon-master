@@ -1,5 +1,10 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { createTranslator } from "@/lib/i18n/translator";
+import type { AppLocale } from "@/lib/i18n/locales";
+import { referenceDisplayName } from "@/lib/i18n/references";
+import { featTermLabel } from "@/lib/i18n/feat-presentations";
 import { X } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { NumberStepper } from "@/components/ui/NumberStepper";
@@ -21,11 +26,12 @@ export {
 // What the row holds besides its name, as small chips: the state the save
 // now keeps.
 export function ItemFlags({ item }: { item: EquipmentItem }) {
+  const { t } = useLocale();
   const flags = [
-    item.equipped ? "worn" : null,
-    item.attuned ? "attuned" : item.attuning ? "attunes at the next rest" : null,
-    item.identified === false ? "unidentified" : null,
-    item.charges !== undefined ? `${item.charges} charges` : null,
+    item.equipped ? t("sheetDialog.edit.worn") : null,
+    item.attuned ? t("sheetDialog.edit.attuned") : item.attuning ? t("sheetDialog.edit.attuning") : null,
+    item.identified === false ? t("sheetDialog.edit.unidentified") : null,
+    item.charges !== undefined ? t("sheetDialog.edit.charges", { count: item.charges }) : null,
   ].filter((flag): flag is string => Boolean(flag));
   if (!flags.length) {
     return null;
@@ -43,7 +49,9 @@ export function ItemFlags({ item }: { item: EquipmentItem }) {
 
 // Removable name chips backing the spell and feat lists; adding goes
 // through the searchable multi-select pickers below each list.
-export function ChipList({ values, onRemove }: { values: string[]; onRemove: (value: string) => void }) {
+export function ChipList({ values, onRemove, kind }: { values: string[]; onRemove: (value: string) => void; kind?: "spell" | "feat" }) {
+  const { locale, t } = useLocale();
+  const name = (value: string) => kind === "spell" ? referenceDisplayName("spell", value, locale) : kind === "feat" ? featTermLabel("feat", value, locale) : value;
   if (!values.length) {
     return null;
   }
@@ -51,8 +59,8 @@ export function ChipList({ values, onRemove }: { values: string[]; onRemove: (va
     <div className="stagger-pop flex flex-wrap gap-1.5">
       {values.map((value) => (
         <span key={value} className={cn("pk-chip gap-0.5 py-0 pl-2 pr-0.5 text-xs text-stone-200")}>
-          {value}
-          <KitButton tone="iconDanger" always onClick={() => onRemove(value)} aria-label={`Remove ${value}`} className="p-1">
+          {name(value)}
+          <KitButton tone="iconDanger" always onClick={() => onRemove(value)} aria-label={t("sheetDialog.edit.remove", { name: name(value) })} className="p-1">
             <X className="size-3" />
           </KitButton>
         </span>
@@ -97,8 +105,9 @@ export function syncCasterLists(
   return withCasterViews(after, views);
 }
 
-export function levelMeta(entry: { level?: number }): string {
-  return entry.level !== undefined ? (entry.level === 0 ? "cantrip" : `level ${entry.level}`) : "";
+export function levelMeta(entry: { level?: number }, locale: AppLocale = "en"): string {
+  const t = createTranslator(locale);
+  return entry.level !== undefined ? (entry.level === 0 ? t("sheetDialog.edit.cantrip") : t("sheetDialog.edit.level", { level: entry.level })) : "";
 }
 
 export type SlotEdits = Record<string, { max: string; used: string }>;
@@ -114,6 +123,7 @@ export function SlotSteppers({
   slots: SlotEdits;
   onChange: (update: (previous: SlotEdits) => SlotEdits) => void;
 }) {
+  const { t } = useLocale();
   const set = (level: string, key: "max" | "used", value: number) =>
     onChange((previous) => ({
       ...previous,
@@ -122,15 +132,15 @@ export function SlotSteppers({
   return (
     <div className="stagger-pop flex flex-wrap gap-2">
       {levels.map((level) => {
-        const title = level === "pact" ? "Pact" : `L${level}`;
-        const named = level === "pact" ? "Pact" : `Level ${level}`;
+        const title = level === "pact" ? t("sheetDialog.edit.pact") : t("sheetDialog.edit.slotShort", { level });
+        const named = level === "pact" ? t("sheetDialog.edit.pact") : t("sheetDialog.edit.slotLevel", { level });
         return (
           <div key={level} className="space-y-1">
-            <span className="text-stone-400">{title} used/max</span>
+            <span className="text-stone-400">{t("sheetDialog.edit.slotCounts", { level: title })}</span>
             <div className="flex items-center gap-1">
-              <NumberStepper size="sm" min={0} value={Number(slots[level]?.used ?? "0") || 0} label={`${named} slots used`} onChange={(next) => set(level, "used", next)} />
+              <NumberStepper size="sm" min={0} value={Number(slots[level]?.used ?? "0") || 0} label={t("sheetDialog.edit.slotsUsed", { level: named })} onChange={(next) => set(level, "used", next)} />
               <span className="text-stone-500">/</span>
-              <NumberStepper size="sm" min={0} value={Number(slots[level]?.max ?? "0") || 0} label={`${named} slots max`} onChange={(next) => set(level, "max", next)} />
+              <NumberStepper size="sm" min={0} value={Number(slots[level]?.max ?? "0") || 0} label={t("sheetDialog.edit.slotsMax", { level: named })} onChange={(next) => set(level, "max", next)} />
             </div>
           </div>
         );

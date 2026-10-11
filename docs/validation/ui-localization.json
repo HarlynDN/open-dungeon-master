@@ -419,11 +419,13 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/LeadEditDialog.tsx",
-      "state": "pending"
+      "state": "pending",
+      "review": "Owned correction/inventory/spell/feat/AC controls and native correction notices reviewed, with frozen English JSX and unchanged PATCH shape. Standard Chinese condition entry becomes canonical English, including across UI switching. Remaining complex condition/material/magic-item names and child source descriptions remain pending."
     },
     {
       "path": "src/app/campaigns/[campaignId]/LeadEditParts.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Inventory flags, spell/feat chips/removal ARIA, spell-level metadata and slot steppers reviewed. Native names/class/slot IDs and callbacks retained; English JSX fingerprint frozen. Unknown authored labels stay literal."
     },
     {
       "path": "src/app/campaigns/[campaignId]/LeadFloorControl.tsx",
@@ -1010,7 +1012,8 @@
     },
     {
       "path": "src/app/characters/builder/MultiContentPicker.tsx",
-      "state": "pending"
+      "state": "pending",
+      "review": "Owned selection/add/remove/pack/admission chrome, registered names and spell-summary metadata localized. Pending selection provenance preserves custom names without entering callback payloads; exact Chinese catalog names no longer offer duplicate custom rows. Generic native source descriptions remain separately pending."
     },
     {
       "path": "src/app/characters/builder/OptionCardGrid.tsx",
@@ -1735,7 +1738,8 @@
     },
     {
       "path": "src/components/sheet/SheetBetween.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned heading/secrecy label and complete native lifestyle/crafting/training/research/recuperating, disease/poison/madness frames reviewed. Viewer locale projects existing English lines; API secrecy filtering, engine counts/costs/durations and authored disease/flaw/topic text remain unchanged."
     },
     {
       "path": "src/components/sheet/SheetChoices.tsx",
