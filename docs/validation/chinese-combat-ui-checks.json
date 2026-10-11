@@ -125,11 +125,11 @@
     "src/app/campaigns/[campaignId]/BoardChrome.tsx": "166a8056c783ef3c53c3f2e4413e5fae4a2c114b3f049a9c62dee6085bfec994",
     "src/lib/i18n/combat-ui-messages.ts": "e5c8fb25470e41472ea0d6c45095cee6f6c78f223492df0c78bbe1730060c9bd",
     "src/lib/i18n/combat-ui-presentations.ts": "f0380c5693827cdb2c2c72e89ffc3b76cdbe0f7c7b404e63b97bbdd764cd29d4",
-    "src/lib/i18n/messages.ts": "1a15d595090f2451d909c790b6bf34a06c92488ad5bef8663cf66e2d290741dd",
-    "src/lib/i18n/resource-scope.ts": "5362e6d41d03f95f1902755a95b700c9c53a213b40210a40f0d9252ef1cfe7e4",
-    "src/lib/i18n/resources/en.content.json": "8f9fbfc1a63a1f3f7b1dc2b98cdbd4426529033a096ed43df9f3f0aa49ccaf71",
-    "src/lib/i18n/resources/zh-CN.content.json": "dddd575c47206f8633ba688c45c57cad5698bcfd680f5d7d7423457757b890ea",
-    "scripts/lib/combat-ui-fixtures.mjs": "a95d4021133acd51aba1380a8ec110c85c515ff56329bee52a1967ece1046261",
+    "src/lib/i18n/messages.ts": "97e5f9c8b717474524fb4c752d1d22a33f869063623f4493ff0ee7225ec3e31d",
+    "src/lib/i18n/resource-scope.ts": "69ac97fecf5c508828cd1070c285e98cd67114b5e675a1420399862d33e10a50",
+    "src/lib/i18n/resources/en.content.json": "76defd68abbbfffaa772619605c11f1ddf89bf205849fb283f79c40de0d7c0e6",
+    "src/lib/i18n/resources/zh-CN.content.json": "0cf31a54cf427438439f5b7a90f7b417b9ede83dcb214c1dbf535792cb5f088d",
+    "scripts/lib/combat-ui-fixtures.mjs": "c30d098937f9b7b4abc82b696b792f46d23c13639c8faa76acbe6406467f7a7b",
     "scripts/test-chinese-combat-ui.mjs": "b4b833409a9e21340611b3a0941e1496400a51f752c8f40b9428a43ec9dcc7c6"
   },
   "artifacts": {
@@ -143,5 +143,39 @@
     "next": "Dynamic condition and roll details, remaining play UI/player logs, configured Codex regression, local single-narrator TTS and complete bilingual play acceptance.",
     "note": "Unconfigured TTS is an outstanding release gate, not a blocker to independent code work."
   },
-  "implementationCommit": "c89eec1a24261f6f0bb08387d4f3d1b6f37f12c4"
+  "implementationCommit": "c89eec1a24261f6f0bb08387d4f3d1b6f37f12c4",
+  "integrations": [
+    {
+      "date": "2026-10-11",
+      "checkpoint": "sheet state and party controls",
+      "review": "Additive sheet-play content templates, locale-aware display helpers, configurable fixture files and one level-up caption context. Source comparison by implementation agent; all 11104 prior bilingual values and 27 compressed baselines retained. Historical validation and runtime outputs are unchanged.",
+      "changed": [
+        {
+          "file": "src/lib/i18n/messages.ts",
+          "previousSha256": "1a15d595090f2451d909c790b6bf34a06c92488ad5bef8663cf66e2d290741dd",
+          "currentSha256": "97e5f9c8b717474524fb4c752d1d22a33f869063623f4493ff0ee7225ec3e31d"
+        },
+        {
+          "file": "src/lib/i18n/resource-scope.ts",
+          "previousSha256": "5362e6d41d03f95f1902755a95b700c9c53a213b40210a40f0d9252ef1cfe7e4",
+          "currentSha256": "69ac97fecf5c508828cd1070c285e98cd67114b5e675a1420399862d33e10a50"
+        },
+        {
+          "file": "src/lib/i18n/resources/en.content.json",
+          "previousSha256": "8f9fbfc1a63a1f3f7b1dc2b98cdbd4426529033a096ed43df9f3f0aa49ccaf71",
+          "currentSha256": "76defd68abbbfffaa772619605c11f1ddf89bf205849fb283f79c40de0d7c0e6"
+        },
+        {
+          "file": "src/lib/i18n/resources/zh-CN.content.json",
+          "previousSha256": "dddd575c47206f8633ba688c45c57cad5698bcfd680f5d7d7423457757b890ea",
+          "currentSha256": "0cf31a54cf427438439f5b7a90f7b417b9ede83dcb214c1dbf535792cb5f088d"
+        },
+        {
+          "file": "scripts/lib/combat-ui-fixtures.mjs",
+          "previousSha256": "a95d4021133acd51aba1380a8ec110c85c515ff56329bee52a1967ece1046261",
+          "currentSha256": "c30d098937f9b7b4abc82b696b792f46d23c13639c8faa76acbe6406467f7a7b"
+        }
+      ]
+    }
+  ]
 }

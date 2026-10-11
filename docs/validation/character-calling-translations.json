@@ -13,7 +13,7 @@
     "src/lib/srd/feature-effects.ts": "0a7f3b483608a2207bfd8af110edc36e8f4c96b7e0a5fc51e1e874e979a1b95e",
     "src/lib/characters/options.ts": "e0294a844664240604091c945104e20adc08bcbf7d0fc32bafacfff70174c31c",
     "src/lib/i18n/builder-picker-presentations.ts": "728ad42accc71a7f52efb7f8c38493ff357ff2c956a182edb6e0263af0a8b539",
-    "src/lib/i18n/messages.ts": "478f742e28a0c154a3e9e8eade3390fde63d121bf21c6c4eb747cf3d4890ac79"
+    "src/lib/i18n/messages.ts": "97e5f9c8b717474524fb4c752d1d22a33f869063623f4493ff0ee7225ec3e31d"
   },
   "catalogs": {
     "src/lib/i18n/calling-ui-messages.ts": "6ee79c641a5e39a5240764e9c90d68718c8d7b822a72e46d1776391177444280"
@@ -50,5 +50,19 @@
       "src/lib/i18n/messages.ts": "d292e2a3cebce25757e55beaa05454c99b7780f5e7824a24ecac770179a3250c"
     },
     "review": "Inspected additive direct-save and special-purpose caption diffs. All 10936 prior bilingual resource values and 23 prior compressed baselines are unchanged. Original English details, dice, DCs, result inputs and visibility match 94 new immutable original call contracts. This refresh does not expand the older review scope; special captions have their own review."
-  }
+  },
+  "integrations": [
+    {
+      "date": "2026-10-11",
+      "checkpoint": "sheet state and party controls",
+      "review": "Additive sheet-play content templates, locale-aware display helpers, configurable fixture files and one level-up caption context. Source comparison by implementation agent; all 11104 prior bilingual values and 27 compressed baselines retained. Historical validation and runtime outputs are unchanged.",
+      "changed": [
+        {
+          "file": "src/lib/i18n/messages.ts",
+          "previousSha256": "478f742e28a0c154a3e9e8eade3390fde63d121bf21c6c4eb747cf3d4890ac79",
+          "currentSha256": "97e5f9c8b717474524fb4c752d1d22a33f869063623f4493ff0ee7225ec3e31d"
+        }
+      ]
+    }
+  ]
 }

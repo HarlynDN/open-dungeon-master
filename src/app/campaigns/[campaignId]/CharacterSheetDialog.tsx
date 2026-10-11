@@ -41,6 +41,8 @@ import { FeatureChoicePicker, OtherSpeeds } from "@/components/sheet/SheetChoice
 import { SheetGearRow } from "@/components/sheet/SheetGearRow";
 import { ResourceRow, SlotRow, STEP_BUTTON } from "@/components/sheet/SheetCounters";
 import { namesLookup } from "@/lib/battlemap/condition-notes";
+import { conditionNamesLookup } from "@/lib/battlemap/condition-presentation";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 function titleCase(value: string) {
   return value.replace(/[-_]/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
@@ -99,10 +101,11 @@ export function CharacterSheetDialog({
   myTurn?: boolean;
   // Who a condition's "until X's turn" or "from X" may name: the party and
   // the enemies the viewer can see.
-  names?: Array<{ id: string; name: string }>;
+  names?: Array<{ id: string; name: string; kind?: string }>;
   onAdjust?: () => void;
   onClose: () => void;
 }) {
+  const { locale } = useLocale();
   const derived = computeSheetDerived(sheet);
   const armor = acBreakdownFor(sheet);
   const attunedCount = sheet.equipment.filter((item) => item.attuned).length;
@@ -123,10 +126,11 @@ export function CharacterSheetDialog({
   // heavy pack costs more when the table plays with encumbrance.
   // speedFor, then the conditions, then exhaustion: the speed the move route
   // lets them walk (src/components/sheet/sheet-state.ts).
-  const speedState = speedView(sheet, { encumbrance: encumbranceRule });
+  const speedState = speedView(sheet, { encumbrance: encumbranceRule }, locale);
   const speed = speedState.speed;
-  const hp = maxHpView(sheet);
+  const hp = maxHpView(sheet, locale);
   const nameOf = namesLookup(names);
+  const displayNameOf = conditionNamesLookup(names.map(entry => ({ ...entry, kind: entry.kind ?? "proper" })));
   const dead = Boolean(sheet.deathSaves?.dead);
   // The same load speedFor weighs (size and a Belt of Giant Strength count),
   // so the tile and the speed beside it agree.
@@ -253,7 +257,7 @@ export function CharacterSheetDialog({
                   glyph: "rest-speed",
                   label: "Speed",
                   value: `${speed} ft`,
-                  title: [speedNote, ...otherSpeedsLine(derived.speeds)].join(" "),
+                  title: [speedNote, ...otherSpeedsLine(derived.speeds, locale)].join(" "),
                   tone: speed < speedState.base ? "warn" : "plain",
                 },
                 {
@@ -321,7 +325,7 @@ export function CharacterSheetDialog({
               <ConditionChips
                 conditions={sheet.conditions}
                 rounds={sheet.conditionMeta}
-                detail={(condition) => conditionDetail(sheet, condition, nameOf)}
+                detail={(condition) => conditionDetail(sheet, condition, nameOf, locale, displayNameOf)}
               />
             </div>
           ) : null}
@@ -500,7 +504,7 @@ export function CharacterSheetDialog({
                 equipment={sheet.equipment}
                 extra={(index) => {
                   const item = sheet.equipment[index];
-                  return item ? itemStatus(sheet, item).charges : null;
+                  return item ? itemStatus(sheet, item, locale).charges : null;
                 }}
               />
               {mine && wearable.length ? (

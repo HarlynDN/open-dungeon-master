@@ -149,7 +149,7 @@
     "src/lib/i18n/references.ts": "8b1cb625ca377b33704b4c763c37a21c3762c6804adcbc44e1a8771ad7442ce5",
     "src/lib/i18n/generation.ts": "36cf11c8c1614ff07293394cfcaea5b51dfe34b5e004f84b6690fe27914580f0",
     "src/lib/i18n/resources/zh-CN.ui.json": "96f1ee532aa62b64e4384f413b1ee2745f0d6d1a6f934fe77835b75d9bf3f943",
-    "src/lib/i18n/resources/zh-CN.content.json": "b862470b229d37f0714df1df4353e6fbe3dae5ad89ed6a2eadc9fb7f54e76081",
+    "src/lib/i18n/resources/zh-CN.content.json": "0cf31a54cf427438439f5b7a90f7b417b9ede83dcb214c1dbf535792cb5f088d",
     "src/lib/dm/prompt.ts": "4b10de0802600521504874ef3e259adaf21027f3bd9f83d03b257e5345c02aa1",
     "src/lib/dm/turn.ts": "84b7d3bea3fd3d6c0b1c7ecf315345f4961363e70d4c7f8c3bb6754681c5a2e6",
     "src/lib/dm/engine-boundary.ts": "6901240f84da69d25c49b508d2f87b579f9362b7094cfff74b34a4f2119c3488",
@@ -165,5 +165,19 @@
     "docs/validation/chinese-combat-terminology-remainder.json": "f5f39f1c64774f583bebb5237628cef4ddb055b35b8ec300836948c95d6b38e5",
     "docs/validation/chinese-combat-terminology-runtime.json": "69cfed21654ab5fda2a06a51483c6d8d67eaaa4aa2bc12ddcac447afa8396703"
   },
-  "implementationCommit": "6c3b2d3009c852d5c0e43d7164670c81a1ee2181"
+  "implementationCommit": "6c3b2d3009c852d5c0e43d7164670c81a1ee2181",
+  "integrations": [
+    {
+      "date": "2026-10-11",
+      "checkpoint": "sheet state and party controls",
+      "review": "Additive sheet-play content templates, locale-aware display helpers, configurable fixture files and one level-up caption context. Source comparison by implementation agent; all 11104 prior bilingual values and 27 compressed baselines retained. Historical validation and runtime outputs are unchanged.",
+      "changed": [
+        {
+          "file": "src/lib/i18n/resources/zh-CN.content.json",
+          "previousSha256": "b862470b229d37f0714df1df4353e6fbe3dae5ad89ed6a2eadc9fb7f54e76081",
+          "currentSha256": "0cf31a54cf427438439f5b7a90f7b417b9ede83dcb214c1dbf535792cb5f088d"
+        }
+      ]
+    }
+  ]
 }

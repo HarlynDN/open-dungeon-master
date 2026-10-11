@@ -38,7 +38,7 @@
     "src/lib/dm/zone-triggers.ts": "dad0437d98e4de4502c6a6cbf3b9ddc3e4bead40454707e178652bbc011b963b",
     "src/lib/i18n/check-roll-messages.ts": "22c2f41bd26ab8aa4c9f198e42e530c37e0adab54ad8227f878ee4ce766353a4",
     "src/lib/i18n/glossary.zh-CN.ts": "356a38e27c23d45dbb0318802b35b7e928158f0a3888ea040976a217ed2d1f4d",
-    "src/lib/i18n/roll-presentations.ts": "e9473f0c953f02d8659577933b35613fb9896564b3ccd3a411a3daf67928c29e",
+    "src/lib/i18n/roll-presentations.ts": "3999299af4647b88f15531dfeca1c5bae09350bbd2479b877eba0c8d7706d582",
     "src/lib/roll-labels.ts": "afe57bc08299f5edf94827b8d55ae13cd7b07c2e0f5660ba36f9770e6a3dd865",
     "src/lib/roll-presentation.ts": "644383d124542129ea03d71baeb4d0547c4e52d9957dbb8e453f94fdd6137267"
   },
@@ -101,6 +101,18 @@
           "file": "src/lib/roll-presentation.ts",
           "previousSha256": "7a12637295f13bc667f6d050337279dac7447932ada02d9f9862ff75cc57956f",
           "currentSha256": "644383d124542129ea03d71baeb4d0547c4e52d9957dbb8e453f94fdd6137267"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-11",
+      "checkpoint": "sheet state and party controls",
+      "review": "Additive sheet-play content templates, locale-aware display helpers, configurable fixture files and one level-up caption context. Source comparison by implementation agent; all 11104 prior bilingual values and 27 compressed baselines retained. Historical validation and runtime outputs are unchanged.",
+      "changed": [
+        {
+          "file": "src/lib/i18n/roll-presentations.ts",
+          "previousSha256": "e9473f0c953f02d8659577933b35613fb9896564b3ccd3a411a3daf67928c29e",
+          "currentSha256": "3999299af4647b88f15531dfeca1c5bae09350bbd2479b877eba0c8d7706d582"
         }
       ]
     }

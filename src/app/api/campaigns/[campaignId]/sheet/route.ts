@@ -34,6 +34,7 @@ import {
   subclassIsOffered,
 } from "@/lib/characters/catalog";
 import { rollCard } from "@/lib/dm/roll-card";
+import { specialRoll } from "@/lib/roll-labels";
 import { buildLevelUp } from "@/lib/srd/level-up";
 import { freeCantripCount } from "@/lib/srd/free-cantrips";
 import type { CharacterSheet } from "@/lib/schemas/sheet";
@@ -501,7 +502,7 @@ export async function PATCH(
           null,
           sheet.id,
           "custom",
-          `level ${parsed.data.level}: hit die d${sides}`,
+          specialRoll(`level ${parsed.data.level}: hit die d${sides}`, { kind: "level-up", level: parsed.data.level!, sides }),
           `1d${sides}`,
           null,
         ).total,

@@ -47,8 +47,10 @@ import { SPECIAL_ROLL_MESSAGES } from "./special-roll-messages.ts";
 import { CHECK_ROLL_MESSAGES } from "./check-roll-messages.ts";
 
 import { CINEMATIC_MESSAGES } from "./cinematic-messages.ts";
+import { SHEET_PLAY_MESSAGES } from "./sheet-play-messages.ts";
 
 const en = {
+  ...SHEET_PLAY_MESSAGES.en,
   ...AUTH_MESSAGES.en,
   ...COMBAT_UI_MESSAGES.en,
   ...CONDITION_UI_MESSAGES.en,
@@ -125,6 +127,7 @@ export type MessageKey = keyof typeof en;
 type Messages = Record<MessageKey, string>;
 
 const zhCN: Messages = {
+  ...SHEET_PLAY_MESSAGES["zh-CN"],
   ...AUTH_MESSAGES["zh-CN"],
   ...COMBAT_UI_MESSAGES["zh-CN"],
   ...CONDITION_UI_MESSAGES["zh-CN"],

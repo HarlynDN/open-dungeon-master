@@ -24,11 +24,11 @@
     "src/lib/dm/enemy-reactions.ts": "ed11a4ed32882f1fa6bc569ff4a04bb5062647cdf6bc939091b3f4f60ab2fbae",
     "src/lib/dm/authored-spend-effects.ts": "be3b7b2ec04036e78ce0f57cc0c1f2d9a87c30dbc30c4c1fd2708b0d86f0b031",
     "src/lib/roll-presentation.ts": "644383d124542129ea03d71baeb4d0547c4e52d9957dbb8e453f94fdd6137267",
-    "src/lib/roll-special-presentation.ts": "952205a98b1353ff922cac43321586e9f2c149a23a49f6902dd594c39c5628bc",
+    "src/lib/roll-special-presentation.ts": "050cc8074cec75b611565f9fd833121b187889167921aa8bfc8860b3e59a9118",
     "src/lib/roll-labels.ts": "afe57bc08299f5edf94827b8d55ae13cd7b07c2e0f5660ba36f9770e6a3dd865",
-    "src/lib/i18n/roll-presentations.ts": "e9473f0c953f02d8659577933b35613fb9896564b3ccd3a411a3daf67928c29e",
+    "src/lib/i18n/roll-presentations.ts": "3999299af4647b88f15531dfeca1c5bae09350bbd2479b877eba0c8d7706d582",
     "src/lib/i18n/check-roll-messages.ts": "22c2f41bd26ab8aa4c9f198e42e530c37e0adab54ad8227f878ee4ce766353a4",
-    "src/lib/i18n/special-roll-messages.ts": "1a37654791606e845730744f6c4de4e3045df873284213e1f44c016a4d346992",
+    "src/lib/i18n/special-roll-messages.ts": "2da4569d2861de7be61a703df37bccfa9d0317bd4c41d9f24b65df8c7a2a5833",
     "scripts/lib/initiative-social-fixtures.mjs": "4941e11c5d3fafe1d1ebeb69248c4ba0ca74ededa7af1ed87718b9492fa12fb2",
     "scripts/lib/special-caption-contracts.mjs": "68ab118a2d22851acb3c52065c74f90759619f9efa9fb1151f6310f631c8db3d"
   },
@@ -44,5 +44,29 @@
     "productionBuild": "passed, default Next 16.3.8 Turbopack, 24 existing dynamic filesystem warnings",
     "staticUiCoverage": "123/437 files, 3436 pending literal sites, 5552 keys",
     "browserAndRealModelAndTts": "not exercised by this checkpoint"
-  }
+  },
+  "integrations": [
+    {
+      "date": "2026-10-11",
+      "checkpoint": "sheet state and party controls",
+      "review": "Additive sheet-play content templates, locale-aware display helpers, configurable fixture files and one level-up caption context. Source comparison by implementation agent; all 11104 prior bilingual values and 27 compressed baselines retained. Historical validation and runtime outputs are unchanged.",
+      "changed": [
+        {
+          "file": "src/lib/roll-special-presentation.ts",
+          "previousSha256": "952205a98b1353ff922cac43321586e9f2c149a23a49f6902dd594c39c5628bc",
+          "currentSha256": "050cc8074cec75b611565f9fd833121b187889167921aa8bfc8860b3e59a9118"
+        },
+        {
+          "file": "src/lib/i18n/roll-presentations.ts",
+          "previousSha256": "e9473f0c953f02d8659577933b35613fb9896564b3ccd3a411a3daf67928c29e",
+          "currentSha256": "3999299af4647b88f15531dfeca1c5bae09350bbd2479b877eba0c8d7706d582"
+        },
+        {
+          "file": "src/lib/i18n/special-roll-messages.ts",
+          "previousSha256": "1a37654791606e845730744f6c4de4e3045df873284213e1f44c016a4d346992",
+          "currentSha256": "2da4569d2861de7be61a703df37bccfa9d0317bd4c41d9f24b65df8c7a2a5833"
+        }
+      ]
+    }
+  ]
 }

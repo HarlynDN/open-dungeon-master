@@ -3,6 +3,7 @@
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { abilityLabel, skillLabel, characterLabel } from "@/lib/i18n/character-presentations";
 import { referenceDisplayName } from "@/lib/i18n/references";
+import { conditionDurationLabel, conditionLabel } from "@/lib/i18n/condition-presentations";
 import type { ReactNode } from "react";
 import { GameIcon } from "@/components/ui/GameIcon";
 import { GameTerm } from "@/components/ui/GameTerm";
@@ -342,6 +343,7 @@ export function ConditionChips({
   // replaces the rounds tail, which it already includes.
   detail?: (condition: string) => string;
 }) {
+  const { locale } = useLocale();
   return (
     <div className="stagger-pop flex flex-wrap gap-1.5">
       {conditions.map((condition) => {
@@ -349,13 +351,13 @@ export function ConditionChips({
         return (
           <span key={condition} className="sheet-condition motion-pop" title={said || undefined}>
             <GameIcon icon={{ kind: "condition", key: conditionIconKey(condition) }} size="size-5" />
-            {condition}
+            {conditionLabel(condition, locale)}
             {detail
               ? said
                 ? ` (${said})`
                 : ""
               : rounds?.[condition]?.rounds
-                ? ` (${describeConditionDuration(rounds[condition]?.rounds ?? 0)})`
+                ? ` (${locale === "en" ? describeConditionDuration(rounds[condition]?.rounds ?? 0) : conditionDurationLabel({ kind: "rounds", rounds: rounds[condition]?.rounds ?? 0 }, locale)})`
                 : ""}
           </span>
         );

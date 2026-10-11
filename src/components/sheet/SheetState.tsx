@@ -9,6 +9,10 @@ import { Tooltip } from "@/components/ui/Tooltip";
 import { GameIcon } from "@/components/ui/GameIcon";
 import type { CharacterSheet } from "@/lib/schemas/sheet";
 import { defensesView, hitDiceRows, stateTags, type StateTag } from "@/components/sheet/sheet-state";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { characterLabel } from "@/lib/i18n/character-presentations";
+import { hitDieMessageText } from "@/lib/i18n/sheet-play-presentations";
+import type { MessageKey } from "@/lib/i18n/translator";
 
 // The character's state the engine keeps beside the conditions, as chips
 // that pop in one after another (motion-pop, the sheet's own stagger): the
@@ -35,10 +39,11 @@ const GLYPH: Record<StateTag["id"], string> = {
 };
 
 export function StateTags({ sheet, className }: { sheet: CharacterSheet; className?: string }) {
-  const tags = stateTags(sheet);
+  const { locale, t } = useLocale();
+  const tags = stateTags(sheet, locale);
   if (!tags.length) return null;
   return (
-    <div className={cn("stagger-pop flex flex-wrap gap-1.5", className)} aria-label="Combat state">
+    <div className={cn("stagger-pop flex flex-wrap gap-1.5", className)} aria-label={t("sheetPlay.state")}>
       {tags.map((tag, index) => (
         <Tooltip key={tag.id} content={tag.note}>
           <span
@@ -61,19 +66,20 @@ export function StateTags({ sheet, className }: { sheet: CharacterSheet; classNa
 // Resistances and immunities the engine applies to damage (pcResistances,
 // pcImmunities): race, features, rage, spells, worn magic items.
 export function DefensesLine({ sheet }: { sheet: CharacterSheet }) {
-  const { resist, immune } = defensesView(sheet);
+  const { locale, t } = useLocale();
+  const { resist, immune } = defensesView(sheet, locale);
   if (!resist && !immune) return null;
   return (
     <p className="reveal mt-2 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-stone-300">
       {resist ? (
         <span>
-          <span className="text-stone-500">Resists </span>
+          <span className="text-stone-500">{t("sheetPlay.resist")}</span>
           {resist}
         </span>
       ) : null}
       {immune ? (
         <span>
-          <span className="text-stone-500">Immune to </span>
+          <span className="text-stone-500">{t("sheetPlay.immune")}</span>
           {immune}
         </span>
       ) : null}
@@ -94,11 +100,15 @@ export function HitDiceSpend({
   mine: boolean;
   inCombat: boolean;
 }) {
+  const { locale, t } = useLocale();
   const rows = hitDiceRows(sheet);
   const left = rows.reduce((sum, row) => sum + row.left, 0);
   const [windowOpen, setWindowOpen] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [said, setSaid] = useState<{ text: string; tone: "ok" | "refused" } | null>(null);
+  const [said, setSaid] = useState<{ text?: string; key?: MessageKey; healed?: number; hp?: string; tone: "ok" | "refused" } | null>(null);
+  const saidText = !said ? "" : said.key ? t(said.key) : typeof said.healed === "number"
+    ? t("sheetPlay.hitDie.rolled", { healed: said.healed, hp: said.hp ? t("sheetPlay.hitDie.now", { hp: said.hp }) : "" })
+    : hitDieMessageText(said.text ?? "", locale);
   const asks = mine && !inCombat;
   const open = asks && windowOpen;
 
@@ -137,16 +147,16 @@ export function HitDiceSpend({
       const data = (await response.json().catch(() => ({}))) as { error?: string; healed?: number; hp?: string };
       if (!response.ok) {
         // The route's own sentence (not resting, a fight on, none left).
-        setSaid({ text: data.error ?? "The hit die was not spent.", tone: "refused" });
+        setSaid({ ...(data.error ? { text: data.error } : { key: "sheetPlay.hitDie.refused" }), tone: "refused" });
         check();
         return;
       }
       setSaid({
-        text: typeof data.healed === "number" ? `Rolled: ${data.healed} hit points back${data.hp ? ` (now ${data.hp})` : ""}.` : "Hit die spent.",
+        ...(typeof data.healed === "number" ? { healed: data.healed, hp: data.hp } : { key: "sheetPlay.hitDie.spent" }),
         tone: "ok",
       });
     } catch {
-      setSaid({ text: "The spend did not reach the server.", tone: "refused" });
+      setSaid({ key: "sheetPlay.hitDie.network", tone: "refused" });
     } finally {
       setBusy(false);
     }
@@ -160,10 +170,10 @@ export function HitDiceSpend({
             key={`${row.label}-${row.die}`}
             className="motion-pop inline-flex items-center gap-1 rounded-lg border border-stone-800 px-2 py-0.5 font-mono text-[11px] text-stone-300"
             style={{ animationDelay: `${index * 45}ms` }}
-            title={`${row.label}: ${row.left} of ${row.total} ${row.die} left`}
+            title={t("sheetPlay.hitDie.remaining", { class: locale === "en" ? row.label : characterLabel("class", row.label, locale), left: row.left, total: row.total, die: row.die })}
           >
             <GameIcon icon={{ kind: "glyph", key: `die-${row.die}` }} size="size-4" />
-            {rows.length > 1 ? <span className="capitalize text-stone-500">{row.label}</span> : null}
+            {rows.length > 1 ? <span className="capitalize text-stone-500">{locale === "en" ? row.label : characterLabel("class", row.label, locale)}</span> : null}
             {row.left}/{row.total}
             {row.die}
           </span>
@@ -174,20 +184,20 @@ export function HitDiceSpend({
             onClick={() => void spend()}
             disabled={busy || left <= 0}
             className={cn(ui.btnSmall, "hit-dice-spend motion-pop min-h-8")}
-            title={left > 0 ? "Roll one hit die, add your Constitution, and heal that much." : "No hit dice left until a long rest."}
+            title={t(left > 0 ? "sheetPlay.hitDie.tip" : "sheetPlay.hitDie.empty")}
           >
             {busy ? <Loader2 className="size-3.5 animate-spin" /> : <Dices className="size-3.5" />}
-            Spend a hit die
+            {t("sheetPlay.hitDie.spend")}
           </button>
         ) : null}
       </div>
       {said ? (
         <p
-          key={said.text}
+          key={saidText}
           role={said.tone === "refused" ? "alert" : "status"}
           className={cn("animate-fade-up text-[11px]", said.tone === "refused" ? "text-amber-300" : "text-emerald-300")}
         >
-          {said.text}
+          {saidText}
         </p>
       ) : null}
     </div>

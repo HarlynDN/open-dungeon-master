@@ -172,7 +172,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/CharacterSheetDialog.tsx",
-      "state": "pending"
+      "state": "pending",
+      "review": "Locale-aware HP/speed/condition/charge helpers wired; full dialog chrome, material descriptions and controls remain pending."
     },
     {
       "path": "src/app/campaigns/[campaignId]/CharacterVoices.tsx",
@@ -583,7 +584,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/PartyPanel.tsx",
-      "state": "pending"
+      "state": "pending",
+      "review": "Owned party chrome, native identity and condition notes, 34 core resource names, typed visible enemy references and controls localized. Additional native/subclass resource names and related dialog flows still need review."
     },
     {
       "path": "src/app/campaigns/[campaignId]/PendingRollCard.tsx",
@@ -1704,11 +1706,13 @@
     },
     {
       "path": "src/components/sheet/SheetChoices.tsx",
-      "state": "pending"
+      "state": "pending",
+      "review": "OtherSpeeds localized; FeatureChoicePicker copy and option display remain pending."
     },
     {
       "path": "src/components/sheet/SheetCounters.tsx",
-      "state": "pending"
+      "state": "pending",
+      "review": "Own slot/resource control and counter copy localized; caller-provided native resource names/help, unlimited-use guidance and disabled-action notes remain pending."
     },
     {
       "path": "src/components/sheet/SheetGearRow.tsx",
@@ -1716,7 +1720,8 @@
     },
     {
       "path": "src/components/sheet/SheetParts.tsx",
-      "state": "pending"
+      "state": "pending",
+      "review": "ConditionChips labels and duration tails localized; feature/feat/training material remains pending."
     },
     {
       "path": "src/components/sheet/SheetSpells.tsx",
@@ -1725,7 +1730,8 @@
     },
     {
       "path": "src/components/sheet/SheetState.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned state/defense/hit-die controls, known endpoint refusals, locale-switchable success and failure messages, and native class labels reviewed. Names/authored triggers/unknown diagnostics remain literal; 32 frozen English fixtures and real one-die route payload regression pass."
     },
     {
       "path": "src/components/sheet/SpellBook.tsx",
@@ -1734,7 +1740,8 @@
     },
     {
       "path": "src/components/sheet/sheet-state.ts",
-      "state": "pending"
+      "state": "pending",
+      "review": "HP/speed/state/defense/condition/charge/counter display adapters localized with English defaults preserved. Unlimited resource guidance and attunement refusal prose still need review."
     },
     {
       "path": "src/components/sheet/useSpellPool.ts",

@@ -2,6 +2,7 @@ import { defineMessages } from './catalog.ts';
 
 // Original captions from engine purposes. No roll result is inferred here.
 export const SPECIAL_ROLL_MESSAGES = /*#__PURE__*/ defineMessages({
+  "combatSpecial.level-up": { en: "level {level}: hit die d{sides}", "zh-CN": "升至 {level} 级：生命骰 d{sides}" },
   'combatSpecial.agreement': { en: 'whether {target} agrees', 'zh-CN': '{target}是否同意' },
   "combatSpecial.named": { en: "{name}", "zh-CN": "{name}" },
   "combatSpecial.healing": { en: "{name}: healing", "zh-CN": "{name}：治疗量" },

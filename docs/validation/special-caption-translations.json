@@ -48,13 +48,13 @@
     "src/lib/dm/world-tools.ts": "a193468f124d31c49319fbbb26bd594607ff923b2ea66b92ee1f90e5f3c19d3f",
     "src/lib/roll-labels.ts": "afe57bc08299f5edf94827b8d55ae13cd7b07c2e0f5660ba36f9770e6a3dd865",
     "src/lib/roll-presentation.ts": "644383d124542129ea03d71baeb4d0547c4e52d9957dbb8e453f94fdd6137267",
-    "src/lib/roll-special-presentation.ts": "952205a98b1353ff922cac43321586e9f2c149a23a49f6902dd594c39c5628bc",
-    "src/lib/i18n/roll-presentations.ts": "e9473f0c953f02d8659577933b35613fb9896564b3ccd3a411a3daf67928c29e",
+    "src/lib/roll-special-presentation.ts": "050cc8074cec75b611565f9fd833121b187889167921aa8bfc8860b3e59a9118",
+    "src/lib/i18n/roll-presentations.ts": "3999299af4647b88f15531dfeca1c5bae09350bbd2479b877eba0c8d7706d582",
     "src/lib/i18n/check-roll-messages.ts": "22c2f41bd26ab8aa4c9f198e42e530c37e0adab54ad8227f878ee4ce766353a4",
-    "src/lib/i18n/special-roll-messages.ts": "1a37654791606e845730744f6c4de4e3045df873284213e1f44c016a4d346992",
+    "src/lib/i18n/special-roll-messages.ts": "2da4569d2861de7be61a703df37bccfa9d0317bd4c41d9f24b65df8c7a2a5833",
     "src/lib/i18n/glossary.zh-CN.ts": "356a38e27c23d45dbb0318802b35b7e928158f0a3888ea040976a217ed2d1f4d",
-    "src/lib/i18n/resource-scope.ts": "721a075d152d876cc6977dac2f251217d375ba57b7eb5c260c54600c6142e929",
-    "src/lib/i18n/messages.ts": "478f742e28a0c154a3e9e8eade3390fde63d121bf21c6c4eb747cf3d4890ac79",
+    "src/lib/i18n/resource-scope.ts": "69ac97fecf5c508828cd1070c285e98cd67114b5e675a1420399862d33e10a50",
+    "src/lib/i18n/messages.ts": "97e5f9c8b717474524fb4c752d1d22a33f869063623f4493ff0ee7225ec3e31d",
     "scripts/lib/special-caption-fixtures.mjs": "8c37932032e361c72af04e557a71c6383a8d86c2f4651834b4a9077a454e815a",
     "scripts/lib/special-caption-contracts.mjs": "68ab118a2d22851acb3c52065c74f90759619f9efa9fb1151f6310f631c8db3d"
   },
@@ -119,6 +119,38 @@
           "file": "scripts/lib/special-caption-contracts.mjs",
           "previousSha256": "dd7dfb9b1237b2cfc3a58da4bbca23dc0c58870a11afb4bd66e2251b3cae7544",
           "currentSha256": "68ab118a2d22851acb3c52065c74f90759619f9efa9fb1151f6310f631c8db3d"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-11",
+      "checkpoint": "sheet state and party controls",
+      "review": "Additive sheet-play content templates, locale-aware display helpers, configurable fixture files and one level-up caption context. Source comparison by implementation agent; all 11104 prior bilingual values and 27 compressed baselines retained. Historical validation and runtime outputs are unchanged.",
+      "changed": [
+        {
+          "file": "src/lib/roll-special-presentation.ts",
+          "previousSha256": "952205a98b1353ff922cac43321586e9f2c149a23a49f6902dd594c39c5628bc",
+          "currentSha256": "050cc8074cec75b611565f9fd833121b187889167921aa8bfc8860b3e59a9118"
+        },
+        {
+          "file": "src/lib/i18n/roll-presentations.ts",
+          "previousSha256": "e9473f0c953f02d8659577933b35613fb9896564b3ccd3a411a3daf67928c29e",
+          "currentSha256": "3999299af4647b88f15531dfeca1c5bae09350bbd2479b877eba0c8d7706d582"
+        },
+        {
+          "file": "src/lib/i18n/special-roll-messages.ts",
+          "previousSha256": "1a37654791606e845730744f6c4de4e3045df873284213e1f44c016a4d346992",
+          "currentSha256": "2da4569d2861de7be61a703df37bccfa9d0317bd4c41d9f24b65df8c7a2a5833"
+        },
+        {
+          "file": "src/lib/i18n/resource-scope.ts",
+          "previousSha256": "721a075d152d876cc6977dac2f251217d375ba57b7eb5c260c54600c6142e929",
+          "currentSha256": "69ac97fecf5c508828cd1070c285e98cd67114b5e675a1420399862d33e10a50"
+        },
+        {
+          "file": "src/lib/i18n/messages.ts",
+          "previousSha256": "478f742e28a0c154a3e9e8eade3390fde63d121bf21c6c4eb747cf3d4890ac79",
+          "currentSha256": "97e5f9c8b717474524fb4c752d1d22a33f869063623f4493ff0ee7225ec3e31d"
         }
       ]
     }

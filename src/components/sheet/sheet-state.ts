@@ -30,10 +30,17 @@ import { gearDefFor } from "@/lib/srd/magic-gear";
 import { matchArmor } from "@/lib/srd/armor";
 import { matchMagicItem } from "@/lib/srd/magic-items";
 import { conditionNote, conditionNoteLine } from "@/lib/battlemap/condition-notes";
+import { conditionPresentation, type ConditionNameLookup } from "@/lib/battlemap/condition-presentation";
+import { CONDITION_MATERIAL_INDEX } from "@/lib/i18n/condition-material-index";
+import { conditionDisplay, conditionLabel } from "@/lib/i18n/condition-presentations";
+import { damageListLabel, exhaustionSummary } from "@/lib/i18n/sheet-play-presentations";
+import { referenceDisplayName } from "@/lib/i18n/references";
+import { createTranslator } from "@/lib/i18n/translator";
+import type { AppLocale } from "@/lib/i18n/locales";
 
 // ---- hit points ----
 
-export function maxHpView(sheet: CharacterSheet): { max: number; stored: number; note: string | null } {
+export function maxHpView(sheet: CharacterSheet, locale: AppLocale = "en"): { max: number; stored: number; note: string | null } {
   const max = effectiveMaxHp(sheet);
   const exhaustion = sheet.exhaustion ?? 0;
   const note =
@@ -44,7 +51,9 @@ export function maxHpView(sheet: CharacterSheet): { max: number; stored: number;
         : max > sheet.maxHp
           ? `Raised by worn, attuned gear that sets Constitution (${sheet.maxHp} without it).`
           : `The rules put the maximum at ${max} right now (${sheet.maxHp} on the sheet).`;
-  return { max, stored: sheet.maxHp, note };
+  if (locale === "en" || !note) return { max, stored: sheet.maxHp, note };
+  const key = exhaustion >= 4 && max < sheet.maxHp ? "sheetPlay.hp.exhaustion" : max > sheet.maxHp ? "sheetPlay.hp.gear" : "sheetPlay.hp.other";
+  return { max, stored: sheet.maxHp, note: createTranslator(locale)(key, { level: exhaustion, stored: sheet.maxHp, max }) };
 }
 
 // ---- speed ----
@@ -54,6 +63,7 @@ const ZEROING = ["grappled", "restrained", "incapacitated", "paralyzed", "stunne
 export function speedView(
   sheet: CharacterSheet,
   options: { encumbrance?: boolean } = {},
+  locale: AppLocale = "en",
 ): { speed: number; base: number; notes: string[] } {
   const worn = speedFor(sheet, { encumbrance: options.encumbrance ?? false });
   const conditioned = effectiveSpeed(sheet.conditions, worn);
@@ -70,7 +80,16 @@ export function speedView(
   if (speed !== conditioned) {
     notes.push(`Exhaustion ${exhaustion}: ${exhaustion >= 5 ? "speed 0" : "speed halved"}.`);
   }
-  return { speed, base: sheet.speed, notes };
+  if (locale === "en") return { speed, base: sheet.speed, notes };
+  const t = createTranslator(locale);
+  const translated: string[] = [];
+  if (worn !== sheet.speed) translated.push(t("sheetPlay.speed.gear", { base: sheet.speed, worn }));
+  if (conditioned !== worn) {
+    const zeroing = sheet.conditions.find(entry => ZEROING.includes(entry.trim().toLowerCase()));
+    translated.push(zeroing ? t("sheetPlay.speed.stopped", { condition: conditionLabel(zeroing, locale) }) : t("sheetPlay.speed.effect", { speed: conditioned }));
+  }
+  if (speed !== conditioned) translated.push(t("sheetPlay.speed.exhaustion", { level: exhaustion, effect: t(exhaustion >= 5 ? "sheetPlay.speed.zero" : "sheetPlay.speed.half") }));
+  return { speed, base: sheet.speed, notes: translated };
 }
 
 // ---- the state beside the conditions ----
@@ -82,7 +101,7 @@ export type StateTag = {
   note: string;
 };
 
-export function stateTags(sheet: CharacterSheet): StateTag[] {
+export function stateTags(sheet: CharacterSheet, locale: AppLocale = "en"): StateTag[] {
   const tags: StateTag[] = [];
   const saves = sheet.deathSaves;
   if (saves?.dead) {
@@ -129,13 +148,44 @@ export function stateTags(sheet: CharacterSheet): StateTag[] {
   if (inspiration && inspiration.used < inspiration.max) {
     tags.push({ id: "inspiration", label: "Inspiration", tone: "bless", note: "Spend it for advantage on one attack, save or check." });
   }
-  return tags;
+  if (locale === "en") return tags;
+  const t = createTranslator(locale);
+  return tags.map(tag => {
+    switch (tag.id) {
+      case "dead": return { ...tag, label: t("sheetPlay.dead"), note: t("sheetPlay.dead.note") };
+      case "stable": return { ...tag, label: t("sheetPlay.stable"), note: t("sheetPlay.stable.note") };
+      case "dying": {
+        const counts = { successes: saves!.successes, failures: saves!.failures,
+          successWord: t(saves!.successes === 1 ? "sheetPlay.success.one" : "sheetPlay.success.many"),
+          failureWord: t(saves!.failures === 1 ? "sheetPlay.failure.one" : "sheetPlay.failure.many") };
+        return { ...tag, label: t("sheetPlay.dying.count", counts), note: t("sheetPlay.dying.note", counts) };
+      }
+      case "incapacitated": {
+        const condition = conditionLabel(stopped!, locale);
+        return { ...tag, label: t("sheetPlay.incapacitated", { condition }), note: t("sheetPlay.incapacitated.note", { name: sheet.name, condition }) };
+      }
+      case "exhaustion": return { ...tag, label: t("sheetPlay.exhaustion", { level: exhaustion }), note: t("sheetPlay.exhaustion.lower", { effects: exhaustionSummary(exhaustion, locale) }) };
+      case "concentration": return { ...tag, label: t("sheetPlay.concentration", { spell: referenceDisplayName("spell", sheet.concentratingOn!, locale) }), note: t("sheetPlay.concentration.note") };
+      case "readied": {
+        const trigger = readied ? sheet.conditionMeta?.[readied]?.source : undefined;
+        return { ...tag, label: t("sheetPlay.readied"), note: t(trigger ? "sheetPlay.readied.trigger" : "sheetPlay.readied.note", { trigger: trigger ?? "" }) };
+      }
+      case "inspiration": return { ...tag, label: t("sheetPlay.inspiration"), note: t("sheetPlay.inspiration.note") };
+    }
+  });
 }
 
 // A condition's chip tail from its metadata: "until Kael's turn", "save
 // ends (WIS 13)", "from Goblin 2", "3 rounds".
-export function conditionDetail(sheet: CharacterSheet, condition: string, nameOf: (id: string) => string | null): string {
-  return conditionNoteLine(conditionNote(condition, sheet.conditionMeta?.[condition], nameOf, sheet.id));
+export function conditionDetail(sheet: CharacterSheet, condition: string, nameOf: (id: string) => string | null, locale: AppLocale = "en", displayNameOf?: ConditionNameLookup): string {
+  const note = conditionNote(condition, sheet.conditionMeta?.[condition], nameOf, sheet.id);
+  if (locale === "en") return conditionNoteLine(note);
+  // Old callers without identity metadata are treated as proper names. An
+  // enemy-looking player name must never become a creature translation.
+  const lookup: ConditionNameLookup = displayNameOf ?? (id => { const name = nameOf(id); return name ? { name, kind: "proper" } : null; });
+  const effect = CONDITION_MATERIAL_INDEX.find(row => row.match.some(alias => alias === condition.trim().toLowerCase()));
+  const projected = conditionDisplay({ label: condition, presentation: conditionPresentation(condition, sheet.conditionMeta?.[condition], lookup, sheet.id, effect?.id) }, locale);
+  return [!effect ? note.meaning : null, projected.note].filter(Boolean).join(createTranslator(locale)("combatDetail.separator"));
 }
 
 // ---- hit dice ----
@@ -159,8 +209,8 @@ export function hitDiceLine(sheet: CharacterSheet): string {
 
 // ---- defenses ----
 
-export function defensesView(sheet: CharacterSheet): { resist: string; immune: string } {
-  return { resist: pcResistances(sheet), immune: pcImmunities(sheet) };
+export function defensesView(sheet: CharacterSheet, locale: AppLocale = "en"): { resist: string; immune: string } {
+  return { resist: damageListLabel(pcResistances(sheet), locale), immune: damageListLabel(pcImmunities(sheet), locale) };
 }
 
 // ---- gear ----
@@ -176,9 +226,11 @@ export type ItemStatus = {
   attuneRefusal: string | null;
 };
 
-export function itemStatus(sheet: CharacterSheet, item: EquipmentItem): ItemStatus {
+export function itemStatus(sheet: CharacterSheet, item: EquipmentItem, locale: AppLocale = "en"): ItemStatus {
   const rule = chargeRuleOf(item);
-  const charges = rule ? `${chargesLeft(item, rule)}/${chargeMax(rule)} charges` : null;
+  const charges = !rule ? null : locale === "en"
+    ? `${chargesLeft(item, rule)}/${chargeMax(rule)} charges`
+    : createTranslator(locale)("sheetPlay.charges", { left: chargesLeft(item, rule), max: chargeMax(rule) });
   const cursed = Boolean(item.attuned && gearDefFor(item.name, item.slug)?.cursed);
   const refusal = attunementRefusal(sheet, { [item.name]: { attuned: !(item.attuned || item.attuning) } });
   return { charges, attuning: Boolean(item.attuning), cursed, attuneRefusal: refusal };
@@ -192,12 +244,18 @@ export function itemStatus(sheet: CharacterSheet, item: EquipmentItem): ItemStat
 // is spent by the cast itself, so the sheet offers no minus for it.
 export type CounterView = { line: string; spendable: boolean; note: string | null };
 
-export function counterView(id: string, pool: { max: number; used: number }): CounterView {
+export function counterView(id: string, pool: { max: number; used: number }, locale: AppLocale = "en"): CounterView {
   const def = resourceDef(id);
   const rest = def?.recharge === "short" ? "a short or long rest" : "a long rest";
+  const t = locale === "en" ? null : createTranslator(locale);
+  const restLabel = t ? t(def?.recharge === "short" ? "sheetPlay.rest.short" : "sheetPlay.rest.long") : rest;
   if (pool.max >= UNLIMITED_USES) {
+    const englishLine = pool.used ? `used ${pool.used} time${pool.used === 1 ? "" : "s"} since ${rest}` : `unused since ${rest}`;
+    const line = !t ? englishLine : pool.used
+      ? t("sheetPlay.counter.used", { count: pool.used, word: t(pool.used === 1 ? "sheetPlay.counter.time" : "sheetPlay.counter.times"), rest: restLabel })
+      : t("sheetPlay.counter.unused", { rest: restLabel });
     return {
-      line: pool.used ? `used ${pool.used} time${pool.used === 1 ? "" : "s"} since ${rest}` : `unused since ${rest}`,
+      line,
       spendable: false,
       note: def?.guidance ?? null,
     };
@@ -205,16 +263,16 @@ export function counterView(id: string, pool: { max: number; used: number }): Co
   return {
     line: `${pool.max - pool.used}/${pool.max}`,
     spendable: !def?.passive,
-    note: def?.passive ? "Spent by the server when it is used; back after " + rest + "." : null,
+    note: def?.passive ? t ? t("sheetPlay.counter.passive", { rest: restLabel }) : "Spent by the server when it is used; back after " + rest + "." : null,
   };
 }
 
 // Flying and swimming speeds beside the walking one (SheetDerived.speeds:
 // Stormborn, Wind Soul, a raging eagle, Avenging Angel...).
-export function otherSpeedsLine(speeds: { fly?: number; swim?: number } | undefined): string[] {
+export function otherSpeedsLine(speeds: { fly?: number; swim?: number } | undefined, locale: AppLocale = "en"): string[] {
   const out: string[] = [];
-  if (speeds?.fly) out.push(`Fly ${speeds.fly} ft`);
-  if (speeds?.swim) out.push(`Swim ${speeds.swim} ft`);
+  if (speeds?.fly) out.push(locale === "en" ? `Fly ${speeds.fly} ft` : createTranslator(locale)("sheetPlay.speed.fly", { speed: speeds.fly }));
+  if (speeds?.swim) out.push(locale === "en" ? `Swim ${speeds.swim} ft` : createTranslator(locale)("sheetPlay.speed.swim", { speed: speeds.swim }));
   return out;
 }
 

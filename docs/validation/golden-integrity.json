@@ -25,5 +25,6 @@
   "special-caption-contracts.json": "5efeb3168136ee79920d9854882670ce42bb799600ae6263c7d56b51f7cae119",
   "special-caption-goldens.json": "a1cd9e0786e1a6cfc6490faba48dead4750269a81817d2faa3784066ffe9a66c",
   "initiative-social-contracts.json": "27aaea3f90ae006f105a827743699ab728f7032174cfdfe47225e1eb75f291ac",
-  "initiative-social-goldens.json": "ebd6bbac0932810068aafb6fd2826dbe936347a91e40da153e140810105b4fa4"
+  "initiative-social-goldens.json": "ebd6bbac0932810068aafb6fd2826dbe936347a91e40da153e140810105b4fa4",
+  "sheet-party-goldens.json": "b3c97e9a064712cea471e5cea6533785dbdd5fe0691e81287b9f63eb391038d4"
 }

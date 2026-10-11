@@ -12,7 +12,9 @@ const url=source=>'data:text/javascript;base64,'+Buffer.from(source).toString('b
 
 // Render actual owned JSX with transport/device discovery replaced. Seeded
 // state exercises failures and editable panels without issuing mutations.
-export async function openCombatRenderer({sourceOf=file=>fs.readFileSync(path.join(root,file),'utf8')}={}) {
+export async function openCombatRenderer({sourceOf=file=>fs.readFileSync(path.join(root,file),'utf8'),
+  files=['RollCard','PendingRollCard','SkillCheckCard','EncounterPanel','DmInitiativePanel','BoardChrome','CinematicParts'].map(name=>`src/app/campaigns/[campaignId]/${name}.tsx`),
+  stubs={}}={}) {
   const state={queues:{},diceSources:{},pixels:[],elements:[],confirmations:[],confirmReplies:[],updates:[],cursors:{}};
   const token='odm-combat-ui-'+Math.random();globalThis[token]=state;
   const shells=url(`export const GameIcon=()=>null;export const appConfirm=async(...args)=>{const s=globalThis[${JSON.stringify(token)}];s.confirmations.push(args);return s.confirmReplies.shift()??false;};`);
@@ -24,7 +26,7 @@ export async function openCombatRenderer({sourceOf=file=>fs.readFileSync(path.jo
     export const supportsShake=()=>false;export const useShakeToRoll=()=>false;
     export const onShake=()=>()=>{};export const buzz=()=>{};`);
   const aliases={'@/components/ui/GameIcon':shells,'@/components/ui/ConfirmDialog':shells,
-    '@/lib/dice/dice-sources':devices,'@/lib/dice/pixels-dice':devices,'@/lib/dice/shake-to-roll':devices};
+    '@/lib/dice/dice-sources':devices,'@/lib/dice/pixels-dice':devices,'@/lib/dice/shake-to-roll':devices,...stubs};
   aliases['react/jsx-runtime']=url(`import {jsx as realJsx,jsxs as realJsxs} from ${JSON.stringify(import.meta.resolve('react/jsx-runtime'))};
     export {Fragment} from ${JSON.stringify(import.meta.resolve('react/jsx-runtime'))};
     const capture=(fn,type,props,key)=>{globalThis[${JSON.stringify(token)}].elements.push({type,props});return fn(type,props,key);};
@@ -54,7 +56,7 @@ export async function openCombatRenderer({sourceOf=file=>fs.readFileSync(path.jo
   };
   const provider=moduleUrl('src/lib/i18n/LocaleProvider.tsx');aliases['@/lib/i18n/LocaleProvider']=provider;
   const components={};
-  for(const file of ['RollCard','PendingRollCard','SkillCheckCard','EncounterPanel','DmInitiativePanel','BoardChrome','CinematicParts'])Object.assign(components,await import(moduleUrl(`src/app/campaigns/[campaignId]/${file}.tsx`)));
+  for(const file of files)Object.assign(components,await import(moduleUrl(file)));
   const {LocaleProvider}=await import(provider);
   const render=(component,props,locale='en',options={})=>{
     state.queues=structuredClone(options.queues??{});state.diceSources=options.diceSources??{};state.pixels=options.pixels??[];

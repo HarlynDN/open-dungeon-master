@@ -127,6 +127,7 @@ export function rollPresentationLabel(raw: unknown, locale: AppLocale): string |
       if ("hitDice" in c) values.hitDice = c.hitDice;
       if ("threshold" in c) values.threshold = c.threshold;
       if ("level" in c) values.level = c.level;
+      if ("sides" in c) values.sides = c.sides;
       if ("count" in c) values.count = c.count;
       if ("multiplier" in c) { values.multiplier = c.multiplier; values.dice = c.dice; }
       if (c.kind === "affliction-onset") values.unit = t(`combatSpecial.unit.${c.unit}`);

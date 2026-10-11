@@ -7,11 +7,13 @@ import { replayAnimation } from "@/lib/motion/replay";
 import { featureChoices } from "@/lib/battlemap/hand-subclass";
 import { otherSpeedsLine } from "@/components/sheet/sheet-state";
 import type { CharacterSheet } from "@/lib/schemas/sheet";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 // Flying and swimming speeds a subclass grants (SheetDerived.speeds), as
 // chips under the vitals; nothing when the character has none.
 export function OtherSpeeds({ speeds }: { speeds: { fly?: number; swim?: number } | undefined }) {
-  const lines = otherSpeedsLine(speeds);
+  const { locale } = useLocale();
+  const lines = otherSpeedsLine(speeds, locale);
   if (!lines.length) return null;
   return (
     <div className="flex flex-wrap gap-1.5 stagger-pop">

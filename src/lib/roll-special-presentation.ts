@@ -9,6 +9,7 @@ export type RollSpecialContext =
   | { kind: "short-rest"; count: number; songDie?: string; chefDie?: string }
   | { kind: "mirror"; threshold: number }
   | { kind: "intervention"; level: number }
+  | { kind: "level-up"; level: number; sides: number }
   | { kind: "treasure"; dice: string; multiplier: number }
   | { kind: "affliction-onset"; name: string; unit: "hours" | "days"; literalName?: true }
   | { kind: "madness"; term: "short" | "long" | "indefinite" }
@@ -28,6 +29,8 @@ export function parseRollSpecialContext(raw: unknown): RollSpecialContext | unde
   if (c.kind === "madness" && typeof c.term === "string" && ["short", "long", "indefinite"].includes(c.term)) return { kind: "madness", term: c.term as "short" | "long" | "indefinite" };
   if (c.kind === "mirror" && finite(c.threshold)) return { kind: "mirror", threshold: c.threshold };
   if (c.kind === "intervention" && finite(c.level)) return { kind: "intervention", level: c.level };
+  if (c.kind === "level-up" && finite(c.level) && Number.isInteger(c.level) && c.level >= 2 && c.level <= 20
+    && finite(c.sides) && Number.isInteger(c.sides) && c.sides > 0 && c.sides <= 1000) return { kind: "level-up", level: c.level, sides: c.sides };
   if (c.kind === "treasure" && finite(c.multiplier) && typeof c.dice === "string") return { kind: "treasure", dice: c.dice, multiplier: c.multiplier };
   if (c.kind === "short-rest" && finite(c.count)) {
     if ([c.songDie, c.chefDie].some(value => value !== undefined && typeof value !== "string")) return;
