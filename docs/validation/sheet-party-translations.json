@@ -20,7 +20,7 @@
     "src/app/campaigns/[campaignId]/CharacterSheetDialog.tsx": "d582cce066ecf1701ac1900b82d14986ec1105cba2ae0a4297cd1c041d1dd5b2",
     "src/app/campaigns/[campaignId]/PartyPanel.tsx": "2bb148a325e0661352856dbf50ec0972d422275f3bdaad0f3abe97c1b1abd726",
     "src/components/sheet/SheetChoices.tsx": "c69cbce9c5be6af8d7dc83146f908b342db38423fde595e852c847307c974568",
-    "src/components/sheet/SheetCounters.tsx": "e9b1d6783e426f2ebb634f9112c59878a6698069f70b2aa57361f97ef671382c",
+    "src/components/sheet/SheetCounters.tsx": "649bf1de0c499e00874d6edfdbf397db883eb913786bd58bf5f471978bab003d",
     "src/components/sheet/SheetParts.tsx": "e47623ce33dfbf4f8f4ea14bafa08f253d2fa6e6e95af05be55d4deebb3ae363",
     "src/components/sheet/SheetState.tsx": "d664ff1c154de748ef0605e2dc44a05ae5b534b4c071070d6cc6a3da2621906b",
     "src/components/sheet/sheet-state.ts": "213c086dd18e14a7036c09029752c7793907085889f97eea90257fd8c577ce56",
@@ -68,7 +68,9 @@
     "priorComponentSha256": {
       "src/app/campaigns/[campaignId]/CharacterSheetDialog.tsx": "cab611ffd0f4baba4f0b24ae42ea8b6428c98e1a662815933bf75ec5299cda4d",
       "src/app/campaigns/[campaignId]/PartyPanel.tsx": "d8ba7ee34768ef7fdaf333e73f40d5eb2c2b52cc6aa023379ebb3f2378a3ae27",
-      "src/components/sheet/SheetChoices.tsx": "8589bf5762754172c6d5c57b854a6a4c5bdcd41eacbabe369d34eeadb1c0876d"
-    }
+      "src/components/sheet/SheetChoices.tsx": "8589bf5762754172c6d5c57b854a6a4c5bdcd41eacbabe369d34eeadb1c0876d",
+      "src/components/sheet/SheetCounters.tsx": "e9b1d6783e426f2ebb634f9112c59878a6698069f70b2aa57361f97ef671382c"
+    },
+    "counterTooltipReview": "The two-line SheetCounters change displays reviewed guidance in an unlimited-counter tooltip. The prior 32 English renders and 11 state views remain exact; new sheet-dialog checks retain 26 original English renders and verify reviewed resource labels/help and canonical usage plus real short-rest recharge. Engine reading, passive gates and callback values are unchanged."
   }
 }

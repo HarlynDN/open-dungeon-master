@@ -50,8 +50,10 @@ import { CINEMATIC_MESSAGES } from "./cinematic-messages.ts";
 import { SHEET_PLAY_MESSAGES } from "./sheet-play-messages.ts";
 import { SHEET_DIALOG_MESSAGES } from "./sheet-dialog-messages.ts";
 import { SHEET_RESOURCE_HELP_MESSAGES } from "./sheet-resource-help-messages.ts";
+import { AUTHORED_RESOURCE_MESSAGES } from "./authored-resource-messages.ts";
 
 const en = {
+  ...AUTHORED_RESOURCE_MESSAGES.en,
   ...SHEET_RESOURCE_HELP_MESSAGES.en,
   ...SHEET_DIALOG_MESSAGES.en,
   ...SHEET_PLAY_MESSAGES.en,
@@ -131,6 +133,7 @@ export type MessageKey = keyof typeof en;
 type Messages = Record<MessageKey, string>;
 
 const zhCN: Messages = {
+  ...AUTHORED_RESOURCE_MESSAGES["zh-CN"],
   ...SHEET_RESOURCE_HELP_MESSAGES["zh-CN"],
   ...SHEET_DIALOG_MESSAGES["zh-CN"],
   ...SHEET_PLAY_MESSAGES["zh-CN"],

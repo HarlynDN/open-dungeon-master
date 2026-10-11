@@ -14,6 +14,7 @@ const view = await import('../src/components/sheet/sheet-state.ts');
 const {conditionNamesLookup} = await import('../src/lib/battlemap/condition-presentation.ts');
 const {hitDieMessageText, resourceLabel} = await import('../src/lib/i18n/sheet-play-presentations.ts');
 const {MESSAGE_CATALOGS} = await import('../src/lib/i18n/messages.ts');
+const {SHEET_PLAY_MESSAGES} = await import('../src/lib/i18n/sheet-play-messages.ts');
 const {parseRollPresentation} = await import('../src/lib/roll-presentation.ts');
 const {specialRoll} = await import('../src/lib/roll-labels.ts');
 const {localizedRollCardLabel} = await import('../src/lib/i18n/combat-ui-presentations.ts');
@@ -190,7 +191,9 @@ await test('source-compared fingerprints and the content delivery boundary remai
     const ui = JSON.parse(fs.readFileSync(path.join(root, `src/lib/i18n/resources/${locale}.ui.json`)));
     const content = JSON.parse(fs.readFileSync(path.join(root, `src/lib/i18n/resources/${locale}.content.json`)));
     assert.equal(Object.keys(ui).some(key => key.startsWith('sheetPlay.')), false);
-    const keys = Object.keys(content).filter(key => key.startsWith('sheetPlay.'));
+    // Verify this batch's original 149 entries; later resource translations
+    // can share the namespace without rewriting this review's fixed scope.
+    const keys = Object.keys(SHEET_PLAY_MESSAGES[locale]);
     assert.equal(keys.length, 149);
     for (const key of keys) assert.equal(content[key], MESSAGE_CATALOGS[locale][key]);
   }

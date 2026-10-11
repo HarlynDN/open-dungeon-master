@@ -13,7 +13,9 @@ const renderer = await openSheetDialogRenderer();
 const {MESSAGE_CATALOGS} = await import('../src/lib/i18n/messages.ts');
 const {registerLocaleScope} = await import('../src/lib/i18n/client-catalogs.ts');
 registerLocaleScope(MESSAGE_CATALOGS,'content');
-const {RESOURCE_DEFS} = await import('../src/lib/srd/class-resources.ts');
+const {RESOURCE_DEFS, UNLIMITED_USES} = await import('../src/lib/srd/class-resources.ts');
+const authoredResources = JSON.parse(fs.readFileSync(path.join(root,'src/lib/srd/authored-resources.json'),'utf8')).resources;
+const {resourceLabel} = await import('../src/lib/i18n/sheet-play-presentations.ts');
 const {sheetTimePassed, sheetUsageMessage, sheetResourceHelp, sheetArmorParts, sheetOwedChoice} = await import('../src/lib/i18n/sheet-dialog-presentations.ts');
 const en = sheetDialogFixtures(renderer), zh = sheetDialogFixtures(renderer,'zh-CN');
 const html = name => {const row=zh.find(row=>row.name===name);assert.ok(row,name);return row.html;};
@@ -45,11 +47,11 @@ await test('authored notes remain escaped and visible only to the sheet owner',(
   const hidden=renderer.render('CharacterSheetDialog',{...own,mine:false,sheet:dialogSheet({notes:'private secret',backstory:'public story'})},'zh-CN');
   assert.doesNotMatch(hidden,/private secret|仅自己可见/);assert.match(hidden,/public story/);
 });
-await test('casting/resource help localizes 34 native explanations without changing engine guidance or unknown text',()=>{
+await test('casting/resource help localizes 174 native explanations without changing engine guidance or unknown text',()=>{
   assert.match(html('dialog/spells'),/智力.*难度.*攻击加值.*1环.*2环.*戏法不消耗法术位/);
   assert.match(html('dialog/pact'),/邪术师.*契约法术位，2环.*短休后恢复/);
   const keys=Object.keys(MESSAGE_CATALOGS.en).filter(k=>k.startsWith('sheetDialog.resourceHelp.'));
-  assert.equal(keys.length,34);
+  assert.equal(keys.length,174);
   for(const key of keys){
     const id=key.split('.').at(-1),def=RESOURCE_DEFS.find(row=>row.id===id);
     assert.ok(def,id);assert.equal(MESSAGE_CATALOGS.en[key],def.guidance);
@@ -59,6 +61,31 @@ await test('casting/resource help localizes 34 native explanations without chang
   assert.match(sheetResourceHelp('second_wind',RESOURCE_DEFS.find(r=>r.id==='second_wind').guidance,'zh-CN'),/附赠动作.*1d10.*战士等级/);
   assert.equal(sheetResourceHelp('second_wind','Authored override <script>','zh-CN'),'Authored override <script>');
   assert.equal(sheetResourceHelp('homebrew','Fireball <script>','zh-CN'),'Fireball <script>');
+});
+await test('all 140 authored resource rows render localized names/help with source dice and shared terminology intact',()=>{
+  assert.equal(authoredResources.length,140);
+  const resources=Object.fromEntries(authoredResources.map(row=>[row.id,{max:2,used:1}]));
+  const sheet=dialogSheet({resources:{...resources,overchannel:{max:UNLIMITED_USES,used:2},homebrew:{max:3,used:1}}});
+  const before=structuredClone(sheet);
+  const dice=text=>(text.match(/\b(?:\d+)?d\d+s?\b/g)??[]).map(term=>term.toLowerCase().replace(/s$/,''));
+  for(const locale of ['en','zh-CN']){
+    renderer.render('CharacterSheetDialog',{...own,sheet},locale);
+    const helps=renderer.elements().filter(row=>typeof row.props.text==='string'&&typeof row.props.label==='string');
+    for(const row of authoredResources){
+      const nameKey='sheetPlay.resourceName.'+row.id,helpKey='sheetDialog.resourceHelp.'+row.id;
+      assert.equal(MESSAGE_CATALOGS.en[nameKey],row.displayName,row.id);
+      assert.equal(MESSAGE_CATALOGS.en[helpKey],row.guidance,row.id);
+      assert.ok(helps.some(button=>button.props.label===MESSAGE_CATALOGS[locale][nameKey]&&button.props.text===MESSAGE_CATALOGS[locale][helpKey]),locale+':'+row.id);
+      assert.deepEqual(dice(MESSAGE_CATALOGS['zh-CN'][helpKey]),dice(row.guidance),row.id);
+      for(const key of Object.keys(MESSAGE_CATALOGS.en).filter(key=>!key.startsWith('sheetPlay.resourceName.')&&MESSAGE_CATALOGS.en[key].toLowerCase()===row.displayName.toLowerCase()))
+        assert.equal(MESSAGE_CATALOGS['zh-CN'][nameKey],MESSAGE_CATALOGS['zh-CN'][key],row.id+':'+key);
+    }
+    const title=MESSAGE_CATALOGS[locale]['sheetDialog.resourceHelp.overchannel'];
+    assert.ok(renderer.elements().some(row=>row.type==='span'&&row.props.title===title),'unlimited resource tooltip: '+locale);
+  }
+  assert.equal(resourceLabel('homebrew','Authored name <script>','zh-CN'),'Authored name <script>');
+  assert.equal(sheetResourceHelp('sub_bladesong','Authored override <script>','zh-CN'),'Authored override <script>');
+  assert.deepEqual(sheet,before);
 });
 await test('gear gates and wear/attunement callbacks keep canonical flags and names',()=>{
   assert.match(html('gear/plate'),/全身板甲.*穿戴/);
@@ -179,5 +206,27 @@ await test('new sheet dialog/material keys stay in route content resources and o
     const keys=Object.keys(MESSAGE_CATALOGS[locale]).filter(k=>k.startsWith('sheetDialog.'));
     assert.ok(keys.length>160);for(const key of keys){assert.equal(ui[key],undefined);assert.equal(content[key],MESSAGE_CATALOGS[locale][key]);}
   }
+});
+await test('Chinese and English resource counter clicks post one canonical usage update and preserve real short-rest recharge',async()=>{
+  const hero=world.addHero({name:'阿明',class:'fighter',level:3,subclass:'Battle Master',features:[{name:'Combat Superiority'}]});
+  const {getUserById}=await import('../src/lib/db/users.ts');world.signIn(getUserById(hero.userId));
+  const route=await world.route('campaigns/[campaignId]/sheet/usage');
+  const calls=[],realFetch=globalThis.fetch;
+  globalThis.fetch=async(url,options)=>{calls.push({url,...options});return route.POST(new Request('http://odm.test/usage',options),{params:Promise.resolve({campaignId:world.campaignId})});};
+  try{
+    for(const locale of ['zh-CN','en']){
+      world.patch(hero.id,{resources:{sub_superiority_dice:{max:4,used:0}}});
+      renderer.render('CharacterSheetDialog',{...own,sheet:world.sheet(hero.id)},locale);
+      const row=renderer.elements().find(({props})=>props.id==='sub_superiority_dice'&&typeof props.onSpend==='function');assert.ok(row);
+      assert.equal(row.props.name,locale==='zh-CN'?'卓越骰':'Superiority Dice');
+      const before=calls.length;row.props.onSpend();await new Promise(resolve=>setImmediate(resolve));await new Promise(resolve=>setImmediate(resolve));
+      assert.equal(calls.length-before,1);assert.deepEqual(JSON.parse(calls.at(-1).body),{resources:{sub_superiority_dice:1}});
+      assert.equal(world.sheet(hero.id).resources.sub_superiority_dice.used,1);
+    }
+  }finally{globalThis.fetch=realFetch;}
+  const {getClock}=await import('../src/lib/db/clock.ts');const before=getClock(world.campaignId).instant;
+  const rested=await world.invoke('take_rest',{kind:'short'});assert.equal(rested.ok,true,JSON.stringify(rested));
+  assert.deepEqual(world.sheet(hero.id).resources.sub_superiority_dice,{max:4,used:0});
+  assert.equal(getClock(world.campaignId).instant-before,60);
 });
 world.close();finish();

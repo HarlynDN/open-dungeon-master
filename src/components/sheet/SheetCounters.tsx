@@ -5,6 +5,7 @@ import { cn } from "@/lib/cn";
 import { InfoButton } from "@/components/ui/InfoDialog";
 import { counterView } from "@/components/sheet/sheet-state";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { sheetResourceHelp } from "@/lib/i18n/sheet-dialog-presentations";
 
 // The character sheet's counters: a spell slot level as marks, and a class
 // resource's row with the engine's reading of it. Split from
@@ -130,7 +131,7 @@ export function ResourceRow({
         <Minus className="size-3" />
       </button>
     ) : null}
-    <span key={pool.used} className="motion-pop inline-block" title={counter.note ?? undefined}>
+    <span key={pool.used} className="motion-pop inline-block" title={sheetResourceHelp(id, counter.note ?? undefined, locale)}>
       {counter.line}
     </span>
     {/* Relentless Rage's DC climbs with each use since the

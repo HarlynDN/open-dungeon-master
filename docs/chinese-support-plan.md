@@ -29,8 +29,8 @@ flow remains incomplete; the review-repair checkpoint is a separate scoped task.
 | Locale foundation | Registry, persistence, browser fallback, typed complete catalogs, model locale policy, classified token proxy, chapter budget, CJK retrieval, IME protection | Real prompt-usage calibration; keep legacy campaign/history regressions |
 | DM safety | Per-event engine conclusions with English/Chinese renderers; AI prose separated; one text-only correction and safe fallback; shared localized enemy names in roster/initiative/prose/guard; real Codex combat acceptance | Broader spell/condition/pack coverage; conservative regex coverage is not full language understanding |
 | Embeddings | Original English deployment default retained; explicit multilingual opt-in; fixed bilingual calibration/holdout and hard-negative policy | Broader pack quality; opt-in affects English campaigns and rebuilds indexes |
-| UI | **125/437** covered files, **3262** pending literal sites, **5929** message keys; scoped AST gate; pending checks, initiative controls, encounter roster, board conditions, structured attack/area/death/check/save/special/initiative/social captions and cinematic owned UI | Remaining play/action/combat/inventory/rest/level-up/save/resume surfaces, full sheet/party dialogs and native resource guidance, native feature/reaction names; file fraction is not overall completion or an effort estimate |
-| Character creation/material | Identity, ancestry, class introductions, ability allocation, gear, spell book/preparation and finish preview; 517 spell and 228 equipment names; 257-entry contextual terminology policy and lint gate; original-source review records | Remaining material beyond reviewed names/creator snippets; authored/pack text retains original language |
+| UI | **125/437** covered files, **3262** pending literal sites, **6209** message keys; scoped AST gate; pending checks, initiative controls, encounter roster, board conditions, structured attack/area/death/check/save/special/initiative/social captions and cinematic owned UI | Remaining play/action/combat/inventory/rest/level-up/save/resume surfaces, full sheet/party dialogs and native resource guidance, native feature/reaction names; file fraction is not overall completion or an effort estimate |
+| Character creation/material | Identity, ancestry, class introductions, ability allocation, gear, spell book/preparation and finish preview; 517 spell and 228 equipment names; 257-entry contextual terminology policy and lint gate; 174/415 resource names and guidance; original-source review records | Remaining material beyond reviewed names/creator snippets; User-authored/pack text retains original language |
 | Player system logs | Structured rule diagnostics and engine-generated combat conclusions retain English protocol semantics with localized presentation | General player-visible log templates; model-facing English tool results remain independent |
 | Resource delivery | UI vs content namespaces; character/campaign boundaries; generated resources checked by lint; production Turbopack build and anonymous bilingual browser switch/reload succeed; home/character/campaign SSR and initial-script payloads measured | Hydrated/lazy network totals, authenticated campaign switching and active-play browser acceptance; route-level JS payload remains large |
 | Local Chinese TTS | Locale capability/voice preferences planned | Service not configured; implement/validate Unicode segmentation, voice discovery, locale-sensitive cache, numbers/units/names and real playback |
@@ -212,6 +212,21 @@ loading. The original 26 dialog renders and 28 earlier compressed baselines are
 retained. SheetChoices joins covered files; remaining native material keeps full
 sheet/gear/party flows pending. Focused checks and consolidated gate sequencing
 are recorded in the linked note.
+
+The native resource display now covers **174/415** names and explanations,
+including all 140 project-authored subclass/lineage counters in
+`src/lib/srd/authored-resources.json`. The new display catalog retains those
+English source values; dice and existing shared labels were compared, and unknown
+or overridden guidance retains its source text. Unlimited-counter tooltips also
+use reviewed display guidance. Root UI bytes, 11,858 prior bilingual values,
+29 prior baselines and resource/refill sources remain unchanged. Focused dialog
+(14), party (12), class-resource (22), spend (25) and prior-review (5) checks,
+TypeScript, changed-file ESLint and resource/terminology gates pass. The old
+149-entry party review verifies its owned catalog rather than locking the entire
+extensible namespace. Whole test/lint/build were not repeated for this content
+batch; the preceding consolidated checkpoint is recorded above. No real model,
+browser journey or audio acceptance ran here. **241** resource descriptions/names,
+feature/feat material, magic-item names and the wider play flow remain pending.
 
 1. Complete remaining native resource names/guidance and full sheet/party
    material; finish native feature/reaction names and authored paired-damage
