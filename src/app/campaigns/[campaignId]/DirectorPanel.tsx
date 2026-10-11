@@ -1,5 +1,6 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
@@ -8,8 +9,6 @@ import { GameIcon } from "@/components/ui/GameIcon";
 import { Tooltip } from "@/components/ui/Tooltip";
 import {
   ONE_SHOT_EVENT_IDS,
-  oneShotLabel,
-  oneShotBlurb,
   type OneShotEventId,
 } from "@/lib/dm/director-logic";
 
@@ -61,6 +60,7 @@ export function DirectorArmedBanner({
   // the directive's text is a spoiler. The directive itself comes from this
   // client's own request, which the server answers in full only for the lead.
   // So: armed from the stream when it has spoken, content from local always.
+  const { t } = useLocale();
   const [local, setLocal] = useState<ArmState | null>(null);
   const [busy, setBusy] = useState(false);
   const isArmedNow = armed?.armed ?? local?.armed ?? false;
@@ -109,8 +109,8 @@ export function DirectorArmedBanner({
       />
       <span className="min-w-0 flex-1 truncate">
         {state.absoluteCommand
-          ? `Direction armed: "${state.absoluteCommand}"`
-          : `${state.oneShot ? oneShotLabel(state.oneShot) : "Event"} armed for the next turn`}
+          ? t("composeUi.director.command", { command: state.absoluteCommand })
+          : t("composeUi.director.armed", { event: t(state.oneShot ? `composeUi.director.${state.oneShot}.label` : "composeUi.director.event") })}
       </span>
       {steersStory ? (
         <button
@@ -129,7 +129,7 @@ export function DirectorArmedBanner({
               .finally(() => setBusy(false));
           }}
           className={cn(ui.iconAction, "-my-1 shrink-0 disabled:opacity-50")}
-          aria-label="Disarm"
+          aria-label={t("composeUi.director.disarm")}
         >
           <X className="size-3.5" />
         </button>
@@ -147,6 +147,7 @@ export function DirectorArmedBanner({
 // privately and keep it hidden, which is why arming never enters the
 // transcript.
 export function DirectorPresets({ campaignId }: { campaignId: string }) {
+  const { t } = useLocale();
   const [busy, setBusy] = useState(false);
 
   const arm = useCallback(
@@ -171,7 +172,7 @@ export function DirectorPresets({ campaignId }: { campaignId: string }) {
   return (
     <>
       {ONE_SHOT_EVENT_IDS.map((id) => (
-        <Tooltip key={id} content={oneShotBlurb(id)}>
+        <Tooltip key={id} content={t(`composeUi.director.${id}.help`)}>
           <button
             type="button"
             disabled={busy} aria-busy={busy}
@@ -179,7 +180,7 @@ export function DirectorPresets({ campaignId }: { campaignId: string }) {
             className={cn(ui.btnSmall, "min-h-9 gap-1 py-1 pl-1.5 pr-2 text-[11px] disabled:opacity-50")}
           >
             <GameIcon icon={{ kind: "glyph", key: ONE_SHOT_GLYPH[id] }} size="size-5" />
-            {oneShotLabel(id)}
+            {t(`composeUi.director.${id}.label`)}
           </button>
         </Tooltip>
       ))}

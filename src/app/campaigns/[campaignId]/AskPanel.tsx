@@ -1,6 +1,9 @@
 "use client";
 
 import { ChevronDown, Loader2, Send, Users } from "lucide-react";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { askCitationLabel, composeErrorText } from "@/lib/i18n/compose-presentations";
+import { messageTemplate } from "@/lib/i18n/translator";
 import { isComposingInput } from "@/lib/input-composition";
 import { memo, useCallback, useState } from "react";
 import type { FormEvent } from "react";
@@ -30,44 +33,30 @@ import { ui } from "@/lib/ui";
 // campaign_messages row and no dm_turns row (src/lib/dm/ask.ts), and nothing
 // here is rendered into MessageList.
 
-const SCOPE_LABELS: Record<string, string> = {
-  story: "Story",
-  rules: "Rules",
-  sheet: "Sheet",
-};
-
-// The picker offers "auto" on top of the stored scopes, and names the sheet
-// scope from the asker's point of view.
-const SCOPE_PICKER_LABELS: Record<AskScope | "auto", string> = {
-  auto: "Auto",
-  story: "Story",
-  rules: "Rules",
-  sheet: "My sheet",
-};
-
 // The painted glyph for what a question was about.
 const SCOPE_GLYPHS: Record<string, string> = { auto: "tab-reference", story: "tab-story", rules: "system-rules", sheet: "tab-characters" };
 
 function AskEntry({ ask, meUserId }: { ask: CampaignAsk; meUserId: string }) {
+  const { locale, t } = useLocale();
   const mine = ask.userId === meUserId;
   return (
     <li className={panelRow}>
       <div className="mb-1.5 flex flex-wrap items-center gap-1.5 text-[11px] text-stone-400">
         <span className="pk-chip">
           <GameIcon icon={{ kind: "glyph", key: SCOPE_GLYPHS[ask.scope] ?? "tab-reference" }} size="size-4" />
-          {SCOPE_LABELS[ask.scope] ?? ask.scope}
+          {t(`composeUi.ask.scope.${ask.scope}`)}
         </span>
         {ask.visibility === "table" ? (
           <span className="inline-flex items-center gap-1 text-stone-400">
-            <Users className="size-3" /> {mine ? "Shared with the table" : "Asked by the table"}
+            <Users className="size-3" /> {t(mine ? "composeUi.ask.shared" : "composeUi.ask.byTable")}
           </span>
         ) : (
-          <span className="text-stone-500">Only you</span>
+          <span className="text-stone-500">{t("composeUi.ask.onlyYou")}</span>
         )}
       </div>
       <p className="mb-1.5 text-xs font-medium leading-5 text-stone-200">{ask.question}</p>
       {ask.status === "failed" ? (
-        <p className="live-in text-xs italic text-red-400">The DM could not answer this one.</p>
+        <p className="live-in text-xs italic text-red-400">{t("composeUi.ask.failed")}</p>
       ) : (
         <p className="whitespace-pre-wrap font-serif text-xs leading-5 text-stone-300">
           <Prose text={ask.answer} />
@@ -75,14 +64,14 @@ function AskEntry({ ask, meUserId }: { ask: CampaignAsk; meUserId: string }) {
       )}
       {ask.citations.length ? (
         <div className="reveal mt-2 space-y-1">
-          <SectionHead title="From the record" glyph="tab-log" level="h4" />
+          <SectionHead title={t("composeUi.ask.record")} glyph="tab-log" level="h4" />
           {ask.citations.map((citation, index) => (
             <p
               key={index}
               className="rounded-md border border-stone-700/50 bg-stone-950/60 p-1.5 text-[11px] leading-4 text-stone-400"
             >
               <span className="eyebrow mr-1 rounded bg-stone-800 px-1 text-[9px] text-amber-300/80">
-                {citation.kind}
+                {askCitationLabel(citation.kind, locale)}
                 {citation.ref ? ` ${citation.ref}` : ""}
               </span>
               {citation.quote}
@@ -122,6 +111,7 @@ function AskDockInner({
   // Refetches the thread once an answer lands.
   onAsked: () => Promise<void>;
 }) {
+  const { locale, t } = useLocale();
   const [question, setQuestion] = useState("");
   const [scope, setScope] = useState<AskScope | "auto">("auto");
   const [visibility, setVisibility] = useState<AskVisibility>("private");
@@ -154,13 +144,13 @@ function AskDockInner({
         });
         if (!response.ok) {
           const data = await response.json().catch(() => ({}));
-          setError(data.error || "The DM could not answer.");
+          setError(data.error || messageTemplate("en", "composeUi.error.ask"));
           return;
         }
         setQuestion("");
         await onAsked();
       } catch {
-        setError("Could not reach the server.");
+        setError(messageTemplate("en", "composeUi.error.network"));
       } finally {
         setSending(false);
         setPendingQuestion("");
@@ -180,7 +170,7 @@ function AskDockInner({
         className="pk-tap flex w-full items-center gap-1.5 px-3 py-1.5 text-xs text-stone-400 transition-colors hover:text-amber-100 motion-press"
       >
         <GameIcon icon={{ kind: "glyph", key: "tab-reference" }} size="size-5" />
-        <span className="eyebrow text-[11px] text-amber-300/90">Ask the DM</span>
+        <span className="eyebrow text-[11px] text-amber-300/90">{t("composeUi.ask.title")}</span>
         {answered ? <span key={answered} className="count-pop text-stone-500">({answered})</span> : null}
         {pendingQuestion && !open ? (
           <Loader2 className="size-3 animate-spin text-stone-500" />
@@ -196,13 +186,12 @@ function AskDockInner({
       <div className={cn("max-h-[28rem] flex-col", open ? "flex" : "hidden")}>
         <div className="min-h-0 flex-1 overflow-y-auto px-3 pb-3 pt-1">
           <p className="pb-2 text-xs leading-5 text-stone-500">
-            Questions about the story, the world, the rules, or your sheet. Answers come from
-            what the campaign has on record and never move the story forward.
+            {t("composeUi.ask.help")}
           </p>
           {!loaded ? (
-            <PanelLoading label="Loading..." rows={2} />
+            <PanelLoading label={t("composeUi.ask.loading")} rows={2} />
           ) : !asks.length && !pendingQuestion ? (
-            <EmptyState size="sm" art="scrolls" title="Nothing asked yet. Put a question to the DM below." />
+            <EmptyState size="sm" art="scrolls" title={t("composeUi.ask.empty")} />
           ) : (
             <ul className="stagger space-y-2">
               {asks.map((ask) => (
@@ -215,7 +204,7 @@ function AskDockInner({
                   </p>
                   <p className="flex items-center gap-2 text-xs text-stone-500">
                     <Loader2 className="size-3.5 animate-spin" />
-                    Checking the record (queued behind the DM)...
+                    {t("composeUi.ask.pending")}
                   </p>
                 </li>
               ) : null}
@@ -225,9 +214,9 @@ function AskDockInner({
 
         <form onSubmit={submit} className="border-t border-stone-800 px-3 py-2.5">
           <div className="mb-1.5 flex flex-wrap items-center gap-1.5 text-[11px] text-stone-500">
-            <span>About</span>
+            <span>{t("composeUi.ask.about")}</span>
             {/* Each choice row is its own group, so each gets its own sliding pill. */}
-            <span data-pill-group="" role="group" aria-label="About" className="inline-flex flex-wrap items-center gap-1.5">
+            <span data-pill-group="" role="group" aria-label={t("composeUi.ask.about")} className="inline-flex flex-wrap items-center gap-1.5">
             {(["auto", "story", "rules", "sheet"] as const).map((option) => (
               <button data-on={scope === option ? "" : undefined}
                 key={option}
@@ -237,19 +226,19 @@ function AskDockInner({
                 className="pk-pill pk-tap motion-press"
               >
                 <GameIcon icon={{ kind: "glyph", key: SCOPE_GLYPHS[option] }} size="size-4" />
-                {SCOPE_PICKER_LABELS[option]}
+                {t(option === "sheet" ? "composeUi.ask.mySheet" : `composeUi.ask.scope.${option}`)}
               </button>
             ))}
             </span>
-            <span className="ml-2">Seen by</span>
-            <span data-pill-group="" role="group" aria-label="Seen by" className="inline-flex flex-wrap items-center gap-1.5">
+            <span className="ml-2">{t("composeUi.ask.seenBy")}</span>
+            <span data-pill-group="" role="group" aria-label={t("composeUi.ask.seenBy")} className="inline-flex flex-wrap items-center gap-1.5">
             {(["private", "table"] as const).map((option) => (
               <Tooltip
                 key={option}
                 content={
                   option === "private"
-                    ? "Only you see the question and the answer."
-                    : "The whole table sees the question and the answer."
+                    ? t("composeUi.ask.privateHint")
+                    : t("composeUi.ask.tableHint")
                 }
               >
                 <button data-on={visibility === option ? "" : undefined}
@@ -258,12 +247,12 @@ function AskDockInner({
                   onClick={() => setVisibility(option)}
                   className="pk-pill pk-tap motion-press"
                 >
-                  {option === "private" ? "Just me" : "The table"}
+                  {t(option === "private" ? "composeUi.ask.private" : "composeUi.ask.table")}
                 </button>
               </Tooltip>
             ))}
             </span>
-            <span className="ml-auto italic text-stone-500">The story does not move.</span>
+            <span className="ml-auto italic text-stone-500">{t("composeUi.ask.noTurn")}</span>
           </div>
           <div className="flex items-end gap-2">
             <textarea
@@ -277,8 +266,8 @@ function AskDockInner({
                 }
               }}
               rows={2}
-              placeholder="Ask the DM about the story, the world, the rules, or your sheet"
-              aria-label="Ask the DM about the story, the world, the rules, or your sheet"
+              placeholder={t("composeUi.ask.placeholder")}
+              aria-label={t("composeUi.ask.placeholder")}
               className={cn(ui.input, "resize-none text-xs leading-5")}
             />
             <button
@@ -291,10 +280,10 @@ function AskDockInner({
               ) : (
                 <Send className="size-3.5" />
               )}
-              Ask
+              {t("composeUi.ask.submit")}
             </button>
           </div>
-          {error ? <PanelError className="mt-1.5">{error}</PanelError> : null}
+          {error ? <PanelError className="mt-1.5">{composeErrorText(error, locale, "composeUi.error.ask")}</PanelError> : null}
         </form>
       </div>
     </div>

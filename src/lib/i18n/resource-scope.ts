@@ -2,7 +2,7 @@
 // App chrome and stock identity labels are available on every page.
 const CONTENT_PREFIXES = new Set([
   "lineageUi", "lineageMaterial", "racialUi", "gameHelp", "closedHelp", "combatUi", "combatDetail", "combatRoll", "combatCheck", "combatSpecial", "cinematic", "sheetPlay", "sheetDialog",
-  "callingUi", "callingMaterial", "abilityUi", "spellUi", "finishUi", "turnUi", "journalUi",
+  "callingUi", "callingMaterial", "abilityUi", "spellUi", "finishUi", "turnUi", "journalUi", "composeUi",
   "spellName", "spellMaterial", "gearUi", "equipmentName", "itemHelp", "builderPicker",
 ]);
 export type MessageScope = "ui" | "content";

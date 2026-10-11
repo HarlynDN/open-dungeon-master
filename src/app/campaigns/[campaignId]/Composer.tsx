@@ -1,6 +1,8 @@
 "use client";
 
 import { Eye, EyeOff, Hand, Loader2, Send } from "lucide-react";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { composeErrorText, composerPlaceholderText } from "@/lib/i18n/compose-presentations";
 import { isComposingInput } from "@/lib/input-composition";
 import { memo, type ReactNode } from "react";
 import type { Dispatch, FormEvent, RefObject, SetStateAction } from "react";
@@ -34,13 +36,6 @@ import type { InputKind } from "@/lib/campaign-types";
 
 export type { InputKind };
 
-const KIND_TIPS: Record<InputKind, string> = {
-  do: "Act in the world. The DM narrates what happens.",
-  say: "Speak in character. Sent as dialogue in quotes.",
-  ooc: "Table talk. The DM does not respond, and it works even when the floor is locked.",
-  lead: "Party lead only. Send the DM an authoritative story direction.",
-  narrate: "Dungeon Master only. Write the passage the table reads.",
-};
 
 // The action composer at the bottom of the game chat: pending-roll cards,
 // floor banners, the join notice, kind pills and the input row.
@@ -141,6 +136,8 @@ function ComposerInner({
   onSnoozeStory: () => void;
   onSubmit: (event: FormEvent) => void;
 }) {
+  const { locale, t } = useLocale();
+  const displayPlaceholder = composerPlaceholderText(placeholder, locale);
   // The Hand outlives the fight by one beat so its fold-away can play.
   const hand = useLingeringEncounter(encounter);
   return (
@@ -207,7 +204,7 @@ function ComposerInner({
             leaving={hand.leaving}
             floor={floor}
             inputBlocked={inputBlocked}
-            blockedReason={placeholder}
+            blockedReason={displayPlaceholder}
             input={input}
             setInput={setInput}
             onKindChange={onKindChange}
@@ -230,7 +227,7 @@ function ComposerInner({
               ] as const)
           ).map(
             (option) => (
-              <Tooltip key={option} content={KIND_TIPS[option]}>
+              <Tooltip key={option} content={t(`composeUi.tip.${option}`)}>
                 <button data-on={kind === option ? "" : undefined}
                   data-mode={option}
                   type="button"
@@ -238,13 +235,7 @@ function ComposerInner({
                   className="session-mode"
                 >
                   <GameIcon icon={{ kind: "glyph", key: MODE_GLYPHS[option] }} size="size-6" />
-                  {option === "do"
-                    ? "Do"
-                    : option === "say"
-                      ? "Say"
-                      : option === "ooc"
-                        ? "OOC"
-                        : "Direct"}
+                  {t(`composeUi.mode.${option}`)}
                 </button>
               </Tooltip>
             ),
@@ -252,17 +243,8 @@ function ComposerInner({
           {dmStatus !== "idle" ? (
             <span className="session-status live-in">
               <D20Spinner className="size-4 shrink-0 text-amber-500" />
-              {dmStatus === "rolling"
-                ? "DM rolling dice..."
-                : dmStatus === "awaiting_rolls"
-                  ? "Waiting on real dice..."
-                  : dmStatus === "narrating"
-                    ? "DM narrating..."
-                    : dmStatus === "writing_chapter"
-                      ? "DM writing the chapter..."
-                      : dmStatus === "plotting_arc"
-                        ? "DM plotting the story arc..."
-                        : "DM at work..."}
+              {t(dmStatus === "rolling" || dmStatus === "awaiting_rolls" || dmStatus === "narrating" || dmStatus === "writing_chapter" || dmStatus === "plotting_arc"
+                ? `composeUi.status.${dmStatus}` : "composeUi.status.working")}
             </span>
           ) : null}
         </div>
@@ -285,14 +267,14 @@ function ComposerInner({
             <Tooltip
               content={
                 leadPrivate
-                  ? "Only the DM sees this. It steers the next turn and never enters the transcript."
-                  : "The table sees this direction, and the DM acts on it now."
+                  ? t("composeUi.privateHint")
+                  : t("composeUi.publicHint")
               }
             >
               <span className="ml-auto inline-flex items-center gap-1.5 text-[11px] text-stone-300">
                 {leadPrivate ? <EyeOff className="size-3.5 text-amber-300" /> : <Eye className="size-3.5 text-stone-500" />}
-                Private
-                <Switch on={leadPrivate} onChange={onLeadPrivateChange} label="Private" />
+                {t("composeUi.private")}
+                <Switch on={leadPrivate} onChange={onLeadPrivateChange} label={t("composeUi.private")} />
               </span>
             </Tooltip>
           </div>
@@ -317,15 +299,15 @@ function ComposerInner({
             }}
             rows={2}
             disabled={inputBlocked}
-            placeholder={placeholder}
+            placeholder={displayPlaceholder}
             className="flex-1 resize-none bg-transparent px-2 py-1.5 text-sm text-stone-200 outline-none disabled:opacity-50"
           />
           {onXCard ? (
-            <Tooltip content="X-card: pause the table without saying why. Nobody is told who pressed it.">
+            <Tooltip content={t("composeUi.xHint")}>
               <button
                 type="button"
                 onClick={onXCard}
-                aria-label="Raise the X-card"
+                aria-label={t("composeUi.xRaise")}
                 className={cn(ui.btnSmall, "session-deskbtn text-stone-400")}
               >
                 <Hand className="size-4" />
@@ -341,13 +323,13 @@ function ComposerInner({
           <button
             type="submit"
             disabled={sending || !input.trim() || inputBlocked}
-            aria-label="Send"
+            aria-label={t("composeUi.send")}
             className={cn(ui.btnPrimary, "session-deskbtn cine-send")}
           >
             {sending ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
           </button>
         </div>
-        {error ? <p className="motion-shake mt-1.5 text-sm text-red-400">{error}</p> : null}
+        {error ? <p className="motion-shake mt-1.5 text-sm text-red-400">{composeErrorText(error, locale, "composeUi.error.send", encounter?.enemies.map(enemy => enemy.name))}</p> : null}
       </div>
     </form>
   );

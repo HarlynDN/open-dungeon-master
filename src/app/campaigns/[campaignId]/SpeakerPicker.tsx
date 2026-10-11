@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { referenceDisplayName } from "@/lib/i18n/references";
 import { GameIcon } from "@/components/ui/GameIcon";
 import { Select, type SelectOption } from "@/components/ui/Select";
 import { cn } from "@/lib/cn";
@@ -21,22 +23,23 @@ export function SpeakerPicker({
   cast: CastMember[];
   monsters: Array<{ id: string; name: string }>;
 }) {
+  const { locale, t } = useLocale();
   const value = speaker ? `${speaker.kind}:${speaker.id || speaker.name}` : "narrator";
   const face = speaker?.kind === "npc" ? cast.find((member) => member.id === speaker.id)?.portraitUrl : "";
   // The same three groups the browser's select listed: the narrator alone,
   // then the cast, then whatever stands on the board.
   const options: SelectOption<string>[] = [
-    { value: "narrator", label: "The narrator", icon: { kind: "glyph", key: "tab-story" } },
+    { value: "narrator", label: t("composeUi.speaker.narrator"), icon: { kind: "glyph", key: "tab-story" } },
     ...cast.map((member) => ({
       value: `npc:${member.id}`,
       label: member.name,
-      group: "The cast",
+      group: t("composeUi.speaker.cast"),
       icon: { kind: "glyph" as const, key: "system-cast" },
     })),
     ...monsters.map((monster) => ({
       value: `monster:${monster.id}`,
-      label: monster.name,
-      group: "On the board",
+      label: referenceDisplayName("monster", monster.name, locale),
+      group: t("composeUi.speaker.board"),
       icon: { kind: "glyph" as const, key: "system-bestiary" },
     })),
   ];
@@ -60,12 +63,12 @@ export function SpeakerPicker({
       ) : (
         <GameIcon icon={{ kind: "glyph", key: "cue-horn" }} size="size-5" className="shrink-0" />
       )}
-      Speaking as
+      {t("composeUi.speaker.as")}
       <Select
         value={value}
         onChange={choose}
         options={options}
-        label="Speaking as"
+        label={t("composeUi.speaker.as")}
         size="sm"
         className={cn("w-auto min-w-[9rem] max-w-[14rem]", speaker && "border-amber-500/70 text-amber-100")}
       />

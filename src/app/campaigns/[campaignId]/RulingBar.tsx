@@ -1,6 +1,9 @@
 "use client";
 
 import { Check, Scale, Users, X } from "lucide-react";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { composeErrorText } from "@/lib/i18n/compose-presentations";
+import { messageTemplate } from "@/lib/i18n/translator";
 import { useState } from "react";
 import { cn } from "@/lib/cn";
 import { GameIcon } from "@/components/ui/GameIcon";
@@ -26,6 +29,7 @@ export function RulingBar({
   meUserId: string;
   steersStory: boolean;
 }) {
+  const { locale, t } = useLocale();
   const [busyId, setBusyId] = useState("");
   const [error, setError] = useState("");
 
@@ -44,18 +48,20 @@ export function RulingBar({
       });
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
-        setError(String(data.error ?? "That did not work."));
+        setError(String(data.error ?? messageTemplate("en", "composeUi.error.ruling")));
       }
+    } catch {
+      setError(messageTemplate("en", "composeUi.error.network"));
     } finally {
       setBusyId("");
     }
   }
 
-  const nameOf = (userId: string) => members.find((member) => member.userId === userId)?.username ?? "A player";
+  const nameOf = (userId: string) => members.find((member) => member.userId === userId)?.username ?? t("composeUi.ruling.player");
 
   return (
     <div className="stagger mx-3 mb-2 space-y-1.5" data-tour="ruling-bar">
-      {error ? <PanelError>{error}</PanelError> : null}
+      {error ? <PanelError>{composeErrorText(error, locale, "composeUi.error.ruling")}</PanelError> : null}
       {disputes.map((dispute) => {
         const busy = busyId === dispute.id;
         const mine = dispute.raisedByUserId === meUserId;
@@ -73,50 +79,50 @@ export function RulingBar({
           >
             <GameIcon icon={{ kind: "glyph", key: "system-rules" }} size="size-6" className="shrink-0" />
             <span className="min-w-0 flex-1">
-              <span className="font-medium">{nameOf(dispute.raisedByUserId)}</span> disputes the ruling
+              <span className="font-medium">{nameOf(dispute.raisedByUserId)}</span>{t("composeUi.ruling.disputes")}
               {dispute.reason ? <span className="text-stone-400">: {dispute.reason}</span> : null}
               {voting ? (
                 <span className="ml-1 text-stone-500">
-                  (vote open, {cast} of {dispute.voterIds.length} in)
+                  {t("composeUi.ruling.vote", { cast, total: dispute.voterIds.length })}
                 </span>
               ) : null}
             </span>
             {voting && canCast ? (
               <span className="flex shrink-0 items-center gap-1.5">
                 <KitButton tone={myVote === "uphold" ? "primary" : undefined} onClick={() => act(dispute.id, "cast", "uphold")} disabled={busy} busy={busy}>
-                  <Check className="size-3.5" /> Stands
+                  <Check className="size-3.5" /> {t("composeUi.ruling.stands")}
                 </KitButton>
                 <KitButton tone={myVote === "overrule" ? "primary" : undefined} onClick={() => act(dispute.id, "cast", "overrule")} disabled={busy}>
-                  <X className="size-3.5" /> Overrule
+                  <X className="size-3.5" /> {t("composeUi.ruling.overrule")}
                 </KitButton>
                 {steersStory ? (
                   <KitButton onClick={() => act(dispute.id, "tally")} disabled={busy}>
-                    <Scale className="size-3.5" /> Count now
+                    <Scale className="size-3.5" /> {t("composeUi.ruling.count")}
                   </KitButton>
                 ) : null}
               </span>
             ) : voting && steersStory ? (
               <KitButton onClick={() => act(dispute.id, "tally")} disabled={busy} busy={busy}>
-                <Scale className="size-3.5" /> Count now
+                <Scale className="size-3.5" /> {t("composeUi.ruling.count")}
               </KitButton>
             ) : steersStory ? (
               <span className="flex shrink-0 items-center gap-1.5">
                 <KitButton tone="primary" onClick={() => act(dispute.id, "uphold")} disabled={busy} busy={busy}>
-                  {busy ? null : <Check className="size-3.5" />} Uphold
+                  {busy ? null : <Check className="size-3.5" />} {t("composeUi.ruling.uphold")}
                 </KitButton>
                 <KitButton onClick={() => act(dispute.id, "overrule")} disabled={busy}>
-                  <X className="size-3.5" /> Overrule
+                  <X className="size-3.5" /> {t("composeUi.ruling.overrule")}
                 </KitButton>
                 <KitButton onClick={() => act(dispute.id, "vote")} disabled={busy}>
-                  <Users className="size-3.5" /> Put to a vote
+                  <Users className="size-3.5" /> {t("composeUi.ruling.putVote")}
                 </KitButton>
               </span>
             ) : mine ? (
               <KitButton onClick={() => act(dispute.id, "withdraw")} disabled={busy} busy={busy}>
-                {busy ? null : <X className="size-3.5" />} Withdraw
+                {busy ? null : <X className="size-3.5" />} {t("composeUi.ruling.withdraw")}
               </KitButton>
             ) : (
-              <span className="shrink-0 text-[11px] italic text-stone-500">waiting on the steerer</span>
+              <span className="shrink-0 text-[11px] italic text-stone-500">{t("composeUi.ruling.waiting")}</span>
             )}
           </div>
         );

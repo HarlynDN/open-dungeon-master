@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { storyCadenceText } from "@/lib/i18n/compose-presentations";
 import { SessionBanner, bannerButtonClass } from "@/app/campaigns/[campaignId]/SessionBanner";
 import type { BeatCadence } from "@/lib/dm/beat-cadence";
 
@@ -16,6 +18,7 @@ export function StoryNudge({
   onCapture: () => void;
   onSnooze: () => void;
 }) {
+  const { locale, t } = useLocale();
   if (cadence.level === "quiet") {
     return null;
   }
@@ -24,21 +27,21 @@ export function StoryNudge({
     <SessionBanner
       glyph="tab-log"
       tone={overdue ? "gold" : "quiet"}
-      title={overdue ? "The story is waiting" : undefined}
+      title={overdue ? t("composeUi.story.title") : undefined}
       actions={
         <>
           <button type="button" onClick={onCapture} className={bannerButtonClass(overdue)}>
-            Write it down
+            {t("composeUi.story.capture")}
           </button>
           <button type="button" onClick={onSnooze} className={bannerButtonClass()}>
-            Later
+            {t("composeUi.story.later")}
           </button>
         </>
       }
     >
       <span className="block sm:truncate">
-        {cadence.reason}
-        {overdue ? " The chapter summaries and the recap are built from it." : ""}
+        {storyCadenceText(cadence.reason, locale)}
+        {overdue ? t("composeUi.story.help") : ""}
       </span>
     </SessionBanner>
   );

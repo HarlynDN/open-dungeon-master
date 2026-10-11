@@ -90,7 +90,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/AskPanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned Ask UI, scope/visibility labels, known failures and citation-kind badges localized. Question/answer/quote/ref data, scope/visibility enums, privacy and POST body unchanged."
     },
     {
       "path": "src/app/campaigns/[campaignId]/BattleMapGrid.tsx",
@@ -194,7 +195,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/Composer.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned modes, status, privacy, pause/send labels, native gate placeholders and known action errors localized. IME, raw input, callbacks, gating and message protocols unchanged; children retain their own coverage rows."
     },
     {
       "path": "src/app/campaigns/[campaignId]/ConsoleOutcomeBanner.tsx",
@@ -218,7 +220,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/DirectorPanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned one-shot labels/help, armed status and disarm label localized. Private command content retained and no protocol/directive or spoiler visibility changes."
     },
     {
       "path": "src/app/campaigns/[campaignId]/DisputeDialog.tsx",
@@ -649,7 +652,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/RulingBar.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned dispute/vote controls, counts, known refusals and network failure localized. Original reasons/names, authority, voter IDs and action/vote enums retained."
     },
     {
       "path": "src/app/campaigns/[campaignId]/SafetyPause.tsx",
@@ -702,7 +706,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/SpeakerPicker.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned narrator/group/field labels localized. Monster display uses existing reference resolver; proper cast names, selected speaker name/ID and wire values retained."
     },
     {
       "path": "src/app/campaigns/[campaignId]/SpeechLine.tsx",
@@ -718,7 +723,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/StoryNudge.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned reminder/actions and complete native cadence count frames localized; cadence thresholds, snooze/capture callbacks and unknown authored reasons retained."
     },
     {
       "path": "src/app/campaigns/[campaignId]/StoryPanel.tsx",
