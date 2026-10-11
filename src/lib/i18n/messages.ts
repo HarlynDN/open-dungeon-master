@@ -1,3 +1,4 @@
+import { PASSAGE_MESSAGES } from "./passage-messages.ts";
 import { MEMORY_MESSAGES } from "./memory-messages.ts";
 import { RECORD_MESSAGES } from "./record-messages.ts";
 import { LEAD_MESSAGES } from "./lead-messages.ts";
@@ -89,6 +90,7 @@ const en = {
     ...LEAD_MESSAGES.en,
   ...RECORD_MESSAGES.en,
   ...MEMORY_MESSAGES.en,
+  ...PASSAGE_MESSAGES.en,
   ...PLAY_EDIT_MESSAGES.en,
   ...HAND_CASTING_MESSAGES.en,
   ...HAND_FEATURE_MESSAGES.en,
@@ -192,6 +194,7 @@ const zhCN: Messages = {
     ...LEAD_MESSAGES["zh-CN"],
   ...RECORD_MESSAGES["zh-CN"],
   ...MEMORY_MESSAGES["zh-CN"],
+  ...PASSAGE_MESSAGES["zh-CN"],
   ...PLAY_EDIT_MESSAGES["zh-CN"],
   ...HAND_CASTING_MESSAGES["zh-CN"],
   ...HAND_FEATURE_MESSAGES["zh-CN"],

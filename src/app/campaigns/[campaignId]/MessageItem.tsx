@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { passageText } from "@/lib/i18n/passage-presentations";
 import {
   Bookmark,
   ChevronLeft,
@@ -121,6 +123,7 @@ export const MessageItem = memo(function MessageItem({
   // Browse the rerolled takes; the picked one is what the table reads.
   onSelectVariant?: (message: CampaignMessage, index: number) => void;
 }) {
+  const { locale, t } = useLocale();
   // Local to the row: only one narration is ever being corrected at a time,
   // and the draft should not survive the row unmounting.
   const [editing, setEditing] = useState(false);
@@ -162,7 +165,7 @@ export const MessageItem = memo(function MessageItem({
       });
       const uploaded = await upload.json().catch(() => ({}));
       if (!upload.ok) {
-        void appNotice(uploaded.error || "That image would not upload.");
+        void appNotice(passageText(typeof uploaded.error === "string" ? uploaded.error : t("passageUi.error.upload"), locale));
         return;
       }
       const response = await fetch(
@@ -175,10 +178,10 @@ export const MessageItem = memo(function MessageItem({
       );
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
-        void appNotice(data.error || "Could not put that picture under the passage.");
+        void appNotice(passageText(typeof data.error === "string" ? data.error : t("passageUi.error.attach"), locale));
       }
     } catch {
-      void appNotice("That image would not upload.");
+      void appNotice(t("passageUi.error.upload"));
     } finally {
       setAttaching(false);
     }
@@ -205,9 +208,9 @@ export const MessageItem = memo(function MessageItem({
     if (onRenarrate) {
       actions.push({
         id: "reroll",
-        name: "Reroll",
-        label: "Reroll this narration",
-        hint: "Reroll: have the DM write this moment again, with the same dice and outcome",
+        name: t("passageUi.reroll.name"),
+        label: t("passageUi.reroll.label"),
+        hint: t("passageUi.reroll.hint"),
         glyph: "die-d20",
         icon: <RefreshCw className="size-3.5" />,
         onSelect: () => onRenarrate(message),
@@ -216,9 +219,9 @@ export const MessageItem = memo(function MessageItem({
     if (onContinueScene) {
       actions.push({
         id: "continue",
-        name: "Continue the scene",
-        label: "Continue this scene",
-        hint: "Continue: have the DM keep writing from where this stopped, without moving the story on",
+        name: t("passageUi.continue.name"),
+        label: t("passageUi.continue.label"),
+        hint: t("passageUi.continue.hint"),
         glyph: "pace-fast",
         icon: <FastForward className="size-3.5" />,
         onSelect: () => onContinueScene(message),
@@ -227,9 +230,9 @@ export const MessageItem = memo(function MessageItem({
     if (onEditSave) {
       actions.push({
         id: "edit",
-        name: "Edit",
-        label: "Edit this narration",
-        hint: "Edit: fix what the DM said. Mechanics are untouched, and every dice marker must survive",
+        name: t("passageUi.edit.name"),
+        label: t("passageUi.edit.label"),
+        hint: t("passageUi.edit.hint"),
         glyph: "tab-log",
         icon: <Pencil className="size-3.5" />,
         onSelect: () => setEditing(true),
@@ -238,9 +241,9 @@ export const MessageItem = memo(function MessageItem({
     if (onPinMemory) {
       actions.push({
         id: "remember",
-        name: "Remember",
-        label: "Pin this to the DM's memory",
-        hint: "Remember: keep your selected text (or this whole message) in front of the DM every turn",
+        name: t("passageUi.remember.name"),
+        label: t("passageUi.remember.label"),
+        hint: t("passageUi.remember.hint"),
         glyph: "tab-journal",
         icon: <Bookmark className="size-3.5" />,
         onSelect: () => onPinMemory(message),
@@ -249,9 +252,9 @@ export const MessageItem = memo(function MessageItem({
     if (onLoreCheck) {
       actions.push({
         id: "lore",
-        name: "Lore check",
-        label: "Lore check this passage",
-        hint: "Lore check: flag this passage (or your selected text) against the campaign record",
+        name: t("passageUi.lore.name"),
+        label: t("passageUi.lore.label"),
+        hint: t("passageUi.lore.hint"),
         glyph: "system-lore",
         icon: <ShieldQuestion className="size-3.5" />,
         onSelect: () => onLoreCheck(message),
@@ -260,9 +263,9 @@ export const MessageItem = memo(function MessageItem({
     if (onPinCanon) {
       actions.push({
         id: "canon",
-        name: "Pin as canon",
-        label: "Pin this passage as canon",
-        hint: "Pin as canon: keep this passage (or your selected text) in front of the DM permanently",
+        name: t("passageUi.canon.name"),
+        label: t("passageUi.canon.label"),
+        hint: t("passageUi.canon.hint"),
         glyph: "tab-facts",
         icon: <Pin className="size-3.5" />,
         onSelect: () => onPinCanon(message),
@@ -271,11 +274,11 @@ export const MessageItem = memo(function MessageItem({
     if (canIllustrate) {
       actions.push({
         id: "picture",
-        name: message.generatedImage ? "Replace the picture" : "Add a picture",
-        label: message.generatedImage ? "Replace the picture" : "Add a picture",
+        name: message.generatedImage ? t("passageUi.picture.replace") : t("passageUi.picture.add"),
+        label: message.generatedImage ? t("passageUi.picture.replace") : t("passageUi.picture.add"),
         hint: message.generatedImage
-          ? "Replace picture: put an image of your own under this passage"
-          : "Add a picture: put an image of your own under this passage",
+          ? t("passageUi.picture.replaceHint")
+          : t("passageUi.picture.addHint"),
         glyph: "tab-handout",
         icon: <ImagePlus className="size-3.5" />,
         busy: attaching,
@@ -285,9 +288,9 @@ export const MessageItem = memo(function MessageItem({
     if (onReplayAudio) {
       actions.push({
         id: "read",
-        name: "Read aloud",
-        label: "Read this passage aloud",
-        hint: "Read aloud",
+        name: t("passageUi.read.name"),
+        label: t("passageUi.read.label"),
+        hint: t("passageUi.read.name"),
         glyph: "cue-horn",
         icon: <Volume2 className="size-3.5" />,
         busy: narrating,
@@ -297,17 +300,17 @@ export const MessageItem = memo(function MessageItem({
           const error = await onReplayAudio(message.id);
           setNarrating(false);
           if (error) {
-            void appNotice(error);
+            void appNotice(passageText(error, locale));
           }
         },
       });
     }
-    actions.push(copyAction(message));
+    actions.push(copyAction(message, locale));
     if (onDispute) {
-      actions.push(disputeAction(message, onDispute));
+      actions.push(disputeAction(message, onDispute, locale));
     }
     if (onReport) {
-      actions.push(reportAction(message, onReport, true));
+      actions.push(reportAction(message, onReport, true, locale));
     }
     const menuActions = actions.map((action) => ({
       ...action,
@@ -319,7 +322,7 @@ export const MessageItem = memo(function MessageItem({
     // Reroll takes: the counter only appears once a second one exists.
     const variants = message.variants ?? [];
     const variantIndex = message.variantIndex ?? 0;
-    const title = message.speaker ? `${message.speaker.name}, through the DM` : "Dungeon Master";
+    const title = message.speaker ? t("passageUi.speaker", { name: message.speaker.name }) : t("passageUi.dm");
     return (
       <div
         className="session-dm group animate-fade-up"
@@ -351,7 +354,7 @@ export const MessageItem = memo(function MessageItem({
                       type="button"
                       onClick={() => onSelectVariant(message, variantIndex - 1)}
                       disabled={variantIndex <= 0}
-                      aria-label="Previous take"
+                      aria-label={t("passageUi.previous")}
                       className={cn(ui.iconAction, "-my-1.5 p-1 opacity-100 disabled:opacity-30")}
                     >
                       <ChevronLeft className="size-3.5" />
@@ -361,14 +364,14 @@ export const MessageItem = memo(function MessageItem({
                       type="button"
                       onClick={() => onSelectVariant(message, variantIndex + 1)}
                       disabled={variantIndex >= variants.length - 1}
-                      aria-label="Next take"
+                      aria-label={t("passageUi.next")}
                       className={cn(ui.iconAction, "-my-1.5 p-1 opacity-100 disabled:opacity-30")}
                     >
                       <ChevronRight className="size-3.5" />
                     </button>
                   </span>
                 ) : null}
-                <MessageActions actions={actions} menuActions={menuActions} menuLabel="Passage actions" />
+                <MessageActions actions={actions} menuActions={menuActions} menuLabel={t("passageUi.actions")} />
               </>
             }
           />
@@ -432,13 +435,13 @@ export const MessageItem = memo(function MessageItem({
           {message.generatedImage ? (
             <ImageLightbox
               src={message.generatedImage.url}
-              alt={message.imageRequest?.prompt || "Scene"}
+              alt={message.imageRequest?.prompt || t("passageUi.scene")}
               className="ken-burns max-h-96 rounded-xl border border-stone-800"
               frameClassName="mt-3 overflow-hidden rounded-xl"
             />
           ) : message.imageRequest?.needed ? (
             <MediaPlaceholder
-              label="Illustrating the scene..."
+              label={t("passageUi.illustrating")}
               status={mediaStatus[message.id]}
               fallbackStartedAt={message.createdAt}
             />
@@ -448,7 +451,7 @@ export const MessageItem = memo(function MessageItem({
             // (issue 88): what went wrong, and a way to ask again.
             <p role="status" className="live-in mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-amber-400/90">
               <VolumeX className="size-3.5 shrink-0" />
-              <span className="min-w-0">This passage was not read aloud. {narrationFailure}</span>
+              <span className="min-w-0">{t("passageUi.notVoiced", { reason: passageText(narrationFailure, locale) })}</span>
               {onReplayAudio ? (
                 <button
                   type="button"
@@ -459,12 +462,12 @@ export const MessageItem = memo(function MessageItem({
                     const error = await onReplayAudio(message.id);
                     setNarrating(false);
                     if (error) {
-                      void appNotice(error);
+                      void appNotice(passageText(error, locale));
                     }
                   }}
                   className="motion-press rounded-md border border-amber-800/60 px-1.5 py-0.5 text-amber-200 hover:border-amber-600 disabled:opacity-60"
                 >
-                  {narrating ? "Trying…" : "Try again"}
+                  {narrating ? t("passageUi.trying") : t("passageUi.retry")}
                 </button>
               ) : null}
             </p>
@@ -484,7 +487,7 @@ export const MessageItem = memo(function MessageItem({
                 <figure className="mt-3 max-w-md">
                   <ImageLightbox
                     src={location.mapImage.url}
-                    alt={`Map of ${location.name}`}
+                    alt={t("passageUi.map", { name: location.name })}
                     caption={location.name}
                     className="max-h-96 rounded-xl border border-stone-800"
                   />
@@ -496,7 +499,7 @@ export const MessageItem = memo(function MessageItem({
             }
             return (
               <MediaPlaceholder
-                label="Charting the area..."
+                label={t("passageUi.charting")}
                 status={mediaStatus[location.id]}
                 fallbackStartedAt={message.createdAt}
               />

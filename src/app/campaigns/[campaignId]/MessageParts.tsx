@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { createTranslator } from "@/lib/i18n/translator";
+import { DEFAULT_LOCALE, type AppLocale } from "@/lib/i18n/locales";
 import { Copy, EyeOff, Flag, Scale } from "lucide-react";
 import { GameIcon } from "@/components/ui/GameIcon";
 import { ContextMenu } from "@/components/ui/ContextMenu";
@@ -20,12 +23,13 @@ import { systemLineGlyph } from "@/app/campaigns/[campaignId]/sessionGlyphs";
 // The transcript's smaller voices: the table's own notices and what the
 // players say. The DM's passage, the hero of the screen, is MessageItem.tsx.
 
-export function copyAction(message: CampaignMessage): MessageAction {
+export function copyAction(message: CampaignMessage, locale: AppLocale = DEFAULT_LOCALE): MessageAction {
+  const t = createTranslator(locale);
   return {
     id: "copy",
-    name: "Copy text",
-    label: "Copy this message's text",
-    hint: "Copy: put this message's words on the clipboard",
+    name: t("passageUi.copy.name"),
+    label: t("passageUi.copy.label"),
+    hint: t("passageUi.copy.hint"),
     glyph: "tab-notes",
     icon: <Copy className="size-3.5" />,
     onSelect: () => {
@@ -36,26 +40,28 @@ export function copyAction(message: CampaignMessage): MessageAction {
 
 // A player's objection to a narrated ruling (DisputeDialog.tsx): the
 // steerer upholds or overrules it, or the table votes.
-export function disputeAction(message: CampaignMessage, onDispute: (message: CampaignMessage) => void): MessageAction {
+export function disputeAction(message: CampaignMessage, onDispute: (message: CampaignMessage) => void, locale: AppLocale = DEFAULT_LOCALE): MessageAction {
+  const t = createTranslator(locale);
   return {
     id: "dispute",
-    name: "Dispute",
-    label: "Dispute this ruling",
-    hint: "Dispute: object to what the narrator ruled here; whoever steers the story settles it, or the table votes",
+    name: t("passageUi.dispute.name"),
+    label: t("passageUi.dispute.label"),
+    hint: t("passageUi.dispute.hint"),
     glyph: "system-rules",
     icon: <Scale className="size-3.5" />,
     onSelect: () => onDispute(message),
   };
 }
 
-export function reportAction(message: CampaignMessage, onReport: (message: CampaignMessage) => void, dm: boolean): MessageAction {
+export function reportAction(message: CampaignMessage, onReport: (message: CampaignMessage) => void, dm: boolean, locale: AppLocale = DEFAULT_LOCALE): MessageAction {
+  const t = createTranslator(locale);
   return {
     id: "report",
-    name: "Report",
-    label: dm ? "Report this passage" : "Report this message",
+    name: t("passageUi.report.name"),
+    label: dm ? t("passageUi.report.passage") : t("passageUi.report.message"),
     hint: dm
-      ? "Report: flag this passage to the admins of this server"
-      : "Report: flag this message to the admins of this server, or block the player",
+      ? t("passageUi.report.passageHint")
+      : t("passageUi.report.messageHint"),
     glyph: "system-rules",
     icon: <Flag className="size-3.5" />,
     tone: "danger",
@@ -66,10 +72,11 @@ export function reportAction(message: CampaignMessage, onReport: (message: Campa
 // A notice that is not a halted turn: the lead's public direction as a card,
 // a joiner, or a plain line with the painting its words call for.
 export function SystemMessage({ content }: { content: string }) {
+  const { t } = useLocale();
   if (content.startsWith(LEAD_NOTE_PREFIX)) {
     return (
       <div data-tone="ember" className="panel session-banner-card rounded-xl border-ember-500/40">
-        <SectionHead title="Party Lead" glyph="tab-lead" level="h4" className="mb-1" />
+        <SectionHead title={t("passageUi.lead")} glyph="tab-lead" level="h4" className="mb-1" />
         <p className="text-sm text-amber-100/90">{content.slice(LEAD_NOTE_PREFIX.length)}</p>
       </div>
     );
@@ -85,10 +92,11 @@ export function SystemMessage({ content }: { content: string }) {
 }
 
 export function BlockedMessage() {
+  const { t } = useLocale();
   return (
     <p className="ml-auto flex max-w-[92%] items-center justify-end gap-1.5 text-right text-xs italic text-stone-600 sm:max-w-2xl">
       <EyeOff className="size-3.5 shrink-0" />
-      A message from a player you blocked
+      {t("passageUi.blocked")}
     </p>
   );
 }
@@ -108,6 +116,7 @@ export function PlayerMessage({
   membersById: Map<string, CampaignMember>;
   onReport?: (message: CampaignMessage) => void;
 }) {
+  const { locale, t } = useLocale();
   // Older messages predate characterId, so fall back to the author's
   // sheet in this campaign before giving up on a character identity.
   const sheet =
@@ -124,9 +133,9 @@ export function PlayerMessage({
       : message.userId
         ? avatarPlaceholder(message.userId)
         : undefined);
-  const actions: MessageAction[] = [copyAction(message)];
+  const actions: MessageAction[] = [copyAction(message, locale)];
   if (onReport && !mine && message.userId) {
-    actions.push(reportAction(message, onReport, false));
+    actions.push(reportAction(message, onReport, false, locale));
   }
   // eslint-disable-next-line @next/next/no-img-element
   const face = portraitUrl ? <img src={portraitUrl} alt="" /> : null;
@@ -134,7 +143,7 @@ export function PlayerMessage({
   return (
     <ContextMenu
       items={toContextItems(actions)}
-      label={sheet?.name ?? "Player"}
+      label={sheet?.name ?? t("passageUi.player")}
       className="session-player group ml-auto max-w-[92%] animate-fade-up sm:max-w-2xl"
     >
       {face ? (
@@ -150,8 +159,8 @@ export function PlayerMessage({
       ) : null}
       <div className="min-w-0">
         <p className="mb-1 flex items-center justify-end gap-1.5 text-right">
-          <MessageActions actions={actions} menuLabel={`${sheet?.name ?? "Player"}: message actions`} quiet />
-          <span className="session-speaker truncate">{sheet?.name ?? "Player"}</span>
+          <MessageActions actions={actions} menuLabel={t("passageUi.playerActions", { name: sheet?.name ?? t("passageUi.player") })} quiet />
+          <span className="session-speaker truncate">{sheet?.name ?? t("passageUi.player")}</span>
         </p>
         <div className={cn("session-bubble", ooc && "session-bubble-ooc")}>
           <p className="whitespace-pre-wrap text-pretty">{message.content}</p>

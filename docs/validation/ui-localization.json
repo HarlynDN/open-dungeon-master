@@ -410,7 +410,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/InlineMessageEditor.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned message actions/variant/media headings, inline editor and reroll guidance/status/native errors localized. Shared action owner renders caller-provided locale labels without owned copy. Authored prose/speakers, dice markers, action IDs and request shapes unchanged; preset display follows viewer locale while original guidance values remain canonical. Thrown edit callbacks recover busy state. Imported content/media/halting owners keep independent scope; focused callback check uses mock transport only."
     },
     {
       "path": "src/app/campaigns/[campaignId]/ItemProposalBar.tsx",
@@ -537,7 +538,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/MessageActions.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned message actions/variant/media headings, inline editor and reroll guidance/status/native errors localized. Shared action owner renders caller-provided locale labels without owned copy. Authored prose/speakers, dice markers, action IDs and request shapes unchanged; preset display follows viewer locale while original guidance values remain canonical. Thrown edit callbacks recover busy state. Imported content/media/halting owners keep independent scope; focused callback check uses mock transport only."
     },
     {
       "path": "src/app/campaigns/[campaignId]/MessageContent.tsx",
@@ -545,7 +547,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/MessageItem.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned message actions/variant/media headings, inline editor and reroll guidance/status/native errors localized. Shared action owner renders caller-provided locale labels without owned copy. Authored prose/speakers, dice markers, action IDs and request shapes unchanged; preset display follows viewer locale while original guidance values remain canonical. Thrown edit callbacks recover busy state. Imported content/media/halting owners keep independent scope; focused callback check uses mock transport only."
     },
     {
       "path": "src/app/campaigns/[campaignId]/MessageList.tsx",
@@ -554,7 +557,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/MessageParts.tsx",
-      "state": "pending"
+      "state": "pending",
+      "review": "Owned player/lead/blocked-message chrome and copy/dispute/report action labels now follow viewer locale; authored names and raw transcript bodies remain literal. General native server system-log templates are still pending, so this owner is not claimed complete."
     },
     {
       "path": "src/app/campaigns/[campaignId]/Moments.tsx",
@@ -662,7 +666,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/RenarrateDialog.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned message actions/variant/media headings, inline editor and reroll guidance/status/native errors localized. Shared action owner renders caller-provided locale labels without owned copy. Authored prose/speakers, dice markers, action IDs and request shapes unchanged; preset display follows viewer locale while original guidance values remain canonical. Thrown edit callbacks recover busy state. Imported content/media/halting owners keep independent scope; focused callback check uses mock transport only."
     },
     {
       "path": "src/app/campaigns/[campaignId]/ReportDialog.tsx",

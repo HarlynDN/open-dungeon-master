@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { createTranslator } from "@/lib/i18n/translator";
+import { passageText } from "@/lib/i18n/passage-presentations";
 import { Check, X } from "lucide-react";
 import { isComposingInput } from "@/lib/input-composition";
 import { useEffect, useRef, useState } from "react";
@@ -32,6 +35,7 @@ export function InlineMessageEditor({
   onSave: (content: string) => Promise<string | null>;
   onCancel: () => void;
 }) {
+  const { locale, t } = useLocale();
   const ref = useRef<HTMLTextAreaElement | null>(null);
   const [draft, setDraft] = useState(initial);
   const [busy, setBusy] = useState(false);
@@ -56,17 +60,21 @@ export function InlineMessageEditor({
     setBusy(true);
     // The server owns the roll-marker rule; whatever it refuses is shown here
     // rather than guessed at in the client.
-    const failure = await onSave(draft);
-    setBusy(false);
-    if (failure) {
-      setError(failure);
+    setError("");
+    try {
+      const failure = await onSave(draft);
+      if (failure) setError(failure);
+    } catch {
+      setError(createTranslator("en")("passageUi.error.network"));
+    } finally {
+      setBusy(false);
     }
   }
 
   return (
     <div className="space-y-1.5">
       <DictateField
-        label="Narration"
+        label={t("passageUi.editor.narration")}
         disabled={busy}
         onTranscript={(text) => {
           setDraft((current) => appendDictation(current, text));
@@ -100,7 +108,7 @@ export function InlineMessageEditor({
           className={cn(ui.input, "resize-none p-3 font-serif text-base leading-relaxed disabled:opacity-60")}
         />
       </DictateField>
-      {error ? <p className="motion-shake text-xs text-red-400">{error}</p> : null}
+      {error ? <p className="motion-shake text-xs text-red-400">{passageText(error, locale)}</p> : null}
       <div className="flex items-center gap-2">
         <button
           type="button"
@@ -108,7 +116,7 @@ export function InlineMessageEditor({
           disabled={busy}
           className={cn(ui.btnPrimary, "h-8 px-3 text-[11px]")}
         >
-          <Check className="size-3" /> Save
+          <Check className="size-3" />{t("passageUi.editor.save")}
         </button>
         <button
           type="button"
@@ -116,10 +124,10 @@ export function InlineMessageEditor({
           disabled={busy} aria-busy={busy}
           className={cn(ui.btnSmall, "px-3 py-1.5 text-[11px]")}
         >
-          <X className="size-3" /> Cancel
+          <X className="size-3" />{t("passageUi.editor.cancel")}
         </button>
         <span className="text-[10px] text-stone-600">
-          Enter saves, Shift+Enter for a new line, Escape cancels. Keep the dice markers.
+          {t("passageUi.editor.keys")}
         </span>
       </div>
     </div>

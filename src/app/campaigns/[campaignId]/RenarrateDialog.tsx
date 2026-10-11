@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { createTranslator } from "@/lib/i18n/translator";
+import { passageText, renarratePresetLabel } from "@/lib/i18n/passage-presentations";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Loader2, X } from "lucide-react";
 import { useState } from "react";
@@ -31,6 +34,7 @@ export function RenarrateDialog({
   message: CampaignMessage;
   onClose: () => void;
 }) {
+  const { locale, t } = useLocale();
   const [guidance, setGuidance] = useState("");
   // NE-P opens its regenerate sheet at base + 0.1 and remembers a dragged
   // offset for the rest of the browse session. This dialog is per-reroll, so
@@ -38,6 +42,8 @@ export function RenarrateDialog({
   const [tempOffset, setTempOffset] = useState(REROLL_TEMP_OFFSET);
   const [running, setRunning] = useState(false);
   const [error, setError] = useState("");
+  // Presets keep their original request value; editable prose remains authored text.
+  const [selectedPreset, setSelectedPreset] = useState<string | null>(null);
   const taken = message.variants?.length ?? 1;
   const capped = taken >= MAX_VARIANTS;
 
@@ -50,17 +56,17 @@ export function RenarrateDialog({
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ action: "reroll", guidance, tempOffset }),
+          body: JSON.stringify({ action: "reroll", guidance: selectedPreset ?? guidance, tempOffset }),
         },
       );
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
-        setError(data.error || "The reroll failed; try again.");
+        setError(typeof data.error === "string" ? data.error : createTranslator("en")("passageUi.error.reroll"));
         return;
       }
       onClose();
     } catch {
-      setError("Could not reach the server.");
+      setError(createTranslator("en")("passageUi.error.network"));
     } finally {
       setRunning(false);
     }
@@ -79,22 +85,20 @@ export function RenarrateDialog({
           <div className="mb-3 flex items-center justify-between">
             <Dialog.Title className="flex items-center gap-2.5 font-display text-lg">
               <GameIcon icon={{ kind: "glyph", key: "die-d20" }} size="size-8" />
-              <span className="gold-title">Reroll the narration</span>
+              <span className="gold-title">{t("passageUi.reroll.title")}</span>
             </Dialog.Title>
-            <Dialog.Close aria-label="Close" className={cn(ui.iconAction, "opacity-100")}>
+            <Dialog.Close aria-label={t("passageUi.close")} className={cn(ui.iconAction, "opacity-100")}>
               <X className="size-4" />
             </Dialog.Close>
           </div>
 
           <p className="mb-3 text-xs leading-5 text-stone-400">
-            The DM says the same moment in different words. Nothing else moves: the
-            same rolls, the same damage, the same outcome. Take {taken} of{" "}
-            {MAX_VARIANTS}.
-            {capped ? " That is every take; browse them and pick one." : ""}
+            {t("passageUi.reroll.description", { taken, max: MAX_VARIANTS })}
+            {capped ? t("passageUi.reroll.capped") : ""}
           </p>
 
           <SectionHead
-            title="Variation"
+            title={t("passageUi.reroll.variation")}
             glyph="sky-wind"
             level="h4"
             aside={
@@ -110,40 +114,40 @@ export function RenarrateDialog({
             value={tempOffset}
             disabled={running}
             onChange={setTempOffset}
-            label="How far this take may drift from the last"
+            label={t("passageUi.reroll.drift")}
             bubble={(value) => `+${value.toFixed(2)}`}
             className="mb-4 w-full"
           />
 
-          <SectionHead title="Guidance for this take (optional)" glyph="tab-log" level="h4" />
+          <SectionHead title={t("passageUi.reroll.guidance")} glyph="tab-log" level="h4" />
           <input
-            aria-label="Guidance for this take (optional)"
-            value={guidance}
-            onChange={(event) => setGuidance(event.target.value)}
+            aria-label={t("passageUi.reroll.guidance")}
+            value={selectedPreset ? renarratePresetLabel(selectedPreset, locale) : guidance}
+            onChange={(event) => { setSelectedPreset(null); setGuidance(event.target.value); }}
             maxLength={MAX_GUIDANCE_LENGTH}
             disabled={running}
-            placeholder="darker, more dialogue, shorter..."
+            placeholder={t("passageUi.reroll.placeholder")}
             className={ui.input}
           />
           <div data-pill-group="" className="mt-2 flex flex-wrap gap-1.5">
             {GUIDANCE_PRESETS.map((preset) => (
-              <button data-on={guidance === preset ? "" : undefined}
+              <button data-on={selectedPreset === preset ? "" : undefined}
                 key={preset}
                 type="button"
                 disabled={running}
-                onClick={() => setGuidance(preset)}
+                onClick={() => setSelectedPreset(preset)}
                 className="session-subtab session-subtab-plain motion-press"
               >
-                {preset}
+                {renarratePresetLabel(preset, locale)}
               </button>
             ))}
           </div>
 
-          {error ? <p className="motion-shake mt-3 text-xs text-red-400">{error}</p> : null}
+          {error ? <p className="motion-shake mt-3 text-xs text-red-400">{passageText(error, locale)}</p> : null}
 
           <div className="mt-4 flex justify-end gap-2">
             <button type="button" onClick={onClose} disabled={running} className={ui.btnSmall}>
-              Cancel
+              {t("passageUi.reroll.cancel")}
             </button>
             <button
               type="button"
@@ -153,10 +157,10 @@ export function RenarrateDialog({
             >
               {running ? (
                 <>
-                  <Loader2 className="size-4 animate-spin" /> Writing...
+                  <Loader2 className="size-4 animate-spin" />{t("passageUi.reroll.writing")}
                 </>
               ) : (
-                "Reroll"
+                t("passageUi.reroll.name")
               )}
             </button>
           </div>
