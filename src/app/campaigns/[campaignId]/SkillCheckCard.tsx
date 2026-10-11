@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/cn";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 // The skill-check card (docs/visual-overhaul-plan.md 5.4, "Rolls and
 // Effects" 5b): the violet frame with its thorn corners, the breathing halo,
@@ -89,6 +90,7 @@ export function CheckDie({
   halo?: boolean;
   verdict?: string | null;
 }) {
+  const { t } = useLocale();
   const tumbling = state === "waiting" || state === "landing";
   const showTotal = total !== undefined && total !== "" && state !== "idle" && state !== "waiting";
   const ink = tone === "pass" ? "var(--check-pass)" : tone === "fail" ? "var(--check-fail)" : "var(--check-face)";
@@ -111,7 +113,7 @@ export function CheckDie({
       </svg>
       {state === "idle" ? (
         <span className="absolute inset-0 flex items-center justify-center font-display text-sm font-bold" style={{ color: "var(--check-face)" }}>
-          d{sides}
+          {t("combatUi.roll.die", { sides })}
         </span>
       ) : null}
       {tumbling ? (
@@ -195,12 +197,13 @@ export function modifierParts(expression: string): Array<{ text: string; kind: "
 }
 
 export function ModifierBreakdown({ expression, caption }: { expression: string; caption?: string }) {
+  const { t } = useLocale();
   const parts = modifierParts(expression);
   if (!parts.length) {
     return null;
   }
   return (
-    <span className="flex flex-wrap items-center gap-1" aria-label={`Rolls ${expression}`}>
+    <span className="flex flex-wrap items-center gap-1" aria-label={t("combatUi.roll.expression", { expression })}>
       {parts.map((part, index) => (
         <span
           key={`${part.text}-${index}`}

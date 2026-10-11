@@ -106,7 +106,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/BoardChrome.tsx",
-      "state": "pending"
+      "state": "pending",
+      "review": "Static rail/HUD/health/cover/target strings and stock SRD condition labels now localize with actual English render/target-ID parity. Still pending: registry effect names/summaries and structured condition-duration/source notes; unknown authored note text must remain intact."
     },
     {
       "path": "src/app/campaigns/[campaignId]/BoardDelivery.tsx",
@@ -268,7 +269,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmInitiativePanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned titles/help/confirmation/accessibility, role labels, hidden/reflex flags and request errors reviewed. Enemy display names localize by role; staged PC and companion names stay verbatim. Actual reorder/rewind/insert handlers preserve IDs, directions and authored names. Engine initiative tests and frozen actual English renders cover compatibility."
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmMapLibraryPanel.tsx",
@@ -313,7 +315,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/EncounterPanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned enemy names, CR/health/regeneration/lair/legendary labels, grouping and end/force confirmations/errors reviewed. Downed or regenerating members are not counted as standing; a zero-HP state does not infer death. Public HP permissions and portrait seeds stay unchanged. ConditionChip and initiative children have independent coverage; existing condition-note projection remains a pending child display task."
     },
     {
       "path": "src/app/campaigns/[campaignId]/EventLog.tsx",
@@ -583,7 +586,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/PendingRollCard.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned check/ability labels, manual/digital/Pixels/held-roll instructions, Inspiration and API errors reviewed. Error state retains raw responses and rerenders by locale, including observer fallback. Actual button callbacks preserve dice payloads and canonical endpoints; character names, assigned die names and campaign-authored reason remain verbatim. Imported steppers have independent coverage."
     },
     {
       "path": "src/app/campaigns/[campaignId]/PinsPanel.tsx",
@@ -619,7 +623,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/RollCard.tsx",
-      "state": "pending"
+      "state": "pending",
+      "review": "Owned verdict/DC/hidden/natural-roll strings and stock skill/ability/single-target labels now localize with frozen English parity. Still pending: complete engine-generated area/death-save/condition-related detail variants and identity-safe target projection."
     },
     {
       "path": "src/app/campaigns/[campaignId]/RulesPanel.tsx",
@@ -676,7 +681,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/SkillCheckCard.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned die notation and modifier accessibility are localized; geometry, dice expressions, animation and caller-owned captions/verdicts stay unchanged. Actual English render baseline and bilingual quantities/control checks pass."
     },
     {
       "path": "src/app/campaigns/[campaignId]/SpeakerPicker.tsx",

@@ -28,7 +28,7 @@
     "src/app/characters/builder/usePickerGroups.ts": "d271803b233c0f3fd4add709fb4b4247c0c622a9dfd9e63f543c59ebc987a5f1",
     "src/app/characters/builder/steps/CallingStep.tsx": "dddfac30b09eef862b1c05da0f2ec8b07dd9062c71f6f37c0483260f87c3aaa7",
     "src/app/campaigns/[campaignId]/LevelUpDialog.tsx": "1804e1a2653dd71483f1151cd55a3a0af4d28396951a7a4f95ac04a59607e17d",
-    "src/lib/i18n/messages.ts": "3411351b3d607241ad39bf728fd1fff4d0675a2cdc3009c60cbb6f75eedd4c52"
+    "src/lib/i18n/messages.ts": "1a15d595090f2451d909c790b6bf34a06c92488ad5bef8663cf66e2d290741dd"
   },
   "catalogs": {
     "src/lib/i18n/calling-material-messages.ts": "6387a3295a5426eca343f1fe331857d5381d98476cd15a38f9c3085ba3add814"
@@ -42,5 +42,6 @@
     "previousHashes": {
       "src/lib/i18n/calling-material-messages.ts": "ec47158c485f6091804d2c1a8f4f9df890875ad11c528eafae40c882916247c4"
     }
-  }
+  },
+  "combatUiCatalogIntegration": "2026-10-11: shared messages.ts appends 183 combatUi keys. Re-compared every pre-existing English/Chinese resource key/value and all 17 previous compressed English baselines to HEAD b7217a84: unchanged. Only the shared entrypoint fingerprint is refreshed; original calling material, mechanism source hashes and review scope are retained."
 }

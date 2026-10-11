@@ -5,10 +5,12 @@ import { useState } from "react";
 import { cn } from "@/lib/cn";
 import { GameIcon } from "@/components/ui/GameIcon";
 import { conditionIconKey } from "@/lib/battlemap/condition-glyphs";
-import { HEALTH_LABEL, HEALTH_RING, type HealthWord } from "@/lib/battlemap/health-words";
+import { HEALTH_RING, type HealthWord } from "@/lib/battlemap/health-words";
 import type { StageToken } from "@/app/campaigns/[campaignId]/BoardStage";
 import type { PublicEncounter } from "@/lib/db/encounter-view";
 import type { TargetEdge } from "@/lib/battlemap/view-tactics";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { combatName, combatTermLabel } from "@/lib/i18n/combat-ui-presentations";
 
 // The chrome on the board as a stage (docs/visual-overhaul-plan.md 5.1): the
 // initiative rail, the turn HUD, the turn banner, the hover plate and the
@@ -82,6 +84,7 @@ export function InitiativeRail({
   faceOf: FaceLookup;
   onOpen?: () => void;
 }) {
+  const { locale, t } = useLocale();
   if (!encounter.orderReady || !encounter.order.length) {
     return null;
   }
@@ -99,18 +102,19 @@ export function InitiativeRail({
     return { entry: order[at], at };
   });
   const more = order.length - shown.length;
+  const current = order[encounter.turnIndex];
   return (
     <button
       type="button"
       onClick={onOpen}
       disabled={!onOpen}
       data-tour="battle-initiative"
-      aria-label={`Round ${round}, initiative order. ${order[encounter.turnIndex]?.name ?? ""} is up. Open the order.`}
+      aria-label={t("combatUi.board.railAria", { round, name: current ? combatName(current.name, current.kind, locale) : "" })}
       className="absolute left-2 top-2 z-10 flex flex-col items-start gap-1 text-left outline-none focus-visible:ring-2 focus-visible:ring-amber-400/60 @md:left-3.5 @md:top-3.5 @md:gap-1.5"
     >
       <span className="board-eyebrow">
-        Round {round}
-        <span className="hidden @md:inline"> · initiative</span>
+        {t("combatUi.board.round", { round })}
+        <span className="hidden @md:inline">{t("combatUi.board.initiative")}</span>
       </span>
       <span className="flex gap-[3px] @md:gap-[5px]">
         {shown.map(({ entry, at }, index) => {
@@ -118,7 +122,7 @@ export function InitiativeRail({
           return (
             <span
               key={`${entry.id}-${at}`}
-              title={`${entry.name}${entry.hidden ? " (hidden)" : ""}${entry.initiative !== undefined ? ` · ${entry.initiative}` : ""}`}
+              title={`${combatName(entry.name, entry.kind, locale)}${entry.hidden ? t("combatUi.board.hidden") : ""}${entry.initiative !== undefined ? ` · ${entry.initiative}` : ""}`}
               className={cn(
                 "board-plate relative block h-[38px] w-[31px] overflow-hidden rounded-[6px] border bg-[#0d0b1c] shadow-[0_2px_6px_rgba(4,2,12,0.55)] @md:h-14 @md:w-[46px] @md:rounded-[7px]",
                 current ? "border-transparent" : "border-[rgba(227,193,92,0.25)]",
@@ -129,7 +133,7 @@ export function InitiativeRail({
             >
               <TokenFace
                 candidates={faceOf(entry)}
-                name={entry.name}
+                name={combatName(entry.name, entry.kind, locale)}
                 enemy={entry.kind === "enemy"}
                 className={cn("absolute inset-0 size-full", entry.hidden && "opacity-50")}
               />
@@ -167,11 +171,7 @@ export function InitiativeRail({
 // projected, so the pips are drawn only for a seat that was sent one.
 export type TurnHudBudget = { action: boolean; bonus: boolean; reaction: boolean };
 
-const PIPS: Array<{ key: keyof TurnHudBudget; label: string }> = [
-  { key: "action", label: "ACTION" },
-  { key: "bonus", label: "BONUS" },
-  { key: "reaction", label: "REACTION" },
-];
+const PIPS: Array<keyof TurnHudBudget> = ["action", "bonus", "reaction"];
 
 // Top-right: whose turn, and on your own turn what you have left.
 export function TurnHud({
@@ -189,26 +189,27 @@ export function TurnHud({
   ac?: number | null;
   hp?: { current: number; max: number } | null;
 }) {
+  const { t } = useLocale();
   if (!actorName) {
     return null;
   }
   const stats = [
-    typeof speedLeftFeet === "number" ? `${speedLeftFeet} ft left` : null,
-    typeof ac === "number" ? `AC ${ac}` : null,
+    typeof speedLeftFeet === "number" ? t("combatUi.board.feetLeft", { feet: speedLeftFeet }) : null,
+    typeof ac === "number" ? t("combatUi.board.ac", { ac }) : null,
     hp ? `${hp.current}/${hp.max}` : null,
   ].filter(Boolean);
   return (
     <div className="pointer-events-none absolute right-2 top-2 z-10 flex max-w-[58%] flex-col items-end gap-1 @md:right-3.5 @md:top-3.5 @md:gap-[7px]">
-      <span className="board-eyebrow block max-w-full truncate text-right">{mine ? `${actorName} · your turn` : `${actorName}'s turn`}</span>
+      <span className="board-eyebrow block max-w-full truncate text-right">{t(mine ? "combatUi.board.yourTurn" : "combatUi.board.turn", { name: actorName })}</span>
       {mine && budget ? (
         // On a narrow board the pips and the stats sit under the rail's
         // plates instead of beside them, where there is no room.
         <div className="mt-[42px] flex flex-wrap justify-end gap-1 @md:mt-0 @md:gap-1.5">
           {PIPS.map((pip) => {
-            const left = budget[pip.key];
+            const left = budget[pip];
             return (
               <span
-                key={pip.key}
+                key={pip}
                 className={cn(
                   // A spent pip dims over a beat instead of blinking out.
                   "flex items-center gap-[5px] rounded-full border px-2 py-[3px] font-mono text-[9px] tracking-[0.04em] transition-colors duration-[420ms] ease-snap @md:text-[10px]",
@@ -218,7 +219,7 @@ export function TurnHud({
                 )}
               >
                 <span className={cn("size-1.5 rounded-full transition-colors duration-[420ms] ease-snap", left ? "bg-[#d4ab3a]" : "bg-[#3a3358]")} />
-                {pip.label}
+                {t(`combatUi.board.${pip}`)}
               </span>
             );
           })}
@@ -262,22 +263,24 @@ export function TurnBanner({ text, mine }: { text: string; mine: boolean }) {
 }
 
 function HealthWordChip({ word }: { word: HealthWord }) {
+  const { t } = useLocale();
   return (
     <span
       className="rounded-full border px-1.5 py-px text-[10px] font-medium"
       style={{ borderColor: `${HEALTH_RING[word]}99`, color: HEALTH_RING[word], background: "rgba(8,6,18,0.6)" }}
     >
-      {HEALTH_LABEL[word] ?? word}
+      {t(`combatUi.board.health.${word}`)}
     </span>
   );
 }
 
 export function ConditionChip({ label, rounds, note }: { label: string; rounds?: number; note?: string }) {
+  const { locale, t } = useLocale();
   return (
     <span className="fx-pop inline-flex max-w-full items-center gap-1 rounded-full border border-amber-900/60 bg-amber-950/30 py-px pl-px pr-1.5 text-[10px] text-amber-300">
       <GameIcon icon={{ kind: "condition", key: conditionIconKey(label) }} size="size-4" />
-      <span className="capitalize">{label}</span>
-      {rounds ? ` (${rounds} rd)` : ""}
+      <span className="capitalize">{combatTermLabel("condition", label, locale)}</span>
+      {rounds ? t("combatUi.board.conditionRounds", { rounds }) : ""}
       {/* What the engine's metadata says: until whose turn, the save that
           ends it, who laid it (src/lib/battlemap/condition-notes.ts). */}
       {note ? <span className="truncate text-amber-200/70">{note}</span> : null}
@@ -289,10 +292,11 @@ export function ConditionChip({ label, rounds, note }: { label: string; rounds?:
 // plate: the board's own verdict (view-tactics.ts), the one the hit preview
 // and pc_attack read.
 function EdgeChips({ edge }: { edge: TargetEdge }) {
+  const { t } = useLocale();
   const chips = [
-    edge.blocked ? "No line of sight" : edge.cover === 5 ? "Three-quarters cover (+5 AC)" : edge.cover === 2 ? "Half cover (+2 AC)" : null,
-    edge.flanking ? "Flanked: advantage in melee" : null,
-    edge.hostileBeside && !edge.adjacent ? "Enemy beside you: ranged at disadvantage" : null,
+    edge.blocked ? t("combatUi.board.noSight") : edge.cover === 5 ? t("combatUi.board.coverThree") : edge.cover === 2 ? t("combatUi.board.coverHalf") : null,
+    edge.flanking ? t("combatUi.board.flanked") : null,
+    edge.hostileBeside && !edge.adjacent ? t("combatUi.board.nearEnemy") : null,
   ].filter((chip): chip is string => Boolean(chip));
   if (!chips.length) return null;
   return (
@@ -327,6 +331,8 @@ export function TokenPlate({
   conditions?: Array<{ id: string; label: string; rounds?: number; note?: string }>;
   edge?: TargetEdge;
 }) {
+  const { locale } = useLocale();
+  const displayName = combatName(token.name, token.kind, locale);
   const cx = ((token.x + footprint / 2) / boardWidth) * 100;
   // Below the figure near the top edge, above it everywhere else.
   const below = token.y < boardHeight / 3;
@@ -346,12 +352,12 @@ export function TokenPlate({
       <div className="flex items-center gap-1.5">
         <TokenFace
           candidates={face}
-          name={token.name}
+          name={displayName}
           enemy={token.kind === "enemy"}
           className="size-7 rounded-full border border-[rgba(227,193,92,0.35)]"
         />
         <span className="min-w-0">
-          <span className="block truncate font-display text-xs font-semibold">{token.name}</span>
+          <span className="block truncate font-display text-xs font-semibold">{displayName}</span>
           {health ? <HealthWordChip word={health} /> : null}
         </span>
       </div>
@@ -384,11 +390,12 @@ export function TargetChips({
   onPick: (tokenId: string) => void;
   onHover?: (tokenId: string | null) => void;
 }) {
+  const { locale, t } = useLocale();
   if (!targets.length) {
-    return <p className="text-[11px] text-stone-500">Nobody here to aim at.</p>;
+    return <p className="text-[11px] text-stone-500">{t("combatUi.board.noTarget")}</p>;
   }
   return (
-    <div className="flex gap-1.5 overflow-x-auto pb-1" role="group" aria-label="Targets">
+    <div className="flex gap-1.5 overflow-x-auto pb-1" role="group" aria-label={t("combatUi.board.targets")}>
       {targets.map(({ token, face, health, feet }, index) => (
         <button
           key={token.id}
@@ -403,14 +410,14 @@ export function TargetChips({
         >
           <TokenFace
             candidates={face}
-            name={token.name}
+            name={combatName(token.name, token.kind, locale)}
             enemy={token.kind === "enemy"}
             className="size-8 rounded-full border border-ember-500/60"
           />
           <span className="min-w-0">
-            <span className="block max-w-[9rem] truncate text-xs font-medium text-stone-100">{token.name}</span>
+            <span className="block max-w-[9rem] truncate text-xs font-medium text-stone-100">{combatName(token.name, token.kind, locale)}</span>
             <span className="block font-mono text-[10px] text-stone-400">
-              {[health ? HEALTH_LABEL[health] ?? health : null, feet !== null ? `${feet} ft` : null].filter(Boolean).join(" · ")}
+              {[health ? t(`combatUi.board.health.${health}`) : null, feet !== null ? t("combatUi.board.feet", { feet }) : null].filter(Boolean).join(" · ")}
             </span>
           </span>
         </button>

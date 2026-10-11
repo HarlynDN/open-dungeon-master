@@ -7,7 +7,8 @@ import { checkBeat } from "@/lib/battlemap/beats";
 import type { StoredRoll } from "@/lib/db/rolls";
 import type { DiceTerm, ModifierTerm } from "@/lib/dice";
 import { prefersReducedMotion } from "@/lib/effects-mode";
-import { rollCardLabel } from "@/lib/roll-labels";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { localizedRollCardLabel } from "@/lib/i18n/combat-ui-presentations";
 import { CheckDie, CheckFrame, type CheckDieState } from "@/app/campaigns/[campaignId]/SkillCheckCard";
 
 // A roll that arrived within this window is the one the table is watching
@@ -25,7 +26,8 @@ function lowEffectsNow(): boolean {
 // natural 1 in ember. It is the card around the number: the 3D dice tray
 // plays on its own and is not driven from here.
 export function RollCard({ roll, characterName }: { roll: StoredRoll; characterName?: string }) {
-  const label = rollCardLabel(roll, characterName);
+  const { locale, t } = useLocale();
+  const label = localizedRollCardLabel(roll, characterName, locale);
   // Decided once, when the card first appears: a re-render must not replay
   // the landing, and scrolling back through history must not start one.
   const [beat] = useState<CheckDieState>(() => {
@@ -45,7 +47,7 @@ export function RollCard({ roll, characterName }: { roll: StoredRoll; characterN
       <div className="inline-flex animate-fade-up items-center gap-2 rounded-lg border border-stone-700/70 bg-stone-900/70 px-3 py-2 text-sm text-stone-400 shadow-elev-1">
         <GameIcon icon={{ kind: "glyph", key: "die-d20" }} size="size-6" className="opacity-80" />
         <span>{label}</span>
-        <span className="text-xs text-stone-600">rolled behind the screen</span>
+        <span className="text-xs text-stone-600">{t("combatUi.roll.hidden")}</span>
       </div>
     );
   }
@@ -57,7 +59,7 @@ export function RollCard({ roll, characterName }: { roll: StoredRoll; characterN
   const crit = roll.breakdown.crit ?? null;
   const judged = roll.dc !== null;
   const tone = judged ? (roll.success ? "pass" : "fail") : crit === "nat1" ? "fail" : crit === "nat20" ? "pass" : "neutral";
-  const verdict = judged ? (roll.success ? "Success!" : "Failure!") : null;
+  const verdict = judged ? t(roll.success ? "combatUi.roll.successBang" : "combatUi.roll.failureBang") : null;
   const timing = checkBeat({ quick: beat === "landing-short" });
   const sides = diceTerms[0]?.sides ?? 20;
 
@@ -87,11 +89,11 @@ export function RollCard({ roll, characterName }: { roll: StoredRoll; characterN
           <span className="font-display text-[12px] font-semibold tracking-[0.04em]">{label}</span>
           {crit === "nat20" ? (
             <span className="animate-twinkle text-xs font-semibold" style={{ color: "var(--check-pass)" }}>
-              Natural 20!
+              {t("combatUi.roll.nat20")}
             </span>
           ) : crit === "nat1" ? (
             <span className="text-xs font-medium" style={{ color: "var(--check-fail)" }}>
-              Natural 1
+              {t("combatUi.roll.nat1")}
             </span>
           ) : null}
         </span>
@@ -111,7 +113,7 @@ export function RollCard({ roll, characterName }: { roll: StoredRoll; characterN
               className="check-well px-1.5 py-px"
               style={{ color: roll.success ? "var(--check-pass)" : "var(--check-fail)" }}
             >
-              DC {roll.dc} · {roll.success ? "success" : "failure"}
+              {t("combatUi.roll.dc", { dc: roll.dc!, verdict: t(roll.success ? "combatUi.roll.success" : "combatUi.roll.failure") })}
             </span>
           ) : null}
         </span>

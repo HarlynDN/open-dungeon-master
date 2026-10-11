@@ -24,7 +24,9 @@ import { CheckDie, CheckFrame, ModifierBreakdown } from "@/app/campaigns/[campai
 import { findSkill } from "@/lib/srd";
 import { heldInspiration } from "@/lib/dm/roll-riders";
 import { INSPIRED_KINDS } from "@/lib/dm/pending-inspiration";
-import { ROLL_KIND_LABELS } from "@/lib/roll-labels";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import type { UiRequestError } from "@/lib/i18n/api-errors";
+import { combatErrorText, combatTermLabel, diceListLabel, pendingRollLabel, rollKindLabel } from "@/lib/i18n/combat-ui-presentations";
 
 const ABILITY_NAMES: Record<string, string> = {
   str: "Strength",
@@ -70,9 +72,10 @@ export function PendingRollCard({
   meUserId: string;
   steersStory: boolean;
 }) {
+  const { locale, t } = useLocale();
   const [values, setValues] = useState<Record<number, string>>({});
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<UiRequestError | null>(null);
   // Sampled once on mount; the fallback affordance appearing on the next
   // re-render after the threshold is fine for a courtesy button.
   const [mountedAt] = useState(() => Date.now());
@@ -143,10 +146,7 @@ export function PendingRollCard({
   }, [mine, faceSources, faces]);
 
   const character = sheets.find((sheet) => sheet.id === pending.characterId);
-  const detailText = pending.detail.replaceAll("_", " ");
-  const label = `${character?.name ?? "Someone"}: ${pending.kind.replaceAll("_", " ")}${
-    detailText ? ` (${detailText})` : ""
-  }`;
+  const label = pendingRollLabel(pending, character?.name, locale);
   // Plain-words instruction: "Roll 2× d20 and 1× d8" from the faces list.
   const diceSummary = (() => {
     if (!faces.length) {
@@ -159,20 +159,18 @@ export function PendingRollCard({
     const parts = [...counts.entries()].map(
       ([sides, count]) => `${count} × d${sides}`,
     );
-    return parts.length > 1
-      ? `${parts.slice(0, -1).join(", ")} and ${parts[parts.length - 1]}`
-      : parts[0];
+    return diceListLabel(parts, locale);
   })();
   // Enter raw die faces only; any flat bonus applies server-side.
   const flatModifier = /([+-]\d+)$/.exec(pending.expression.replaceAll(" ", ""))?.[1];
   const modifierNote = flatModifier
-    ? `Enter the bare die numbers; the ${flatModifier} is added for you.`
+    ? t("combatUi.pending.modifier", { modifier: flatModifier })
     : "";
   const advantageNote =
     pending.advantage === "advantage"
-      ? "advantage: roll both, highest counts"
+      ? t("combatUi.pending.advantage")
       : pending.advantage === "disadvantage"
-        ? "disadvantage: roll both, lowest counts"
+        ? t("combatUi.pending.disadvantage")
         : "";
   const stale = mountedAt - new Date(pending.createdAt).getTime() > OWNER_FALLBACK_AFTER_MS;
   // A digital face is always ready (the server fills it); everything else
@@ -189,7 +187,7 @@ export function PendingRollCard({
 
   async function submit(body: unknown) {
     setBusy(true);
-    setError("");
+    setError(null);
     try {
       const response = await fetch(
         `/api/campaigns/${campaignId}/pending-rolls/${pending.id}`,
@@ -201,10 +199,10 @@ export function PendingRollCard({
       );
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
-        setError(data.error || "Could not submit the roll.");
+        setError({ data, fallback: "combatUi.error.rollSubmit" });
       }
     } catch {
-      setError("Could not reach the server.");
+      setError({ data: {}, fallback: "combatUi.error.network" });
     } finally {
       setBusy(false);
     }
@@ -251,31 +249,43 @@ export function PendingRollCard({
     pending.advantage !== "advantage";
   async function inspire() {
     setBusy(true);
-    setError("");
+    setError(null);
     try {
       const response = await fetch(`/api/campaigns/${campaignId}/pending-rolls/${pending.id}/inspiration`, { method: "POST" });
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
-        setError(data.error || "Could not spend your Inspiration.");
+        setError({ data, fallback: "combatUi.error.inspiration" });
       }
     } catch {
-      setError("Could not reach the server.");
+      setError({ data: {}, fallback: "combatUi.error.network" });
     } finally {
       setBusy(false);
     }
   }
 
   async function stopHolding() {
-    await fetch(`/api/campaigns/${campaignId}/members/me`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ holdRolls: false }),
-    }).catch(() => undefined);
+    setBusy(true);
+    setError(null);
+    try {
+      const response = await fetch(`/api/campaigns/${campaignId}/members/me`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ holdRolls: false }),
+      });
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        setError({ data, fallback: "combatUi.error.hold" });
+      }
+    } catch {
+      setError({ data: {}, fallback: "combatUi.error.network" });
+    } finally {
+      setBusy(false);
+    }
   }
 
   // What the card is about, for its head: the kind, the DC the table was
   // sent, and the ability behind a skill ("Athletics" is Strength).
-  const title = ROLL_KIND_LABELS[pending.kind] ?? "Roll";
+  const title = rollKindLabel(pending.kind, locale);
   const skillId = pending.detail.trim().toLowerCase().replace(/[\s-]+/g, "_");
   const abilityId =
     pending.kind === "skill_check"
@@ -283,7 +293,8 @@ export function PendingRollCard({
       : pending.kind === "saving_throw" || pending.kind === "ability_check"
         ? skillId.slice(0, 3)
         : undefined;
-  const abilityName = abilityId ? ABILITY_NAMES[abilityId] : undefined;
+  const abilityName = abilityId ? combatTermLabel("ability", ABILITY_NAMES[abilityId] ?? abilityId, locale) : undefined;
+  const errorText = combatErrorText(error, locale, "combatUi.error.rollSubmit");
 
   if (!mine) {
     return (
@@ -291,8 +302,7 @@ export function PendingRollCard({
         <span className="flex min-w-0 items-center gap-2">
           <CheckDie state="waiting" sides={faces[0] ?? 20} size="size-7" />
           <span className="min-w-0">
-            Waiting for {character?.name ?? "a player"} to roll {pending.expression}
-            {heldOnly ? "" : " with real dice"}
+            {t(heldOnly ? "combatUi.pending.waitHeld" : "combatUi.pending.waitPhysical", { name: character?.name ?? t("combatUi.pending.player"), expression: pending.expression })}
           </span>
         </span>
         {steersStory && stale ? (
@@ -302,9 +312,10 @@ export function PendingRollCard({
             onClick={() => submit({ fallback: "digital" })}
             className="motion-press shrink-0 font-medium underline decoration-dotted underline-offset-2 disabled:opacity-50"
           >
-            Roll digitally
+            {t("combatUi.pending.digital")}
           </button>
         ) : null}
+        {errorText ? <span role="alert" className="text-xs text-red-400">{errorText}</span> : null}
       </CheckFrame>
     );
   }
@@ -320,13 +331,13 @@ export function PendingRollCard({
               {title}
             </span>
             {pending.dc !== null ? (
-              <span className="check-well check-dim px-2 py-0.5 font-mono text-[11px]">Difficulty Class: {pending.dc}</span>
+              <span className="check-well check-dim px-2 py-0.5 font-mono text-[11px]">{t("combatUi.pending.difficulty", { dc: pending.dc })}</span>
             ) : null}
             <ModifierBreakdown expression={pending.expression} caption={abilityName} />
           </div>
           <p className="mt-1 flex items-center gap-2 text-sm">
             <Dices className="size-4 shrink-0" style={{ color: "var(--check-vine)" }} />
-            <span className="min-w-0">Your roll: {label}</span>
+            <span className="min-w-0">{t("combatUi.pending.yourRoll", { label })}</span>
           </p>
           {pending.reason ? <p className="check-dim mt-0.5 text-xs">{pending.reason}</p> : null}
           {canInspire ? (
@@ -334,10 +345,10 @@ export function PendingRollCard({
               type="button"
               disabled={busy}
               onClick={() => void inspire()}
-              title="Spend your Inspiration: advantage on this roll."
+              title={t("combatUi.pending.inspirationHint")}
               className="motion-pop motion-press mt-1.5 inline-flex min-h-9 items-center gap-1.5 rounded-full border border-amber-400/60 bg-amber-500/10 px-3 text-xs text-amber-100 transition-colors duration-150 hover:bg-amber-500/20 disabled:opacity-50 sm:min-h-8"
             >
-              <Sparkles className="size-3.5" /> Spend Inspiration
+              <Sparkles className="size-3.5" /> {t("combatUi.pending.inspiration")}
             </button>
           ) : null}
       {heldOnly ? (
@@ -349,11 +360,11 @@ export function PendingRollCard({
             {shakeActive ? (
               <span className="flex items-center gap-2 text-sm">
                 <Smartphone className="size-5 animate-bounce" style={{ color: "var(--check-vine)" }} />
-                Shake to roll {diceSummary}
+                {t("combatUi.pending.shake", { dice: diceSummary })}
               </span>
             ) : (
               <span className="text-xs">
-                Your rolls wait for you{canShake ? "" : " (shake to roll is on on your phone)"}.
+                {t(canShake ? "combatUi.pending.hold" : "combatUi.pending.holdPhone")}
               </span>
             )}
             <button
@@ -362,7 +373,7 @@ export function PendingRollCard({
               onClick={() => submit({ fallback: "digital" })}
               className={SUBMIT_BUTTON}
             >
-              {busy ? <Loader2 className="size-4 animate-spin" /> : "Roll now"}
+              {busy ? <Loader2 className="size-4 animate-spin" /> : t("combatUi.pending.now")}
             </button>
             {!shakeActive ? (
               <button
@@ -371,20 +382,18 @@ export function PendingRollCard({
                 onClick={() => void stopHolding()}
                 className="check-dim text-xs hover:underline disabled:opacity-50"
               >
-                Stop holding my rolls
+                {t("combatUi.pending.stopHolding")}
               </button>
             ) : null}
           </div>
-          {error ? <p className="mt-1.5 text-xs text-red-400">{error}</p> : null}
+          {errorText ? <p className="mt-1.5 text-xs text-red-400">{errorText}</p> : null}
         </>
       ) : null}
       {!heldOnly && diceSummary ? (
         <p className="mt-1 text-xs">
           {fullyAutomatic
-            ? `Roll ${diceSummary}. Your assigned dice fill in on their own.`
-            : `Roll ${diceSummary} at your table and enter each die below.${
-                modifierNote ? ` ${modifierNote}` : ""
-              } The game waits for your result.`}
+            ? t("combatUi.pending.automatic", { dice: diceSummary })
+            : t("combatUi.pending.manual", { dice: diceSummary, modifier: modifierNote ? ` ${modifierNote}` : "" })}
         </p>
       ) : null}
       {!heldOnly && advantageNote ? (
@@ -392,7 +401,7 @@ export function PendingRollCard({
       ) : null}
       {!heldOnly && shakeActive ? (
         <p className="check-dim mt-0.5 flex items-center gap-1.5 text-xs">
-          <Smartphone className="size-3.5" /> Or shake to roll it digitally.
+          <Smartphone className="size-3.5" /> {t("combatUi.pending.shakeInstead")}
         </p>
       ) : null}
 
@@ -407,10 +416,10 @@ export function PendingRollCard({
             return (
               <div key={index} className="block">
                 <span className="mb-0.5 block text-center text-[10px] text-sky-300/80">
-                  d{sides} · auto
+                  {t("combatUi.pending.autoDie", { sides })}
                 </span>
                 <div
-                  aria-label={`d${sides} rolled for you`}
+                  aria-label={t("combatUi.pending.dieAria", { sides })}
                   className="flex h-[34px] w-14 items-center justify-center rounded-md border border-sky-800/70 bg-sky-950/30 text-sm text-sky-100"
                 >
                   <Dices className="size-4 text-sky-300/80" />
@@ -430,7 +439,7 @@ export function PendingRollCard({
                   isPixel ? "text-sky-300/90" : "check-dim",
                 )}
               >
-                {isPixel ? source.name : `d${sides}`}
+                {isPixel ? source.name : t("combatUi.roll.die", { sides })}
               </span>
               <div className="relative">
                 {/* Blank means "not rolled yet", so the stepper is the optional
@@ -441,7 +450,7 @@ export function PendingRollCard({
                   fallback={1}
                   value={filled === "" || !Number.isFinite(Number(filled)) ? undefined : Number(filled)}
                   onChange={(next) => setValues((current) => ({ ...current, [index]: next === "" ? "" : String(next) }))}
-                  label={isPixel ? `${source.name}, d${sides}` : `d${sides}`}
+                  label={isPixel ? t("combatUi.pending.pixelDie", { name: source.name, sides }) : t("combatUi.roll.die", { sides })}
                   size="sm"
                 />
                 {isPixel && !filled ? (
@@ -457,7 +466,7 @@ export function PendingRollCard({
           onClick={() => submit({ dice: submissionDice() })}
           className={SUBMIT_BUTTON}
         >
-          {busy ? <Loader2 className="size-4 animate-spin" /> : "Submit roll"}
+          {busy ? <Loader2 className="size-4 animate-spin" /> : t("combatUi.pending.submit")}
         </button>
         <button
           type="button"
@@ -465,11 +474,11 @@ export function PendingRollCard({
           onClick={() => submit({ fallback: "digital" })}
           className="check-dim text-xs hover:underline disabled:opacity-50"
         >
-          Roll digitally instead
+          {t("combatUi.pending.digitalInstead")}
         </button>
       </div>
       )}
-      {!heldOnly && error ? <p className="mt-1.5 text-xs text-red-400">{error}</p> : null}
+      {!heldOnly && errorText ? <p className="mt-1.5 text-xs text-red-400">{errorText}</p> : null}
         </div>
       </div>
     </CheckFrame>
