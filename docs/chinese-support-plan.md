@@ -32,7 +32,7 @@ flow remains incomplete; the review-repair checkpoint is a separate scoped task.
 | Locale foundation | Registry, persistence, browser fallback, typed complete catalogs, model locale policy, classified token proxy, chapter budget, CJK retrieval, IME protection | Real prompt-usage calibration; keep legacy campaign/history regressions |
 | DM safety | Per-event engine conclusions with English/Chinese renderers; AI prose separated; one text-only correction and safe fallback; shared localized enemy names and held-resource names/IDs; scoped resource aliases and ambiguity retries; real Codex combat/resource acceptance | Untracked feature/reaction options and broader spell/condition/pack coverage; conservative regex coverage is not full language understanding |
 | Embeddings | Original English deployment default retained; explicit multilingual opt-in; fixed bilingual calibration/holdout and hard-negative policy | Broader pack quality; opt-in affects English campaigns and rebuilds indexes |
-| UI | **377/440** covered files, **0** pending literal sites, **15724** message keys; scoped AST gate; earlier play/session surfaces plus hand labels/targets/area selection, campaign-locale action sentences, native previews, basic/reaction rules, common casting refusals, spell selectors, all 113 owned mechanic notes, 103 native technique and 23 maneuver labels, attack/bonus-route and material/ritual refusals, built-in form attack names and verified current-actor labels, correction/multi-picker chrome, native downtime facts and inventory/vitals approval/player-trade controls, guided progression chrome, rest/loot/travel moments and all native option summaries, owned generic feature/feat summaries, feat choice controls, campaign/map entry notices the complete app help walkthrough story/chronicle/arc controls, NPC roster review, campaign model controls market/shelf/trade, party-lead, quest-log/faction controls plus facts, pinned memories, context-trace presentation and passage edit/reroll/action controls and character/companion entry and private-chat/media presentation and audit/timeline controls and dice tray/source controls and board movement/camera/order/area/target/drawing and DM placement/measurement controls | 63 zero-literal owners still require dynamic composition/source-ownership review; locale-sensitive selection thresholds and backend/native messages remain audit items; file fraction is not overall completion or an effort estimate |
+| UI | **377/440** covered files, **0** pending literal sites, **15790** message keys; scoped AST gate; earlier play/session surfaces plus hand labels/targets/area selection, campaign-locale action sentences, native previews, basic/reaction rules, common casting refusals, spell selectors, all 113 owned mechanic notes, 103 native technique and 23 maneuver labels, attack/bonus-route and material/ritual refusals, built-in form attack names and verified current-actor labels, correction/multi-picker chrome, native downtime facts and inventory/vitals approval/player-trade controls, guided progression chrome, rest/loot/travel moments and all native option summaries, owned generic feature/feat summaries, feat choice controls, campaign/map entry notices the complete app help walkthrough story/chronicle/arc controls, NPC roster review, campaign model controls market/shelf/trade, party-lead, quest-log/faction controls plus facts, pinned memories, context-trace presentation and passage edit/reroll/action controls and character/companion entry and private-chat/media presentation and audit/timeline controls and dice tray/source controls and board movement/camera/order/area/target/drawing and DM placement/measurement controls | 63 zero-literal owners still require dynamic composition/source-ownership review; locale-sensitive selection thresholds and backend/native messages remain audit items; file fraction is not overall completion or an effort estimate |
 | Character creation/material | Identity, ancestry, class introductions, ability allocation, gear, spell book/preparation and finish preview; 517 spell and 228 equipment names plus all 239 SRD magic-item titles and 52 exact variants; 257-entry contextual terminology policy and lint gate; 415/415 static registered resource names and guidance shared with DM references; 135/135 bundled option names/descriptions plus all 20 nonempty requirement frames; 146 shared/class-specific feature summaries, 54 native feat summaries and owned feat choice controls; four native pregen card summaries and backstories; original-source review records | Remaining specific/themed feature and magic-item material; dynamic free-cast resources and user-authored/pack text remain outside the static resource review |
 | Player system logs | Structured rule diagnostics, engine-generated combat conclusions and structured audit/timeline presentation retain English protocol semantics with localized display | Typed party-item/coin/banked-XP logs now persist campaign-locale text and original facts; other player-visible log templates remain pending; model-facing English tool results remain independent |
 | Resource delivery | UI/content/help scopes; selected-locale help loads independently on open, with retry; character/campaign boundaries; generated resources checked by lint; production Turbopack build and anonymous bilingual browser switch/reload succeed; home/character/campaign SSR and initial-script payloads measured | Hydrated/lazy network totals, authenticated campaign switching and active-play browser acceptance; route-level JS payload remains large |
@@ -46,29 +46,49 @@ inventory; do not count deferred files as promised first-release delivery.
 
 ## Delivery adjustment (2026-10-13)
 
-Keep the approved goal and language architecture. Change execution granularity:
-finish the current opportunity-log batch, then prioritize the remaining main-play
-owners in complete workflows. The remaining 73 owners have no pending static
-literal sites; review their dynamic data and inherited adapters in grouped passes
-rather than treating every file as a new translation project.
+The approved goal remains active and unchanged. Execution now prioritizes closing
+main-play workflows in batches. Static captions have no remaining literal sites;
+the 63 pending owners need dynamic data, inherited display and source-ownership
+review. Do not restart a word-by-word translation or acceptance cycle.
 
-1. Finish combat/table display together: hand/reaction surfaces, roll cards,
-   board delivery/movement notes and the sheet/party wrappers. Localize confirmed
-   native player-visible output while preserving authored text and machine fields.
-2. Finish creation/content browsing together: calling/identity/racial choices,
-   the shared content pickers and info dialogs. Keep untranslated owned material
-   explicit instead of closing an owner based on its static captions alone.
-3. Finish Chinese single-narrator TTS as a separate delivery unit, including the
-   existing voice/audio hooks, local setup and actual playback when available.
-4. Run the final Chinese journey and English regression at the phase boundary.
+1. Creation and character sheet: complete native feature names/help and shared
+   picker/info projections together. The current batch closes base/SRD feature
+   omissions; expanded subclass/themed material remains an explicit next batch.
+2. Combat/table and session logs: group the remaining native dynamic output with
+   the components displaying it. Preserve canonical inputs and existing history.
+3. Local speech deployment: reuse the completed locale-aware single-narrator code;
+   configure the local service and perform one real audio/playback acceptance.
+4. Final bilingual journey: Chinese create/play/combat/rest/voice and English
+   regression, with the remaining full-suite/lint/build gates at this boundary.
 
-Do not start a separate test/commit cycle for a word, a thin wrapper or a
-previously accepted name. Use one batch-end catalog/type/changed-file lint gate;
-add one focused behavior check only when the batch changes behavior. Stop after
-passing. Known model/name evidence is reused; model, audio, full-suite and build
-checks are reserved for their relevant phase or final acceptance. Report completed
-player workflows, outstanding gates and the latest measured coverage, without
-claiming that audited-file percentage equals overall completion.
+Each batch has a stated workflow and stopping point. Group adjacent display fixes
+only when they unblock that workflow; defer unrelated refactoring and optional
+hardening. Run catalog/types/changed-file lint once at batch end and one focused
+integration check for shared dynamic logic. After passing, commit the batch and
+move on. Repeat only a failed check or a check affected by a subsequent change.
+Reuse existing Goblin/model/name evidence; do not rerun real DM, full builds,
+model calibration or audio for ordinary UI copy. Report delivered workflows and
+open gates, with measured file coverage as a separate metric.
+
+The core-feature batch adds 49 missing names and 50 exact class/name/help bindings
+across base classes and their bundled SRD subclasses. Seventeen new help texts
+complete the gaps, while existing reviewed resource guidance is reused where it
+matches the full source. CallingStep and FeatureChips share the projection;
+creation tooltip titles/help now follow the viewer locale. Explicit world-pack
+feature names (even unchanged English labels) and blurbs retain their authored
+text. Canonical stored features, rules/tool inputs and story-granted names remain
+unchanged. This is a display projection, not a correction of pre-existing fuzzy
+English help resolution; specific/themed feature descriptions remain open.
+
+Validation: one catalog/type/changed-file lint gate and the existing focused
+feature-material integration script passed. Its grouped creation/sheet checks
+verify English/Chinese display, tooltip props, canonical IDs and pack overrides.
+An outdated lazy-dialog fixture lacked its request identity; the fixture was
+updated and only the failed script was repeated, preserving its existing English
+golden. Logs: /tmp/odm-core-feature-{catalog,types,lint,test}.log. Coverage remains
+377/440, zero literal sites, 15790 keys; expanded material prevents premature
+closure of CallingStep/SheetParts. No model, audio, build or unrelated name
+acceptance was repeated.
 
 ## Lightweight verification policy
 

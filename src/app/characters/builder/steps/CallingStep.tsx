@@ -8,6 +8,7 @@ import { builderOptionName, builderOptionSearchNames } from "@/lib/i18n/builder-
 import { builderTermLabel } from "@/lib/i18n/builder-name-presentations";
 import { callingCardFacts, grantingTraitLabel } from "@/lib/i18n/calling-presentations";
 import { subclassHelpText } from "@/lib/i18n/calling-material-presentations";
+import { nativeFeatureName, nativeFeatureHelp } from "@/lib/i18n/feature-material-presentations";
 import { LocalizedText } from "@/lib/i18n/LocalizedText";
 import { useMemo, useState } from "react";
 import { GameTerm } from "@/components/ui/GameTerm";
@@ -15,7 +16,7 @@ import { InfoButton, InfoDialog } from "@/components/ui/InfoDialog";
 import { describeFeature } from "@/lib/help";
 import { firstSentence } from "@/lib/help/rules-text";
 import { SRD_SKILLS } from "@/lib/srd";
-import { displayName, type Reskinned } from "@/lib/worlds/reskin-logic";
+import type { Reskinned } from "@/lib/worlds/reskin-logic";
 import type { WorldPack } from "@/lib/worlds/types";
 import { classArt } from "../lineage";
 import { OptionCardGrid, type OptionCardGroup } from "../OptionCardGrid";
@@ -211,19 +212,23 @@ export function CallingStep({
           help={t("callingUi.gainHelp")}
         >
           <div className="flex flex-wrap gap-x-3 gap-y-1">
-            {grantedFeatures.map((feature) => (
-              <span
-                key={`${feature.name}-${feature.level ?? 0}`}
-                className="flex items-center gap-1 text-xs text-stone-300"
-              >
-                {displayName(pack, "features", feature.name)}
-                <InfoButton
-                  label={feature.name}
-                  meta={feature.level ? t("callingUi.level", { level: feature.level }) : undefined}
-                  text={klass ? describeFeature(klass.id, subclass, feature.name) : null}
-                />
-              </span>
-            ))}
+            {grantedFeatures.map((feature) => {
+              const reskin = pack?.features.find(entry => entry.from.trim().toLowerCase() === feature.name.trim().toLowerCase());
+              const name = reskin ? reskin.name : nativeFeatureName(feature.name, locale);
+              return (
+                <span
+                  key={`${feature.name}-${feature.level ?? 0}`}
+                  className="flex items-center gap-1 text-xs text-stone-300"
+                >
+                  {name}
+                  <InfoButton
+                    label={name}
+                    meta={feature.level ? t("callingUi.level", { level: feature.level }) : undefined}
+                    text={reskin?.blurb || (klass ? nativeFeatureHelp(klass.id, feature.name, describeFeature(klass.id, subclass, feature.name), locale) : null)}
+                  />
+                </span>
+              );
+            })}
           </div>
         </StepPanel>
       ) : null}

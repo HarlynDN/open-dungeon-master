@@ -49,6 +49,7 @@ import { STORY_MESSAGES } from "./story-messages.ts";
 import { APP_HELP_MESSAGES } from "./app-help-messages.ts";
 import { FEAT_CHOICE_MESSAGES } from "./feat-choice-messages.ts";
 import { FEATURE_MATERIAL_MESSAGES } from "./feature-material-messages.ts";
+import { CORE_FEATURE_MESSAGES } from "./core-feature-messages.ts";
 import { CLASS_OPTION_MESSAGES } from "./class-option-messages.ts";
 import { LEVEL_UP_MESSAGES } from "./level-up-messages.ts";
 import { registerMessages } from "./translator.ts";
@@ -123,6 +124,7 @@ const en = {
     ...LEVEL_UP_MESSAGES.en,
     ...CLASS_OPTION_MESSAGES.en,
     ...FEATURE_MATERIAL_MESSAGES.en,
+    ...CORE_FEATURE_MESSAGES.en,
     ...FEAT_CHOICE_MESSAGES.en,
     ...APP_HELP_MESSAGES.en,
     ...STORY_MESSAGES.en,
@@ -268,6 +270,7 @@ const zhCN: Messages = {
     ...LEVEL_UP_MESSAGES["zh-CN"],
     ...CLASS_OPTION_MESSAGES["zh-CN"],
     ...FEATURE_MATERIAL_MESSAGES["zh-CN"],
+    ...CORE_FEATURE_MESSAGES["zh-CN"],
     ...FEAT_CHOICE_MESSAGES["zh-CN"],
     ...APP_HELP_MESSAGES["zh-CN"],
     ...STORY_MESSAGES["zh-CN"],

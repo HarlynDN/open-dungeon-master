@@ -1,4 +1,5 @@
 import { NATIVE_FEATURE_MATERIAL, NATIVE_FEAT_MATERIAL } from "./feature-material-metadata.ts";
+import { CORE_FEATURE_NAMES, CORE_FEATURE_HELP } from "./core-feature-metadata.ts";
 import { classOptionFeatureName, classOptionHelp } from "./class-option-presentations.ts";
 import { catalogFor, createTranslator } from "./translator.ts";
 import { normalizeRulesText } from "../help/rules-text.ts";
@@ -10,6 +11,8 @@ export function nativeFeatureName(name: string, locale: AppLocale): string {
   if (locale === "en") return name;
   const option = classOptionFeatureName(name, locale);
   if (option !== name) return option;
+  const core = CORE_FEATURE_NAMES.find(entry => entry.name === name);
+  if (core) return createTranslator(locale)(core.key);
   const row = NATIVE_FEATURE_MATERIAL.find(entry => entry.name === name);
   return row ? createTranslator(locale)(row.nameKey) : name;
 }
@@ -18,6 +21,9 @@ export function nativeFeatureHelp(classId: string, name: string, source: string 
   if (locale === "en" || !source) return source;
   const option = classOptionHelp(name, source, locale);
   if (option !== source) return option;
+  const core = CORE_FEATURE_HELP.find(entry => entry.classId === classId.trim().toLowerCase()
+    && entry.name === name && entry.description === source);
+  if (core) return createTranslator(locale)(core.descriptionKey);
   const en = { ...catalogFor("en", "callingMaterial.nativeFeature."), ...catalogFor("en", "callingMaterial.featureOverride.") };
   const row = NATIVE_FEATURE_MATERIAL.find(entry => {
     if (entry.name !== name || ("classId" in entry && entry.classId !== classId.trim().toLowerCase())) return false;

@@ -1211,7 +1211,8 @@
     },
     {
       "path": "src/app/characters/builder/steps/CallingStep.tsx",
-      "state": "pending"
+      "state": "pending",
+      "review": "Static class/subclass/skill chrome and base/SRD dynamic feature names/help reviewed. Shared source-bound display localizes titles and help without changing canonical granted features. Explicit world-pack feature names/blurbs remain authored, including an unchanged English display override. Grouped actual creation/sheet bilingual check passed. Expanded subclass/themed feature material remains pending; no premature full-owner closure."
     },
     {
       "path": "src/app/characters/builder/steps/ClassChoices.tsx",
@@ -1973,7 +1974,7 @@
     {
       "path": "src/components/sheet/SheetParts.tsx",
       "state": "pending",
-      "review": "Owned identity/vitals/ability chrome, canonical option-feature names/help, shared native feature/class-specific Timeless Body summaries and feat names reviewed. Full-source display bindings preserve English, modified/story descriptions, stable chip IDs, icon keys and canonical lazy-help references. Three frozen English material renders and parser-input parity checked. Other specific/themed feature help and full material remain pending."
+      "review": "Owned identity/vitals/ability chrome, canonical option-feature names/help, shared native feature/class-specific Timeless Body summaries and feat names reviewed. Full-source display bindings preserve English, modified/story descriptions, stable chip IDs, icon keys and canonical lazy-help references. Three frozen English material renders and parser-input parity checked. Other specific/themed feature help and full material remain pending. Base/SRD core feature omissions now use 49 name and 50 exact class/name/help bindings shared with creation; grouped actual bilingual creation/sheet projection passed, preserving canonical chip IDs and story names. Expanded material remains pending."
     },
     {
       "path": "src/components/sheet/SheetSpells.tsx",
