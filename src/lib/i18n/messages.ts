@@ -1,3 +1,4 @@
+import { MAP_SCENE_MESSAGES } from "./map-scene-messages.ts";
 import { REGION_MESSAGES } from "./region-messages.ts";
 import { BOARD_TOOL_MESSAGES } from "./board-tool-messages.ts";
 import { BOARD_CONTROL_MESSAGES } from "./board-control-messages.ts";
@@ -105,6 +106,7 @@ const en = {
   ...BOARD_CONTROL_MESSAGES.en,
     ...BOARD_TOOL_MESSAGES.en,
     ...REGION_MESSAGES.en,
+    ...MAP_SCENE_MESSAGES.en,
   ...PLAY_EDIT_MESSAGES.en,
   ...HAND_CASTING_MESSAGES.en,
   ...HAND_FEATURE_MESSAGES.en,
@@ -216,6 +218,7 @@ const zhCN: Messages = {
   ...BOARD_CONTROL_MESSAGES["zh-CN"],
     ...BOARD_TOOL_MESSAGES["zh-CN"],
     ...REGION_MESSAGES["zh-CN"],
+    ...MAP_SCENE_MESSAGES["zh-CN"],
   ...PLAY_EDIT_MESSAGES["zh-CN"],
   ...HAND_CASTING_MESSAGES["zh-CN"],
   ...HAND_FEATURE_MESSAGES["zh-CN"],

@@ -570,7 +570,7 @@ export const BattleMapGrid = memo(
               const [dx, dy] = key.split(",").map(Number);
               return (
                 <g key={`door-${key}`} pointerEvents="none">
-                  <title>{t(state === "locked" ? "boardTools.grid.locked" : "boardTools.grid.stuck")}</title>
+                  <title>{t(state === "locked" ? "boardTools.grid.locked" : "boardTools.grid.secret")}</title>
                   <rect
                     x={dx * TILE + TILE * 0.55}
                     y={dy * TILE + TILE * 0.05}
@@ -588,7 +588,7 @@ export const BattleMapGrid = memo(
                     fill="#0c0a09"
                     style={{ fontFamily: "sans-serif" }}
                   >
-                    {t(state === "locked" ? "boardTools.grid.lockedMark" : "boardTools.grid.stuckMark")}
+                    {t(state === "locked" ? "boardTools.grid.lockedMark" : "boardTools.grid.secretMark")}
                   </text>
                 </g>
               );

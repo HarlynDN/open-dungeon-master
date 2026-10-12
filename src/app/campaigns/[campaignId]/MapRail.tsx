@@ -1,9 +1,11 @@
 "use client";
 
 import { Keyboard } from "lucide-react";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { mapRailEntry } from "@/lib/i18n/map-scene-presentations";
 import { cn } from "@/lib/cn";
 import { Tooltip } from "@/components/ui/Tooltip";
-import { MODES, type MapTools, type ModeEntry, type ModeGroup, type SurfaceCaps } from "@/app/campaigns/[campaignId]/MapToolbox";
+import { MODES, type MapTools, type ModeEntry, type ModeGroup, type SurfaceCaps } from "@/app/campaigns/[campaignId]/mapToolState";
 
 // The tool rail (docs/visual-overhaul-plan.md 4.3): every mode of the toolbox
 // in three groups, the key printed small in the corner, a gold spine on the
@@ -29,12 +31,14 @@ function RailCell({
   strip: boolean;
   onPress: () => void;
 }) {
+  const { locale, t } = useLocale();
+  const shown = mapRailEntry(entry, locale);
   const Icon = entry.icon;
   const button = (
     <button
       type="button"
       aria-pressed={active}
-      aria-label={`${entry.label} (${entry.key})`}
+      aria-label={t("mapSceneUi.rail.label", { label: shown.label, key: entry.key })}
       data-map-tool={entry.mode}
       onClick={onPress}
       className={cn(
@@ -55,7 +59,7 @@ function RailCell({
       />
       <Icon className={strip ? "size-[18px]" : "size-4"} />
       {strip ? (
-        <span className="font-mono text-[8px] uppercase tracking-wide">{entry.label}</span>
+        <span className="font-mono text-[8px] uppercase tracking-wide">{shown.label}</span>
       ) : (
         <span aria-hidden="true" className="absolute bottom-[3px] right-[4px] font-mono text-[7px] leading-none text-stone-600">
           {entry.key}
@@ -65,7 +69,7 @@ function RailCell({
   );
   // The strip prints the name under the icon, so it needs no tooltip; the
   // upright rail has only the icon and says the rest on hover or focus.
-  return strip ? button : <Tooltip content={`${entry.label} (${entry.key}). ${entry.hint}`}>{button}</Tooltip>;
+  return strip ? button : <Tooltip content={t("mapSceneUi.rail.hint", { label: shown.label, key: entry.key, hint: shown.hint })}>{button}</Tooltip>;
 }
 
 export function MapRail({
@@ -84,11 +88,12 @@ export function MapRail({
   // The phone raises the tool sheet when a tool with dials is taken up.
   onPicked?: (mode: MapTools["mode"]) => void;
 }) {
+  const { t } = useLocale();
   const strip = orientation === "strip";
   const entries = modesFor(caps);
   return (
     <nav
-      aria-label="Map tools"
+      aria-label={t("mapSceneUi.rail.title")}
       className={cn(
         "flex shrink-0 border-stone-800 bg-stone-950/60",
         strip
@@ -126,15 +131,15 @@ export function MapRail({
         <button
           type="button"
           onClick={onHelp}
-          aria-label="Keys"
-          title="Every key (?)"
+          aria-label={t("mapSceneUi.rail.keys")}
+          title={t("mapSceneUi.rail.keyTip")}
           className={cn(
             "flex shrink-0 flex-col items-center justify-center gap-0.5 rounded-lg text-stone-500 motion-rail hover:bg-stone-900/70 hover:text-stone-200",
             strip ? "ml-1 h-[46px] min-w-[52px] px-1.5" : "mt-auto size-[38px]",
           )}
         >
           <Keyboard className={strip ? "size-[18px]" : "size-4"} />
-          {strip ? <span className="font-mono text-[8px] uppercase tracking-wide">Keys</span> : null}
+          {strip ? <span className="font-mono text-[8px] uppercase tracking-wide">{t("mapSceneUi.rail.keys")}</span> : null}
         </button>
       ) : null}
     </nav>

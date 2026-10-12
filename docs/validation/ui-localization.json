@@ -99,7 +99,7 @@
     {
       "path": "src/app/campaigns/[campaignId]/BattleMapGrid.tsx",
       "state": "covered",
-      "review": "Battle-map accessibility and locked/stuck door marks/titles use campaign locale; English L/S marks preserved. Passed ruler/area captions are localized by their owners; authored map labels/ping names and fixed numeric door DCs stay literal. Native turn matching still uses raw token names/IDs; geometry, fog/visibility, images and event callbacks unchanged."
+      "review": "Battle-map accessibility and locked/secret door marks/titles use campaign locale; English L/S marks preserved. Passed ruler/area captions are localized by their owners; authored map labels/ping names and fixed numeric door DCs stay literal. Native turn matching still uses raw token names/IDs; geometry, fog/visibility, images and event callbacks unchanged. Native DOOR_STATES confirmed secret (S) means a secret door, not stuck; Chinese mark/title corrected accordingly."
     },
     {
       "path": "src/app/campaigns/[campaignId]/BattleMapPanel.tsx",
@@ -518,15 +518,18 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/MapPanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Location/placeholder/render/menu/upload/redraw/populate/route/history labels use campaign locale; authored names/layout/hook text unchanged. Population stats are structured for locale rerendering. Canonical menu IDs, endpoints, uploads and image selection unchanged. Population network rejection displays localized feedback and resets busy state; raw API/media diagnostics retained with localized known-frame/opaque fallbacks."
     },
     {
       "path": "src/app/campaigns/[campaignId]/MapRail.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Map rail labels/hints/accessibility/Keys display use a separate locale projection that only returns text. Direct import of the existing native mapToolState ledger avoids the toolbox cycle; original mode IDs, shortcuts, capabilities, icons and callbacks preserved. Custom labels/hints remain literal; native metadata/hotkey code remains unchanged."
     },
     {
       "path": "src/app/campaigns/[campaignId]/MapSceneTools.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Light presets/radius help, labels/privacy, props, zones/door help, 47 owned ambience/music cue labels and private overlays use campaign locale. Native radii/clamps, IDs, limits, sound selections and visibility flags unchanged; custom asset labels/names stay literal. Upload request and overlay privacy contract preserved."
     },
     {
       "path": "src/app/campaigns/[campaignId]/MapTilesetPanel.tsx",

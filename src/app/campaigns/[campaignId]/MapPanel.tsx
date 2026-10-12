@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { REGION_FAILURES } from "@/lib/i18n/region-presentations";
+import { MAP_SCENE_FAILURES, mapSceneErrorText, mapPopulateNote, mapRenderFailure, type MapPopulateReport } from "@/lib/i18n/map-scene-presentations";
 import { EmptyState } from "@/components/EmptyState";
 import * as Dialog from "@radix-ui/react-dialog";
 import { ImageOff, ImagePlus, Loader2, RefreshCw, X } from "lucide-react";
@@ -50,12 +53,13 @@ export function MapPanel({
   // speaking in the latest passage, and the faces to show for them.
   inserts?: { speakers: Speaker[]; cast: CastMember[]; messageId: string } | null;
 }) {
+  const { locale, t } = useLocale();
   const current = locations.find((location) => location.isCurrent) ?? null;
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [populating, setPopulating] = useState(false);
-  const [populateNote, setPopulateNote] = useState("");
+  const [populateNote, setPopulateNote] = useState<string | MapPopulateReport>("");
 
-  // "Populate" (docs/vtt-parity-implementation-plan.md 12.1): the settlement
+  // t("mapSceneUi.area.populate") (docs/vtt-parity-implementation-plan.md 12.1): the settlement
   // generator writes the place's people, shops, rumours and a hook.
   async function populate(locationId: string) {
     setPopulating(true);
@@ -63,7 +67,9 @@ export function MapPanel({
     try {
       const response = await fetch(`/api/campaigns/${campaignId}/locations/${locationId}/populate`, { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" });
       const data = await response.json().catch(() => ({}));
-      setPopulateNote(response.ok ? `${data.npcs} people and ${data.shops} shops now live here. Hook: ${data.hook?.title ?? ""}` : String(data.error ?? "Could not populate that place."));
+      setPopulateNote(response.ok ? { npcs: data.npcs, shops: data.shops, hook: data.hook?.title ?? "" } : String(data.error ?? MAP_SCENE_FAILURES.populate));
+    } catch {
+      setPopulateNote(MAP_SCENE_FAILURES.network);
     } finally {
       setPopulating(false);
     }
@@ -96,7 +102,7 @@ export function MapPanel({
       });
       const payload = await uploaded.json().catch(() => ({}));
       if (!uploaded.ok) {
-        setRegenerateError(payload.error || "That image would not upload.");
+        setRegenerateError(payload.error || REGION_FAILURES.upload);
         return;
       }
       const response = await fetch(`/api/campaigns/${campaignId}/locations/${shown.id}/map`, {
@@ -106,10 +112,10 @@ export function MapPanel({
       });
       if (!response.ok) {
         const data = (await response.json().catch(() => ({}))) as { error?: string };
-        setRegenerateError(data.error ?? "Could not set the map.");
+        setRegenerateError(data.error ?? MAP_SCENE_FAILURES.set);
       }
     } catch {
-      setRegenerateError("That image would not upload.");
+      setRegenerateError(REGION_FAILURES.upload);
     } finally {
       setUploading(false);
     }
@@ -127,10 +133,10 @@ export function MapPanel({
       });
       if (!response.ok) {
         const data = (await response.json().catch(() => ({}))) as { error?: string };
-        setRegenerateError(data.error ?? "Could not queue the redraw.");
+        setRegenerateError(data.error ?? MAP_SCENE_FAILURES.queue);
       }
     } catch {
-      setRegenerateError("Could not reach the server.");
+      setRegenerateError(MAP_SCENE_FAILURES.network);
     } finally {
       setRegenerating(false);
     }
@@ -149,16 +155,16 @@ export function MapPanel({
       });
       if (!response.ok) {
         const data = (await response.json().catch(() => ({}))) as { error?: string };
-        setRegenerateError(data.error ?? "Could not clear the map.");
+        setRegenerateError(data.error ?? MAP_SCENE_FAILURES.clear);
       }
     } catch {
-      setRegenerateError("Could not reach the server.");
+      setRegenerateError(MAP_SCENE_FAILURES.network);
     }
   }
 
   if (!locations.length) {
     return (
-      <EmptyState size="sm" art="map" title={canPaint ? "No areas charted yet. Maps appear as the party explores." : "No areas charted yet. Areas appear as the party explores, and the DM can upload a map for each."} />
+      <EmptyState size="sm" art="map" title={canPaint ? t("mapSceneUi.area.emptyPaint") : t("mapSceneUi.area.emptyUpload")} />
     );
   }
 
@@ -166,13 +172,13 @@ export function MapPanel({
   const mapItems: ContextMenuItem[] =
     shown && steersStory
       ? [
-          { id: "upload", label: shown.mapImage ? "Replace map with your own picture" : "Upload a map", glyph: "tab-handout", disabled: uploading || regenerating, onSelect: () => fileRef.current?.click() },
-          ...(canPaint ? [{ id: "redraw", label: "Redraw this map", glyph: "system-maps", disabled: regenerating || uploading, onSelect: () => void regenerate() }] : []),
-          ...(shown.mapImage ? [{ id: "clear", label: "Use the placeholder instead", glyph: "quest-hidden", disabled: uploading || regenerating, onSelect: () => void clearToPlaceholder() }] : []),
-          { id: "populate", label: "Populate", glyph: "system-party", separated: true, disabled: populating, onSelect: () => void populate(shown.id) },
+          { id: "upload", label: shown.mapImage ? t("mapSceneUi.area.replace") : t("mapSceneUi.area.upload"), glyph: "tab-handout", disabled: uploading || regenerating, onSelect: () => fileRef.current?.click() },
+          ...(canPaint ? [{ id: "redraw", label: t("mapSceneUi.area.redraw"), glyph: "system-maps", disabled: regenerating || uploading, onSelect: () => void regenerate() }] : []),
+          ...(shown.mapImage ? [{ id: "clear", label: t("mapSceneUi.area.placeholder"), glyph: "quest-hidden", disabled: uploading || regenerating, onSelect: () => void clearToPlaceholder() }] : []),
+          { id: "populate", label: t("mapSceneUi.area.populate"), glyph: "system-party", separated: true, disabled: populating, onSelect: () => void populate(shown.id) },
         ]
       : shown?.mapImage
-        ? [{ id: "enlarge", label: "Enlarge the map", glyph: "tab-map", onSelect: () => setEnlarged(true) }]
+        ? [{ id: "enlarge", label: t("mapSceneUi.area.enlarge"), glyph: "tab-map", onSelect: () => setEnlarged(true) }]
         : [];
 
   return (
@@ -185,7 +191,7 @@ export function MapPanel({
                 {shown.name}
                 {shown.isCurrent ? (
                   <span className="ml-1.5 rounded-full border border-emerald-500/40 bg-emerald-950 px-1.5 py-0.5 align-middle font-sans text-[10px] normal-case tracking-normal text-emerald-300">
-                    here
+                    {t("mapSceneUi.area.here")}
                   </span>
                 ) : null}
               </>
@@ -213,14 +219,14 @@ export function MapPanel({
                     onClick={() => fileRef.current?.click()}
                     disabled={uploading || regenerating}
                     busy={uploading}
-                    title={shown.mapImage ? "Replace map with your own picture" : "Upload a map"}
-                    aria-label={shown.mapImage ? "Replace map" : "Upload a map"}
+                    title={shown.mapImage ? t("mapSceneUi.area.replace") : t("mapSceneUi.area.upload")}
+                    aria-label={shown.mapImage ? t("mapSceneUi.area.replaceShort") : t("mapSceneUi.area.upload")}
                     className="disabled:opacity-50"
                   >
                     {uploading ? null : <ImagePlus className="size-3.5" />}
                   </KitButton>
                   {canPaint ? (
-                    <KitButton tone="icon" always onClick={regenerate} disabled={regenerating || uploading} busy={regenerating} title="Redraw this map" aria-label="Redraw this map" className="disabled:opacity-50">
+                    <KitButton tone="icon" always onClick={regenerate} disabled={regenerating || uploading} busy={regenerating} title={t("mapSceneUi.area.redraw")} aria-label={t("mapSceneUi.area.redraw")} className="disabled:opacity-50">
                       {regenerating ? null : <RefreshCw className="size-3.5" />}
                     </KitButton>
                   ) : null}
@@ -230,8 +236,8 @@ export function MapPanel({
                       always
                       onClick={() => void clearToPlaceholder()}
                       disabled={uploading || regenerating}
-                      title="Take the map away and show the stand-in for this kind of place"
-                      aria-label="Use the placeholder instead"
+                      title={t("mapSceneUi.area.placeholderTip")}
+                      aria-label={t("mapSceneUi.area.placeholder")}
                       className="disabled:opacity-50"
                     >
                       <ImageOff className="size-3.5" />
@@ -242,13 +248,13 @@ export function MapPanel({
               ) : null
             }
           />
-          {regenerateError ? <PanelError className="mb-1.5">{regenerateError}</PanelError> : null}
+          {regenerateError ? <PanelError className="mb-1.5">{mapSceneErrorText(regenerateError, locale)}</PanelError> : null}
 
           {shown.mapImage ? (
             <button
               type="button"
               onClick={() => setEnlarged(true)}
-              aria-label={`Enlarge the map of ${shown.name}`}
+              aria-label={t("mapSceneUi.area.enlargeNamed", { name: shown.name })}
               className="panel motion-card relative block w-full overflow-hidden rounded-lg"
             >
               {/* The slow drift and the sky's tint over the scene art: the
@@ -256,7 +262,7 @@ export function MapPanel({
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={variantUrl(shown.mapImage.url, 1024)}
-                alt={`Map of ${shown.name}`}
+                alt={t("mapSceneUi.area.alt", { name: shown.name })}
                 loading="lazy"
                 decoding="async"
                 className="ken-burns w-full"
@@ -268,8 +274,8 @@ export function MapPanel({
             <div role="status" className="skeleton-block flex aspect-[4/3] flex-col items-center justify-center gap-1.5 rounded-lg text-xs text-stone-400">
               <Loader2 className="size-4 animate-spin text-amber-400" />
               {mediaStatus[shown.id].state === "queued"
-                ? "Waiting for the render queue..."
-                : "Drawing the map..."}
+                ? t("mapSceneUi.area.queued")
+                : t("mapSceneUi.area.drawing")}
             </div>
           ) : (
             // The stand-in plate for the kind of place this is, with the
@@ -289,12 +295,10 @@ export function MapPanel({
               <p className="absolute inset-x-0 bottom-0 flex items-center gap-1.5 bg-gradient-to-t from-stone-950/90 to-transparent px-2 pb-1.5 pt-4 text-xs text-stone-300">
                 <GameIcon icon={{ kind: "glyph", key: "system-maps" }} size="size-5" className="shrink-0" />
                 {mediaStatus[shown.id]?.state === "failed"
-                  ? mediaStatus[shown.id]?.reason
-                    ? `Map render failed: ${mediaStatus[shown.id]?.reason}`
-                    : "Map render failed"
+                  ? mapRenderFailure(mediaStatus[shown.id]?.reason, locale)
                   : !canPaint && steersStory
-                    ? "Not yet mapped. Upload one above."
-                    : "Not yet mapped"}
+                    ? t("mapSceneUi.area.notYetUpload")
+                    : t("mapSceneUi.area.notYet")}
               </p>
             </div>
           )}
@@ -303,15 +307,15 @@ export function MapPanel({
             <p className="mt-1.5 text-xs leading-5 text-stone-400">{shown.layoutDescription}</p>
           ) : null}
           {steersStory ? (
-            <KitButton disabled={populating} busy={populating} onClick={() => void populate(shown.id)} title="Invent this place's people, shops, rumours and a hook" className="mt-1.5">
-              {populating ? null : <GameIcon icon={{ kind: "glyph", key: "system-party" }} size="size-4" />} Populate
+            <KitButton disabled={populating} busy={populating} onClick={() => void populate(shown.id)} title={t("mapSceneUi.area.populateTip")} className="mt-1.5">
+              {populating ? null : <GameIcon icon={{ kind: "glyph", key: "system-party" }} size="size-4" />} {t("mapSceneUi.area.populate")}
             </KitButton>
           ) : null}
-          {populateNote ? <p role="status" className="live-in mt-1 text-xs text-amber-300/80">{populateNote}</p> : null}
+          {populateNote ? <p role="status" className="live-in mt-1 text-xs text-amber-300/80">{mapPopulateNote(populateNote, locale)}</p> : null}
           {shown.connections.length ? (
             <p className="mt-1 flex items-start gap-1 text-xs text-stone-500">
               <GameIcon icon={{ kind: "glyph", key: "pace-normal" }} size="size-4" className="mt-0.5 shrink-0" />
-              <span>Routes: {shown.connections.join(", ")}</span>
+              <span>{t("mapSceneUi.area.routes", { names: shown.connections.join(t("boardUi.list")) })}</span>
             </p>
           ) : null}
         </ContextMenu>
@@ -319,7 +323,7 @@ export function MapPanel({
 
       {locations.length > 1 ? (
         <div>
-          <SectionHead title="Charted areas" glyph="system-region" level="h4" aside={locations.length} />
+          <SectionHead title={t("mapSceneUi.area.charted")} glyph="system-region" level="h4" aside={locations.length} />
           <ul className="space-y-1">
             {locations.map((location) => (
               <li key={location.id}>
@@ -338,8 +342,8 @@ export function MapPanel({
                 >
                   <GameIcon icon={{ kind: "glyph", key: location.mapImage ? "tab-map" : "quest-hidden" }} size="size-4" className="shrink-0" />
                   {location.name}
-                  {location.isCurrent ? " (here)" : ""}
-                  {location.mapImage ? "" : " · unmapped"}
+                  {location.isCurrent ? t("mapSceneUi.area.hereTail") : ""}
+                  {location.mapImage ? "" : t("mapSceneUi.area.unmappedTail")}
                 </button>
               </li>
             ))}
@@ -354,12 +358,12 @@ export function MapPanel({
             <Dialog.Content className="fixed left-1/2 top-1/2 z-50 max-h-[92vh] w-[min(94vw,64rem)] -translate-x-1/2 -translate-y-1/2 overflow-auto panel rounded-xl p-4">
               <div className="mb-2 flex items-center justify-between">
                 <Dialog.Title className="gold-title font-display text-lg">{shown.name}</Dialog.Title>
-                <Dialog.Close aria-label="Close" className="pk-tap rounded p-1 text-stone-400 hover:bg-stone-900 hover:text-amber-200 motion-nudge">
+                <Dialog.Close aria-label={t("mapSceneUi.area.close")} className="pk-tap rounded p-1 text-stone-400 hover:bg-stone-900 hover:text-amber-200 motion-nudge">
                   <X className="size-4" />
                 </Dialog.Close>
               </div>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={shown.mapImage.url} alt={`Map of ${shown.name}`} className="w-full rounded" />
+              <img src={shown.mapImage.url} alt={t("mapSceneUi.area.alt", { name: shown.name })} className="w-full rounded" />
             </Dialog.Content>
           </Dialog.Portal>
         </Dialog.Root>

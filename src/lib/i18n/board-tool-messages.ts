@@ -3,9 +3,9 @@ import { defineMessages } from "./catalog.ts";
 // Display only: board tools, ranges and native token facts keep their identities.
 export const BOARD_TOOL_MESSAGES = /*#__PURE__*/ defineMessages({
   "boardTools.grid.lockedMark": { "en": "L", "zh-CN": "锁" },
-  "boardTools.grid.stuckMark": { "en": "S", "zh-CN": "卡" },
+  "boardTools.grid.secretMark": { "en": "S", "zh-CN": "暗" },
   "boardTools.grid.locked": { "en": "Locked door", "zh-CN": "门已上锁" },
-  "boardTools.grid.stuck": { "en": "Stuck door", "zh-CN": "门已卡住" },
+  "boardTools.grid.secret": { "en": "Secret door", "zh-CN": "暗门" },
   "boardTools.rail.handle": {"en": "Move pieces", "zh-CN": "移动棋子"},
   "boardTools.rail.place": {"en": "Put something down", "zh-CN": "放置棋子"},
   "boardTools.rail.measure": {"en": "Measure an area", "zh-CN": "测量区域"},
