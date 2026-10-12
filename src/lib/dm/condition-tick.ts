@@ -115,10 +115,8 @@ export function tickClockConditions(campaign: Campaign, minutes: number) {
     for (const stale of listSheets(campaign.id)) {
       const sheet = getSheetById(stale.id) ?? stale;
       if (sheet.deathSaves?.stable && !stableWaitOf(sheet.conditionMeta)) {
-        const woke = wakeStable(campaign, sheet.id);
-        if (woke) {
-          lines.push(woke);
-        }
+        // wakeStable publishes its own typed, campaign-locale note.
+        wakeStable(campaign, sheet.id);
       }
     }
   }
@@ -438,7 +436,6 @@ function tickSheetConditions(
     if (tick.expired.includes(UNCONSCIOUS) && stableWaitOf(sheet.conditionMeta)) {
       const woke = wakeStable(campaign, sheet.id);
       if (woke) {
-        lines.push(woke);
         tick.expired.splice(tick.expired.indexOf(UNCONSCIOUS), 1);
       }
     }

@@ -13,6 +13,19 @@ registerMessages(SYSTEM_LOG_MESSAGES);
 export function systemEventText(event: SystemEvent): string {
   const t = createTranslator(event.locale);
   switch (event.kind) {
+    case "death":
+      if (event.locale === "en") return event.english;
+      return t(`playerLog.death.${event.outcome}`, { actor: event.actor, hours: event.hours ?? 0, total: event.total ?? 0, result: t(event.success ? "playerLog.death.success" : "playerLog.death.failure"), successes: event.successes ?? 0, failures: event.failures ?? 0 });
+    case "rest": {
+      if (event.locale === "en") return event.english;
+      const days = event.minutes / 1440, hours = event.minutes / 60;
+      const duration = event.minutes >= 1440 && Number.isInteger(days) ? t("playerLog.rest.days", { amount: days })
+        : event.minutes >= 60 && Number.isInteger(hours) ? t("playerLog.rest.hours", { amount: hours }) : t("playerLog.rest.minutes", { amount: event.minutes });
+      return t(`playerLog.rest.${event.rest}`, {
+        duration, clock: event.clockText ? t("playerLog.rest.clock", { clock: event.clockText }) : "",
+        skipped: event.skipped.length ? t("playerLog.rest.skipped", { names: event.skipped.map(row => t(`playerLog.rest.${row.reason}`, { actor: row.actor })).join(t("playerLog.rest.separator")) }) : "",
+      });
+    }
     case "opportunity": return opportunityEventText(event);
     case "partyItem": return t(`playerLog.item.${event.direction}`, {
       actor: event.actor, item: referenceDisplayName("equipment", event.item, event.locale),

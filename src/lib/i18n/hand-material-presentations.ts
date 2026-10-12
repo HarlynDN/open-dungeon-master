@@ -7,6 +7,7 @@ import { conditionLabel } from "./condition-presentations.ts";
 import { referenceDisplayName } from "./references.ts";
 import { damageListLabel, resourceLabel } from "./sheet-play-presentations.ts";
 import { reactionHitText } from "../battlemap/hand-react.ts";
+import { rollActionLabel } from "./roll-presentations.ts";
 import type { HandCard } from "../battlemap/hand-core.ts";
 import type { PreviewRow } from "../battlemap/hand-play.ts";
 import type { PublicLastHit } from "../db/encounter-view.ts";
@@ -285,7 +286,8 @@ export function handReactionPrompt(card: HandCard, locale: AppLocale, context?: 
     if (hit.source === "fall") return t("handMaterial.react.fall", { who: whom, damage: hit.damage });
     const enemy = context.enemies.find(entry => entry.id === hit.attackerId && entry.name === hit.attacker);
     const attacker = enemy ? referenceDisplayName("monster", hit.attacker, locale) : hit.attacker;
-    return t("handMaterial.react.hit", { attacker, attack: mechanic(hit.attack, locale), who: whom })
+    const action = rollActionLabel(hit.attack, locale);
+    return t("handMaterial.react.hit", { attacker, attack: action === hit.attack ? mechanic(hit.attack, locale) : action, who: whom })
       + (hit.damage ? t("handMaterial.react.damage", { damage: hit.damage, type: hit.type ? damageListLabel(hit.type, locale) : "" }) : "");
   }
   return raw;

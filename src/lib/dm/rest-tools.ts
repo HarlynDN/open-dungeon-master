@@ -4,6 +4,10 @@ import { getActiveEncounter } from "@/lib/db/encounters";
 import { getSheetById, patchSheet } from "@/lib/db/sheets";
 import { insertSheetAudit } from "@/lib/db/sheet-audit";
 import { insertCampaignMessage } from "@/lib/db/messages";
+import { normalizeLocale } from "@/lib/i18n/locales";
+import { calendarDescription } from "@/lib/i18n/calendar-presentations";
+import { systemEventText } from "@/lib/i18n/system-event-presentations";
+import type { RestEventData } from "@/lib/system-events";
 import { publishPersisted, publishWithSeq } from "@/lib/events";
 import { computeSheetDerived } from "@/lib/srd";
 import { resourceDef, resourceLevel } from "@/lib/srd/class-resources";
@@ -153,13 +157,15 @@ function auditRest(
   }
 }
 
-function tableNote(campaign: Campaign, content: string) {
+function tableNote(campaign: Campaign, content: string, data: Omit<RestEventData, "kind" | "english">) {
+  const systemEvent = { ...data, kind: "rest" as const, english: content, locale: normalizeLocale(campaign.gameSettings.locale) };
   const seq = allocateSeq(campaign.id);
   const message = insertCampaignMessage({
     campaignId: campaign.id,
     seq,
     authorType: "system",
-    content,
+    content: systemEventText(systemEvent),
+    systemEvent,
   });
   publishWithSeq(campaign.id, seq, "message_added", { message });
 }
@@ -194,6 +200,7 @@ export function handleTakeRest(
   const endsAt = starts.instant + restMinutes(args.kind, variant);
   const resting: string[] = [];
   const unaffected: string[] = [];
+  const skipped: RestEventData["skipped"] = [];
   if (args.kind === "long") {
     for (const stale of sheets) {
       const sheet = getSheetById(stale.id);
@@ -202,10 +209,13 @@ export function handleTakeRest(
       }
       if (sheet.deathSaves?.dead) {
         unaffected.push(`${sheet.name} (dead)`);
+        skipped.push({ actor: sheet.name, reason: "dead" });
       } else if (sheet.currentHp <= 0) {
         unaffected.push(`${sheet.name} (at 0 hit points; a long rest needs at least 1 to begin with)`);
+        skipped.push({ actor: sheet.name, reason: "zeroHp" });
       } else if (!longRestAllowed(starts.longRests?.[sheet.id], endsAt)) {
         unaffected.push(`${sheet.name} (finished a long rest less than 24 hours ago)`);
+        skipped.push({ actor: sheet.name, reason: "tooSoon" });
       } else {
         resting.push(sheet.id);
       }
@@ -226,6 +236,10 @@ export function handleTakeRest(
     "error" in clockAfter
       ? ""
       : describeInstant(clockAfter.clock.calendar, clockAfter.clock.instant);
+  const clock = "error" in clockAfter ? {} : {
+    instant: clockAfter.clock.instant,
+    clockText: calendarDescription(clockAfter.clock.calendar, clockAfter.clock.instant, normalizeLocale(campaign.gameSettings.locale)),
+  };
 
   // Whoever rested with an item they asked to attune to is attuned now,
   // short rest or long (a long rest holds a short one).
@@ -262,6 +276,7 @@ export function handleTakeRest(
       `The party takes a long rest (${restedFor})${nowReads ? `. It is now ${nowReads}` : ""}.${
         unaffected.length ? ` No benefit from it for ${unaffected.join("; ")}.` : ""
       }`,
+      { rest: "long", minutes: restedMinutes, skipped, ...clock },
     );
     // A night passing is a timeskip: the off-screen world moves too (world
     // arcs, NPC goals), with results landing as DM-only facts and sparks.
@@ -379,6 +394,7 @@ export function handleTakeRest(
   tableNote(
     campaign,
     `The party takes a short rest (${restedFor})${nowReads ? `. It is now ${nowReads}` : ""}.`,
+    { rest: "short", minutes: restedMinutes, skipped: [], ...clock },
   );
   return {
     ok: true,

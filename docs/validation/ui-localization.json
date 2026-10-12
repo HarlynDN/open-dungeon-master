@@ -451,7 +451,7 @@
     {
       "path": "src/app/campaigns/[campaignId]/HandReactPrompt.tsx",
       "state": "pending",
-      "review": "Owned reaction strip, current-record prompts, active technique names, counters/rules and common casting/material refusals reviewed; callbacks and canonical examples preserved. Remaining current-attacker/action display names keep this pending. Current table-flow batch: Reviewed reaction chips and typed last-hit context passed by Hand. Prompt names use explicit viewer/party/enemy roles; translated labels/material are separate from selected source card and reaction intent. Remaining known material/native-output gaps above still prevent full-owner completion."
+      "review": "Owned reaction strip, current-record prompts, active technique names, counters/rules and common casting/material refusals reviewed; callbacks and canonical examples preserved. Remaining current-attacker/action display names keep this pending. Current table-flow batch: Reviewed reaction chips and typed last-hit context passed by Hand. Prompt names use explicit viewer/party/enemy roles; translated labels/material are separate from selected source card and reaction intent. Remaining known material/native-output gaps above still prevent full-owner completion. Survival-log batch: typed current-hit prompts now reuse rollActionLabel for native natural attacks and opportunity suffixes, retaining the prior mechanic fallback and original English/card values. Broader native feature/reaction material remains pending; this does not certify all reaction options."
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandSpells.tsx",
