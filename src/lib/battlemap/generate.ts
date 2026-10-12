@@ -1,3 +1,4 @@
+import { mapHintMatches } from "./hint-cues.ts";
 import {
   TERRAIN,
   blocksMove,
@@ -78,26 +79,25 @@ export function mulberry32(seed: number): () => number {
 }
 
 function pickTheme(text: string, rng: () => number): { theme: MapTheme; ambient: AmbientLight } {
-  const has = (re: RegExp) => re.test(text);
   let theme: MapTheme = "field";
-  if (has(/\bcave|cavern|dungeon|crypt|tomb|tunnel|mine|underdark|barrow\b/)) {
+  if (mapHintMatches(text, "cave")) {
     theme = "cave";
-  } else if (has(/\bswamp|marsh|bog|mire|fen\b/)) {
+  } else if (mapHintMatches(text, "swamp")) {
     theme = "swamp";
-  } else if (has(/\bforest|wood|grove|jungle|thicket\b/)) {
+  } else if (mapHintMatches(text, "forest")) {
     theme = "forest";
-  } else if (has(/\briver|lake|shore|beach|sewer|canal|dock|harbor\b/)) {
+  } else if (mapHintMatches(text, "riverside")) {
     theme = "riverside";
-  } else if (has(/\bstreet|alley|warehouse|tavern|inn|room|hall|temple|church|castle|keep|tower|deck|ship|manor|library\b/)) {
+  } else if (mapHintMatches(text, "interior")) {
     theme = "interior";
   }
   let ambient: AmbientLight =
     theme === "cave" ? "dark" : theme === "interior" ? "dim" : "bright";
-  if (has(/\bnight|midnight|moonlit|dark|darkness|pitch-black\b/)) {
+  if (mapHintMatches(text, "dark")) {
     ambient = "dark";
-  } else if (has(/\bdim|dusk|twilight|torchlit|candlelit|foggy|misty\b/)) {
+  } else if (mapHintMatches(text, "dim")) {
     ambient = ambient === "dark" ? "dark" : "dim";
-  } else if (has(/\bdaylight|noon|sunny|bright\b/)) {
+  } else if (mapHintMatches(text, "bright")) {
     ambient = "bright";
   }
   // Unused rng draw keeps theme choice stable if branches change later.
@@ -372,7 +372,7 @@ export function generateBattleMap(input: GenerateInput): GeneratedMap {
       carveFence(tiles, width, height, rng);
     }
   }
-  if (/\brubble|ice|mud|sand|snow\b/.test(text)) {
+  if (mapHintMatches(text, "rough")) {
     scatterBlobs(tiles, width, height, rng, TERRAIN.difficult, 5, 2);
   }
 

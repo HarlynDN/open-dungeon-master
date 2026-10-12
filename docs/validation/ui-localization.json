@@ -1565,11 +1565,13 @@
     },
     {
       "path": "src/app/workshop/maps/ForgePreview.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Generated-map canvas accessibility caption uses viewer uiLocale. Native terrain renderer, animation timings, torch/spawn markers, geometry and image paths unchanged; no browser animation or pixel acceptance claimed."
     },
     {
       "path": "src/app/workshop/maps/MapCreateControls.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Reviewed shared MapForge wrapper: all owned display is delegated to its covered component. Native library surface, generator/genre delegation, callback props and saved-map clearing contract unchanged. Child ownership remains independent."
     },
     {
       "path": "src/app/workshop/maps/MapDetails.tsx",
@@ -1583,7 +1585,8 @@
     },
     {
       "path": "src/app/workshop/maps/MapForge.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Library/studio generation chrome, typed read-back facts, theme/light/size/seed/spawn summaries, preview/history prompts, 27 native skin display names and three skin groups localized with viewer uiLocale. Chinese keyword spans share the generator cue adapters; no LLM translation or hint mutation. Native enums, seed/history behavior, callbacks and save/capture/import/request values retained; authored names/hints and customized skin labels remain literal."
     },
     {
       "path": "src/app/workshop/maps/MapGallery.tsx",

@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+
 import { useEffect, useRef, type CSSProperties } from "react";
 import type { MapTheme } from "@/lib/battlemap/generate";
 import type { MapSkin } from "@/lib/battlemap/skins";
@@ -59,6 +61,7 @@ export function ForgePreview({
   // Above 1 slows the flood: a roll brought back from the history takes its time.
   stretch?: number;
 }) {
+  const { t } = useLocale();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const startRef = useRef<{ rollId: number; at: number } | null>(null);
   const ground = usePaintedGround({
@@ -155,7 +158,7 @@ export function ForgePreview({
       className="map-fade-in relative w-full overflow-hidden rounded-lg border border-stone-800 bg-stone-950"
       style={{ aspectRatio: `${map.width} / ${map.height}` }}
     >
-      <canvas ref={canvasRef} aria-label="The rolled map" role="img" className="block size-full" />
+      <canvas ref={canvasRef} aria-label={t("mapForgeUi.canvas")} role="img" className="block size-full" />
       <div
         aria-hidden="true"
         // As wide as the map: its travel is a share of its own width, so a

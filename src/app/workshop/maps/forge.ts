@@ -1,5 +1,6 @@
 import { MAP_SIZE, generateBattleMap, type GeneratedMap, type MapTheme } from "@/lib/battlemap/generate";
 import type { AmbientLight } from "@/lib/battlemap/types";
+import { normalizeMapHintWord, splitMapHintWords } from "@/lib/battlemap/hint-cues";
 
 // The pure half of the Map Forge (docs/visual-overhaul-plan.md 4.1): what a
 // roll is, what the history strip remembers, how the reveal floods, and what
@@ -186,13 +187,13 @@ function readWord(word: string): WordRead {
 
 export function readHint(hint: string, genre?: string | null): HintRead {
   const whole = generateBattleMap({ ...PROBE, hint: hint.trim() || undefined, genre: genre ?? undefined });
-  const parts = hint.split(/\s+/).filter(Boolean);
+  const parts = splitMapHintWords(hint);
   const words: HintRead["words"] = parts.map((text) => ({ text, hit: null }));
   let themeWord: string | null = null;
   let lightWord: string | null = null;
   let roughWord: string | null = null;
   parts.forEach((part, index) => {
-    const bare = part.toLowerCase().replace(/^[^a-z0-9]+|[^a-z0-9]+$/g, "");
+    const bare = normalizeMapHintWord(part);
     if (!bare) {
       return;
     }
@@ -213,31 +214,41 @@ export function readHint(hint: string, genre?: string | null): HintRead {
 
 export const AMBIENT_LABELS: Record<AmbientLight, string> = { bright: "Daylight", dim: "Dim", dark: "Dark" };
 
-// The sentences under the chips: which word did what, or who decided instead.
-export function explainRead(
-  read: HintRead,
-  settings: Pick<ForgeSettings, "theme" | "ambient">,
-  themeLabel: (theme: MapTheme) => string,
-): string[] {
-  const out: string[] = [];
-  if (settings.theme) {
-    out.push(`You said ${themeLabel(settings.theme).toLowerCase()} outright, so the words do not pick the ground.`);
-  } else if (read.themeWord) {
-    out.push(`“${read.themeWord}” put this in ${themeLabel(read.theme).toLowerCase()}.`);
-  } else if (read.theme !== "field") {
-    out.push(`The setting put this in ${themeLabel(read.theme).toLowerCase()}.`);
-  } else {
-    out.push("Nothing named a kind of place, so it is open ground.");
-  }
-  if (settings.ambient) {
-    out.push(`You set the light to ${AMBIENT_LABELS[settings.ambient].toLowerCase()}.`);
-  } else if (read.lightWord) {
-    out.push(`“${read.lightWord}” set the light.`);
-  } else {
-    out.push(`The light is what ${themeLabel(settings.theme || read.theme).toLowerCase()} usually has.`);
-  }
-  if (read.roughWord) {
-    out.push(`“${read.roughWord}” scattered rough ground.`);
-  }
+// Structured explanation facts are shared by native English and locale UI
+// renderers, so copy changes cannot change which source decided a setting.
+export type ForgeExplanation =
+  | { kind: "themeOverride" | "setting" | "lightDefault"; theme: MapTheme }
+  | { kind: "themeWord"; theme: MapTheme; word: string }
+  | { kind: "field" }
+  | { kind: "lightOverride"; light: AmbientLight }
+  | { kind: "lightWord" | "rough"; word: string };
+
+export function explainReadFacts(read: HintRead, settings: Pick<ForgeSettings, "theme" | "ambient">): ForgeExplanation[] {
+  const out: ForgeExplanation[] = [];
+  if (settings.theme) out.push({ kind: "themeOverride", theme: settings.theme });
+  else if (read.themeWord) out.push({ kind: "themeWord", theme: read.theme, word: read.themeWord });
+  else if (read.theme !== "field") out.push({ kind: "setting", theme: read.theme });
+  else out.push({ kind: "field" });
+  if (settings.ambient) out.push({ kind: "lightOverride", light: settings.ambient });
+  else if (read.lightWord) out.push({ kind: "lightWord", word: read.lightWord });
+  else out.push({ kind: "lightDefault", theme: settings.theme || read.theme });
+  if (read.roughWord) out.push({ kind: "rough", word: read.roughWord });
   return out;
+}
+
+// Native callers keep the same English sentences. Player UI renders the same
+// facts through locale templates, without translating raw hints or settings.
+export function explainRead(read: HintRead, settings: Pick<ForgeSettings, "theme" | "ambient">, themeLabel: (theme: MapTheme) => string): string[] {
+  return explainReadFacts(read, settings).map(fact => {
+    switch (fact.kind) {
+      case "themeOverride": return `You said ${themeLabel(fact.theme).toLowerCase()} outright, so the words do not pick the ground.`;
+      case "themeWord": return `“${fact.word}” put this in ${themeLabel(fact.theme).toLowerCase()}.`;
+      case "setting": return `The setting put this in ${themeLabel(fact.theme).toLowerCase()}.`;
+      case "field": return "Nothing named a kind of place, so it is open ground.";
+      case "lightOverride": return `You set the light to ${AMBIENT_LABELS[fact.light].toLowerCase()}.`;
+      case "lightWord": return `“${fact.word}” set the light.`;
+      case "lightDefault": return `The light is what ${themeLabel(fact.theme).toLowerCase()} usually has.`;
+      case "rough": return `“${fact.word}” scattered rough ground.`;
+    }
+  });
 }
