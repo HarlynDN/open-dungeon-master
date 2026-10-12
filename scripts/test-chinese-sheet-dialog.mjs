@@ -5,15 +5,20 @@ import {execFileSync} from 'node:child_process';
 import {openWorld} from './lib/enforce-world.mjs';
 import {suite} from './lib/enforce-harness.mjs';
 import {readValidationJson} from './lib/validation-json.mjs';
-import {openSheetDialogRenderer, sheetDialogFixtures, dialogSheet, DIALOG_FILE} from './lib/sheet-dialog-fixtures.mjs';
+import {openSheetDialogRenderer, sheetDialogFixtures, dialogSheet, DIALOG_FILE, GEAR_FILE, CHOICE_FILE} from './lib/sheet-dialog-fixtures.mjs';
 const root=path.resolve(import.meta.dirname,'..');
 const world = await openWorld({gameSettings:{locale:'zh-CN'}});
 const {test,finish} = suite('test-chinese-sheet-dialog');
-const renderer = await openSheetDialogRenderer();
+const renderer = await openSheetDialogRenderer({files:[DIALOG_FILE,GEAR_FILE,CHOICE_FILE,'src/app/characters/[characterId]/SheetSections.tsx']});
 const {MESSAGE_CATALOGS} = await import('../src/lib/i18n/messages.ts');
 const {registerLocaleScope} = await import('../src/lib/i18n/client-catalogs.ts');
 registerLocaleScope(MESSAGE_CATALOGS,'content');
-const {RESOURCE_DEFS, UNLIMITED_USES} = await import('../src/lib/srd/class-resources.ts');
+const {RESOURCE_DEFS, UNLIMITED_USES, resourceDef} = await import('../src/lib/srd/class-resources.ts');
+const {freeCastFeatureName, freeCastResourceId, freeCastResourceText} = await import('../src/lib/srd/feat-spells.ts');
+const {resourceDisplayName, resourceNameForProse} = await import('../src/lib/i18n/resource-names.ts');
+const {nativeFeatureName, nativeFeatureHelp} = await import('../src/lib/i18n/feature-material-presentations.ts');
+const {heldResourceDefinitions, resourceReference, resolveResourceReference, resourceEngineName} = await import('../src/lib/dm/resource-references.ts');
+const {handCardMaterial} = await import('../src/lib/i18n/hand-material-presentations.ts');
 const authoredResources = JSON.parse(fs.readFileSync(path.join(root,'src/lib/srd/authored-resources.json'),'utf8')).resources;
 const {resourceLabel} = await import('../src/lib/i18n/sheet-play-presentations.ts');
 const {sheetTimePassed, sheetUsageMessage, sheetResourceHelp, sheetArmorParts, sheetOwedChoice} = await import('../src/lib/i18n/sheet-dialog-presentations.ts');
@@ -80,15 +85,60 @@ await test('all 415 native resource rows render localized names/help with new so
       assert.equal(MESSAGE_CATALOGS.en[helpKey],row.guidance,row.id);
       assert.ok(helps.some(button=>button.props.label===MESSAGE_CATALOGS[locale][nameKey]&&button.props.text===MESSAGE_CATALOGS[locale][helpKey]),locale+':'+row.id);
       if(!previouslyReviewed.has(row.id)) assert.deepEqual(dice(MESSAGE_CATALOGS['zh-CN'][helpKey]),dice(row.guidance),row.id);
-      if(!previouslyReviewed.has(row.id)) for(const key of Object.keys(MESSAGE_CATALOGS.en).filter(key=>!key.startsWith('sheetPlay.resourceName.')&&MESSAGE_CATALOGS.en[key].toLowerCase()===row.displayName.toLowerCase()))
+      // Zone lighting called Darkness is 黑暗; the spell/resource is 黑暗术.
+      // These roles share English text but are different terminology contexts.
+      if(!previouslyReviewed.has(row.id)) for(const key of Object.keys(MESSAGE_CATALOGS.en).filter(key=>!key.startsWith('sheetPlay.resourceName.')&&!key.startsWith('mapSceneUi.zone.')&&MESSAGE_CATALOGS.en[key].toLowerCase()===row.displayName.toLowerCase()))
         assert.equal(MESSAGE_CATALOGS['zh-CN'][nameKey],MESSAGE_CATALOGS['zh-CN'][key],row.id+':'+key);
     }
     const title=MESSAGE_CATALOGS[locale]['sheetDialog.resourceHelp.overchannel'];
     assert.ok(renderer.elements().some(row=>row.type==='span'&&row.props.title===title),'unlimited resource tooltip: '+locale);
   }
   assert.equal(resourceLabel('homebrew','Authored name <script>','zh-CN'),'Authored name <script>');
+  assert.equal(MESSAGE_CATALOGS['zh-CN']['mapSceneUi.zone.darkness'],'黑暗');
+  assert.equal(resourceDisplayName('racial_darkness','Darkness','zh-CN'),'黑暗术');
   assert.equal(sheetResourceHelp('sub_bladesong','Authored override <script>','zh-CN'),'Authored override <script>');
   assert.deepEqual(sheet,before);
+});
+await test('dynamic free-cast source, sheet help, hand summaries and scoped DM aliases share names without changing protocol',()=>{
+  for(const spell of ['Misty Step','Invisibility','Cure Wounds']){
+    const id=freeCastResourceId(spell),def=resourceDef(id),text=freeCastResourceText(id);
+    const original=`${spell} once without a spell slot, at its own level, and again after a long rest; the cast tool spends this use itself when the spell is cast, so use_resource is not needed. With a slot of its level or higher it can also be cast as usual.`;
+    assert.equal(def.displayName,`${spell} (free cast)`);assert.equal(def.guidance,original);assert.equal(text.guidance,original);
+    assert.equal(def.maxFor(4,{}),1);assert.equal(def.recharge,'long');assert.deepEqual(def.effect,{kind:'narrative'});
+    const sheet=dialogSheet({resources:{[id]:{max:1,used:0}},features:[{name:freeCastFeatureName(spell,'Fey Touched'),source:'story'}]});
+    const before=structuredClone(sheet);
+    for(const locale of ['zh-CN','en']){
+      renderer.render('CharacterSheetDialog',{...own,sheet},locale);
+      const row=renderer.elements().find(e=>e.props.id===id&&typeof e.props.onSpend==='function');assert(row);
+      const label=resourceLabel(id,id.replaceAll('_',' ').replace(/\b\w/g,l=>l.toUpperCase()),locale);
+      assert.equal(row.props.name,label);assert.equal(row.props.help,sheetResourceHelp(id,original,locale));
+      const items=renderer.elements().find(e=>e.props.items?.some(row=>row.id===sheet.features[0].name)).props.items;
+      assert.equal(items[0].id,sheet.features[0].name);assert.equal(items[0].name,nativeFeatureName(sheet.features[0].name,locale));
+      assert.equal(items[0].text,nativeFeatureHelp('fighter',sheet.features[0].name,null,locale));
+      renderer.render('SheetSections',{sheet,level:4},locale);
+      const library=renderer.elements().find(e=>e.props.items?.some(row=>row.id===sheet.features[0].name)).props.items[0];
+      assert.equal(library.name,nativeFeatureName(sheet.features[0].name,locale));assert.equal(library.text,nativeFeatureHelp('fighter',sheet.features[0].name,null,locale));
+      const reference=resourceReference(def,locale);assert.equal(reference.name,def.displayName);assert.equal(reference.id,id);
+      if(locale==='zh-CN')assert.equal(reference.displayName,label);
+      assert.equal(resourceNameForProse(def.displayName,locale),reference.displayName);
+      const found=resolveResourceReference(reference.displayName,heldResourceDefinitions(sheet),locale);
+      assert.equal(found.kind,'matched');assert.equal(found.entry.id,id);assert.equal(resourceEngineName(found.entry),id);
+      assert.equal(resolveResourceReference(reference.displayName,[],locale).kind,'unknown');
+      const card={intent:{card:'feature',resourceId:id},rules:original.split('. ')[0]+'.',range:'',dice:'',roll:'',resource: `${def.displayName} 1/1`,condition:'',disabled:null};
+      assert.equal(handCardMaterial(card,locale).rules,locale==='en'?card.rules:sheetResourceHelp(id,original,locale));
+    }
+    assert.deepEqual(sheet,before);
+    renderer.render('CharacterSheetDialog',{...own,sheet:{...sheet,resources:{}}},'zh-CN');
+    const story=renderer.elements().find(e=>e.props.items?.some(row=>row.id===sheet.features[0].name)).props.items[0];
+    assert.equal(story.name,sheet.features[0].name);assert.equal(story.text,undefined);
+    assert.equal(resourceDisplayName(id,'Authored replacement.','zh-CN'),'Authored replacement.');
+    assert.equal(resourceLabel(id,'Authored replacement.','zh-CN'),'Authored replacement.');
+    assert.equal(sheetResourceHelp(id,original+' Extra authored effect.','zh-CN'),original+' Extra authored effect.');
+    assert.equal(nativeFeatureHelp('fighter',sheet.features[0].name,'Authored feature help.','zh-CN'),'Authored feature help.');
+  }
+  assert.equal(resourceLabel('free_cast_misty_step','Free cast','zh-CN'),'迷雾步（免费施法）');
+  assert.equal(resourceDisplayName('free_cast_custom_spell','Custom Spell (free cast)','zh-CN'),'Custom Spell（免费施法）');
+  assert(sheetResourceHelp('free_cast_custom_spell',freeCastResourceText('free_cast_custom_spell').guidance,'zh-CN').includes('Custom Spell'));
 });
 await test('gear gates and wear/attunement callbacks keep canonical flags and names',()=>{
   assert.match(html('gear/plate'),/全身板甲.*穿戴/);
@@ -262,5 +312,35 @@ await test('the Darkness display avoids the legacy one-level reminder and the re
   const sheet=dialogSheet({class:'wizard',spellcasting:{ability:'int',known:['Darkness'],prepared:['Darkness'],slots:{2:{max:2,used:0}}}}),before=structuredClone(sheet);
   assert.match(slotPlan(sheet,'Darkness',facts,1).error,/level 2.*level 1/);
   assert.equal(slotPlan(sheet,'Darkness',facts,2).kind,'slot');assert.deepEqual(sheet,before);
+});
+await test('bilingual dynamic counter buttons keep canonical IDs; a real free cast pays once and rests recharge it',async()=>{
+  const id=freeCastResourceId('Misty Step');
+  const hero=world.addHero({name:'阿明',class:'fighter',level:4,feats:['Fey Touched'],
+    featChoices:{'fey touched':{spells:['Charm Person'],ability:'wis'}},
+    spellcasting:{ability:'wis',slots:{},known:['Misty Step','Charm Person'],prepared:[],cantrips:[]},
+    features:[{name:freeCastFeatureName('Misty Step','Fey Touched'),source:'story'}]});
+  const {getUserById}=await import('../src/lib/db/users.ts');world.signIn(getUserById(hero.userId));
+  const route=await world.route('campaigns/[campaignId]/sheet/usage'),calls=[],realFetch=globalThis.fetch;
+  globalThis.fetch=async(url,options)=>{calls.push(JSON.parse(options.body));return route.POST(new Request('http://odm.test/usage',options),{params:Promise.resolve({campaignId:world.campaignId})});};
+  try{
+    for(const locale of ['zh-CN','en']){
+      world.patch(hero.id,{resources:{[id]:{max:1,used:0}}});
+      renderer.render('CharacterSheetDialog',{...own,sheet:world.sheet(hero.id)},locale);
+      const row=renderer.elements().find(e=>e.props.id===id&&typeof e.props.onSpend==='function');assert(row);
+      const count=calls.length;row.props.onSpend();await new Promise(resolve=>setImmediate(resolve));await new Promise(resolve=>setImmediate(resolve));
+      assert.equal(calls.length-count,1);assert.deepEqual(calls.at(-1),{resources:{[id]:1}});
+      assert.deepEqual(world.sheet(hero.id).resources[id],{max:1,used:1});
+    }
+  }finally{globalThis.fetch=realFetch;}
+  world.patch(hero.id,{resources:{[id]:{max:1,used:0}}});
+  const cast=await world.invoke('use_spell_slot',{characterId:hero.id,spell:'Misty Step',level:2});
+  assert.equal(cast.ok,true,JSON.stringify(cast));assert.deepEqual(world.sheet(hero.id).resources[id],{max:1,used:1});
+  assert.deepEqual(world.sheet(hero.id).spellcasting.slots,{});
+  const again=await world.invoke('use_spell_slot',{characterId:hero.id,spell:'Misty Step',level:2});
+  assert.equal(again.ok,false);assert.deepEqual(world.sheet(hero.id).resources[id],{max:1,used:1});
+  const short=await world.invoke('take_rest',{kind:'short'});assert.equal(short.ok,true,JSON.stringify(short));
+  assert.equal(world.sheet(hero.id).resources[id].used,1);
+  const long=await world.invoke('take_rest',{kind:'long'});assert.equal(long.ok,true,JSON.stringify(long));
+  assert.deepEqual(world.sheet(hero.id).resources[id],{max:1,used:0});
 });
 world.close();finish();

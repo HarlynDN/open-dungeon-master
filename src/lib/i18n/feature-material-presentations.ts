@@ -5,11 +5,19 @@ import { classOptionFeatureName, classOptionHelp } from "./class-option-presenta
 import { catalogFor, createTranslator, registeredMessageTemplate } from "./translator.ts";
 import { normalizeRulesText } from "../help/rules-text.ts";
 import type { AppLocale } from "./locales.ts";
+import { freeCastOf, freeCastResourceId, freeCastResourceText } from "../srd/feat-spells.ts";
+import { referenceDisplayName } from "./references.ts";
+import { featTermLabel } from "./feat-presentations.ts";
+import { sheetResourceHelp } from "./sheet-dialog-presentations.ts";
 
 // Display adapters only: rule parsers and saved sheets retain English source.
 // Translate a known whole summary, never a name-based replacement of homebrew.
 export function nativeFeatureName(name: string, locale: AppLocale): string {
   if (locale === "en") return name;
+  const free = freeCastOf(name);
+  if (free) return createTranslator(locale)("callingMaterial.freeCast.name", {
+    spell: referenceDisplayName("spell", free.spell, locale), feat: featTermLabel("feat", free.feat, locale),
+  });
   const option = classOptionFeatureName(name, locale);
   if (option !== name) return option;
   const core = CORE_FEATURE_NAMES.find(entry => entry.name === name);
@@ -21,6 +29,11 @@ export function nativeFeatureName(name: string, locale: AppLocale): string {
 }
 
 export function nativeFeatureHelp(classId: string, name: string, source: string | null | undefined, locale: AppLocale): string | null | undefined {
+  const free = freeCastOf(name);
+  if (free) {
+    const id = freeCastResourceId(free.spell), native = freeCastResourceText(id).guidance;
+    return sheetResourceHelp(id, source || native, locale);
+  }
   if (locale === "en" || !source) return source;
   const option = classOptionHelp(name, source, locale);
   if (option !== source) return option;

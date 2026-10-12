@@ -1,6 +1,7 @@
 "use client";
 
 import { nativeFeatureName, nativeFeatureHelp, nativeFeatHelp } from "@/lib/i18n/feature-material-presentations";
+import { freeCastOf, freeCastResourceId } from "@/lib/srd/feat-spells";
 import { backgroundGrantView } from "@/lib/i18n/background-material-presentations";
 import { featTermLabel } from "@/lib/i18n/feat-presentations";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
@@ -302,11 +303,13 @@ export function FeatureChips({
   classId,
   subclass,
   classes,
+  resources,
 }: {
   features: Array<{ name: string; source?: string; level?: number; classId?: string }>;
   classId: string;
   subclass?: string | null;
   classes?: ReadonlyArray<{ id: string; subclass?: string | null }> | null;
+  resources?: Readonly<Record<string, { max: number; used: number }>>;
 }) {
   const { locale, t } = useLocale();
   return (
@@ -320,14 +323,18 @@ export function FeatureChips({
         const ownerSubclass = entries.length === 1 ? entries[0].subclass ?? ""
           : owner.trim().toLowerCase() === classId.trim().toLowerCase() ? subclass ?? "" : "";
         const help = describeFeature(owner, ownerSubclass, feature.name);
+        // Feat-spell grants use the legacy story source. Only a matching
+        // actual counter identifies their generated protocol, not prose alone.
+        const free = freeCastOf(feature.name);
+        const story = feature.source === "story" && !(free && resources && Object.hasOwn(resources, freeCastResourceId(free.spell)));
         const background = feature.source === "background" ? backgroundGrantView(feature.name, help, locale) : null;
         return {
           id: feature.name,
-          name: background?.name ?? (feature.source === "story" ? feature.name : nativeFeatureName(feature.name, locale)),
+          name: background?.name ?? (story ? feature.name : nativeFeatureName(feature.name, locale)),
           icon: { kind: "feature" as const, key: feature.name, family: `class-${owner.toLowerCase()}` },
-          note: feature.source === "story" ? t("sheet.storySource") : undefined,
+          note: story ? t("sheet.storySource") : undefined,
           meta: feature.level ? t("library.level", { level: feature.level }) : undefined,
-          text: (background ? background.help : feature.source === "story" ? help : nativeFeatureHelp(owner, feature.name, help, locale)) ?? undefined,
+          text: (background ? background.help : story ? help : nativeFeatureHelp(owner, feature.name, help, locale)) ?? undefined,
         };
       })}
     />

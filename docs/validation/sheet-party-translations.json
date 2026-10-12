@@ -17,16 +17,16 @@
     "scripts/lib/combat-ui-fixtures.mjs": "c30d098937f9b7b4abc82b696b792f46d23c13639c8faa76acbe6406467f7a7b",
     "scripts/lib/sheet-party-fixtures.mjs": "85ffb69a377fa633acbd680fd8c6bfc05c70c1b6719a1d07b5cbdeb2455e3bd8",
     "src/app/api/campaigns/[campaignId]/sheet/route.ts": "f38e06d5e7120fbe65521fdd8ca2dc8ebd4b37e09d0ee91f5641df6bf4e71c43",
-    "src/app/campaigns/[campaignId]/CharacterSheetDialog.tsx": "d582cce066ecf1701ac1900b82d14986ec1105cba2ae0a4297cd1c041d1dd5b2",
+    "src/app/campaigns/[campaignId]/CharacterSheetDialog.tsx": "ec76a036a097d703d84a6083304c1b7cb6eea576c1959d9c5fe2bf54b5bf5203",
     "src/app/campaigns/[campaignId]/PartyPanel.tsx": "2bb148a325e0661352856dbf50ec0972d422275f3bdaad0f3abe97c1b1abd726",
     "src/components/sheet/SheetChoices.tsx": "c69cbce9c5be6af8d7dc83146f908b342db38423fde595e852c847307c974568",
     "src/components/sheet/SheetCounters.tsx": "649bf1de0c499e00874d6edfdbf397db883eb913786bd58bf5f471978bab003d",
-    "src/components/sheet/SheetParts.tsx": "e47623ce33dfbf4f8f4ea14bafa08f253d2fa6e6e95af05be55d4deebb3ae363",
+    "src/components/sheet/SheetParts.tsx": "1ada4b01411481e0f49060f7d493765d20a263190acbf52df12dcae6e90decb2",
     "src/components/sheet/SheetState.tsx": "d664ff1c154de748ef0605e2dc44a05ae5b534b4c071070d6cc6a3da2621906b",
     "src/components/sheet/sheet-state.ts": "690e43d5e6276af98c09d23745bf8f78f048e995ea5eb4450cd69568b57bbf23",
     "src/lib/i18n/roll-presentations.ts": "3999299af4647b88f15531dfeca1c5bae09350bbd2479b877eba0c8d7706d582",
     "src/lib/i18n/sheet-play-messages.ts": "bb0d4fedc82ddce4fbd7bb8703182b085c97eb17532ac9251424cd01581056ff",
-    "src/lib/i18n/sheet-play-presentations.ts": "5c0500769004e486e789698dc2e72aa2852153280a67cf2b1fc5d5b67add6622",
+    "src/lib/i18n/sheet-play-presentations.ts": "ac25c60c3ae74bb3e66b46cf6b03e6d8210ee0190f98c029bedbca03b4016649",
     "src/lib/i18n/special-roll-messages.ts": "2da4569d2861de7be61a703df37bccfa9d0317bd4c41d9f24b65df8c7a2a5833",
     "src/lib/roll-special-presentation.ts": "050cc8074cec75b611565f9fd833121b187889167921aa8bfc8860b3e59a9118"
   },
@@ -72,5 +72,17 @@
       "src/components/sheet/SheetCounters.tsx": "e9b1d6783e426f2ebb634f9112c59878a6698069f70b2aa57361f97ef671382c"
     },
     "counterTooltipReview": "The two-line SheetCounters change displays reviewed guidance in an unlimited-counter tooltip. The prior 32 English renders and 11 state views remain exact; new sheet-dialog checks retain 26 original English renders and verify reviewed resource labels/help and canonical usage plus real short-rest recharge. Engine reading, passive gates and callback values are unchanged."
+  },
+  "freeCastDisplayIntegration": {
+    "priorHashes": {
+      "src/app/campaigns/[campaignId]/CharacterSheetDialog.tsx": "d582cce066ecf1701ac1900b82d14986ec1105cba2ae0a4297cd1c041d1dd5b2",
+      "src/components/sheet/SheetParts.tsx": "e47623ce33dfbf4f8f4ea14bafa08f253d2fa6e6e95af05be55d4deebb3ae363",
+      "src/lib/i18n/sheet-play-presentations.ts": "5c0500769004e486e789698dc2e72aa2852153280a67cf2b1fc5d5b67add6622"
+    },
+    "review": "Dynamic free-cast help now uses the native resource definition. A story-sourced generated feature projects only with a matching resource; library preview derives that resource through populateResources. Names and English guidance retain canonical source, authored replacements stay verbatim, and Chinese names are shared with actor-scoped DM references. The 26 original dialog English renders and 18 focused sheet cases passed in this batch, including actual library/table display, canonical button requests, one real free cast, exhausted refusal and short/long rest recharge. The earlier 32 party/state renders remain historical evidence; they were not rerun in this batch. Original goldens and static resource translations were not changed.",
+    "checks": [
+      "scripts/test-chinese-sheet-dialog.mjs"
+    ],
+    "remaining": "Other material/output and authenticated browser/full journey/TTS gates remain open."
   }
 }

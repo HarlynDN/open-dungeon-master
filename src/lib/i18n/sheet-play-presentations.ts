@@ -3,7 +3,7 @@ import { catalogFor, createTranslator, messageTemplate, type MessageKey } from "
 import { conditionDisplay } from "./condition-presentations.ts";
 import { referenceDisplayName } from "./references.ts";
 import { describeExhaustion } from "../dm/condition-logic";
-import { freeCastSpellOf, isFreeCastResource } from "../srd/feat-spells";
+import { freeCastResourceText, freeCastSpellOf, isFreeCastResource } from "../srd/feat-spells";
 
 export function exhaustionSummary(level: number, locale: AppLocale): string {
   if (locale === "en") return describeExhaustion(level);
@@ -26,7 +26,11 @@ export function resourceLabel(id: string, fallback: string, locale: AppLocale): 
   const source = catalogFor("en", "sheetPlay.resourceName.");
   const key = `sheetPlay.resourceName.${id}` as MessageKey;
   if (source[key]) return createTranslator(locale)(key);
-  if (isFreeCastResource(id)) return createTranslator(locale)("sheetPlay.resource.freeCast", { spell: referenceDisplayName("spell", freeCastSpellOf(id), locale) });
+  if (isFreeCastResource(id) && freeCastSpellOf(id)) {
+    const native = freeCastResourceText(id);
+    if (fallback.toLowerCase() !== native.name.toLowerCase() && fallback.toLowerCase() !== id.replaceAll("_", " ").toLowerCase() && fallback.toLowerCase() !== "free cast") return fallback;
+    return createTranslator(locale)("sheetPlay.resource.freeCast", { spell: referenceDisplayName("spell", native.spell, locale) });
+  }
   return fallback;
 }
 

@@ -3,6 +3,10 @@ import {defineMessages} from "./catalog.ts";
 // Original component and engine wording. These templates change presentation
 // only; the rule engine and its English responses remain independent.
 export const SHEET_DIALOG_MESSAGES = /*#__PURE__*/ defineMessages({
+  "sheetDialog.freeCastHelp": {
+    en:"{spell} once without a spell slot, at its own level, and again after a long rest; the cast tool spends this use itself when the spell is cast, so use_resource is not needed. With a slot of its level or higher it can also be cast as usual.",
+    "zh-CN":"可按原本环阶施放一次{spell}，无需消耗法术位；长休后恢复这次使用机会。施法时会自动扣除次数，无需另行标记。你也可以照常消耗对应环阶或更高环阶的法术位来施放。"
+  },
   "sheetDialog.identity": {en:"Level {level} {race} {classes}{background}{alignment}","zh-CN":"{level} 级{race} {classes}{background}{alignment}"},
   "sheetDialog.ac": {en:"Armor class","zh-CN":"护甲等级"},
   "sheetDialog.ac.manual": {en:"Set by hand; armor does not change it.","zh-CN":"已手动设定；护甲不会改变此数值。"},

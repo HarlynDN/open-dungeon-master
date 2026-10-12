@@ -9,7 +9,7 @@ import { COMBAT_RESOURCE_DEFS } from "@/lib/srd/combat-rows";
 import customResourcesJson from "@/lib/classes/resources.json";
 import authoredResourcesJson from "@/lib/srd/authored-resources.json";
 import { innateSpellCounterRows } from "@/lib/srd/racial-grants";
-import { freeCastOf, freeCastResourceId, freeCastSpellOf, isFreeCastResource } from "@/lib/srd/feat-spells";
+import { freeCastOf, freeCastResourceId, freeCastResourceText, isFreeCastResource } from "@/lib/srd/feat-spells";
 import { LATE_RESOURCE_DEFS } from "@/lib/srd/class-resources-late";
 import { UNLIMITED_USES } from "@/lib/srd/resource-limits";
 import { tableFeat } from "@/lib/srd/feat-effects";
@@ -729,15 +729,15 @@ export function resourceDef(id: string): ResourceDef | null {
 // The counter behind a feat's free cast, made from its id: the spell is in
 // the id, the rule is the same for every one of them.
 function freeCastDef(id: string): ResourceDef {
-  const spell = freeCastSpellOf(id).replace(/(^|\s)([a-z])/g, (_, before, letter) => `${before}${letter.toUpperCase()}`);
+  const text = freeCastResourceText(id);
   return {
     id,
     match: [],
-    displayName: `${spell} (free cast)`,
+    displayName: text.name,
     maxFor: () => 1,
     recharge: "long",
     effect: { kind: "narrative" },
-    guidance: `${spell} once without a spell slot, at its own level, and again after a long rest; the cast tool spends this use itself when the spell is cast, so use_resource is not needed. With a slot of its level or higher it can also be cast as usual.`,
+    guidance: text.guidance,
   };
 }
 

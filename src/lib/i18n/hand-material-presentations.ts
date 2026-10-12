@@ -1,5 +1,7 @@
 import { monsterCardRules, monsterHandRefusal } from "./monster-hand-presentations.ts";
 import type { AppLocale } from "./locales.ts";
+import { freeCastResourceText, isFreeCastResource } from "../srd/feat-spells.ts";
+import { sheetResourceHelp } from "./sheet-dialog-presentations.ts";
 import { catalogFor, createTranslator, type MessageKey } from "./translator.ts";
 import { handCostLabel, handTermLabel, handCurrentActorName, type HandTurnContext } from "./hand-presentations.ts";
 import { combatTermLabel } from "./combat-ui-presentations.ts";
@@ -242,10 +244,12 @@ export function handCardMaterial(card: HandCard, locale: AppLocale, context?: Ha
   }
   if (locale !== "en" && card.intent.card === "feature") {
     const key = `sheetDialog.resourceHelp.${card.intent.resourceId}` as MessageKey;
-    const source = catalogFor("en", "sheetDialog.resourceHelp.")[key];
+    const id = card.intent.resourceId;
+    const source = catalogFor("en", "sheetDialog.resourceHelp.")[key]
+      ?? (id && isFreeCastResource(id) ? freeCastResourceText(id).guidance : undefined);
     // A native resource card abbreviates reviewed guidance to its first
     // sentence. Chinese shows the already-reviewed complete guidance.
-    if (source && card.rules === source.split(". ")[0].replace(/\.?$/, ".")) rules = createTranslator(locale)(key);
+    if (id && source && card.rules === source.split(". ")[0].replace(/\.?$/, ".")) rules = sheetResourceHelp(id, source, locale) ?? rules;
   }
   if (card.intent.card === "monster") rules = monsterCardRules(card, locale);
   return { range: handFactText(card.range, locale), dice: handFactText(card.dice, locale), roll: handFactText(card.roll, locale), rules,

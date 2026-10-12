@@ -18,7 +18,7 @@
     "src/lib/srd/condition-effects-last.ts": "cb0da89df3105f1f36e5253c7a0f31efc31e8c4b9798fba6bd2b3788ab6a0d3f",
     "src/lib/srd/condition-effects-spells.ts": "ba53b76ec5d10be0dd42736aee8be774f1cfec3773b53c14e49fa80a80d14eae",
     "src/lib/dm/condition-logic.ts": "cd14ca107d7c4acdb34b0105c5eaf45556a0713158cdf7c602e5720997a16771",
-    "src/lib/srd/class-resources.ts": "f2894cf03f05547a1d4e7ba3822b49d3933deeb4c6a20881d5f0e9b47350f50b",
+    "src/lib/srd/class-resources.ts": "d4d82d608a3269d05d525b024fb86239477f6327e239d7ad4dd8ebd9ed914cb5",
     "src/lib/dm/object-actions.ts": "9a1e918ec2e7d13af58a16e23630d73376a0e886943b752e517e222e6154d85b",
     "src/lib/dm/roll-feature-riders.ts": "08a2ec8e7d2ab0395f02f2ed6ca0eed365095f4b7a3747e45570696abc077806"
   },
@@ -44,5 +44,9 @@
     "date": "2026-10-11",
     "review": "Re-reviewed object-actions.ts: only a typed Search caption context is appended to rollCharacterCheck. No condition generators, action pricing, search skill, dice or payload changes. The 274 native labels/summaries, their catalogs and original English baselines remain unchanged.",
     "previousObjectActionsSha256": "d30633a0c15ee771b73ca641081def124b25b3fc352fd1630d89901941591e2a"
+  },
+  "freeCastTextIntegration": {
+    "priorSourceHash": "f2894cf03f05547a1d4e7ba3822b49d3933deeb4c6a20881d5f0e9b47350f50b",
+    "review": "Only the dynamic freeCastDef English name/guidance assembly moved to freeCastResourceText. Static resource rows, condition-effect sources and all existing reviewed translations are unchanged. Focused checks compare native dynamic source byte-for-byte and exercise single payment, refusal and rest recharge. This is source comparison by the implementation agent, not external approval."
   }
 }

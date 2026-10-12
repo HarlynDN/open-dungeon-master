@@ -19,6 +19,7 @@ import { Ribbon } from "@/components/ui/Ribbon";
 import { cn } from "@/lib/cn";
 import type { CreateSheetInput } from "@/lib/schemas/sheet";
 import { computeSheetDerived, formatModifier, speedFor, type DerivedPart } from "@/lib/srd";
+import { populateResources } from "@/lib/srd/class-resources";
 import { ui } from "@/lib/ui";
 
 export type CharacterEvent = {
@@ -138,7 +139,7 @@ export function SheetSections({ sheet, level = 1 }: { sheet: CreateSheetInput; l
 
       {sheet.features?.length ? (
         <SheetPanel title={t("sheet.features")}>
-          <FeatureChips features={sheet.features} classId={sheet.class} subclass={sheet.subclass} classes={sheet.classes} />
+          <FeatureChips features={sheet.features} classId={sheet.class} subclass={sheet.subclass} classes={sheet.classes} resources={populateResources(sheet.features, level, derived.abilityMods, undefined, sheet.classes, sheet.feats)} />
         </SheetPanel>
       ) : null}
 

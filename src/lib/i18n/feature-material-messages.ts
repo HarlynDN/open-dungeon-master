@@ -2,6 +2,10 @@ import { defineMessages } from "./catalog.ts";
 
 // Translations of the project-owned short help and feat summaries.
 export const FEATURE_MATERIAL_MESSAGES = /*#__PURE__*/ defineMessages({
+  "callingMaterial.freeCast.name": {
+    "en": "Free cast: {spell} ({feat})",
+    "zh-CN": "免费施法：{spell}（{feat}）"
+  },
   "callingMaterial.nativeFeature.0.name": {
     "en": "Additional Fighting Style",
     "zh-CN": "额外战斗风格"

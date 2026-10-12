@@ -19,7 +19,7 @@ import {
 import { attunementSlotsFor, matchArmor } from "@/lib/srd/armor";
 import { encumbranceFor } from "@/lib/srd/encumbrance";
 import { matchMagicItem, magicItemRiders } from "@/lib/srd/magic-items";
-import { RESOURCE_DEFS } from "@/lib/srd/class-resources";
+import { RESOURCE_DEFS, resourceDef } from "@/lib/srd/class-resources";
 import { GameTerm } from "@/components/ui/GameTerm";
 import {
   AbilityTiles,
@@ -56,7 +56,6 @@ function titleCase(value: string) {
 const RESOURCE_NAMES = new Map(RESOURCE_DEFS.map((def) => [def.id, def.displayName]));
 // Original model guidance remains the English fallback; reviewed player
 // explanations are selected only for exact native resource IDs and wording.
-const RESOURCE_HELP = new Map(RESOURCE_DEFS.map((def) => [def.id, def.guidance]));
 
 // Full character sheet, opened by selecting any party member. Read-only,
 // except the owner may mark counters their class actually has as spent
@@ -456,7 +455,7 @@ export function CharacterSheetDialog({
                     id={id}
                     pool={pool}
                     name={resourceLabel(id, RESOURCE_NAMES.get(id) ?? titleCase(id), locale)}
-                    help={sheetResourceHelp(id, RESOURCE_HELP.get(id), locale)}
+                    help={sheetResourceHelp(id, resourceDef(id)?.guidance, locale)}
                     spends={spends}
                     corrects={corrects}
                     busy={busy}
@@ -545,7 +544,7 @@ export function CharacterSheetDialog({
           ) : null}
           {sheet.features.length ? (
             <SheetBlock className="mt-4" title={t("sheetDialog.features")}>
-              <FeatureChips features={sheet.features} classId={sheet.class} subclass={sheet.subclass} classes={sheet.classes} />
+              <FeatureChips features={sheet.features} classId={sheet.class} subclass={sheet.subclass} classes={sheet.classes} resources={sheet.resources} />
               <FeatureChoicePicker sheet={sheet} mine={mine} inCombat={inCombat} campaignLocale={campaignLocale} />
             </SheetBlock>
           ) : null}

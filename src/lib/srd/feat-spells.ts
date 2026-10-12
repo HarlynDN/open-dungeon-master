@@ -389,6 +389,17 @@ export function freeCastSpellOf(id: string): string {
   return id.replace(/^free_cast_/, "").replace(/_/g, " ");
 }
 
+// Native English text for the dynamic counter, shared by rules and display
+// recognition. Its ID/recharge/payment remain controlled by class-resources.
+export function freeCastResourceText(id: string): { spell: string; name: string; guidance: string } {
+  const spell = freeCastSpellOf(id).replace(/(^|\s)([a-z])/g, (_, before, letter) => `${before}${letter.toUpperCase()}`);
+  return {
+    spell,
+    name: `${spell} (free cast)`,
+    guidance: `${spell} once without a spell slot, at its own level, and again after a long rest; the cast tool spends this use itself when the spell is cast, so use_resource is not needed. With a slot of its level or higher it can also be cast as usual.`,
+  };
+}
+
 // Every Free cast feature the grants call for.
 export function freeCastFeatures(grants: FeatSpellGrant[]): string[] {
   return grants.flatMap((grant) => grant.freeCasts.map((spell) => freeCastFeatureName(spell, grant.feat)));

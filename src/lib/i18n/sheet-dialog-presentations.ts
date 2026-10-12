@@ -7,6 +7,7 @@ import type { CharacterSheet } from "../schemas/sheet.ts";
 import type { DerivedPart } from "../srd/index.ts";
 import type { Encumbrance } from "../srd/encumbrance.ts";
 import { formatModifier } from "../srd/index.ts";
+import { freeCastResourceText, freeCastSpellOf, isFreeCastResource } from "../srd/feat-spells.ts";
 
 const titleCase = (value: string) => value.replace(/[-_]/g, " ").replace(/\b\w/g, letter => letter.toUpperCase());
 
@@ -86,6 +87,10 @@ export function sheetChoiceOption(value: string, locale: AppLocale): string {
 }
 
 export function sheetResourceHelp(id: string, original: string | undefined, locale: AppLocale): string | undefined {
+  if (locale !== "en" && isFreeCastResource(id) && freeCastSpellOf(id)
+    && original === freeCastResourceText(id).guidance) return createTranslator(locale)("sheetDialog.freeCastHelp", {
+    spell: referenceDisplayName("spell", freeCastResourceText(id).spell, locale),
+  });
   const key = `sheetDialog.resourceHelp.${id}` as MessageKey;
   return original && original === catalogFor("en", "sheetDialog.resourceHelp.")[key] ? createTranslator(locale)(key) : original;
 }
