@@ -59,7 +59,7 @@ export const SPECIAL_ROLL_MESSAGES = /*#__PURE__*/ defineMessages({
   "combatSpecial.name.mote_of_potential": { en: "Mote of Potential", "zh-CN": "潜能微光" },
   "combatSpecial.name.overchannel": { en: "Overchannel", "zh-CN": "超限施法" },
   "combatSpecial.name.second_wind": { en: "Second Wind", "zh-CN": "回气" },
-  "combatSpecial.name.combat_wild_shape": { en: "Combat Wild Shape", "zh-CN": "战斗野性变形" },
+  "combatSpecial.name.combat_wild_shape": { en: "Combat Wild Shape", "zh-CN": "战斗荒野形态" },
   "combatSpecial.name.divine_intervention": { en: "Divine Intervention", "zh-CN": "神术干预" },
   "combatSpecial.name.disarming_attack": { en: "Disarming Attack", "zh-CN": "缴械攻击" },
   "combatSpecial.name.goading_attack": { en: "Goading Attack", "zh-CN": "挑衅攻击" },

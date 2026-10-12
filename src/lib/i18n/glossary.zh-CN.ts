@@ -254,7 +254,7 @@ export const ZH_CN_GLOSSARY = [
   {"id":"combatSpecial.name.mote_of_potential","source":"Mote of Potential","preferred":"潜能微光","scope":"rule","keys":["combatSpecial.name.mote_of_potential"]},
   {"id":"combatSpecial.name.overchannel","source":"Overchannel","preferred":"超限施法","scope":"rule","keys":["combatSpecial.name.overchannel"]},
   {"id":"combatSpecial.name.second_wind","source":"Second Wind","preferred":"回气","scope":"rule","keys":["combatSpecial.name.second_wind"]},
-  {"id":"combatSpecial.name.combat_wild_shape","source":"Combat Wild Shape","preferred":"战斗野性变形","scope":"rule","keys":["combatSpecial.name.combat_wild_shape"]},
+  {"id":"combatSpecial.name.combat_wild_shape","source":"Combat Wild Shape","preferred":"战斗荒野形态","scope":"rule","keys":["combatSpecial.name.combat_wild_shape"]},
   {"id":"combatSpecial.name.divine_intervention","source":"Divine Intervention","preferred":"神术干预","scope":"rule","keys":["combatSpecial.name.divine_intervention"]},
   {"id":"combatSpecial.name.disarming_attack","source":"Disarming Attack","preferred":"缴械攻击","scope":"rule","keys":["combatSpecial.name.disarming_attack"]},
   {"id":"combatSpecial.name.goading_attack","source":"Goading Attack","preferred":"挑衅攻击","scope":"rule","keys":["combatSpecial.name.goading_attack"]},

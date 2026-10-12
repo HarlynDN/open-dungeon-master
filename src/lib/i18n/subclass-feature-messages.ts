@@ -2090,5 +2090,1157 @@ export const SUBCLASS_FEATURE_MESSAGES = /*#__PURE__*/ defineMessages({
   "callingMaterial.subclassFeature.wizard.order-of-scribes.one-with-the-word.description": {
     "en": "Once per long rest, avoid death by destroying your book's magic, then rebuild it over days of study.",
     "zh-CN": "每次长休后可用一次，摧毁法术书的魔法以避免死亡，再通过数日研习重建法术书。"
+  },
+  "callingMaterial.subclassFeature.cleric.knowledge-domain.blessings-of-knowledge.name": {
+    "en": "Blessings of Knowledge",
+    "zh-CN": "知识祝福"
+  },
+  "callingMaterial.subclassFeature.cleric.knowledge-domain.blessings-of-knowledge.description": {
+    "en": "Two extra languages and proficiency plus expertise in two knowledge skills.",
+    "zh-CN": "额外学会两种语言，并获得两项知识类技能的熟练和专精。"
+  },
+  "callingMaterial.subclassFeature.cleric.knowledge-domain.channel-divinity-knowledge-of-the-ages.name": {
+    "en": "Channel Divinity: Knowledge of the Ages",
+    "zh-CN": "引导神力：岁月之识"
+  },
+  "callingMaterial.subclassFeature.cleric.knowledge-domain.channel-divinity-knowledge-of-the-ages.description": {
+    "en": "Gain proficiency with one skill or tool of your choice for 10 minutes.",
+    "zh-CN": "获得一项自选技能或工具的熟练，持续十分钟。"
+  },
+  "callingMaterial.subclassFeature.cleric.knowledge-domain.channel-divinity-read-thoughts.name": {
+    "en": "Channel Divinity: Read Thoughts",
+    "zh-CN": "引导神力：读取思想"
+  },
+  "callingMaterial.subclassFeature.cleric.knowledge-domain.channel-divinity-read-thoughts.description": {
+    "en": "Read a creature's surface thoughts for a minute and cast suggestion on it without a slot.",
+    "zh-CN": "读取一个生物的表层思想一分钟，并可不消耗法术位对其施放暗示术。"
+  },
+  "callingMaterial.subclassFeature.cleric.knowledge-domain.potent-spellcasting.name": {
+    "en": "Potent Spellcasting",
+    "zh-CN": "强效施法"
+  },
+  "callingMaterial.subclassFeature.cleric.knowledge-domain.potent-spellcasting.description": {
+    "en": "Add your Wisdom modifier to the damage of your cleric cantrips.",
+    "zh-CN": "牧师戏法的伤害加上感知调整值。"
+  },
+  "callingMaterial.subclassFeature.cleric.knowledge-domain.visions-of-the-past.name": {
+    "en": "Visions of the Past",
+    "zh-CN": "往昔视界"
+  },
+  "callingMaterial.subclassFeature.cleric.knowledge-domain.visions-of-the-past.description": {
+    "en": "A minute of concentration reveals an object's or a place's recent history.",
+    "zh-CN": "专注一分钟，可看见物体或地点近期的历史。"
+  },
+  "callingMaterial.subclassFeature.cleric.light-domain.bonus-cantrip-light.name": {
+    "en": "Bonus Cantrip (Light)",
+    "zh-CN": "额外戏法（光亮术）"
+  },
+  "callingMaterial.subclassFeature.cleric.light-domain.bonus-cantrip-light.description": {
+    "en": "You know the light cantrip.",
+    "zh-CN": "掌握光亮术戏法。"
+  },
+  "callingMaterial.subclassFeature.cleric.light-domain.warding-flare.name": {
+    "en": "Warding Flare",
+    "zh-CN": "守护闪光"
+  },
+  "callingMaterial.subclassFeature.cleric.light-domain.warding-flare.description": {
+    "en": "A reaction imposes disadvantage on an attack against you, a Wisdom-modifier number of times per long rest.",
+    "zh-CN": "用反应使针对你的攻击具有劣势，每次长休后的使用次数等于感知调整值。"
+  },
+  "callingMaterial.subclassFeature.cleric.light-domain.channel-divinity-radiance-of-the-dawn.name": {
+    "en": "Channel Divinity: Radiance of the Dawn",
+    "zh-CN": "引导神力：黎明光辉"
+  },
+  "callingMaterial.subclassFeature.cleric.light-domain.channel-divinity-radiance-of-the-dawn.description": {
+    "en": "Dispel magical darkness within 30 feet and deal 2d10 + cleric level radiant damage to hostile creatures, halved on a Constitution save.",
+    "zh-CN": "驱散 30 尺内的魔法黑暗，对敌对生物造成 2d10 加牧师等级的光耀伤害，体质豁免成功则减半。"
+  },
+  "callingMaterial.subclassFeature.cleric.light-domain.improved-warding-flare.name": {
+    "en": "Improved Warding Flare",
+    "zh-CN": "精通守护闪光"
+  },
+  "callingMaterial.subclassFeature.cleric.light-domain.improved-warding-flare.description": {
+    "en": "Warding Flare also protects an ally you can see within 30 feet.",
+    "zh-CN": "守护闪光也可保护 30 尺内一名你能看见的盟友。"
+  },
+  "callingMaterial.subclassFeature.cleric.light-domain.potent-spellcasting.name": {
+    "en": "Potent Spellcasting",
+    "zh-CN": "强效施法"
+  },
+  "callingMaterial.subclassFeature.cleric.light-domain.potent-spellcasting.description": {
+    "en": "Add your Wisdom modifier to the damage of your cleric cantrips.",
+    "zh-CN": "牧师戏法的伤害加上感知调整值。"
+  },
+  "callingMaterial.subclassFeature.cleric.light-domain.corona-of-light.name": {
+    "en": "Corona of Light",
+    "zh-CN": "光之冠冕"
+  },
+  "callingMaterial.subclassFeature.cleric.light-domain.corona-of-light.description": {
+    "en": "For a minute, shed 60 feet of bright light and give enemies in it disadvantage on saves against fire and radiant spells.",
+    "zh-CN": "持续一分钟，散发 60 尺明亮光照；范围内敌人对抗火焰和光耀法术的豁免具有劣势。"
+  },
+  "callingMaterial.subclassFeature.cleric.nature-domain.acolyte-of-nature.name": {
+    "en": "Acolyte of Nature",
+    "zh-CN": "自然侍者"
+  },
+  "callingMaterial.subclassFeature.cleric.nature-domain.acolyte-of-nature.description": {
+    "en": "One druid cantrip and proficiency in one nature-facing skill.",
+    "zh-CN": "学会一个德鲁伊戏法，并获得一项自然相关技能的熟练。"
+  },
+  "callingMaterial.subclassFeature.cleric.nature-domain.bonus-proficiency-heavy-armor.name": {
+    "en": "Bonus Proficiency (heavy armor)",
+    "zh-CN": "额外熟练项（重甲）"
+  },
+  "callingMaterial.subclassFeature.cleric.nature-domain.bonus-proficiency-heavy-armor.description": {
+    "en": "Proficiency with heavy armor.",
+    "zh-CN": "获得重甲熟练。"
+  },
+  "callingMaterial.subclassFeature.cleric.nature-domain.channel-divinity-charm-animals-and-plants.name": {
+    "en": "Channel Divinity: Charm Animals and Plants",
+    "zh-CN": "引导神力：魅惑动植物"
+  },
+  "callingMaterial.subclassFeature.cleric.nature-domain.channel-divinity-charm-animals-and-plants.description": {
+    "en": "Beasts and plants within 30 feet that fail a Wisdom save are charmed for a minute and friendly to you and your allies.",
+    "zh-CN": "30 尺内的野兽和植物感知豁免失败时，被魅惑一分钟，对你和盟友友善。"
+  },
+  "callingMaterial.subclassFeature.cleric.nature-domain.dampen-elements.name": {
+    "en": "Dampen Elements",
+    "zh-CN": "削弱元素"
+  },
+  "callingMaterial.subclassFeature.cleric.nature-domain.dampen-elements.description": {
+    "en": "A reaction grants you or an ally within 30 feet resistance to one instance of acid, cold, fire, lightning or thunder damage.",
+    "zh-CN": "用反应，使你或 30 尺内一名盟友对一次强酸、冷冻、火焰、闪电或雷鸣伤害具有抗性。"
+  },
+  "callingMaterial.subclassFeature.cleric.nature-domain.divine-strike.name": {
+    "en": "Divine Strike",
+    "zh-CN": "神圣打击"
+  },
+  "callingMaterial.subclassFeature.cleric.nature-domain.divine-strike.description": {
+    "en": "Once per turn a weapon hit deals an extra 1d8 cold, fire or lightning damage, rising to 2d8 at 14th level.",
+    "zh-CN": "每回合一次，武器命中时额外造成 1d8 冷冻、火焰或闪电伤害；14 级时增至 2d8。"
+  },
+  "callingMaterial.subclassFeature.cleric.nature-domain.master-of-nature.name": {
+    "en": "Master of Nature",
+    "zh-CN": "自然大师"
+  },
+  "callingMaterial.subclassFeature.cleric.nature-domain.master-of-nature.description": {
+    "en": "A bonus action commands creatures charmed by your Channel Divinity.",
+    "zh-CN": "可用附赠动作指挥被你的引导神力魅惑的生物。"
+  },
+  "callingMaterial.subclassFeature.cleric.tempest-domain.bonus-proficiencies-tempest.name": {
+    "en": "Bonus Proficiencies (Tempest)",
+    "zh-CN": "额外熟练项（风暴）"
+  },
+  "callingMaterial.subclassFeature.cleric.tempest-domain.bonus-proficiencies-tempest.description": {
+    "en": "Proficiency with martial weapons and heavy armor.",
+    "zh-CN": "获得军用武器和重甲的熟练。"
+  },
+  "callingMaterial.subclassFeature.cleric.tempest-domain.wrath-of-the-storm.name": {
+    "en": "Wrath of the Storm",
+    "zh-CN": "风暴之怒"
+  },
+  "callingMaterial.subclassFeature.cleric.tempest-domain.wrath-of-the-storm.description": {
+    "en": "A reaction deals 2d8 lightning or thunder damage to a creature that hits you in melee, halved on a Dexterity save; a Wisdom-modifier number of times per long rest.",
+    "zh-CN": "用反应对近战命中你的生物造成 2d8 闪电或雷鸣伤害，敏捷豁免成功则减半。每次长休后的使用次数等于感知调整值。"
+  },
+  "callingMaterial.subclassFeature.cleric.tempest-domain.channel-divinity-destructive-wrath.name": {
+    "en": "Channel Divinity: Destructive Wrath",
+    "zh-CN": "引导神力：毁灭之怒"
+  },
+  "callingMaterial.subclassFeature.cleric.tempest-domain.channel-divinity-destructive-wrath.description": {
+    "en": "Deal maximum damage instead of rolling for lightning or thunder damage.",
+    "zh-CN": "造成闪电或雷鸣伤害时，无需掷骰，直接造成最大伤害。"
+  },
+  "callingMaterial.subclassFeature.cleric.tempest-domain.thunderbolt-strike.name": {
+    "en": "Thunderbolt Strike",
+    "zh-CN": "雷霆打击"
+  },
+  "callingMaterial.subclassFeature.cleric.tempest-domain.thunderbolt-strike.description": {
+    "en": "Lightning damage you deal pushes a Large or smaller creature 10 feet away.",
+    "zh-CN": "你造成的闪电伤害可将大型或更小的生物推开 10 尺。"
+  },
+  "callingMaterial.subclassFeature.cleric.tempest-domain.divine-strike.name": {
+    "en": "Divine Strike",
+    "zh-CN": "神圣打击"
+  },
+  "callingMaterial.subclassFeature.cleric.tempest-domain.divine-strike.description": {
+    "en": "Once per turn a weapon hit deals an extra 1d8 thunder damage, rising to 2d8 at 14th level.",
+    "zh-CN": "每回合一次，武器命中时额外造成 1d8 雷鸣伤害；14 级时增至 2d8。"
+  },
+  "callingMaterial.subclassFeature.cleric.tempest-domain.stormborn.name": {
+    "en": "Stormborn",
+    "zh-CN": "风暴之子"
+  },
+  "callingMaterial.subclassFeature.cleric.tempest-domain.stormborn.description": {
+    "en": "You have a flying speed equal to your walking speed while not underground or indoors.",
+    "zh-CN": "不在地下或室内时，获得等于步行速度的飞行速度。"
+  },
+  "callingMaterial.subclassFeature.cleric.trickery-domain.blessing-of-the-trickster.name": {
+    "en": "Blessing of the Trickster",
+    "zh-CN": "诡术祝福"
+  },
+  "callingMaterial.subclassFeature.cleric.trickery-domain.blessing-of-the-trickster.description": {
+    "en": "Touch a willing creature to give it advantage on Stealth checks for an hour.",
+    "zh-CN": "触碰一个愿意的生物，使其隐匿检定具有优势，持续一小时。"
+  },
+  "callingMaterial.subclassFeature.cleric.trickery-domain.channel-divinity-invoke-duplicity.name": {
+    "en": "Channel Divinity: Invoke Duplicity",
+    "zh-CN": "引导神力：召唤分身"
+  },
+  "callingMaterial.subclassFeature.cleric.trickery-domain.channel-divinity-invoke-duplicity.description": {
+    "en": "Create an illusory double for a minute that you can move, cast spells through, and use to gain attack advantage.",
+    "zh-CN": "创造一个持续一分钟的幻象分身，可移动分身、通过其位置施法，并借此获得攻击优势。"
+  },
+  "callingMaterial.subclassFeature.cleric.trickery-domain.channel-divinity-cloak-of-shadows.name": {
+    "en": "Channel Divinity: Cloak of Shadows",
+    "zh-CN": "引导神力：暗影斗篷"
+  },
+  "callingMaterial.subclassFeature.cleric.trickery-domain.channel-divinity-cloak-of-shadows.description": {
+    "en": "Become invisible until the end of your next turn or until you attack or cast.",
+    "zh-CN": "隐形至你的下一回合结束，或直到你攻击或施法。"
+  },
+  "callingMaterial.subclassFeature.cleric.trickery-domain.divine-strike.name": {
+    "en": "Divine Strike",
+    "zh-CN": "神圣打击"
+  },
+  "callingMaterial.subclassFeature.cleric.trickery-domain.divine-strike.description": {
+    "en": "Once per turn a weapon hit deals an extra 1d8 poison damage, rising to 2d8 at 14th level.",
+    "zh-CN": "每回合一次，武器命中时额外造成 1d8 毒素伤害；14 级时增至 2d8。"
+  },
+  "callingMaterial.subclassFeature.cleric.trickery-domain.improved-duplicity.name": {
+    "en": "Improved Duplicity",
+    "zh-CN": "精通分身"
+  },
+  "callingMaterial.subclassFeature.cleric.trickery-domain.improved-duplicity.description": {
+    "en": "Invoke Duplicity creates up to four illusory duplicates.",
+    "zh-CN": "召唤分身可创造至多四个幻象分身。"
+  },
+  "callingMaterial.subclassFeature.cleric.war-domain.bonus-proficiencies-war.name": {
+    "en": "Bonus Proficiencies (War)",
+    "zh-CN": "额外熟练项（战争）"
+  },
+  "callingMaterial.subclassFeature.cleric.war-domain.bonus-proficiencies-war.description": {
+    "en": "Proficiency with martial weapons and heavy armor.",
+    "zh-CN": "获得军用武器和重甲的熟练。"
+  },
+  "callingMaterial.subclassFeature.cleric.war-domain.war-priest.name": {
+    "en": "War Priest",
+    "zh-CN": "战争祭司"
+  },
+  "callingMaterial.subclassFeature.cleric.war-domain.war-priest.description": {
+    "en": "A bonus-action weapon attack when you take the Attack action, a Wisdom-modifier number of times per long rest.",
+    "zh-CN": "采取攻击动作时，可用附赠动作进行一次武器攻击，每次长休后的使用次数等于感知调整值。"
+  },
+  "callingMaterial.subclassFeature.cleric.war-domain.channel-divinity-guided-strike.name": {
+    "en": "Channel Divinity: Guided Strike",
+    "zh-CN": "引导神力：引导打击"
+  },
+  "callingMaterial.subclassFeature.cleric.war-domain.channel-divinity-guided-strike.description": {
+    "en": "Add +10 to one attack roll, before or after seeing the result.",
+    "zh-CN": "一次攻击掷骰增加 10，可在看见结果之前或之后使用。"
+  },
+  "callingMaterial.subclassFeature.cleric.war-domain.channel-divinity-war-god-s-blessing.name": {
+    "en": "Channel Divinity: War God's Blessing",
+    "zh-CN": "引导神力：战神祝福"
+  },
+  "callingMaterial.subclassFeature.cleric.war-domain.channel-divinity-war-god-s-blessing.description": {
+    "en": "A reaction grants an ally within 30 feet +10 on an attack roll.",
+    "zh-CN": "用反应使 30 尺内一名盟友的攻击掷骰增加 10。"
+  },
+  "callingMaterial.subclassFeature.cleric.war-domain.divine-strike.name": {
+    "en": "Divine Strike",
+    "zh-CN": "神圣打击"
+  },
+  "callingMaterial.subclassFeature.cleric.war-domain.divine-strike.description": {
+    "en": "Once per turn a weapon hit deals an extra 1d8 damage of the weapon's type, rising to 2d8 at 14th level.",
+    "zh-CN": "每回合一次，武器命中时额外造成 1d8 与武器伤害类型相同的伤害；14 级时增至 2d8。"
+  },
+  "callingMaterial.subclassFeature.cleric.war-domain.avatar-of-battle.name": {
+    "en": "Avatar of Battle",
+    "zh-CN": "战斗化身"
+  },
+  "callingMaterial.subclassFeature.cleric.war-domain.avatar-of-battle.description": {
+    "en": "Resistance to nonmagical bludgeoning, piercing and slashing damage.",
+    "zh-CN": "对非魔法钝击、穿刺和挥砍伤害具有抗性。"
+  },
+  "callingMaterial.subclassFeature.cleric.death-domain.bonus-proficiency-martial-weapons.name": {
+    "en": "Bonus Proficiency (martial weapons)",
+    "zh-CN": "额外熟练项（军用武器）"
+  },
+  "callingMaterial.subclassFeature.cleric.death-domain.bonus-proficiency-martial-weapons.description": {
+    "en": "Proficiency with martial weapons.",
+    "zh-CN": "获得军用武器熟练。"
+  },
+  "callingMaterial.subclassFeature.cleric.death-domain.reaper.name": {
+    "en": "Reaper",
+    "zh-CN": "收割者"
+  },
+  "callingMaterial.subclassFeature.cleric.death-domain.reaper.description": {
+    "en": "Learn a necromancy cantrip; single-target necromancy cantrips can hit a second creature within 5 feet of the first.",
+    "zh-CN": "学会一个死灵系戏法；以单个生物为目标的死灵系戏法，可额外命中距第一目标 5 尺内的第二个生物。"
+  },
+  "callingMaterial.subclassFeature.cleric.death-domain.channel-divinity-touch-of-death.name": {
+    "en": "Channel Divinity: Touch of Death",
+    "zh-CN": "引导神力：死亡之触"
+  },
+  "callingMaterial.subclassFeature.cleric.death-domain.channel-divinity-touch-of-death.description": {
+    "en": "A melee hit deals extra necrotic damage equal to 5 + twice your cleric level.",
+    "zh-CN": "近战命中时，额外造成等于 5 加牧师等级两倍的黯蚀伤害。"
+  },
+  "callingMaterial.subclassFeature.cleric.death-domain.inescapable-destruction.name": {
+    "en": "Inescapable Destruction",
+    "zh-CN": "无可逃避的毁灭"
+  },
+  "callingMaterial.subclassFeature.cleric.death-domain.inescapable-destruction.description": {
+    "en": "Your necrotic damage ignores resistance.",
+    "zh-CN": "你的黯蚀伤害无视抗性。"
+  },
+  "callingMaterial.subclassFeature.cleric.death-domain.divine-strike.name": {
+    "en": "Divine Strike",
+    "zh-CN": "神圣打击"
+  },
+  "callingMaterial.subclassFeature.cleric.death-domain.divine-strike.description": {
+    "en": "Once per turn a weapon hit deals an extra 1d8 necrotic damage, rising to 2d8 at 14th level.",
+    "zh-CN": "每回合一次，武器命中时额外造成 1d8 黯蚀伤害；14 级时增至 2d8。"
+  },
+  "callingMaterial.subclassFeature.cleric.death-domain.improved-reaper.name": {
+    "en": "Improved Reaper",
+    "zh-CN": "精通收割"
+  },
+  "callingMaterial.subclassFeature.cleric.death-domain.improved-reaper.description": {
+    "en": "Cast a necromancy spell of 1st to 5th level that targets one creature at two creatures within 5 feet, at the cost of 1d8 of your own hit points per spell level.",
+    "zh-CN": "以单个生物为目标的一至五环死灵系法术，可指定相距 5 尺内的两个生物；代价是每环失去 1d8 点自身生命值。"
+  },
+  "callingMaterial.subclassFeature.cleric.forge-domain.bonus-proficiencies-forge.name": {
+    "en": "Bonus Proficiencies (Forge)",
+    "zh-CN": "额外熟练项（锻造）"
+  },
+  "callingMaterial.subclassFeature.cleric.forge-domain.bonus-proficiencies-forge.description": {
+    "en": "Proficiency with heavy armor and smith's tools.",
+    "zh-CN": "获得重甲和铁匠工具的熟练。"
+  },
+  "callingMaterial.subclassFeature.cleric.forge-domain.blessing-of-the-forge.name": {
+    "en": "Blessing of the Forge",
+    "zh-CN": "锻造祝福"
+  },
+  "callingMaterial.subclassFeature.cleric.forge-domain.blessing-of-the-forge.description": {
+    "en": "After a long rest, enchant a weapon or suit of armor you touch with a +1 bonus until you use the feature again.",
+    "zh-CN": "长休后，触碰一把武器或一套护甲，使其获得 +1 加值，持续至再次使用此特性。"
+  },
+  "callingMaterial.subclassFeature.cleric.forge-domain.channel-divinity-artisan-s-blessing.name": {
+    "en": "Channel Divinity: Artisan's Blessing",
+    "zh-CN": "引导神力：工匠祝福"
+  },
+  "callingMaterial.subclassFeature.cleric.forge-domain.channel-divinity-artisan-s-blessing.description": {
+    "en": "An hour of ritual smithing creates a simple metal item worth up to 100 gp.",
+    "zh-CN": "进行一小时的锻造仪式，可创造价值至多 100 金币的简单金属物品。"
+  },
+  "callingMaterial.subclassFeature.cleric.forge-domain.soul-of-the-forge.name": {
+    "en": "Soul of the Forge",
+    "zh-CN": "锻造之魂"
+  },
+  "callingMaterial.subclassFeature.cleric.forge-domain.soul-of-the-forge.description": {
+    "en": "+1 AC while wearing heavy armor, and resistance to fire damage.",
+    "zh-CN": "穿重甲时护甲等级增加 1，并具有火焰伤害抗性。"
+  },
+  "callingMaterial.subclassFeature.cleric.forge-domain.divine-strike.name": {
+    "en": "Divine Strike",
+    "zh-CN": "神圣打击"
+  },
+  "callingMaterial.subclassFeature.cleric.forge-domain.divine-strike.description": {
+    "en": "Once per turn a weapon hit deals an extra 1d8 fire damage, rising to 2d8 at 14th level.",
+    "zh-CN": "每回合一次，武器命中时额外造成 1d8 火焰伤害；14 级时增至 2d8。"
+  },
+  "callingMaterial.subclassFeature.cleric.forge-domain.saint-of-forge-and-fire.name": {
+    "en": "Saint of Forge and Fire",
+    "zh-CN": "锻造与火焰圣者"
+  },
+  "callingMaterial.subclassFeature.cleric.forge-domain.saint-of-forge-and-fire.description": {
+    "en": "Immunity to fire damage, and resistance to nonmagical bludgeoning, piercing and slashing while in heavy armor.",
+    "zh-CN": "免疫火焰伤害；穿重甲时，对非魔法钝击、穿刺和挥砍伤害具有抗性。"
+  },
+  "callingMaterial.subclassFeature.cleric.grave-domain.circle-of-mortality.name": {
+    "en": "Circle of Mortality",
+    "zh-CN": "生死循环"
+  },
+  "callingMaterial.subclassFeature.cleric.grave-domain.circle-of-mortality.description": {
+    "en": "Healing spells cast on a creature at 0 hit points heal the maximum; you can cast spare the dying at 30 feet as a bonus action.",
+    "zh-CN": "对生命值为 0 的生物施放治疗法术时，治疗量取最大值；可用附赠动作对 30 尺内目标施放维生术。"
+  },
+  "callingMaterial.subclassFeature.cleric.grave-domain.eyes-of-the-grave.name": {
+    "en": "Eyes of the Grave",
+    "zh-CN": "墓地之眼"
+  },
+  "callingMaterial.subclassFeature.cleric.grave-domain.eyes-of-the-grave.description": {
+    "en": "Detect undead within 60 feet as an action, a Wisdom-modifier number of times per long rest.",
+    "zh-CN": "用一个动作感知 60 尺内的亡灵，每次长休后的使用次数等于感知调整值。"
+  },
+  "callingMaterial.subclassFeature.cleric.grave-domain.channel-divinity-path-to-the-grave.name": {
+    "en": "Channel Divinity: Path to the Grave",
+    "zh-CN": "引导神力：通往坟墓之路"
+  },
+  "callingMaterial.subclassFeature.cleric.grave-domain.channel-divinity-path-to-the-grave.description": {
+    "en": "Curse a creature so the next attack against it has advantage and doubles its damage vulnerability for that hit.",
+    "zh-CN": "诅咒一个生物，使针对它的下一次攻击具有优势，并利用伤害易伤使该次命中的伤害翻倍。"
+  },
+  "callingMaterial.subclassFeature.cleric.grave-domain.sentinel-at-death-s-door.name": {
+    "en": "Sentinel at Death's Door",
+    "zh-CN": "死门守卫"
+  },
+  "callingMaterial.subclassFeature.cleric.grave-domain.sentinel-at-death-s-door.description": {
+    "en": "A reaction turns a critical hit against a creature within 30 feet into a normal hit, a Wisdom-modifier number of times per long rest.",
+    "zh-CN": "用反应将 30 尺内一个生物受到的重击改为普通命中，每次长休后的使用次数等于感知调整值。"
+  },
+  "callingMaterial.subclassFeature.cleric.grave-domain.potent-spellcasting.name": {
+    "en": "Potent Spellcasting",
+    "zh-CN": "强效施法"
+  },
+  "callingMaterial.subclassFeature.cleric.grave-domain.potent-spellcasting.description": {
+    "en": "Add your Wisdom modifier to the damage of your cleric cantrips.",
+    "zh-CN": "牧师戏法的伤害加上感知调整值。"
+  },
+  "callingMaterial.subclassFeature.cleric.grave-domain.keeper-of-souls.name": {
+    "en": "Keeper of Souls",
+    "zh-CN": "灵魂守护者"
+  },
+  "callingMaterial.subclassFeature.cleric.grave-domain.keeper-of-souls.description": {
+    "en": "Once per turn, when an enemy within 60 feet dies, an ally you can see regains hit points equal to its Hit Dice.",
+    "zh-CN": "每回合一次，60 尺内的敌人死亡时，一名你能看见的盟友恢复等于该敌人生命骰数量的生命值。"
+  },
+  "callingMaterial.subclassFeature.cleric.order-domain.bonus-proficiencies-order.name": {
+    "en": "Bonus Proficiencies (Order)",
+    "zh-CN": "额外熟练项（秩序）"
+  },
+  "callingMaterial.subclassFeature.cleric.order-domain.bonus-proficiencies-order.description": {
+    "en": "Heavy armor, plus proficiency in Intimidation or Persuasion.",
+    "zh-CN": "获得重甲熟练，以及威吓或游说技能的熟练。"
+  },
+  "callingMaterial.subclassFeature.cleric.order-domain.voice-of-authority.name": {
+    "en": "Voice of Authority",
+    "zh-CN": "权威之声"
+  },
+  "callingMaterial.subclassFeature.cleric.order-domain.voice-of-authority.description": {
+    "en": "After a spell of 1st level or higher targets an ally, that ally may use a reaction to make one weapon attack.",
+    "zh-CN": "用一环或更高环法术指定盟友为目标后，该盟友可用反应进行一次武器攻击。"
+  },
+  "callingMaterial.subclassFeature.cleric.order-domain.channel-divinity-order-s-demand.name": {
+    "en": "Channel Divinity: Order's Demand",
+    "zh-CN": "引导神力：秩序号令"
+  },
+  "callingMaterial.subclassFeature.cleric.order-domain.channel-divinity-order-s-demand.description": {
+    "en": "Creatures of your choice within 30 feet are charmed for a minute on a failed Wisdom save, and you may drop or push one of them 30 feet.",
+    "zh-CN": "30 尺内你选择的生物感知豁免失败时，被魅惑一分钟；还可放倒其中一个，或将其推开 30 尺。"
+  },
+  "callingMaterial.subclassFeature.cleric.order-domain.embodiment-of-the-law.name": {
+    "en": "Embodiment of the Law",
+    "zh-CN": "律法化身"
+  },
+  "callingMaterial.subclassFeature.cleric.order-domain.embodiment-of-the-law.description": {
+    "en": "A Wisdom-modifier number of times per long rest, cast an enchantment spell of 1st level or higher as a bonus action.",
+    "zh-CN": "可用附赠动作施放一环或更高环惑控系法术，每次长休后的使用次数等于感知调整值。"
+  },
+  "callingMaterial.subclassFeature.cleric.order-domain.divine-strike.name": {
+    "en": "Divine Strike",
+    "zh-CN": "神圣打击"
+  },
+  "callingMaterial.subclassFeature.cleric.order-domain.divine-strike.description": {
+    "en": "Once per turn a weapon hit deals an extra 1d8 psychic damage, rising to 2d8 at 14th level.",
+    "zh-CN": "每回合一次，武器命中时额外造成 1d8 心灵伤害；14 级时增至 2d8。"
+  },
+  "callingMaterial.subclassFeature.cleric.order-domain.order-s-wrath.name": {
+    "en": "Order's Wrath",
+    "zh-CN": "秩序之怒"
+  },
+  "callingMaterial.subclassFeature.cleric.order-domain.order-s-wrath.description": {
+    "en": "Once per turn, a creature you damage with Divine Strike takes an extra 2d8 psychic damage the next time an ally hits it.",
+    "zh-CN": "每回合一次，被你用神圣打击伤害的生物，在下一次被盟友命中时额外受到 2d8 心灵伤害。"
+  },
+  "callingMaterial.subclassFeature.cleric.peace-domain.implement-of-peace.name": {
+    "en": "Implement of Peace",
+    "zh-CN": "和平使者"
+  },
+  "callingMaterial.subclassFeature.cleric.peace-domain.implement-of-peace.description": {
+    "en": "Proficiency in Performance, Insight or Persuasion.",
+    "zh-CN": "获得表演、洞悉或游说技能的熟练。"
+  },
+  "callingMaterial.subclassFeature.cleric.peace-domain.emboldening-bond.name": {
+    "en": "Emboldening Bond",
+    "zh-CN": "鼓舞纽带"
+  },
+  "callingMaterial.subclassFeature.cleric.peace-domain.emboldening-bond.description": {
+    "en": "Bond a proficiency-bonus number of creatures for 10 minutes; while near each other they may add a d4 to an attack, check or save, once per turn.",
+    "zh-CN": "联结数量等于熟练加值的生物，持续十分钟；彼此靠近时，每回合一次，可使一次攻击、检定或豁免结果增加 d4。"
+  },
+  "callingMaterial.subclassFeature.cleric.peace-domain.channel-divinity-balm-of-peace.name": {
+    "en": "Channel Divinity: Balm of Peace",
+    "zh-CN": "引导神力：和平抚慰"
+  },
+  "callingMaterial.subclassFeature.cleric.peace-domain.channel-divinity-balm-of-peace.description": {
+    "en": "Move without provoking and heal each creature you pass within 5 feet for 2d6 + your Wisdom modifier.",
+    "zh-CN": "移动时不引发借机攻击，经过的每个距你 5 尺内的生物恢复 2d6 加感知调整值的生命值。"
+  },
+  "callingMaterial.subclassFeature.cleric.peace-domain.protective-bond.name": {
+    "en": "Protective Bond",
+    "zh-CN": "守护纽带"
+  },
+  "callingMaterial.subclassFeature.cleric.peace-domain.protective-bond.description": {
+    "en": "A bonded creature may use a reaction to teleport to another and take its damage instead.",
+    "zh-CN": "被联结的生物可用反应传送至另一个被联结者身旁，代其承受伤害。"
+  },
+  "callingMaterial.subclassFeature.cleric.peace-domain.potent-spellcasting.name": {
+    "en": "Potent Spellcasting",
+    "zh-CN": "强效施法"
+  },
+  "callingMaterial.subclassFeature.cleric.peace-domain.potent-spellcasting.description": {
+    "en": "Add your Wisdom modifier to the damage of your cleric cantrips.",
+    "zh-CN": "牧师戏法的伤害加上感知调整值。"
+  },
+  "callingMaterial.subclassFeature.cleric.peace-domain.expansive-bond.name": {
+    "en": "Expansive Bond",
+    "zh-CN": "延展纽带"
+  },
+  "callingMaterial.subclassFeature.cleric.peace-domain.expansive-bond.description": {
+    "en": "Emboldening Bond's range grows to 60 feet and Protective Bond halves the damage taken.",
+    "zh-CN": "鼓舞纽带的范围增至 60 尺，守护纽带所承受的伤害减半。"
+  },
+  "callingMaterial.subclassFeature.cleric.twilight-domain.bonus-proficiencies-twilight.name": {
+    "en": "Bonus Proficiencies (Twilight)",
+    "zh-CN": "额外熟练项（暮光）"
+  },
+  "callingMaterial.subclassFeature.cleric.twilight-domain.bonus-proficiencies-twilight.description": {
+    "en": "Martial weapons and heavy armor.",
+    "zh-CN": "获得军用武器和重甲的熟练。"
+  },
+  "callingMaterial.subclassFeature.cleric.twilight-domain.eyes-of-night.name": {
+    "en": "Eyes of Night",
+    "zh-CN": "夜之眼"
+  },
+  "callingMaterial.subclassFeature.cleric.twilight-domain.eyes-of-night.description": {
+    "en": "Darkvision out to 300 feet, shareable with a Wisdom-modifier number of creatures once per long rest.",
+    "zh-CN": "获得 300 尺黑暗视觉；每次长休后可分享一次，分享的生物数量等于感知调整值。"
+  },
+  "callingMaterial.subclassFeature.cleric.twilight-domain.vigilant-blessing.name": {
+    "en": "Vigilant Blessing",
+    "zh-CN": "警戒祝福"
+  },
+  "callingMaterial.subclassFeature.cleric.twilight-domain.vigilant-blessing.description": {
+    "en": "Touch a creature to give it advantage on its next initiative roll.",
+    "zh-CN": "触碰一个生物，使其下一次先攻掷骰具有优势。"
+  },
+  "callingMaterial.subclassFeature.cleric.twilight-domain.channel-divinity-twilight-sanctuary.name": {
+    "en": "Channel Divinity: Twilight Sanctuary",
+    "zh-CN": "引导神力：暮光庇护"
+  },
+  "callingMaterial.subclassFeature.cleric.twilight-domain.channel-divinity-twilight-sanctuary.description": {
+    "en": "A 30-foot aura for a minute that grants each ally either temporary hit points of 1d6 + cleric level or an end to a charm or fear effect, each round.",
+    "zh-CN": "形成范围 30 尺、持续一分钟的灵光；每轮使每名盟友获得 1d6 加牧师等级的临时生命值，或结束其一个魅惑或恐慌效果。"
+  },
+  "callingMaterial.subclassFeature.cleric.twilight-domain.steps-of-night.name": {
+    "en": "Steps of Night",
+    "zh-CN": "夜之步"
+  },
+  "callingMaterial.subclassFeature.cleric.twilight-domain.steps-of-night.description": {
+    "en": "A bonus action in dim light or darkness grants flight for a minute, a proficiency-bonus number of times per long rest.",
+    "zh-CN": "在昏暗光照或黑暗中，可用附赠动作获得飞行能力，持续一分钟，每次长休后的使用次数等于熟练加值。"
+  },
+  "callingMaterial.subclassFeature.cleric.twilight-domain.divine-strike.name": {
+    "en": "Divine Strike",
+    "zh-CN": "神圣打击"
+  },
+  "callingMaterial.subclassFeature.cleric.twilight-domain.divine-strike.description": {
+    "en": "Once per turn a weapon hit deals an extra 1d8 radiant damage, rising to 2d8 at 14th level.",
+    "zh-CN": "每回合一次，武器命中时额外造成 1d8 光耀伤害；14 级时增至 2d8。"
+  },
+  "callingMaterial.subclassFeature.cleric.twilight-domain.twilight-shroud.name": {
+    "en": "Twilight Shroud",
+    "zh-CN": "暮光帷幕"
+  },
+  "callingMaterial.subclassFeature.cleric.twilight-domain.twilight-shroud.description": {
+    "en": "Allies inside Twilight Sanctuary have half cover.",
+    "zh-CN": "暮光庇护范围内的盟友具有半身掩护。"
+  },
+  "callingMaterial.subclassFeature.cleric.arcana-domain.arcane-initiate.name": {
+    "en": "Arcane Initiate",
+    "zh-CN": "奥术学徒"
+  },
+  "callingMaterial.subclassFeature.cleric.arcana-domain.arcane-initiate.description": {
+    "en": "Proficiency in Arcana and two wizard cantrips of your choice.",
+    "zh-CN": "获得奥秘技能的熟练，并学会两个自选法师戏法。"
+  },
+  "callingMaterial.subclassFeature.cleric.arcana-domain.channel-divinity-arcane-abjuration.name": {
+    "en": "Channel Divinity: Arcane Abjuration",
+    "zh-CN": "引导神力：奥术驱逐"
+  },
+  "callingMaterial.subclassFeature.cleric.arcana-domain.channel-divinity-arcane-abjuration.description": {
+    "en": "Turn one celestial, elemental, fey or fiend within 30 feet on a failed Wisdom save, banishing weaker ones outright at higher levels.",
+    "zh-CN": "驱散 30 尺内一个感知豁免失败的天界生物、元素生物、妖精或邪魔；等级提高后，可直接放逐较弱的目标。"
+  },
+  "callingMaterial.subclassFeature.cleric.arcana-domain.spell-breaker.name": {
+    "en": "Spell Breaker",
+    "zh-CN": "破法者"
+  },
+  "callingMaterial.subclassFeature.cleric.arcana-domain.spell-breaker.description": {
+    "en": "Restoring hit points with a spell also ends one spell of equal or lower level on the target.",
+    "zh-CN": "用法术恢复目标生命值时，也会结束目标身上一个环数不高于该治疗法术的法术。"
+  },
+  "callingMaterial.subclassFeature.cleric.arcana-domain.potent-spellcasting.name": {
+    "en": "Potent Spellcasting",
+    "zh-CN": "强效施法"
+  },
+  "callingMaterial.subclassFeature.cleric.arcana-domain.potent-spellcasting.description": {
+    "en": "Add your Wisdom modifier to the damage of your cleric cantrips.",
+    "zh-CN": "牧师戏法的伤害加上感知调整值。"
+  },
+  "callingMaterial.subclassFeature.cleric.arcana-domain.arcane-mastery.name": {
+    "en": "Arcane Mastery",
+    "zh-CN": "奥术大师"
+  },
+  "callingMaterial.subclassFeature.cleric.arcana-domain.arcane-mastery.description": {
+    "en": "Add four wizard spells of 6th, 7th, 8th and 9th level to your cleric spell list.",
+    "zh-CN": "分别将一个六、七、八、九环法师法术加入牧师法术列表。"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-the-moon.combat-wild-shape.name": {
+    "en": "Combat Wild Shape",
+    "zh-CN": "战斗荒野形态"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-the-moon.combat-wild-shape.description": {
+    "en": "Wild Shape as a bonus action, and while transformed spend a spell slot as a bonus action to heal 1d8 per slot level.",
+    "zh-CN": "可用附赠动作进入荒野形态；变形期间，可用附赠动作消耗法术位治疗，每环恢复 1d8 生命值。"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-the-moon.circle-forms.name": {
+    "en": "Circle Forms",
+    "zh-CN": "结社形态"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-the-moon.circle-forms.description": {
+    "en": "Wild Shape into beasts of challenge rating 1 at 2nd level, and up to a third of your druid level rounded down from 6th level on.",
+    "zh-CN": "2 级时，可变为挑战等级为 1 的野兽；6 级起，挑战等级上限为德鲁伊等级的三分之一，向下取整。"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-the-moon.primal-strike.name": {
+    "en": "Primal Strike",
+    "zh-CN": "原始打击"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-the-moon.primal-strike.description": {
+    "en": "Your beast form's attacks count as magical for overcoming resistance.",
+    "zh-CN": "野兽形态的攻击在克服抗性时视为魔法攻击。"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-the-moon.elemental-wild-shape.name": {
+    "en": "Elemental Wild Shape",
+    "zh-CN": "元素荒野形态"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-the-moon.elemental-wild-shape.description": {
+    "en": "Spend two Wild Shape uses at once to become an air, earth, fire or water elemental.",
+    "zh-CN": "一次消耗两次荒野形态使用次数，可变为空气、土、火或水元素生物。"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-the-moon.thousand-forms.name": {
+    "en": "Thousand Forms",
+    "zh-CN": "千变万化"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-the-moon.thousand-forms.description": {
+    "en": "Cast alter self at will.",
+    "zh-CN": "可随意施放改变自身。"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-dreams.balm-of-the-summer-court.name": {
+    "en": "Balm of the Summer Court",
+    "zh-CN": "夏庭香膏"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-dreams.balm-of-the-summer-court.description": {
+    "en": "A pool of d6s equal to your druid level, spendable as a bonus action to heal a creature within 120 feet and give it temporary hit points; refills on a long rest.",
+    "zh-CN": "拥有数量等于德鲁伊等级的 d6 治疗骰，可用附赠动作消耗以治疗 120 尺内一个生物，并给予临时生命值；长休后恢复。"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-dreams.hearth-of-moonlight-and-shadow.name": {
+    "en": "Hearth of Moonlight and Shadow",
+    "zh-CN": "月光与暗影之炉"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-dreams.hearth-of-moonlight-and-shadow.description": {
+    "en": "A 30-foot camp during a rest that grants concealment, silence, and a bonus to Perception and Stealth for everyone inside.",
+    "zh-CN": "休息时形成范围 30 尺的营地，为其中所有人提供隐蔽、静音，以及察觉和隐匿检定加值。"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-dreams.hidden-paths.name": {
+    "en": "Hidden Paths",
+    "zh-CN": "隐秘路径"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-dreams.hidden-paths.description": {
+    "en": "A bonus action teleports you 60 feet, or a creature you touch 30 feet, a Wisdom-modifier number of times per long rest.",
+    "zh-CN": "用附赠动作将自己传送 60 尺，或将触碰的生物传送 30 尺，每次长休后的使用次数等于感知调整值。"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-dreams.walker-in-dreams.name": {
+    "en": "Walker in Dreams",
+    "zh-CN": "梦境行者"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-dreams.walker-in-dreams.description": {
+    "en": "After a short rest, cast dream, scrying or teleportation circle without a slot, the circle keyed to a place you have seen.",
+    "zh-CN": "短休后，可不消耗法术位施放托梦术、探知术或传送法阵；传送法阵连接至你见过的地点。"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-the-shepherd.speech-of-the-woods.name": {
+    "en": "Speech of the Woods",
+    "zh-CN": "林地之语"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-the-shepherd.speech-of-the-woods.description": {
+    "en": "You learn Sylvan and can speak with beasts.",
+    "zh-CN": "学会林地语，并可与野兽交谈。"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-the-shepherd.spirit-totem.name": {
+    "en": "Spirit Totem",
+    "zh-CN": "精魂图腾"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-the-shepherd.spirit-totem.description": {
+    "en": "A bonus action calls a 30-foot spirit aura for a minute, once per short or long rest: Bear grants temporary hit points and Strength advantage, Hawk grants attack advantage as a reaction and Perception advantage, Unicorn grants attack advantage against creatures in it and boosts your healing.",
+    "zh-CN": "用附赠动作召唤范围 30 尺的精魂灵光，持续一分钟，每次短休或长休后可用一次。熊：提供临时生命值和力量优势。鹰：可用反应提供攻击优势，并提供察觉优势。独角兽：对范围内的生物攻击时具有优势，并增强你的治疗。"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-the-shepherd.mighty-summoner.name": {
+    "en": "Mighty Summoner",
+    "zh-CN": "强大召唤者"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-the-shepherd.mighty-summoner.description": {
+    "en": "Creatures you conjure gain 2 extra hit points per Hit Die and their attacks count as magical.",
+    "zh-CN": "你召唤的生物每个生命骰额外获得 2 点生命值，其攻击视为魔法攻击。"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-the-shepherd.guardian-spirit.name": {
+    "en": "Guardian Spirit",
+    "zh-CN": "守护精魂"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-the-shepherd.guardian-spirit.description": {
+    "en": "Summoned creatures inside your Spirit Totem aura heal half your druid level at the end of your turns.",
+    "zh-CN": "精魂图腾范围内的召唤生物，在你的回合结束时恢复等于德鲁伊等级一半的生命值。"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-the-shepherd.faithful-summons.name": {
+    "en": "Faithful Summons",
+    "zh-CN": "忠诚召唤"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-the-shepherd.faithful-summons.description": {
+    "en": "When you drop to 0 hit points, four dire wolves appear and defend you for an hour; recharges on a long rest.",
+    "zh-CN": "生命值降至 0 时，四只恐狼出现并保护你一小时。长休后恢复使用次数。"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-spores.halo-of-spores.name": {
+    "en": "Halo of Spores",
+    "zh-CN": "孢子光环"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-spores.halo-of-spores.description": {
+    "en": "A reaction deals 1d4 necrotic damage to a creature within 10 feet on a failed Constitution save, scaling with druid level.",
+    "zh-CN": "用反应对 10 尺内体质豁免失败的生物造成 1d4 黯蚀伤害，伤害随德鲁伊等级提高。"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-spores.symbiotic-entity.name": {
+    "en": "Symbiotic Entity",
+    "zh-CN": "共生体"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-spores.symbiotic-entity.description": {
+    "en": "Spend a Wild Shape use to gain four temporary hit points per druid level and add 1d6 necrotic to melee weapon hits for 10 minutes.",
+    "zh-CN": "消耗一次荒野形态使用次数，每个德鲁伊等级获得 4 点临时生命值，近战武器命中时额外造成 1d6 黯蚀伤害，持续十分钟。"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-spores.fungal-infestation.name": {
+    "en": "Fungal Infestation",
+    "zh-CN": "真菌侵染"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-spores.fungal-infestation.description": {
+    "en": "A reaction reanimates a beast or humanoid that dies within 10 feet as a zombie under your command for an hour, a Wisdom-modifier number of times per long rest.",
+    "zh-CN": "用反应将 10 尺内死去的野兽或类人生物复生为受你指挥的僵尸，持续一小时，每次长休后的使用次数等于感知调整值。"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-spores.spreading-spores.name": {
+    "en": "Spreading Spores",
+    "zh-CN": "蔓延孢子"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-spores.spreading-spores.description": {
+    "en": "Hurl your spores into a 10-foot cube within 30 feet, damaging creatures that start their turn there instead of using Halo of Spores.",
+    "zh-CN": "将孢子抛至 30 尺内一个 10 尺立方体中，对在其中开始回合的生物造成伤害，替代孢子光环的使用。"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-spores.fungal-body.name": {
+    "en": "Fungal Body",
+    "zh-CN": "真菌之躯"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-spores.fungal-body.description": {
+    "en": "Immunity to blindness, deafness, fear and poison, and critical hits against you count as normal hits.",
+    "zh-CN": "免疫目盲、耳聋、恐慌和中毒，针对你的重击视为普通命中。"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-stars.star-map.name": {
+    "en": "Star Map",
+    "zh-CN": "星图"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-stars.star-map.description": {
+    "en": "A charted map serving as your spellcasting focus; you know guidance and can cast guiding bolt a proficiency-bonus number of times per long rest without a slot.",
+    "zh-CN": "一张作为施法法器的星图。掌握指引术；每次长休后，可不消耗法术位施放曳光弹，次数等于熟练加值。"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-stars.starry-form.name": {
+    "en": "Starry Form",
+    "zh-CN": "星辰形态"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-stars.starry-form.description": {
+    "en": "Spend a Wild Shape use to glow with a constellation for 10 minutes: Archer gives a bonus-action ranged attack for 1d8 + Wisdom radiant damage, Chalice heals a second creature whenever you cast a healing spell, Dragon lets you treat a d20 of 9 or lower as a 10 on Intelligence and Wisdom checks and concentration saves.",
+    "zh-CN": "消耗一次荒野形态使用次数，显现发光的星座，持续十分钟。弓箭手：可用附赠动作远程攻击，造成 1d8 加感知调整值的光耀伤害。圣杯：施放治疗法术时，额外治疗第二个生物。巨龙：智力、感知检定和专注豁免中，d20 掷出 9 或更低视为 10。"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-stars.cosmic-omen.name": {
+    "en": "Cosmic Omen",
+    "zh-CN": "宇宙征兆"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-stars.cosmic-omen.description": {
+    "en": "After a long rest, read your map for Weal or Woe; a reaction then adds or subtracts a d6 on a roll near you, a proficiency-bonus number of times per long rest.",
+    "zh-CN": "长休后，解读星图获得吉兆或凶兆；此后可用反应使附近一次掷骰结果增加或减少 d6，每次长休后的使用次数等于熟练加值。"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-stars.twinkling-constellations.name": {
+    "en": "Twinkling Constellations",
+    "zh-CN": "闪烁星座"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-stars.twinkling-constellations.description": {
+    "en": "Starry Form improves: Archer and Chalice roll 2d8, Dragon grants a 20-foot fly speed, and you may change constellation each turn.",
+    "zh-CN": "星辰形态增强：弓箭手和圣杯改为掷 2d8，巨龙提供 20 尺飞行速度，每回合都可改变星座。"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-stars.full-of-stars.name": {
+    "en": "Full of Stars",
+    "zh-CN": "繁星之躯"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-stars.full-of-stars.description": {
+    "en": "While in Starry Form you are partly incorporeal and resist bludgeoning, piercing and slashing damage.",
+    "zh-CN": "星辰形态中，你部分化为无实体形态，对钝击、穿刺和挥砍伤害具有抗性。"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-wildfire.summon-wildfire-spirit.name": {
+    "en": "Summon Wildfire Spirit",
+    "zh-CN": "召唤野火精魂"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-wildfire.summon-wildfire-spirit.description": {
+    "en": "Spend a Wild Shape use to summon a wildfire spirit companion that acts on your turn, with a fiery teleport that damages creatures around its arrival.",
+    "zh-CN": "消耗一次荒野形态使用次数，召唤在你回合行动的野火精魂伙伴；它的火焰传送会伤害抵达位置周围的生物。"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-wildfire.enhanced-bond.name": {
+    "en": "Enhanced Bond",
+    "zh-CN": "强化联结"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-wildfire.enhanced-bond.description": {
+    "en": "While the spirit is out, your fire and healing spells gain 1d8, and you may cast them from the spirit's position.",
+    "zh-CN": "精魂存在时，你的火焰和治疗法术增加 1d8，并可从精魂的位置施放。"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-wildfire.cauterizing-flames.name": {
+    "en": "Cauterizing Flames",
+    "zh-CN": "灼疗之焰"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-wildfire.cauterizing-flames.description": {
+    "en": "When a creature dies near you or the spirit, a flame springs up that either heals or burns the next creature to move through it for 2d10 + your Wisdom modifier.",
+    "zh-CN": "生物在你或精魂附近死亡时，会出现一团火焰，对下一个穿过的生物造成治疗或火焰伤害，数值为 2d10 加感知调整值。"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-wildfire.blazing-revival.name": {
+    "en": "Blazing Revival",
+    "zh-CN": "烈焰复苏"
+  },
+  "callingMaterial.subclassFeature.druid.circle-of-wildfire.blazing-revival.description": {
+    "en": "Once per long rest, dropping to 0 hit points destroys the spirit and returns you to half your hit point maximum instead.",
+    "zh-CN": "每次长休后可用一次。生命值降至 0 时，改为摧毁精魂，使你恢复至最大生命值的一半。"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-the-ancients.channel-divinity-nature-s-wrath.name": {
+    "en": "Channel Divinity: Nature's Wrath",
+    "zh-CN": "引导神力：自然之怒"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-the-ancients.channel-divinity-nature-s-wrath.description": {
+    "en": "Spectral vines restrain a creature within 10 feet that fails a Strength or Dexterity save.",
+    "zh-CN": "灵体藤蔓束缚 10 尺内一个力量或敏捷豁免失败的生物。"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-the-ancients.channel-divinity-turn-the-faithless.name": {
+    "en": "Channel Divinity: Turn the Faithless",
+    "zh-CN": "引导神力：驱散无信者"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-the-ancients.channel-divinity-turn-the-faithless.description": {
+    "en": "Fey and fiends within 30 feet that fail a Wisdom save are turned for a minute, and their disguises drop.",
+    "zh-CN": "30 尺内的妖精和邪魔感知豁免失败时，被驱散一分钟，并显露伪装下的真貌。"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-the-ancients.aura-of-warding.name": {
+    "en": "Aura of Warding",
+    "zh-CN": "防护灵光"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-the-ancients.aura-of-warding.description": {
+    "en": "You and allies within 10 feet have resistance to damage from spells, growing to 30 feet at 18th level.",
+    "zh-CN": "你和 10 尺内的盟友对法术伤害具有抗性，18 级时范围增至 30 尺。"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-the-ancients.undying-sentinel.name": {
+    "en": "Undying Sentinel",
+    "zh-CN": "不死哨兵"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-the-ancients.undying-sentinel.description": {
+    "en": "Once per long rest, drop to 1 hit point instead of 0, and you no longer age or weaken with time.",
+    "zh-CN": "每次长休后可用一次，生命值本应降至 0 时，改为保留 1 点；你也不再随时间衰老或衰弱。"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-the-ancients.elder-champion.name": {
+    "en": "Elder Champion",
+    "zh-CN": "古老勇士"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-the-ancients.elder-champion.description": {
+    "en": "For a minute: regain 10 hit points each turn, cast paladin spells as a bonus action, and enemies within 10 feet have disadvantage on saves against your spells and Channel Divinity.",
+    "zh-CN": "持续一分钟：每回合恢复 10 点生命值，可用附赠动作施放圣武士法术，10 尺内敌人对抗你的法术和引导神力时，豁免具有劣势。"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-vengeance.channel-divinity-abjure-enemy.name": {
+    "en": "Channel Divinity: Abjure Enemy",
+    "zh-CN": "引导神力：斥退敌人"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-vengeance.channel-divinity-abjure-enemy.description": {
+    "en": "One creature within 60 feet is frightened and its speed drops to 0 for a minute on a failed Wisdom save, half that on a success.",
+    "zh-CN": "60 尺内一个生物感知豁免失败时，恐慌且速度降至 0，持续一分钟；成功时效果减半。"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-vengeance.channel-divinity-vow-of-enmity.name": {
+    "en": "Channel Divinity: Vow of Enmity",
+    "zh-CN": "引导神力：仇敌誓言"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-vengeance.channel-divinity-vow-of-enmity.description": {
+    "en": "A bonus action grants advantage on attacks against one creature within 10 feet for a minute.",
+    "zh-CN": "用附赠动作，使对 10 尺内一个生物的攻击具有优势，持续一分钟。"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-vengeance.relentless-avenger.name": {
+    "en": "Relentless Avenger",
+    "zh-CN": "无情复仇者"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-vengeance.relentless-avenger.description": {
+    "en": "An opportunity-attack hit lets you move up to half your speed as part of the reaction, without provoking.",
+    "zh-CN": "借机攻击命中时，可作为该反应的一部分移动至多速度的一半，不引发借机攻击。"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-vengeance.soul-of-vengeance.name": {
+    "en": "Soul of Vengeance",
+    "zh-CN": "复仇之魂"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-vengeance.soul-of-vengeance.description": {
+    "en": "A reaction makes a melee attack against a creature under your Vow of Enmity when it attacks.",
+    "zh-CN": "仇敌誓言的目标攻击时，可用反应对其进行一次近战攻击。"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-vengeance.avenging-angel.name": {
+    "en": "Avenging Angel",
+    "zh-CN": "复仇天使"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-vengeance.avenging-angel.description": {
+    "en": "For an hour, gain a 60-foot flying speed and a 30-foot aura that frightens enemies who fail a Wisdom save, giving you advantage against them.",
+    "zh-CN": "持续一小时，获得 60 尺飞行速度和范围 30 尺的灵光；敌人感知豁免失败时恐慌，你对它们的攻击具有优势。"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-conquest.channel-divinity-conquering-presence.name": {
+    "en": "Channel Divinity: Conquering Presence",
+    "zh-CN": "引导神力：征服威仪"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-conquest.channel-divinity-conquering-presence.description": {
+    "en": "Every creature within 30 feet that fails a Wisdom save is frightened for a minute, saving again each turn.",
+    "zh-CN": "30 尺内感知豁免失败的每个生物恐慌一分钟，每回合可再次豁免。"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-conquest.channel-divinity-guided-strike.name": {
+    "en": "Channel Divinity: Guided Strike",
+    "zh-CN": "引导神力：引导打击"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-conquest.channel-divinity-guided-strike.description": {
+    "en": "Add +10 to one attack roll after seeing the result.",
+    "zh-CN": "看见一次攻击掷骰结果后，可使结果增加 10。"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-conquest.aura-of-conquest.name": {
+    "en": "Aura of Conquest",
+    "zh-CN": "征服灵光"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-conquest.aura-of-conquest.description": {
+    "en": "Frightened creatures within 10 feet have their speed reduced to 0 and take psychic damage equal to half your paladin level each turn; 30 feet at 18th level.",
+    "zh-CN": "10 尺内恐慌的生物速度降至 0，每回合受到等于圣武士等级一半的心灵伤害；18 级时范围增至 30 尺。"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-conquest.scornful-rebuke.name": {
+    "en": "Scornful Rebuke",
+    "zh-CN": "蔑视反斥"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-conquest.scornful-rebuke.description": {
+    "en": "A creature that hits you takes psychic damage equal to your Charisma modifier.",
+    "zh-CN": "命中你的生物受到等于魅力调整值的心灵伤害。"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-conquest.invincible-conqueror.name": {
+    "en": "Invincible Conqueror",
+    "zh-CN": "无敌征服者"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-conquest.invincible-conqueror.description": {
+    "en": "For a minute: resistance to all damage, an extra attack with the Attack action, and melee critical hits on a 19 or 20.",
+    "zh-CN": "持续一分钟：对所有伤害具有抗性，采取攻击动作时可额外攻击一次，近战攻击掷出 19 或 20 即可重击。"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-redemption.channel-divinity-emissary-of-peace.name": {
+    "en": "Channel Divinity: Emissary of Peace",
+    "zh-CN": "引导神力：和平使节"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-redemption.channel-divinity-emissary-of-peace.description": {
+    "en": "A +5 bonus to Persuasion checks for 10 minutes.",
+    "zh-CN": "游说检定获得 +5 加值，持续十分钟。"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-redemption.channel-divinity-rebuke-the-violent.name": {
+    "en": "Channel Divinity: Rebuke the Violent",
+    "zh-CN": "引导神力：反斥暴力"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-redemption.channel-divinity-rebuke-the-violent.description": {
+    "en": "A reaction deals the same damage back to an attacker who wounded someone near you, halved on a Wisdom save.",
+    "zh-CN": "附近有人受到伤害时，可用反应使攻击者受到同等伤害，感知豁免成功则减半。"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-redemption.aura-of-the-guardian.name": {
+    "en": "Aura of the Guardian",
+    "zh-CN": "守护者灵光"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-redemption.aura-of-the-guardian.description": {
+    "en": "A reaction takes the damage aimed at an ally within 10 feet onto yourself, ignoring resistance; 30 feet at 18th level.",
+    "zh-CN": "用反应代 10 尺内盟友承受伤害，该伤害无视抗性；18 级时范围增至 30 尺。"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-redemption.protective-spirit.name": {
+    "en": "Protective Spirit",
+    "zh-CN": "守护灵体"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-redemption.protective-spirit.description": {
+    "en": "Regain 1d6 + half your paladin level hit points at the end of your turn in combat when below half your maximum.",
+    "zh-CN": "战斗中，生命值不足最大值一半时，在你的回合结束恢复 1d6 加圣武士等级一半的生命值。"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-redemption.emissary-of-redemption.name": {
+    "en": "Emissary of Redemption",
+    "zh-CN": "救赎使节"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-redemption.emissary-of-redemption.description": {
+    "en": "Resistance to all damage from other creatures, and attackers take radiant damage equal to half of what they dealt you, until you attack or harm someone.",
+    "zh-CN": "对其他生物造成的所有伤害具有抗性，攻击者受到等于其对你所造成伤害一半的光耀伤害，持续至你攻击或伤害他人。"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-glory.channel-divinity-peerless-athlete.name": {
+    "en": "Channel Divinity: Peerless Athlete",
+    "zh-CN": "引导神力：无双健将"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-glory.channel-divinity-peerless-athlete.description": {
+    "en": "For 10 minutes, advantage on Athletics and Acrobatics, extra carrying capacity, and 10 extra feet of jump distance.",
+    "zh-CN": "持续十分钟：运动和特技检定具有优势，负重能力提高，跳跃距离增加 10 尺。"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-glory.channel-divinity-inspiring-smite.name": {
+    "en": "Channel Divinity: Inspiring Smite",
+    "zh-CN": "引导神力：鼓舞神圣斩"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-glory.channel-divinity-inspiring-smite.description": {
+    "en": "After a Divine Smite, hand out temporary hit points of 2d8 + paladin level split among creatures within 30 feet.",
+    "zh-CN": "使用神圣斩后，可在 30 尺内的生物之间分配总计 2d8 加圣武士等级的临时生命值。"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-glory.aura-of-alacrity.name": {
+    "en": "Aura of Alacrity",
+    "zh-CN": "迅捷灵光"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-glory.aura-of-alacrity.description": {
+    "en": "Your speed rises by 10 feet, and allies within 5 feet gain 10 feet of speed until their next turn; 10 feet of aura at 18th level.",
+    "zh-CN": "你的速度增加 10 尺，5 尺内的盟友速度增加 10 尺，持续至其下一回合；18 级时灵光范围增至 10 尺。"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-glory.glorious-defense.name": {
+    "en": "Glorious Defense",
+    "zh-CN": "荣耀防御"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-glory.glorious-defense.description": {
+    "en": "A reaction adds your Charisma modifier to the AC of yourself or an ally within 10 feet, and a resulting miss lets you attack the attacker; a Charisma-modifier number of times per long rest.",
+    "zh-CN": "用反应使你或 10 尺内盟友的护甲等级增加你的魅力调整值；若因此使攻击未命中，你可攻击该攻击者。每次长休后的使用次数等于魅力调整值。"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-glory.living-legend.name": {
+    "en": "Living Legend",
+    "zh-CN": "活着的传奇"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-glory.living-legend.description": {
+    "en": "For a minute: advantage on Charisma checks, a missed attack can be rerolled once per turn, and failed saves can be turned into successes once per turn.",
+    "zh-CN": "持续一分钟：魅力检定具有优势，每回合可重掷一次未命中的攻击，并可将一次失败的豁免改为成功。"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-the-watchers.channel-divinity-watcher-s-will.name": {
+    "en": "Channel Divinity: Watcher's Will",
+    "zh-CN": "引导神力：守望者意志"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-the-watchers.channel-divinity-watcher-s-will.description": {
+    "en": "You and up to your Charisma modifier in allies gain advantage on Intelligence, Wisdom and Charisma saves for a minute.",
+    "zh-CN": "你和至多等于魅力调整值数量的盟友，进行智力、感知和魅力豁免时具有优势，持续一分钟。"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-the-watchers.channel-divinity-abjure-the-extraplanar.name": {
+    "en": "Channel Divinity: Abjure the Extraplanar",
+    "zh-CN": "引导神力：驱逐异界生物"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-the-watchers.channel-divinity-abjure-the-extraplanar.description": {
+    "en": "Aberrations, celestials, elementals, fey and fiends within 30 feet that fail a Wisdom save are turned for a minute.",
+    "zh-CN": "30 尺内的异怪、天界生物、元素生物、妖精和邪魔，感知豁免失败时被驱散一分钟。"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-the-watchers.aura-of-the-sentinel.name": {
+    "en": "Aura of the Sentinel",
+    "zh-CN": "哨卫灵光"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-the-watchers.aura-of-the-sentinel.description": {
+    "en": "You and allies within 10 feet add your proficiency bonus to initiative; 30 feet at 18th level.",
+    "zh-CN": "你和 10 尺内盟友的先攻加上你的熟练加值；18 级时范围增至 30 尺。"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-the-watchers.vigilant-rebuke.name": {
+    "en": "Vigilant Rebuke",
+    "zh-CN": "警戒反斥"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-the-watchers.vigilant-rebuke.description": {
+    "en": "A reaction deals 2d8 + Charisma force damage to a creature whose spell or effect you just saved against.",
+    "zh-CN": "刚成功豁免一个生物的法术或效果后，可用反应对其造成 2d8 加魅力调整值的力场伤害。"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-the-watchers.mortal-bulwark.name": {
+    "en": "Mortal Bulwark",
+    "zh-CN": "凡世壁垒"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-the-watchers.mortal-bulwark.description": {
+    "en": "For a minute: truesight to 120 feet, advantage on attacks against aberrations, celestials, elementals, fey and fiends, and a hit can banish one to its home plane on a failed Charisma save.",
+    "zh-CN": "持续一分钟：获得 120 尺真实视觉，攻击异怪、天界生物、元素生物、妖精和邪魔时具有优势；命中时，若目标魅力豁免失败，可将其放逐至原生位面。"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-the-crown.channel-divinity-champion-challenge.name": {
+    "en": "Channel Divinity: Champion Challenge",
+    "zh-CN": "引导神力：勇士挑战"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-the-crown.channel-divinity-champion-challenge.description": {
+    "en": "Creatures of your choice within 30 feet that fail a Wisdom save cannot move more than 30 feet away from you.",
+    "zh-CN": "30 尺内你选择的生物，感知豁免失败时不能移动到距你超过 30 尺的位置。"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-the-crown.channel-divinity-turn-the-tide.name": {
+    "en": "Channel Divinity: Turn the Tide",
+    "zh-CN": "引导神力：扭转战局"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-the-crown.channel-divinity-turn-the-tide.description": {
+    "en": "Creatures of your choice within 30 feet below half hit points regain 1d6 + your Charisma modifier hit points.",
+    "zh-CN": "30 尺内你选择的、生命值不足一半的生物，恢复 1d6 加魅力调整值的生命值。"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-the-crown.divine-allegiance.name": {
+    "en": "Divine Allegiance",
+    "zh-CN": "神圣效忠"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-the-crown.divine-allegiance.description": {
+    "en": "A reaction takes the damage aimed at a creature within 5 feet onto yourself, ignoring resistance.",
+    "zh-CN": "用反应代 5 尺内一个生物承受伤害，该伤害无视抗性。"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-the-crown.unyielding-spirit.name": {
+    "en": "Unyielding Spirit",
+    "zh-CN": "不屈精神"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-the-crown.unyielding-spirit.description": {
+    "en": "Advantage on saving throws against being paralyzed or stunned.",
+    "zh-CN": "对抗麻痹或震慑的豁免具有优势。"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-the-crown.exalted-champion.name": {
+    "en": "Exalted Champion",
+    "zh-CN": "崇高勇士"
+  },
+  "callingMaterial.subclassFeature.paladin.oath-of-the-crown.exalted-champion.description": {
+    "en": "For an hour: resistance to nonmagical weapon damage, advantage on Wisdom saves for you and allies within 30 feet, and death saves at advantage for the same.",
+    "zh-CN": "持续一小时：对非魔法武器伤害具有抗性，你和 30 尺内盟友的感知豁免及死亡豁免具有优势。"
+  },
+  "callingMaterial.subclassFeature.paladin.oathbreaker.channel-divinity-control-undead.name": {
+    "en": "Channel Divinity: Control Undead",
+    "zh-CN": "引导神力：控制亡灵"
+  },
+  "callingMaterial.subclassFeature.paladin.oathbreaker.channel-divinity-control-undead.description": {
+    "en": "One undead of CR at or below your level within 30 feet obeys you for 24 hours on a failed Charisma save.",
+    "zh-CN": "30 尺内一个挑战等级不高于你等级的亡灵，魅力豁免失败时听从你指挥，持续 24 小时。"
+  },
+  "callingMaterial.subclassFeature.paladin.oathbreaker.channel-divinity-dreadful-aspect.name": {
+    "en": "Channel Divinity: Dreadful Aspect",
+    "zh-CN": "引导神力：恐怖面貌"
+  },
+  "callingMaterial.subclassFeature.paladin.oathbreaker.channel-divinity-dreadful-aspect.description": {
+    "en": "Creatures of your choice within 30 feet that fail a Wisdom save are frightened for a minute.",
+    "zh-CN": "30 尺内你选择的生物，感知豁免失败时恐慌一分钟。"
+  },
+  "callingMaterial.subclassFeature.paladin.oathbreaker.aura-of-hate.name": {
+    "en": "Aura of Hate",
+    "zh-CN": "憎恨灵光"
+  },
+  "callingMaterial.subclassFeature.paladin.oathbreaker.aura-of-hate.description": {
+    "en": "You, fiends and undead within 10 feet add your Charisma modifier to melee weapon damage; 30 feet at 18th level.",
+    "zh-CN": "你以及 10 尺内的邪魔和亡灵，近战武器伤害加上你的魅力调整值；18 级时范围增至 30 尺。"
+  },
+  "callingMaterial.subclassFeature.paladin.oathbreaker.supernatural-resistance.name": {
+    "en": "Supernatural Resistance",
+    "zh-CN": "超自然抗性"
+  },
+  "callingMaterial.subclassFeature.paladin.oathbreaker.supernatural-resistance.description": {
+    "en": "Resistance to nonmagical bludgeoning, piercing and slashing damage.",
+    "zh-CN": "对非魔法钝击、穿刺和挥砍伤害具有抗性。"
+  },
+  "callingMaterial.subclassFeature.paladin.oathbreaker.dread-lord.name": {
+    "en": "Dread Lord",
+    "zh-CN": "恐怖领主"
+  },
+  "callingMaterial.subclassFeature.paladin.oathbreaker.dread-lord.description": {
+    "en": "For a minute: a 30-foot aura of magical darkness that deals 4d10 psychic damage to enemies who start their turn in it, gives attackers disadvantage against you, and lets you make a spectral 4d10 psychic attack as a bonus action.",
+    "zh-CN": "持续一分钟，形成范围 30 尺的魔法黑暗灵光；敌人在其中开始回合时受到 4d10 心灵伤害，对你的攻击具有劣势，你还可用附赠动作进行一次造成 4d10 心灵伤害的灵体攻击。"
   }
 });

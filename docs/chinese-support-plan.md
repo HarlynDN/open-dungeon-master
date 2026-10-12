@@ -32,8 +32,8 @@ flow remains incomplete; the review-repair checkpoint is a separate scoped task.
 | Locale foundation | Registry, persistence, browser fallback, typed complete catalogs, model locale policy, classified token proxy, chapter budget, CJK retrieval, IME protection | Real prompt-usage calibration; keep legacy campaign/history regressions |
 | DM safety | Per-event engine conclusions with English/Chinese renderers; AI prose separated; one text-only correction and safe fallback; shared localized enemy names and held-resource names/IDs; scoped resource aliases and ambiguity retries; real Codex combat/resource acceptance | Untracked feature/reaction options and broader spell/condition/pack coverage; conservative regex coverage is not full language understanding |
 | Embeddings | Original English deployment default retained; explicit multilingual opt-in; fixed bilingual calibration/holdout and hard-negative policy | Broader pack quality; opt-in affects English campaigns and rebuilds indexes |
-| UI | **377/440** covered files, **0** pending literal sites, **16312** message keys; scoped AST gate; earlier play/session surfaces plus hand labels/targets/area selection, campaign-locale action sentences, native previews, basic/reaction rules, common casting refusals, spell selectors, all 113 owned mechanic notes, 103 native technique and 23 maneuver labels, attack/bonus-route and material/ritual refusals, built-in form attack names and verified current-actor labels, correction/multi-picker chrome, native downtime facts and inventory/vitals approval/player-trade controls, guided progression chrome, rest/loot/travel moments and all native option summaries, owned generic feature/feat summaries, feat choice controls, campaign/map entry notices the complete app help walkthrough story/chronicle/arc controls, NPC roster review, campaign model controls market/shelf/trade, party-lead, quest-log/faction controls plus facts, pinned memories, context-trace presentation and passage edit/reroll/action controls and character/companion entry and private-chat/media presentation and audit/timeline controls and dice tray/source controls and board movement/camera/order/area/target/drawing and DM placement/measurement controls | 63 zero-literal owners still require dynamic composition/source-ownership review; locale-sensitive selection thresholds and backend/native messages remain audit items; file fraction is not overall completion or an effort estimate |
-| Character creation/material | Identity, ancestry, class introductions, ability allocation, gear, spell book/preparation and finish preview; 517 spell and 228 equipment names plus all 239 SRD magic-item titles and 52 exact variants; 257-entry contextual terminology policy and lint gate; 415/415 static registered resource names and guidance shared with DM references; 135/135 bundled option names/descriptions plus all 20 nonempty requirement frames; 146 shared/class-specific feature summaries, 54 native feat summaries and owned feat choice controls; four native pregen card summaries and backstories; 261 authored feature names/short summaries across 51 barbarian/fighter/rogue/sorcerer/warlock/wizard subclasses; original-source review records | Remaining specific/themed feature and magic-item material; dynamic free-cast resources and user-authored/pack text remain outside the static resource review |
+| UI | **377/440** covered files, **0** pending literal sites, **16600** message keys; scoped AST gate; earlier play/session surfaces plus hand labels/targets/area selection, campaign-locale action sentences, native previews, basic/reaction rules, common casting refusals, spell selectors, all 113 owned mechanic notes, 103 native technique and 23 maneuver labels, attack/bonus-route and material/ritual refusals, built-in form attack names and verified current-actor labels, correction/multi-picker chrome, native downtime facts and inventory/vitals approval/player-trade controls, guided progression chrome, rest/loot/travel moments and all native option summaries, owned generic feature/feat summaries, feat choice controls, campaign/map entry notices the complete app help walkthrough story/chronicle/arc controls, NPC roster review, campaign model controls market/shelf/trade, party-lead, quest-log/faction controls plus facts, pinned memories, context-trace presentation and passage edit/reroll/action controls and character/companion entry and private-chat/media presentation and audit/timeline controls and dice tray/source controls and board movement/camera/order/area/target/drawing and DM placement/measurement controls | 63 zero-literal owners still require dynamic composition/source-ownership review; locale-sensitive selection thresholds and backend/native messages remain audit items; file fraction is not overall completion or an effort estimate |
+| Character creation/material | Identity, ancestry, class introductions, ability allocation, gear, spell book/preparation and finish preview; 517 spell and 228 equipment names plus all 239 SRD magic-item titles and 52 exact variants; 257-entry contextual terminology policy and lint gate; 415/415 static registered resource names and guidance shared with DM references; 135/135 bundled option names/descriptions plus all 20 nonempty requirement frames; 146 shared/class-specific feature summaries, 54 native feat summaries and owned feat choice controls; four native pregen card summaries and backstories; 405 authored feature names/short summaries across 78 subclasses in nine classes; original-source review records | Remaining specific/themed feature and magic-item material; dynamic free-cast resources and user-authored/pack text remain outside the static resource review |
 | Player system logs | Structured rule diagnostics, engine-generated combat conclusions and structured audit/timeline presentation retain English protocol semantics with localized display | Typed party-item/coin/banked-XP logs now persist campaign-locale text and original facts; other player-visible log templates remain pending; model-facing English tool results remain independent |
 | Resource delivery | UI/content/help scopes; selected-locale help loads independently on open, with retry; character/campaign boundaries; generated resources checked by lint; production Turbopack build and anonymous bilingual browser switch/reload succeed; home/character/campaign SSR and initial-script payloads measured | Hydrated/lazy network totals, authenticated campaign switching and active-play browser acceptance; route-level JS payload remains large |
 | Local Chinese TTS | Locale-driven voice prefixes/defaults, Chinese single narrator, Unicode sentence/hard limits, campaign-language voice discovery and previews, cache isolation and Chinese failure UI implemented; mock transport/queue and English compatibility checks pass | Service not configured; actual model/voice/dependency versions, numeric/name pronunciation, browser/native playback, stream/replay/mute/retry and final bilingual journey acceptance remain open |
@@ -90,33 +90,35 @@ golden. Logs: /tmp/odm-core-feature-{catalog,types,lint,test}.log. Coverage rema
 closure of CallingStep/SheetParts. No model, audio, build or unrelated name
 acceptance was repeated.
 
-Expanded-feature delivery covers all 261 authored source features across 51
-subclasses of barbarian, fighter, rogue, sorcerer, warlock and wizard in
-src/lib/srd/subclasses.json. The current arcane batch adds 132 entries across 27
-subclasses: 37 sorcerer, 36 warlock and 59 wizard features. The remaining seven
-classes have 272 source rows: bard 30, cleric 76, druid 28, monk 41, paladin 40,
-ranger 35 and artificer 22. Keep their material explicitly open.
+Expanded-feature delivery covers 405/533 authored source features across 78
+subclasses of barbarian, fighter, rogue, sorcerer, warlock, wizard, cleric, druid
+and paladin in src/lib/srd/subclasses.json. The current divine/nature batch adds
+144 entries across 27 subclasses: 76 cleric, 28 druid and 40 paladin features.
+The remaining four classes have 128 source rows: bard 30, monk 41, ranger 35 and
+artificer 22. Keep their material explicitly open.
 
-Names reuse existing exact-name terminology; descriptions are original Chinese
-translations of repository-authored summaries. Subclass-specific meanings remain
-separate, including the Bladesinging Extra Attack that can replace one attack
-with a cantrip. Translation keys stay in callingMaterial content resources;
-client adapters import only identities/keys. Class/name/full-source matching
-preserves changed or appended prose and unrelated-class text. Creation and sheet
-components share this projection; stored grants, rule/tool inputs, world-pack
-overlays, story names and English rendering remain unchanged. This is a source
-translation batch, not a revision of engine mechanics or third-party rulebook
-prose.
+Names reuse existing terminology; descriptions are original Chinese translations
+of repository-authored summaries. Same-name features retain their source-specific
+meanings: the eight expanded domains' Divine Strike damage types, cleric versus
+paladin Guided Strike timing, and Bladesinging Extra Attack are separate bindings.
+Combat Wild Shape now consistently displays 战斗荒野形态 in material, action
+labels and the glossary, following the established 荒野形态 base name.
+Translation keys stay in callingMaterial content resources; client adapters import
+only identities/keys. Class/name/full-source matching preserves changed/appended
+prose and unrelated-class text. Creation and sheet components share the projection;
+stored grants, rule/tool inputs, world-pack overlays, story names and English
+rendering remain unchanged. This is a source translation batch, not a revision
+of engine mechanics or third-party rulebook prose.
 
 One grouped catalog/type/changed-file lint gate and the existing material script
-passed. New entries bind to the actual authored source and describeFeature
-resolver; representative bilingual creation/sheet cases include the three newly
-covered classes and specific wizard feature help. English render goldens,
+passed. All entries bind to actual authored source and describeFeature resolution;
+new bilingual creation/sheet cases exercise Nature/Tempest Divine Strike, Moon
+Combat Wild Shape and Conquest Guided Strike. Existing English render goldens,
 canonical IDs and explicit pack names/help remain intact. Coverage stays 377/440
-with zero literal sites; 264 new keys bring the catalog to 16312. Logs:
-/tmp/odm-arcane-feature-{catalog,types,lint,test}.log. No passed check was repeated,
-no new snapshots were generated, and no DM/audio/full-build acceptance was
-started for this material batch.
+with zero literal sites; 288 new keys bring the catalog to 16600. Logs:
+/tmp/odm-divine-feature-{catalog,types,lint,test}.log. No passed check was repeated,
+no snapshots were added, and no DM/audio/full-build acceptance was started for
+this material batch. Whole-owner closure and final acceptance remain open.
 
 ## Lightweight verification policy
 

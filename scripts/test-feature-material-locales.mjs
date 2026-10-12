@@ -107,6 +107,10 @@ for (const [classId, featureName, chinese, subclass = ''] of [
   ['sorcerer', 'Bastion of Law', '秩序堡垒', 'Clockwork Soul'],
   ['warlock', 'Healing Light', '治愈之光', 'The Celestial'],
   ['wizard', 'Extra Attack', '额外攻击', 'Bladesinging'],
+  ['cleric', 'Divine Strike', '神圣打击', 'Nature Domain'],
+  ['cleric', 'Divine Strike', '神圣打击', 'Tempest Domain'],
+  ['druid', 'Combat Wild Shape', '战斗荒野形态', 'Circle of the Moon'],
+  ['paladin', 'Channel Divinity: Guided Strike', '引导神力：引导打击', 'Oath of Conquest'],
 ]) {
   const feature = {name: featureName, source: 'class', level: 1};
   const klass = srdClassOptions().find(row => row.id === classId);
@@ -120,6 +124,9 @@ for (const [classId, featureName, chinese, subclass = ''] of [
     const tooltip = calling.elements().find(row => row.props.label === name && row.props.meta);
     assert(tooltip);
     assert.equal(tooltip.props.text, nativeFeatureHelp(classId, featureName, describeFeature(classId, subclass, featureName), locale));
+    if (classId === 'cleric' && featureName === 'Divine Strike' && locale === 'zh-CN') {
+      assert(tooltip.props.text.includes(subclass === 'Nature Domain' ? '冷冻、火焰或闪电' : '雷鸣'));
+    }
     assert(chips.render('FeatureChips', {features: [feature], classId, subclass}, locale).includes(name));
     assert.equal(chips.elements().find(row => row.props.items).props.items[0].id, featureName);
   }

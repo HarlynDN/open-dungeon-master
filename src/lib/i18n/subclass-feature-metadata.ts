@@ -1826,5 +1826,1013 @@ export const SUBCLASS_FEATURE_MATERIAL = [
     "name": "One with the Word",
     "nameKey": "callingMaterial.subclassFeature.wizard.order-of-scribes.one-with-the-word.name",
     "descriptionKey": "callingMaterial.subclassFeature.wizard.order-of-scribes.one-with-the-word.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Knowledge Domain",
+    "name": "Blessings of Knowledge",
+    "nameKey": "callingMaterial.subclassFeature.cleric.knowledge-domain.blessings-of-knowledge.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.knowledge-domain.blessings-of-knowledge.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Knowledge Domain",
+    "name": "Channel Divinity: Knowledge of the Ages",
+    "nameKey": "callingMaterial.subclassFeature.cleric.knowledge-domain.channel-divinity-knowledge-of-the-ages.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.knowledge-domain.channel-divinity-knowledge-of-the-ages.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Knowledge Domain",
+    "name": "Channel Divinity: Read Thoughts",
+    "nameKey": "callingMaterial.subclassFeature.cleric.knowledge-domain.channel-divinity-read-thoughts.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.knowledge-domain.channel-divinity-read-thoughts.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Knowledge Domain",
+    "name": "Potent Spellcasting",
+    "nameKey": "callingMaterial.subclassFeature.cleric.knowledge-domain.potent-spellcasting.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.knowledge-domain.potent-spellcasting.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Knowledge Domain",
+    "name": "Visions of the Past",
+    "nameKey": "callingMaterial.subclassFeature.cleric.knowledge-domain.visions-of-the-past.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.knowledge-domain.visions-of-the-past.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Light Domain",
+    "name": "Bonus Cantrip (Light)",
+    "nameKey": "callingMaterial.subclassFeature.cleric.light-domain.bonus-cantrip-light.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.light-domain.bonus-cantrip-light.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Light Domain",
+    "name": "Warding Flare",
+    "nameKey": "callingMaterial.subclassFeature.cleric.light-domain.warding-flare.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.light-domain.warding-flare.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Light Domain",
+    "name": "Channel Divinity: Radiance of the Dawn",
+    "nameKey": "callingMaterial.subclassFeature.cleric.light-domain.channel-divinity-radiance-of-the-dawn.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.light-domain.channel-divinity-radiance-of-the-dawn.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Light Domain",
+    "name": "Improved Warding Flare",
+    "nameKey": "callingMaterial.subclassFeature.cleric.light-domain.improved-warding-flare.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.light-domain.improved-warding-flare.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Light Domain",
+    "name": "Potent Spellcasting",
+    "nameKey": "callingMaterial.subclassFeature.cleric.light-domain.potent-spellcasting.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.light-domain.potent-spellcasting.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Light Domain",
+    "name": "Corona of Light",
+    "nameKey": "callingMaterial.subclassFeature.cleric.light-domain.corona-of-light.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.light-domain.corona-of-light.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Nature Domain",
+    "name": "Acolyte of Nature",
+    "nameKey": "callingMaterial.subclassFeature.cleric.nature-domain.acolyte-of-nature.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.nature-domain.acolyte-of-nature.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Nature Domain",
+    "name": "Bonus Proficiency (heavy armor)",
+    "nameKey": "callingMaterial.subclassFeature.cleric.nature-domain.bonus-proficiency-heavy-armor.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.nature-domain.bonus-proficiency-heavy-armor.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Nature Domain",
+    "name": "Channel Divinity: Charm Animals and Plants",
+    "nameKey": "callingMaterial.subclassFeature.cleric.nature-domain.channel-divinity-charm-animals-and-plants.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.nature-domain.channel-divinity-charm-animals-and-plants.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Nature Domain",
+    "name": "Dampen Elements",
+    "nameKey": "callingMaterial.subclassFeature.cleric.nature-domain.dampen-elements.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.nature-domain.dampen-elements.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Nature Domain",
+    "name": "Divine Strike",
+    "nameKey": "callingMaterial.subclassFeature.cleric.nature-domain.divine-strike.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.nature-domain.divine-strike.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Nature Domain",
+    "name": "Master of Nature",
+    "nameKey": "callingMaterial.subclassFeature.cleric.nature-domain.master-of-nature.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.nature-domain.master-of-nature.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Tempest Domain",
+    "name": "Bonus Proficiencies (Tempest)",
+    "nameKey": "callingMaterial.subclassFeature.cleric.tempest-domain.bonus-proficiencies-tempest.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.tempest-domain.bonus-proficiencies-tempest.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Tempest Domain",
+    "name": "Wrath of the Storm",
+    "nameKey": "callingMaterial.subclassFeature.cleric.tempest-domain.wrath-of-the-storm.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.tempest-domain.wrath-of-the-storm.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Tempest Domain",
+    "name": "Channel Divinity: Destructive Wrath",
+    "nameKey": "callingMaterial.subclassFeature.cleric.tempest-domain.channel-divinity-destructive-wrath.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.tempest-domain.channel-divinity-destructive-wrath.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Tempest Domain",
+    "name": "Thunderbolt Strike",
+    "nameKey": "callingMaterial.subclassFeature.cleric.tempest-domain.thunderbolt-strike.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.tempest-domain.thunderbolt-strike.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Tempest Domain",
+    "name": "Divine Strike",
+    "nameKey": "callingMaterial.subclassFeature.cleric.tempest-domain.divine-strike.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.tempest-domain.divine-strike.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Tempest Domain",
+    "name": "Stormborn",
+    "nameKey": "callingMaterial.subclassFeature.cleric.tempest-domain.stormborn.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.tempest-domain.stormborn.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Trickery Domain",
+    "name": "Blessing of the Trickster",
+    "nameKey": "callingMaterial.subclassFeature.cleric.trickery-domain.blessing-of-the-trickster.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.trickery-domain.blessing-of-the-trickster.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Trickery Domain",
+    "name": "Channel Divinity: Invoke Duplicity",
+    "nameKey": "callingMaterial.subclassFeature.cleric.trickery-domain.channel-divinity-invoke-duplicity.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.trickery-domain.channel-divinity-invoke-duplicity.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Trickery Domain",
+    "name": "Channel Divinity: Cloak of Shadows",
+    "nameKey": "callingMaterial.subclassFeature.cleric.trickery-domain.channel-divinity-cloak-of-shadows.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.trickery-domain.channel-divinity-cloak-of-shadows.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Trickery Domain",
+    "name": "Divine Strike",
+    "nameKey": "callingMaterial.subclassFeature.cleric.trickery-domain.divine-strike.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.trickery-domain.divine-strike.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Trickery Domain",
+    "name": "Improved Duplicity",
+    "nameKey": "callingMaterial.subclassFeature.cleric.trickery-domain.improved-duplicity.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.trickery-domain.improved-duplicity.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "War Domain",
+    "name": "Bonus Proficiencies (War)",
+    "nameKey": "callingMaterial.subclassFeature.cleric.war-domain.bonus-proficiencies-war.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.war-domain.bonus-proficiencies-war.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "War Domain",
+    "name": "War Priest",
+    "nameKey": "callingMaterial.subclassFeature.cleric.war-domain.war-priest.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.war-domain.war-priest.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "War Domain",
+    "name": "Channel Divinity: Guided Strike",
+    "nameKey": "callingMaterial.subclassFeature.cleric.war-domain.channel-divinity-guided-strike.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.war-domain.channel-divinity-guided-strike.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "War Domain",
+    "name": "Channel Divinity: War God's Blessing",
+    "nameKey": "callingMaterial.subclassFeature.cleric.war-domain.channel-divinity-war-god-s-blessing.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.war-domain.channel-divinity-war-god-s-blessing.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "War Domain",
+    "name": "Divine Strike",
+    "nameKey": "callingMaterial.subclassFeature.cleric.war-domain.divine-strike.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.war-domain.divine-strike.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "War Domain",
+    "name": "Avatar of Battle",
+    "nameKey": "callingMaterial.subclassFeature.cleric.war-domain.avatar-of-battle.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.war-domain.avatar-of-battle.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Death Domain",
+    "name": "Bonus Proficiency (martial weapons)",
+    "nameKey": "callingMaterial.subclassFeature.cleric.death-domain.bonus-proficiency-martial-weapons.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.death-domain.bonus-proficiency-martial-weapons.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Death Domain",
+    "name": "Reaper",
+    "nameKey": "callingMaterial.subclassFeature.cleric.death-domain.reaper.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.death-domain.reaper.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Death Domain",
+    "name": "Channel Divinity: Touch of Death",
+    "nameKey": "callingMaterial.subclassFeature.cleric.death-domain.channel-divinity-touch-of-death.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.death-domain.channel-divinity-touch-of-death.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Death Domain",
+    "name": "Inescapable Destruction",
+    "nameKey": "callingMaterial.subclassFeature.cleric.death-domain.inescapable-destruction.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.death-domain.inescapable-destruction.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Death Domain",
+    "name": "Divine Strike",
+    "nameKey": "callingMaterial.subclassFeature.cleric.death-domain.divine-strike.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.death-domain.divine-strike.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Death Domain",
+    "name": "Improved Reaper",
+    "nameKey": "callingMaterial.subclassFeature.cleric.death-domain.improved-reaper.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.death-domain.improved-reaper.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Forge Domain",
+    "name": "Bonus Proficiencies (Forge)",
+    "nameKey": "callingMaterial.subclassFeature.cleric.forge-domain.bonus-proficiencies-forge.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.forge-domain.bonus-proficiencies-forge.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Forge Domain",
+    "name": "Blessing of the Forge",
+    "nameKey": "callingMaterial.subclassFeature.cleric.forge-domain.blessing-of-the-forge.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.forge-domain.blessing-of-the-forge.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Forge Domain",
+    "name": "Channel Divinity: Artisan's Blessing",
+    "nameKey": "callingMaterial.subclassFeature.cleric.forge-domain.channel-divinity-artisan-s-blessing.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.forge-domain.channel-divinity-artisan-s-blessing.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Forge Domain",
+    "name": "Soul of the Forge",
+    "nameKey": "callingMaterial.subclassFeature.cleric.forge-domain.soul-of-the-forge.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.forge-domain.soul-of-the-forge.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Forge Domain",
+    "name": "Divine Strike",
+    "nameKey": "callingMaterial.subclassFeature.cleric.forge-domain.divine-strike.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.forge-domain.divine-strike.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Forge Domain",
+    "name": "Saint of Forge and Fire",
+    "nameKey": "callingMaterial.subclassFeature.cleric.forge-domain.saint-of-forge-and-fire.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.forge-domain.saint-of-forge-and-fire.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Grave Domain",
+    "name": "Circle of Mortality",
+    "nameKey": "callingMaterial.subclassFeature.cleric.grave-domain.circle-of-mortality.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.grave-domain.circle-of-mortality.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Grave Domain",
+    "name": "Eyes of the Grave",
+    "nameKey": "callingMaterial.subclassFeature.cleric.grave-domain.eyes-of-the-grave.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.grave-domain.eyes-of-the-grave.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Grave Domain",
+    "name": "Channel Divinity: Path to the Grave",
+    "nameKey": "callingMaterial.subclassFeature.cleric.grave-domain.channel-divinity-path-to-the-grave.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.grave-domain.channel-divinity-path-to-the-grave.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Grave Domain",
+    "name": "Sentinel at Death's Door",
+    "nameKey": "callingMaterial.subclassFeature.cleric.grave-domain.sentinel-at-death-s-door.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.grave-domain.sentinel-at-death-s-door.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Grave Domain",
+    "name": "Potent Spellcasting",
+    "nameKey": "callingMaterial.subclassFeature.cleric.grave-domain.potent-spellcasting.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.grave-domain.potent-spellcasting.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Grave Domain",
+    "name": "Keeper of Souls",
+    "nameKey": "callingMaterial.subclassFeature.cleric.grave-domain.keeper-of-souls.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.grave-domain.keeper-of-souls.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Order Domain",
+    "name": "Bonus Proficiencies (Order)",
+    "nameKey": "callingMaterial.subclassFeature.cleric.order-domain.bonus-proficiencies-order.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.order-domain.bonus-proficiencies-order.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Order Domain",
+    "name": "Voice of Authority",
+    "nameKey": "callingMaterial.subclassFeature.cleric.order-domain.voice-of-authority.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.order-domain.voice-of-authority.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Order Domain",
+    "name": "Channel Divinity: Order's Demand",
+    "nameKey": "callingMaterial.subclassFeature.cleric.order-domain.channel-divinity-order-s-demand.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.order-domain.channel-divinity-order-s-demand.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Order Domain",
+    "name": "Embodiment of the Law",
+    "nameKey": "callingMaterial.subclassFeature.cleric.order-domain.embodiment-of-the-law.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.order-domain.embodiment-of-the-law.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Order Domain",
+    "name": "Divine Strike",
+    "nameKey": "callingMaterial.subclassFeature.cleric.order-domain.divine-strike.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.order-domain.divine-strike.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Order Domain",
+    "name": "Order's Wrath",
+    "nameKey": "callingMaterial.subclassFeature.cleric.order-domain.order-s-wrath.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.order-domain.order-s-wrath.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Peace Domain",
+    "name": "Implement of Peace",
+    "nameKey": "callingMaterial.subclassFeature.cleric.peace-domain.implement-of-peace.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.peace-domain.implement-of-peace.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Peace Domain",
+    "name": "Emboldening Bond",
+    "nameKey": "callingMaterial.subclassFeature.cleric.peace-domain.emboldening-bond.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.peace-domain.emboldening-bond.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Peace Domain",
+    "name": "Channel Divinity: Balm of Peace",
+    "nameKey": "callingMaterial.subclassFeature.cleric.peace-domain.channel-divinity-balm-of-peace.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.peace-domain.channel-divinity-balm-of-peace.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Peace Domain",
+    "name": "Protective Bond",
+    "nameKey": "callingMaterial.subclassFeature.cleric.peace-domain.protective-bond.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.peace-domain.protective-bond.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Peace Domain",
+    "name": "Potent Spellcasting",
+    "nameKey": "callingMaterial.subclassFeature.cleric.peace-domain.potent-spellcasting.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.peace-domain.potent-spellcasting.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Peace Domain",
+    "name": "Expansive Bond",
+    "nameKey": "callingMaterial.subclassFeature.cleric.peace-domain.expansive-bond.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.peace-domain.expansive-bond.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Twilight Domain",
+    "name": "Bonus Proficiencies (Twilight)",
+    "nameKey": "callingMaterial.subclassFeature.cleric.twilight-domain.bonus-proficiencies-twilight.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.twilight-domain.bonus-proficiencies-twilight.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Twilight Domain",
+    "name": "Eyes of Night",
+    "nameKey": "callingMaterial.subclassFeature.cleric.twilight-domain.eyes-of-night.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.twilight-domain.eyes-of-night.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Twilight Domain",
+    "name": "Vigilant Blessing",
+    "nameKey": "callingMaterial.subclassFeature.cleric.twilight-domain.vigilant-blessing.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.twilight-domain.vigilant-blessing.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Twilight Domain",
+    "name": "Channel Divinity: Twilight Sanctuary",
+    "nameKey": "callingMaterial.subclassFeature.cleric.twilight-domain.channel-divinity-twilight-sanctuary.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.twilight-domain.channel-divinity-twilight-sanctuary.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Twilight Domain",
+    "name": "Steps of Night",
+    "nameKey": "callingMaterial.subclassFeature.cleric.twilight-domain.steps-of-night.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.twilight-domain.steps-of-night.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Twilight Domain",
+    "name": "Divine Strike",
+    "nameKey": "callingMaterial.subclassFeature.cleric.twilight-domain.divine-strike.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.twilight-domain.divine-strike.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Twilight Domain",
+    "name": "Twilight Shroud",
+    "nameKey": "callingMaterial.subclassFeature.cleric.twilight-domain.twilight-shroud.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.twilight-domain.twilight-shroud.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Arcana Domain",
+    "name": "Arcane Initiate",
+    "nameKey": "callingMaterial.subclassFeature.cleric.arcana-domain.arcane-initiate.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.arcana-domain.arcane-initiate.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Arcana Domain",
+    "name": "Channel Divinity: Arcane Abjuration",
+    "nameKey": "callingMaterial.subclassFeature.cleric.arcana-domain.channel-divinity-arcane-abjuration.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.arcana-domain.channel-divinity-arcane-abjuration.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Arcana Domain",
+    "name": "Spell Breaker",
+    "nameKey": "callingMaterial.subclassFeature.cleric.arcana-domain.spell-breaker.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.arcana-domain.spell-breaker.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Arcana Domain",
+    "name": "Potent Spellcasting",
+    "nameKey": "callingMaterial.subclassFeature.cleric.arcana-domain.potent-spellcasting.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.arcana-domain.potent-spellcasting.description"
+  },
+  {
+    "classId": "cleric",
+    "subclass": "Arcana Domain",
+    "name": "Arcane Mastery",
+    "nameKey": "callingMaterial.subclassFeature.cleric.arcana-domain.arcane-mastery.name",
+    "descriptionKey": "callingMaterial.subclassFeature.cleric.arcana-domain.arcane-mastery.description"
+  },
+  {
+    "classId": "druid",
+    "subclass": "Circle of the Moon",
+    "name": "Combat Wild Shape",
+    "nameKey": "callingMaterial.subclassFeature.druid.circle-of-the-moon.combat-wild-shape.name",
+    "descriptionKey": "callingMaterial.subclassFeature.druid.circle-of-the-moon.combat-wild-shape.description"
+  },
+  {
+    "classId": "druid",
+    "subclass": "Circle of the Moon",
+    "name": "Circle Forms",
+    "nameKey": "callingMaterial.subclassFeature.druid.circle-of-the-moon.circle-forms.name",
+    "descriptionKey": "callingMaterial.subclassFeature.druid.circle-of-the-moon.circle-forms.description"
+  },
+  {
+    "classId": "druid",
+    "subclass": "Circle of the Moon",
+    "name": "Primal Strike",
+    "nameKey": "callingMaterial.subclassFeature.druid.circle-of-the-moon.primal-strike.name",
+    "descriptionKey": "callingMaterial.subclassFeature.druid.circle-of-the-moon.primal-strike.description"
+  },
+  {
+    "classId": "druid",
+    "subclass": "Circle of the Moon",
+    "name": "Elemental Wild Shape",
+    "nameKey": "callingMaterial.subclassFeature.druid.circle-of-the-moon.elemental-wild-shape.name",
+    "descriptionKey": "callingMaterial.subclassFeature.druid.circle-of-the-moon.elemental-wild-shape.description"
+  },
+  {
+    "classId": "druid",
+    "subclass": "Circle of the Moon",
+    "name": "Thousand Forms",
+    "nameKey": "callingMaterial.subclassFeature.druid.circle-of-the-moon.thousand-forms.name",
+    "descriptionKey": "callingMaterial.subclassFeature.druid.circle-of-the-moon.thousand-forms.description"
+  },
+  {
+    "classId": "druid",
+    "subclass": "Circle of Dreams",
+    "name": "Balm of the Summer Court",
+    "nameKey": "callingMaterial.subclassFeature.druid.circle-of-dreams.balm-of-the-summer-court.name",
+    "descriptionKey": "callingMaterial.subclassFeature.druid.circle-of-dreams.balm-of-the-summer-court.description"
+  },
+  {
+    "classId": "druid",
+    "subclass": "Circle of Dreams",
+    "name": "Hearth of Moonlight and Shadow",
+    "nameKey": "callingMaterial.subclassFeature.druid.circle-of-dreams.hearth-of-moonlight-and-shadow.name",
+    "descriptionKey": "callingMaterial.subclassFeature.druid.circle-of-dreams.hearth-of-moonlight-and-shadow.description"
+  },
+  {
+    "classId": "druid",
+    "subclass": "Circle of Dreams",
+    "name": "Hidden Paths",
+    "nameKey": "callingMaterial.subclassFeature.druid.circle-of-dreams.hidden-paths.name",
+    "descriptionKey": "callingMaterial.subclassFeature.druid.circle-of-dreams.hidden-paths.description"
+  },
+  {
+    "classId": "druid",
+    "subclass": "Circle of Dreams",
+    "name": "Walker in Dreams",
+    "nameKey": "callingMaterial.subclassFeature.druid.circle-of-dreams.walker-in-dreams.name",
+    "descriptionKey": "callingMaterial.subclassFeature.druid.circle-of-dreams.walker-in-dreams.description"
+  },
+  {
+    "classId": "druid",
+    "subclass": "Circle of the Shepherd",
+    "name": "Speech of the Woods",
+    "nameKey": "callingMaterial.subclassFeature.druid.circle-of-the-shepherd.speech-of-the-woods.name",
+    "descriptionKey": "callingMaterial.subclassFeature.druid.circle-of-the-shepherd.speech-of-the-woods.description"
+  },
+  {
+    "classId": "druid",
+    "subclass": "Circle of the Shepherd",
+    "name": "Spirit Totem",
+    "nameKey": "callingMaterial.subclassFeature.druid.circle-of-the-shepherd.spirit-totem.name",
+    "descriptionKey": "callingMaterial.subclassFeature.druid.circle-of-the-shepherd.spirit-totem.description"
+  },
+  {
+    "classId": "druid",
+    "subclass": "Circle of the Shepherd",
+    "name": "Mighty Summoner",
+    "nameKey": "callingMaterial.subclassFeature.druid.circle-of-the-shepherd.mighty-summoner.name",
+    "descriptionKey": "callingMaterial.subclassFeature.druid.circle-of-the-shepherd.mighty-summoner.description"
+  },
+  {
+    "classId": "druid",
+    "subclass": "Circle of the Shepherd",
+    "name": "Guardian Spirit",
+    "nameKey": "callingMaterial.subclassFeature.druid.circle-of-the-shepherd.guardian-spirit.name",
+    "descriptionKey": "callingMaterial.subclassFeature.druid.circle-of-the-shepherd.guardian-spirit.description"
+  },
+  {
+    "classId": "druid",
+    "subclass": "Circle of the Shepherd",
+    "name": "Faithful Summons",
+    "nameKey": "callingMaterial.subclassFeature.druid.circle-of-the-shepherd.faithful-summons.name",
+    "descriptionKey": "callingMaterial.subclassFeature.druid.circle-of-the-shepherd.faithful-summons.description"
+  },
+  {
+    "classId": "druid",
+    "subclass": "Circle of Spores",
+    "name": "Halo of Spores",
+    "nameKey": "callingMaterial.subclassFeature.druid.circle-of-spores.halo-of-spores.name",
+    "descriptionKey": "callingMaterial.subclassFeature.druid.circle-of-spores.halo-of-spores.description"
+  },
+  {
+    "classId": "druid",
+    "subclass": "Circle of Spores",
+    "name": "Symbiotic Entity",
+    "nameKey": "callingMaterial.subclassFeature.druid.circle-of-spores.symbiotic-entity.name",
+    "descriptionKey": "callingMaterial.subclassFeature.druid.circle-of-spores.symbiotic-entity.description"
+  },
+  {
+    "classId": "druid",
+    "subclass": "Circle of Spores",
+    "name": "Fungal Infestation",
+    "nameKey": "callingMaterial.subclassFeature.druid.circle-of-spores.fungal-infestation.name",
+    "descriptionKey": "callingMaterial.subclassFeature.druid.circle-of-spores.fungal-infestation.description"
+  },
+  {
+    "classId": "druid",
+    "subclass": "Circle of Spores",
+    "name": "Spreading Spores",
+    "nameKey": "callingMaterial.subclassFeature.druid.circle-of-spores.spreading-spores.name",
+    "descriptionKey": "callingMaterial.subclassFeature.druid.circle-of-spores.spreading-spores.description"
+  },
+  {
+    "classId": "druid",
+    "subclass": "Circle of Spores",
+    "name": "Fungal Body",
+    "nameKey": "callingMaterial.subclassFeature.druid.circle-of-spores.fungal-body.name",
+    "descriptionKey": "callingMaterial.subclassFeature.druid.circle-of-spores.fungal-body.description"
+  },
+  {
+    "classId": "druid",
+    "subclass": "Circle of Stars",
+    "name": "Star Map",
+    "nameKey": "callingMaterial.subclassFeature.druid.circle-of-stars.star-map.name",
+    "descriptionKey": "callingMaterial.subclassFeature.druid.circle-of-stars.star-map.description"
+  },
+  {
+    "classId": "druid",
+    "subclass": "Circle of Stars",
+    "name": "Starry Form",
+    "nameKey": "callingMaterial.subclassFeature.druid.circle-of-stars.starry-form.name",
+    "descriptionKey": "callingMaterial.subclassFeature.druid.circle-of-stars.starry-form.description"
+  },
+  {
+    "classId": "druid",
+    "subclass": "Circle of Stars",
+    "name": "Cosmic Omen",
+    "nameKey": "callingMaterial.subclassFeature.druid.circle-of-stars.cosmic-omen.name",
+    "descriptionKey": "callingMaterial.subclassFeature.druid.circle-of-stars.cosmic-omen.description"
+  },
+  {
+    "classId": "druid",
+    "subclass": "Circle of Stars",
+    "name": "Twinkling Constellations",
+    "nameKey": "callingMaterial.subclassFeature.druid.circle-of-stars.twinkling-constellations.name",
+    "descriptionKey": "callingMaterial.subclassFeature.druid.circle-of-stars.twinkling-constellations.description"
+  },
+  {
+    "classId": "druid",
+    "subclass": "Circle of Stars",
+    "name": "Full of Stars",
+    "nameKey": "callingMaterial.subclassFeature.druid.circle-of-stars.full-of-stars.name",
+    "descriptionKey": "callingMaterial.subclassFeature.druid.circle-of-stars.full-of-stars.description"
+  },
+  {
+    "classId": "druid",
+    "subclass": "Circle of Wildfire",
+    "name": "Summon Wildfire Spirit",
+    "nameKey": "callingMaterial.subclassFeature.druid.circle-of-wildfire.summon-wildfire-spirit.name",
+    "descriptionKey": "callingMaterial.subclassFeature.druid.circle-of-wildfire.summon-wildfire-spirit.description"
+  },
+  {
+    "classId": "druid",
+    "subclass": "Circle of Wildfire",
+    "name": "Enhanced Bond",
+    "nameKey": "callingMaterial.subclassFeature.druid.circle-of-wildfire.enhanced-bond.name",
+    "descriptionKey": "callingMaterial.subclassFeature.druid.circle-of-wildfire.enhanced-bond.description"
+  },
+  {
+    "classId": "druid",
+    "subclass": "Circle of Wildfire",
+    "name": "Cauterizing Flames",
+    "nameKey": "callingMaterial.subclassFeature.druid.circle-of-wildfire.cauterizing-flames.name",
+    "descriptionKey": "callingMaterial.subclassFeature.druid.circle-of-wildfire.cauterizing-flames.description"
+  },
+  {
+    "classId": "druid",
+    "subclass": "Circle of Wildfire",
+    "name": "Blazing Revival",
+    "nameKey": "callingMaterial.subclassFeature.druid.circle-of-wildfire.blazing-revival.name",
+    "descriptionKey": "callingMaterial.subclassFeature.druid.circle-of-wildfire.blazing-revival.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oath of the Ancients",
+    "name": "Channel Divinity: Nature's Wrath",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oath-of-the-ancients.channel-divinity-nature-s-wrath.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oath-of-the-ancients.channel-divinity-nature-s-wrath.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oath of the Ancients",
+    "name": "Channel Divinity: Turn the Faithless",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oath-of-the-ancients.channel-divinity-turn-the-faithless.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oath-of-the-ancients.channel-divinity-turn-the-faithless.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oath of the Ancients",
+    "name": "Aura of Warding",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oath-of-the-ancients.aura-of-warding.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oath-of-the-ancients.aura-of-warding.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oath of the Ancients",
+    "name": "Undying Sentinel",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oath-of-the-ancients.undying-sentinel.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oath-of-the-ancients.undying-sentinel.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oath of the Ancients",
+    "name": "Elder Champion",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oath-of-the-ancients.elder-champion.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oath-of-the-ancients.elder-champion.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oath of Vengeance",
+    "name": "Channel Divinity: Abjure Enemy",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oath-of-vengeance.channel-divinity-abjure-enemy.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oath-of-vengeance.channel-divinity-abjure-enemy.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oath of Vengeance",
+    "name": "Channel Divinity: Vow of Enmity",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oath-of-vengeance.channel-divinity-vow-of-enmity.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oath-of-vengeance.channel-divinity-vow-of-enmity.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oath of Vengeance",
+    "name": "Relentless Avenger",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oath-of-vengeance.relentless-avenger.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oath-of-vengeance.relentless-avenger.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oath of Vengeance",
+    "name": "Soul of Vengeance",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oath-of-vengeance.soul-of-vengeance.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oath-of-vengeance.soul-of-vengeance.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oath of Vengeance",
+    "name": "Avenging Angel",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oath-of-vengeance.avenging-angel.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oath-of-vengeance.avenging-angel.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oath of Conquest",
+    "name": "Channel Divinity: Conquering Presence",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oath-of-conquest.channel-divinity-conquering-presence.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oath-of-conquest.channel-divinity-conquering-presence.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oath of Conquest",
+    "name": "Channel Divinity: Guided Strike",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oath-of-conquest.channel-divinity-guided-strike.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oath-of-conquest.channel-divinity-guided-strike.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oath of Conquest",
+    "name": "Aura of Conquest",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oath-of-conquest.aura-of-conquest.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oath-of-conquest.aura-of-conquest.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oath of Conquest",
+    "name": "Scornful Rebuke",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oath-of-conquest.scornful-rebuke.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oath-of-conquest.scornful-rebuke.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oath of Conquest",
+    "name": "Invincible Conqueror",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oath-of-conquest.invincible-conqueror.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oath-of-conquest.invincible-conqueror.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oath of Redemption",
+    "name": "Channel Divinity: Emissary of Peace",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oath-of-redemption.channel-divinity-emissary-of-peace.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oath-of-redemption.channel-divinity-emissary-of-peace.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oath of Redemption",
+    "name": "Channel Divinity: Rebuke the Violent",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oath-of-redemption.channel-divinity-rebuke-the-violent.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oath-of-redemption.channel-divinity-rebuke-the-violent.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oath of Redemption",
+    "name": "Aura of the Guardian",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oath-of-redemption.aura-of-the-guardian.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oath-of-redemption.aura-of-the-guardian.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oath of Redemption",
+    "name": "Protective Spirit",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oath-of-redemption.protective-spirit.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oath-of-redemption.protective-spirit.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oath of Redemption",
+    "name": "Emissary of Redemption",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oath-of-redemption.emissary-of-redemption.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oath-of-redemption.emissary-of-redemption.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oath of Glory",
+    "name": "Channel Divinity: Peerless Athlete",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oath-of-glory.channel-divinity-peerless-athlete.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oath-of-glory.channel-divinity-peerless-athlete.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oath of Glory",
+    "name": "Channel Divinity: Inspiring Smite",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oath-of-glory.channel-divinity-inspiring-smite.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oath-of-glory.channel-divinity-inspiring-smite.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oath of Glory",
+    "name": "Aura of Alacrity",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oath-of-glory.aura-of-alacrity.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oath-of-glory.aura-of-alacrity.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oath of Glory",
+    "name": "Glorious Defense",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oath-of-glory.glorious-defense.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oath-of-glory.glorious-defense.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oath of Glory",
+    "name": "Living Legend",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oath-of-glory.living-legend.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oath-of-glory.living-legend.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oath of the Watchers",
+    "name": "Channel Divinity: Watcher's Will",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oath-of-the-watchers.channel-divinity-watcher-s-will.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oath-of-the-watchers.channel-divinity-watcher-s-will.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oath of the Watchers",
+    "name": "Channel Divinity: Abjure the Extraplanar",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oath-of-the-watchers.channel-divinity-abjure-the-extraplanar.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oath-of-the-watchers.channel-divinity-abjure-the-extraplanar.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oath of the Watchers",
+    "name": "Aura of the Sentinel",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oath-of-the-watchers.aura-of-the-sentinel.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oath-of-the-watchers.aura-of-the-sentinel.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oath of the Watchers",
+    "name": "Vigilant Rebuke",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oath-of-the-watchers.vigilant-rebuke.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oath-of-the-watchers.vigilant-rebuke.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oath of the Watchers",
+    "name": "Mortal Bulwark",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oath-of-the-watchers.mortal-bulwark.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oath-of-the-watchers.mortal-bulwark.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oath of the Crown",
+    "name": "Channel Divinity: Champion Challenge",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oath-of-the-crown.channel-divinity-champion-challenge.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oath-of-the-crown.channel-divinity-champion-challenge.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oath of the Crown",
+    "name": "Channel Divinity: Turn the Tide",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oath-of-the-crown.channel-divinity-turn-the-tide.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oath-of-the-crown.channel-divinity-turn-the-tide.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oath of the Crown",
+    "name": "Divine Allegiance",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oath-of-the-crown.divine-allegiance.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oath-of-the-crown.divine-allegiance.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oath of the Crown",
+    "name": "Unyielding Spirit",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oath-of-the-crown.unyielding-spirit.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oath-of-the-crown.unyielding-spirit.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oath of the Crown",
+    "name": "Exalted Champion",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oath-of-the-crown.exalted-champion.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oath-of-the-crown.exalted-champion.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oathbreaker",
+    "name": "Channel Divinity: Control Undead",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oathbreaker.channel-divinity-control-undead.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oathbreaker.channel-divinity-control-undead.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oathbreaker",
+    "name": "Channel Divinity: Dreadful Aspect",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oathbreaker.channel-divinity-dreadful-aspect.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oathbreaker.channel-divinity-dreadful-aspect.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oathbreaker",
+    "name": "Aura of Hate",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oathbreaker.aura-of-hate.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oathbreaker.aura-of-hate.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oathbreaker",
+    "name": "Supernatural Resistance",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oathbreaker.supernatural-resistance.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oathbreaker.supernatural-resistance.description"
+  },
+  {
+    "classId": "paladin",
+    "subclass": "Oathbreaker",
+    "name": "Dread Lord",
+    "nameKey": "callingMaterial.subclassFeature.paladin.oathbreaker.dread-lord.name",
+    "descriptionKey": "callingMaterial.subclassFeature.paladin.oathbreaker.dread-lord.description"
   }
 ] as const;
