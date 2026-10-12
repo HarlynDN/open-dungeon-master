@@ -7,6 +7,7 @@ import { damageListLabel } from "./sheet-play-presentations.ts";
 import { featTermLabel } from "./feat-presentations.ts";
 import { nativeFeatureName } from "./feature-material-presentations.ts";
 import { handRefusalText } from "./hand-material-presentations.ts";
+import { boardOperationErrorText } from "./board-operation-presentations.ts";
 import type { AppLocale } from "./locales.ts";
 
 export type BoardDisplayName = { name: string; kind: string };
@@ -66,10 +67,11 @@ export function boardMoveNoteText(source: string, locale: AppLocale, names: read
 }
 
 // Raw diagnostics remain available; only owned complete messages are translated.
-export function boardPanelErrorText(raw: string, locale: AppLocale): string {
+export function boardPanelErrorText(raw: string, locale: AppLocale, names: readonly BoardDisplayName[] = []): string {
   if (locale === "en" || !raw) return raw;
   const known = Object.entries(catalogFor("en", "boardUi.error.")).find(([, source]) => source === raw);
-  return known ? createTranslator(locale)(known[0] as MessageKey) : handRefusalText(raw, locale);
+  return known ? createTranslator(locale)(known[0] as MessageKey)
+    : boardOperationErrorText(raw, locale, name => boardDisplayName(name, locale, names)) ?? handRefusalText(raw, locale);
 }
 
 export function boardSquareLabel(raw: string, locale: AppLocale): string {

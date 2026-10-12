@@ -1,6 +1,6 @@
 import type { ConditionDisplayName, ConditionDuration, ConditionPresentation } from "../battlemap/condition-presentation";
 import { CONDITION_MATERIAL_INDEX } from "./condition-material-index.ts";
-import { createTranslator, type MessageKey } from "./translator.ts";
+import { catalogFor, createTranslator, type MessageKey } from "./translator.ts";
 import type { AppLocale } from "./locales.ts";
 import { referenceDisplayName } from "./references.ts";
 import { combatName, combatTermLabel, regeneratingLabel } from "./combat-ui-presentations.ts";
@@ -33,6 +33,18 @@ export function conditionLabel(name: string, locale: AppLocale): string {
   if (!row && !legacy) return name;
   const translated = createTranslator(locale)((row ? `combatDetail.effect.${row.id}.name` : `combatDetail.condition.${legacy}`) as MessageKey);
   return parameter ? createTranslator(locale)("combatDetail.parameter", { name: translated, value: parameterLabel(parameter[2], locale) }) : translated;
+}
+
+// Resolve only exact displayed mechanic names. English and authored names
+// retain their original input; ambiguous translations never guess a rule ID.
+export function resolveConditionInput(value: string, locale: AppLocale): { name: string } | { candidates: string[] } {
+  if (locale === "en") return { name: value };
+  const prefix = "closedHelp.condition.", needle = value.trim().toLowerCase();
+  const basic = Object.keys(catalogFor("en", prefix)).filter(key => key.endsWith(".name"))
+    .map(key => key.slice(prefix.length, -".name".length));
+  const native = [...basic, ...CONDITION_MATERIAL_INDEX.map(row => row.match[0]), ...Object.keys(LEGACY_NAMES)];
+  const matches = [...new Set(native.filter(name => conditionLabel(name, locale).trim().toLowerCase() === needle && name !== needle))];
+  return matches.length > 1 ? { candidates: matches } : { name: matches[0] ?? value };
 }
 function visibleName(who: ConditionDisplayName, locale: AppLocale): string {
   return combatName(who.name, who.kind, locale);

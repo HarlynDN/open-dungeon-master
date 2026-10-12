@@ -41,6 +41,7 @@ import { PromptDialog } from "@/components/ui/PromptDialog";
 import { cn } from "@/lib/cn";
 import { createTranslator, type MessageKey } from "@/lib/i18n/translator";
 import { combatName } from "@/lib/i18n/combat-ui-presentations";
+import { conditionLabel, resolveConditionInput } from "@/lib/i18n/condition-presentations";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { boardDisplayName, boardRulerText, boardPanelErrorText } from "@/lib/i18n/board-control-presentations";
 import { jumpRulerFor, moveNotesFrom, rulerFor } from "@/lib/battlemap/board-move";
@@ -395,7 +396,7 @@ export function BattleMapPanel({
         error?: string;
         result?: { error?: string };
       };
-      const failure = !response.ok ? data.error : data.result?.error;
+      const failure = !response.ok ? data.error ?? "That was not allowed." : data.result?.error;
       if (failure) {
         setError(failure);
         return false;
@@ -547,6 +548,9 @@ export function BattleMapPanel({
         const data = (await response.json().catch(() => ({}))) as { error?: string };
         setError(data.error ?? "Nothing to erase.");
       }
+    } catch {
+      setError("Could not reach the table.");
+      return;
     } finally {
       setBusy(false);
     }
@@ -756,6 +760,8 @@ export function BattleMapPanel({
               caught: data.caught ?? [],
             });
             setMeasureOrigin(null);
+          } catch {
+            setError("Could not reach the table.");
           } finally {
             setBusy(false);
           }
@@ -883,7 +889,12 @@ export function BattleMapPanel({
       const isEnemy = promptToken.kind === "enemy";
       const ref = isEnemy ? { enemyId: promptToken.refId } : { characterId: promptToken.refId };
       if (prompt.kind === "condition") {
-        void invoke(isEnemy ? "set_enemy_condition" : "set_condition", { ...ref, condition: value });
+        const resolved = resolveConditionInput(value, locale);
+        if ("candidates" in resolved) {
+          setError(createTranslator("en")("boardOpsUi.refusal.ambiguousCondition", { options: resolved.candidates.join(", ") }));
+          return;
+        }
+        void invoke(isEnemy ? "set_enemy_condition" : "set_condition", { ...ref, condition: resolved.name });
       } else {
         const amount = Number.parseInt(value, 10);
         if (!Number.isFinite(amount) || amount < 1) {
@@ -900,7 +911,7 @@ export function BattleMapPanel({
     },
     // invoke closes over busy state; rebuilding per prompt is intended.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [prompt, promptToken],
+    [prompt, promptToken, locale],
   );
 
   const grid = (
@@ -1310,7 +1321,7 @@ export function BattleMapPanel({
           hasToken: Boolean(view.myTokenId),
         }, locale)}
       </p>
-      {error ? <p className="text-[11px] text-red-400">{boardPanelErrorText(error, locale)}</p> : null}
+      {error ? <p className="text-[11px] text-red-400">{boardPanelErrorText(error, locale, view.tokens)}</p> : null}
       {targeting ? (
         <TargetChips
           targets={aimTargets.map((entry) => ({
@@ -1334,7 +1345,7 @@ export function BattleMapPanel({
               : t("boardUi.panel.condition", { name: promptName })
         }
         label={t(prompt?.kind === "condition" ? "boardUi.panel.conditionLabel" : "boardUi.panel.hp")}
-        placeholder={prompt?.kind === "condition" ? "prone" : "8"}
+        placeholder={prompt?.kind === "condition" ? conditionLabel("prone", locale) : "8"}
         submitLabel={t(prompt?.kind === "damage" ? "boardUi.panel.deal" : prompt?.kind === "heal" ? "boardUi.panel.healSubmit" : "boardUi.panel.apply")}
         onSubmit={submitPrompt}
         onOpenChange={(open) => {

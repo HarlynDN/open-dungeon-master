@@ -31,7 +31,7 @@ export const BOARD_CONTROL_MESSAGES = /*#__PURE__*/ defineMessages({
   "boardUi.panel.damage": {"en": "Damage {name}", "zh-CN": "对{name}造成伤害"},
   "boardUi.panel.heal": {"en": "Heal {name}", "zh-CN": "治疗{name}"},
   "boardUi.panel.condition": {"en": "Condition on {name}", "zh-CN": "设置{name}的状态"},
-  "boardUi.panel.conditionLabel": {"en": "Condition", "zh-CN": "状态（输入规则原名，例如 prone）"},
+  "boardUi.panel.conditionLabel": {"en": "Condition", "zh-CN": "状态（中文译名、英文原名或自定义名称）"},
   "boardUi.panel.hp": {"en": "Hit points", "zh-CN": "生命值"},
   "boardUi.panel.deal": {"en": "Deal it", "zh-CN": "造成伤害"},
   "boardUi.panel.healSubmit": {"en": "Heal", "zh-CN": "治疗"},
