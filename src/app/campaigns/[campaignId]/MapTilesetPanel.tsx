@@ -1,5 +1,9 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { mapSkinName, mapSkinGroup } from "@/lib/i18n/map-forge-presentations";
+import { mapSkinNote, mapMaterialLabel, mapMaterialRole, localizedMaterialChoices } from "@/lib/i18n/map-surface-presentations";
+
 import { useMemo, useState } from "react";
 import { RotateCcw } from "lucide-react";
 import { cn } from "@/lib/cn";
@@ -7,7 +11,6 @@ import { Dialog } from "@/components/ui/Dialog";
 import { Select } from "@/components/ui/Select";
 import {
   SKIN_CHARS,
-  SKIN_ROLES,
   defaultSkinFor,
   skinById,
   skinChoices,
@@ -16,7 +19,6 @@ import {
   type SkinChar,
 } from "@/lib/battlemap/skins";
 import type { TileEntry } from "@/lib/battlemap/render/painted";
-import { materialChoices } from "@/app/campaigns/[campaignId]/mapCatalogue";
 import type { Catalogue } from "@/app/campaigns/[campaignId]/useMapPaint";
 import { Chip, FinePrint, PanelHead, Swatch, mapInput } from "@/app/campaigns/[campaignId]/mapUi";
 
@@ -52,6 +54,7 @@ export function MapTilesetPanel({
   // Absent on a surface that cannot store a skin (the live board).
   onSkin?: (next: MapSkin) => void;
 }) {
+  const { locale, t } = useLocale();
   const [picking, setPicking] = useState<SkinChar | null>(null);
   const tiles = useMemo(() => new Map((catalogue?.tiles ?? []).map((tile) => [tile.id, tile])), [catalogue]);
   const defaultId = defaultSkinFor(genre, theme);
@@ -60,35 +63,35 @@ export function MapTilesetPanel({
 
   return (
     <section className="space-y-1.5">
-      <PanelHead aside={painted ? "painted" : "flat fills"}>Tileset</PanelHead>
+      <PanelHead aside={t(painted ? "mapSurfaceUi.paintedState" : "mapSurfaceUi.flatState")}>{t("mapSurfaceUi.heading")}</PanelHead>
       <div className="grid grid-cols-2 gap-1">
-        <Chip active={!painted} onClick={() => onPainted(false)} title="The old flat diagram. A choice for this device, not the map.">
-          Flat
+        <Chip active={!painted} onClick={() => onPainted(false)} title={t("mapSurfaceUi.flatTip")}>
+          {t("mapSurfaceUi.flat")}
         </Chip>
-        <Chip active={painted} onClick={() => onPainted(true)} title="Painted by the renderer the table plays on.">
-          Painted
+        <Chip active={painted} onClick={() => onPainted(true)} title={t("mapSurfaceUi.paintedTip")}>
+          {t("mapSurfaceUi.painted")}
         </Chip>
       </div>
 
       {onSkin ? (
         <label className="block space-y-1">
-          <span className="font-display text-[9px] uppercase tracking-[0.18em] text-stone-500">Skin</span>
+          <span className="font-display text-[9px] uppercase tracking-[0.18em] text-stone-500">{t("mapForgeUi.skinLabel")}</span>
           <Select
             value={skin.id as string}
-            label="Skin"
+            label={t("mapForgeUi.skinLabel")}
             size="sm"
             onChange={(id) => onSkin({ id, bind: {} })}
             options={[
-              { value: "", label: `Default: ${skinById(defaultId)?.name ?? "Stone dungeon"}` },
-              ...groups.flatMap((group) => group.skins.map((option) => ({ value: option.id as string, label: option.name, group: group.group }))),
+              { value: "", label: t("mapForgeUi.defaultSkin", { name: mapSkinName(skinById(defaultId), locale) }) },
+              ...groups.flatMap((group) => group.skins.map((option) => ({ value: option.id as string, label: mapSkinName(option, locale), group: mapSkinGroup(group.group, locale) }))),
             ]}
             className="w-full"
           />
         </label>
       ) : (
-        <p className="text-[11px] text-stone-300">{resolved.name}</p>
+        <p className="text-[11px] text-stone-300">{mapSkinName(resolved, locale)}</p>
       )}
-      <FinePrint>{resolved.note}</FinePrint>
+      <FinePrint>{mapSkinNote(resolved, locale)}</FinePrint>
 
       <ul className="space-y-0.5">
         {SKIN_CHARS.map((char) => {
@@ -100,7 +103,7 @@ export function MapTilesetPanel({
                 type="button"
                 disabled={!onSkin || !catalogue}
                 onClick={() => setPicking(char)}
-                title={onSkin ? `Choose what ${SKIN_ROLES[char].label.toLowerCase()} is painted with` : undefined}
+                title={onSkin ? t("mapSurfaceUi.choose", { role: mapMaterialRole(char, locale).toLowerCase() }) : undefined}
                 className={cn(
                   "flex w-full items-center gap-2 rounded-md border px-1.5 py-1 text-left motion-press disabled:cursor-default",
                   own ? "border-amber-500/40 bg-amber-400/5" : "border-transparent hover:border-stone-700",
@@ -108,10 +111,10 @@ export function MapTilesetPanel({
               >
                 <Swatch char={char} src={painted ? material?.src : undefined} />
                 <span className="min-w-0 flex-1">
-                  <span className="block truncate text-[11px] text-stone-200">{SKIN_ROLES[char].label}</span>
+                  <span className="block truncate text-[11px] text-stone-200">{mapMaterialRole(char, locale)}</span>
                   <span className="block truncate font-mono text-[9px] text-stone-500">
-                    {material?.label ?? resolved.bind[char]}
-                    {own ? " · yours" : ""}
+                    {mapMaterialLabel(material ?? resolved.bind[char], locale)}
+                    {own ? t("mapSurfaceUi.own") : ""}
                   </span>
                 </span>
                 <span className="font-mono text-[9px] tabular-nums text-amber-200/80">{counts[char] ?? 0}</span>
@@ -126,7 +129,7 @@ export function MapTilesetPanel({
           onClick={() => onSkin({ id: skin.id, bind: {} })}
           className="flex min-h-8 items-center gap-1 text-[11px] text-stone-400 hover:text-amber-200"
         >
-          <RotateCcw className="size-3" /> Back to the skin&apos;s own materials
+          <RotateCcw className="size-3" /> {t("mapSurfaceUi.reset")}
         </button>
       ) : null}
 
@@ -182,20 +185,21 @@ function MaterialPicker({
   onPick: (material: string) => void;
   onClose: () => void;
 }) {
+  const { locale, t } = useLocale();
   const [query, setQuery] = useState("");
-  const groups = useMemo(() => (char ? materialChoices(tiles, char, genre, theme, query) : []), [tiles, char, genre, theme, query]);
+  const groups = useMemo(() => (char ? localizedMaterialChoices(tiles, char, genre, theme, query, locale) : []), [tiles, char, genre, theme, query, locale]);
   return (
     <Dialog
       open={char !== null}
       onOpenChange={(open) => (open ? undefined : onClose())}
-      title={char ? `${SKIN_ROLES[char].label}: painted with` : "Material"}
+      title={char ? t("mapSurfaceUi.picker.title", { role: mapMaterialRole(char, locale) }) : t("mapSurfaceUi.picker.material")}
       width="w-[min(94vw,44rem)]"
     >
       <input
         value={query}
         onChange={(event) => setQuery(event.target.value)}
-        placeholder="Find a material: granite, moss, lava"
-        aria-label="Find a material"
+        placeholder={t("mapSurfaceUi.picker.findHint")}
+        aria-label={t("mapSurfaceUi.picker.find")}
         className={cn(mapInput, "mb-3")}
       />
       <div className="space-y-4">
@@ -225,15 +229,15 @@ function MaterialPicker({
                     }
                   />
                   <span className="block truncate px-1.5 py-1 text-[10px] text-stone-200">
-                    {tile.label ?? tile.id}
-                    {tile.id === skinsOwn ? <span className="ml-1 text-amber-400/80">skin</span> : null}
+                    {mapMaterialLabel(tile, locale)}
+                    {tile.id === skinsOwn ? <span className="ml-1 text-amber-400/80">{t("mapSurfaceUi.picker.skin")}</span> : null}
                   </span>
                 </button>
               ))}
             </div>
           </section>
         ))}
-        {!groups.length ? <FinePrint>Nothing in the tile set matches that.</FinePrint> : null}
+        {!groups.length ? <FinePrint>{t("mapSurfaceUi.picker.empty")}</FinePrint> : null}
       </div>
     </Dialog>
   );

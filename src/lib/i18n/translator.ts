@@ -26,6 +26,12 @@ export function catalogFor(locale: AppLocale, prefix = ""): MessageCatalog {
   return Object.fromEntries(Object.entries(catalogs[locale] ?? {}).filter(([key]) => key.startsWith(prefix)));
 }
 
+// Exact source recognition for large native asset lists. A direct lookup
+// avoids rebuilding/filtering the entire catalog for every visible material.
+export function registeredMessageTemplate(locale: AppLocale, key: MessageKey): string | undefined {
+  return catalogs[locale]?.[key];
+}
+
 // A typed view for existing source-recognition helpers. Values are supplied
 // by the nearest resource boundary, not statically imported by each helper.
 export function scopedCatalog<T>(prefix: string): T {

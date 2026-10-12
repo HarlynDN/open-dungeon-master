@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+
 import { ArrowDownAZ, Clock, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { cn } from "@/lib/cn";
@@ -43,13 +45,15 @@ export function useListControls<T extends Listed>(items: T[]) {
 
 export function ListControls({
   controls,
-  placeholder = "Find by name",
+  placeholder,
   className,
 }: {
   controls: ReturnType<typeof useListControls>;
   placeholder?: string;
   className?: string;
 }) {
+  const { t } = useLocale();
+  const hint = placeholder ?? t("listUi.search");
   const { query, setQuery, tag, setTag, sort, setSort, tags } = controls;
   return (
     <div className={cn("flex flex-wrap items-center gap-1.5", className)}>
@@ -58,8 +62,8 @@ export function ListControls({
         <input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder={placeholder}
-          aria-label={placeholder}
+          placeholder={hint}
+          aria-label={hint}
           className="h-8 w-40 rounded-md border border-stone-700 bg-stone-950 pl-7 pr-2 text-xs text-stone-200 outline-none focus:border-amber-500"
         />
       </label>
@@ -86,7 +90,7 @@ export function ListControls({
           type="button"
           aria-pressed={sort === "recent"}
           onClick={() => setSort("recent")}
-          title="Newest first"
+          title={t("listUi.recent")}
           className={cn("rounded-md border p-1", sort === "recent" ? "border-amber-700 text-amber-200" : "border-stone-700 text-stone-500")}
         >
           <Clock className="size-3.5" />
@@ -95,7 +99,7 @@ export function ListControls({
           type="button"
           aria-pressed={sort === "name"}
           onClick={() => setSort("name")}
-          title="By name"
+          title={t("listUi.name")}
           className={cn("rounded-md border p-1", sort === "name" ? "border-amber-700 text-amber-200" : "border-stone-700 text-stone-500")}
         >
           <ArrowDownAZ className="size-3.5" />

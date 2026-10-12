@@ -1,12 +1,15 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { mapSkinName } from "@/lib/i18n/map-forge-presentations";
+
 import { cn } from "@/lib/cn";
 import { ListControls, useListControls } from "@/components/ui/ListControls";
 import { ui } from "@/lib/ui";
 import { resolveSkin } from "@/lib/battlemap/skins";
 import { TerrainCanvas } from "@/app/campaigns/[campaignId]/TerrainCanvas";
 import { stampsOf, useMapThumb } from "@/app/campaigns/[campaignId]/useMapPaint";
-import { THEME_LABELS, type PreparedMap } from "@/app/workshop/maps/types";
+import { type PreparedMap } from "@/app/workshop/maps/types";
 
 // The workshop's map gallery: every prepared map as a thumbnail with its size,
 // theme and skin underneath. Tapping a tile hands the map to the caller, which
@@ -63,19 +66,20 @@ export function MapGallery({
   genre?: string | null;
   onOpen: (map: PreparedMap) => void;
 }) {
+  const { locale, t } = useLocale();
   const controls = useListControls(maps);
   if (!maps.length) {
     return (
       <p className="text-xs text-stone-500">
-        Nothing in the drawer yet. Roll one, start from blank rock, or import a drawing.
+        {t("mapLibraryUi.library.empty")}
       </p>
     );
   }
   return (
     <div className="space-y-3">
-    <ListControls controls={controls} placeholder="Find a map" />
+    <ListControls controls={controls} placeholder={t("mapSurfaceUi.gallery.find")} />
     {controls.filtered && !controls.shown.length ? (
-      <p className="text-xs text-stone-500">Nothing matches that. Clear the search or the tag.</p>
+      <p className="text-xs text-stone-500">{t("mapSurfaceUi.gallery.none")}</p>
     ) : null}
     <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
       {controls.shown.map((map) => (
@@ -83,7 +87,7 @@ export function MapGallery({
           <button
             type="button"
             onClick={() => onOpen(map)}
-            aria-label={`Open ${map.name}`}
+            aria-label={t("mapSurfaceUi.gallery.open", { name: map.name })}
             className={cn(
               ui.card,
               ui.tileHover,
@@ -95,7 +99,7 @@ export function MapGallery({
             <div className="min-w-0 px-1 pb-1">
               <p className="truncate font-display text-sm tracking-wide text-amber-50">{map.name}</p>
               <p className="text-[11px] text-stone-500">
-                {map.width} × {map.height} · {THEME_LABELS[map.theme]} · {resolveSkin(genre, map.theme, map.skin).name}
+                {t("mapSurfaceUi.gallery.summary", { width: map.width, height: map.height, theme: t(`mapInspectUi.theme.${map.theme}`), skin: mapSkinName(resolveSkin(genre, map.theme, map.skin), locale) })}
               </p>
             </div>
           </button>

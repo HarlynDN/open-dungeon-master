@@ -20,7 +20,8 @@
   ],
   "additionalSources": [
     "src/lib/i18n/LocalizedText.tsx",
-    "src/app/characters/builder/refusal.ts"
+    "src/app/characters/builder/refusal.ts",
+    "src/app/campaigns/[campaignId]/mapCatalogue.ts"
   ],
   "deferred": [
     {
@@ -539,7 +540,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/MapTilesetPanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Tileset/flat/painted chrome, six native terrain roles, picker/search/group/default/override controls and 27 source-matched skin notes use viewer uiLocale. All 346 owned material labels use exact native ID/source matching, including binding-only display before art loads; changed/custom labels stay literal. Chinese search preserves native category eligibility, group priority, order, tile identities, material IDs and bind/reset/view callbacks. Art paths, geometry and native catalog unchanged."
     },
     {
       "path": "src/app/campaigns/[campaignId]/MapToasts.tsx",
@@ -899,7 +901,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/mapCatalogue.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Native catalogue metadata/order/filter helpers remain English/canonical for native consumers. All UI consumers now go through localizedStampGroups or localizedMaterialChoices, with source-matched owned set/material/group names and raw custom names. Explicit additional source preserves audit scope after UI import moved behind locale helpers; native asset IDs, eligibility, ordering and identity unchanged."
     },
     {
       "path": "src/app/campaigns/[campaignId]/mapToolState.ts",
@@ -1590,7 +1593,8 @@
     },
     {
       "path": "src/app/workshop/maps/MapGallery.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Map-card search/empty/no-match/open/size/theme/skin chrome follows viewer uiLocale. Map names/tags, native filtering/sort, selected ID, whole map identity, thumbnail renderer and art metadata unchanged; shared list chrome has independent ownership."
     },
     {
       "path": "src/app/workshop/maps/MapRollPanel.tsx",
@@ -1956,7 +1960,8 @@
     },
     {
       "path": "src/components/ui/ListControls.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Default name-search hint and sort-button titles follow global viewer uiLocale. Caller-provided hints and authored tags stay literal; query/tag/sort IDs and the native list filtering/order algorithm unchanged. Explicit empty hint remains supported."
     },
     {
       "path": "src/components/ui/Markdown.tsx",

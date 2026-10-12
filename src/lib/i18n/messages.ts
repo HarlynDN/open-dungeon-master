@@ -1,3 +1,4 @@
+import { MAP_SURFACE_MESSAGES } from "./map-surface-messages.ts";
 import { MAP_FORGE_MESSAGES } from "./map-forge-messages.ts";
 import { MAP_LIBRARY_MESSAGES } from "./map-library-messages.ts";
 import { MAP_INSPECTION_MESSAGES } from "./map-inspection-messages.ts";
@@ -112,6 +113,7 @@ const en = {
     ...REGION_MESSAGES.en,
     ...MAP_SCENE_MESSAGES.en,
     ...MAP_EDITOR_MESSAGES.en,
+    ...MAP_SURFACE_MESSAGES.en,
     ...MAP_FORGE_MESSAGES.en,
     ...MAP_LIBRARY_MESSAGES.en,
     ...MAP_INSPECTION_MESSAGES.en,
@@ -228,6 +230,7 @@ const zhCN: Messages = {
     ...REGION_MESSAGES["zh-CN"],
     ...MAP_SCENE_MESSAGES["zh-CN"],
     ...MAP_EDITOR_MESSAGES["zh-CN"],
+    ...MAP_SURFACE_MESSAGES["zh-CN"],
     ...MAP_FORGE_MESSAGES["zh-CN"],
     ...MAP_LIBRARY_MESSAGES["zh-CN"],
     ...MAP_INSPECTION_MESSAGES["zh-CN"],
