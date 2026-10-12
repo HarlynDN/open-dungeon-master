@@ -69,6 +69,10 @@ export function uiLiterals(file, source, allowed = [], messageKeys = new Set()) 
     if (ts.isCallExpression(node) && TEXT_CALLS.test(node.expression.getText(ast).split(".").at(-1))) {
       node.arguments.forEach(argument => parts(argument, "UI notice"));
     }
+    if (ts.isCallExpression(node) && ts.isPropertyAccessExpression(node.expression)
+      && ["fillText", "strokeText"].includes(node.expression.name.text)) {
+      parts(node.arguments[0], "Canvas text");
+    }
     ts.forEachChild(node, visit);
   };
   visit(ast);

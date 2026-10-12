@@ -1,6 +1,7 @@
 import { defineMessages } from "./catalog.ts";
 
 export const MAP_EDITOR_MESSAGES = /*#__PURE__*/ defineMessages({
+  "mapEditorUi.backdrop.pixels": { en: "one square is {pixels} px of picture", "zh-CN": "每格对应 {pixels} 像素底图" },
   "mapEditorUi.options.title": {"en": "Tools", "zh-CN": "工具"},
   "mapEditorUi.options.pick": {"en": "Pick a tool from the rail and draw on the map.", "zh-CN": "从工具栏选择工具，再在地图上绘制。"},
   "mapEditorUi.options.keys": {"en": "Pick a tool. Keys 1 to {max} pick a brush, Escape puts the tool down, Ctrl+Z takes back the last edit.", "zh-CN": "选择工具。数字键 1 至 {max} 选择画笔，Escape 放下工具，Ctrl+Z 撤销上次修改。"},

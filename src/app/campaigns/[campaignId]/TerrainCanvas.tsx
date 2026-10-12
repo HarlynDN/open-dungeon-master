@@ -238,7 +238,8 @@ export function TerrainCanvas({
       popFrameRef.current = requestAnimationFrame(() => drawRef.current());
     }
     if (tool?.kind === "backdrop" && backdrop) {
-      drawBackdropHandles(context, backdropRect(backdrop.transform, width, height, tile), width);
+      drawBackdropHandles(context, backdropRect(backdrop.transform, width, height, tile), width,
+        pixels => t("mapEditorUi.backdrop.pixels", { pixels }));
     }
     drawSelection(context, selected ?? [], tile);
     if (showGrid) {
@@ -248,7 +249,7 @@ export function TerrainCanvas({
       drawBorderGuard(context, width, height, tile);
     }
     drawToolPreview(context, { tool, hover, drag, painting, terrain, width, height, tile });
-  }, [terrain, width, height, backdrop, image, lights, labels, props, doors, zones, overlay, tool, hover, drag, painting, selected, ground, hidden, showGrid, dmView, guard]);
+  }, [terrain, width, height, backdrop, image, lights, labels, props, doors, zones, overlay, tool, hover, drag, painting, selected, ground, hidden, showGrid, dmView, guard, t]);
 
   // The observer subscribes once; the draw it calls is whichever is current.
   // Keeping the two apart means a hover does not re-subscribe to resizes.

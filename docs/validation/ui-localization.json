@@ -908,7 +908,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/battleMapCells.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "All SVG ground/wall/climb/dressing passes and theme palettes audited. No player prose; tile characters, coordinates, colors, texture URLs and deterministic decoration stay native. Dynamic captions belong to independently tracked board overlays."
     },
     {
       "path": "src/app/campaigns/[campaignId]/character/page.tsx",
@@ -965,11 +966,13 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/mapUi.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Pass-through panel/choice/range captions and accessibility audited. Parents supply localized labels/readouts; authored children remain literal. Style tokens, brush characters, skin IDs/assets and numeric callbacks stay native; grouped bilingual actual control render/callback checks pass."
     },
     {
       "path": "src/app/campaigns/[campaignId]/overworldDraw.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Canvas paths/pins/place names are authored scene data and remain literal. Terrain palettes, native coordinates/route IDs/party marker and PNG filename are language-independent. Original export failure maps through the existing regionErrorText; grouped failed-export and literal-preservation checks pass. Rendering geometry remains unchanged."
     },
     {
       "path": "src/app/campaigns/[campaignId]/page.tsx",
@@ -992,11 +995,13 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/terrainCanvasParts.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Zoom controls pass through localized aria/title labels; SVG selection geometry and motion/image-loading helpers audited. No independent captions; classes/paths/animation tokens and map coordinates stay native. Grouped actual bilingual zoom/selection checks pass."
     },
     {
       "path": "src/app/campaigns/[campaignId]/terrainDraw.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "All canvas passes audited. Calibration caption accepts a display formatter; TerrainCanvas supplies the viewer translator and redraws on its change. Default formatter preserves legacy English and numeric rounding. Scene names/labels stay authored, door glyphs remain native, and geometry/paint inputs are unchanged; grouped canvas call parity and immutable scene-data checks pass."
     },
     {
       "path": "src/app/campaigns/[campaignId]/transcript-capture.ts",
@@ -1009,7 +1014,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/useBoardCamera.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Camera transforms, resize/fit/lock/broadcast state and pointer/keyboard handlers audited. No owned player prose; DOM selectors/shortcuts/numeric describe payload remain canonical. Composition input guard retained and captions supplied by parent controls."
     },
     {
       "path": "src/app/campaigns/[campaignId]/useCampaignStream.ts",
@@ -1030,7 +1036,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/useMapPaint.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Paint/canvas/thumb/catalogue hooks audited. Asset IDs/paths, terrain strings, quality, stamp coordinates/cache keys and preference persist as native data. No owned UI prose; independent parent catalogue pickers own captions and authored metadata."
     },
     {
       "path": "src/app/campaigns/[campaignId]/useMapSelection.tsx",
@@ -1043,15 +1050,18 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/useOverworldView.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Pan/pinch/wheel/fit/zoom transforms and pointer capture audited. No player prose or locale-sensitive state; native coordinate/zoom values and event semantics remain unchanged. Parent controls own their captions."
     },
     {
       "path": "src/app/campaigns/[campaignId]/usePaintedMap.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Board background loading/swap/cache/release lifecycle audited. Source terrain/skin/seed/quality and geometry remain native; hook returns a canvas/null and has no text renderer. Independent token/overlay owners handle their own visible content."
     },
     {
       "path": "src/app/campaigns/[campaignId]/usePainter.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Paint history, batching, undo/redo and stroke/shape transport audited. Native body keys/tool/brush IDs and terrain snapshots are preserved; success/failure is boolean, not unlocalized prose. Parent toolbar owns labels/errors; no language-dependent mechanics."
     },
     {
       "path": "src/app/campaigns/[campaignId]/useTableAudio.ts",

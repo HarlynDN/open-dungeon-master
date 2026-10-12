@@ -172,6 +172,7 @@ export function drawBackdropHandles(
   context: CanvasRenderingContext2D,
   rect: { x: number; y: number; width: number; height: number },
   width: number,
+  formatPixels: (pixels: number) => string = pixels => `one square is ${pixels} px of picture`,
 ) {
   context.setLineDash([4, 4]);
   context.strokeStyle = "#d4ab3a";
@@ -196,7 +197,7 @@ export function drawBackdropHandles(
   context.font = "11px sans-serif";
   context.textAlign = "left";
   context.textBaseline = "alphabetic";
-  context.fillText(`one square is ${Math.round((rect.width / width) * 10) / 10} px of picture`, 8, 17);
+  context.fillText(formatPixels(Math.round((rect.width / width) * 10) / 10), 8, 17);
 }
 
 export function drawSelection(
