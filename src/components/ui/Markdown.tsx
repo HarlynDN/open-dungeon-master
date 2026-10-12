@@ -1,5 +1,9 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { reviewText, reviewFrame } from "@/lib/i18n/play-review-presentations";
+
+import { DEFAULT_LOCALE, type AppLocale } from "@/lib/i18n/locales";
 import { Dices } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { cn } from "@/lib/cn";
@@ -95,8 +99,10 @@ const INLINE = /(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`)/g;
 const DICE = /^\s*(\d{0,2}d\d{1,3}(?:\s*[+-]\s*\d{1,3})?)\s*$/i;
 
 function RollChip({ expression, onRoll }: { expression: string; onRoll?: (expression: string) => Promise<number | null> }) {
+  const { locale } = useLocale();
   const [result, setResult] = useState<number | null>(null);
   const [busy, setBusy] = useState(false);
+  const [failed, setFailed] = useState(false);
   return (
     <button
       type="button"
@@ -106,23 +112,30 @@ function RollChip({ expression, onRoll }: { expression: string; onRoll?: (expres
           return;
         }
         setBusy(true);
+        setFailed(false);
+        setResult(null);
         try {
-          setResult(await onRoll(expression));
+          const next = await onRoll(expression);
+          setResult(next);
+          setFailed(next === null);
+        } catch {
+          setFailed(true);
         } finally {
           setBusy(false);
         }
       }}
-      title={onRoll ? `Roll ${expression}` : expression}
+      title={onRoll ? reviewFrame("roll", { expression }, locale) : expression}
       className="inline-flex items-center gap-1 rounded-md border border-amber-700/60 bg-amber-950/40 px-1.5 py-0 align-baseline font-mono text-[0.85em] text-amber-100 hover:bg-amber-900/40 disabled:opacity-70"
     >
       <Dices className="size-3" />
       {expression}
+      {failed ? <span role="alert" className="text-red-300">{reviewText("Could not roll that.", locale)}</span> : null}
       {result !== null ? <span className="fx-pop font-semibold text-amber-300">{result}</span> : null}
     </button>
   );
 }
 
-type InlineOptions = { onRoll?: (expression: string) => Promise<number | null> };
+type InlineOptions = { locale?: AppLocale; onRoll?: (expression: string) => Promise<number | null> };
 
 function inline(
   text: string,
@@ -130,6 +143,7 @@ function inline(
   onLink?: (target: LoreLinkTarget) => void,
   options: InlineOptions = {},
 ): ReactNode[] {
+  const locale = options.locale ?? DEFAULT_LOCALE;
   const nodes: ReactNode[] = [];
   splitLoreLinks(text, targets).forEach((segment, index) => {
     if (segment.kind === "link" && DICE.test(segment.name)) {
@@ -151,7 +165,7 @@ function inline(
           <span
             key={`link-${index}`}
             className={cn("rounded-sm", segment.target ? "text-amber-200" : "text-stone-400 line-through decoration-stone-600")}
-            title={segment.target ? `A ${segment.target.kind}` : "Nothing by this name yet"}
+            title={segment.target ? reviewText(`A ${segment.target.kind}`, locale) : reviewText("Nothing by this name yet", locale)}
           >
             {segment.name}
           </span>
@@ -207,9 +221,10 @@ export function Markdown({
   // Rolls a [[1d6]] chip; without it the chip is only a label.
   onRoll?: (expression: string) => Promise<number | null>;
 }) {
+  const { locale } = useLocale();
   const rendered = blocks(source);
   const look = STYLE_CLASS[style];
-  const options: InlineOptions = { onRoll };
+  const options: InlineOptions = { onRoll, locale };
   const renderBlocks = (list: Block[], keyPrefix = ""): ReactNode[] =>
     list.map((block, index) => {
       const key = `${keyPrefix}${index}`;
@@ -219,7 +234,7 @@ export function Markdown({
         }
         return (
           <div key={key} className="rounded-md border border-dashed border-violet-700/70 bg-violet-950/30 px-2 py-1.5">
-            <p className="mb-1 text-[10px] uppercase tracking-wide text-violet-300">Only the DM reads this</p>
+            <p className="mb-1 text-[10px] uppercase tracking-wide text-violet-300">{reviewText("Only the DM reads this", locale)}</p>
             <div className="space-y-1.5">{renderBlocks(block.blocks, `${key}-`)}</div>
           </div>
         );

@@ -1,3 +1,6 @@
+import type { ComposerGatePhase } from "@/lib/i18n/composer-gate-metadata";
+import { composerGatePlaceholder } from "@/lib/i18n/compose-presentations";
+import type { AppLocale } from "@/lib/i18n/locales";
 import { isFloorExempt } from "@/lib/campaign-types";
 import type { InputKind } from "@/app/campaigns/[campaignId]/Composer";
 import type { Floor } from "@/lib/db/campaigns";
@@ -21,6 +24,7 @@ export function composerGate({
   leadPrivate,
   openingNarrationPlaying,
   enemyTurns = false,
+  locale = "en",
 }: {
   floor: Floor;
   sheets: CharacterSheet[];
@@ -33,6 +37,7 @@ export function composerGate({
   // The fight's floor is held for the enemies' turns (PublicEncounter
   // enemyTurns), not for table talk.
   enemyTurns?: boolean;
+  locale?: AppLocale;
 }) {
   const exempt = isFloorExempt(kind);
   const spotlighted =
@@ -62,26 +67,15 @@ export function composerGate({
   // Ask strip is never blocked, so this only has to spare OOC.
   const narrationBlocked = openingNarrationPlaying && kind !== "ooc";
   const inputBlocked = floorBlocked || holdBlocked || initiativeBlocked || narrationBlocked;
-  const placeholder = narrationBlocked
-    ? "The Dungeon Master is setting the scene... (OOC still open)"
-    : holdBlocked
-      ? floor.mode === "hold" && floor.next.mode === "initiative" && enemyTurns
-        ? "The enemies are taking their turns... (OOC still open)"
-        : "The party lead has the floor held for discussion... (OOC still open)"
-      : initiativeBlocked
-        ? `${floor.mode === "initiative" ? floor.currentName : "Another hero"}'s turn in combat... (OOC still open)`
-        : floorBlocked
-          ? `Waiting on ${spotlighted.map((sheet) => sheet.name).join(", ")}... (OOC still open)`
-          : kind === "do"
-            ? `What does ${myName} do?`
-            : kind === "say"
-              ? `What does ${myName} say?`
-              : kind === "narrate"
-                ? "Narrate the scene. The server still rolls every die."
-                : kind === "ooc"
-                  ? "Out-of-character note to the table"
-                  : leadPrivate
-                    ? "Tell the DM privately what to do with the next turn"
-                    : "Steer the story: a direction the DM must weave in";
+  const phase: ComposerGatePhase = narrationBlocked ? "opening"
+    : holdBlocked ? floor.mode === "hold" && floor.next.mode === "initiative" && enemyTurns ? "enemies" : "hold"
+    : initiativeBlocked ? "turn"
+    : floorBlocked ? "waiting"
+    : kind === "do" ? "do" : kind === "say" ? "say" : kind === "narrate" ? "narrate" : kind === "ooc" ? "ooc"
+    : leadPrivate ? "private" : "lead";
+  const placeholder = composerGatePlaceholder(phase, {
+    name: phase === "turn" && floor.mode === "initiative" ? floor.currentName : myName,
+    names: spotlighted.map(sheet => sheet.name).join(", "),
+  }, locale);
   return { inputBlocked, placeholder, spotlighted, heldSpotlightNames };
 }

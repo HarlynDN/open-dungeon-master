@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { reviewText } from "@/lib/i18n/play-review-presentations";
+
 import { ChevronsLeft, ChevronsRight } from "lucide-react";
 import { memo, useMemo, useSyncExternalStore, type ReactNode } from "react";
 import { cn } from "@/lib/cn";
@@ -83,6 +86,7 @@ function SidePanelInner({
   // The quest line above the panel (CinematicParts.tsx QuestGlance).
   glance?: ReactNode;
 }) {
+  const { locale } = useLocale();
   const wide = useSyncExternalStore(subscribeWide, readWide, () => false);
   // The server snapshot says docked so the first client render matches the
   // lg layout most desktops hydrate into; a phone corrects it at once.
@@ -137,11 +141,11 @@ function SidePanelInner({
           reads chat, context, then the switch between contexts. It scrolls
           on a short window rather than clipping the last tabs. */}
       <div className="cine-rail hidden w-16 shrink-0 flex-col items-stretch gap-1 overflow-y-auto border-l border-amber-500/15 bg-gradient-to-b from-stone-950/60 to-transparent px-1.5 py-2 [scrollbar-width:none] lg:flex">
-        <Tooltip content={wide ? "Narrow the panel" : "Widen the panel"} side="left">
+        <Tooltip content={reviewText(wide ? "Narrow the panel" : "Widen the panel", locale)} side="left">
           <button
             type="button"
             onClick={() => setWide(!wide)}
-            aria-label={wide ? "Narrow the panel" : "Widen the panel"}
+            aria-label={wide ? reviewText("Narrow the panel", locale) : reviewText("Widen the panel", locale)}
             className={cn(ui.railCell, "h-8 shrink-0 justify-center py-0")}
           >
             {wide ? <ChevronsRight className="size-4" /> : <ChevronsLeft className="size-4" />}

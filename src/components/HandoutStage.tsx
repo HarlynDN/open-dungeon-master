@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { reviewText } from "@/lib/i18n/play-review-presentations";
+
 import { Download, X } from "lucide-react";
 import { isComposingInput } from "@/lib/input-composition";
 import { useEffect, useState } from "react";
@@ -34,6 +37,7 @@ export function HandoutStage({
   // The DM's take-down; players fold locally.
   onDismiss: (id: string) => Promise<void>;
 }) {
+  const { locale } = useLocale();
   const [folded, setFolded] = useState<string | null>(null);
   const [entry, setEntry] = useState<LoreEntryView | null>(null);
   // The binder entry this stage last finished asking for, found or not: the
@@ -87,8 +91,9 @@ export function HandoutStage({
     return null;
   }
   const style = handout.style;
-  const image = handout.imagePath ?? entry?.imagePath ?? "";
-  const body = loreId ? entry?.body ?? "" : "";
+  const boundEntry = loreId && entry?.id === loreId ? entry : null;
+  const image = handout.imagePath ?? boundEntry?.imagePath ?? "";
+  const body = loreId ? boundEntry?.body ?? "" : "";
   const roll = async (expression: string) => {
     const response = await fetch(`/api/campaigns/${campaignId}/rolls`, {
       method: "POST",
@@ -101,7 +106,7 @@ export function HandoutStage({
 
   const paper = (
     <>
-      {style === "parchment" ? <span className="found-stamp">Found</span> : null}
+      {style === "parchment" ? <span className="found-stamp">{reviewText("Found", locale)}</span> : null}
       <h2 className={cn("font-display", style === "notice" ? "text-center text-2xl uppercase tracking-[0.2em]" : "text-xl")}>
         {handout.title}
       </h2>
@@ -114,11 +119,10 @@ export function HandoutStage({
         <p className={cn("mt-4 text-[11px] italic opacity-80", style === "notice" ? "text-center" : "")}>{handout.caption}</p>
       ) : null}
       <div className="mt-4 flex items-center justify-between">
-        <span className="wax-seal">From the DM</span>
-        {entry?.attachmentPath ? (
-          <a href={entry.attachmentPath} target="_blank" rel="noreferrer" className="text-[11px] underline">
-            Open the pages
-          </a>
+        <span className="wax-seal">{reviewText("From the DM", locale)}</span>
+        {boundEntry?.attachmentPath ? (
+          <a href={boundEntry.attachmentPath} target="_blank" rel="noreferrer" className="text-[11px] underline">
+             {reviewText("Open the pages", locale)} </a>
         ) : null}
       </div>
     </>
@@ -150,7 +154,7 @@ export function HandoutStage({
           <a
             href={image}
             download
-            aria-label="Download"
+            aria-label={reviewText("Download", locale)}
             className="rounded-md border border-stone-700 bg-stone-950/80 p-2 text-stone-400 hover:text-stone-100"
           >
             <Download className="size-4" />
@@ -162,13 +166,12 @@ export function HandoutStage({
             onClick={() => void onDismiss(handout.id)}
             className="rounded-md border border-amber-700 bg-amber-950/60 px-2 py-1.5 text-xs text-amber-100"
           >
-            Take it down
-          </button>
+             {reviewText("Take it down", locale)} </button>
         ) : null}
         <button
           type="button"
           onClick={() => setFolded(handout.id)}
-          aria-label="Fold away"
+          aria-label={reviewText("Fold away", locale)}
           className="rounded-md border border-stone-700 bg-stone-950/80 p-2 text-stone-400 hover:text-stone-100"
         >
           <X className="size-4" />

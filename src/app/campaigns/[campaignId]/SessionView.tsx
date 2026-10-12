@@ -1,5 +1,7 @@
 "use client";
 
+import { reviewText, tableTourView, REVIEW_NOTICES } from "@/lib/i18n/play-review-presentations";
+import { HELP_TOURS } from "@/lib/i18n/app-help-metadata";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 import { LevelUpMoment, LootMoment, MomentVeil, RestMoment, TravelBanner } from "@/app/campaigns/[campaignId]/Moments";
@@ -166,7 +168,7 @@ export function SessionView({
   markTitleCardShown?: (id: string) => void;
   playSting?: (cue: string) => void;
 }) {
-  const { locale } = useLocale();
+  const { locale, t } = useLocale();
   // The effects mode rides on <html data-effects> for CSS-only consumers.
   useEffectsRoot();
   const turnChime = useTurnChime();
@@ -209,6 +211,7 @@ export function SessionView({
   const [pinsVersion, setPinsVersion] = useState(0);
   // The guided tour on screen, if any: the player's or the DM's.
   const [tour, setTour] = useState<"player" | "dm" | null>(null);
+  const tourSteps = useMemo(() => tableTourView(tour === "dm" ? "dm" : "player", tour === "dm" ? DM_TOUR : PLAYER_TOUR, locale), [tour, locale]);
   const composerRef = useRef<HTMLTextAreaElement>(null);
   const dice3d = useSyncExternalStore(subscribeDicePref, readDice3d, () => true);
   const toggleDice3d = useCallback(() => {
@@ -377,7 +380,7 @@ export function SessionView({
     Boolean(firstDmMessageId) &&
     narration.playingMessageId === firstDmMessageId &&
     messages.filter((message) => message.authorType === "dm").length === 1;
-  const myName = mySheet?.name ?? "your character";
+  const myName = mySheet?.name ?? reviewText("your character", locale);
   const meId = me?.id ?? "";
   // Muted by the party lead: the server refuses the send, so the box says
   // so instead of letting the player type into a wall.
@@ -385,8 +388,8 @@ export function SessionView({
   const enemyTurns = state.encounter?.enemyTurns === true;
   const gate = useMemo(
     () =>
-      composerGate({ floor, sheets, meUserId: meId, kind, myName, leadPrivate, openingNarrationPlaying, enemyTurns }),
-    [floor, sheets, meId, kind, myName, leadPrivate, openingNarrationPlaying, enemyTurns],
+      composerGate({ floor, sheets, meUserId: meId, kind, myName, leadPrivate, openingNarrationPlaying, enemyTurns, locale }),
+    [floor, sheets, meId, kind, myName, leadPrivate, openingNarrationPlaying, enemyTurns, locale],
   );
   // A mid-game joiner without a character is gated to creation first. The DM
   // runs no character, so the gate must never catch them.
@@ -487,12 +490,12 @@ export function SessionView({
         });
         if (!response.ok) {
           const data = await response.json().catch(() => ({}));
-          setError(data.error || "Could not send your action.");
+          setError(data.error || REVIEW_NOTICES.action);
           return;
         }
         setInput("");
       } catch {
-        setError("Could not reach the server.");
+        setError(REVIEW_NOTICES.network);
       } finally {
         setSending(false);
       }
@@ -673,7 +676,7 @@ export function SessionView({
       setInput={setInput}
       sending={sending}
       inputBlocked={gate.inputBlocked || muted}
-      placeholder={muted ? "The party lead has muted you at this table." : gate.placeholder}
+      placeholder={muted ? t("composeUi.placeholder.muted") : gate.placeholder}
       onSubmit={submit}
       composer={composer}
     />
@@ -810,7 +813,7 @@ export function SessionView({
               sending={sending}
               error={error}
               inputBlocked={gate.inputBlocked || muted}
-              placeholder={muted ? "The party lead has muted you at this table." : gate.placeholder}
+              placeholder={muted ? t("composeUi.placeholder.muted") : gate.placeholder}
               dmStatus={dmStatus}
               pendingRolls={pendingRolls}
               members={state.members}
@@ -962,15 +965,13 @@ export function SessionView({
         onOpenChange={setHelpOpen}
         tours={[
           {
-            label: "Tour the table",
-            detail: "How a player takes a turn, asks the DM, and finds the party, the story and the maps.",
+            ...HELP_TOURS[0],
             onStart: () => startTour("player"),
           },
           ...(caps.adjudicates
             ? [
                 {
-                  label: "Tour the DM console",
-                  detail: "The floor, story beats, hand-over switches, the queue and the tools.",
+                  ...HELP_TOURS[1],
                   onStart: () => startTour("dm"),
                 },
               ]
@@ -980,7 +981,7 @@ export function SessionView({
 
       <GuidedTour
         open={tour !== null}
-        steps={tour === "dm" ? DM_TOUR : PLAYER_TOUR}
+        steps={tourSteps}
         onPrepare={prepareTourStep}
         onClose={closeTour}
       />

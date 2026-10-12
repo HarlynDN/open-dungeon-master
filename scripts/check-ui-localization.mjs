@@ -22,6 +22,8 @@ import { TTS_VOICES } from "../src/lib/tts-voices.ts";
 import { CLASS_OPTION_MATERIAL } from "../src/lib/i18n/class-option-metadata.ts";
 import { NATIVE_FEATURE_MATERIAL, NATIVE_FEAT_MATERIAL } from "../src/lib/i18n/feature-material-metadata.ts";
 import { HELP_TOPICS, HELP_TOURS } from "../src/lib/i18n/app-help-metadata.ts";
+import { COMPOSER_GATE_SOURCE } from "../src/lib/i18n/composer-gate-metadata.ts";
+import { DM_TOUR, PLAYER_TOUR } from "../src/lib/tours/table.ts";
 import { BOOK_HEADERS, BOOK_TEXT_KEYS } from "../src/lib/i18n/book-ui-metadata.ts";
 import { WORKSHOP_GUIDES } from "../src/lib/tours/workshop-guide.ts";
 import { SHELF_TOUR } from "../src/lib/tours/workshop.ts";
@@ -83,6 +85,13 @@ for (const [file, field] of [["src/lib/rulebook/crosswalk.ts", "where"], ["src/l
   }
   nativeCaption(ast);
 }
+
+for (const [kind, steps] of [["player", PLAYER_TOUR], ["dm", DM_TOUR]]) for (const step of steps) for (const field of ["title", "body"]) {
+  if (MESSAGE_CATALOGS.en[`playReviewUi.tour.${kind}.${step.id}.${field}`] !== step[field]) problems.push(`Table tour source changed: ${kind}.${step.id}.${field}`);
+}
+for (const [phase, source] of Object.entries(COMPOSER_GATE_SOURCE)) {
+  if (MESSAGE_CATALOGS.en[`composeUi.placeholder.${phase}`] !== source) problems.push(`Composer gate source changed: ${phase}`);
+}
 for (const guide of WORKSHOP_GUIDES) {
   const prefix = `workshopHelp.guide.${guide.id}`;
   for (const [field, source] of [["title", guide.title], ["purpose", guide.purpose], ...guide.steps.map((value, i) => [`step.${i}`, value]), ...guide.tips.map((value, i) => [`tip.${i}`, value])]) {
@@ -126,6 +135,13 @@ function collectTours(node) {
   if (ts.isObjectLiteralExpression(node)) {
     const properties = new Map(node.properties.filter(ts.isPropertyAssignment).map(property => [property.name.getText(sessionAst), property.initializer]));
     if (properties.has("onStart") && ts.isStringLiteral(properties.get("label") ?? sessionAst) && ts.isStringLiteral(properties.get("detail") ?? sessionAst)) nativeTours.push({ label: properties.get("label").text, detail: properties.get("detail").text });
+    if (properties.has("onStart") && !properties.has("label") && !properties.has("detail")) for (const property of node.properties) {
+      if (!ts.isSpreadAssignment(property) || !ts.isElementAccessExpression(property.expression)) continue;
+      const spread = property.expression;
+      if (spread.expression.getText(sessionAst) !== "HELP_TOURS" || !spread.argumentExpression || !ts.isNumericLiteral(spread.argumentExpression)) continue;
+      const row = HELP_TOURS[Number(spread.argumentExpression.text)];
+      if (row) nativeTours.push({ label: row.label, detail: row.detail });
+    }
   }
   ts.forEachChild(node, collectTours);
 }

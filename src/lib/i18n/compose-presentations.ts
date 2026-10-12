@@ -1,3 +1,4 @@
+import { COMPOSER_GATE_SOURCE, type ComposerGatePhase } from "./composer-gate-metadata.ts";
 import { catalogFor, createTranslator, type MessageKey } from "./translator.ts";
 import type { AppLocale } from "./locales.ts";
 import { turnControlErrorText } from "./turn-control-presentations.ts";
@@ -29,4 +30,11 @@ export function composeErrorText(raw: string, locale: AppLocale, fallback: Messa
   const localized = nativeFrame(raw, locale, "composeUi.error.");
   if (localized !== raw) return localized;
   return turnControlErrorText({ data: { error: raw }, fallback }, locale, enemyNames);
+}
+
+// Eligibility selects a typed UI phase; translated text never determines who
+// may act. English defaults also work in pure callers without a UI provider.
+export function composerGatePlaceholder(phase: ComposerGatePhase, params: Record<string, string | number>, locale: AppLocale): string {
+  return locale === "en" ? COMPOSER_GATE_SOURCE[phase].replace(/\{(\w+)\}/g, (_, name: string) => String(params[name] ?? `{${name}}`))
+    : createTranslator(locale)(`composeUi.placeholder.${phase}`, params);
 }

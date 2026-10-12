@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { reviewText, reviewFrame } from "@/lib/i18n/play-review-presentations";
+
 import { Pencil } from "lucide-react";
 import { useState } from "react";
 import type { CampaignDifficulty } from "@/lib/campaign-types";
@@ -37,31 +40,30 @@ export function SessionSettings({
   steersStory: boolean;
   isDm: boolean;
 }) {
+  const { locale, t } = useLocale();
   const [editing, setEditing] = useState(false);
 
   return (
     <div className="text-sm">
       <div className="mb-3 rounded-lg border border-stone-800 bg-stone-950/40 p-3">
         <div className="mb-1.5 flex items-center justify-between">
-          <p className="text-xs font-medium text-stone-400">Campaign</p>
+          <p className="text-xs font-medium text-stone-400">{reviewText("Campaign", locale)}</p>
           {isLead ? (
             <button
               type="button"
               onClick={() => setEditing(true)}
-              title="Edit title, premise, setting, difficulty, and player slots"
+              title={reviewText("Edit title, premise, setting, difficulty, and player slots", locale)}
               className="flex items-center gap-1 rounded-md border border-stone-700 px-2 py-1 text-xs text-stone-300 hover:bg-stone-900"
             >
-              <Pencil className="size-3" /> Edit details
-            </button>
+              <Pencil className="size-3" />  {reviewText("Edit details", locale)} </button>
           ) : null}
         </div>
         <p className="truncate text-stone-200">{campaign.title}</p>
         <p className="mt-1 text-xs text-stone-500">
-          Difficulty {campaign.difficulty} · Level {campaign.startingLevel} start · Up to{" "}
-          {campaign.maxPlayers} players
+          {reviewFrame("campaign", { difficulty: t(`campaign.difficulty.${campaign.difficulty}`), level: campaign.startingLevel, players: campaign.maxPlayers }, locale)}
         </p>
         {campaign.theme ? (
-          <p className="reveal mt-1 line-clamp-2 text-xs text-stone-500">Setting: {campaign.theme}</p>
+          <p className="reveal mt-1 line-clamp-2 text-xs text-stone-500">{reviewFrame("setting", { theme: campaign.theme }, locale)}</p>
         ) : null}
       </div>
 

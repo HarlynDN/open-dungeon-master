@@ -520,7 +520,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/LoreCheckDialog.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Lore check chrome, native category/verdict/citation labels and known check/accept errors localized. Evidence quotes, refs, model explanation/rewrite, excerpt splicing, permissions, run/accept protocol and source message remain raw; generator already uses campaign locale."
     },
     {
       "path": "src/app/campaigns/[campaignId]/LorePanel.tsx",
@@ -779,7 +780,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/SessionSettings.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Session settings shell, difficulty/count/theme summary and editing controls localized. Authored title/theme, native difficulty enum/values and authority/read-only props for independent game/rule/model children preserved."
     },
     {
       "path": "src/app/campaigns/[campaignId]/SessionTabs.tsx",
@@ -788,7 +790,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/SessionView.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Session orchestration shell uses viewer-localized composer/fallback/mute labels, source-bound help metadata and memoized native player/DM tour steps. Canonical submit/routes/body, callbacks, authority, raw model/player/stream text and child-owner boundaries unchanged; child owners remain independently pending where appropriate."
     },
     {
       "path": "src/app/campaigns/[campaignId]/SideChatPanel.tsx",
@@ -797,7 +800,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/SidePanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Both width tooltip and accessibility captions localized. Native storage/event keys, docked visibility, tab IDs/labels supplied by SessionTabs, authority/badges and memoized child routing preserved; child owners reviewed independently."
     },
     {
       "path": "src/app/campaigns/[campaignId]/SidePanelRouter.tsx",
@@ -901,7 +905,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/composerGate.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Original eligibility/spotlight/held name calculations stay native; optional viewer locale projects existing complete placeholder frames. Omitted locale retains exact English. Every native placeholder branch is source-bound to existing compose catalog."
     },
     {
       "path": "src/app/campaigns/[campaignId]/dmStatusPhrases.ts",
@@ -1767,7 +1772,8 @@
     },
     {
       "path": "src/components/DictateField.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Dictation chrome, default/custom field accessible labels, timers/chunk progress and known native hint/partial-retention errors localized. Transcript/partial text, recording/transcribe/native states and callbacks remain original. Chinese STT/backend/recognizer-language changes are deferred; this owner only claims UI localization."
     },
     {
       "path": "src/components/EmptyState.tsx",
@@ -1776,7 +1782,8 @@
     },
     {
       "path": "src/components/HandoutStage.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Handout provenance/download/fold/take-down captions localized. Authored titles/body/caption/image/attachments/audience, roll expression and callbacks preserved. Binder content is gated by matching current lore ID, so stale or failed loads cannot display a previous entry under a new handout."
     },
     {
       "path": "src/components/HelpDialog.tsx",
@@ -2047,7 +2054,8 @@
     },
     {
       "path": "src/components/ui/Markdown.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Markdown secret/link/dice chrome localized, source body/headings/names and resolved target IDs preserved. DM-only content gate unchanged. Roll chip preserves expression and one callback; failed/missing rolls settle visibly and clear stale result."
     },
     {
       "path": "src/components/ui/NumberStepper.tsx",
