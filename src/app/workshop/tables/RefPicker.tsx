@@ -1,5 +1,8 @@
 "use client";
 
+import { encounterPrepError } from "@/lib/i18n/encounter-prep-presentations";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
 import { ROLL_REF_KINDS, type RollRefKind } from "@/lib/dm/roll-table-logic";
@@ -18,13 +21,9 @@ import { readLoad } from "@/lib/load-state";
 // monsters and the catalogue's, the content pack's items, the cast, the
 // lore), and the row lands in the body.
 
-const KIND_LABELS: Record<RollRefKind, string> = {
-  table: "Another table",
-  monster: "A monster",
-  item: "An item",
-  npc: "Someone from the cast",
-  lore: "A lore entry",
-};
+const KIND_MESSAGES = {
+  table: "encounterPrep.ref.table", monster: "encounterPrep.ref.monster", item: "encounterPrep.ref.item", npc: "encounterPrep.ref.npc", lore: "encounterPrep.ref.lore",
+} as const;
 
 const KIND_GLYPHS: Record<RollRefKind, string> = {
   table: "system-tables",
@@ -33,11 +32,6 @@ const KIND_GLYPHS: Record<RollRefKind, string> = {
   npc: "system-cast",
   lore: "system-lore",
 };
-const KIND_OPTIONS = ROLL_REF_KINDS.map((option) => ({
-  value: option,
-  label: KIND_LABELS[option],
-  icon: { kind: "glyph" as const, key: KIND_GLYPHS[option] },
-}));
 
 type Named = { name: string };
 
@@ -55,6 +49,8 @@ export function RefPicker({
   editingId: string;
   onInsert: (line: string) => void;
 }) {
+  const { locale, t } = useLocale();
+  const kindOptions = ROLL_REF_KINDS.map(value => ({ value, label: t(KIND_MESSAGES[value]), icon: { kind: "glyph" as const, key: KIND_GLYPHS[value] } }));
   const [kind, setKind] = useState<RollRefKind>("table");
   const [npcs, setNpcs] = useState<Named[] | null>(null);
   const [lore, setLore] = useState<Named[] | null>(null);
@@ -117,43 +113,43 @@ export function RefPicker({
     <div className="flex flex-wrap items-center gap-1.5" data-tour="tables-ref">
       <GameIcon icon={{ kind: "glyph", key: "tab-reference" }} size="size-6" />
       <span className="w-56">
-        <Select<RollRefKind> value={kind} label="What kind of thing the row is" onChange={setKind} options={KIND_OPTIONS} size="sm" />
+        <Select<RollRefKind> value={kind} label={t("encounterPrep.ref.kind")} onChange={setKind} options={kindOptions} size="sm" />
       </span>
       {kind === "item" ? (
         <ContentPick
           kind="items"
-          label="Find an item to add as a row"
-          placeholder="Potion of Healing"
+          label={t("encounterPrep.ref.itemLabel")}
+          placeholder={t("encounterPrep.ref.itemHint")}
           onPick={(entry) => insert(entry.name)}
           className="min-w-44 flex-1"
         />
       ) : kind === "monster" ? (
         <>
           <AddFromList
-            prompt="One of yours"
+            prompt={t("encounterPrep.ref.mine")}
             options={(list ?? []).map((entry) => entry.name)}
             onPick={insert}
           />
           <ContentPick
             kind="monsters"
-            label="Find a monster in the catalogue to add as a row"
-            placeholder="wolf"
+            label={t("encounterPrep.ref.monsterLabel")}
+            placeholder={t("encounterPrep.ref.monsterHint")}
             onPick={(entry) => insert(entry.name)}
             className="min-w-44 flex-1"
           />
         </>
       ) : list && list.length ? (
         <AddFromList
-          prompt="Add a row for"
+          prompt={t("encounterPrep.ref.add")}
           options={list.map((entry) => entry.name)}
           onPick={insert}
           className={cn("min-w-44")}
         />
       ) : list === null && loadErrors[kind] ? (
-        <LoadFailed error={loadErrors[kind] ?? ""} onRetry={retry} className="min-w-44" />
+        <LoadFailed error={encounterPrepError(loadErrors[kind] ?? "", locale)} onRetry={retry} className="min-w-44" />
       ) : (
         <span className="text-xs text-stone-500">
-          {list === null ? "Reading..." : `Nothing of that kind in this workshop yet.`}
+          {list === null ? t("encounterPrep.ref.reading") : t("encounterPrep.ref.empty")}
         </span>
       )}
     </div>

@@ -627,7 +627,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/MonsterRosterPicker.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped encounter-preparation workflow: owned fields, map/entry/placement/hidden controls, reward references, phases, difficulty/budget counts and row actions localized. Raw roster/name/battlefield/map names/rewards/phases and @kind reference syntax preserved; placement/override slots, coordinates, numeric geometry, canonical IDs and callbacks unchanged. Monster search opts into registered locale aliases, admits one-character CJK queries, displays only known owned names with source/document provenance and retains canonical picks plus homebrew priority. Search failures distinguish failed reads from empty results, provide retry, and short queries stop stale loading. Imported children retain independent coverage."
     },
     {
       "path": "src/app/campaigns/[campaignId]/NarrationFailureBanner.tsx",
@@ -1552,15 +1553,18 @@
     },
     {
       "path": "src/app/workshop/encounters/EncounterExtras.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped encounter-preparation workflow: owned fields, map/entry/placement/hidden controls, reward references, phases, difficulty/budget counts and row actions localized. Raw roster/name/battlefield/map names/rewards/phases and @kind reference syntax preserved; placement/override slots, coordinates, numeric geometry, canonical IDs and callbacks unchanged. Monster search opts into registered locale aliases, admits one-character CJK queries, displays only known owned names with source/document provenance and retains canonical picks plus homebrew priority. Search failures distinguish failed reads from empty results, provide retry, and short queries stop stale loading. Imported children retain independent coverage."
     },
     {
       "path": "src/app/workshop/encounters/EncounterForm.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped encounter-preparation workflow: owned fields, map/entry/placement/hidden controls, reward references, phases, difficulty/budget counts and row actions localized. Raw roster/name/battlefield/map names/rewards/phases and @kind reference syntax preserved; placement/override slots, coordinates, numeric geometry, canonical IDs and callbacks unchanged. Monster search opts into registered locale aliases, admits one-character CJK queries, displays only known owned names with source/document provenance and retains canonical picks plus homebrew priority. Search failures distinguish failed reads from empty results, provide retry, and short queries stop stale loading. Imported children retain independent coverage."
     },
     {
       "path": "src/app/workshop/encounters/EncounterRows.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped encounter-preparation workflow: owned fields, map/entry/placement/hidden controls, reward references, phases, difficulty/budget counts and row actions localized. Raw roster/name/battlefield/map names/rewards/phases and @kind reference syntax preserved; placement/override slots, coordinates, numeric geometry, canonical IDs and callbacks unchanged. Monster search opts into registered locale aliases, admits one-character CJK queries, displays only known owned names with source/document provenance and retains canonical picks plus homebrew priority. Search failures distinguish failed reads from empty results, provide retry, and short queries stop stale loading. Imported children retain independent coverage."
     },
     {
       "path": "src/app/workshop/encounters/budget-bar.ts",
@@ -1673,7 +1677,8 @@
     },
     {
       "path": "src/app/workshop/tables/RefPicker.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped encounter-preparation workflow: owned fields, map/entry/placement/hidden controls, reward references, phases, difficulty/budget counts and row actions localized. Raw roster/name/battlefield/map names/rewards/phases and @kind reference syntax preserved; placement/override slots, coordinates, numeric geometry, canonical IDs and callbacks unchanged. Monster search opts into registered locale aliases, admits one-character CJK queries, displays only known owned names with source/document provenance and retains canonical picks plus homebrew priority. Search failures distinguish failed reads from empty results, provide retry, and short queries stop stale loading. Imported children retain independent coverage."
     },
     {
       "path": "src/app/workshop/tables/StatblockFinder.tsx",

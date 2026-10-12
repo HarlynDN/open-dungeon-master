@@ -1,3 +1,5 @@
+import { localizedReferenceSearch } from "@/lib/content/localized-reference-search";
+import { normalizeLocale } from "@/lib/i18n/locales";
 import { z } from "zod";
 import { isErrorResponse, requireDm } from "@/lib/campaign-api";
 import { documentTitle, getEntryDetail, searchMonsters } from "@/lib/content";
@@ -49,11 +51,15 @@ export async function GET(
 
   // The search runs only when asked for. A DM opening the panel wants their
   // own monsters, not 3,207 rows of Open5e.
+  const search = (q: string, offset: number, limit: number) => searchMonsters({ q, offset, limit, maxCr: query.maxCr });
   const found = query.q
-    ? searchMonsters({ q: query.q, limit: 25, maxCr: query.maxCr }).map((entry) => ({
+    ? (url.searchParams.get("localized") === "1" ? localizedReferenceSearch({
+        q: query.q, kind: "monster", locale: normalizeLocale(url.searchParams.get("locale")), offset: 0, limit: 25, search,
+      }) : search(query.q, 0, 25)).map((entry) => ({
         slug: entry.slug,
         name: entry.name,
         source: entry.source,
+        documentSlug: entry.documentSlug,
         cr: typeof entry.data.cr === "number" ? entry.data.cr : 0,
         type: normalizeCreatureType(entry.data.type) ?? "",
         // The world pack's own picture of this monster, when it carries one.

@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+
 import { useState } from "react";
 import { EyeOff, Flag, Plus, X } from "lucide-react";
 import { cn } from "@/lib/cn";
@@ -41,6 +43,7 @@ export function EncounterExtras({
   value: TemplateExtras;
   onChange: (next: TemplateExtras) => void;
 }) {
+  const { t } = useLocale();
   const slots = expandRoster(parseRoster(roster));
   // Which slot the next tap on the map places; -1 is the party's entry.
   const [placing, setPlacing] = useState<number | null>(null);
@@ -81,11 +84,11 @@ export function EncounterExtras({
         : null;
     })
     .filter((label): label is NonNullable<typeof label> => label !== null);
-  const props = value.entry ? [{ x: value.entry.x, y: value.entry.y, name: "Party enters", kind: "npc" as const }] : [];
+  const props = value.entry ? [{ x: value.entry.x, y: value.entry.y, name: t("encounterPrep.partyEnters"), kind: "npc" as const }] : [];
 
   return (
     <div className="panel space-y-3 rounded-xl p-3">
-      <SectionHead title="The plan" glyph="tab-battle" className="mb-0" />
+      <SectionHead title={t("encounterPrep.plan")} glyph="tab-battle" className="mb-0" />
 
       {slots.length ? (
         <ul className="stagger space-y-1">
@@ -99,7 +102,7 @@ export function EncounterExtras({
                   type="button"
                   disabled={!canPlace}
                   aria-pressed={placing === slot.slot}
-                  title={canPlace ? "Then tap the map where it starts" : "Link a prepared map to place it"}
+                  title={canPlace ? t("encounterPrep.placeTip") : t("encounterPrep.linkTip")}
                   onClick={() => setPlacing(placing === slot.slot ? null : slot.slot)}
                   className={cn(ui.btnSmall, chip, "min-w-28 text-left", placing === slot.slot && chipOn)}
                 >
@@ -108,9 +111,9 @@ export function EncounterExtras({
                 </button>
                 <input
                   value={override?.name ?? ""}
-                  placeholder="name"
+                  placeholder={t("encounterPrep.slotNameHint")}
                   maxLength={EXTRAS_LIMITS.name}
-                  aria-label={`${slot.label} name`}
+                  aria-label={t("encounterPrep.slotName", { name: slot.label })}
                   onChange={(event) => setOverride(slot.slot, { name: event.target.value })}
                   className={cn(field, "w-32 py-1.5")}
                 />
@@ -119,20 +122,20 @@ export function EncounterExtras({
                   fallback={1}
                   min={1}
                   max={EXTRAS_LIMITS.hp}
-                  suffix="hp"
-                  label={`${slot.label} hit points`}
+                  suffix={t("encounterPrep.hp")}
+                  label={t("encounterPrep.slotHp", { name: slot.label })}
                   onChange={(next) => setOverride(slot.slot, { hp: next === "" ? undefined : next })}
                 />
                 <button
                   type="button"
                   aria-pressed={hidden}
-                  title="Hidden when the fight opens"
+                  title={t("encounterPrep.hiddenTip")}
                   onClick={() =>
                     set({ hidden: hidden ? value.hidden.filter((entry) => entry !== slot.slot) : [...value.hidden, slot.slot] })
                   }
                   className={cn(ui.btnSmall, addChip, hidden && "border-violet-700 bg-violet-950/40 text-violet-200")}
                 >
-                  <EyeOff className="size-3" /> {hidden ? "Hidden" : "Seen"}
+                  <EyeOff className="size-3" /> {hidden ? t("encounterPrep.hidden") : t("encounterPrep.seen")}
                 </button>
               </li>
             );
@@ -145,13 +148,13 @@ export function EncounterExtras({
               onClick={() => setPlacing(placing === -1 ? null : -1)}
               className={cn(ui.btnSmall, addChip, placing === -1 && chipOn)}
             >
-              <Flag className="size-3" /> Where the party comes in
+              <Flag className="size-3" /> {t("encounterPrep.partyEntry")}
               {value.entry ? <span className="text-stone-500">({value.entry.x},{value.entry.y})</span> : null}
             </button>
           </li>
         </ul>
       ) : (
-        <p className="text-[11px] text-stone-500">Write the roster above and each creature gets a line here.</p>
+        <p className="text-[11px] text-stone-500">{t("encounterPrep.slotsEmpty")}</p>
       )}
 
       {canPlace && map?.terrain && map.width && map.height ? (
@@ -168,24 +171,24 @@ export function EncounterExtras({
           />
           <p className="text-[11px] text-stone-500">
             {placing === null
-              ? "Pick a creature above, then tap where it starts. The party goes where the flag says."
-              : "Tap the tile. Tap the same tile again to clear it."}
+              ? t("encounterPrep.placeHelp")
+              : t("encounterPrep.tileHelp")}
           </p>
         </>
       ) : (
         <p className="text-[11px] text-stone-500">
-          Link a prepared map above to place each creature on it. Without one the generator seats them.
+          {t("encounterPrep.noMap")}
         </p>
       )}
 
-      <SectionHead title="What the fight is worth" glyph="coin-purse" className="mb-0" />
-      <Field as="label" label="Rewards">
-        <DictateField label="Rewards" onTranscript={(text) => set({ rewards: appendDictation(value.rewards, text, EXTRAS_LIMITS.rewards) })}>
+      <SectionHead title={t("encounterPrep.worth")} glyph="coin-purse" className="mb-0" />
+      <Field as="label" label={t("encounterPrep.rewards")}>
+        <DictateField label={t("encounterPrep.rewards")} onTranscript={(text) => set({ rewards: appendDictation(value.rewards, text, EXTRAS_LIMITS.rewards) })}>
           <textarea
             value={value.rewards}
             maxLength={EXTRAS_LIMITS.rewards}
             rows={2}
-            placeholder="120 gp in a locked chest, the captain's signet ring, roll once on Marsh treasure."
+            placeholder={t("encounterPrep.rewardHint")}
             onChange={(event) => set({ rewards: event.target.value })}
             className={field}
           />
@@ -205,14 +208,14 @@ export function EncounterExtras({
       />
 
       <div className="space-y-1.5 text-sm">
-        <SectionHead title="What happens when" glyph="tab-timeline" className="mb-1" />
+        <SectionHead title={t("encounterPrep.phases")} glyph="tab-timeline" className="mb-1" />
         {value.phases.map((phase, index) => (
           <div key={index} className="flex items-center gap-1.5">
             <input
               value={phase}
               maxLength={EXTRAS_LIMITS.phaseText}
-              placeholder="When the shaman drops, the wolves flee."
-              aria-label={`Phase ${index + 1}`}
+              placeholder={t("encounterPrep.phaseHint")}
+              aria-label={t("encounterPrep.phase", { count: index + 1 })}
               onChange={(event) =>
                 set({ phases: value.phases.map((line, at) => (at === index ? event.target.value : line)) })
               }
@@ -220,7 +223,7 @@ export function EncounterExtras({
             />
             <button
               type="button"
-              aria-label="Remove phase"
+              aria-label={t("encounterPrep.removePhase")}
               onClick={() => set({ phases: value.phases.filter((_, at) => at !== index) })}
               className={cn(ui.iconAction, rowIcon, "hover:text-red-300")}
             >
@@ -234,11 +237,11 @@ export function EncounterExtras({
             onClick={() => set({ phases: [...value.phases, ""] })}
             className={cn(ui.btnSmall, addChip)}
           >
-            <Plus className="size-3" /> Add a phase
+            <Plus className="size-3" /> {t("encounterPrep.addPhase")}
           </button>
         ) : null}
         <p className="text-[11px] text-stone-500">
-          Rewards and phases land as a note only you can read when the fight is deployed.
+          {t("encounterPrep.privateNote")}
         </p>
       </div>
     </div>

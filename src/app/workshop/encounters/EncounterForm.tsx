@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { ui } from "@/lib/ui";
@@ -41,6 +43,7 @@ export function EncounterForm({
   onSubmit: () => void;
   variant?: "card" | "sheet";
 }) {
+  const { t } = useLocale();
   const set = (patch: Partial<EncounterDraft>) => onChange({ ...value, ...patch });
   return (
     <section
@@ -50,16 +53,16 @@ export function EncounterForm({
           : "space-y-2",
       )}
     >
-      <SectionHead title="The fight" glyph="system-encounters" className="mb-1" />
+      <SectionHead title={t("encounterPrep.fight")} glyph="system-encounters" className="mb-1" />
       <input
         value={value.name}
         maxLength={TEMPLATE_NAME_MAX}
         onChange={(event) => set({ name: event.target.value })}
-        placeholder="Ambush at the ford"
-        aria-label="Encounter name"
+        placeholder={t("encounterPrep.nameHint")}
+        aria-label={t("encounterPrep.name")}
         className={field}
       />
-      <SectionHead title="Who is in it" glyph="system-bestiary" className="mb-1 pt-1" />
+      <SectionHead title={t("encounterPrep.participants")} glyph="system-bestiary" className="mb-1 pt-1" />
       <div data-tour="encounters-picker">
         <MonsterRosterPicker
           campaignId={campaignId}
@@ -71,30 +74,29 @@ export function EncounterForm({
         value={value.enemies}
         onChange={(event) => set({ enemies: event.target.value })}
         rows={3}
-        placeholder={"goblin x4\nhobgoblin"}
-        aria-label="Roster"
+        placeholder={t("encounterPrep.rosterHint")}
+        aria-label={t("encounterPrep.roster")}
         className={field}
       />
       <p className="text-[11px] text-stone-500">
-        One per line, name or slug, optional xN. The same shorthand Start a fight takes, so
-        picking above and typing here are the same thing.
+        {t("encounterPrep.rosterHelp")}
       </p>
-      <SectionHead title="Where it happens" glyph="system-maps" className="mb-1 pt-1" />
+      <SectionHead title={t("encounterPrep.where")} glyph="system-maps" className="mb-1 pt-1" />
       <input
         value={value.battlefield}
         onChange={(event) => set({ battlefield: event.target.value })}
-        placeholder="a rope bridge over a gorge"
-        aria-label="Battlefield"
+        placeholder={t("encounterPrep.battlefieldHint")}
+        aria-label={t("encounterPrep.battlefield")}
         className={field}
       />
       <div data-tour="encounters-map">
-        <Field label="On which map">
+        <Field label={t("encounterPrep.map")}>
           <Select
-            label="On which map"
+            label={t("encounterPrep.map")}
             value={value.mapId}
             onChange={(mapId) => set({ mapId })}
             options={[
-              { value: "", label: "Generator's choice", icon: { kind: "glyph", key: "die-d20" } },
+              { value: "", label: t("encounterPrep.generator"), icon: { kind: "glyph", key: "die-d20" } },
               ...maps.map((map) => ({ value: map.id, label: map.name, icon: { kind: "glyph" as const, key: "system-maps" } })),
             ]}
           />
@@ -107,14 +109,14 @@ export function EncounterForm({
         value={value.extras}
         onChange={(extras) => set({ extras })}
       />
-      <SectionHead title="Notes" glyph="tab-notes" className="mb-1 pt-1" />
-      <DictateField label="Encounter notes" onTranscript={(text) => set({ notes: appendDictation(value.notes, text) })}>
+      <SectionHead title={t("encounterPrep.notes")} glyph="tab-notes" className="mb-1 pt-1" />
+      <DictateField label={t("encounterPrep.noteLabel")} onTranscript={(text) => set({ notes: appendDictation(value.notes, text) })}>
         <textarea
           value={value.notes}
           onChange={(event) => set({ notes: event.target.value })}
           rows={2}
-          placeholder="Tactics, what they want, when they run."
-          aria-label="Notes"
+          placeholder={t("encounterPrep.noteHint")}
+          aria-label={t("encounterPrep.notes")}
           className={field}
         />
       </DictateField>

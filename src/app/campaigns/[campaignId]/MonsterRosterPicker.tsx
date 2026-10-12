@@ -1,5 +1,9 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { rosterMonsterName, monsterSearchReady, encounterPrepError, type RosterMonster } from "@/lib/i18n/encounter-prep-presentations";
+import { readLoad } from "@/lib/load-state";
+
 import { Loader2, Plus, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
@@ -29,9 +33,13 @@ export function MonsterRosterPicker({
   roster: string;
   onChange: (roster: string) => void;
 }) {
+  const { locale, t } = useLocale();
+  const [loadError, setLoadError] = useState("");
+  const [searched, setSearched] = useState(false);
+  const [retries, setRetries] = useState(0);
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<
-    Array<{ slug: string; name: string; cr: number; type: string; art?: string }>
+    RosterMonster[]
   >([]);
   // The table's setting, for the boss plate on high-rating results.
   const [genre, setGenre] = useState("");
@@ -45,57 +53,46 @@ export function MonsterRosterPicker({
     const term = query.trim();
     let cancelled = false;
     const timer = setTimeout(() => {
-      if (term.length < 2) {
+      if (!monsterSearchReady(term)) {
         setResults([]);
+        setLoading(false);
+        setLoadError("");
+        setSearched(false);
         return;
       }
       setLoading(true);
-      fetch(`/api/campaigns/${campaignId}/dm/bestiary?q=${encodeURIComponent(term)}`)
-        .then((response) => (response.ok ? response.json() : null))
-        .then(
-          (
-            payload: {
-              found: Array<{ slug: string; name: string; cr: number; type: string; art?: string }>;
-              monsters: Array<{
-                draft: { name: string; stats: { cr: number; type?: string } };
-                slug: string;
-              }>;
-              genre?: string;
-            } | null,
-          ) => {
-            if (cancelled || !payload) {
-              return;
-            }
-            setGenre(payload.genre ?? "");
-            // The DM's own monsters first: a boss built in this workshop is
-            // the one they came looking for.
-            const mine = payload.monsters
-              .filter((monster) =>
-                monster.draft.name.toLowerCase().includes(term.toLowerCase()),
-              )
-              .map((monster) => ({
-                slug: monster.slug,
-                name: monster.draft.name,
-                cr: monster.draft.stats.cr,
-                type: monster.draft.stats.type ?? "",
-              }));
-            setResults([...mine, ...payload.found].slice(0, 24));
-          },
-        )
-        .catch(() => {
-          // transient; the next keystroke retries
-        })
-        .finally(() => {
-          if (!cancelled) {
-            setLoading(false);
+      setLoadError("");
+      const params = new URLSearchParams({ q: term });
+      if (locale !== "en") { params.set("localized", "1"); params.set("locale", locale); }
+      readLoad<{
+        found: RosterMonster[];
+        monsters: Array<{ draft: { name: string; stats: { cr: number; type?: string } }; slug: string }>;
+        genre?: string;
+      }>(fetch(`/api/campaigns/${campaignId}/dm/bestiary?${params}`), "The monster search")
+        .then(outcome => {
+          if (cancelled) return;
+          setLoading(false);
+          setSearched(true);
+          if (!outcome.payload) {
+            setResults([]);
+            setLoadError(outcome.error);
+            return;
           }
+          const payload = outcome.payload;
+          setGenre(payload.genre ?? "");
+          // Authored monsters keep their names and retain first-pick priority.
+          const mine = payload.monsters
+            .filter(monster => monster.draft.name.toLowerCase().includes(term.toLowerCase()))
+            .map(monster => ({ slug: monster.slug, name: monster.draft.name,
+              cr: monster.draft.stats.cr, type: monster.draft.stats.type ?? "", source: "homebrew" }));
+          setResults([...mine, ...payload.found].slice(0, 24));
         });
     }, 250);
     return () => {
       cancelled = true;
       clearTimeout(timer);
     };
-  }, [campaignId, query]);
+  }, [campaignId, query, locale, retries]);
 
   return (
     <div className="flex flex-col gap-1">
@@ -104,13 +101,22 @@ export function MonsterRosterPicker({
         <input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="Search monsters to add: goblin, owlbear, the boss you built..."
+          placeholder={t("encounterPrep.searchHint")}
+          aria-label={t("encounterPrep.searchLabel")}
           className={cn(input, "w-full pl-7")}
         />
         {loading ? (
           <Loader2 className="absolute right-2 top-1.5 size-3.5 animate-spin text-stone-600" />
         ) : null}
       </div>
+      {loadError ? (
+        <div role="alert" className="flex items-center gap-2 text-xs text-red-300">
+          <span>{encounterPrepError(loadError, locale)}</span>
+          <button type="button" onClick={() => setRetries(current => current + 1)} className={chip}>{t("encounterPrep.retry")}</button>
+        </div>
+      ) : searched && !loading && !results.length ? (
+        <p className="text-xs text-stone-500">{t("encounterPrep.searchEmpty")}</p>
+      ) : null}
       {results.length ? (
         <div className="reveal flex flex-wrap gap-1">
           {results.map((entry) => (
@@ -130,8 +136,8 @@ export function MonsterRosterPicker({
                 size="size-5"
                 className="mr-1 inline-flex align-middle"
               />
-              {entry.name}
-              <span className="ml-1 text-stone-600">CR {crLabel(entry.cr)}</span>
+              {rosterMonsterName(entry, locale)}
+              <span className="ml-1 text-stone-600">{t("encounterPrep.cr", { cr: crLabel(entry.cr) })}</span>
             </button>
           ))}
         </div>

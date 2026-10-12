@@ -1,3 +1,4 @@
+import { ENCOUNTER_PREP_MESSAGES } from "./encounter-prep-messages.ts";
 import { DM_RESULT_MESSAGES } from "./dm-result-messages.ts";
 import { DM_FIELD_MESSAGES } from "./dm-field-messages.ts";
 import { NPC_EDITOR_MESSAGES } from "./npc-editor-messages.ts";
@@ -127,6 +128,7 @@ const en = {
     ...MAP_EDITOR_MESSAGES.en,
     ...NPC_EDITOR_MESSAGES.en,
     ...DM_RESULT_MESSAGES.en,
+    ...ENCOUNTER_PREP_MESSAGES.en,
     ...DM_FIELD_MESSAGES.en,
     ...DM_TOOLS_MESSAGES.en,
   ...DM_ACTION_MESSAGES.en,
@@ -256,6 +258,7 @@ const zhCN: Messages = {
     ...MAP_EDITOR_MESSAGES["zh-CN"],
     ...NPC_EDITOR_MESSAGES["zh-CN"],
     ...DM_RESULT_MESSAGES["zh-CN"],
+    ...ENCOUNTER_PREP_MESSAGES["zh-CN"],
     ...DM_FIELD_MESSAGES["zh-CN"],
     ...DM_TOOLS_MESSAGES["zh-CN"],
   ...DM_ACTION_MESSAGES["zh-CN"],
