@@ -1,4 +1,5 @@
 import { currentUser, unauthorized } from "@/lib/auth";
+import { normalizeLocale } from "@/lib/i18n/locales";
 import { rulebookSearch } from "@/lib/rulebook/book";
 
 export const runtime = "nodejs";
@@ -13,6 +14,7 @@ export async function GET(request: Request) {
   if (!user) {
     return unauthorized();
   }
-  const q = (new URL(request.url).searchParams.get("q") ?? "").slice(0, QUERY_MAX);
-  return Response.json(rulebookSearch(q));
+  const params = new URL(request.url).searchParams;
+  const q = (params.get("q") ?? "").slice(0, QUERY_MAX);
+  return Response.json(rulebookSearch(q, undefined, normalizeLocale(params.get("locale"))));
 }

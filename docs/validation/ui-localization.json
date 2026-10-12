@@ -42,7 +42,8 @@
     "ODM-XXXXXXXXXX",
     "XXXX-XXXX-XXXX-XXXX",
     "d",
-    "chrome://flags/#enable-web-bluetooth"
+    "chrome://flags/#enable-web-bluetooth",
+    "CC-BY-4.0"
   ],
   "files": [
     {
@@ -1417,7 +1418,8 @@
     },
     {
       "path": "src/app/rulebook/page.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Rulebook/book reading workflow chrome, navigation headers, quick links, counters, known native crosswalk/support/family explanations, loading/search/retry/bookmarks/copy controls localized. SRD Markdown/entry titles/meta/snippets, authored story entries and unknown overrides remain original under full-rulebook-text deferral. Page/anchor IDs, original xrefs, folios, book storage keys and editor URLs preserved. Chinese opt-in searches expand registered names/terms; legacy English search stays native. Failed search is distinct from no results, failed navigation retains current page with retry, workshop read refusal is distinct from an empty account."
     },
     {
       "path": "src/app/settings/AppearanceSection.tsx",
@@ -1878,23 +1880,28 @@
     },
     {
       "path": "src/components/rulebook/PagePrep.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Rulebook/book reading workflow chrome, navigation headers, quick links, counters, known native crosswalk/support/family explanations, loading/search/retry/bookmarks/copy controls localized. SRD Markdown/entry titles/meta/snippets, authored story entries and unknown overrides remain original under full-rulebook-text deferral. Page/anchor IDs, original xrefs, folios, book storage keys and editor URLs preserved. Chinese opt-in searches expand registered names/terms; legacy English search stays native. Failed search is distinct from no results, failed navigation retains current page with retry, workshop read refusal is distinct from an empty account."
     },
     {
       "path": "src/components/rulebook/RulebookContents.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Rulebook/book reading workflow chrome, navigation headers, quick links, counters, known native crosswalk/support/family explanations, loading/search/retry/bookmarks/copy controls localized. SRD Markdown/entry titles/meta/snippets, authored story entries and unknown overrides remain original under full-rulebook-text deferral. Page/anchor IDs, original xrefs, folios, book storage keys and editor URLs preserved. Chinese opt-in searches expand registered names/terms; legacy English search stays native. Failed search is distinct from no results, failed navigation retains current page with retry, workshop read refusal is distinct from an empty account."
     },
     {
       "path": "src/components/rulebook/RulebookDialog.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Rulebook/book reading workflow chrome, navigation headers, quick links, counters, known native crosswalk/support/family explanations, loading/search/retry/bookmarks/copy controls localized. SRD Markdown/entry titles/meta/snippets, authored story entries and unknown overrides remain original under full-rulebook-text deferral. Page/anchor IDs, original xrefs, folios, book storage keys and editor URLs preserved. Chinese opt-in searches expand registered names/terms; legacy English search stays native. Failed search is distinct from no results, failed navigation retains current page with retry, workshop read refusal is distinct from an empty account."
     },
     {
       "path": "src/components/rulebook/RulebookPage.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Rulebook/book reading workflow chrome, navigation headers, quick links, counters, known native crosswalk/support/family explanations, loading/search/retry/bookmarks/copy controls localized. SRD Markdown/entry titles/meta/snippets, authored story entries and unknown overrides remain original under full-rulebook-text deferral. Page/anchor IDs, original xrefs, folios, book storage keys and editor URLs preserved. Chinese opt-in searches expand registered names/terms; legacy English search stays native. Failed search is distinct from no results, failed navigation retains current page with retry, workshop read refusal is distinct from an empty account."
     },
     {
       "path": "src/components/rulebook/RulebookReader.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Rulebook/book reading workflow chrome, navigation headers, quick links, counters, known native crosswalk/support/family explanations, loading/search/retry/bookmarks/copy controls localized. SRD Markdown/entry titles/meta/snippets, authored story entries and unknown overrides remain original under full-rulebook-text deferral. Page/anchor IDs, original xrefs, folios, book storage keys and editor URLs preserved. Chinese opt-in searches expand registered names/terms; legacy English search stays native. Failed search is distinct from no results, failed navigation retains current page with retry, workshop read refusal is distinct from an empty account."
     },
     {
       "path": "src/components/sheet/SheetBetween.tsx",
@@ -1952,7 +1959,8 @@
     },
     {
       "path": "src/components/ui/Book.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Rulebook/book reading workflow chrome, navigation headers, quick links, counters, known native crosswalk/support/family explanations, loading/search/retry/bookmarks/copy controls localized. SRD Markdown/entry titles/meta/snippets, authored story entries and unknown overrides remain original under full-rulebook-text deferral. Page/anchor IDs, original xrefs, folios, book storage keys and editor URLs preserved. Chinese opt-in searches expand registered names/terms; legacy English search stays native. Failed search is distinct from no results, failed navigation retains current page with retry, workshop read refusal is distinct from an empty account."
     },
     {
       "path": "src/components/ui/ConfirmDialog.tsx",

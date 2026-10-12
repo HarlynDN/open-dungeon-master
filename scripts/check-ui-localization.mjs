@@ -22,6 +22,7 @@ import { TTS_VOICES } from "../src/lib/tts-voices.ts";
 import { CLASS_OPTION_MATERIAL } from "../src/lib/i18n/class-option-metadata.ts";
 import { NATIVE_FEATURE_MATERIAL, NATIVE_FEAT_MATERIAL } from "../src/lib/i18n/feature-material-metadata.ts";
 import { HELP_TOPICS, HELP_TOURS } from "../src/lib/i18n/app-help-metadata.ts";
+import { BOOK_HEADERS, BOOK_TEXT_KEYS } from "../src/lib/i18n/book-ui-metadata.ts";
 import { WORKSHOP_GUIDES } from "../src/lib/tours/workshop-guide.ts";
 import { SHELF_TOUR } from "../src/lib/tours/workshop.ts";
 import { CHARACTER_SUBCLASS_METADATA } from "../src/lib/i18n/character-subclass-metadata.ts";
@@ -68,6 +69,20 @@ if (args.has("--sync")) {
   process.exit(0);
 }
 const problems = [];
+const nativeBook = JSON.parse(fs.readFileSync(path.join(root, "src/lib/rulebook/srd-5.1.json"), "utf8"));
+for (const [kind, rows] of [["part", nativeBook.parts], ["chapter", nativeBook.chapters]]) for (const row of rows) {
+  for (const field of ["title", "blurb"]) if (BOOK_HEADERS[`${kind}:${row.id}`]?.[field] !== row[field] || MESSAGE_CATALOGS.en[`bookUi.${kind}.${row.id}.${field}`] !== row[field]) problems.push(`Rulebook navigation source changed: ${kind}.${row.id}.${field}`);
+}
+
+// These are project-written bridge/quick-link captions, not deferred SRD prose.
+for (const [file, field] of [["src/lib/rulebook/crosswalk.ts", "where"], ["src/lib/rulebook/book.ts", "label"]]) {
+  const ast = parseUiSource(file, fs.readFileSync(path.join(root, file), "utf8"));
+  function nativeCaption(node) {
+    if (ts.isPropertyAssignment(node) && node.name.getText(ast) === field && ts.isStringLiteral(node.initializer) && !Object.hasOwn(BOOK_TEXT_KEYS, node.initializer.text)) problems.push(`Rulebook native caption changed: ${node.initializer.text}`);
+    ts.forEachChild(node, nativeCaption);
+  }
+  nativeCaption(ast);
+}
 for (const guide of WORKSHOP_GUIDES) {
   const prefix = `workshopHelp.guide.${guide.id}`;
   for (const [field, source] of [["title", guide.title], ["purpose", guide.purpose], ...guide.steps.map((value, i) => [`step.${i}`, value]), ...guide.tips.map((value, i) => [`tip.${i}`, value])]) {

@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { bookFrame, bookHeader } from "@/lib/i18n/book-ui-presentations";
+
 import { PagePrep } from "./PagePrep";
 import { Fragment, useMemo, type ReactNode } from "react";
 import { cn } from "@/lib/cn";
@@ -239,6 +242,7 @@ export function RulebookPage({
   // an editor or the table, where leaving would lose what is open there.
   canStart?: boolean;
 }) {
+  const { locale } = useLocale();
   const { page, chapter, prev, next } = data;
   const blocks = useMemo(() => {
     const all = parseBook(page.md);
@@ -272,8 +276,8 @@ export function RulebookPage({
     <article className="rb-page" data-kind={page.kind}>
       <header className="rb-head">
         <p className="rb-running">
-          <span aria-hidden="true">{"❦"}</span> Chapter {chapter.numeral} <span className="rb-dot">&middot;</span>{" "}
-          <Digits text={chapter.title} />{" "}
+          <span aria-hidden="true">{"❦"}</span> {bookFrame("chapter", { numeral: chapter.numeral }, locale)} <span className="rb-dot">&middot;</span>{" "}
+          <Digits text={bookHeader("chapter", chapter.id, "title", chapter.title, locale)} />{" "}
           <span aria-hidden="true">{"❦"}</span>
         </p>
         <h1 className="rb-title">
@@ -300,7 +304,7 @@ export function RulebookPage({
         ) : (
           <span />
         )}
-        <span className="rb-folio" aria-label={`Page ${page.folio}`}>
+        <span className="rb-folio" aria-label={bookFrame("page", { folio: page.folio }, locale)}>
           {page.folio}
         </span>
         {next ? (

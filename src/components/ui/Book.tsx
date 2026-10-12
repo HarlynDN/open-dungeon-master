@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { bookText, bookFrame } from "@/lib/i18n/book-ui-presentations";
+
 import * as RadixDialog from "@radix-ui/react-dialog";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -31,6 +34,7 @@ export function Book({
   entries: BookEntry[];
   startAt?: number;
 }) {
+  const { locale } = useLocale();
   const [index, setIndex] = useState(startAt);
   // The direction of a turn in flight, or null at rest.
   const [turning, setTurning] = useState<"forward" | "back" | null>(null);
@@ -96,7 +100,7 @@ export function Book({
         >
           <div className="mb-3 flex items-center justify-between gap-3 px-1">
             <RadixDialog.Title className="gold-title font-display text-xl sm:text-2xl">{title}</RadixDialog.Title>
-            <RadixDialog.Close aria-label="Close the book" className="motion-nudge rounded-md p-1.5 text-stone-300 hover:text-amber-200">
+            <RadixDialog.Close aria-label={bookText("Close the book", locale)} className="motion-nudge rounded-md p-1.5 text-stone-300 hover:text-amber-200">
               <X className="size-5" />
             </RadixDialog.Close>
           </div>
@@ -117,7 +121,7 @@ export function Book({
               </>
             ) : (
               <section className="kit-book-page kit-book-left">
-                <p className="kit-book-note">Nothing is written here yet.</p>
+                <p className="kit-book-note">{bookText("Nothing is written here yet.", locale)}</p>
               </section>
             )}
             <span className="kit-book-leaf" aria-hidden="true" />
@@ -126,13 +130,12 @@ export function Book({
 
           <div className="mt-3 flex items-center justify-between gap-3 px-1 text-sm text-stone-300">
             <button type="button" onClick={() => turn("back")} disabled={at === 0 || Boolean(turning)} className="motion-press inline-flex items-center gap-1 rounded-lg border border-stone-600/60 bg-stone-900/60 px-3 py-1.5 disabled:opacity-40">
-              <ChevronLeft className="size-4" /> Earlier
-            </button>
+              <ChevronLeft className="size-4" />  {bookText("Earlier", locale)} </button>
             <span className="font-display text-xs uppercase tracking-[0.18em] text-amber-200/80" aria-live="polite">
-              {entries.length ? `${at + 1} of ${entries.length}` : "Empty"}
+              {entries.length ? bookFrame("position", { index: at + 1, total: entries.length }, locale) : bookText("Empty", locale)}
             </span>
             <button type="button" onClick={() => turn("forward")} disabled={at >= last || Boolean(turning)} className="motion-press inline-flex items-center gap-1 rounded-lg border border-stone-600/60 bg-stone-900/60 px-3 py-1.5 disabled:opacity-40">
-              Later <ChevronRight className="size-4" />
+               {bookText("Later", locale)} <ChevronRight className="size-4" />
             </button>
           </div>
         </RadixDialog.Content>

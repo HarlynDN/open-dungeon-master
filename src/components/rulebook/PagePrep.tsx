@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { bookText, bookNotice, bookCrosswalk, BOOK_NOTICES } from "@/lib/i18n/book-ui-presentations";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Hammer, Loader2 } from "lucide-react";
@@ -19,6 +22,7 @@ const SUPPORT_LABEL: Record<NonNullable<RulebookPageResponse["crosswalk"]>["supp
 };
 
 export function PagePrep({ data, canStart = true }: { data: RulebookPageResponse; canStart?: boolean }) {
+  const { locale } = useLocale();
   const crosswalk = data.crosswalk;
   const [busy, setBusy] = useState(false);
   const [note, setNote] = useState("");
@@ -31,15 +35,19 @@ export function PagePrep({ data, canStart = true }: { data: RulebookPageResponse
     setBusy(true);
     setNote("");
     try {
-      const body = (await fetch("/api/workshops").then((response) => (response.ok ? response.json() : null))) as { workshops?: Array<{ id: string; updatedAt?: string }> } | null;
+      const response = await fetch("/api/workshops");
+      const body = (await response.json().catch(() => ({}))) as { workshops?: Array<{ id: string; updatedAt?: string }>; error?: string };
+      if (!response.ok) { setNote(body.error || BOOK_NOTICES.workshops); return; }
       const workshops = [...(body?.workshops ?? [])].sort((a, b) => String(b.updatedAt ?? "").localeCompare(String(a.updatedAt ?? "")));
       if (!workshops.length) {
-        setNote("Make a workshop first: your homebrew lives in your workshops.");
+        setNote(BOOK_NOTICES.emptyWorkshops);
         return;
       }
       const system = crosswalk.editor === "monster" ? "bestiary" : "homebrew";
       const start = `${crosswalk.editor}:${data.page.id}`;
       router.push(`/workshop/${workshops[0].id}?system=${system}&start=${encodeURIComponent(start)}`);
+    } catch {
+      setNote(BOOK_NOTICES.network);
     } finally {
       setBusy(false);
     }
@@ -48,16 +56,16 @@ export function PagePrep({ data, canStart = true }: { data: RulebookPageResponse
   return (
     <div className="rb-prep" data-support={crosswalk.support} data-testid="rulebook-prep">
       <p>
-        <span className="rb-prep-label">{SUPPORT_LABEL[crosswalk.support]}:</span> {crosswalk.where}
-        {crosswalk.template ? <span className="rb-prep-note"> {crosswalk.template === "half-dragon" || crosswalk.template === "npc" ? "" : `(${crosswalk.template})`}</span> : null}
+        <span className="rb-prep-label">{bookText(SUPPORT_LABEL[crosswalk.support], locale)}:</span> {bookCrosswalk(crosswalk.where, locale)}
+        {crosswalk.template ? <span className="rb-prep-note"> {crosswalk.template === "half-dragon" || crosswalk.template === "npc" ? "" : `(${bookText(crosswalk.template, locale)})`}</span> : null}
       </p>
       {copyable ? (
         <button type="button" onClick={() => void startFrom()} disabled={busy} className="rb-turn-link rb-prep-start motion-press">
           {busy ? <Loader2 className="size-3.5 animate-spin" aria-hidden="true" /> : <Hammer className="size-3.5" aria-hidden="true" />}
-          {crosswalk.editor === "archetype" ? "Write a subclass for this class" : "Start a workshop copy of this"}
+          {crosswalk.editor === "archetype" ? bookText("Write a subclass for this class", locale) : bookText("Start a workshop copy of this", locale)}
         </button>
       ) : null}
-      {note ? <p className="rb-prep-note">{note}</p> : null}
+      {note ? <p className="rb-prep-note">{bookNotice(note, locale)}</p> : null}
     </div>
   );
 }

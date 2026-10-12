@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { bookText } from "@/lib/i18n/book-ui-presentations";
+
 import * as RadixDialog from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import { RulebookReader } from "./RulebookReader";
@@ -18,14 +21,15 @@ export function RulebookDialog({
   startAt?: string;
   startAnchor?: string;
 }) {
+  const { locale } = useLocale();
   return (
     <RadixDialog.Root open={open} onOpenChange={onOpenChange}>
       <RadixDialog.Portal>
         <RadixDialog.Overlay className="dialog-overlay fixed inset-0 z-[60] bg-[#05030d]/80 backdrop-blur-sm" />
         <RadixDialog.Content aria-describedby={undefined} className="rb-dialog">
-          <RadixDialog.Title className="sr-only">The Rulebook</RadixDialog.Title>
+          <RadixDialog.Title className="sr-only">{bookText("The Rulebook", locale)}</RadixDialog.Title>
           <RulebookReader embedded startAt={startAt} startAnchor={startAnchor} />
-          <RadixDialog.Close aria-label="Close the rulebook" className="rb-dialog-close motion-press">
+          <RadixDialog.Close aria-label={bookText("Close the rulebook", locale)} className="rb-dialog-close motion-press">
             <X className="size-5" />
           </RadixDialog.Close>
         </RadixDialog.Content>

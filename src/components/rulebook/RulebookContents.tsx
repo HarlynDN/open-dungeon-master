@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { bookText, bookFrame, bookHeader, bookChapterTitle } from "@/lib/i18n/book-ui-presentations";
+
 import { Bookmark, ChevronRight, Search, X } from "lucide-react";
 import { isComposingInput } from "@/lib/input-composition";
 import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
@@ -59,6 +62,7 @@ function EntryRow({ entry, current, onOpen }: { entry: ContentsEntry; current: b
 }
 
 function ChapterBody({ chapter, current, onOpen }: { chapter: ContentsChapter; current: string | null; onOpen: (id: string) => void }) {
+  const { locale } = useLocale();
   // Long chapters (spells by level, monsters and items by letter) are cut
   // into groups; the short ones list their pages straight.
   const groups = useMemo(() => {
@@ -73,12 +77,12 @@ function ChapterBody({ chapter, current, onOpen }: { chapter: ContentsChapter; c
   }, [chapter.entries]);
   return (
     <div className="rb-chapter-pages">
-      <p className="rb-chapter-blurb">{chapter.blurb}</p>
+      <p className="rb-chapter-blurb">{bookHeader("chapter", chapter.id, "blurb", chapter.blurb, locale)}</p>
       {groups.map((group, index) => (
         <div key={`${group.name ?? "intro"}-${index}`} className="rb-group">
           {group.name ? (
             <p className="rb-group-name">
-              <Digits text={group.name} />
+              <Digits text={bookText(group.name, locale)} />
             </p>
           ) : null}
           <div className={cn("rb-group-entries", group.entries.length > 12 && "rb-group-wide")}>
@@ -105,9 +109,12 @@ export function RulebookContents({
   onOpen: OpenFromContents;
   searchRef: RefObject<HTMLInputElement | null>;
 }) {
+  const { locale } = useLocale();
   const [query, setQuery] = useState("");
   const [result, setResult] = useState<{ query: string; hits: SearchHit[]; terms: string[] } | null>(null);
   const [searching, setSearching] = useState(false);
+  const [searchFailed, setSearchFailed] = useState(false);
+  const [retry, setRetry] = useState(0);
   const currentChapter = useMemo(
     () => contents?.chapters.find((chapter) => chapter.entries.some((entry) => entry.id === current))?.id ?? null,
     [contents, current],
@@ -130,18 +137,23 @@ export function RulebookContents({
     const q = query.trim();
     asked.current = q;
     if (!q) return;
+    let live = true;
     const timer = setTimeout(async () => {
+      setSearchFailed(false);
       setSearching(true);
       try {
-        const response = await fetch(`/api/rulebook/search?q=${encodeURIComponent(q)}`);
-        const data = response.ok ? await response.json() : { hits: [], terms: [] };
-        if (asked.current === q) setResult({ query: q, hits: data.hits ?? [], terms: data.terms ?? [] });
+        const response = await fetch(`/api/rulebook/search?q=${encodeURIComponent(q)}${locale === "en" ? "" : `&locale=${encodeURIComponent(locale)}`}`);
+        if (!response.ok) throw new Error(String(response.status));
+        const data = await response.json();
+        if (live && asked.current === q) setResult({ query: q, hits: data.hits ?? [], terms: data.terms ?? [] });
+      } catch {
+        if (live && asked.current === q) { setResult(null); setSearchFailed(true); }
       } finally {
-        if (asked.current === q) setSearching(false);
+        if (live && asked.current === q) setSearching(false);
       }
     }, 180);
-    return () => clearTimeout(timer);
-  }, [query]);
+    return () => { live = false; clearTimeout(timer); };
+  }, [query, locale, retry]);
 
   const entries = useMemo(() => {
     const map = new Map<string, ContentsEntry>();
@@ -184,8 +196,9 @@ export function RulebookContents({
     <div className="rb-contents" data-no-motion>
       <header className="rb-contents-head">
         <p className="rb-running">Open Dungeon Master</p>
-        <h2 className="rb-book-title">The Rulebook</h2>
-        <p className="rb-book-sub">Fifth Edition &middot; System Reference Document 5.1</p>
+        <h2 className="rb-book-title">{bookText("The Rulebook", locale)}</h2>
+        <p className="rb-book-sub">{bookText("Fifth Edition · System Reference Document 5.1", locale)}</p>
+        <p className="rb-book-sub">{bookText("The rulebook text is in English. Chinese searches match registered names and terms.", locale)}</p>
       </header>
 
       <label className="rb-search">
@@ -205,8 +218,8 @@ export function RulebookContents({
               onOpen(hit.page, hit.at, shown.terms);
             }
           }}
-          placeholder="Seek a rule, a spell, a monster"
-          aria-label="Search the rulebook"
+          placeholder={bookText("Seek a rule, a spell, a monster", locale)}
+          aria-label={bookText("Search the rulebook", locale)}
           spellCheck={false}
           enterKeyHint="search"
         />
@@ -214,7 +227,7 @@ export function RulebookContents({
           // eslint-disable-next-line @next/next/no-img-element
           <img src="/assets/ui/quill.webp" alt="" className="rb-quill" />
         ) : query ? (
-          <button type="button" className="rb-search-clear" aria-label="Clear the search" onClick={() => setQuery("")}>
+          <button type="button" className="rb-search-clear" aria-label={bookText("Clear the search", locale)} onClick={() => setQuery("")}>
             <X className="size-3.5" />
           </button>
         ) : null}
@@ -223,19 +236,22 @@ export function RulebookContents({
 
       {searchingNow ? (
         <section className="rb-results" aria-live="polite">
-          {shown ? (
+          {searchFailed ? <div role="alert" className="rb-trouble">
+            <p>{bookText("Search failed. Please try again.", locale)}</p>
+            <button type="button" className="rb-chip" onClick={() => setRetry(value => value + 1)}>{bookText("Try again", locale)}</button>
+          </div> : shown ? (
             <>
               <p className="rb-results-count">
                 {shown.hits.length
-                  ? `${shown.hits.length === 40 ? "The first 40" : shown.hits.length} passage${shown.hits.length === 1 ? "" : "s"} found`
-                  : "Nothing in the book matches that."}
+                  ? bookFrame(shown.hits.length === 40 ? "foundFirst" : shown.hits.length === 1 ? "foundOne" : "foundMany", { count: shown.hits.length }, locale)
+                  : bookText("Nothing in the book matches that.", locale)}
               </p>
               <ol className="rb-hits" key={shown.query}>
                 {shown.hits.map((hit, index) => (
                   <li key={`${hit.page}-${hit.at ?? ""}`} style={{ animationDelay: `${Math.min(index, 12) * 35}ms` }}>
                     <button type="button" className="rb-hit" data-on={hit.page === current || undefined} onClick={() => onOpen(hit.page, hit.at, shown.terms)}>
                       <span className="rb-hit-where">
-                        {hit.numeral} &middot; <Digits text={hit.chapter} />
+                        {hit.numeral} &middot; <Digits text={bookChapterTitle(hit.chapter, locale)} />
                       </span>
                       <span className="rb-hit-title">
                         <Digits text={hit.title} />
@@ -257,44 +273,43 @@ export function RulebookContents({
               </ol>
             </>
           ) : (
-            <p className="rb-results-count">Turning the pages&hellip;</p>
+            <p className="rb-results-count">{bookText("Turning the pages…", locale)}</p>
           )}
         </section>
       ) : (
         <div className="rb-contents-body">
           {contents ? (
             <>
-              <section className="rb-quick" aria-label="At the table">
-                <p className="rb-section-label">At the table</p>
+              <section className="rb-quick" aria-label={bookText("At the table", locale)}>
+                <p className="rb-section-label">{bookText("At the table", locale)}</p>
                 <div className="rb-chips">
                   {contents.quick.map((link) => (
-                    <button key={link.label} type="button" className="rb-chip motion-press" onClick={() => onOpen(link.page, link.at)}>
-                      {link.label}
+                    <button key={bookText(link.label, locale)} type="button" className="rb-chip motion-press" onClick={() => onOpen(link.page, link.at)}>
+                      {bookText(link.label, locale)}
                     </button>
                   ))}
                 </div>
               </section>
 
               {marks.length ? (
-                <section className="rb-marks" aria-label="Bookmarks">
+                <section className="rb-marks" aria-label={bookText("Bookmarks", locale)}>
                   <p className="rb-section-label">
-                    <Bookmark className="size-3.5" aria-hidden="true" /> Bookmarks
-                  </p>
+                    <Bookmark className="size-3.5" aria-hidden="true" />  {bookText("Bookmarks", locale)} </p>
                   {marks.map((entry) => (
                     <EntryRow key={entry.id} entry={entry} current={entry.id === current} onOpen={(id) => onOpen(id)} />
                   ))}
                 </section>
               ) : null}
 
-              <nav aria-label="Contents">
-                <p className="rb-section-label">Contents</p>
+              <nav aria-label={bookText("Contents", locale)}>
+                <p className="rb-section-label">{bookText("Contents", locale)}</p>
                 {sections.map((section) => (
-                  <section key={section.part?.id ?? "appendices"} className="rb-part" aria-label={section.part?.title}>
+                  <section key={section.part?.id ?? "appendices"} className="rb-part" aria-label={section.part ? bookHeader("part", section.part.id, "title", section.part.title, locale) : undefined}>
                     {section.part ? (
                       <header className="rb-part-head" style={{ animationDelay: `${120 + section.delay * 30}ms` }}>
-                        <p className="rb-part-numeral">Book {section.part.numeral}</p>
-                        <h3 className="rb-part-title">{section.part.title}</h3>
-                        <p className="rb-part-blurb">{section.part.blurb}</p>
+                        <p className="rb-part-numeral">{bookFrame("book", { numeral: section.part.numeral }, locale)}</p>
+                        <h3 className="rb-part-title">{bookHeader("part", section.part.id, "title", section.part.title, locale)}</h3>
+                        <p className="rb-part-blurb">{bookHeader("part", section.part.id, "blurb", section.part.blurb, locale)}</p>
                       </header>
                     ) : null}
                     <ol className="rb-chapters">
@@ -305,7 +320,7 @@ export function RulebookContents({
                             <button type="button" className="rb-chapter-row" aria-expanded={isOpen} onClick={() => toggle(chapter.id)}>
                               <span className="rb-numeral">{chapter.numeral}</span>
                               <span className="rb-chapter-title">
-                                <Digits text={chapter.title} />
+                                <Digits text={bookHeader("chapter", chapter.id, "title", chapter.title, locale)} />
                               </span>
                               <span className="rb-leader" aria-hidden="true" />
                               <span className="rb-entry-folio">{chapter.entries[0]?.folio}</span>
@@ -325,19 +340,17 @@ export function RulebookContents({
               </nav>
 
               <p className="rb-legal">
-                This work includes material taken from the System Reference Document 5.1 (&ldquo;SRD 5.1&rdquo;) by
-                Wizards of the Coast LLC, licensed under{" "}
+                 {bookText("This work includes material taken from the System Reference Document 5.1 (“SRD 5.1”) by Wizards of the Coast LLC, licensed under", locale)}{" "}
                 <a href={contents.source.licenseUrl} target="_blank" rel="noreferrer">
                   CC-BY-4.0
                 </a>
                 .{" "}
                 <button type="button" className="rb-xref" onClick={() => onOpen("legal-information")}>
-                  Legal information
-                </button>
+                   {bookText("Legal information", locale)} </button>
               </p>
             </>
           ) : (
-            <p className="rb-results-count">Opening the book&hellip;</p>
+            <p className="rb-results-count">{bookText("Opening the book…", locale)}</p>
           )}
         </div>
       )}

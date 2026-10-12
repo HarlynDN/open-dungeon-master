@@ -2,6 +2,8 @@
 // scripts/import-srd-rulebook.mjs), the contents, one page with its
 // neighbours, and search. The book is read once per process and never
 // changes while it runs; the search index is built on the first search.
+import type { AppLocale } from "../i18n/locales.ts";
+import { rulebookSearchQueries } from "./search-locales.ts";
 import data from "./srd-5.1.json";
 import { buildIndex, queryTerms, searchRulebook, type RulebookIndex } from "./search";
 import type {
@@ -82,9 +84,18 @@ export function rulebookPage(id: string): RulebookPageResponse | null {
   };
 }
 
-export function rulebookSearch(query: string, limit?: number): SearchResponse {
+export function rulebookSearch(query: string, limit?: number, locale: AppLocale = "en"): SearchResponse {
   index ??= buildIndex(book.pages, book.chapters);
-  return { hits: searchRulebook(index, query, limit), terms: queryTerms(query) };
+  const queries = rulebookSearchQueries(query, locale);
+  if (queries.length === 1) return { hits: searchRulebook(index, queries[0], limit), terms: queryTerms(queries[0]) };
+  // Alternatives are separate searches: concatenating unrelated aliases would
+  // require every name in one passage and erase the native exact-title boost.
+  const byPassage = new Map<string, SearchResponse["hits"][number]>();
+  for (const candidate of queries) for (const hit of searchRulebook(index, candidate, limit)) {
+    const key = `${hit.page}:${hit.at ?? ""}`;
+    if ((byPassage.get(key)?.score ?? -Infinity) < hit.score) byPassage.set(key, hit);
+  }
+  return { hits: [...byPassage.values()].sort((a, b) => b.score - a.score || a.title.localeCompare(b.title)).slice(0, limit ?? 40), terms: [...new Set(queries.flatMap(queryTerms))] };
 }
 
 export function rulebookPages(): RulebookPage[] {
