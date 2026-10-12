@@ -104,6 +104,9 @@ for (const [classId, featureName, chinese, subclass = ''] of [
   ['barbarian', 'Totem Spirit', '图腾精魂', 'Path of the Totem Warrior'],
   ['fighter', 'War Magic', '战争魔法', 'Eldritch Knight'],
   ['rogue', 'Psychic Blades', '心灵之刃', 'Soulknife'],
+  ['sorcerer', 'Bastion of Law', '秩序堡垒', 'Clockwork Soul'],
+  ['warlock', 'Healing Light', '治愈之光', 'The Celestial'],
+  ['wizard', 'Extra Attack', '额外攻击', 'Bladesinging'],
 ]) {
   const feature = {name: featureName, source: 'class', level: 1};
   const klass = srdClassOptions().find(row => row.id === classId);
@@ -131,4 +134,4 @@ for (const [classId, featureName, chinese, subclass = ''] of [
 }
 console.log('PASS: 146 native feature and 54 feat summaries, class overrides, source-bound display, unchanged parser inputs, canonical chip/reference identities, lazy feat help and English render parity.');
 console.log('PASS: bilingual core features across actual creation and sheet components; localized tooltip props, canonical identities and explicit pack names/help preserved.');
-console.log(`PASS: ${SUBCLASS_FEATURE_MATERIAL.length} authored subclass source bindings and the actual creation/sheet projection for barbarian, fighter and rogue; changed or unrelated-class prose preserved.`);
+console.log(`PASS: ${SUBCLASS_FEATURE_MATERIAL.length} authored subclass source bindings and actual creation/sheet projections for the registered classes; subclass-specific help, changed and unrelated-class prose preserved.`);

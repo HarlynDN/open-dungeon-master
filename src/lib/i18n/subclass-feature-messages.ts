@@ -1034,5 +1034,1061 @@ export const SUBCLASS_FEATURE_MESSAGES = /*#__PURE__*/ defineMessages({
   "callingMaterial.subclassFeature.rogue.soulknife.rend-mind.description": {
     "en": "A sneak attack with Psychic Blades can stun a creature for a minute on a failed Wisdom save; free once per long rest and otherwise for three dice.",
     "zh-CN": "用心灵之刃偷袭时，可使感知豁免失败的生物震慑一分钟。每次长休后可免费用一次，否则消耗三个骰。"
+  },
+  "callingMaterial.subclassFeature.sorcerer.wild-magic.wild-magic-surge.name": {
+    "en": "Wild Magic Surge",
+    "zh-CN": "狂野魔法涌动"
+  },
+  "callingMaterial.subclassFeature.sorcerer.wild-magic.wild-magic-surge.description": {
+    "en": "After casting a sorcerer spell of 1st level or higher, the DM may have you roll a d20; on a 1 you roll on the wild magic table.",
+    "zh-CN": "施放一环或更高环的术士法术后，DM 可以让你掷 d20；掷出 1 时，再在狂野魔法表上掷骰。"
+  },
+  "callingMaterial.subclassFeature.sorcerer.wild-magic.tides-of-chaos.name": {
+    "en": "Tides of Chaos",
+    "zh-CN": "混沌潮汐"
+  },
+  "callingMaterial.subclassFeature.sorcerer.wild-magic.tides-of-chaos.description": {
+    "en": "Gain advantage on one attack, check or save; the DM can then trigger a Wild Magic Surge to restore the use.",
+    "zh-CN": "使一次攻击、检定或豁免具有优势；此后，DM 可以触发一次狂野魔法涌动，使你恢复该特性的使用次数。"
+  },
+  "callingMaterial.subclassFeature.sorcerer.wild-magic.bend-luck.name": {
+    "en": "Bend Luck",
+    "zh-CN": "扭转运气"
+  },
+  "callingMaterial.subclassFeature.sorcerer.wild-magic.bend-luck.description": {
+    "en": "A reaction spends 2 sorcery points to add or subtract 1d4 on another creature's attack, check or save.",
+    "zh-CN": "用反应消耗 2 个术法点，使另一个生物的攻击、检定或豁免结果增加或减少 1d4。"
+  },
+  "callingMaterial.subclassFeature.sorcerer.wild-magic.controlled-chaos.name": {
+    "en": "Controlled Chaos",
+    "zh-CN": "受控混沌"
+  },
+  "callingMaterial.subclassFeature.sorcerer.wild-magic.controlled-chaos.description": {
+    "en": "Roll twice on the wild magic table and pick either result.",
+    "zh-CN": "在狂野魔法表上掷骰两次，选择其中一个结果。"
+  },
+  "callingMaterial.subclassFeature.sorcerer.wild-magic.spell-bombardment.name": {
+    "en": "Spell Bombardment",
+    "zh-CN": "法术轰击"
+  },
+  "callingMaterial.subclassFeature.sorcerer.wild-magic.spell-bombardment.description": {
+    "en": "Once per turn, the highest damage die you roll for a spell explodes: roll it again and add it.",
+    "zh-CN": "每回合一次，法术伤害骰中结果最高的一个骰可再掷一次，将结果加到伤害中。"
+  },
+  "callingMaterial.subclassFeature.sorcerer.divine-soul.divine-magic.name": {
+    "en": "Divine Magic",
+    "zh-CN": "神圣魔法"
+  },
+  "callingMaterial.subclassFeature.sorcerer.divine-soul.divine-magic.description": {
+    "en": "Add the cleric spell list to your sorcerer spell choices, plus one affinity spell matching your divine bent.",
+    "zh-CN": "选择术士法术时，也可从牧师法术列表中选择；另获得一个与你神圣倾向相符的法术。"
+  },
+  "callingMaterial.subclassFeature.sorcerer.divine-soul.favored-by-the-gods.name": {
+    "en": "Favored by the Gods",
+    "zh-CN": "众神眷顾"
+  },
+  "callingMaterial.subclassFeature.sorcerer.divine-soul.favored-by-the-gods.description": {
+    "en": "Once per short or long rest, add 2d4 to a failed save or missed attack.",
+    "zh-CN": "每次短休或长休后，可使一次失败的豁免或未命中的攻击结果增加 2d4。"
+  },
+  "callingMaterial.subclassFeature.sorcerer.divine-soul.empowered-healing.name": {
+    "en": "Empowered Healing",
+    "zh-CN": "强化治疗"
+  },
+  "callingMaterial.subclassFeature.sorcerer.divine-soul.empowered-healing.description": {
+    "en": "Spend 1 sorcery point to reroll healing dice for yourself or an ally, once per turn.",
+    "zh-CN": "每回合一次，可消耗 1 个术法点，重掷自身或盟友的治疗骰。"
+  },
+  "callingMaterial.subclassFeature.sorcerer.divine-soul.otherworldly-wings.name": {
+    "en": "Otherworldly Wings",
+    "zh-CN": "异界之翼"
+  },
+  "callingMaterial.subclassFeature.sorcerer.divine-soul.otherworldly-wings.description": {
+    "en": "A bonus action grants a 30-foot flying speed with spectral wings.",
+    "zh-CN": "用附赠动作展开灵体翅膀，获得 30 尺飞行速度。"
+  },
+  "callingMaterial.subclassFeature.sorcerer.divine-soul.unearthly-recovery.name": {
+    "en": "Unearthly Recovery",
+    "zh-CN": "超凡复原"
+  },
+  "callingMaterial.subclassFeature.sorcerer.divine-soul.unearthly-recovery.description": {
+    "en": "Once per long rest, a bonus action at half hit points or less restores hit points equal to half your maximum.",
+    "zh-CN": "每次长休后可用一次。生命值不超过最大值的一半时，可用附赠动作恢复等于最大生命值一半的生命值。"
+  },
+  "callingMaterial.subclassFeature.sorcerer.shadow-magic.eyes-of-the-dark.name": {
+    "en": "Eyes of the Dark",
+    "zh-CN": "黑暗之眼"
+  },
+  "callingMaterial.subclassFeature.sorcerer.shadow-magic.eyes-of-the-dark.description": {
+    "en": "Darkvision to 120 feet, and darkness can be cast for 2 sorcery points and seen through.",
+    "zh-CN": "获得 120 尺黑暗视觉；还可消耗 2 个术法点施放黑暗术，并看穿其黑暗。"
+  },
+  "callingMaterial.subclassFeature.sorcerer.shadow-magic.strength-of-the-grave.name": {
+    "en": "Strength of the Grave",
+    "zh-CN": "坟墓之力"
+  },
+  "callingMaterial.subclassFeature.sorcerer.shadow-magic.strength-of-the-grave.description": {
+    "en": "A Charisma save against 5 + the damage leaves you at 1 hit point instead of 0; once per long rest.",
+    "zh-CN": "进行魅力豁免，难度为 5 加所受伤害；成功时，生命值保留为 1，而非降至 0。每次长休后可用一次。"
+  },
+  "callingMaterial.subclassFeature.sorcerer.shadow-magic.hound-of-ill-omen.name": {
+    "en": "Hound of Ill Omen",
+    "zh-CN": "凶兆之犬"
+  },
+  "callingMaterial.subclassFeature.sorcerer.shadow-magic.hound-of-ill-omen.description": {
+    "en": "Spend 3 sorcery points to summon a shadow dire wolf that chases one creature, gives your spells advantage against it, and blocks its escape.",
+    "zh-CN": "消耗 3 个术法点，召唤一只暗影恐狼追赶一个生物。它使你的法术对该目标具有优势，并阻止其逃脱。"
+  },
+  "callingMaterial.subclassFeature.sorcerer.shadow-magic.shadow-walk.name": {
+    "en": "Shadow Walk",
+    "zh-CN": "暗影行走"
+  },
+  "callingMaterial.subclassFeature.sorcerer.shadow-magic.shadow-walk.description": {
+    "en": "A bonus action teleports 120 feet between dim or dark spaces.",
+    "zh-CN": "用附赠动作在昏暗或黑暗区域之间传送，距离可达 120 尺。"
+  },
+  "callingMaterial.subclassFeature.sorcerer.shadow-magic.umbral-form.name": {
+    "en": "Umbral Form",
+    "zh-CN": "暗影形态"
+  },
+  "callingMaterial.subclassFeature.sorcerer.shadow-magic.umbral-form.description": {
+    "en": "Spend 6 sorcery points to become shadow for a minute: resistance to all but force and radiant damage, and the ability to move through creatures and objects.",
+    "zh-CN": "消耗 6 个术法点，化为暗影一分钟：对除力场和光耀外的所有伤害具有抗性，并可穿过生物和物体。"
+  },
+  "callingMaterial.subclassFeature.sorcerer.storm-sorcery.wind-speaker.name": {
+    "en": "Wind Speaker",
+    "zh-CN": "风语者"
+  },
+  "callingMaterial.subclassFeature.sorcerer.storm-sorcery.wind-speaker.description": {
+    "en": "You speak, read and write Primordial and its dialects.",
+    "zh-CN": "你能够说、读、写原初语及其方言。"
+  },
+  "callingMaterial.subclassFeature.sorcerer.storm-sorcery.tempestuous-magic.name": {
+    "en": "Tempestuous Magic",
+    "zh-CN": "暴风魔法"
+  },
+  "callingMaterial.subclassFeature.sorcerer.storm-sorcery.tempestuous-magic.description": {
+    "en": "Before or after casting a spell of 1st level or higher, a bonus action lets you fly 10 feet without provoking.",
+    "zh-CN": "施放一环或更高环法术前或后，可用附赠动作飞行 10 尺，不引发借机攻击。"
+  },
+  "callingMaterial.subclassFeature.sorcerer.storm-sorcery.heart-of-the-storm.name": {
+    "en": "Heart of the Storm",
+    "zh-CN": "风暴之心"
+  },
+  "callingMaterial.subclassFeature.sorcerer.storm-sorcery.heart-of-the-storm.description": {
+    "en": "Resistance to lightning and thunder damage, and casting a spell of those types deals half your sorcerer level in damage to creatures within 10 feet.",
+    "zh-CN": "具有闪电和雷鸣伤害抗性；施放造成这两类伤害的法术时，会对 10 尺内的生物造成等于术士等级一半的伤害。"
+  },
+  "callingMaterial.subclassFeature.sorcerer.storm-sorcery.storm-guide.name": {
+    "en": "Storm Guide",
+    "zh-CN": "风暴引导"
+  },
+  "callingMaterial.subclassFeature.sorcerer.storm-sorcery.storm-guide.description": {
+    "en": "Stop rain around you or steer the wind's direction as a bonus action.",
+    "zh-CN": "用附赠动作停止周围的降雨，或改变风向。"
+  },
+  "callingMaterial.subclassFeature.sorcerer.storm-sorcery.storm-s-fury.name": {
+    "en": "Storm's Fury",
+    "zh-CN": "风暴之怒"
+  },
+  "callingMaterial.subclassFeature.sorcerer.storm-sorcery.storm-s-fury.description": {
+    "en": "A reaction deals your sorcerer level in lightning damage to a melee attacker and pushes it 20 feet on a failed Strength save.",
+    "zh-CN": "用反应对近战攻击者造成等于术士等级的闪电伤害；目标力量豁免失败时，再将其推开 20 尺。"
+  },
+  "callingMaterial.subclassFeature.sorcerer.storm-sorcery.wind-soul.name": {
+    "en": "Wind Soul",
+    "zh-CN": "风之魂"
+  },
+  "callingMaterial.subclassFeature.sorcerer.storm-sorcery.wind-soul.description": {
+    "en": "Immunity to lightning and thunder damage, a 60-foot flying speed, and the ability to grant allies 30 feet of flight for an hour once per long rest.",
+    "zh-CN": "免疫闪电和雷鸣伤害，具有 60 尺飞行速度；每次长休后，还可让盟友获得 30 尺飞行速度，持续一小时。"
+  },
+  "callingMaterial.subclassFeature.sorcerer.aberrant-mind.psionic-spells.name": {
+    "en": "Psionic Spells",
+    "zh-CN": "灵能法术"
+  },
+  "callingMaterial.subclassFeature.sorcerer.aberrant-mind.psionic-spells.description": {
+    "en": "A set of psionic spells always known that do not count against your spells known, swappable for divination and enchantment spells as you level.",
+    "zh-CN": "始终掌握一组灵能法术，不占已知法术数量；升级时可将它们替换为预言系或惑控系法术。"
+  },
+  "callingMaterial.subclassFeature.sorcerer.aberrant-mind.telepathic-speech.name": {
+    "en": "Telepathic Speech",
+    "zh-CN": "心灵传话"
+  },
+  "callingMaterial.subclassFeature.sorcerer.aberrant-mind.telepathic-speech.description": {
+    "en": "A bonus action opens a telepathic link with one creature within 30 feet for minutes equal to your sorcerer level.",
+    "zh-CN": "用附赠动作与 30 尺内一个生物建立心灵联结，持续分钟数等于术士等级。"
+  },
+  "callingMaterial.subclassFeature.sorcerer.aberrant-mind.psionic-sorcery.name": {
+    "en": "Psionic Sorcery",
+    "zh-CN": "灵能施法"
+  },
+  "callingMaterial.subclassFeature.sorcerer.aberrant-mind.psionic-sorcery.description": {
+    "en": "Cast your psionic spells by spending sorcery points instead of a slot, with no verbal, somatic or costly components.",
+    "zh-CN": "可消耗术法点而非法术位施放灵能法术，无需言语、姿势或昂贵的成分。"
+  },
+  "callingMaterial.subclassFeature.sorcerer.aberrant-mind.psychic-defenses.name": {
+    "en": "Psychic Defenses",
+    "zh-CN": "心灵防御"
+  },
+  "callingMaterial.subclassFeature.sorcerer.aberrant-mind.psychic-defenses.description": {
+    "en": "Resistance to psychic damage and advantage on saves against being charmed or frightened.",
+    "zh-CN": "具有心灵伤害抗性，对抗魅惑或恐慌的豁免具有优势。"
+  },
+  "callingMaterial.subclassFeature.sorcerer.aberrant-mind.revelation-in-flesh.name": {
+    "en": "Revelation in Flesh",
+    "zh-CN": "血肉异变"
+  },
+  "callingMaterial.subclassFeature.sorcerer.aberrant-mind.revelation-in-flesh.description": {
+    "en": "Spend 1 or more sorcery points for a minute of aberrant change: see invisible things, swim and breathe water, fly, or squeeze through tiny gaps.",
+    "zh-CN": "消耗至少 1 个术法点，异变一分钟：可看见隐形事物、游泳并在水下呼吸、飞行，或挤过极小的缝隙。"
+  },
+  "callingMaterial.subclassFeature.sorcerer.aberrant-mind.warping-implosion.name": {
+    "en": "Warping Implosion",
+    "zh-CN": "扭曲内爆"
+  },
+  "callingMaterial.subclassFeature.sorcerer.aberrant-mind.warping-implosion.description": {
+    "en": "Once per long rest, teleport 120 feet and pull creatures toward your old space for 3d10 force damage.",
+    "zh-CN": "每次长休后可用一次。传送 120 尺，将生物拉向你原本的位置，并造成 3d10 力场伤害。"
+  },
+  "callingMaterial.subclassFeature.sorcerer.clockwork-soul.clockwork-magic.name": {
+    "en": "Clockwork Magic",
+    "zh-CN": "发条魔法"
+  },
+  "callingMaterial.subclassFeature.sorcerer.clockwork-soul.clockwork-magic.description": {
+    "en": "A set of order-themed spells always known that do not count against your spells known, swappable for abjuration and transmutation spells as you level.",
+    "zh-CN": "始终掌握一组以秩序为主题的法术，不占已知法术数量；升级时可将它们替换为防护系或变化系法术。"
+  },
+  "callingMaterial.subclassFeature.sorcerer.clockwork-soul.restore-balance.name": {
+    "en": "Restore Balance",
+    "zh-CN": "恢复平衡"
+  },
+  "callingMaterial.subclassFeature.sorcerer.clockwork-soul.restore-balance.description": {
+    "en": "A reaction cancels advantage or disadvantage on a roll within 60 feet, a proficiency-bonus number of times per long rest.",
+    "zh-CN": "用反应取消 60 尺内一次掷骰的优势或劣势，每次长休后的使用次数等于熟练加值。"
+  },
+  "callingMaterial.subclassFeature.sorcerer.clockwork-soul.bastion-of-law.name": {
+    "en": "Bastion of Law",
+    "zh-CN": "秩序堡垒"
+  },
+  "callingMaterial.subclassFeature.sorcerer.clockwork-soul.bastion-of-law.description": {
+    "en": "Spend 1 to 5 sorcery points to give a creature that many d8s to spend reducing damage, until your next long rest.",
+    "zh-CN": "消耗 1 至 5 个术法点，让一个生物获得同等数量的 d8，可消耗以减少所受伤害，持续至你的下一次长休。"
+  },
+  "callingMaterial.subclassFeature.sorcerer.clockwork-soul.trance-of-order.name": {
+    "en": "Trance of Order",
+    "zh-CN": "秩序恍惚"
+  },
+  "callingMaterial.subclassFeature.sorcerer.clockwork-soul.trance-of-order.description": {
+    "en": "For a minute, attacks against you cannot have advantage and you treat any d20 of 9 or lower as a 10 on attacks, checks and saves; once per long rest or for 5 sorcery points.",
+    "zh-CN": "持续一分钟：针对你的攻击不能具有优势，你的攻击、检定和豁免中，d20 掷出 9 或更低视为 10。每次长休后可用一次，也可消耗 5 个术法点使用。"
+  },
+  "callingMaterial.subclassFeature.sorcerer.clockwork-soul.clockwork-cavalcade.name": {
+    "en": "Clockwork Cavalcade",
+    "zh-CN": "发条巡游"
+  },
+  "callingMaterial.subclassFeature.sorcerer.clockwork-soul.clockwork-cavalcade.description": {
+    "en": "A 30-foot cube heals 100 hit points among creatures in it, ends spells of 6th level or lower, and repairs damaged objects; once per long rest or for 7 sorcery points.",
+    "zh-CN": "在 30 尺立方体内，为其中的生物分配总计 100 点治疗，结束六环或更低的法术，并修复受损物体。每次长休后可用一次，也可消耗 7 个术法点使用。"
+  },
+  "callingMaterial.subclassFeature.sorcerer.lunar-sorcery.lunar-embodiment.name": {
+    "en": "Lunar Embodiment",
+    "zh-CN": "月相化身"
+  },
+  "callingMaterial.subclassFeature.sorcerer.lunar-sorcery.lunar-embodiment.description": {
+    "en": "A rotating set of moon spells always known, and healing or damaging sorcerer spells you cast can shift to radiant or cold.",
+    "zh-CN": "始终掌握一组随月相轮换的法术；你施放的治疗或伤害类术士法术，可以转为光耀或冷冻伤害。"
+  },
+  "callingMaterial.subclassFeature.sorcerer.lunar-sorcery.moon-fire.name": {
+    "en": "Moon Fire",
+    "zh-CN": "月火"
+  },
+  "callingMaterial.subclassFeature.sorcerer.lunar-sorcery.moon-fire.description": {
+    "en": "A bonus action changes your lunar phase: Full grants a radiant aura, New grants concealment, Crescent grants extra reach and movement.",
+    "zh-CN": "用附赠动作改变月相：满月提供光耀灵光，新月提供隐蔽，弦月增加触及范围和移动能力。"
+  },
+  "callingMaterial.subclassFeature.sorcerer.lunar-sorcery.lunar-boons.name": {
+    "en": "Lunar Boons",
+    "zh-CN": "月相恩惠"
+  },
+  "callingMaterial.subclassFeature.sorcerer.lunar-sorcery.lunar-boons.description": {
+    "en": "Your current phase empowers a matching school of spells, and a sorcery point can shift the phase mid-fight.",
+    "zh-CN": "当前月相会强化对应学派的法术；战斗中可消耗一个术法点改变月相。"
+  },
+  "callingMaterial.subclassFeature.sorcerer.lunar-sorcery.waxing-and-waning.name": {
+    "en": "Waxing and Waning",
+    "zh-CN": "月盈月亏"
+  },
+  "callingMaterial.subclassFeature.sorcerer.lunar-sorcery.waxing-and-waning.description": {
+    "en": "Spend sorcery points to shift phase as a free action and add your Charisma modifier to a lunar spell's damage or healing once per turn.",
+    "zh-CN": "可消耗术法点，以自由动作改变月相；每回合一次，可将魅力调整值加到月相法术的伤害或治疗量上。"
+  },
+  "callingMaterial.subclassFeature.sorcerer.lunar-sorcery.lunar-phenomenon.name": {
+    "en": "Lunar Phenomenon",
+    "zh-CN": "月相奇观"
+  },
+  "callingMaterial.subclassFeature.sorcerer.lunar-sorcery.lunar-phenomenon.description": {
+    "en": "Once per long rest or for 5 sorcery points, unleash the full power of your phase in a 30-foot burst that heals allies, blinds enemies or hastens you depending on the moon.",
+    "zh-CN": "在 30 尺范围内释放当前月相的完整力量，根据月相治疗盟友、使敌人目盲或加速自身。每次长休后可用一次，也可消耗 5 个术法点使用。"
+  },
+  "callingMaterial.subclassFeature.warlock.the-archfey.fey-presence.name": {
+    "en": "Fey Presence",
+    "zh-CN": "妖精威仪"
+  },
+  "callingMaterial.subclassFeature.warlock.the-archfey.fey-presence.description": {
+    "en": "An action charms or frightens every creature in a 10-foot cube that fails a Wisdom save until the end of your next turn; recharges on a short or long rest.",
+    "zh-CN": "用一个动作，使 10 尺立方体内感知豁免失败的每个生物陷入魅惑或恐慌，持续至你的下一回合结束。短休或长休后恢复使用次数。"
+  },
+  "callingMaterial.subclassFeature.warlock.the-archfey.misty-escape.name": {
+    "en": "Misty Escape",
+    "zh-CN": "迷雾遁逃"
+  },
+  "callingMaterial.subclassFeature.warlock.the-archfey.misty-escape.description": {
+    "en": "A reaction on taking damage turns you invisible and teleports you 60 feet; recharges on a short or long rest.",
+    "zh-CN": "受到伤害时，可用反应隐形并传送 60 尺。短休或长休后恢复使用次数。"
+  },
+  "callingMaterial.subclassFeature.warlock.the-archfey.beguiling-defenses.name": {
+    "en": "Beguiling Defenses",
+    "zh-CN": "惑心防御"
+  },
+  "callingMaterial.subclassFeature.warlock.the-archfey.beguiling-defenses.description": {
+    "en": "Immunity to being charmed, and a reaction turns a charm attempt back on the caster for 1 minute and 3d10 psychic damage per turn.",
+    "zh-CN": "免疫魅惑；可用反应将魅惑尝试反弹给施法者，持续一分钟，并每回合造成 3d10 心灵伤害。"
+  },
+  "callingMaterial.subclassFeature.warlock.the-archfey.dark-delirium.name": {
+    "en": "Dark Delirium",
+    "zh-CN": "黑暗迷梦"
+  },
+  "callingMaterial.subclassFeature.warlock.the-archfey.dark-delirium.description": {
+    "en": "Wrap a creature within 60 feet in illusion for a minute: charmed or frightened, unable to perceive anything else, and removable to the Feywild until the effect ends.",
+    "zh-CN": "使 60 尺内一个生物陷入持续一分钟的幻象：目标被魅惑或恐慌，无法感知其他事物，还可被移至妖精荒野，直至效果结束。"
+  },
+  "callingMaterial.subclassFeature.warlock.the-great-old-one.awakened-mind.name": {
+    "en": "Awakened Mind",
+    "zh-CN": "觉醒心智"
+  },
+  "callingMaterial.subclassFeature.warlock.the-great-old-one.awakened-mind.description": {
+    "en": "Speak telepathically to any creature within 30 feet that shares a language with you.",
+    "zh-CN": "可通过心灵交流，与 30 尺内任何和你有共同语言的生物交谈。"
+  },
+  "callingMaterial.subclassFeature.warlock.the-great-old-one.entropic-ward.name": {
+    "en": "Entropic Ward",
+    "zh-CN": "熵能守护"
+  },
+  "callingMaterial.subclassFeature.warlock.the-great-old-one.entropic-ward.description": {
+    "en": "A reaction imposes disadvantage on an attack against you, and a miss grants advantage on your next attack against that creature; recharges on a short or long rest.",
+    "zh-CN": "用反应使针对你的一次攻击具有劣势；若攻击未命中，你对该生物的下一次攻击具有优势。短休或长休后恢复使用次数。"
+  },
+  "callingMaterial.subclassFeature.warlock.the-great-old-one.thought-shield.name": {
+    "en": "Thought Shield",
+    "zh-CN": "思想护盾"
+  },
+  "callingMaterial.subclassFeature.warlock.the-great-old-one.thought-shield.description": {
+    "en": "Your thoughts cannot be read, you resist psychic damage, and psychic damage dealt to you is dealt back to the attacker.",
+    "zh-CN": "你的思想无法被读取，具有心灵伤害抗性；对你造成的心灵伤害还会反弹给攻击者。"
+  },
+  "callingMaterial.subclassFeature.warlock.the-great-old-one.create-thrall.name": {
+    "en": "Create Thrall",
+    "zh-CN": "创造仆从"
+  },
+  "callingMaterial.subclassFeature.warlock.the-great-old-one.create-thrall.description": {
+    "en": "An incapacitated humanoid you touch becomes charmed until a remove curse, with telepathic contact at any distance on the same plane.",
+    "zh-CN": "触碰一个失能的类人生物，使其被魅惑，直至移除诅咒解除该效果；处于同一位面时，可在任意距离与其保持心灵联系。"
+  },
+  "callingMaterial.subclassFeature.warlock.the-celestial.bonus-cantrips-celestial.name": {
+    "en": "Bonus Cantrips (Celestial)",
+    "zh-CN": "额外戏法（天界）"
+  },
+  "callingMaterial.subclassFeature.warlock.the-celestial.bonus-cantrips-celestial.description": {
+    "en": "You know light and sacred flame.",
+    "zh-CN": "掌握光亮术和圣火术。"
+  },
+  "callingMaterial.subclassFeature.warlock.the-celestial.healing-light.name": {
+    "en": "Healing Light",
+    "zh-CN": "治愈之光"
+  },
+  "callingMaterial.subclassFeature.warlock.the-celestial.healing-light.description": {
+    "en": "A pool of d6s equal to 1 + your warlock level, spendable as a bonus action to heal a creature within 60 feet; refills on a long rest.",
+    "zh-CN": "拥有数量等于 1 加邪术师等级的 d6 治疗骰，可用附赠动作消耗以治疗 60 尺内一个生物；长休后恢复。"
+  },
+  "callingMaterial.subclassFeature.warlock.the-celestial.radiant-soul.name": {
+    "en": "Radiant Soul",
+    "zh-CN": "光耀之魂"
+  },
+  "callingMaterial.subclassFeature.warlock.the-celestial.radiant-soul.description": {
+    "en": "Resistance to radiant damage, and once per turn add your Charisma modifier to a radiant or fire spell's damage.",
+    "zh-CN": "具有光耀伤害抗性；每回合一次，可将魅力调整值加到光耀或火焰法术的伤害上。"
+  },
+  "callingMaterial.subclassFeature.warlock.the-celestial.celestial-resilience.name": {
+    "en": "Celestial Resilience",
+    "zh-CN": "天界韧性"
+  },
+  "callingMaterial.subclassFeature.warlock.the-celestial.celestial-resilience.description": {
+    "en": "Temporary hit points after every rest, for you and up to five allies, equal to your warlock level plus your Charisma modifier.",
+    "zh-CN": "每次休息后，你及至多五名盟友获得临时生命值，数值等于邪术师等级加魅力调整值。"
+  },
+  "callingMaterial.subclassFeature.warlock.the-celestial.searing-vengeance.name": {
+    "en": "Searing Vengeance",
+    "zh-CN": "灼热复仇"
+  },
+  "callingMaterial.subclassFeature.warlock.the-celestial.searing-vengeance.description": {
+    "en": "When you would make a death save, rise instead at half hit points, blinding and burning enemies within 30 feet for 2d8 + Charisma radiant damage; recharges on a long rest.",
+    "zh-CN": "本应进行死亡豁免时，改为以一半生命值起身，使 30 尺内的敌人目盲，并造成 2d8 加魅力调整值的光耀伤害。长休后恢复使用次数。"
+  },
+  "callingMaterial.subclassFeature.warlock.the-hexblade.hexblade-s-curse.name": {
+    "en": "Hexblade's Curse",
+    "zh-CN": "咒剑诅咒"
+  },
+  "callingMaterial.subclassFeature.warlock.the-hexblade.hexblade-s-curse.description": {
+    "en": "A bonus action curses a creature for a minute: bonus damage equal to your proficiency bonus, critical hits on a 19 or 20, and hit points back when it dies; recharges on a short or long rest.",
+    "zh-CN": "用附赠动作诅咒一个生物一分钟：对其造成的额外伤害等于熟练加值，掷出 19 或 20 即可重击，目标死亡时恢复生命值。短休或长休后恢复使用次数。"
+  },
+  "callingMaterial.subclassFeature.warlock.the-hexblade.hex-warrior.name": {
+    "en": "Hex Warrior",
+    "zh-CN": "咒剑战士"
+  },
+  "callingMaterial.subclassFeature.warlock.the-hexblade.hex-warrior.description": {
+    "en": "Proficiency with medium armor, shields and martial weapons, and one weapon each day uses Charisma for attack and damage.",
+    "zh-CN": "获得中甲、盾牌和军用武器的熟练；每日可选择一把武器，使用魅力进行攻击和伤害掷骰。"
+  },
+  "callingMaterial.subclassFeature.warlock.the-hexblade.accursed-specter.name": {
+    "en": "Accursed Specter",
+    "zh-CN": "受诅幽魂"
+  },
+  "callingMaterial.subclassFeature.warlock.the-hexblade.accursed-specter.description": {
+    "en": "A humanoid you kill rises as a specter under your command until your next long rest; recharges on a long rest.",
+    "zh-CN": "你杀死的一个类人生物会化为幽魂，受你指挥，持续至下一次长休。长休后恢复使用次数。"
+  },
+  "callingMaterial.subclassFeature.warlock.the-hexblade.armor-of-hexes.name": {
+    "en": "Armor of Hexes",
+    "zh-CN": "咒术护甲"
+  },
+  "callingMaterial.subclassFeature.warlock.the-hexblade.armor-of-hexes.description": {
+    "en": "An attack from your cursed target misses on a coin-flip d6 roll even when it would hit.",
+    "zh-CN": "被你诅咒的目标即使命中，掷 d6 后也有一半概率使该攻击改为未命中。"
+  },
+  "callingMaterial.subclassFeature.warlock.the-hexblade.master-of-hexes.name": {
+    "en": "Master of Hexes",
+    "zh-CN": "咒术大师"
+  },
+  "callingMaterial.subclassFeature.warlock.the-hexblade.master-of-hexes.description": {
+    "en": "When your cursed target dies, move the curse to a new creature without spending a rest.",
+    "zh-CN": "被诅咒的目标死亡时，可将诅咒转移至另一个生物，无需休息。"
+  },
+  "callingMaterial.subclassFeature.warlock.the-fathomless.tentacle-of-the-deep.name": {
+    "en": "Tentacle of the Deep",
+    "zh-CN": "深海触须"
+  },
+  "callingMaterial.subclassFeature.warlock.the-fathomless.tentacle-of-the-deep.description": {
+    "en": "A bonus action summons a spectral tentacle for a minute that attacks for 1d8 cold damage and halves a target's speed; a proficiency-bonus number of times per long rest.",
+    "zh-CN": "用附赠动作召唤灵体触须，持续一分钟；触须攻击造成 1d8 冷冻伤害，并使目标速度减半。每次长休后的使用次数等于熟练加值。"
+  },
+  "callingMaterial.subclassFeature.warlock.the-fathomless.gift-of-the-sea.name": {
+    "en": "Gift of the Sea",
+    "zh-CN": "海洋赠礼"
+  },
+  "callingMaterial.subclassFeature.warlock.the-fathomless.gift-of-the-sea.description": {
+    "en": "A 40-foot swimming speed and the ability to breathe underwater.",
+    "zh-CN": "获得 40 尺游泳速度，并可在水下呼吸。"
+  },
+  "callingMaterial.subclassFeature.warlock.the-fathomless.oceanic-soul.name": {
+    "en": "Oceanic Soul",
+    "zh-CN": "海洋之魂"
+  },
+  "callingMaterial.subclassFeature.warlock.the-fathomless.oceanic-soul.description": {
+    "en": "Immunity to cold damage, full immersion comfort, and the ability to speak with any creature underwater.",
+    "zh-CN": "免疫冷冻伤害，能够舒适地完全浸入水中，并可与水下任何生物交谈。"
+  },
+  "callingMaterial.subclassFeature.warlock.the-fathomless.guardian-coil.name": {
+    "en": "Guardian Coil",
+    "zh-CN": "守护盘绕"
+  },
+  "callingMaterial.subclassFeature.warlock.the-fathomless.guardian-coil.description": {
+    "en": "Your tentacle reduces damage to you or a creature near it by 1d8, rising to 2d8 at 10th level.",
+    "zh-CN": "触须使你或其附近生物受到的伤害减少 1d8，10 级时增至 2d8。"
+  },
+  "callingMaterial.subclassFeature.warlock.the-fathomless.grasping-tentacles.name": {
+    "en": "Grasping Tentacles",
+    "zh-CN": "缠抓触须"
+  },
+  "callingMaterial.subclassFeature.warlock.the-fathomless.grasping-tentacles.description": {
+    "en": "You always have evard's black tentacles prepared, gain temporary hit points when you cast it, and keep concentration through damage more easily.",
+    "zh-CN": "始终准备艾伐黑触手；施放时获得临时生命值，受到伤害时也更容易维持专注。"
+  },
+  "callingMaterial.subclassFeature.warlock.the-fathomless.fathomless-plunge.name": {
+    "en": "Fathomless Plunge",
+    "zh-CN": "深海潜遁"
+  },
+  "callingMaterial.subclassFeature.warlock.the-fathomless.fathomless-plunge.description": {
+    "en": "Teleport yourself and up to five willing creatures to a body of water within a mile; recharges on a short or long rest.",
+    "zh-CN": "将你和至多五个愿意的生物传送至一英里内的一处水体。短休或长休后恢复使用次数。"
+  },
+  "callingMaterial.subclassFeature.warlock.the-genie.genie-s-vessel.name": {
+    "en": "Genie's Vessel",
+    "zh-CN": "巨灵容器"
+  },
+  "callingMaterial.subclassFeature.warlock.the-genie.genie-s-vessel.description": {
+    "en": "A vessel tied to your patron: once per long rest, Bottled Respite lets you retreat inside it for 10 minutes, and Genie's Wrath adds your proficiency bonus in your patron's damage type to one hit per turn.",
+    "zh-CN": "拥有一个与宗主相连的容器。每次长休后，瓶中休憩可让你进入其中十分钟；巨灵之怒则每回合一次，在命中时增加等于熟练加值的伤害，伤害类型由宗主决定。"
+  },
+  "callingMaterial.subclassFeature.warlock.the-genie.elemental-gift.name": {
+    "en": "Elemental Gift",
+    "zh-CN": "元素赠礼"
+  },
+  "callingMaterial.subclassFeature.warlock.the-genie.elemental-gift.description": {
+    "en": "Resistance to your patron's damage type, and a bonus action grants a 30-foot flying speed for 10 minutes, a proficiency-bonus number of times per long rest.",
+    "zh-CN": "具有对应宗主伤害类型的抗性；可用附赠动作获得 30 尺飞行速度，持续十分钟，每次长休后的使用次数等于熟练加值。"
+  },
+  "callingMaterial.subclassFeature.warlock.the-genie.sanctuary-vessel.name": {
+    "en": "Sanctuary Vessel",
+    "zh-CN": "庇护容器"
+  },
+  "callingMaterial.subclassFeature.warlock.the-genie.sanctuary-vessel.description": {
+    "en": "Bottled Respite takes up to five companions with you, and everyone who finishes a short rest inside gains temporary hit points.",
+    "zh-CN": "瓶中休憩可带上至多五名同伴；所有在容器内完成短休的人都会获得临时生命值。"
+  },
+  "callingMaterial.subclassFeature.warlock.the-genie.limited-wish.name": {
+    "en": "Limited Wish",
+    "zh-CN": "有限祈愿"
+  },
+  "callingMaterial.subclassFeature.warlock.the-genie.limited-wish.description": {
+    "en": "Once per 1d4 long rests, replicate any spell of 6th level or lower without components.",
+    "zh-CN": "每经过 1d4 次长休后，可复制任意六环或更低的法术，无需成分。"
+  },
+  "callingMaterial.subclassFeature.warlock.the-undead.form-of-dread.name": {
+    "en": "Form of Dread",
+    "zh-CN": "恐怖形态"
+  },
+  "callingMaterial.subclassFeature.warlock.the-undead.form-of-dread.description": {
+    "en": "A bonus action for a minute grants temporary hit points of 1d10 + warlock level, immunity to fear, and the power to frighten one creature you hit each turn; a proficiency-bonus number of times per long rest.",
+    "zh-CN": "用附赠动作变形一分钟：获得 1d10 加邪术师等级的临时生命值，免疫恐慌，并可每回合使一个被你命中的生物恐慌。每次长休后的使用次数等于熟练加值。"
+  },
+  "callingMaterial.subclassFeature.warlock.the-undead.grave-touched.name": {
+    "en": "Grave Touched",
+    "zh-CN": "坟墓触碰"
+  },
+  "callingMaterial.subclassFeature.warlock.the-undead.grave-touched.description": {
+    "en": "You need no food, drink or air, and once per turn a damaging attack can deal necrotic damage instead, with a bonus die while in Form of Dread.",
+    "zh-CN": "无需食物、饮水或空气；每回合一次，可将一次伤害性攻击改为黯蚀伤害，在恐怖形态中还可增加一个伤害骰。"
+  },
+  "callingMaterial.subclassFeature.warlock.the-undead.necrotic-husk.name": {
+    "en": "Necrotic Husk",
+    "zh-CN": "黯蚀躯壳"
+  },
+  "callingMaterial.subclassFeature.warlock.the-undead.necrotic-husk.description": {
+    "en": "Immunity to necrotic damage, and once per long rest dropping to 0 hit points instead leaves you at 1 and blasts nearby creatures for necrotic damage equal to your warlock level.",
+    "zh-CN": "免疫黯蚀伤害；每次长休后可用一次，生命值本应降至 0 时，改为保留 1 点，并对附近生物造成等于邪术师等级的黯蚀伤害。"
+  },
+  "callingMaterial.subclassFeature.warlock.the-undead.spirit-projection.name": {
+    "en": "Spirit Projection",
+    "zh-CN": "灵体投射"
+  },
+  "callingMaterial.subclassFeature.warlock.the-undead.spirit-projection.description": {
+    "en": "For an hour, project your spirit: resistance to most damage, the ability to move through solid matter, and necrotic and psychic spell damage that heals you; once per long rest or with a 5th-level slot.",
+    "zh-CN": "将灵体投射出去一小时：对大多数伤害具有抗性，可穿过实体物质，法术造成的黯蚀和心灵伤害还能治疗自己。每次长休后可用一次，也可消耗一个五环法术位使用。"
+  },
+  "callingMaterial.subclassFeature.warlock.the-undying.among-the-dead.name": {
+    "en": "Among the Dead",
+    "zh-CN": "行于亡者之间"
+  },
+  "callingMaterial.subclassFeature.warlock.the-undying.among-the-dead.description": {
+    "en": "You know spare the dying, undead have disadvantage attacking you unless you attack them, and you have advantage on saves against disease.",
+    "zh-CN": "掌握维生术；除非你攻击亡灵，否则亡灵对你的攻击具有劣势；对抗疾病的豁免具有优势。"
+  },
+  "callingMaterial.subclassFeature.warlock.the-undying.defy-death.name": {
+    "en": "Defy Death",
+    "zh-CN": "抗拒死亡"
+  },
+  "callingMaterial.subclassFeature.warlock.the-undying.defy-death.description": {
+    "en": "Regain 1d8 + your Constitution modifier hit points when you succeed on a death save or stabilize a creature; recharges on a long rest.",
+    "zh-CN": "死亡豁免成功或使一个生物稳定时，恢复 1d8 加体质调整值的生命值。长休后恢复使用次数。"
+  },
+  "callingMaterial.subclassFeature.warlock.the-undying.undying-nature.name": {
+    "en": "Undying Nature",
+    "zh-CN": "不死之性"
+  },
+  "callingMaterial.subclassFeature.warlock.the-undying.undying-nature.description": {
+    "en": "You barely need to breathe, eat or sleep, you no longer age, and you cannot be aged magically.",
+    "zh-CN": "几乎无需呼吸、进食或睡眠，不再衰老，也不会被魔法催老。"
+  },
+  "callingMaterial.subclassFeature.warlock.the-undying.indestructible-life.name": {
+    "en": "Indestructible Life",
+    "zh-CN": "不灭生命"
+  },
+  "callingMaterial.subclassFeature.warlock.the-undying.indestructible-life.description": {
+    "en": "A bonus action heals 1d8 + your warlock level and reattaches severed body parts; recharges on a short or long rest.",
+    "zh-CN": "用附赠动作恢复 1d8 加邪术师等级的生命值，并重新接合被斩断的身体部位。短休或长休后恢复使用次数。"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-abjuration.abjuration-savant.name": {
+    "en": "Abjuration Savant",
+    "zh-CN": "防护学者"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-abjuration.abjuration-savant.description": {
+    "en": "Copying abjuration spells into your book costs half the time and gold.",
+    "zh-CN": "将防护系法术抄入法术书时，时间和金币花费减半。"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-abjuration.arcane-ward.name": {
+    "en": "Arcane Ward",
+    "zh-CN": "奥术结界"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-abjuration.arcane-ward.description": {
+    "en": "Casting an abjuration spell of 1st level or higher raises a ward with hit points equal to twice your wizard level plus your Intelligence modifier, which absorbs damage aimed at you and recharges as you cast.",
+    "zh-CN": "施放一环或更高环的防护系法术时，形成一个结界，生命值等于法师等级的两倍加智力调整值。结界吸收针对你的伤害，并随你施法而恢复。"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-abjuration.projected-ward.name": {
+    "en": "Projected Ward",
+    "zh-CN": "投射防护"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-abjuration.projected-ward.description": {
+    "en": "A reaction makes your Arcane Ward absorb damage aimed at a creature within 30 feet.",
+    "zh-CN": "用反应使奥术结界吸收针对 30 尺内一个生物的伤害。"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-abjuration.improved-abjuration.name": {
+    "en": "Improved Abjuration",
+    "zh-CN": "精通防护"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-abjuration.improved-abjuration.description": {
+    "en": "Add your proficiency bonus to ability checks made as part of an abjuration spell, such as counterspell and dispel magic.",
+    "zh-CN": "进行防护系法术要求的属性检定（如反制法术和解除魔法）时，加上熟练加值。"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-abjuration.spell-resistance.name": {
+    "en": "Spell Resistance",
+    "zh-CN": "法术抗性"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-abjuration.spell-resistance.description": {
+    "en": "Advantage on saves against spells, and resistance to damage from spells.",
+    "zh-CN": "对抗法术的豁免具有优势，对法术造成的伤害具有抗性。"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-conjuration.conjuration-savant.name": {
+    "en": "Conjuration Savant",
+    "zh-CN": "咒法学者"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-conjuration.conjuration-savant.description": {
+    "en": "Copying conjuration spells into your book costs half the time and gold.",
+    "zh-CN": "将咒法系法术抄入法术书时，时间和金币花费减半。"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-conjuration.minor-conjuration.name": {
+    "en": "Minor Conjuration",
+    "zh-CN": "次级咒法"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-conjuration.minor-conjuration.description": {
+    "en": "An action conjures a nonmagical object up to 3 feet on a side and 10 pounds for an hour.",
+    "zh-CN": "用一个动作召唤非魔法物体，任意一边不超过 3 尺，重量不超过 10 磅，持续一小时。"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-conjuration.benign-transposition.name": {
+    "en": "Benign Transposition",
+    "zh-CN": "良性移位"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-conjuration.benign-transposition.description": {
+    "en": "Teleport 30 feet or swap places with a willing creature; recharges on a long rest or when you cast a conjuration spell.",
+    "zh-CN": "传送 30 尺，或与一个愿意的生物交换位置。长休后，或施放咒法系法术时，恢复使用次数。"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-conjuration.focused-conjuration.name": {
+    "en": "Focused Conjuration",
+    "zh-CN": "专注咒法"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-conjuration.focused-conjuration.description": {
+    "en": "Concentration on a conjuration spell cannot be broken by taking damage.",
+    "zh-CN": "专注于咒法系法术时，受到伤害不会打断专注。"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-conjuration.durable-summons.name": {
+    "en": "Durable Summons",
+    "zh-CN": "坚韧召唤"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-conjuration.durable-summons.description": {
+    "en": "Creatures you summon get 30 temporary hit points.",
+    "zh-CN": "你召唤的生物获得 30 点临时生命值。"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-divination.divination-savant.name": {
+    "en": "Divination Savant",
+    "zh-CN": "预言学者"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-divination.divination-savant.description": {
+    "en": "Copying divination spells into your book costs half the time and gold.",
+    "zh-CN": "将预言系法术抄入法术书时，时间和金币花费减半。"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-divination.portent.name": {
+    "en": "Portent",
+    "zh-CN": "预兆"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-divination.portent.description": {
+    "en": "Roll two d20s after each long rest and replace any attack, check or save made by you or a creature you can see with one of them; three dice from 14th level.",
+    "zh-CN": "每次长休后掷两个 d20，可用其中一个结果替换你或一个能看见的生物的攻击、检定或豁免。14 级起改为三个骰。"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-divination.expert-divination.name": {
+    "en": "Expert Divination",
+    "zh-CN": "精通预言"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-divination.expert-divination.description": {
+    "en": "Casting a divination spell of 2nd level or higher returns one expended slot of lower level.",
+    "zh-CN": "施放二环或更高环的预言系法术时，恢复一个已消耗的较低环法术位。"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-divination.the-third-eye.name": {
+    "en": "The Third Eye",
+    "zh-CN": "第三只眼"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-divination.the-third-eye.description": {
+    "en": "After a rest, gain darkvision, ethereal sight, greater comprehension or see invisibility until your next rest.",
+    "zh-CN": "休息后，可选择获得黑暗视觉、以太视觉、更强的理解能力或看见隐形事物，持续至下一次休息。"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-divination.greater-portent.name": {
+    "en": "Greater Portent",
+    "zh-CN": "高等预兆"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-divination.greater-portent.description": {
+    "en": "You roll three Portent dice after each long rest instead of two.",
+    "zh-CN": "每次长休后，预兆骰改为三个，而非两个。"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-enchantment.enchantment-savant.name": {
+    "en": "Enchantment Savant",
+    "zh-CN": "惑控学者"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-enchantment.enchantment-savant.description": {
+    "en": "Copying enchantment spells into your book costs half the time and gold.",
+    "zh-CN": "将惑控系法术抄入法术书时，时间和金币花费减半。"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-enchantment.hypnotic-gaze.name": {
+    "en": "Hypnotic Gaze",
+    "zh-CN": "催眠凝视"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-enchantment.hypnotic-gaze.description": {
+    "en": "An action charms and incapacitates a creature within 5 feet until the end of your next turn, extendable each turn; recharges on a short or long rest.",
+    "zh-CN": "用一个动作使 5 尺内一个生物被魅惑并失能，持续至你的下一回合结束，每回合可延长。短休或长休后恢复使用次数。"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-enchantment.instinctive-charm.name": {
+    "en": "Instinctive Charm",
+    "zh-CN": "本能魅惑"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-enchantment.instinctive-charm.description": {
+    "en": "A reaction redirects an attack aimed at you onto another creature within the attacker's reach on a failed Wisdom save; recharges on a short or long rest.",
+    "zh-CN": "用反应，若目标感知豁免失败，则将针对你的攻击转移至攻击者触及范围内的另一个生物。短休或长休后恢复使用次数。"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-enchantment.split-enchantment.name": {
+    "en": "Split Enchantment",
+    "zh-CN": "双重惑控"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-enchantment.split-enchantment.description": {
+    "en": "An enchantment spell of 1st level or higher that targets one creature can target a second.",
+    "zh-CN": "以单个生物为目标的一环或更高环惑控系法术，可以额外指定第二个目标。"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-enchantment.alter-memories.name": {
+    "en": "Alter Memories",
+    "zh-CN": "篡改记忆"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-enchantment.alter-memories.description": {
+    "en": "A charmed creature forgets it was charmed, and you can strip up to your Charisma modifier plus one hour of memory on a failed save.",
+    "zh-CN": "被魅惑的生物会忘记自己曾被魅惑；豁免失败时，你还可抹去至多（魅力调整值＋1）小时的记忆。"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-illusion.illusion-savant.name": {
+    "en": "Illusion Savant",
+    "zh-CN": "幻术学者"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-illusion.illusion-savant.description": {
+    "en": "Copying illusion spells into your book costs half the time and gold.",
+    "zh-CN": "将幻术系法术抄入法术书时，时间和金币花费减半。"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-illusion.improved-minor-illusion.name": {
+    "en": "Improved Minor Illusion",
+    "zh-CN": "精通次级幻象"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-illusion.improved-minor-illusion.description": {
+    "en": "You know minor illusion and can create sound and an image with the same casting.",
+    "zh-CN": "掌握次级幻象，并可在同一次施法中创造声音和影像。"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-illusion.malleable-illusion.name": {
+    "en": "Malleable Illusion",
+    "zh-CN": "可塑幻象"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-illusion.malleable-illusion.description": {
+    "en": "An action reshapes an illusion you are concentrating on while it lasts.",
+    "zh-CN": "幻象持续期间，可用一个动作重塑你正在专注维持的幻象。"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-illusion.illusory-self.name": {
+    "en": "Illusory Self",
+    "zh-CN": "幻象分身"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-illusion.illusory-self.description": {
+    "en": "A reaction interposes an illusory duplicate so an attack that would hit you misses; recharges on a short or long rest.",
+    "zh-CN": "用反应以幻象分身挡下一次攻击，使原本会命中的攻击落空。短休或长休后恢复使用次数。"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-illusion.illusory-reality.name": {
+    "en": "Illusory Reality",
+    "zh-CN": "幻象成真"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-illusion.illusory-reality.description": {
+    "en": "A bonus action makes one object in your illusion real for a minute.",
+    "zh-CN": "用附赠动作，使幻象中的一个物体变为真实物体，持续一分钟。"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-necromancy.necromancy-savant.name": {
+    "en": "Necromancy Savant",
+    "zh-CN": "死灵学者"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-necromancy.necromancy-savant.description": {
+    "en": "Copying necromancy spells into your book costs half the time and gold.",
+    "zh-CN": "将死灵系法术抄入法术书时，时间和金币花费减半。"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-necromancy.grim-harvest.name": {
+    "en": "Grim Harvest",
+    "zh-CN": "阴森收割"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-necromancy.grim-harvest.description": {
+    "en": "Once per turn, killing a creature with a spell of 1st level or higher restores twice the spell's level in hit points, three times for necromancy spells.",
+    "zh-CN": "每回合一次，用一环或更高环法术杀死生物时，恢复等于法术环数两倍的生命值；死灵系法术改为三倍。"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-necromancy.undead-thralls.name": {
+    "en": "Undead Thralls",
+    "zh-CN": "亡灵仆从"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-necromancy.undead-thralls.description": {
+    "en": "You learn animate dead, raise one extra corpse per casting, and your undead gain extra hit points and add your proficiency bonus to weapon damage.",
+    "zh-CN": "学会操纵亡者，每次施法可额外唤起一具尸体；你创造的亡灵还会获得额外生命值，武器伤害加上你的熟练加值。"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-necromancy.inured-to-undeath.name": {
+    "en": "Inured to Undeath",
+    "zh-CN": "不死适应"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-necromancy.inured-to-undeath.description": {
+    "en": "Resistance to necrotic damage, and your hit point maximum cannot be reduced.",
+    "zh-CN": "具有黯蚀伤害抗性，最大生命值不会被降低。"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-necromancy.command-undead.name": {
+    "en": "Command Undead",
+    "zh-CN": "号令亡灵"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-necromancy.command-undead.description": {
+    "en": "An action takes control of an undead creature on a failed Charisma save, with intelligent undead getting a fresh save each time they take damage.",
+    "zh-CN": "用一个动作，使魅力豁免失败的亡灵受你控制；有智慧的亡灵每次受到伤害时都可重新豁免。"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-transmutation.transmutation-savant.name": {
+    "en": "Transmutation Savant",
+    "zh-CN": "变化学者"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-transmutation.transmutation-savant.description": {
+    "en": "Copying transmutation spells into your book costs half the time and gold.",
+    "zh-CN": "将变化系法术抄入法术书时，时间和金币花费减半。"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-transmutation.minor-alchemy.name": {
+    "en": "Minor Alchemy",
+    "zh-CN": "次级炼金"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-transmutation.minor-alchemy.description": {
+    "en": "Ten minutes of concentration converts one material into another, such as wood into stone, for an hour.",
+    "zh-CN": "专注十分钟，可将一种材料转变为另一种，例如将木头变为石头，持续一小时。"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-transmutation.transmuter-s-stone.name": {
+    "en": "Transmuter's Stone",
+    "zh-CN": "变化师之石"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-transmutation.transmuter-s-stone.description": {
+    "en": "Craft a stone granting one of darkvision, 10 feet of speed, proficiency in Constitution saves, or resistance to an element, changeable when you cast a transmutation spell.",
+    "zh-CN": "制作一块石头，提供黑暗视觉、速度增加 10 尺、体质豁免熟练或一种元素抗性中的一项。施放变化系法术时，可改变所选效果。"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-transmutation.shapechanger.name": {
+    "en": "Shapechanger",
+    "zh-CN": "变形者"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-transmutation.shapechanger.description": {
+    "en": "You always have polymorph prepared and can cast it on yourself as a beast of CR 1 or lower without a slot, once per short or long rest.",
+    "zh-CN": "始终准备变形术；每次短休或长休后，可不消耗法术位将自己变为挑战等级不超过 1 的野兽一次。"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-transmutation.master-transmuter.name": {
+    "en": "Master Transmuter",
+    "zh-CN": "变化大师"
+  },
+  "callingMaterial.subclassFeature.wizard.school-of-transmutation.master-transmuter.description": {
+    "en": "Destroy your Transmuter's Stone to transform an object, remove all curses and disease from a creature, restore a creature's youth, or raise the dead.",
+    "zh-CN": "摧毁变化师之石，可转化物体、移除生物身上的全部诅咒和疾病、使生物恢复青春，或使死者复活。"
+  },
+  "callingMaterial.subclassFeature.wizard.war-magic.arcane-deflection.name": {
+    "en": "Arcane Deflection",
+    "zh-CN": "奥术偏斜"
+  },
+  "callingMaterial.subclassFeature.wizard.war-magic.arcane-deflection.description": {
+    "en": "A reaction after being hit or failing a save grants +2 AC or +4 on the save, at the cost of casting only cantrips on your next turn.",
+    "zh-CN": "被命中或豁免失败后，可用反应使护甲等级增加 2，或豁免结果增加 4；代价是下一回合只能施放戏法。"
+  },
+  "callingMaterial.subclassFeature.wizard.war-magic.tactical-wit.name": {
+    "en": "Tactical Wit",
+    "zh-CN": "战术才智"
+  },
+  "callingMaterial.subclassFeature.wizard.war-magic.tactical-wit.description": {
+    "en": "Add your Intelligence modifier to initiative.",
+    "zh-CN": "先攻加上智力调整值。"
+  },
+  "callingMaterial.subclassFeature.wizard.war-magic.power-surge.name": {
+    "en": "Power Surge",
+    "zh-CN": "能量涌流"
+  },
+  "callingMaterial.subclassFeature.wizard.war-magic.power-surge.description": {
+    "en": "Store surges from dispelled or countered spells, up to your Intelligence modifier, and spend one to add half your wizard level to a damaging spell's damage.",
+    "zh-CN": "从被你解除或反制的法术中储存涌流，最多等于智力调整值；消耗一次涌流，使伤害类法术的伤害增加法师等级的一半。"
+  },
+  "callingMaterial.subclassFeature.wizard.war-magic.durable-magic.name": {
+    "en": "Durable Magic",
+    "zh-CN": "坚韧魔法"
+  },
+  "callingMaterial.subclassFeature.wizard.war-magic.durable-magic.description": {
+    "en": "While concentrating on a spell, gain +2 AC and +2 on all saving throws.",
+    "zh-CN": "专注于法术时，护甲等级增加 2，所有豁免增加 2。"
+  },
+  "callingMaterial.subclassFeature.wizard.war-magic.deflecting-shroud.name": {
+    "en": "Deflecting Shroud",
+    "zh-CN": "偏斜帷幕"
+  },
+  "callingMaterial.subclassFeature.wizard.war-magic.deflecting-shroud.description": {
+    "en": "Arcane Deflection also deals half your wizard level in force damage to up to three creatures within 60 feet.",
+    "zh-CN": "使用奥术偏斜时，还可对 60 尺内至多三个生物造成等于法师等级一半的力场伤害。"
+  },
+  "callingMaterial.subclassFeature.wizard.bladesinging.training-in-war-and-song.name": {
+    "en": "Training in War and Song",
+    "zh-CN": "战与歌的训练"
+  },
+  "callingMaterial.subclassFeature.wizard.bladesinging.training-in-war-and-song.description": {
+    "en": "Proficiency with light armor, one one-handed melee weapon, and the Performance skill.",
+    "zh-CN": "获得轻甲、一种单手近战武器和表演技能的熟练。"
+  },
+  "callingMaterial.subclassFeature.wizard.bladesinging.bladesong.name": {
+    "en": "Bladesong",
+    "zh-CN": "剑歌"
+  },
+  "callingMaterial.subclassFeature.wizard.bladesinging.bladesong.description": {
+    "en": "A bonus action for a minute grants +Intelligence to AC, 10 feet of speed, advantage on Acrobatics and a concentration-save bonus; a proficiency-bonus number of times per long rest.",
+    "zh-CN": "用附赠动作激活剑歌，持续一分钟：护甲等级加上智力调整值，速度增加 10 尺，特技检定具有优势，维持专注的豁免获得加值。每次长休后的使用次数等于熟练加值。"
+  },
+  "callingMaterial.subclassFeature.wizard.bladesinging.extra-attack.name": {
+    "en": "Extra Attack",
+    "zh-CN": "额外攻击"
+  },
+  "callingMaterial.subclassFeature.wizard.bladesinging.extra-attack.description": {
+    "en": "Attack twice with the Attack action, and one of those attacks may be a cantrip with a casting time of one action.",
+    "zh-CN": "采取攻击动作时可攻击两次，其中一次可替换为施法时间为一个动作的戏法。"
+  },
+  "callingMaterial.subclassFeature.wizard.bladesinging.song-of-defense.name": {
+    "en": "Song of Defense",
+    "zh-CN": "防御之歌"
+  },
+  "callingMaterial.subclassFeature.wizard.bladesinging.song-of-defense.description": {
+    "en": "A reaction while bladesinging spends a spell slot to reduce damage to you by five times the slot level.",
+    "zh-CN": "剑歌期间，用反应消耗一个法术位，使受到的伤害减少法术位环数的五倍。"
+  },
+  "callingMaterial.subclassFeature.wizard.bladesinging.song-of-victory.name": {
+    "en": "Song of Victory",
+    "zh-CN": "胜利之歌"
+  },
+  "callingMaterial.subclassFeature.wizard.bladesinging.song-of-victory.description": {
+    "en": "Add your Intelligence modifier to melee weapon damage while bladesinging.",
+    "zh-CN": "剑歌期间，近战武器伤害加上智力调整值。"
+  },
+  "callingMaterial.subclassFeature.wizard.chronurgy-magic.chronal-shift.name": {
+    "en": "Chronal Shift",
+    "zh-CN": "时序偏移"
+  },
+  "callingMaterial.subclassFeature.wizard.chronurgy-magic.chronal-shift.description": {
+    "en": "A reaction forces a creature within 30 feet to reroll an attack, check or save, twice per long rest.",
+    "zh-CN": "用反应迫使 30 尺内一个生物重掷攻击、检定或豁免，每次长休后可用两次。"
+  },
+  "callingMaterial.subclassFeature.wizard.chronurgy-magic.temporal-awareness.name": {
+    "en": "Temporal Awareness",
+    "zh-CN": "时间感知"
+  },
+  "callingMaterial.subclassFeature.wizard.chronurgy-magic.temporal-awareness.description": {
+    "en": "Add your Intelligence modifier to initiative.",
+    "zh-CN": "先攻加上智力调整值。"
+  },
+  "callingMaterial.subclassFeature.wizard.chronurgy-magic.momentary-stasis.name": {
+    "en": "Momentary Stasis",
+    "zh-CN": "瞬时静止"
+  },
+  "callingMaterial.subclassFeature.wizard.chronurgy-magic.momentary-stasis.description": {
+    "en": "A Large or smaller creature within 60 feet is frozen in time until the end of your next turn on a failed Constitution save; a proficiency-bonus number of times per long rest.",
+    "zh-CN": "使 60 尺内一个大型或更小的生物进行体质豁免，失败则被凝固在时间中，持续至你的下一回合结束。每次长休后的使用次数等于熟练加值。"
+  },
+  "callingMaterial.subclassFeature.wizard.chronurgy-magic.arcane-abeyance.name": {
+    "en": "Arcane Abeyance",
+    "zh-CN": "奥术暂存"
+  },
+  "callingMaterial.subclassFeature.wizard.chronurgy-magic.arcane-abeyance.description": {
+    "en": "Store a spell of 4th level or lower in a bead that anyone can break to cast it; recharges on a short or long rest.",
+    "zh-CN": "将一个四环或更低的法术储存在珠子里，任何人都可打碎珠子施放该法术。短休或长休后恢复使用次数。"
+  },
+  "callingMaterial.subclassFeature.wizard.chronurgy-magic.convergent-future.name": {
+    "en": "Convergent Future",
+    "zh-CN": "收束未来"
+  },
+  "callingMaterial.subclassFeature.wizard.chronurgy-magic.convergent-future.description": {
+    "en": "A reaction dictates the outcome of a roll within 60 feet as a success or a failure, at the cost of a level of exhaustion.",
+    "zh-CN": "用反应决定 60 尺内一次掷骰成功还是失败，代价是获得一级力竭。"
+  },
+  "callingMaterial.subclassFeature.wizard.graviturgy-magic.adjust-density.name": {
+    "en": "Adjust Density",
+    "zh-CN": "调节密度"
+  },
+  "callingMaterial.subclassFeature.wizard.graviturgy-magic.adjust-density.description": {
+    "en": "Halve or double a creature's or object's weight for a minute, changing its speed, carrying capacity and Strength checks.",
+    "zh-CN": "将生物或物体的重量减半或翻倍，持续一分钟，同时影响速度、负重能力和力量检定。"
+  },
+  "callingMaterial.subclassFeature.wizard.graviturgy-magic.gravity-well.name": {
+    "en": "Gravity Well",
+    "zh-CN": "重力井"
+  },
+  "callingMaterial.subclassFeature.wizard.graviturgy-magic.gravity-well.description": {
+    "en": "Any creature you affect with a spell can be moved 5 feet to a space of your choice.",
+    "zh-CN": "受到你法术影响的任何生物，都可被移动 5 尺至你选择的位置。"
+  },
+  "callingMaterial.subclassFeature.wizard.graviturgy-magic.violent-attraction.name": {
+    "en": "Violent Attraction",
+    "zh-CN": "强烈引力"
+  },
+  "callingMaterial.subclassFeature.wizard.graviturgy-magic.violent-attraction.description": {
+    "en": "A reaction adds 1d10 to a falling or weapon damage roll within 60 feet, a proficiency-bonus number of times per long rest.",
+    "zh-CN": "用反应，使 60 尺内一次坠落或武器伤害掷骰增加 1d10，每次长休后的使用次数等于熟练加值。"
+  },
+  "callingMaterial.subclassFeature.wizard.graviturgy-magic.event-horizon.name": {
+    "en": "Event Horizon",
+    "zh-CN": "事件视界"
+  },
+  "callingMaterial.subclassFeature.wizard.graviturgy-magic.event-horizon.description": {
+    "en": "A 30-foot field of crushing gravity for a minute that deals 2d10 force damage and halts movement on a failed Strength save; once per long rest or with a 4th-level slot.",
+    "zh-CN": "形成持续一分钟、范围 30 尺的强重力区域，造成 2d10 力场伤害，使力量豁免失败的目标停止移动。每次长休后可用一次，也可消耗一个四环法术位使用。"
+  },
+  "callingMaterial.subclassFeature.wizard.order-of-scribes.wizardly-quill.name": {
+    "en": "Wizardly Quill",
+    "zh-CN": "法师羽笔"
+  },
+  "callingMaterial.subclassFeature.wizard.order-of-scribes.wizardly-quill.description": {
+    "en": "Conjure a magic quill that needs no ink, scribes at speed, and can erase what it wrote.",
+    "zh-CN": "召唤无需墨水的魔法羽笔，可快速抄写，也可擦除自己写下的内容。"
+  },
+  "callingMaterial.subclassFeature.wizard.order-of-scribes.awakened-spellbook.name": {
+    "en": "Awakened Spellbook",
+    "zh-CN": "觉醒法术书"
+  },
+  "callingMaterial.subclassFeature.wizard.order-of-scribes.awakened-spellbook.description": {
+    "en": "Your book gains a mind: it lets you change a spell's damage type, cast one ritual per long rest without preparing it, and replace lost pages.",
+    "zh-CN": "法术书获得心智，让你改变法术伤害类型；每次长休后，可无需准备就施放一次仪式法术，并能补回遗失的书页。"
+  },
+  "callingMaterial.subclassFeature.wizard.order-of-scribes.manifest-mind.name": {
+    "en": "Manifest Mind",
+    "zh-CN": "心智显现"
+  },
+  "callingMaterial.subclassFeature.wizard.order-of-scribes.manifest-mind.description": {
+    "en": "A bonus action projects your book's spirit up to 300 feet, letting you cast spells from its position and shed light; free once per long rest, otherwise a slot.",
+    "zh-CN": "用附赠动作将法术书的灵体投射至至多 300 尺外，可从其位置施法，并让其发光。每次长休后可不消耗法术位使用一次，否则消耗一个法术位。"
+  },
+  "callingMaterial.subclassFeature.wizard.order-of-scribes.master-scrivener.name": {
+    "en": "Master Scrivener",
+    "zh-CN": "抄写大师"
+  },
+  "callingMaterial.subclassFeature.wizard.order-of-scribes.master-scrivener.description": {
+    "en": "After a long rest, create a spell scroll of a 1st or 2nd-level spell from your book, cast at maximum effect.",
+    "zh-CN": "长休后，可将法术书中一个一环或二环法术制成卷轴，施放时达到最大效果。"
+  },
+  "callingMaterial.subclassFeature.wizard.order-of-scribes.one-with-the-word.name": {
+    "en": "One with the Word",
+    "zh-CN": "与书合一"
+  },
+  "callingMaterial.subclassFeature.wizard.order-of-scribes.one-with-the-word.description": {
+    "en": "Once per long rest, avoid death by destroying your book's magic, then rebuild it over days of study.",
+    "zh-CN": "每次长休后可用一次，摧毁法术书的魔法以避免死亡，再通过数日研习重建法术书。"
   }
 });
