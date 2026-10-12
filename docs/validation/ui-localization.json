@@ -1510,7 +1510,8 @@
     },
     {
       "path": "src/app/workshop/ContentImportPicker.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Complete content-import picker: native planner warnings carry typed locale-neutral notice codes and facts beside unchanged English messages; display follows viewer locale, authored titles/links/ranks/monster references remain raw. Stored receipts re-project on language switch without another POST. Source and plan failures are distinct from empty results, retryable and not successful import notices; stale previews are aborted/keyed; failed or pending preview blocks immediate import. Creation-path selection and canonical POST/GET options remain native."
     },
     {
       "path": "src/app/workshop/ImportBundleButton.tsx",

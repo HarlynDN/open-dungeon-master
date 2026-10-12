@@ -6,7 +6,7 @@ import { AlertTriangle, Hammer, Info, Loader2 } from "lucide-react";
 import { Select } from "@/components/ui/Select";
 import { Switch } from "@/components/ui/Switch";
 import { FieldLabel } from "@/app/workshop/kit";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { ui } from "@/lib/ui";
 import {
   IMPORT_KINDS,
@@ -14,6 +14,7 @@ import {
   type ImportKind,
   type ImportPlan,
 } from "@/lib/workshop/import";
+import { IMPORT_ERRORS, importErrorText, importReceiptText, importWarningText, type ImportReceipt } from "@/lib/i18n/import-flow-presentations";
 import type { ImportSourceSummary } from "@/app/workshop/types";
 
 // Choosing what crosses over into a table.
@@ -63,33 +64,38 @@ export function ContentImportPicker({
   onImported?: (copied: number) => void;
 }) {
   const [sources, setSources] = useState<ImportSourceSummary[]>([]);
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const [loading, setLoading] = useState(true);
-  const [plan, setPlan] = useState<ImportPlan | null>(null);
+  const [sourceError, setSourceError] = useState("");
+  const [sourceRetry, setSourceRetry] = useState(0);
+  const [planState, setPlanState] = useState<{ key: string; plan: ImportPlan | null; error: string; pending: boolean } | null>(null);
+  const [planRetry, setPlanRetry] = useState(0);
   const [busy, setBusy] = useState(false);
-  const [note, setNote] = useState("");
+  const [note, setNote] = useState<{ receipt: ImportReceipt } | { error: string } | null>(null);
 
   useEffect(() => {
-    let cancelled = false;
-    fetch("/api/import-sources")
-      .then((response) => (response.ok ? response.json() : null))
-      .then((data) => {
-        if (!cancelled && data) {
-          setSources(data.sources ?? []);
+    const controller = new AbortController();
+    void Promise.resolve().then(async () => {
+      if (controller.signal.aborted) return;
+      setLoading(true);
+      setSourceError("");
+      try {
+        const response = await fetch("/api/import-sources", { signal: controller.signal });
+        const data = await response.json().catch(() => ({}));
+        if (controller.signal.aborted) return;
+        if (!response.ok || !Array.isArray(data.sources)) {
+          setSourceError(IMPORT_ERRORS.loadFailed);
+          return;
         }
-      })
-      .catch(() => {
-        // No sources is a valid state; the section explains itself.
-      })
-      .finally(() => {
-        if (!cancelled) {
-          setLoading(false);
-        }
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+        setSources(data.sources);
+      } catch {
+        if (!controller.signal.aborted) setSourceError(IMPORT_ERRORS.network);
+      } finally {
+        if (!controller.signal.aborted) setLoading(false);
+      }
+    });
+    return () => controller.abort();
+  }, [sourceRetry]);
 
   // A campaign cannot import from itself, and offering it would be the one
   // option guaranteed to fail.
@@ -105,32 +111,37 @@ export function ContentImportPicker({
     ? IMPORT_KINDS.filter((kind) => (chosen.contents?.[kind] ?? 0) > 0)
     : [];
 
-  // The state lands in a .then callback rather than after an await, so the
-  // refetch reads as "subscribe to an external system" to React and to the
-  // effect linter, which is what it is. Same shape as DmMapStudioPanel.
-  const refreshPlan = useCallback(() => {
-    if (!campaignId || !selection.sourceId || !selection.select.length) {
-      return Promise.resolve().then(() => setPlan(null));
-    }
-    const params = new URLSearchParams({
-      sourceId: selection.sourceId,
-      again: selection.again ?? "skip",
-      arc: selection.arc ?? "leave",
-    });
-    for (const kind of selection.select) {
-      params.append("select", kind);
-    }
-    return fetch(`/api/campaigns/${campaignId}/import?${params}`)
-      .then((response) => (response.ok ? response.json() : null))
-      .then((data) => setPlan(data?.plan ?? null))
-      .catch(() => {
-        // transient; the next change reloads
-      });
-  }, [campaignId, selection.sourceId, selection.select, selection.again, selection.arc]);
+  // A matching request key prevents a previous source's warnings from
+  // flashing on the next selection before the effect starts. Aborting keeps
+  // slower previews from replacing a newer one or its failure state.
+  const params = new URLSearchParams({ sourceId: selection.sourceId, again: selection.again ?? "skip", arc: selection.arc ?? "leave" });
+  for (const kind of selection.select) params.append("select", kind);
+  const planUrl = campaignId && selection.sourceId && selection.select.length
+    ? `/api/campaigns/${campaignId}/import?${params}` : "";
+  const planKey = `${planUrl}#${planRetry}`;
+  const currentPlan = planState?.key === planKey ? planState : null;
+  const plan = currentPlan?.plan ?? null;
+  const planning = Boolean(planUrl) && (!currentPlan || currentPlan.pending);
+  const planError = currentPlan?.error ?? "";
 
   useEffect(() => {
-    void refreshPlan();
-  }, [refreshPlan]);
+    if (!planUrl) return;
+    const controller = new AbortController();
+    void Promise.resolve().then(async () => {
+      if (controller.signal.aborted) return;
+      setPlanState({ key: planKey, plan: null, error: "", pending: true });
+      try {
+        const response = await fetch(planUrl, { signal: controller.signal });
+        const data = await response.json().catch(() => ({}));
+        if (controller.signal.aborted) return;
+        setPlanState({ key: planKey, plan: response.ok ? data.plan ?? null : null,
+          error: response.ok && data.plan ? "" : typeof data.error === "string" ? data.error : IMPORT_ERRORS.planFailed, pending: false });
+      } catch {
+        if (!controller.signal.aborted) setPlanState({ key: planKey, plan: null, error: IMPORT_ERRORS.network, pending: false });
+      }
+    });
+    return () => controller.abort();
+  }, [planUrl, planKey]);
 
   function choose(source: ImportSourceSummary | null) {
     if (!source) {
@@ -156,11 +167,11 @@ export function ContentImportPicker({
   }
 
   async function importNow() {
-    if (!campaignId || !selection.sourceId || !selection.select.length) {
+    if (!campaignId || !selection.sourceId || !selection.select.length || busy || planning || planError || !plan || plan.empty) {
       return;
     }
     setBusy(true);
-    setNote("");
+    setNote(null);
     try {
       const response = await fetch(`/api/campaigns/${campaignId}/import`, {
         method: "POST",
@@ -168,31 +179,18 @@ export function ContentImportPicker({
         body: JSON.stringify(selection),
       });
       const data = await response.json().catch(() => ({}));
-      if (!response.ok) {
-        setNote(data.error || "Could not import.");
+      if (!response.ok || data.error || typeof data.copied !== "number") {
+        setNote({ error: typeof data.error === "string" ? data.error : IMPORT_ERRORS.failed });
         return;
       }
-      setNote(
-        [
-          `Brought ${data.copied} item${data.copied === 1 ? "" : "s"} across.`,
-          data.kept ? `Kept ${data.kept} already here.` : "",
-          data.beatsAdded ? `${data.beatsAdded} beat${data.beatsAdded === 1 ? "" : "s"} joined the arc.` : "",
-          // Names this table's Cast or fights use that nothing here answers
-          // to (a monster on another author's shelf), and links both worlds
-          // changed (src/lib/db/content-import.ts).
-          Array.isArray(data.unresolved) && data.unresolved.length
-            ? `No monster here answers to ${data.unresolved.join(", ")}: add them to your bestiary, or point those NPCs and fights at another.`
-            : "",
-          Array.isArray(data.worldConflicts) && data.worldConflicts.length ? `Kept as you had them: ${data.worldConflicts.join(" ")}` : "",
-        ]
-          .filter(Boolean)
-          .join(" "),
-      );
+      setNote({ receipt: data });
       // Clearing the ticks re-runs the plan effect, which clears the plan.
       // Refetching here as well raced it with the old ticks and left the
       // last import's warnings and notes on screen.
       onChange({ ...selection, select: [] });
       onImported?.(data.copied ?? 0);
+    } catch {
+      setNote({ error: IMPORT_ERRORS.network });
     } finally {
       setBusy(false);
     }
@@ -202,7 +200,15 @@ export function ContentImportPicker({
     return <Loader2 className="size-4 animate-spin text-stone-500" />;
   }
 
+  const sourceFailure = sourceError ? (
+    <div role="alert" className="flex items-center gap-2 text-xs text-red-300">
+      <span>{importErrorText(sourceError, locale)}</span>
+      <button type="button" className={ui.btnSmall} onClick={() => setSourceRetry(value => value + 1)}>{t("importFlow.retry")}</button>
+    </div>
+  ) : null;
+
   if (!offered.length) {
+    if (sourceFailure) return sourceFailure;
     return (
       <p className="text-xs text-stone-500">
         {t("import.empty")}</p>
@@ -211,6 +217,7 @@ export function ContentImportPicker({
 
   return (
     <div className="space-y-3">
+      {sourceFailure}
       <div className="block">
         <FieldLabel className="mb-1 block">{t("import.startFrom")}</FieldLabel>
         <Select
@@ -303,6 +310,12 @@ export function ContentImportPicker({
               </div>
             ) : null}
 
+            {planning ? <p role="status" className="text-xs text-stone-400">{t("importFlow.planning")}</p> : null}
+            {planError ? <div role="alert" className="flex items-center gap-2 text-xs text-red-300">
+              <span>{importErrorText(planError, locale)}</span>
+              <button type="button" className={ui.btnSmall} onClick={() => setPlanRetry(value => value + 1)}>{t("importFlow.retry")}</button>
+            </div> : null}
+
             {plan?.warnings.length ? (
               <ul className="stagger space-y-1">
                 {plan.warnings.map((warning, index) => (
@@ -311,7 +324,7 @@ export function ContentImportPicker({
                     className="flex items-start gap-1.5 text-xs text-amber-300/90"
                   >
                     <AlertTriangle className="mt-0.5 size-3.5 shrink-0" />
-                    <span>{warning.message}</span>
+                    <span>{importWarningText(warning, locale)}</span>
                   </li>
                 ))}
               </ul>
@@ -322,7 +335,7 @@ export function ContentImportPicker({
                 {plan.notes.map((note, index) => (
                   <li key={index} className="flex items-start gap-1.5 text-xs text-stone-400">
                     <Info className="mt-0.5 size-3.5 shrink-0 text-sky-300/70" />
-                    <span>{note.message}</span>
+                    <span>{importWarningText(note, locale)}</span>
                   </li>
                 ))}
               </ul>
@@ -333,12 +346,14 @@ export function ContentImportPicker({
                 <button
                   type="button"
                   onClick={importNow}
-                  disabled={busy || !selection.select.length || Boolean(plan?.empty)}
+                  disabled={busy || !selection.select.length || planning || Boolean(planError) || !plan || plan.empty}
                   className={ui.btnSmall}
                 >
                   {busy ? <Loader2 className="size-3.5 animate-spin" /> : <Hammer className="size-3.5" />}
                   {t("import.bringIn")}</button>
-                {note ? <span className="live-in text-xs text-emerald-400">{note}</span> : null}
+                {note ? <span role={"error" in note ? "alert" : "status"} className={`live-in text-xs ${"error" in note ? "text-red-300" : "text-emerald-400"}`}>
+                  {"error" in note ? importErrorText(note.error, locale) : importReceiptText(note.receipt, locale)}
+                </span> : null}
               </div>
             ) : (
               <p className="text-xs text-stone-500">

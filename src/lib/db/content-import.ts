@@ -291,6 +291,8 @@ export type ImportOutcome = {
   unbound: number;
   // Beats the board added to the campaign's arc.
   beatsAdded: number;
+  unresolved?: string[];
+  worldConflicts?: string[];
 };
 
 // Copies the planned rows. One transaction, so a constraint the planner

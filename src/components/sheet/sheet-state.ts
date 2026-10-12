@@ -31,6 +31,7 @@ import { matchArmor } from "@/lib/srd/armor";
 import { matchMagicItem } from "@/lib/srd/magic-items";
 import { conditionNote, conditionNoteLine } from "@/lib/battlemap/condition-notes";
 import { conditionPresentation, type ConditionNameLookup } from "@/lib/battlemap/condition-presentation";
+import { sheetResourceHelp } from "@/lib/i18n/sheet-dialog-presentations";
 import { CONDITION_MATERIAL_INDEX } from "@/lib/i18n/condition-material-index";
 import { conditionDisplay, conditionLabel } from "@/lib/i18n/condition-presentations";
 import { damageListLabel, exhaustionSummary } from "@/lib/i18n/sheet-play-presentations";
@@ -257,7 +258,7 @@ export function counterView(id: string, pool: { max: number; used: number }, loc
     return {
       line,
       spendable: false,
-      note: def?.guidance ?? null,
+      note: sheetResourceHelp(id, def?.guidance, locale) ?? null,
     };
   }
   return {

@@ -145,7 +145,11 @@ export type ImportPlanItem = {
   kept?: boolean;
 };
 
-export type ImportWarning = { kind: ImportKind; message: string };
+export type ImportWarning = {
+  kind: ImportKind;
+  message: string;
+  presentation?: import("./import-notices.ts").ImportNotice;
+};
 
 export type ImportPlan = {
   items: ImportPlanItem[];

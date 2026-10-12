@@ -51,6 +51,7 @@ export function planBoard(
     if (lost) {
       warnings.push({
         kind: "storyboard",
+        presentation: { code: "boardLinks", values: { count: lost, kind } },
         message: `${lost} of the board's ${LINK_WORDS[kind]} ${lost === 1 ? "is" : "are"} not coming along, so the cards that pick ${lost === 1 ? "it" : "them"} arrive without ${lost === 1 ? "it" : "them"}. Tick ${IMPORT_KIND_LABELS[kind]} to keep those links.`,
       });
     }
@@ -58,12 +59,14 @@ export function planBoard(
   if (missing) {
     warnings.push({
       kind: "storyboard",
+      presentation: { code: "boardMissing", values: { count: missing } },
       message: `${missing} card link${missing === 1 ? " points" : "s point"} at something that is no longer in the workshop and ${missing === 1 ? "is" : "are"} dropped.`,
     });
   }
   if (fightsAlong) {
     notes.push({
       kind: "storyboard",
+      presentation: { code: "boardFights", values: { count: fightsAlong } },
       message: `${fightsAlong} fight card${fightsAlong === 1 ? " brings the prepared fight it picks" : "s bring the prepared fights they pick"} (roster, map settings, rewards) even though Prepared encounters is not ticked.`,
     });
   }
@@ -83,6 +86,7 @@ export function planBoard(
     if (reused || copied) {
       notes.push({
         kind: "storyboard",
+        presentation: { code: "shared", values: { title: board.common.title, copied, reused } },
         message: `From the shared workshop "${board.common.title}": ${[
           copied ? `${copied} record${copied === 1 ? "" : "s"} copied in` : "",
           reused ? `${reused} already in this campaign and reused` : "",
@@ -95,6 +99,7 @@ export function planBoard(
   if (board.moments) {
     notes.push({
       kind: "storyboard",
+      presentation: { code: "moments", values: { count: board.moments } },
       message: `${board.moments} scene${board.moments === 1 ? " sits" : "s sit"} on an alternative or optional route. ${board.moments === 1 ? "It arrives" : "They arrive"} as planned moments the storyteller fires or drops when the party gets there, not as beats the party must play.`,
     });
   }
@@ -112,13 +117,15 @@ export function planBoard(
   };
   if (!arc) {
     if (board.arcProblem && board.beats.length) {
-      warnings.push({ kind: "storyboard", message: `${board.arcProblem} Until then the board's beats are left out.` });
+      warnings.push({ kind: "storyboard", presentation: { code: "arcProblem", values: { reason: board.arcProblem } },
+        message: `${board.arcProblem} Until then the board's beats are left out.` });
     }
     return plan;
   }
   if (mode === "leave") {
     warnings.push({
       kind: "storyboard",
+      presentation: { code: "arcExisting", values: { add: Boolean(board.beats.length) } },
       message: `This campaign already has a story arc. The board's places, quests, fights and notes still land; its beats do not overwrite the spine the table has been playing.${board.beats.length ? " Add them as the next act to keep them." : ""}`,
     });
     plan.newBeats = 0;
@@ -127,6 +134,7 @@ export function planBoard(
   if (!arc.actRoom || !arc.room) {
     warnings.push({
       kind: "storyboard",
+      presentation: { code: "arcFull", values: {} },
       message: "This arc is already as long as an arc gets, so the board's beats cannot join it.",
     });
     plan.newBeats = 0;
@@ -136,18 +144,21 @@ export function planBoard(
   if (repeated) {
     notes.push({
       kind: "storyboard",
+      presentation: { code: "arcRepeated", values: { count: repeated } },
       message: `${repeated} of the board's beats ${repeated === 1 ? "is" : "are"} already in the arc, so ${repeated === 1 ? "it is" : "they are"} not added twice.`,
     });
   }
   if (fresh.length > arc.room) {
     warnings.push({
       kind: "storyboard",
+      presentation: { code: "arcRoom", values: { room: arc.room, lost: fresh.length - arc.room } },
       message: `The arc has room for ${arc.room} more beat${arc.room === 1 ? "" : "s"}; the last ${fresh.length - arc.room} of the board's are left out.`,
     });
   }
   if (plan.newBeats) {
     notes.push({
       kind: "storyboard",
+      presentation: { code: "arcAppend", values: { count: plan.newBeats, act: plan.act, oldCount: arc.beats.length } },
       message: `${plan.newBeats} beat${plan.newBeats === 1 ? "" : "s"} arrive${plan.newBeats === 1 ? "s" : ""} as act ${plan.act}, after the ${arc.beats.length} already in the arc. Played and skipped beats, and the acts already recapped, are untouched.`,
     });
   }

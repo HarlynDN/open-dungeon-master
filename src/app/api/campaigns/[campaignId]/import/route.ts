@@ -111,5 +111,7 @@ export async function POST(
     kept: result.kept,
     unbound: result.unbound,
     beatsAdded: result.beatsAdded,
+    ...(result.unresolved?.length ? { unresolved: result.unresolved } : {}),
+    ...(result.worldConflicts?.length ? { worldConflicts: result.worldConflicts } : {}),
   });
 }
