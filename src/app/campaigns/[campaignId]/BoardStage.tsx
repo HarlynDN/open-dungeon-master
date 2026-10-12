@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { boardTokenTitle } from "@/lib/i18n/board-tool-presentations";
+import { combatName } from "@/lib/i18n/combat-ui-presentations";
 import { memo } from "react";
 import { cn } from "@/lib/cn";
 import { TILE } from "@/app/campaigns/[campaignId]/battleMapCells";
@@ -10,7 +13,7 @@ import {
   glyphIconKey,
   MAX_BADGES,
 } from "@/lib/battlemap/condition-glyphs";
-import { HEALTH_LABEL, HEALTH_RING, type HealthWord } from "@/lib/battlemap/health-words";
+import { HEALTH_RING, type HealthWord } from "@/lib/battlemap/health-words";
 import { iconPath } from "@/lib/icons";
 import { variantUrl } from "@/lib/image-format";
 import { HostSvgImage } from "@/components/ui/HostSvgImage";
@@ -245,6 +248,8 @@ export const TokenFigure = memo(function TokenFigure({
   showsNumbers,
   dimmed,
 }: TokenFigureProps) {
+  const { locale } = useLocale();
+  const name = combatName(token.name, token.kind, locale);
   const size = footprint * TILE;
   const cx = size / 2;
   const cy = size / 2;
@@ -261,15 +266,7 @@ export const TokenFigure = memo(function TokenFigure({
   const extra = (conditions ?? []).length - badges.length;
   // A flier hovers; the figure whose turn it is stands a little taller.
   const lift = (elevation === "flying" ? -3 : 0) + (isCurrent && !down ? -2 : 0);
-  const title = [
-    token.name,
-    health ? HEALTH_LABEL[health] ?? health : null,
-    ...(conditions ?? []).map((c) =>
-      c.note ? `${c.label} (${c.rounds ? `${c.rounds} rd, ` : ""}${c.note})` : c.rounds ? `${c.label} (${c.rounds})` : c.label,
-    ),
-  ]
-    .filter(Boolean)
-    .join(" · ");
+  const title = boardTokenTitle(token, health, conditions, locale);
 
   return (
     <g
@@ -374,7 +371,7 @@ export const TokenFigure = memo(function TokenFigure({
             fill={down ? "#a8a29e" : token.kind === "enemy" ? "#fca5a5" : "#e7e5e4"}
             pointerEvents="none"
           >
-            {token.name.charAt(0).toUpperCase()}
+            {name.charAt(0).toUpperCase()}
           </text>
         ) : null}
         {/* A face on a 24 px token wants the 256 px copy, not the full portrait. */}

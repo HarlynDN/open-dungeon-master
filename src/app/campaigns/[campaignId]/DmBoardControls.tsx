@@ -1,10 +1,14 @@
 "use client";
 
 import { Box, Eye, EyeOff, Hand, MapPin, Pencil, Ruler, Trash2, UserPlus } from "lucide-react";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { createTranslator, type MessageKey } from "@/lib/i18n/translator";
+import { combatName } from "@/lib/i18n/combat-ui-presentations";
+import { boardCaughtName } from "@/lib/i18n/board-tool-presentations";
 import { cn } from "@/lib/cn";
 import { Slider } from "@/components/ui/Slider";
-import { ADHOC_LABELS, ADHOC_HINTS, ADHOC_NAME_MAX } from "@/lib/dm/board-logic";
-import { SHAPE_LABELS, SHAPE_MEASURES, TEMPLATE_SHAPES } from "@/lib/battlemap/template";
+import { ADHOC_NAME_MAX } from "@/lib/dm/board-logic";
+import { SHAPE_MEASURES, TEMPLATE_SHAPES } from "@/lib/battlemap/template";
 import type { TemplateShape } from "@/lib/battlemap/template";
 import type { AdhocTokenKind } from "@/lib/battlemap/types";
 import type { PlayerMapView } from "@/lib/battlemap/view";
@@ -15,13 +19,15 @@ import type { PlayerMapView } from "@/lib/battlemap/view";
 
 export type BoardTool = "handle" | "place" | "measure" | "point" | "draw";
 
-const TOOL_LABELS: Record<BoardTool, string> = {
-  handle: "Move pieces",
-  place: "Put something down",
-  measure: "Measure an area",
-  point: "Point at a tile",
-  draw: "Draw on the board",
+const TOOL_LABELS: Record<BoardTool, MessageKey> = {
+  handle: "boardTools.rail.handle",
+  place: "boardTools.rail.place",
+  measure: "boardTools.rail.measure",
+  point: "boardTools.rail.point",
+  draw: "boardTools.rail.draw",
 };
+
+const ADHOC_KEYS = { npc: "boardTools.kind.npc", prop: "boardTools.kind.prop" } satisfies Record<AdhocTokenKind, MessageKey>;
 
 const TOOL_ICONS: Record<BoardTool, typeof Hand> = {
   handle: Hand,
@@ -40,6 +46,8 @@ export function BoardToolRail({
   onTool: (tool: BoardTool) => void;
   disabled: boolean;
 }) {
+  const { locale } = useLocale();
+  const t = createTranslator(locale);
   return (
     // board-tools: in a fixed window the row keeps to one line and scrolls
     // sideways, so it never takes the board's height (world.css, issue 87).
@@ -52,7 +60,7 @@ export function BoardToolRail({
             type="button"
             disabled={disabled}
             onClick={() => onTool(option)}
-            title={TOOL_LABELS[option]}
+            title={t(TOOL_LABELS[option])}
             className={cn(
               "flex items-center gap-1.5 rounded-md border px-2 py-1 text-xs disabled:opacity-40",
               tool === option
@@ -61,7 +69,7 @@ export function BoardToolRail({
             )}
           >
             <Icon className="size-3.5" />
-            {TOOL_LABELS[option]}
+            {t(TOOL_LABELS[option])}
           </button>
         );
       })}
@@ -80,15 +88,17 @@ export function PlaceTokenForm({
   onKind: (kind: AdhocTokenKind) => void;
   onName: (name: string) => void;
 }) {
+  const { locale } = useLocale();
+  const t = createTranslator(locale);
   return (
     <div className="space-y-1.5 rounded-lg border border-stone-800 bg-stone-950/60 px-2.5 py-2">
       <div data-pill-group="" className="flex gap-1">
-        {(Object.keys(ADHOC_LABELS) as AdhocTokenKind[]).map((option) => (
+        {(Object.keys(ADHOC_KEYS) as AdhocTokenKind[]).map((option) => (
           <button data-on={kind === option ? "" : undefined}
             key={option}
             type="button"
             onClick={() => onKind(option)}
-            title={ADHOC_HINTS[option]}
+            title={t(option === "npc" ? "boardTools.place.npcHint" : "boardTools.place.propHint")}
             className={cn(
               "rounded-md border px-2 py-1 text-xs",
               kind === option
@@ -96,7 +106,7 @@ export function PlaceTokenForm({
                 : "border-stone-700 text-stone-400 hover:text-stone-200",
             )}
           >
-            {ADHOC_LABELS[option]}
+            {t(ADHOC_KEYS[option])}
           </button>
         ))}
       </div>
@@ -104,13 +114,13 @@ export function PlaceTokenForm({
         value={name}
         onChange={(event) => onName(event.target.value)}
         maxLength={ADHOC_NAME_MAX}
-        placeholder={kind === "npc" ? "Marla the smith" : "Overturned cart"}
+        placeholder={t(kind === "npc" ? "boardTools.place.npcPlaceholder" : "boardTools.place.propPlaceholder")}
         className="w-full rounded-md border border-stone-700 bg-stone-950 px-2 py-1 text-xs text-stone-200 placeholder:text-stone-600"
       />
       <p className="text-[11px] text-stone-500">
         {name.trim()
-          ? "Now tap the tile it stands on."
-          : "Name it first. An unlabelled circle is a puzzle for the whole table."}
+          ? t("boardTools.place.ready")
+          : t("boardTools.place.empty")}
       </p>
     </div>
   );
@@ -133,6 +143,8 @@ export function MeasureControls({
   onSize: (feet: number) => void;
   onClear: () => void;
 }) {
+  const { locale } = useLocale();
+  const t = createTranslator(locale);
   const enemyIds = caught.map((entry) => entry.enemyId).filter(Boolean).join(", ");
   return (
     <div className="space-y-1.5 rounded-lg border border-stone-800 bg-stone-950/60 px-2.5 py-2">
@@ -149,30 +161,30 @@ export function MeasureControls({
                 : "border-stone-700 text-stone-400 hover:text-stone-200",
             )}
           >
-            {SHAPE_LABELS[option]}
+            {t(`boardTools.shape.${option}`)}
           </button>
         ))}
       </div>
       <label className="flex items-center gap-2 text-[11px] text-stone-400">
-        <span className="w-16 capitalize">{SHAPE_MEASURES[shape]}</span>
+        <span className="w-16 capitalize">{t(`boardTools.measure.${SHAPE_MEASURES[shape]}` as MessageKey)}</span>
         <Slider
           min={5}
           max={60}
           step={5}
           value={sizeFeet}
           onChange={onSize}
-          label={`Template ${SHAPE_MEASURES[shape]} in feet`}
-          bubble={(feet) => `${feet} ft`}
+          label={t("boardTools.measure.slider", { measure: t(`boardTools.measure.${SHAPE_MEASURES[shape]}` as MessageKey) })}
+          bubble={(feet) => t("boardTools.measure.feet", { feet })}
           className="min-w-0 flex-1"
         />
-        <span className="w-12 text-right tabular-nums text-stone-300">{sizeFeet} ft</span>
+        <span className="w-12 text-right tabular-nums text-stone-300">{t("boardTools.measure.feet", { feet: sizeFeet })}</span>
       </label>
       <p className="text-[11px] leading-4 text-stone-500">
-        Tap where it starts, then tap where it points. Nobody else sees it.
+        {t("boardTools.measure.help")}
       </p>
       {caught.length ? (
         <p className="text-[11px] leading-4 text-amber-300">
-          Caught: {caught.map((entry) => entry.name).join(", ")}
+          {t("boardTools.measure.caught", { names: caught.map(entry => boardCaughtName(entry, locale)).join(t("boardUi.list")) })}
         </p>
       ) : null}
       <div className="flex flex-wrap gap-1">
@@ -181,7 +193,7 @@ export function MeasureControls({
           onClick={onClear}
           className="rounded-md border border-stone-700 px-2 py-1 text-xs text-stone-400 hover:text-stone-200"
         >
-          Clear the measure
+          {t("boardTools.measure.clear")}
         </button>
         {/* The console's Area of effect takes enemy ids as comma-separated
             text, so measuring and resolving are two steps rather than one
@@ -193,7 +205,7 @@ export function MeasureControls({
             title={enemyIds}
             className="rounded-md border border-stone-700 px-2 py-1 text-xs text-stone-400 hover:text-stone-200"
           >
-            Copy the enemy ids
+            {t("boardTools.measure.copy")}
           </button>
         ) : null}
       </div>
@@ -222,27 +234,29 @@ export function TokenCard({
   onRemove: () => void;
   onClose: () => void;
 }) {
+  const { locale } = useLocale();
+  const t = createTranslator(locale);
   const adhoc = token.kind === "npc" || token.kind === "prop";
   return (
     <div className="space-y-1.5 rounded-lg border border-amber-900/60 bg-stone-950/90 px-2.5 py-2">
       <div className="flex items-center justify-between gap-2">
-        <p className="truncate text-xs font-medium text-stone-200">{token.name}</p>
+        <p className="truncate text-xs font-medium text-stone-200">{combatName(token.name, token.kind, locale)}</p>
         <button
           type="button"
           onClick={onClose}
           className="text-[11px] text-stone-500 hover:text-stone-300"
         >
-          Close
+          {t("boardTools.card.close")}
         </button>
       </div>
       <p className="text-[11px] text-stone-500">
         {token.kind === "pc"
-          ? "Player character"
+          ? t("boardTools.kind.pc")
           : token.kind === "enemy"
-            ? "Enemy"
-            : ADHOC_LABELS[token.kind as AdhocTokenKind]}
-        {hp ? ` · ${hp.current} / ${hp.max} HP` : ""}
-        {token.hidden ? " · hidden from the party" : ""}
+            ? t("boardTools.kind.enemy")
+            : t(ADHOC_KEYS[token.kind as AdhocTokenKind])}
+        {hp ? t("boardTools.card.hp", { current: hp.current, max: hp.max }) : ""}
+        {token.hidden ? t("boardTools.card.hidden") : ""}
       </p>
       <div className="flex flex-wrap gap-1">
         <button
@@ -257,7 +271,7 @@ export function TokenCard({
           )}
         >
           <Hand className="size-3.5" />
-          {held ? "Put it back down" : "Pick it up"}
+          {t(held ? "boardTools.card.put" : "boardTools.card.pick")}
         </button>
         {token.kind === "pc" ? null : (
           <button
@@ -267,7 +281,7 @@ export function TokenCard({
             className="flex items-center gap-1 rounded-md border border-stone-700 px-2 py-1 text-xs text-stone-400 hover:text-stone-200 disabled:opacity-40"
           >
             {token.hidden ? <Eye className="size-3.5" /> : <EyeOff className="size-3.5" />}
-            {token.hidden ? "Reveal" : "Hide"}
+            {t(token.hidden ? "boardTools.card.reveal" : "boardTools.card.hide")}
           </button>
         )}
         {adhoc ? (
@@ -278,14 +292,14 @@ export function TokenCard({
             className="flex items-center gap-1 rounded-md border border-red-900/60 px-2 py-1 text-xs text-red-300 hover:bg-red-950/40 disabled:opacity-40"
           >
             <Trash2 className="size-3.5" />
-            Take off
+            {t("boardTools.card.remove")}
           </button>
         ) : null}
       </div>
       {token.kind !== "pc" && !adhoc ? (
         <p className="flex items-center gap-1 text-[11px] text-stone-600">
           <UserPlus className="size-3" />
-          Enemies leave the board when they die.
+          {t("boardTools.card.enemyHelp")}
         </p>
       ) : null}
     </div>

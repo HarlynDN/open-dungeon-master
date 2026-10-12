@@ -1,6 +1,8 @@
 "use client";
 
 import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef } from "react";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { createTranslator } from "@/lib/i18n/translator";
 import { cn } from "@/lib/cn";
 import { HostSvgImage } from "@/components/ui/HostSvgImage";
 import {
@@ -116,6 +118,8 @@ export const BattleMapGrid = memo(
     // A label with a reference was tapped (a lore entry, an NPC).
     onLabelClick?: (label: MapLabel) => void;
   }) {
+    const { locale } = useLocale();
+    const t = createTranslator(locale);
     const clickRef = useRef(onTileClick);
     const hoverRef = useRef(onTileHover);
     const tokenRef = useRef(onTokenClick);
@@ -374,7 +378,7 @@ export const BattleMapGrid = memo(
         viewBox={`0 0 ${width * TILE} ${height * TILE}`}
         className="h-auto w-full select-none rounded-lg border border-stone-800 bg-stone-950"
         role="img"
-        aria-label="Battle map"
+        aria-label={t("boardTools.grid.label")}
         onClick={handleSvgClick}
         onPointerDown={(event) => {
           pointerTypeRef.current = event.pointerType;
@@ -566,6 +570,7 @@ export const BattleMapGrid = memo(
               const [dx, dy] = key.split(",").map(Number);
               return (
                 <g key={`door-${key}`} pointerEvents="none">
+                  <title>{t(state === "locked" ? "boardTools.grid.locked" : "boardTools.grid.stuck")}</title>
                   <rect
                     x={dx * TILE + TILE * 0.55}
                     y={dy * TILE + TILE * 0.05}
@@ -583,7 +588,7 @@ export const BattleMapGrid = memo(
                     fill="#0c0a09"
                     style={{ fontFamily: "sans-serif" }}
                   >
-                    {state === "locked" ? "L" : "S"}
+                    {t(state === "locked" ? "boardTools.grid.lockedMark" : "boardTools.grid.stuckMark")}
                   </text>
                 </g>
               );

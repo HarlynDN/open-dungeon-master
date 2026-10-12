@@ -2,11 +2,14 @@
 
 import { Crosshair, Footprints, Sparkles, Swords, Zap } from "lucide-react";
 import { useMemo, useState } from "react";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { boardIntentSentence } from "@/lib/i18n/board-tool-presentations";
+import { combatName } from "@/lib/i18n/combat-ui-presentations";
 import { cn } from "@/lib/cn";
 import { TILE } from "@/app/campaigns/[campaignId]/battleMapCells";
 import { TokenFace } from "@/app/campaigns/[campaignId]/BoardChrome";
 import type { StageToken } from "@/app/campaigns/[campaignId]/BoardStage";
-import { intentArc, intentSentence, visibleIntents, type TokenIntent } from "@/lib/battlemap/intent";
+import { intentArc, visibleIntents, type TokenIntent } from "@/lib/battlemap/intent";
 
 // Enemy intent on the board (docs/visual-overhaul-plan.md 5.6): a breathing
 // badge over each enemy that means to do something, the diamond-scale arc to
@@ -42,6 +45,7 @@ export function IntentLayer({
   round?: number;
   faceOf: (token: StageToken) => Array<string | null | undefined>;
 }) {
+  const { locale } = useLocale();
   const [litId, setLitId] = useState<string | null>(null);
   const byId = useMemo(() => new Map(tokens.map((token) => [token.id, token])), [tokens]);
   const shown = useMemo(
@@ -95,7 +99,7 @@ export function IntentLayer({
           <button
             key={actor.id}
             type="button"
-            aria-label={intentSentence(intent, actor.name, target?.name)}
+            aria-label={boardIntentSentence(intent, actor, target, locale)}
             aria-pressed={isLit}
             data-lit={isLit}
             onPointerEnter={(event) => {
@@ -142,17 +146,17 @@ export function IntentLayer({
         >
           <TokenFace
             candidates={faceOf(litActor)}
-            name={litActor.name}
+            name={combatName(litActor.name, litActor.kind, locale)}
             enemy
             className="size-6 rounded-full border border-[rgba(220,38,38,0.7)]"
           />
           <span className="min-w-0 truncate font-serif text-[12.5px] text-[#e9e6f4]">
-            {intentSentence(lit, litActor.name, litTarget?.name)}
+            {boardIntentSentence(lit, litActor, litTarget, locale)}
           </span>
           {litTarget ? (
             <TokenFace
               candidates={faceOf(litTarget)}
-              name={litTarget.name}
+              name={combatName(litTarget.name, litTarget.kind, locale)}
               className="size-6 rounded-full border border-[rgba(227,193,92,0.6)]"
             />
           ) : null}

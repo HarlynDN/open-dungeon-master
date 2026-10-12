@@ -1,3 +1,4 @@
+import { BOARD_TOOL_MESSAGES } from "./board-tool-messages.ts";
 import { BOARD_CONTROL_MESSAGES } from "./board-control-messages.ts";
 import { DICE_CONTROL_MESSAGES } from "./dice-control-messages.ts";
 import { FEED_MESSAGES } from "./feed-messages.ts";
@@ -101,6 +102,7 @@ const en = {
   ...FEED_MESSAGES.en,
   ...DICE_CONTROL_MESSAGES.en,
   ...BOARD_CONTROL_MESSAGES.en,
+    ...BOARD_TOOL_MESSAGES.en,
   ...PLAY_EDIT_MESSAGES.en,
   ...HAND_CASTING_MESSAGES.en,
   ...HAND_FEATURE_MESSAGES.en,
@@ -210,6 +212,7 @@ const zhCN: Messages = {
   ...FEED_MESSAGES["zh-CN"],
   ...DICE_CONTROL_MESSAGES["zh-CN"],
   ...BOARD_CONTROL_MESSAGES["zh-CN"],
+    ...BOARD_TOOL_MESSAGES["zh-CN"],
   ...PLAY_EDIT_MESSAGES["zh-CN"],
   ...HAND_CASTING_MESSAGES["zh-CN"],
   ...HAND_FEATURE_MESSAGES["zh-CN"],

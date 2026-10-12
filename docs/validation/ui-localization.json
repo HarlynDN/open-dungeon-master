@@ -98,7 +98,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/BattleMapGrid.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Battle-map accessibility and locked/stuck door marks/titles use campaign locale; English L/S marks preserved. Passed ruler/area captions are localized by their owners; authored map labels/ping names and fixed numeric door DCs stay literal. Native turn matching still uses raw token names/IDs; geometry, fog/visibility, images and event callbacks unchanged."
     },
     {
       "path": "src/app/campaigns/[campaignId]/BattleMapPanel.tsx",
@@ -129,7 +130,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/BoardIntent.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Intent wrappers and typed actor/target/resource names use campaign locale; arbitrary intent prose remains literal. Native visibleIntents filtering, round checks, actor IDs, geometry, badge values and focus/click behavior unchanged. Current engine still does not emit intents; localization does not implement that server feature."
     },
     {
       "path": "src/app/campaigns/[campaignId]/BoardMoveModes.tsx",
@@ -148,7 +150,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/BoardStage.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "TokenFigure display initial and accessible status title use typed display names and existing health/condition renderers; authored condition notes and labels survive. English title formatting preserved. Native health colors, HP facts, condition IDs/glyphs, visibility, token coordinates and art layers unchanged."
     },
     {
       "path": "src/app/campaigns/[campaignId]/BoardStageLayers.tsx",
@@ -263,7 +266,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmBoardControls.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "DM tool rail, ad hoc placement/type/hints, measured shape/unit/help/caught targets and token-card controls use campaign locale. Native templates, name input, distances, slider limits and callbacks unchanged; clipboard still copies canonical enemy IDs. Caught names translate only when enemyId is present and characterId absent; PC/ambiguous/custom names stay literal."
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmConsolePanel.tsx",
