@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { cn } from "@/lib/cn";
 import { GameIcon } from "@/components/ui/GameIcon";
 import type { ListedModel } from "@/lib/setup/discovery-logic";
@@ -120,10 +121,11 @@ export function ModelPicker({
   recommended: string;
   onChange: (model: string) => void;
 }) {
+  const { t } = useLocale();
   const options = [
     ...models.map((model) => ({
       value: model.id,
-      label: `${model.label}${model.id === recommended ? " (recommended)" : ""}${model.context ? ` · ${Math.round(model.context / 1000)}K` : ""}`,
+      label: `${model.label}${model.id === recommended ? t("setupGuide.model.recommended") : ""}${model.context ? t("setupGuide.model.context", { count: Math.round(model.context / 1000) }) : ""}`,
     })),
     ...(value && !models.some((model) => model.id === value) ? [{ value, label: value }] : []),
   ];

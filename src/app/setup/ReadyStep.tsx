@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { createTranslator, type MessageKey } from "@/lib/i18n/translator";
+
 import { RefreshCw } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { ui } from "@/lib/ui";
@@ -11,16 +14,16 @@ import { Lamp, type Tone } from "@/app/setup/SetupParts";
 
 type Row = { key: string; title: string; tone: Tone; text: string; step: number };
 
-const SIGNUPS: Record<Draft["signupMode"], string> = {
-  invite: "Accounts by invite code",
-  open: "Anyone with the address can make an account",
-  closed: "No new accounts",
+const SIGNUPS: Record<Draft["signupMode"], MessageKey> = {
+  invite: "setupGuide.ready.invite",
+  open: "setupGuide.ready.open",
+  closed: "setupGuide.ready.closed",
 };
 
-const STT_WORDS: Record<string, string> = {
-  whisper: "Dictation by the Whisper server",
-  builtin: "Dictation by the built-in engine",
-  openai: "Dictation by OpenAI, on the key",
+const STT_WORDS: Record<string, MessageKey> = {
+  whisper: "setupGuide.ready.sttWhisper",
+  builtin: "setupGuide.ready.sttBuiltin",
+  openai: "setupGuide.ready.sttOpenai",
 };
 
 function rows(input: {
@@ -29,57 +32,60 @@ function rows(input: {
   address: string;
   agentConnected: boolean;
   steps: Record<string, number>;
-}): Row[] {
+  failed: boolean;
+}, t: ReturnType<typeof createTranslator>): Row[] {
   const { draft, caps, steps } = input;
   const wait = !caps;
+  const waitingTone = input.failed ? "bad" : "wait";
+  const waitingText = t(input.failed ? "setupGuide.ready.unknown" : "setupGuide.ready.ask");
   const story: Row =
     draft.story === "none"
-      ? { key: "story", title: "Storyteller", tone: "off", text: "A person narrates. No AI storyteller.", step: steps.story }
+      ? { key: "story", title: t("setupGuide.ready.story"), tone: "off", text: t("setupGuide.ready.human"), step: steps.story }
       : wait
-        ? { key: "story", title: "Storyteller", tone: "wait", text: "Asking the storyteller…", step: steps.story }
+        ? { key: "story", title: t("setupGuide.ready.story"), tone: waitingTone, text: input.failed ? waitingText : t("setupGuide.ready.askStory"), step: steps.story }
         : caps.story.configured && caps.story.reachable
-          ? { key: "story", title: "Storyteller", tone: "ok", text: `Answering${caps.story.model ? ` · ${caps.story.model}` : ""}`, step: steps.story }
+          ? { key: "story", title: t("setupGuide.ready.story"), tone: "ok", text: t("setupGuide.ready.answering", { model: caps.story.model ? ` · ${caps.story.model}` : "" }), step: steps.story }
           : {
               key: "story",
-              title: "Storyteller",
+              title: t("setupGuide.ready.story"),
               tone: "bad",
               text:
                 draft.story === "agent"
-                  ? "Saved, but the program is not ready: install it or sign it in, then check again."
-                  : "Saved, but not answering yet: start the model server, then check again.",
+                  ? t("setupGuide.ready.agentNotReady")
+                  : t("setupGuide.ready.serverNotReady"),
               step: steps.story,
             };
   const pictures: Row =
     draft.pictures === "none"
-      ? { key: "pictures", title: "Pictures", tone: "off", text: "Painted placeholders", step: steps.pictures }
+      ? { key: "pictures", title: t("setupGuide.ready.pictures"), tone: "off", text: t("setupGuide.ready.placeholders"), step: steps.pictures }
       : wait
-        ? { key: "pictures", title: "Pictures", tone: "wait", text: "Asking…", step: steps.pictures }
+        ? { key: "pictures", title: t("setupGuide.ready.pictures"), tone: waitingTone, text: waitingText, step: steps.pictures }
         : caps.images.configured && caps.images.reachable
-          ? { key: "pictures", title: "Pictures", tone: "ok", text: draft.pictures === "comfyui" ? "ComfyUI paints them" : draft.pictures === "openai" ? "OpenAI paints them, on the key" : "The agent paints them", step: steps.pictures }
-          : { key: "pictures", title: "Pictures", tone: "warn", text: "Saved, but not answering yet. Tables use placeholders until it does.", step: steps.pictures };
+          ? { key: "pictures", title: t("setupGuide.ready.pictures"), tone: "ok", text: draft.pictures === "comfyui" ? t("setupGuide.ready.comfy") : draft.pictures === "openai" ? t("setupGuide.ready.openaiPictures") : t("setupGuide.ready.agentPictures"), step: steps.pictures }
+          : { key: "pictures", title: t("setupGuide.ready.pictures"), tone: "warn", text: t("setupGuide.ready.picturesWaiting"), step: steps.pictures };
   const narration: Row =
     draft.narration === "off"
-      ? { key: "narration", title: "Narration", tone: "off", text: "Text only", step: steps.voice }
+      ? { key: "narration", title: t("setupGuide.ready.narration"), tone: "off", text: t("setupGuide.ready.text"), step: steps.voice }
       : wait
-        ? { key: "narration", title: "Narration", tone: "wait", text: "Asking…", step: steps.voice }
+        ? { key: "narration", title: t("setupGuide.ready.narration"), tone: waitingTone, text: waitingText, step: steps.voice }
         : caps.tts.configured && caps.tts.reachable
-          ? { key: "narration", title: "Narration", tone: "ok", text: draft.narration === "kokoro" ? "Kokoro reads it aloud" : "OpenAI reads it aloud, on the key", step: steps.voice }
-          : { key: "narration", title: "Narration", tone: "warn", text: "Saved, but not answering yet.", step: steps.voice };
+          ? { key: "narration", title: t("setupGuide.ready.narration"), tone: "ok", text: draft.narration === "kokoro" ? t("setupGuide.ready.kokoro") : t("setupGuide.ready.openaiVoice"), step: steps.voice }
+          : { key: "narration", title: t("setupGuide.ready.narration"), tone: "warn", text: t("setupGuide.ready.waiting"), step: steps.voice };
   const dictation: Row = wait
-    ? { key: "dictation", title: "Dictation", tone: "wait", text: "Asking…", step: steps.voice }
+    ? { key: "dictation", title: t("setupGuide.ready.dictation"), tone: waitingTone, text: waitingText, step: steps.voice }
     : caps.stt.configured
-      ? { key: "dictation", title: "Dictation", tone: "ok", text: STT_WORDS[caps.stt.backend] ?? "Ready", step: steps.voice }
-      : { key: "dictation", title: "Dictation", tone: "off", text: "Off. The Voice step can download the built-in engine.", step: steps.voice };
+      ? { key: "dictation", title: t("setupGuide.ready.dictation"), tone: "ok", text: t(STT_WORDS[caps.stt.backend] ?? "setupGuide.ready.available"), step: steps.voice }
+      : { key: "dictation", title: t("setupGuide.ready.dictation"), tone: "off", text: t("setupGuide.ready.sttOff"), step: steps.voice };
   const players: Row = {
     key: "players",
-    title: "Players",
+    title: t("setupGuide.ready.players"),
     tone: "ok",
-    text: `${SIGNUPS[draft.signupMode]}${input.address ? ` · ${input.address}` : ""}`,
+    text: `${t(SIGNUPS[draft.signupMode])}${input.address ? ` · ${input.address}` : ""}`,
     step: steps.players,
   };
   const agent: Row = input.agentConnected
-    ? { key: "agent", title: "Your agent", tone: "ok", text: "Connection made", step: steps.agent }
-    : { key: "agent", title: "Your agent", tone: "off", text: "Not connected (optional)", step: steps.agent };
+    ? { key: "agent", title: t("setupGuide.ready.agent"), tone: "ok", text: t("setupGuide.ready.connected"), step: steps.agent }
+    : { key: "agent", title: t("setupGuide.ready.agent"), tone: "off", text: t("setupGuide.ready.optional"), step: steps.agent };
   return [story, pictures, narration, dictation, players, agent];
 }
 
@@ -100,8 +106,10 @@ export function ReadyStep({
   steps: Record<string, number>;
   onJump: (step: number) => void;
 }) {
+  const { t } = useLocale();
   const [caps, setCaps] = useState<Capabilities | null>(null);
   const [checking, setChecking] = useState(false);
+  const [failed, setFailed] = useState(false);
 
   const ask = useCallback(
     () =>
@@ -109,7 +117,10 @@ export function ReadyStep({
         .then((response) => (response.ok ? response.json() : null))
         .catch(() => null)
         .then((data) => {
-          setCaps(data as Capabilities | null);
+          const readable = data && ["story", "images", "tts", "stt"].every(key => typeof data[key]?.configured === "boolean")
+            && ["story", "images", "tts"].every(key => typeof data[key]?.reachable === "boolean");
+          setCaps(readable ? data as Capabilities : null);
+          setFailed(!readable);
           setChecking(false);
         }),
     [],
@@ -124,19 +135,21 @@ export function ReadyStep({
   function check() {
     setChecking(true);
     setCaps(null);
+    setFailed(false);
     void ask();
   }
 
-  const list = rows({ draft, caps, address, agentConnected, steps });
+  const list = rows({ draft, caps, address, agentConnected, steps, failed }, t);
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-2">
-        <span className="text-xs font-medium text-stone-400">What this server can do now</span>
+        <span className="text-xs font-medium text-stone-400">{t("setupGuide.ready.heading")}</span>
         <button type="button" className={ui.btnSmall} onClick={check} disabled={checking} aria-busy={checking}>
-          <RefreshCw className={checking ? "size-3.5 animate-spin" : "size-3.5"} /> Check again
+          <RefreshCw className={checking ? "size-3.5 animate-spin" : "size-3.5"} /> {t("setupGuide.agent.check")}
         </button>
       </div>
+      {failed ? <p role="alert" className="text-sm text-red-400">{t("setupGuide.error.capabilities")}</p> : null}
       <ul className="stagger space-y-2" aria-live="polite">
         {list.map((row) => (
           <li key={row.key} className="su-row">
@@ -148,7 +161,7 @@ export function ReadyStep({
               </span>
             </span>
             <button type="button" className={ui.btnSmall} onClick={() => onJump(row.step)}>
-              Change
+              {t("setupGuide.ready.change")}
             </button>
           </li>
         ))}
@@ -156,12 +169,12 @@ export function ReadyStep({
 
       {draft.story === "local" || draft.story === "key" ? (
         <div className="su-row flex-col items-stretch">
-          <span className="text-sm text-stone-200">Try the storyteller the way a table will</span>
+          <span className="text-sm text-stone-200">{t("setupGuide.ready.tryStory")}</span>
           <BackendProbe which="story" baseUrl="" model="" />
         </div>
       ) : draft.story === "agent" && draft.agent.id ? (
         <div className="su-row flex-col items-stretch">
-          <span className="text-sm text-stone-200">Try the agent with one tiny real turn</span>
+          <span className="text-sm text-stone-200">{t("setupGuide.ready.tryAgent")}</span>
           <HarnessTestPanel saved paints={false} picturesVerified={false} onVerified={check} />
         </div>
       ) : null}

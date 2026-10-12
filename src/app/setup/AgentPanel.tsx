@@ -1,5 +1,9 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { createTranslator } from "@/lib/i18n/translator";
+import type { AppLocale } from "@/lib/i18n/locales";
+import { setupAgentMessage } from "@/lib/i18n/setup-guide-presentations";
 import { RefreshCw } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { ui } from "@/lib/ui";
@@ -13,12 +17,13 @@ type Update = (change: (draft: Draft) => Draft) => void;
 
 const MARKS: Record<HarnessId, string> = { claude: "CC", codex: "Cx", opencode: "oc", grok: "Gk" };
 
-function statusTone(status: HarnessStatus): { tone: "ready" | "warn" | "off"; text: string } {
-  if (status.availability !== "ok") return { tone: "off", text: "Not available here" };
-  if (!status.installed) return { tone: "off", text: "Not installed" };
-  if (status.auth.state === "signed-out") return { tone: "warn", text: "Sign in needed" };
-  if (status.auth.state === "unknown") return { tone: "warn", text: "Installed" };
-  return { tone: "ready", text: "Ready" };
+function statusTone(status: HarnessStatus, locale: AppLocale): { tone: "ready" | "warn" | "off"; text: string } {
+  const t = createTranslator(locale);
+  if (status.availability !== "ok") return { tone: "off", text: t("setupGuide.agent.unavailable") };
+  if (!status.installed) return { tone: "off", text: t("setupGuide.agent.notInstalled") };
+  if (status.auth.state === "signed-out") return { tone: "warn", text: t("setupGuide.agent.signIn") };
+  if (status.auth.state === "unknown") return { tone: "warn", text: t("setupGuide.agent.installed") };
+  return { tone: "ready", text: t("setupGuide.agent.ready") };
 }
 
 // "An agent you already pay for": each program this server can run, whether
@@ -26,8 +31,10 @@ function statusTone(status: HarnessStatus): { tone: "ready" | "warn" | "off"; te
 // it is not. Nothing is saved until the step's Continue; the live test turn
 // waits on the last step, once the choice is the server's.
 export function AgentPanel({ draft, update }: { draft: Draft; update: Update }) {
+  const { locale, t } = useLocale();
   const [statuses, setStatuses] = useState<HarnessStatus[] | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [loadError, setLoadError] = useState(false);
   const phone = shellHost()?.platform === "android";
 
   const load = useCallback(
@@ -35,9 +42,15 @@ export function AgentPanel({ draft, update }: { draft: Draft; update: Update }) 
       fetch(`/api/admin/harness?${refresh ? "refresh=1&" : ""}${phone ? "platform=android" : ""}`)
         .then((response) => (response.ok ? response.json() : null))
         .then((data) => {
-          if (data?.statuses) setStatuses(data.statuses as HarnessStatus[]);
+          if (Array.isArray(data?.statuses) && data.statuses.every((status: HarnessStatus) => status
+            && typeof status.id === "string" && typeof status.label === "string" && typeof status.installed === "boolean"
+            && typeof status.availability === "string" && status.auth && typeof status.auth.state === "string"
+            && Array.isArray(status.models) && status.models.every(model => model && typeof model.id === "string" && typeof model.label === "string"))) {
+            setStatuses(data.statuses as HarnessStatus[]);
+            setLoadError(false);
+          } else setLoadError(true);
         })
-        .catch(() => undefined),
+        .catch(() => setLoadError(true)),
     [phone],
   );
 
@@ -57,9 +70,10 @@ export function AgentPanel({ draft, update }: { draft: Draft; update: Update }) 
   const setAgent = (patch: Partial<Draft["agent"]>) => update((current) => ({ ...current, agent: { ...current.agent, ...patch } }));
 
   if (!statuses) {
+    if (loadError) return <div role="alert" className="space-y-2"><p className="text-sm text-red-400">{t("setupGuide.error.agent")}</p><button type="button" className={ui.btnSmall} disabled={refreshing} aria-busy={refreshing} onClick={() => void refresh()}>{t("setupGuide.agent.check")}</button></div>;
     return (
       <div className="flex items-center gap-2 text-xs text-stone-400">
-        <span className="su-scan" aria-hidden="true" /> Looking for agent programs on this computer…
+        <span className="su-scan" aria-hidden="true" /> {t("setupGuide.agent.looking")}
       </div>
     );
   }
@@ -69,16 +83,17 @@ export function AgentPanel({ draft, update }: { draft: Draft; update: Update }) 
 
   return (
     <div className="space-y-3">
-      {unavailable && statuses[0]?.message ? <p className="su-note">{statuses[0].message}</p> : null}
+      {loadError ? <p role="alert" className="text-sm text-red-400">{t("setupGuide.error.agent")}</p> : null}
+      {unavailable && statuses[0]?.message ? <p className="su-note">{setupAgentMessage(statuses[0].message, locale)}</p> : null}
       <div className="flex items-center justify-between gap-2">
-        <span className="text-xs font-medium text-stone-400">Choose the program</span>
+        <span className="text-xs font-medium text-stone-400">{t("setupGuide.agent.choose")}</span>
         <button type="button" onClick={refresh} disabled={refreshing} aria-busy={refreshing} className={ui.btnSmall}>
-          <RefreshCw className={refreshing ? "size-3.5 animate-spin" : "size-3.5"} /> Check again
+          <RefreshCw className={refreshing ? "size-3.5 animate-spin" : "size-3.5"} /> {t("setupGuide.agent.check")}
         </button>
       </div>
-      <div role="radiogroup" aria-label="Agent program" className="hx-cards stagger">
+      <div role="radiogroup" aria-label={t("setupGuide.agent.group")} className="hx-cards stagger">
         {statuses.map((status) => {
-          const pill = statusTone(status);
+          const pill = statusTone(status, locale);
           const picked = draft.agent.id === status.id;
           return (
             <button
@@ -97,7 +112,7 @@ export function AgentPanel({ draft, update }: { draft: Draft; update: Update }) 
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-sm font-semibold text-stone-100">{status.label}</span>
                   <span className="block truncate text-[11px] text-stone-500">
-                    {status.version ? `v${status.version}` : status.installed ? "installed" : "not on this computer"}
+                    {status.version ? t("setupGuide.agent.version", { version: status.version }) : t(status.installed ? "setupGuide.agent.versionInstalled" : "setupGuide.agent.missing")}
                     {status.auth.plan ? ` · ${status.auth.plan}` : ""}
                   </span>
                 </span>
@@ -114,44 +129,43 @@ export function AgentPanel({ draft, update }: { draft: Draft; update: Update }) 
         <div key={chosen.id} className="reveal-height space-y-3">
           {chosen.availability === "ok" && !chosen.installed ? (
             <div className="su-row flex-col items-stretch">
-              <span className="text-sm text-stone-200">1. Install {chosen.label} on this computer</span>
-              <CopyLine text={chosen.installHint ?? ""} label="install command" />
-              <span className="text-sm text-stone-200">2. Sign it in</span>
-              <CopyLine text={chosen.signInHint ?? ""} label="sign-in command" />
-              <span className="text-xs text-stone-500">Run both in a terminal on the server&apos;s computer, then press Check again.</span>
+              <span className="text-sm text-stone-200">{t("setupGuide.agent.install", { label: chosen.label })}</span>
+              <CopyLine text={chosen.installHint ?? ""} label={t("setupGuide.agent.installCommand")} />
+              <span className="text-sm text-stone-200">{t("setupGuide.agent.signInStep")}</span>
+              <CopyLine text={chosen.signInHint ?? ""} label={t("setupGuide.agent.signInCommand")} />
+              <span className="text-xs text-stone-500">{t("setupGuide.agent.runCommands")}</span>
             </div>
           ) : chosen.installed && chosen.auth.state === "signed-out" ? (
             <div className="su-row flex-col items-stretch">
-              <span className="text-sm text-stone-200">Sign {chosen.label} in on this computer</span>
-              <CopyLine text={chosen.signInHint ?? ""} label="sign-in command" />
-              <span className="text-xs text-stone-500">It opens a browser to sign in with your own plan. Then press Check again.</span>
+              <span className="text-sm text-stone-200">{t("setupGuide.agent.signInLabel", { label: chosen.label })}</span>
+              <CopyLine text={chosen.signInHint ?? ""} label={t("setupGuide.agent.signInCommand")} />
+              <span className="text-xs text-stone-500">{t("setupGuide.agent.browserSignIn")}</span>
             </div>
           ) : chosen.message ? (
-            <p className="su-note">{chosen.message}</p>
+            <p className="su-note">{setupAgentMessage(chosen.message, locale)}</p>
           ) : null}
           {chosen.installed ? (
             <p className="text-xs text-stone-500">
               {chosen.path}
-              {chosen.auth.account ? ` · signed in as ${chosen.auth.account}` : ""}. It runs with none of its own tools: it can only
-              touch the table&apos;s rules engine, and this server never sees its password or key.
+              {chosen.auth.account ? t("setupGuide.agent.account", { account: chosen.auth.account }) : ""}{t("setupGuide.agent.tools")}
             </p>
           ) : null}
           {chosen.models.length ? (
             <div className="grid gap-3 sm:grid-cols-2">
               <ModelPicker
-                label="Story model"
-                models={[{ id: "", label: "The program's own default" }, ...chosen.models.map((model) => ({ id: model.id, label: model.label }))]}
+                label={t("setupGuide.agent.storyModel")}
+                models={[{ id: "", label: t("setupGuide.agent.defaultModel") }, ...chosen.models.map((model) => ({ id: model.id, label: model.label }))]}
                 value={draft.agent.model}
                 recommended=""
                 onChange={(model) => setAgent({ model })}
               />
               <ModelPicker
-                label="Bookkeeping model (summaries, Ask)"
+                label={t("setupGuide.agent.utilityModel")}
                 models={[
-                  { id: "", label: "Same as the story model" },
+                  { id: "", label: t("setupGuide.agent.sameModel") },
                   ...[...chosen.models]
                     .sort((a, b) => Number(Boolean(b.cheap)) - Number(Boolean(a.cheap)))
-                    .map((model) => ({ id: model.id, label: model.cheap ? `${model.label} (light)` : model.label })),
+                    .map((model) => ({ id: model.id, label: model.cheap ? t("setupGuide.agent.lightModel", { label: model.label }) : model.label })),
                 ]}
                 value={draft.agent.utilityModel}
                 recommended=""

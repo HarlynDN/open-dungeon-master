@@ -1409,7 +1409,8 @@
     },
     {
       "path": "src/app/setup/AgentPanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Agent-program choice/status/version/auth/install/sign-in/model/utility captions and exact owned harness status messages follow global viewer uiLocale. Native IDs, model/default values, cheap-first ordering, marks, version/path/account/plan data and copied install/login commands remain literal; external CLI diagnostics stay raw. Failed/unreadable discovery shows retry feedback, clears busy and retains prior statuses; successful retry clears failure. No CLI/auth/model calls performed by localization tests."
     },
     {
       "path": "src/app/setup/MediaSteps.tsx",
@@ -1421,11 +1422,13 @@
     },
     {
       "path": "src/app/setup/ReadyStep.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Capability recap labels and all native draft/capability branches follow global viewer uiLocale. Native row keys/tones (outside failure), step indices, configured/reachable decisions, model/address values and probe props unchanged. Unreachable/unreadable capability responses display failed/unknown status with retry instead of perpetual asking or malformed-object render failure. This reports connectivity/configuration, not Chinese model/TTS acceptance; child test panels remain separately owned."
     },
     {
       "path": "src/app/setup/SetupParts.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Shared furniture keeps caller-supplied labels/titles/details literal; recommendation suffix follows global viewer uiLocale. Native glyphs, model IDs/labels/context rounding, unknown model fallback, option ordering and selection/callback values unchanged. Calling steps retain independent copy ownership."
     },
     {
       "path": "src/app/setup/SetupWizard.tsx",
