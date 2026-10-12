@@ -81,6 +81,34 @@ assert.deepEqual(rows.map(row => row.icon.key), featProps.feats);
 assert.deepEqual(rows.map(row => row.reference.name), featProps.feats);
 assert.deepEqual(rows.map(row => row.reference.slug), ['tough', 'athlete']);
 
+const multiclass = {classId: 'fighter', subclass: 'Eldritch Knight',
+  classes: [{id: 'fighter', subclass: 'Eldritch Knight'}, {id: 'cleric', subclass: 'Tempest Domain'}, {id: 'monk', subclass: 'Way of the Open Hand'}],
+  features: [{name: 'Divine Strike', source: 'class', classId: 'cleric', level: 8},
+    {name: 'Timeless Body', source: 'class', classId: 'monk', level: 15},
+    {name: 'Second Wind', source: 'class', level: 1},
+    {name: 'Authored gift', source: 'story', classId: 'cleric'}]};
+const multiclassSource = JSON.stringify(multiclass);
+for (const locale of ['en', 'zh-CN']) {
+  chips.render('FeatureChips', multiclass, locale);
+  const projected = chips.elements().find(element => element.props.items).props.items;
+  for (const [index, classId, subclass] of [[0, 'cleric', 'Tempest Domain'], [1, 'monk', 'Way of the Open Hand'], [2, 'fighter', 'Eldritch Knight']]) {
+    const name = multiclass.features[index].name;
+    assert.equal(projected[index].text, nativeFeatureHelp(classId, name, describeFeature(classId, subclass, name), locale));
+    assert.equal(projected[index].icon.family, `class-${classId}`);
+  }
+  if (locale === 'zh-CN') { assert(projected[0].text.includes('雷鸣')); assert(projected[1].text.includes('不再需要食物或水')); }
+  assert.deepEqual(projected.map(row => row.id), multiclass.features.map(row => row.name));
+  assert.equal(projected[3].name, 'Authored gift');
+  assert.equal(projected[3].icon.family, 'class-fighter');
+}
+for (const classes of [[], [{id: 'cleric', subclass: 'Nature Domain'}, {id: 'cleric', subclass: 'Tempest Domain'}]]) {
+  chips.render('FeatureChips', {...multiclass, classes, subclass: 'Nature Domain'}, 'zh-CN');
+  const projected = chips.elements().find(element => element.props.items).props.items;
+  const generic = describeFeature('cleric', '', 'Divine Strike');
+  assert.equal(projected[0].text, nativeFeatureHelp('cleric', 'Divine Strike', generic, 'zh-CN'));
+}
+assert.equal(JSON.stringify(multiclass), multiclassSource);
+
 const infoFile = 'src/components/ui/InfoDialog.tsx';
 const info = await openCombatRenderer({files: [infoFile], stubs: {
   '@/components/ui/Dialog': url('export const Dialog=({children})=>children;'),
@@ -152,3 +180,4 @@ for (const [classId, featureName, chinese, subclass = ''] of [
 console.log('PASS: 146 native feature and 54 feat summaries, class overrides, source-bound display, unchanged parser inputs, canonical chip/reference identities, lazy feat help and English render parity.');
 console.log('PASS: bilingual core features across actual creation and sheet components; localized tooltip props, canonical identities and explicit pack names/help preserved.');
 console.log(`PASS: ${SUBCLASS_FEATURE_MATERIAL.length} authored subclass source bindings and actual creation/sheet projections for the registered classes; subclass-specific help, changed and unrelated-class prose preserved.`);
+console.log('PASS: multiclass feature help/icon ownership, legacy primary fallback, missing/ambiguous secondary subclasses, canonical IDs and story names preserved.');

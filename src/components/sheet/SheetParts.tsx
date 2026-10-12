@@ -300,22 +300,34 @@ export function FeatureChips({
   features,
   classId,
   subclass,
+  classes,
 }: {
-  features: Array<{ name: string; source?: string; level?: number }>;
+  features: Array<{ name: string; source?: string; level?: number; classId?: string }>;
   classId: string;
   subclass?: string | null;
+  classes?: ReadonlyArray<{ id: string; subclass?: string | null }> | null;
 }) {
   const { locale, t } = useLocale();
   return (
     <InfoChipList
-      items={features.map((feature) => ({
-        id: feature.name,
-        name: feature.source === "story" ? feature.name : nativeFeatureName(feature.name, locale),
-        icon: { kind: "feature" as const, key: feature.name, family: `class-${classId.toLowerCase()}` },
-        note: feature.source === "story" ? t("sheet.storySource") : undefined,
-        meta: feature.level ? t("library.level", { level: feature.level }) : undefined,
-        text: (feature.source === "story" ? describeFeature(classId, subclass ?? "", feature.name) : nativeFeatureHelp(classId, feature.name, describeFeature(classId, subclass ?? "", feature.name), locale)) ?? undefined,
-      }))}
+      items={features.map((feature) => {
+        // New class grants identify their owner. Legacy and story features
+        // keep the primary context; never borrow its subclass for a secondary
+        // class whose entry is missing or ambiguous.
+        const owner = feature.source === "class" && feature.classId ? feature.classId.trim().toLowerCase() : classId;
+        const entries = classes?.filter(entry => entry.id.trim().toLowerCase() === owner.trim().toLowerCase()) ?? [];
+        const ownerSubclass = entries.length === 1 ? entries[0].subclass ?? ""
+          : owner.trim().toLowerCase() === classId.trim().toLowerCase() ? subclass ?? "" : "";
+        const help = describeFeature(owner, ownerSubclass, feature.name);
+        return {
+          id: feature.name,
+          name: feature.source === "story" ? feature.name : nativeFeatureName(feature.name, locale),
+          icon: { kind: "feature" as const, key: feature.name, family: `class-${owner.toLowerCase()}` },
+          note: feature.source === "story" ? t("sheet.storySource") : undefined,
+          meta: feature.level ? t("library.level", { level: feature.level }) : undefined,
+          text: (feature.source === "story" ? help : nativeFeatureHelp(owner, feature.name, help, locale)) ?? undefined,
+        };
+      })}
     />
   );
 }

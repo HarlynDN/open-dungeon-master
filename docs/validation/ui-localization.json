@@ -206,7 +206,7 @@
     {
       "path": "src/app/campaigns/[campaignId]/CharacterSheetDialog.tsx",
       "state": "pending",
-      "review": "Owned identity/vitals/derived/load/wild-shape/slot/resource/equipment/owed-choice/notes/export chrome and native usage refusals localized; all 415 static registered resource explanations and names reviewed (including 140 authored subclass/lineage counters and six native themes). Dynamic free-cast resources, magic-item names, feature/feat material and Chinese PDF output keep the full dialog pending. Current table-flow batch: Reviewed sheet dialog compositions and usage refusal/time state. Identity, derived explanations, vitals, condition details, slots, resource/gear help and owed choices use existing adapters; usage sends native IDs/counters, campaign action locale passes to feature choices. Authored names/backstory/notes stay literal; child material coverage remains independent. Remaining known material/native-output gaps above still prevent full-owner completion. SRD magic naming batch: all 239 standard item titles and 52 exact variants now share the equipment/reference aliases. Long magic-item help, additional native/pack item names, feature/free-cast material and Chinese PDF output remain open."
+      "review": "Owned identity/vitals/derived/load/wild-shape/slot/resource/equipment/owed-choice/notes/export chrome and native usage refusals localized; all 415 static registered resource explanations and names reviewed (including 140 authored subclass/lineage counters and six native themes). Dynamic free-cast resources, magic-item names, feature/feat material and Chinese PDF output keep the full dialog pending. Current table-flow batch: Reviewed sheet dialog compositions and usage refusal/time state. Identity, derived explanations, vitals, condition details, slots, resource/gear help and owed choices use existing adapters; usage sends native IDs/counters, campaign action locale passes to feature choices. Authored names/backstory/notes stay literal; child material coverage remains independent. Remaining known material/native-output gaps above still prevent full-owner completion. SRD magic naming batch: all 239 standard item titles and 52 exact variants now share the equipment/reference aliases. Long magic-item help, additional native/pack item names, feature/free-cast material and Chinese PDF output remain open. Feature help/icon class context now follows each class-sourced feature.classId and the unique sheet.classes entry. Both live and library sheet callers pass the class list. Missing/ambiguous secondary subclasses use generic owner context, legacy/story features retain primary context; focused bilingual multiclass projection and immutable source-data checks passed. Other material/output gates remain open."
     },
     {
       "path": "src/app/campaigns/[campaignId]/CharacterVoices.tsx",
@@ -1166,19 +1166,23 @@
     },
     {
       "path": "src/app/characters/builder/abilityDice.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Pure dice/scoring/HP arithmetic and transient animation coordinates audited. summaryLine remains an English source printer; abilitySummaryText localizes its display in AbilitySummary. No locale-sensitive rule values, direct UI output or translated stored scores."
     },
     {
       "path": "src/app/characters/builder/abilityGains.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Pure capped ability increments audited. Original gain sources and gainLabel remain canonical calculation/key inputs; AbilityEditor displays abilityGainText for levels, Primal Champion, feats and cap status. No user-facing renderer or locale-dependent arithmetic."
     },
     {
       "path": "src/app/characters/builder/casting.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Pure casting eligibility/list/slot/cap selection audited, including third casters. Class IDs and spell advice metadata remain English rule inputs; SpellsGearStep projects the advice at its display boundary. No independent UI prose or locale-dependent spell counts."
     },
     {
       "path": "src/app/characters/builder/derivedReasons.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "English source printers for HP, armor and purse audited across all branches. Player-facing consumers use localizedHitPointsLine, localizedArmorClassLine and localizedPurseView, retaining exact English behavior and authored names. Currency/dice values remain arithmetic inputs, not translated protocol fields."
     },
     {
       "path": "src/app/characters/builder/lineage.ts",
@@ -1192,7 +1196,8 @@
     },
     {
       "path": "src/app/characters/builder/reconcile.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Pure source-name reconciliation and structured DroppedPick facts audited. IDs, choices and English diagnostic labels stay canonical; useBuilderState retains drops and the shared builderDroppedText display projects known kinds/names. No locale-sensitive legality, translated grants or raw diagnostic renderer here."
     },
     {
       "path": "src/app/characters/builder/refusal.ts",
@@ -1262,7 +1267,8 @@
     },
     {
       "path": "src/app/characters/builder/useFeatDescs.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Scoped source-data retrieval/rule registration audited. Fetched and authored feat descriptions remain original English/pack text for mechanics parsing; display translation belongs to feat/info adapters. Empty lookup and cancellation states contain no UI prose; table/source identity remains unchanged."
     },
     {
       "path": "src/app/characters/builder/usePickerGroups.ts",
@@ -1974,7 +1980,7 @@
     {
       "path": "src/components/sheet/SheetParts.tsx",
       "state": "pending",
-      "review": "Owned identity/vitals/ability chrome, canonical option-feature names/help, shared native feature/class-specific Timeless Body summaries and feat names reviewed. Full-source display bindings preserve English, modified/story descriptions, stable chip IDs, icon keys and canonical lazy-help references. Three frozen English material renders and parser-input parity checked. Other specific/themed feature help and full material remain pending. Base/SRD core feature omissions now use 49 name and 50 exact class/name/help bindings shared with creation; grouped actual bilingual creation/sheet projection passed, preserving canonical chip IDs and story names. Expanded material remains pending. All 533 authored expanded feature rows across 13 classes/105 subclasses project through class/name/full-source bindings. Whole-table identity/source assertions and bilingual creation/sheet cases cover every class, subclass-specific distinctions, canonical IDs and explicit authored overlays. Moon Combat Wild Shape follows the shared 荒野形态 terminology. Themed/other dynamic material and whole-owner audit remain open."
+      "review": "Owned identity/vitals/ability chrome, canonical option-feature names/help, shared native feature/class-specific Timeless Body summaries and feat names reviewed. Full-source display bindings preserve English, modified/story descriptions, stable chip IDs, icon keys and canonical lazy-help references. Three frozen English material renders and parser-input parity checked. Other specific/themed feature help and full material remain pending. Base/SRD core feature omissions now use 49 name and 50 exact class/name/help bindings shared with creation; grouped actual bilingual creation/sheet projection passed, preserving canonical chip IDs and story names. Expanded material remains pending. All 533 authored expanded feature rows across 13 classes/105 subclasses project through class/name/full-source bindings. Whole-table identity/source assertions and bilingual creation/sheet cases cover every class, subclass-specific distinctions, canonical IDs and explicit authored overlays. Moon Combat Wild Shape follows the shared 荒野形态 terminology. Themed/other dynamic material and whole-owner audit remain open. Feature help/icon class context now follows each class-sourced feature.classId and the unique sheet.classes entry. Both live and library sheet callers pass the class list. Missing/ambiguous secondary subclasses use generic owner context, legacy/story features retain primary context; focused bilingual multiclass projection and immutable source-data checks passed. Other material/output gates remain open."
     },
     {
       "path": "src/components/sheet/SheetSpells.tsx",
@@ -1998,7 +2004,8 @@
     },
     {
       "path": "src/components/sheet/useSpellPool.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Scoped source-data pool/lookups, pagination, fallback, deduplication and loading state audited. Names/levels/source/document metadata remain canonical; sheet and creator display adapters project owned names and preserve authored data. No user-facing prose or locale-dependent cache content."
     },
     {
       "path": "src/components/ui/AddFromList.tsx",
