@@ -47,7 +47,7 @@ function resolveSubject(
       : null;
   }
   const entry = getEntryDetail(kind, slug);
-  return entry ? { slug, name: entry.name, source: "open5e", data: entry.data } : null;
+  return entry ? { slug, name: entry.name, source: "open5e", documentSlug: entry.documentSlug, data: entry.data } : null;
 }
 
 // POST /api/reference/compare { kind: "spells", slugs: [...] }

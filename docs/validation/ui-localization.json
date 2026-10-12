@@ -1364,7 +1364,8 @@
     },
     {
       "path": "src/app/reference/CalculatorsPanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped reference metrics: all five calculator metadata/fields/choices, raw result values/details/notes project to viewer uiLocale through complete numeric frames and context-specific verdict/difficulty/size vocabulary. Native calculator IDs/defaults, field keys/options, run functions, arithmetic, limits and callbacks unchanged; unknown source text stays literal. Metrics catalog is content-scoped."
     },
     {
       "path": "src/app/reference/CategoryRail.tsx",
@@ -1373,7 +1374,8 @@
     },
     {
       "path": "src/app/reference/ComparePanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped reference metrics: chrome/errors, row labels, generated numeric facts/units, closed vocabulary and derive-CR notes follow viewer uiLocale; source metadata gates column/chip names. Pure comparison text/flags/counts/order/differing filters and request slugs/kinds/callbacks unchanged. Material/trait and unknown pack prose stay original. Additive documentSlug provenance reaches canonical table columns; selection keeps source identity for language switching."
     },
     {
       "path": "src/app/reference/DeskPanel.tsx",

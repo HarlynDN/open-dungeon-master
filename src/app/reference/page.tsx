@@ -260,7 +260,7 @@ export default function ReferencePage() {
       if (current.entries.length >= MAX_COMPARE) {
         return current;
       }
-      return { kind: comparable, entries: [...current.entries, { slug: row.slug, name: row.name }] };
+      return { kind: comparable, entries: [...current.entries, { slug: row.slug, name: row.name, source: row.source, documentSlug: row.documentSlug }] };
     });
   }
 

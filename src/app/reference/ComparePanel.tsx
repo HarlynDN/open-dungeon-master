@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { comparisonName, compareCellView, metricText, metricNotice, METRIC_NOTICES } from "@/lib/i18n/reference-metrics-presentations";
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
@@ -18,7 +20,7 @@ import type { CompareKind, CompareTable } from "@/lib/reference/compare";
 
 export type CompareSelection = {
   kind: CompareKind;
-  entries: Array<{ slug: string; name: string }>;
+  entries: Array<{ slug: string; name: string; source?: string; documentSlug?: string }>;
 };
 
 export function ComparePanel({
@@ -30,6 +32,7 @@ export function ComparePanel({
   onRemove: (slug: string) => void;
   onClear: () => void;
 }) {
+  const { t, locale } = useLocale();
   const [table, setTable] = useState<CompareTable | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -62,7 +65,7 @@ export function ComparePanel({
           return;
         }
         if (!response.ok) {
-          setError(data.error ?? "That comparison could not be built.");
+          setError(data.error ?? METRIC_NOTICES.compare);
           setTable(null);
           return;
         }
@@ -70,7 +73,7 @@ export function ComparePanel({
         setTable(data.table);
       } catch {
         if (!cancelled) {
-          setError("That comparison could not be built.");
+          setError(METRIC_NOTICES.compare);
         }
       } finally {
         if (!cancelled) {
@@ -88,8 +91,8 @@ export function ComparePanel({
     return (
       <EmptyState
         art="scrolls"
-        title="Pick two or more spells or monsters in Browse to compare them."
-        hint="Only one kind at a time."
+        title={t("referenceMetrics.ui.empty")}
+        hint={t("referenceMetrics.ui.sameKind")}
       />
     );
   }
@@ -104,11 +107,11 @@ export function ComparePanel({
             key={entry.slug}
             className="inline-flex items-center gap-1 rounded-full border border-amber-500/30 bg-amber-400/10 py-0.5 pl-3 pr-1 text-xs text-amber-100"
           >
-            {entry.name}
+            {comparisonName(selection.kind, entry, locale, table)}
             <button
               type="button"
               onClick={() => onRemove(entry.slug)}
-              aria-label={`Remove ${entry.name}`}
+              aria-label={t("referenceMetrics.ui.remove", { name: comparisonName(selection.kind, entry, locale, table) })}
               className="motion-nudge inline-flex size-7 items-center justify-center rounded-full text-stone-400 hover:text-amber-200"
             >
               <X className="size-3" />
@@ -116,22 +119,22 @@ export function ComparePanel({
           </span>
         ))}
         <button type="button" onClick={onClear} className={ui.btnSmall}>
-          Clear
+          {t("referenceMetrics.ui.clear")}
         </button>
       </div>
 
       {loading ? (
         <p className="reveal flex items-center gap-2 text-sm text-stone-500">
-          <D20Spinner className="size-4 text-amber-300" /> Building the table
+          <D20Spinner className="size-4 text-amber-300" /> {t("referenceMetrics.ui.building")}
         </p>
       ) : null}
-      {error ? <p role="alert" className="motion-shake text-sm text-red-300">{error}</p> : null}
+      {error ? <p role="alert" className="motion-shake text-sm text-red-300">{metricNotice(error, locale)}</p> : null}
 
       {table ? (
         <>
           <div className="mb-3 flex items-center gap-2 text-xs text-stone-400">
-            <Switch on={onlyDiffering} onChange={setOnlyDiffering} label="Only what differs" />
-            Only what differs ({table.differingRows} of {table.rows.length} rows)
+            <Switch on={onlyDiffering} onChange={setOnlyDiffering} label={t("referenceMetrics.ui.onlyDiffering")} />
+            {t("referenceMetrics.ui.diffCount", { different: table.differingRows, total: table.rows.length })}
           </div>
 
           <div className="panel overflow-x-auto rounded-xl">
@@ -147,7 +150,7 @@ export function ComparePanel({
                         column.source === "homebrew" ? "text-amber-300" : "text-amber-100",
                       )}
                     >
-                      {column.name}
+                      {comparisonName(table.kind, column, locale)}
                     </th>
                   ))}
                 </tr>
@@ -156,19 +159,19 @@ export function ComparePanel({
                 {rows.map((row) => (
                   <tr key={row.label} className="border-b border-stone-800/60 last:border-0">
                     <th className="section-head-title whitespace-nowrap px-3 py-2 text-left font-normal">
-                      {row.label}
+                      {metricText(row.label, locale, "row")}
                     </th>
                     {row.cells.map((cell, index) => (
                       <td
-                        key={`${row.label}-${table.columns[index]?.slug ?? index}`}
+                        key={`${metricText(row.label, locale, "row")}-${table.columns[index]?.slug ?? index}`}
                         className={cn(
                           "px-3 py-2 align-top",
                           row.differs ? "text-stone-100" : "text-stone-400",
                         )}
                       >
-                        {cell.text}
+                        {compareCellView(table.kind, row.label, cell, locale).text}
                         {cell.detail ? (
-                          <span className="block text-xs text-stone-500">{cell.detail}</span>
+                          <span className="block text-xs text-stone-500">{compareCellView(table.kind, row.label, cell, locale).detail}</span>
                         ) : null}
                       </td>
                     ))}
@@ -180,7 +183,7 @@ export function ComparePanel({
                       colSpan={table.columns.length + 1}
                       className="px-3 py-4 text-sm text-stone-500"
                     >
-                      These agree on every row the table checks.
+                      {t("referenceMetrics.ui.allSame")}
                     </td>
                   </tr>
                 ) : null}

@@ -33,6 +33,7 @@ export type CompareSubject = {
   slug: string;
   name: string;
   source: "open5e" | "homebrew";
+  documentSlug?: string;
   data: Record<string, unknown>;
 };
 
@@ -52,7 +53,7 @@ export type CompareRow = {
 
 export type CompareTable = {
   kind: CompareKind;
-  columns: Array<{ slug: string; name: string; source: "open5e" | "homebrew" }>;
+  columns: Array<{ slug: string; name: string; source: "open5e" | "homebrew"; documentSlug?: string }>;
   rows: CompareRow[];
   differingRows: number;
 };
@@ -294,6 +295,7 @@ export function buildCompare(
       slug: subject.slug,
       name: subject.name,
       source: subject.source,
+      ...(subject.documentSlug ? { documentSlug: subject.documentSlug } : {}),
     })),
     rows,
     differingRows: rows.filter((entry) => entry.differs).length,
