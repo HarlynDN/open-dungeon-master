@@ -32,7 +32,7 @@ flow remains incomplete; the review-repair checkpoint is a separate scoped task.
 | Locale foundation | Registry, persistence, browser fallback, typed complete catalogs, model locale policy, classified token proxy, chapter budget, CJK retrieval, IME protection | Real prompt-usage calibration; keep legacy campaign/history regressions |
 | DM safety | Per-event engine conclusions with English/Chinese renderers; AI prose separated; one text-only correction and safe fallback; shared localized enemy names and held-resource names/IDs; scoped resource aliases and ambiguity retries; real Codex combat/resource acceptance | Untracked feature/reaction options and broader spell/condition/pack coverage; conservative regex coverage is not full language understanding |
 | Embeddings | Original English deployment default retained; explicit multilingual opt-in; fixed bilingual calibration/holdout and hard-negative policy | Broader pack quality; opt-in affects English campaigns and rebuilds indexes |
-| UI | **231/439** covered files, **1483** pending literal sites, **11496** message keys; scoped AST gate; earlier play/session surfaces plus hand labels/targets/area selection, campaign-locale action sentences, native previews, basic/reaction rules, common casting refusals, spell selectors, all 113 owned mechanic notes, 103 native technique and 23 maneuver labels, attack/bonus-route and material/ritual refusals, built-in form attack names and verified current-actor labels, correction/multi-picker chrome, native downtime facts and inventory/vitals approval/player-trade controls, guided progression chrome, rest/loot/travel moments and all native option summaries, owned generic feature/feat summaries, feat choice controls, campaign/map entry notices the complete app help walkthrough story/chronicle/arc controls, NPC roster review, campaign model controls market/shelf/trade, party-lead, quest-log/faction controls plus facts, pinned memories, context-trace presentation and passage edit/reroll/action controls and character/companion entry and private-chat/media presentation and audit/timeline controls and dice tray/source controls and board movement/camera/order/area/target/drawing and DM placement/measurement controls | Remaining dynamic text keeps hand files pending; general play/inventory/rest/level-up/save/resume surfaces and full sheet/party dialogs; file fraction is not overall completion or an effort estimate |
+| UI | **232/439** covered files, **1431** pending literal sites, **11556** message keys; scoped AST gate; earlier play/session surfaces plus hand labels/targets/area selection, campaign-locale action sentences, native previews, basic/reaction rules, common casting refusals, spell selectors, all 113 owned mechanic notes, 103 native technique and 23 maneuver labels, attack/bonus-route and material/ritual refusals, built-in form attack names and verified current-actor labels, correction/multi-picker chrome, native downtime facts and inventory/vitals approval/player-trade controls, guided progression chrome, rest/loot/travel moments and all native option summaries, owned generic feature/feat summaries, feat choice controls, campaign/map entry notices the complete app help walkthrough story/chronicle/arc controls, NPC roster review, campaign model controls market/shelf/trade, party-lead, quest-log/faction controls plus facts, pinned memories, context-trace presentation and passage edit/reroll/action controls and character/companion entry and private-chat/media presentation and audit/timeline controls and dice tray/source controls and board movement/camera/order/area/target/drawing and DM placement/measurement controls | Remaining dynamic text keeps hand files pending; general play/inventory/rest/level-up/save/resume surfaces and full sheet/party dialogs; file fraction is not overall completion or an effort estimate |
 | Character creation/material | Identity, ancestry, class introductions, ability allocation, gear, spell book/preparation and finish preview; 517 spell and 228 equipment names; 257-entry contextual terminology policy and lint gate; 415/415 static registered resource names and guidance shared with DM references; 135/135 bundled option names/descriptions plus all 20 nonempty requirement frames; 146 shared/class-specific feature summaries, 54 native feat summaries and owned feat choice controls; four native pregen card summaries and backstories; original-source review records | Remaining specific/themed feature and magic-item material; dynamic free-cast resources and user-authored/pack text remain outside the static resource review |
 | Player system logs | Structured rule diagnostics, engine-generated combat conclusions and structured audit/timeline presentation retain English protocol semantics with localized display | General player-visible log templates; model-facing English tool results remain independent |
 | Resource delivery | UI/content/help scopes; selected-locale help loads independently on open, with retry; character/campaign boundaries; generated resources checked by lint; production Turbopack build and anonymous bilingual browser switch/reload succeed; home/character/campaign SSR and initial-script payloads measured | Hydrated/lazy network totals, authenticated campaign switching and active-play browser acceptance; route-level JS payload remains large |
@@ -46,15 +46,17 @@ inventory; do not count deferred files as promised first-release delivery.
 
 ## Lightweight verification policy
 
-The user explicitly requested that verification not slow delivery. For routine
-copy batches, check catalog/coverage/terminology once and use a focused interaction
-check only where behavior or shared display logic changed. Do not repeatedly test
-settled names such as Goblin unless their parsing/display implementation changed.
-Type checks apply to code changes; full regression, lint and production builds
-belong at meaningful phase boundaries and final acceptance, not every copy batch.
-Once relevant checks pass, stop validation and continue delivery. Repeat only
-after a new change, failure or specific unresolved concern; reuse existing logs
-for progress reports instead of starting another check.
+The user explicitly requested that verification not slow delivery. Delivery units
+are complete pages or player flows, grouping ordinary copy across their components.
+Run catalog/coverage/terminology and types once per batch; add a focused interaction
+check only for changed behavior or shared dynamic display logic. Reuse established
+name/source evidence. Do not create exhaustive render snapshots or separate test
+scripts for each static component. Keep unrelated fixes outside copy batches unless
+they block the translated flow. Record and commit at flow/phase checkpoints, with
+full regression, lint and production builds at meaningful phase boundaries and
+final acceptance. Once relevant checks pass, stop validation and continue delivery.
+Repeat only after a new change, failure or specific unresolved concern; progress
+reports reuse existing logs instead of starting another check.
 
 Turn controls passed six focused interaction scenarios, 32 exact pre-edit English
 renders, relevant existing floor/hand/retry regressions, types and changed-file
@@ -65,7 +67,22 @@ attempts were blocked at its internal port binding by the execution environment,
 including the escalated attempt; this batch does not claim a passing production
 build. Keep that gate for the next phase boundary rather than retrying per batch.
 
-The latest setup-guide checkpoint adds 76 global UI keys. Agent program/auth/
+The latest setup-media checkpoint adds 60 global UI keys for picture/voice
+choices, discovery captions, saved-key hints and preview feedback. Native defaults,
+provider/model/voice IDs, URLs, keys and request bodies remain unchanged. Owned
+speech failures translate while upstream details remain literal. One intentional
+bilingual copy correction requires a workflow-compatible checkpoint. Refused,
+unreadable or missing-audio replies cannot report a successful preview.
+
+Existing checks passed: 14 English renders (generated accessibility IDs and the
+explicit copy correction normalized), 14 native speech-failure frames, provider/
+voice/key/request callbacks with mock fetch/audio, types and catalog/AST/terms:
+232/439 covered, 1431 pending sites, 11556 keys, zero terminology errors and 227
+context warnings. No real media service/playback or Chinese STT acceptance; the
+preview's locale and local Chinese TTS runtime remain future work. These passed
+checks are reused; they were not repeated for documentation or this status report.
+
+The preceding setup-guide checkpoint adds 76 global UI keys. Agent program/auth/
 install/default/story/utility selection, capability recap and shared recommended/
 context captions now follow viewer uiLocale. Native program/model IDs, default
 values, cheap-first ordering, paths, versions, masked accounts/plans, commands,

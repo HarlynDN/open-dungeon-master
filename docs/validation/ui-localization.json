@@ -1414,7 +1414,8 @@
     },
     {
       "path": "src/app/setup/MediaSteps.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Pictures/voice choices, scan badges, guides, addresses/checkpoint/voice captions, saved-key hints, existing dictation chrome and preview status/errors follow global viewer uiLocale. Provider IDs/defaults, paths/URLs, native voice/checkpoint names, keys, raw test results, child callbacks and request bodies unchanged. Known owned speech failures localized; upstream details/unknown diagnostics retained literally. Refused/unreadable/no-audio responses cannot report a successful preview. One explicit bilingual copy correction requires workflow-compatible checkpoint instead of claiming every checkpoint works. Child service/test panels independent; no Chinese TTS/STT or real playback acceptance claim."
     },
     {
       "path": "src/app/setup/PlayersStep.tsx",
