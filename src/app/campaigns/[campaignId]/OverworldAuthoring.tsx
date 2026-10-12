@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { Loader2, Sparkles, Wand2 } from "lucide-react";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { REGION_FAILURES, regionSizeLabel, regionErrorText } from "@/lib/i18n/region-presentations";
 import { cn } from "@/lib/cn";
 import { Select } from "@/components/ui/Select";
 import { Slider } from "@/components/ui/Slider";
@@ -10,7 +12,7 @@ import {
   OVERWORLD_PARAM_LABELS,
   type OverworldParams,
 } from "@/lib/overworld/logic";
-import { OVERWORLD_SIZES, sizeLabel, type OverworldSize } from "@/lib/overworld/features";
+import { OVERWORLD_SIZES, type OverworldSize } from "@/lib/overworld/features";
 import type { OverworldData } from "@/app/campaigns/[campaignId]/overworldDraw";
 import { offersStoryModel, useCapabilities } from "@/lib/use-capabilities";
 import { DictateField } from "@/components/DictateField";
@@ -43,6 +45,7 @@ export function OverworldAuthoring({
   data: OverworldData;
   onData: (next: OverworldData) => void;
 }) {
+  const { locale, t } = useLocale();
   const [open, setOpen] = useState(false);
   const [description, setDescription] = useState("");
   const [plan, setPlan] = useState<Plan | null>(null);
@@ -76,11 +79,14 @@ export function OverworldAuthoring({
       });
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) {
-        setError((payload as { error?: string }).error ?? "That did not work.");
+        setError((payload as { error?: string }).error ?? REGION_FAILURES.update);
         return false;
       }
       onData(payload as OverworldData);
       return true;
+    } catch {
+      setError(REGION_FAILURES.network);
+      return false;
     } finally {
       setBusy(false);
     }
@@ -113,12 +119,14 @@ export function OverworldAuthoring({
       });
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) {
-        setError((payload as { error?: string }).error ?? "The model had nothing for that.");
+        setError((payload as { error?: string }).error ?? REGION_FAILURES.describe);
         return;
       }
       const described = (payload as { plan: Plan }).plan;
       setPlan(described);
       setParams(described.params);
+    } catch {
+      setError(REGION_FAILURES.network);
     } finally {
       setBusy(false);
     }
@@ -135,7 +143,7 @@ export function OverworldAuthoring({
         className="flex w-full items-center gap-1.5 text-left text-xs font-medium uppercase tracking-wide text-stone-500 hover:text-stone-300"
       >
         <Wand2 className="size-3.5" />
-        Shape the region
+        {t("regionUi.author.title")}
       </button>
 
       {open ? (
@@ -146,7 +154,7 @@ export function OverworldAuthoring({
                 value={description}
                 onChange={(event) => setDescription(event.target.value)}
                 rows={2}
-                placeholder="A chain of islands off a storm coast, pine forest inland."
+                placeholder={t("regionUi.author.description")}
                 className="w-full rounded-md border border-stone-700 bg-stone-950 px-2 py-1 text-sm text-stone-200"
               />
               <button
@@ -156,11 +164,11 @@ export function OverworldAuthoring({
                 className="flex items-center gap-1 rounded-md border border-stone-700 px-2 py-1 text-xs text-stone-300 hover:bg-stone-900 disabled:opacity-40"
               >
                 {busy ? <Loader2 className="size-3 animate-spin" /> : <Sparkles className="size-3" />}
-                Read it into the dials
+                {t("regionUi.author.read")}
               </button>
               {plan ? (
                 <p className="reveal text-[11px] text-stone-500">
-                  {plan.note || "Dials set."} Reroll below until the coastline falls where you want it.
+                  {t("regionUi.author.plan", { note: plan.note || t("regionUi.author.dials") })}
                 </p>
               ) : null}
             </>
@@ -168,13 +176,13 @@ export function OverworldAuthoring({
 
           {(Object.keys(OVERWORLD_PARAM_LABELS) as Array<keyof OverworldParams>).map((key) => (
             <label key={key} className="flex items-center gap-2 text-[11px] text-stone-500">
-              <span className="w-20 shrink-0">{OVERWORLD_PARAM_LABELS[key]}</span>
+              <span className="w-20 shrink-0">{t(`regionUi.param.${key}`)}</span>
               <Slider
                 min={0}
                 max={100}
                 value={Math.round(params[key] * 100)}
                 onChange={(next) => setParams({ ...params, [key]: next / 100 })}
-                label={OVERWORLD_PARAM_LABELS[key]}
+                label={t(`regionUi.param.${key}`)}
                 bubble={(percent) => `${percent}%`}
                 className="min-w-0 flex-1"
               />
@@ -186,14 +194,14 @@ export function OverworldAuthoring({
               type="button"
               disabled={busy} aria-busy={busy}
               onClick={() => void patch({ regenerate: true, params, ...size })}
-              title="Reroll the terrain under these dials, at this size. Places, pins, lines and notes stay."
+              title={t("regionUi.author.rollTip")}
               className="rounded-md border border-amber-700 bg-amber-950/50 px-2 py-1 text-xs text-amber-100 disabled:opacity-40"
             >
-              Roll a world
+              {t("regionUi.author.roll")}
             </button>
             <Select
               value={sizeId as string}
-              label="Size of the next roll"
+              label={t("regionUi.author.size")}
               size="sm"
               onChange={(next) => {
                 const preset = OVERWORLD_SIZES.find((entry) => entry.id === next);
@@ -202,10 +210,10 @@ export function OverworldAuthoring({
                 }
               }}
               options={[
-                ...(sizeId === "custom" ? [{ value: "custom", label: sizeLabel(size) }] : []),
+                ...(sizeId === "custom" ? [{ value: "custom", label: regionSizeLabel(size, locale) }] : []),
                 ...OVERWORLD_SIZES.map((entry) => ({
                   value: entry.id as string,
-                  label: `${entry.label} (${entry.width} by ${entry.height})`,
+                  label: regionSizeLabel(entry, locale),
                 })),
               ]}
             />
@@ -219,7 +227,7 @@ export function OverworldAuthoring({
                   "hover:bg-stone-900 disabled:opacity-40",
                 )}
               >
-                Add {plan.places.length} place{plan.places.length === 1 ? "" : "s"}
+                {t("regionUi.author.addPlaces", { count: plan.places.length, word: t(plan.places.length === 1 ? "regionUi.author.place" : "regionUi.author.places") })}
               </button>
             ) : null}
           </div>
@@ -235,20 +243,20 @@ export function OverworldAuthoring({
           ) : null}
 
           <div className="space-y-1">
-            <span className="text-[11px] uppercase tracking-wide text-stone-500">Add a place</span>
+            <span className="text-[11px] uppercase tracking-wide text-stone-500">{t("regionUi.author.add")}</span>
             <input
               value={placeName}
               maxLength={80}
               onChange={(event) => setPlaceName(event.target.value)}
-              placeholder="The Salt Wharf"
+              placeholder={t("regionUi.author.name")}
               className="w-full rounded-md border border-stone-700 bg-stone-950 px-2 py-1 text-sm text-stone-200"
             />
-            <DictateField single label="What a traveller would say" onTranscript={(text) => setPlaceBlurb((current) => appendDictation(current, text, 300))}>
+            <DictateField single label={t("regionUi.author.blurbLabel")} onTranscript={(text) => setPlaceBlurb((current) => appendDictation(current, text, 300))}>
               <input
                 value={placeBlurb}
                 maxLength={300}
                 onChange={(event) => setPlaceBlurb(event.target.value)}
-                placeholder="What a traveller would say about it (optional)"
+                placeholder={t("regionUi.author.blurb")}
                 className="w-full rounded-md border border-stone-700 bg-stone-950 px-2 py-1 text-sm text-stone-200"
               />
             </DictateField>
@@ -258,18 +266,18 @@ export function OverworldAuthoring({
               onClick={() => void addPlace()}
               className="rounded-md border border-stone-700 px-2 py-1 text-xs text-stone-300 hover:bg-stone-900 disabled:opacity-40"
             >
-              Put it on the map
+              {t("regionUi.author.put")}
             </button>
           </div>
 
           <div>
             <label htmlFor="region-notes" className="text-[11px] uppercase tracking-wide text-stone-500">
-              Notes on the region
+              {t("regionUi.author.notes")}
             </label>
             {/* Typed notes save when the field lets go of focus; spoken ones
                 save as they land, since no blur follows them. */}
             <DictateField
-              label="Notes on the region"
+              label={t("regionUi.author.notes")}
               className="mt-0.5"
               onTranscript={(text) => {
                 const next = appendDictation(notes, text);
@@ -287,14 +295,14 @@ export function OverworldAuthoring({
                   }
                 }}
                 rows={2}
-                placeholder="What lies past the edge. Which roads are watched."
+                placeholder={t("regionUi.author.noteHint")}
                 className="w-full rounded-md border border-stone-700 bg-stone-950 px-2 py-1 text-sm text-stone-200"
               />
             </DictateField>
-            <span className="text-[10px] text-stone-600">Yours alone; players never see this.</span>
+            <span className="text-[10px] text-stone-600">{t("regionUi.author.private")}</span>
           </div>
 
-          {error ? <p className="motion-shake text-[11px] text-red-400">{error}</p> : null}
+          {error ? <p className="motion-shake text-[11px] text-red-400">{regionErrorText(error, locale)}</p> : null}
         </div>
       ) : null}
     </section>

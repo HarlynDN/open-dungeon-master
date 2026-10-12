@@ -631,15 +631,18 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/OverworldAuthoring.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Terrain dials, generation/place controls, size selection, private-note labels and native errors localized; model plan/place prose and user description/names/notes stay raw. Numeric params and PATCH/describe schemas unchanged; existing describe utility already receives campaign locale. Network failures display a localized message, release busy state and retain unsaved form values; no automatic retry or new model call path."
     },
     {
       "path": "src/app/campaigns/[campaignId]/OverworldPanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Region header/loading/zoom/stroke/place/erase/help and prompts use campaign locale; import statistics use structured display report while raw original note remains in state. Native canvas coordinates/drawing/undo/payloads/private visibility unchanged. PATCH/import network rejections now expose localizable feedback. Authored map/place/label/pin/notes text stays literal; no real canvas/model/import acceptance claimed."
     },
     {
       "path": "src/app/campaigns/[campaignId]/OverworldTools.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Region modes, pin/place/label prompts, brushes/themed terrain labels, paint/line/size/file help and known operation failures use campaign locale. askCopy keeps its default English interface and authored values. Import helper retains raw English note/data contract plus display-only report metadata. Canonical modes/tiles/path types/grid sizes, file payloads/accept types and callbacks unchanged; failed file reads are shown, raw server diagnostics remain in state with localized operation fallback."
     },
     {
       "path": "src/app/campaigns/[campaignId]/PanelKit.tsx",

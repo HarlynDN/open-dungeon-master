@@ -4,6 +4,8 @@ import { Loader2, Minus, Plus } from "lucide-react";
 import { useUndoRing } from "@/lib/use-undo-ring";
 import { terrainDiffStrokes } from "@/lib/overworld/undo";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { REGION_FAILURES, regionErrorText, type RegionImportReport } from "@/lib/i18n/region-presentations";
 import { cn } from "@/lib/cn";
 import { SectionHead } from "@/components/ui/SectionHead";
 import { KitButton, PanelError } from "./PanelKit";
@@ -62,6 +64,7 @@ export function OverworldPanel({
   // rests while it is off screen and picks up again when it is shown.
   visible?: boolean;
 }) {
+  const { locale, t } = useLocale();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [data, setData] = useState<OverworldData | null>(null);
@@ -88,6 +91,7 @@ export function OverworldPanel({
   const [exporting, setExporting] = useState(false);
   const [importing, setImporting] = useState(false);
   const [importNote, setImportNote] = useState("");
+  const [importReport, setImportReport] = useState<RegionImportReport | null>(null);
   const [error, setError] = useState("");
   const pulseRef = useRef(0);
   const sizeRef = useRef("");
@@ -236,18 +240,23 @@ export function OverworldPanel({
   // more than the new map: it names the places it left in the sea.
   async function patch(body: Record<string, unknown>) {
     setError("");
-    const response = await fetch(`/api/campaigns/${campaignId}/overworld`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-    const payload = await response.json().catch(() => ({}));
-    if (!response.ok) {
-      setError((payload as { error?: string }).error ?? "That did not work.");
+    try {
+      const response = await fetch(`/api/campaigns/${campaignId}/overworld`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        setError((payload as { error?: string }).error ?? REGION_FAILURES.update);
+        return null;
+      }
+      setData(payload);
+      return payload as OverworldData & { stranded?: Stranded };
+    } catch {
+      setError(REGION_FAILURES.network);
       return null;
     }
-    setData(payload);
-    return payload as OverworldData & { stranded?: Stranded };
   }
 
   // Canvas pixels to map tiles, or null outside the grid.
@@ -444,6 +453,7 @@ export function OverworldPanel({
   async function importAzgaar(files: string[], size: OverworldSize) {
     setImporting(true);
     setImportNote("");
+    setImportReport(null);
     setError("");
     try {
       const result = await importAzgaarFiles<OverworldData>(campaignId, files, size);
@@ -453,6 +463,9 @@ export function OverworldPanel({
       }
       setData(result.data);
       setImportNote(result.note);
+      setImportReport(result.report);
+    } catch {
+      setError(REGION_FAILURES.network);
     } finally {
       setImporting(false);
     }
@@ -461,11 +474,11 @@ export function OverworldPanel({
   paintUndo.track(data?.map.terrain ?? "");
   const skin = data ? skinForGenre(genre) : null;
   const heldName = data?.locations.find((entry) => entry.id === held)?.name ?? "";
-  const ask = askCopy(asking, labelSize, heldName);
+  const ask = askCopy(asking, labelSize, heldName, locale);
 
   return (
     <div className="space-y-2">
-      <SectionHead title="The region" glyph="system-region" />
+      <SectionHead title={t("regionUi.panel.title")} glyph="system-region" />
       <div
         ref={containerRef}
         className="panel relative overflow-hidden rounded-lg"
@@ -473,7 +486,7 @@ export function OverworldPanel({
       >
         {loading ? (
           <p role="status" className="skeleton-block reveal flex aspect-[4/3] items-center justify-center gap-1.5 text-xs text-stone-400">
-            <Loader2 className="size-3.5 animate-spin" /> Charting the region...
+            <Loader2 className="size-3.5 animate-spin" /> {t("regionUi.panel.loading")}
           </p>
         ) : (
           <canvas
@@ -512,17 +525,17 @@ export function OverworldPanel({
         )}
         {!loading ? (
           <div className="absolute bottom-2 right-2 flex flex-col gap-1">
-            <KitButton tone="secondary" onClick={() => zoomBy(1.25)} aria-label="Zoom in" className="size-10 bg-stone-950/85 px-0">
+            <KitButton tone="secondary" onClick={() => zoomBy(1.25)} aria-label={t("regionUi.panel.in")} className="size-10 bg-stone-950/85 px-0">
               <Plus className="size-4" />
             </KitButton>
-            <KitButton tone="secondary" onClick={() => zoomBy(0.8)} aria-label="Zoom out" className="size-10 bg-stone-950/85 px-0">
+            <KitButton tone="secondary" onClick={() => zoomBy(0.8)} aria-label={t("regionUi.panel.out")} className="size-10 bg-stone-950/85 px-0">
               <Minus className="size-4" />
             </KitButton>
           </div>
         ) : null}
         {strokeCount ? (
           <span key={strokeCount} className="count-pop pointer-events-none absolute left-2 top-2 rounded-md border border-amber-500/30 bg-stone-950/85 px-1.5 py-0.5 text-[11px] text-amber-200">
-            {strokeCount} {strokeCount === 1 ? "tile" : "tiles"}
+            {t("regionUi.panel.tiles", { count: strokeCount, word: t(strokeCount === 1 ? "regionUi.panel.tile" : "regionUi.panel.manyTiles") })}
           </span>
         ) : null}
       </div>
@@ -541,8 +554,8 @@ export function OverworldPanel({
           />
           {held ? (
             <p className="reveal flex flex-wrap items-center gap-2 text-xs text-amber-200">
-              Holding {heldName}. Tap where it belongs.
-              <KitButton onClick={() => setAsking({ kind: "rename", locationId: held })}>Rename it</KitButton>
+              {t("regionUi.panel.held", { name: heldName })}
+              <KitButton onClick={() => setAsking({ kind: "rename", locationId: held })}>{t("regionUi.panel.rename")}</KitButton>
             </p>
           ) : null}
           {mode === "paint" && skin ? (
@@ -575,7 +588,7 @@ export function OverworldPanel({
           ) : null}
           {mode === "label" ? <LabelTools size={labelSize} onSize={setLabelSize} /> : null}
           {mode === "erase" ? (
-            <p className="reveal text-xs text-stone-500">Tap a line, a label or a pin to take it off the map.</p>
+            <p className="reveal text-xs text-stone-500">{t("regionUi.panel.erase")}</p>
           ) : null}
           <FileTools
             backdropPath={data.map.backdropPath}
@@ -585,14 +598,15 @@ export function OverworldPanel({
             onImport={(files, size) => void importAzgaar(files, size)}
             importing={importing}
             importNote={importNote}
+            importReport={importReport}
             mapSize={{ width: data.map.width, height: data.map.height }}
           />
-          {error ? <PanelError>{error}</PanelError> : null}
+          {error ? <PanelError>{regionErrorText(error, locale)}</PanelError> : null}
           <OverworldAuthoring campaignId={campaignId} data={data} onData={setData} />
         </>
       ) : null}
       <p className="text-[11px] text-stone-500">
-        Drag to pan, scroll or pinch to zoom. Locations appear as the party discovers them.
+        {t("regionUi.panel.help")}
       </p>
       <PromptDialog
         open={asking !== null}
