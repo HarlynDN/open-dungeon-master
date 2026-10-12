@@ -2,7 +2,7 @@
 // App chrome and stock identity labels are available on every page.
 const CONTENT_PREFIXES = new Set([
   "lineageUi", "lineageMaterial", "racialUi", "gameHelp", "closedHelp", "combatUi", "combatDetail", "combatRoll", "combatCheck", "combatSpecial", "cinematic", "sheetPlay", "sheetDialog",
-  "feedUi", "chatUi", "entryCharacter", "passageUi", "memoryUi", "recordUi", "leadUi", "marketUi", "storyControl", "storyUi", "callingUi", "callingMaterial", "abilityUi", "spellUi", "finishUi", "turnUi", "journalUi", "composeUi", "sessionUi", "handUi", "handMaterial",
+  "diceTrayUi", "feedUi", "chatUi", "entryCharacter", "passageUi", "memoryUi", "recordUi", "leadUi", "marketUi", "storyControl", "storyUi", "callingUi", "callingMaterial", "abilityUi", "spellUi", "finishUi", "turnUi", "journalUi", "composeUi", "sessionUi", "handUi", "handMaterial",
   "spellName", "spellMaterial", "gearUi", "equipmentName", "itemHelp", "builderPicker",
 ]);
 export const MESSAGE_SCOPES = ["ui", "content", "help"] as const;

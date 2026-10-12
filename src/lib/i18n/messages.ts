@@ -1,3 +1,4 @@
+import { DICE_CONTROL_MESSAGES } from "./dice-control-messages.ts";
 import { FEED_MESSAGES } from "./feed-messages.ts";
 import { CHAT_MESSAGES } from "./chat-messages.ts";
 import { ENTRY_CHARACTER_MESSAGES } from "./entry-character-messages.ts";
@@ -97,6 +98,7 @@ const en = {
   ...ENTRY_CHARACTER_MESSAGES.en,
   ...CHAT_MESSAGES.en,
   ...FEED_MESSAGES.en,
+  ...DICE_CONTROL_MESSAGES.en,
   ...PLAY_EDIT_MESSAGES.en,
   ...HAND_CASTING_MESSAGES.en,
   ...HAND_FEATURE_MESSAGES.en,
@@ -204,6 +206,7 @@ const zhCN: Messages = {
   ...ENTRY_CHARACTER_MESSAGES["zh-CN"],
   ...CHAT_MESSAGES["zh-CN"],
   ...FEED_MESSAGES["zh-CN"],
+  ...DICE_CONTROL_MESSAGES["zh-CN"],
   ...PLAY_EDIT_MESSAGES["zh-CN"],
   ...HAND_CASTING_MESSAGES["zh-CN"],
   ...HAND_FEATURE_MESSAGES["zh-CN"],

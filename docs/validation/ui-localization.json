@@ -38,7 +38,9 @@
     "Discord",
     "D&D",
     "ODM-XXXXXXXXXX",
-    "XXXX-XXXX-XXXX-XXXX"
+    "XXXX-XXXX-XXXX-XXXX",
+    "d",
+    "chrome://flags/#enable-web-bluetooth"
   ],
   "files": [
     {
@@ -216,11 +218,13 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/DiceSourcesDialog.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned dice tray/source labels, secret audiences, result annotations and native parser/device diagnostics localized. Tray namespace loads with campaign content; dice-source namespace stays global for standalone settings. Expressions, physical source values, device IDs/names, privacy flags and roll results unchanged. Browser chooser cancellation uses a phase-specific language-neutral signal; later GATT errors remain visible. Focused component/callback check uses fake devices and roll transport only; engine dice-resolution tests were not repeated."
     },
     {
       "path": "src/app/campaigns/[campaignId]/DiceTrayDialog.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned dice tray/source labels, secret audiences, result annotations and native parser/device diagnostics localized. Tray namespace loads with campaign content; dice-source namespace stays global for standalone settings. Expressions, physical source values, device IDs/names, privacy flags and roll results unchanged. Browser chooser cancellation uses a phase-specific language-neutral signal; later GATT errors remain visible. Focused component/callback check uses fake devices and roll transport only; engine dice-resolution tests were not repeated."
     },
     {
       "path": "src/app/campaigns/[campaignId]/DirectorPanel.tsx",

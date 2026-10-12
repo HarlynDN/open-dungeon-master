@@ -1,3 +1,4 @@
+import { pixelChooserFailure } from "./pixel-chooser-errors";
 "use client";
 
 // Browser-side manager for Pixels Bluetooth dice (https://gamewithpixels.com).
@@ -140,7 +141,7 @@ function register(pixel: Pixel): ConnectedPixel {
 // called from a user gesture (a click) per the Web Bluetooth security model.
 export async function connectNewPixel(): Promise<ConnectedPixel> {
   const mod = await loadModule();
-  const pixel = await mod.requestPixel();
+  const pixel = await mod.requestPixel().catch((cause: unknown) => { throw pixelChooserFailure(cause); });
   await mod.repeatConnect(pixel);
   return register(pixel);
 }
