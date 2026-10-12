@@ -1,5 +1,10 @@
 "use client";
 
+import { dmActionView } from "@/lib/i18n/dm-action-presentations";
+import { DM_ACTION_KEYWORDS } from "@/lib/i18n/dm-action-keywords";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { consoleUiText, consoleFrame, consoleFloorStatus, consoleTabLabel, consoleNotice, CONSOLE_NOTICES } from "@/lib/i18n/dm-console-presentations";
+
 import { EmptyState } from "@/components/EmptyState";
 import { useMemo, useState } from "react";
 import { cn } from "@/lib/cn";
@@ -48,19 +53,25 @@ function FloorControl({
   campaignId: string;
   mode: "open" | "hold" | "spotlight" | "initiative";
 }) {
+  const { locale } = useLocale();
   const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
 
   async function set(next: "open" | "hold") {
     setBusy(true);
+    setError("");
     try {
-      await fetch(`/api/campaigns/${campaignId}/floor`, {
+      const response = await fetch(`/api/campaigns/${campaignId}/floor`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ set: next }),
       });
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        setError(data.error ?? CONSOLE_NOTICES.floor);
+      }
     } catch {
-      // The floor_changed event is the source of truth; a failed click
-      // simply leaves it where it was.
+      setError(CONSOLE_NOTICES.network);
     } finally {
       setBusy(false);
     }
@@ -68,19 +79,18 @@ function FloorControl({
 
   return (
     <DeskCard
-      title="The floor"
+      title={consoleUiText("The floor", locale)}
       glyph="tab-session"
       aside={
         <span key={mode} className="count-pop rounded-full border border-amber-500/40 bg-amber-400/10 px-2 py-0.5 text-[11px] text-amber-100">
-          {FLOOR_STATUS[mode]}
+          {consoleFloorStatus(mode, locale)}
         </span>
       }
     >
       {mode === "initiative" ? (
         <p className="reveal flex items-center gap-2 text-xs text-stone-400">
           <GameIcon icon={{ kind: "glyph", key: "rest-initiative" }} size="size-5" className="shrink-0" />
-          The initiative order has it while the fight runs.
-        </p>
+          {consoleUiText("The initiative order has it while the fight runs.", locale)}</p>
       ) : (
         <div data-pill-group="" className="flex flex-wrap gap-1.5">
           {(["open", "hold"] as const).map((option) => (
@@ -96,32 +106,23 @@ function FloorControl({
               )}
             >
               <GameIcon icon={{ kind: "glyph", key: option === "open" ? "tab-chat" : "cue-bell" }} size="size-5" />
-              {option === "open" ? "Anyone may act" : "Hold everyone"}
+              {option === "open" ? consoleUiText("Anyone may act", locale) : consoleUiText("Hold everyone", locale)}
             </button>
           ))}
           {mode === "spotlight" ? (
             <span className="inline-flex min-h-10 items-center gap-1.5 rounded-lg border border-amber-500/70 bg-amber-400/10 px-3 text-xs text-amber-100">
               <GameIcon icon={{ kind: "glyph", key: "tab-lead" }} size="size-5" />
-              Spotlight
-            </span>
+              {consoleUiText("Spotlight", locale)}</span>
           ) : (
             <span className="basis-full text-[11px] leading-snug text-stone-500">
-              Give the floor to named players with Give the floor, under Story.
-            </span>
+              {consoleUiText("Give the floor to named players with Give the floor, under Story.", locale)}</span>
           )}
         </div>
       )}
+      {error ? <p role="alert" className="text-xs text-red-300">{consoleNotice(error, locale)}</p> : null}
     </DeskCard>
   );
 }
-
-// The floor's state in a word, for the card's corner.
-const FLOOR_STATUS = {
-  open: "Open",
-  hold: "Held",
-  spotlight: "Spotlight",
-  initiative: "Initiative",
-} as const;
 
 // The console rail: the catalog's own categories, plus three tabs that are
 // not adjudications at all. "assist" answers questions and applies nothing;
@@ -181,6 +182,7 @@ export function DmConsolePanel({
   // The stretch of answers currently handed over, or null.
   cover: DmCover | null;
 }) {
+  const { locale } = useLocale();
   // Illustrate stays in the catalog (the AI DM and the dispatcher still know
   // it) but leaves the console on a server with no image backend, where the
   // form could only ever queue a render that fails. The upload alternative
@@ -221,23 +223,23 @@ export function DmConsolePanel({
         .map((intent) => ({
           intent,
           message: messagesById.get(intent.messageId) ?? null,
-          name: sheetsById.get(intent.characterId)?.name ?? "Someone",
+          name: sheetsById.get(intent.characterId)?.name ?? consoleUiText("Someone", locale),
         }))
         .filter((row) => row.message)
         .sort((a, b) => a.intent.seq - b.intent.seq),
-    [intents, messagesById, sheetsById],
+    [intents, messagesById, sheetsById, locale],
   );
 
   const active = groups.find((group) => group.category === category) ?? null;
 
   const tabs: Array<readonly [ConsoleTab, string]> = [
-    ["assist", "Assist"],
-    ...groups.map((group) => [group.category, group.label] as const),
-    ["maps", "Maps"],
-    ["cast", "Cast"],
-    ["bestiary", "Bestiary"],
-    ["storyboard", "Storyboard"],
-    ["tables", "Tables"],
+    ["assist", consoleTabLabel("assist", locale)],
+    ...groups.map((group) => [group.category, consoleTabLabel(group.category, locale)] as const),
+    ["maps", consoleTabLabel("maps", locale)],
+    ["cast", consoleTabLabel("cast", locale)],
+    ["bestiary", consoleTabLabel("bestiary", locale)],
+    ["storyboard", consoleTabLabel("storyboard", locale)],
+    ["tables", consoleTabLabel("tables", locale)],
   ];
 
   // The palette presses the same buttons the console draws: a tab, an
@@ -255,29 +257,29 @@ export function DmConsolePanel({
     reveal("dm-console-tabs");
   }
   const sections: Array<[anchor: string, label: string, hint: string, glyph: string]> = [
-    ["dm-floor", "The floor", "Who may speak right now", "tab-session"],
-    ["dm-beats", "Write the story", "The beat composer", "tab-journal"],
+    ["dm-floor", consoleUiText("The floor", locale), consoleUiText("Who may speak right now", locale), "tab-session"],
+    ["dm-beats", consoleUiText("Write the story", locale), consoleUiText("The beat composer", locale), "tab-journal"],
     ...(delegations.monsters || delegations.cover
-      ? [["dm-delegation", "Hand things to the AI", "Monsters and cover", "tab-dm"] as [string, string, string, string]]
+      ? [["dm-delegation", consoleUiText("Hand things to the AI", locale), consoleUiText("Monsters and cover", locale), "tab-dm"] as [string, string, string, string]]
       : []),
-    ["dm-queue", "Waiting on you", queue.length ? `${queue.length} unanswered` : "Nothing waiting", "tab-log"],
+    ["dm-queue", consoleUiText("Waiting on you", locale), queue.length ? consoleFrame("unanswered", { count: queue.length }, locale) : consoleUiText("Nothing waiting", locale), "tab-log"],
   ];
   const commands: PaletteCommand[] = [
     ...groups.flatMap((group) =>
       group.entries.map((entry) => ({
         id: `do-${entry.name}`,
-        label: entry.label,
-        hint: entry.summary,
-        group: group.label,
+        label: dmActionView(entry, locale).label,
+        hint: dmActionView(entry, locale).summary,
+        group: consoleTabLabel(group.category, locale),
         glyph: actionGlyph(entry.name, group.category),
-        keywords: [entry.name.replace(/_/g, " ")],
+        keywords: [entry.name.replace(/_/g, " "), entry.label, entry.summary, ...(DM_ACTION_KEYWORDS[locale][entry.name] ?? [])],
         onSelect: () => goTo(group.category, entry.name),
       })),
     ),
     ...tabs.map(([tab, label]) => ({
       id: `tab-${tab}`,
-      label: `Open ${label}`,
-      group: "Console tabs",
+      label: consoleFrame("openTab", { tab: label }, locale),
+      group: consoleUiText("Console tabs", locale),
       glyph: TAB_GLYPH[tab],
       keywords: ["tab", "section", tab],
       onSelect: () => goTo(tab),
@@ -286,7 +288,7 @@ export function DmConsolePanel({
       id: `see-${anchor}`,
       label,
       hint,
-      group: "On this console",
+      group: consoleUiText("On this console", locale),
       glyph,
       keywords: ["jump", "scroll"],
       onSelect: () => reveal(anchor),
@@ -298,10 +300,10 @@ export function DmConsolePanel({
       {/* Gold, the DM's colour: nobody else at the table has this tab, and
           the lead's desk wears ember so the two seats never blur. */}
       <div className="flex items-center gap-2">
-        <Ribbon tone="gold" className="min-w-0 flex-1">Only you</Ribbon>
+        <Ribbon tone="gold" className="min-w-0 flex-1">{consoleUiText("Only you", locale)}</Ribbon>
         <CommandPalette
-          title="DM console commands"
-          placeholder="Find an action or a tab"
+          title={consoleUiText("DM console commands", locale)}
+          placeholder={consoleUiText("Find an action or a tab", locale)}
           commands={commands}
         />
       </div>
@@ -332,7 +334,7 @@ export function DmConsolePanel({
 
       <section data-tour="dm-queue" className={cn(ui.card, "dm-card p-3")}>
         <SectionHead
-          title="Waiting on you"
+          title={consoleUiText("Waiting on you", locale)}
           glyph="tab-log"
           aside={
             queue.length ? (
@@ -340,7 +342,7 @@ export function DmConsolePanel({
                 {queue.length}
               </span>
             ) : (
-              "All answered"
+              consoleUiText("All answered", locale)
             )
           }
         />
@@ -363,13 +365,12 @@ export function DmConsolePanel({
                   className={cn(ui.btnSmall, "mt-1.5 min-h-9 px-2 py-1 text-xs")}
                 >
                   <GameIcon icon={{ kind: "glyph", key: "die-d20" }} size="size-5" />
-                  What should I press?
-                </button>
+                  {consoleUiText("What should I press?", locale)}</button>
               </li>
             ))}
           </ul>
         ) : (
-          <EmptyState size="sm" art="scrolls" title="Nothing waiting. Everything the party has said has been answered." />
+          <EmptyState size="sm" art="scrolls" title={consoleUiText("Nothing waiting. Everything the party has said has been answered.", locale)} />
         )}
       </section>
 
@@ -431,9 +432,9 @@ export function DmConsolePanel({
           <div>
             {active ? (
               <SectionHead
-                title={active.label}
+                title={consoleTabLabel(active.category, locale)}
                 glyph={TAB_GLYPH[active.category]}
-                aside={`${active.entries.length} ${active.entries.length === 1 ? "action" : "actions"}`}
+                aside={consoleFrame(active.entries.length === 1 ? "actionOne" : "actionMany", { count: active.entries.length }, locale)}
               />
             ) : null}
             <ul className="stagger space-y-1.5">
@@ -453,8 +454,8 @@ export function DmConsolePanel({
                   ) : (
                     <ActionPlate
                       glyph={actionGlyph(entry.name, active?.category ?? "table")}
-                      label={entry.label}
-                      summary={entry.summary}
+                      label={dmActionView(entry, locale).label}
+                      summary={dmActionView(entry, locale).summary}
                       onClick={() => setOpenAction(entry.name)}
                     />
                   )}

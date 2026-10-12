@@ -32,7 +32,7 @@ flow remains incomplete; the review-repair checkpoint is a separate scoped task.
 | Locale foundation | Registry, persistence, browser fallback, typed complete catalogs, model locale policy, classified token proxy, chapter budget, CJK retrieval, IME protection | Real prompt-usage calibration; keep legacy campaign/history regressions |
 | DM safety | Per-event engine conclusions with English/Chinese renderers; AI prose separated; one text-only correction and safe fallback; shared localized enemy names and held-resource names/IDs; scoped resource aliases and ambiguity retries; real Codex combat/resource acceptance | Untracked feature/reaction options and broader spell/condition/pack coverage; conservative regex coverage is not full language understanding |
 | Embeddings | Original English deployment default retained; explicit multilingual opt-in; fixed bilingual calibration/holdout and hard-negative policy | Broader pack quality; opt-in affects English campaigns and rebuilds indexes |
-| UI | **284/440** covered files, **504** pending literal sites, **14277** message keys; scoped AST gate; earlier play/session surfaces plus hand labels/targets/area selection, campaign-locale action sentences, native previews, basic/reaction rules, common casting refusals, spell selectors, all 113 owned mechanic notes, 103 native technique and 23 maneuver labels, attack/bonus-route and material/ritual refusals, built-in form attack names and verified current-actor labels, correction/multi-picker chrome, native downtime facts and inventory/vitals approval/player-trade controls, guided progression chrome, rest/loot/travel moments and all native option summaries, owned generic feature/feat summaries, feat choice controls, campaign/map entry notices the complete app help walkthrough story/chronicle/arc controls, NPC roster review, campaign model controls market/shelf/trade, party-lead, quest-log/faction controls plus facts, pinned memories, context-trace presentation and passage edit/reroll/action controls and character/companion entry and private-chat/media presentation and audit/timeline controls and dice tray/source controls and board movement/camera/order/area/target/drawing and DM placement/measurement controls | Remaining dynamic text keeps hand files pending; general play/inventory/rest/level-up/save/resume surfaces and full sheet/party dialogs; file fraction is not overall completion or an effort estimate |
+| UI | **291/440** covered files, **408** pending literal sites, **14420** message keys; scoped AST gate; earlier play/session surfaces plus hand labels/targets/area selection, campaign-locale action sentences, native previews, basic/reaction rules, common casting refusals, spell selectors, all 113 owned mechanic notes, 103 native technique and 23 maneuver labels, attack/bonus-route and material/ritual refusals, built-in form attack names and verified current-actor labels, correction/multi-picker chrome, native downtime facts and inventory/vitals approval/player-trade controls, guided progression chrome, rest/loot/travel moments and all native option summaries, owned generic feature/feat summaries, feat choice controls, campaign/map entry notices the complete app help walkthrough story/chronicle/arc controls, NPC roster review, campaign model controls market/shelf/trade, party-lead, quest-log/faction controls plus facts, pinned memories, context-trace presentation and passage edit/reroll/action controls and character/companion entry and private-chat/media presentation and audit/timeline controls and dice tray/source controls and board movement/camera/order/area/target/drawing and DM placement/measurement controls | Remaining dynamic text keeps hand files pending; general play/inventory/rest/level-up/save/resume surfaces and full sheet/party dialogs; file fraction is not overall completion or an effort estimate |
 | Character creation/material | Identity, ancestry, class introductions, ability allocation, gear, spell book/preparation and finish preview; 517 spell and 228 equipment names; 257-entry contextual terminology policy and lint gate; 415/415 static registered resource names and guidance shared with DM references; 135/135 bundled option names/descriptions plus all 20 nonempty requirement frames; 146 shared/class-specific feature summaries, 54 native feat summaries and owned feat choice controls; four native pregen card summaries and backstories; original-source review records | Remaining specific/themed feature and magic-item material; dynamic free-cast resources and user-authored/pack text remain outside the static resource review |
 | Player system logs | Structured rule diagnostics, engine-generated combat conclusions and structured audit/timeline presentation retain English protocol semantics with localized display | General player-visible log templates; model-facing English tool results remain independent |
 | Resource delivery | UI/content/help scopes; selected-locale help loads independently on open, with retry; character/campaign boundaries; generated resources checked by lint; production Turbopack build and anonymous bilingual browser switch/reload succeed; home/character/campaign SSR and initial-script payloads measured | Hydrated/lazy network totals, authenticated campaign switching and active-play browser acceptance; route-level JS payload remains large |
@@ -73,7 +73,30 @@ attempts were blocked at its internal port binding by the execution environment,
 including the escalated attempt; this batch does not claim a passing production
 build. Keep that gate for the next phase boundary rather than retrying per batch.
 
-The latest monster-editor tail checkpoint closes the remaining three shared
+The latest grouped console/table checkpoint closes seven owners: console
+floor/tabs/queue/action rail, command palette, beat capture, temporary AI cover,
+enemy HP correction, random-table rows and statblock lookup. It adds 143 content
+keys and reuses all 99 source-bound action captions plus registered lexical
+hints. Palette labels/groups switch locale while English action names/captions
+stay searchable; command/tab/action IDs and callbacks remain native. Floor and
+lookup HTTP/network failures now surface raw retryable notices without optimistic
+state changes. Beat/history/table text and chains stay raw; an explicit
+missingResult flag projects only a native absence notice. HP receipts retain
+structured raw fields for display-language changes and preserve alive/min/max
+rules. Cover/beat/floor/correction request bodies are unchanged.
+Statblock search optionally accepts viewer locale for aliases, preserving legacy
+English/empty-query ordering, slugs and source fields. Additive provenance marks
+only the identical native genre row; pack/custom names remain literal and
+synthetic default names are distinguished. Native genre names not yet registered
+in the material glossary remain a content gate, rather than being guessed.
+Types/catalog/AST/terms passed (zero errors, 319 contextual warnings), 11 existing
+palette regressions and grouped mocked UI/lookup checks for bilingual command
+search, IME selection, floor/beat/cover/HP bodies, raw receipts and table prose,
+lookup locale/refusals, native-vs-pack provenance and baseline-name handling.
+Current UI: 291/440, 408 pending sites, 14420 keys. No real model/audio/browser
+journey or whole build was repeated for this UI batch.
+
+The preceding monster-editor tail checkpoint closes the remaining three shared
 field owners: structured actions/regeneration/routines, spellcasting and printed
 stats/skills/senses/languages/alignment/habitat/trait sections. It adds 104 content
 keys while reusing existing ability/skill/fictional-language/alignment/spell and

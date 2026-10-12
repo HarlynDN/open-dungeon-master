@@ -1,5 +1,10 @@
 "use client";
 
+import { referenceDisplayName } from "@/lib/i18n/references";
+import { monsterUiFrame } from "@/lib/i18n/monster-ui-presentations";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { consoleUiText, consoleFrame, consoleNotice, CONSOLE_NOTICES } from "@/lib/i18n/dm-console-presentations";
+
 import { useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/cn";
@@ -17,7 +22,7 @@ import { SectionHead } from "@/components/ui/SectionHead";
 
 export const inputClass = ui.input;
 
-type StatblockMatch = { slug: string; name: string; cr: number; type: string; blurb: string };
+type StatblockMatch = { slug: string; name: string; cr: number; type: string; blurb: string; ownedName?: boolean };
 
 export function StatblockFinder({
   campaignId,
@@ -26,6 +31,8 @@ export function StatblockFinder({
   campaignId: string;
   collapsible?: boolean;
 }) {
+  const { locale } = useLocale();
+  const [error, setError] = useState("");
   const [query, setQuery] = useState("");
   const [matches, setMatches] = useState<StatblockMatch[]>([]);
   // The table's setting, for the boss plate on high-rating matches.
@@ -38,16 +45,20 @@ export function StatblockFinder({
 
   async function search() {
     setBusy(true);
+    setError("");
     setDetail(null);
     try {
       const response = await fetch(`/api/campaigns/${campaignId}/dm/assist/statblock`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query }),
+        body: JSON.stringify({ query, ...(locale === "en" ? {} : { locale }) }),
       });
       const data = await response.json().catch(() => ({}));
+      if (!response.ok) { setError(data.error ?? CONSOLE_NOTICES.lookup); return; }
       setMatches(data.matches ?? []);
       setGenre(typeof data.genre === "string" ? data.genre : "");
+    } catch {
+      setError(CONSOLE_NOTICES.network);
     } finally {
       setBusy(false);
     }
@@ -55,6 +66,7 @@ export function StatblockFinder({
 
   async function openStatblock(slug: string) {
     setBusy(true);
+    setError("");
     try {
       const response = await fetch(`/api/campaigns/${campaignId}/dm/assist/statblock`, {
         method: "POST",
@@ -62,7 +74,10 @@ export function StatblockFinder({
         body: JSON.stringify({ ref: slug }),
       });
       const data = await response.json().catch(() => ({}));
+      if (!response.ok) { setError(data.error ?? CONSOLE_NOTICES.lookup); return; }
       setDetail(data.statblock ?? null);
+    } catch {
+      setError(CONSOLE_NOTICES.network);
     } finally {
       setBusy(false);
     }
@@ -78,7 +93,7 @@ export function StatblockFinder({
         <input
           value={query}
           onChange={(event) => setQuery(event.target.value.slice(0, 80))}
-          placeholder="wolf, or leave empty for what fits the party"
+          placeholder={consoleUiText("wolf, or leave empty for what fits the party", locale)}
           className={inputClass}
         />
         <button
@@ -87,9 +102,9 @@ export function StatblockFinder({
           disabled={busy}
           className={cn(ui.btnSecondary, "shrink-0")}
         >
-          Search
-        </button>
+          {consoleUiText("Search", locale)}</button>
       </div>
+      {error ? <p role="alert" className="text-xs text-red-300">{consoleNotice(error, locale)}</p> : null}
       {matches.length ? (
         <ul className="stagger mt-1.5 space-y-1">
           {matches.map((match) => (
@@ -107,8 +122,8 @@ export function StatblockFinder({
                   size="size-8"
                 />
                 <span className="text-xs text-stone-200">
-                  {match.name}
-                  <span className="ml-1.5 text-stone-500">CR {match.cr}</span>
+                  {match.ownedName ? referenceDisplayName("monster", match.name, locale) : match.name}
+                  <span className="ml-1.5 text-stone-500">{monsterUiFrame("cr", { cr: match.cr }, locale)}</span>
                 </span>
               </button>
             </li>
@@ -118,19 +133,18 @@ export function StatblockFinder({
       {stats ? (
         <div className="panel reveal mt-2 rounded-lg px-3 py-2 text-xs text-stone-300">
           <p className="text-stone-200">
-            {String(detail?.name ?? "")}
+            {detail?.baselineName ? consoleFrame("baselineName", { cr: stats.cr }, locale) : detail?.ownedName ? referenceDisplayName("monster", String(detail.name ?? ""), locale) : String(detail?.name ?? "")}
             {detail?.synthesized ? (
               <span className="ml-1.5 font-display text-[10px] tracking-wide text-amber-300/80">
-                DMG baseline
-              </span>
+                {consoleUiText("DMG baseline", locale)}</span>
             ) : null}
           </p>
           <p className="text-stone-500">
-            AC {stats.ac} · {stats.maxHp} hp · CR {stats.cr} · speed {stats.speed}
+            {consoleFrame("statline", { ac: stats.ac, hp: stats.maxHp, cr: stats.cr, speed: stats.speed }, locale)}
           </p>
           {stats.attacks.map((attack) => (
             <p key={attack.name} className="text-stone-400">
-              {attack.name}: +{attack.toHit} to hit, {attack.damage}
+              {consoleFrame("attackline", { name: attack.name, hit: attack.toHit, damage: attack.damage }, locale)}
             </p>
           ))}
         </div>
@@ -148,8 +162,7 @@ export function StatblockFinder({
           className="flex min-h-10 w-full items-center gap-2 text-left font-display text-sm tracking-wide text-amber-100"
         >
           <GameIcon icon={{ kind: "glyph", key: "system-bestiary" }} size="size-7" />
-          Look up a monster
-          {open ? (
+          {consoleUiText("Look up a monster", locale)}{open ? (
             <ChevronDown className="ml-auto size-4 text-stone-500" />
           ) : (
             <ChevronRight className="ml-auto size-4 text-stone-500" />
@@ -162,7 +175,7 @@ export function StatblockFinder({
 
   return (
     <section className="panel rounded-xl p-3">
-      <SectionHead title="Look up a monster" glyph="system-bestiary" />
+      <SectionHead title={consoleUiText("Look up a monster", locale)} glyph="system-bestiary" />
       {controls}
     </section>
   );

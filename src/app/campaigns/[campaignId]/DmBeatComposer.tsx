@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { consoleUiText, consoleBeatKind, consoleNotice, CONSOLE_NOTICES } from "@/lib/i18n/dm-console-presentations";
+
 import { useState } from "react";
 import { Loader2, Sparkles } from "lucide-react";
 import { cn } from "@/lib/cn";
@@ -10,7 +13,6 @@ import { Switch } from "@/components/ui/Switch";
 import { DeskCard } from "@/app/campaigns/[campaignId]/DmConsoleParts";
 import {
   BEAT_KINDS,
-  BEAT_KIND_LABELS,
   BEAT_MAX_CHARS,
   type BeatKind,
   type BeatSource,
@@ -38,6 +40,7 @@ export function DmBeatComposer({
   // on a scene transition and not on "they took the left fork".
   canExpand: boolean;
 }) {
+  const { locale } = useLocale();
   const [body, setBody] = useState("");
   const [kind, setKind] = useState<BeatKind>("scene");
   const [source, setSource] = useState<BeatSource>("typed");
@@ -55,13 +58,13 @@ export function DmBeatComposer({
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
-        setError(data.error || "Could not write a draft.");
+        setError(data.error || CONSOLE_NOTICES.draft);
         return;
       }
       setBody(String(data.draft ?? ""));
       setSource("drafted");
     } catch {
-      setError("Could not reach the server.");
+      setError(CONSOLE_NOTICES.network);
     } finally {
       setDrafting(false);
     }
@@ -82,27 +85,25 @@ export function DmBeatComposer({
       });
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
-        setError(data.error || "Could not record that.");
+        setError(data.error || CONSOLE_NOTICES.record);
         return;
       }
       setBody("");
       setSource("typed");
     } catch {
-      setError("Could not reach the server.");
+      setError(CONSOLE_NOTICES.network);
     } finally {
       setSaving(false);
     }
   }
 
   return (
-    <DeskCard glyph="tab-journal" title="Write down what happened">
+    <DeskCard glyph="tab-journal" title={consoleUiText("Write down what happened", locale)}>
       <p className="mb-2 text-[11px] leading-snug text-stone-400">
-        Anything you narrated out loud. A sentence or two is enough, and it is
-        what the chapter summaries, the recap and the export are built from.
-      </p>
+        {consoleUiText("Anything you narrated out loud. A sentence or two is enough, and it is what the chapter summaries, the recap and the export are built from.", locale)}</p>
 
       <DictateField
-        label="What happened"
+        label={consoleUiText("What happened", locale)}
         disabled={drafting || saving}
         onTranscript={(text) => {
           setBody((current) => appendDictation(current, text, BEAT_MAX_CHARS));
@@ -113,8 +114,8 @@ export function DmBeatComposer({
           value={body}
           onChange={(event) => setBody(event.target.value.slice(0, BEAT_MAX_CHARS))}
           rows={3}
-          placeholder="They talked the reeve out of the toll and learned the mill burned last winter."
-          aria-label="What happened"
+          placeholder={consoleUiText("They talked the reeve out of the toll and learned the mill burned last winter.", locale)}
+          aria-label={consoleUiText("What happened", locale)}
           className={cn(ui.input, "resize-y")}
         />
       </DictateField>
@@ -123,8 +124,8 @@ export function DmBeatComposer({
         <Select
           value={kind}
           onChange={setKind}
-          options={optionsFrom<BeatKind>(BEAT_KINDS.map((option) => [option, BEAT_KIND_LABELS[option]]))}
-          label="Kind of beat"
+          options={optionsFrom<BeatKind>(BEAT_KINDS.map((option) => [option, consoleBeatKind(option, locale)]))}
+          label={consoleUiText("Kind of beat", locale)}
           size="sm"
           className="w-auto min-w-[10rem] max-w-full"
         />
@@ -133,7 +134,7 @@ export function DmBeatComposer({
           type="button"
           onClick={draft}
           disabled={drafting || saving}
-          title="Reads what the players typed, what the dice did and what changed on the sheets, then writes a draft for you to edit."
+          title={consoleUiText("Reads what the players typed, what the dice did and what changed on the sheets, then writes a draft for you to edit.", locale)}
           aria-busy={drafting}
           className={cn(ui.btnSmall, "min-h-10 text-xs")}
         >
@@ -142,17 +143,15 @@ export function DmBeatComposer({
           ) : (
             <Sparkles className="size-3.5" />
           )}
-          Draft it for me
-        </button>
+          {consoleUiText("Draft it for me", locale)}</button>
 
         {canExpand ? (
           <span
-            title="The AI says your line to the table as full prose. Your own words stay as the first take, one click away on the message."
+            title={consoleUiText("The AI says your line to the table as full prose. Your own words stay as the first take, one click away on the message.", locale)}
             className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-stone-600/60 bg-stone-900/50 px-2.5 text-xs text-stone-300"
           >
             <GameIcon icon={{ kind: "glyph", key: "cue-horn" }} size="size-5" />
-            Say it aloud
-            <Switch on={expand} onChange={setExpand} label="Say it aloud" />
+            {consoleUiText("Say it aloud", locale)}<Switch on={expand} onChange={setExpand} label={consoleUiText("Say it aloud", locale)} />
           </span>
         ) : null}
 
@@ -163,17 +162,17 @@ export function DmBeatComposer({
           aria-busy={saving}
           className={cn(ui.btnPrimary, "ml-auto")}
         >
-          {saving ? "Recording..." : "Record it"}
+          {saving ? consoleUiText("Recording...", locale) : consoleUiText("Record it", locale)}
         </button>
       </div>
 
-      {error ? <p className="motion-shake mt-1.5 text-xs text-red-400">{error}</p> : null}
+      {error ? <p className="motion-shake mt-1.5 text-xs text-red-400">{consoleNotice(error, locale)}</p> : null}
 
       {beats.length ? (
         <ul className="stagger mt-3 space-y-1 border-t border-amber-500/15 pt-2">
           {beats.slice(0, 3).map((beat) => (
             <li key={beat.id} className="text-[11px] leading-snug text-stone-400">
-              <span className="font-display tracking-wide text-amber-200/80">{BEAT_KIND_LABELS[beat.kind] ?? "Beat"}:</span>{" "}
+              <span className="font-display tracking-wide text-amber-200/80">{consoleBeatKind(beat.kind, locale)}:</span>{" "}
               {beat.body.length > 140 ? `${beat.body.slice(0, 140)}...` : beat.body}
             </li>
           ))}

@@ -1,10 +1,11 @@
-import { APP_LOCALES } from "@/lib/i18n/locales";
+import { referenceSearchNames } from "@/lib/i18n/reference-search";
+import { APP_LOCALES, type AppLocale } from "@/lib/i18n/locales";
 import { DM_ACTION_MESSAGES } from "@/lib/i18n/dm-action-messages";
 import { DM_ACTION_KEYWORDS } from "@/lib/i18n/dm-action-keywords";
 import { dmActionSource } from "@/lib/i18n/dm-action-presentations";
 import type { Campaign } from "@/lib/db/campaigns";
 import { spellAuthorsFor } from "@/lib/dm/spell-authors";
-import { bestiaryFor, resolveMonster, suggestEnemies } from "@/lib/bestiary";
+import { bestiaryFor, bestiaryForGenre, resolveMonster, suggestEnemies } from "@/lib/bestiary";
 import { synthesizeStats } from "@/lib/bestiary/synthesize";
 import type { EnemyStats } from "@/lib/bestiary/statblock";
 import { listSheets } from "@/lib/db/sheets";
@@ -122,15 +123,21 @@ export type StatblockMatch = {
   cr: number;
   type: string;
   blurb: string;
+  // True only for the identical repository genre entry, not a pack reskin.
+  ownedName?: boolean;
 };
 
 // The genre catalog, filtered by name, blurb or creature type ("undead"
 // lists every undead in the roster). With no query it returns the CR-spread
 // shortlist the encounter builder already uses, so an empty box is still a
 // useful answer.
-export function searchStatblocks(campaign: Campaign, query: string): StatblockMatch[] {
+export function searchStatblocks(campaign: Campaign, query: string, locale?: AppLocale): StatblockMatch[] {
   const setting = campaign.gameSettings;
   const trimmed = query.trim().toLowerCase();
+  const originals = bestiaryForGenre(setting.genre);
+  const owned = (entry: { slug: string; name: string; cr: number; type: string; blurb: string }) => originals.some(source =>
+    source.slug === entry.slug && source.name === entry.name && source.cr === entry.cr && source.type === entry.type && source.blurb === entry.blurb);
+  const terms = [trimmed, ...(locale ? referenceSearchNames("monster", query, locale) : [])];
   if (!trimmed) {
     const levels = listSheets(campaign.id).map((sheet) => sheet.level);
     return suggestEnemies(setting, levels, 12).map((entry) => ({
@@ -139,15 +146,14 @@ export function searchStatblocks(campaign: Campaign, query: string): StatblockMa
       cr: entry.cr,
       type: entry.type,
       blurb: entry.blurb,
+      ownedName: owned(entry),
     }));
   }
   return bestiaryFor(setting)
     .filter(
       (entry) =>
-        entry.name.toLowerCase().includes(trimmed) ||
-        entry.slug.includes(trimmed) ||
-        entry.type === trimmed ||
-        entry.blurb.toLowerCase().includes(trimmed),
+        terms.some(term => entry.name.toLowerCase().includes(term) ||
+          entry.slug.includes(term) || entry.type === term || entry.blurb.toLowerCase().includes(term)),
     )
     .slice(0, 12)
     .map((entry) => ({
@@ -156,6 +162,7 @@ export function searchStatblocks(campaign: Campaign, query: string): StatblockMa
       cr: entry.cr,
       type: entry.type,
       blurb: entry.blurb,
+      ownedName: owned(entry),
     }));
 }
 
@@ -167,6 +174,8 @@ export type StatblockResult = {
   // True when nothing matched and the numbers came from the DMG's
   // by-CR baseline instead of a real stat block.
   synthesized: boolean;
+  ownedName?: boolean;
+  baselineName?: boolean;
 };
 
 // One monster, resolved the same way the spawner resolves it, so what the DM
@@ -183,8 +192,12 @@ export function quickStatblock(
       userIds: spellAuthorsFor(campaign),
     });
     if (resolved) {
+      const name = resolved.reskinName ?? resolved.baseName;
+      const entry = bestiaryFor(campaign.gameSettings).find(row => row.slug === resolved.slug);
+      const original = bestiaryForGenre(campaign.gameSettings.genre).find(row => row.slug === resolved.slug);
+      const ownedName = Boolean(entry && original && name === original.name && entry.name === original.name && entry.blurb === original.blurb && entry.type === original.type && entry.cr === original.cr);
       return {
-        name: resolved.reskinName ?? resolved.baseName,
+        name, ownedName,
         reskinName: resolved.reskinName,
         stats: resolved.stats,
         synthesized: false,
@@ -197,6 +210,7 @@ export function quickStatblock(
       reskinName: null,
       stats: synthesizeStats(input.cr),
       synthesized: true,
+      baselineName: !ref,
     };
   }
   return null;

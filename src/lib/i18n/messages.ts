@@ -1,3 +1,4 @@
+import { DM_CONSOLE_MESSAGES } from "./dm-console-messages.ts";
 import { MONSTER_UI_MESSAGES } from "./monster-ui-messages.ts";
 import { ENCOUNTER_PREP_MESSAGES } from "./encounter-prep-messages.ts";
 import { DM_RESULT_MESSAGES } from "./dm-result-messages.ts";
@@ -129,6 +130,7 @@ const en = {
     ...MAP_EDITOR_MESSAGES.en,
     ...NPC_EDITOR_MESSAGES.en,
     ...DM_RESULT_MESSAGES.en,
+    ...DM_CONSOLE_MESSAGES.en,
     ...MONSTER_UI_MESSAGES.en,
     ...ENCOUNTER_PREP_MESSAGES.en,
     ...DM_FIELD_MESSAGES.en,
@@ -260,6 +262,7 @@ const zhCN: Messages = {
     ...MAP_EDITOR_MESSAGES["zh-CN"],
     ...NPC_EDITOR_MESSAGES["zh-CN"],
     ...DM_RESULT_MESSAGES["zh-CN"],
+    ...DM_CONSOLE_MESSAGES["zh-CN"],
     ...MONSTER_UI_MESSAGES["zh-CN"],
     ...ENCOUNTER_PREP_MESSAGES["zh-CN"],
     ...DM_FIELD_MESSAGES["zh-CN"],

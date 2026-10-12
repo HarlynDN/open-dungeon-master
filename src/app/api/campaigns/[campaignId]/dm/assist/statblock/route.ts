@@ -1,3 +1,4 @@
+import { normalizeLocale } from "@/lib/i18n/locales";
 import { z } from "zod";
 import { isErrorResponse, requireDm } from "@/lib/campaign-api";
 import { quickStatblock, searchStatblocks } from "@/lib/dm/assist";
@@ -10,6 +11,7 @@ export const dynamic = "force-dynamic";
 // match falls back to the DMG's by-CR baseline, which is honest arithmetic
 // rather than an invented stat block.
 const statblockSchema = z.object({
+  locale: z.string().optional(),
   query: z.string().trim().max(80).default(""),
   ref: z.string().trim().max(80).default(""),
   cr: z.number().min(0).max(30).optional(),
@@ -38,7 +40,7 @@ export async function POST(
     return Response.json({ statblock });
   }
   return Response.json({
-    matches: searchStatblocks(context.campaign, query),
+    matches: searchStatblocks(context.campaign, query, parsed.data.locale ? normalizeLocale(parsed.data.locale) : undefined),
     // For the thumbnails: a high-rating match draws this setting's boss
     // plate (src/lib/placeholders.ts).
     genre: context.campaign.gameSettings.genre,

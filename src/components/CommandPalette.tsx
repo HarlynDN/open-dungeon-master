@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { consoleUiText, consoleFrame } from "@/lib/i18n/dm-console-presentations";
+
 import * as RadixDialog from "@radix-ui/react-dialog";
 import { isComposingInput } from "@/lib/input-composition";
 import { Search } from "lucide-react";
@@ -41,9 +44,9 @@ function typingInto(target: EventTarget | null): boolean {
 
 export function CommandPalette({
   commands,
-  title = "Commands",
-  placeholder = "Type a command",
-  chipLabel = "Commands",
+  title,
+  placeholder,
+  chipLabel,
   className,
 }: {
   commands: PaletteCommand[];
@@ -53,6 +56,10 @@ export function CommandPalette({
   // Extra classes for the hint chip.
   className?: string;
 }) {
+  const { locale } = useLocale();
+  const heading = title ?? consoleUiText("Commands", locale);
+  const hint = placeholder ?? consoleUiText("Type a command", locale);
+  const label = chipLabel ?? consoleUiText("Commands", locale);
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
@@ -125,13 +132,13 @@ export function CommandPalette({
       <button
         type="button"
         onClick={show}
-        aria-label={`${title}: open the command palette`}
+        aria-label={consoleFrame("paletteOpen", { title: heading }, locale)}
         aria-keyshortcuts="/ Control+K Meta+K"
-        title="Press / or Ctrl K"
+        title={consoleUiText("Press / or Ctrl K", locale)}
         className={cn("kbd-chip shrink-0", className)}
       >
         <span className="kbd-key" aria-hidden="true">/</span>
-        {chipLabel}
+        {label}
       </button>
       <RadixDialog.Root open={open} onOpenChange={setOpen}>
         <RadixDialog.Portal>
@@ -140,7 +147,7 @@ export function CommandPalette({
             aria-describedby={undefined}
             className="palette-panel panel fixed left-1/2 top-[12vh] z-[60] flex max-h-[70vh] w-[min(94vw,34rem)] -translate-x-1/2 flex-col overflow-hidden rounded-xl p-0 shadow-elev-2"
           >
-            <RadixDialog.Title className="sr-only">{title}</RadixDialog.Title>
+            <RadixDialog.Title className="sr-only">{heading}</RadixDialog.Title>
             <div className="flex items-center gap-2 border-b border-amber-400/15 px-3 py-2.5">
               <Search className="size-4 shrink-0 text-amber-200/70" aria-hidden="true" />
               <input
@@ -151,17 +158,17 @@ export function CommandPalette({
                   setActive(0);
                 }}
                 onKeyDown={onInputKey}
-                placeholder={placeholder}
+                placeholder={hint}
                 role="combobox"
                 aria-expanded="true"
                 aria-controls={listId}
                 aria-activedescendant={activeIndex >= 0 ? `${listId}-${shown[activeIndex].id}` : undefined}
-                aria-label={title}
+                aria-label={heading}
                 className="min-w-0 flex-1 bg-transparent text-sm text-stone-100 outline-none placeholder:text-stone-500"
               />
-              <span className="kbd-key" aria-hidden="true">Esc</span>
+              <span className="kbd-key" aria-hidden="true">{consoleUiText("Esc", locale)}</span>
             </div>
-            <div ref={listRef} id={listId} role="listbox" aria-label={title} className="palette-list min-h-0 flex-1 overflow-y-auto p-1.5">
+            <div ref={listRef} id={listId} role="listbox" aria-label={heading} className="palette-list min-h-0 flex-1 overflow-y-auto p-1.5">
               {shown.map((command, index) => (
                 <PaletteRow
                   key={command.id}
@@ -175,13 +182,13 @@ export function CommandPalette({
                 />
               ))}
               {!shown.length ? (
-                <p className="reveal px-3 py-6 text-center text-sm text-stone-500">Nothing here answers to that.</p>
+                <p className="reveal px-3 py-6 text-center text-sm text-stone-500">{consoleUiText("Nothing here answers to that.", locale)}</p>
               ) : null}
             </div>
             <p className="flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-amber-400/10 px-3 py-1.5 text-[11px] text-stone-500">
-              <span><span className="kbd-key">↑</span> <span className="kbd-key">↓</span> move</span>
-              <span><span className="kbd-key">Enter</span> run</span>
-              <span className="ml-auto">{shown.length} of {commands.length}</span>
+              <span><span className="kbd-key">↑</span> <span className="kbd-key">↓</span>  {consoleUiText("move", locale)}</span>
+              <span><span className="kbd-key">{consoleUiText("Enter", locale)}</span>  {consoleUiText("run", locale)}</span>
+              <span className="ml-auto">{consoleFrame("paletteCount", { shown: shown.length, total: commands.length }, locale)}</span>
             </p>
           </RadixDialog.Content>
         </RadixDialog.Portal>

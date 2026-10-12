@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { consoleUiText, consoleFrame, consoleNotice, tableCoverageText } from "@/lib/i18n/dm-console-presentations";
+
 import { useState } from "react";
 import { Loader2, Plus, Search } from "lucide-react";
 import { cn } from "@/lib/cn";
@@ -69,6 +72,8 @@ export type RollResult = {
   chain: string[];
   // Results still undealt on a table that draws without replacement.
   remaining: number | null;
+  // Separate native missing-result notices from authored rows with identical text.
+  missingResult?: boolean;
 };
 
 type RowsProps = {
@@ -99,6 +104,7 @@ export function TableRows({
   onDuplicate,
   onDelete,
 }: RowsProps) {
+  const { locale } = useLocale();
   const [query, setQuery] = useState("");
   const needle = query.trim().toLowerCase();
   const [sort, setSort] = useState<RowSort>("made");
@@ -115,12 +121,12 @@ export function TableRows({
         <input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="Search your tables"
-          aria-label="Search your tables by name"
+          placeholder={consoleUiText("Search your tables", locale)}
+          aria-label={consoleUiText("Search your tables by name", locale)}
           className={`${ui.input} pl-9`}
         />
       </label>
-      <ListTally shown={shown.length} total={tables.length} noun={["table", "tables"]} sort={sort} onSort={setSort} />
+      <ListTally shown={shown.length} total={tables.length} noun={[consoleUiText("table", locale), consoleUiText("tables", locale)]} sort={sort} onSort={setSort} />
 
       <ul className="stagger-up grid gap-2 lg:grid-cols-2">
         {shown.map((table) => {
@@ -129,10 +135,10 @@ export function TableRows({
           // Roll stays the row's visible button; the rest live behind the
           // kebab and the right-click or long-press menu, the same list.
           const items: ContextMenuItem[] = [
-            { id: "open", label: "Open", glyph: "system-tables", onSelect: () => onOpen(table) },
-            { id: "roll", label: "Roll", glyph: dieGlyph(coverage.die), disabled: busy === table.id, onSelect: () => onRoll(table) },
-            { id: "duplicate", label: "Duplicate", glyph: "tab-notes", disabled: busy === `copy-${table.id}`, onSelect: () => onDuplicate(table) },
-            { id: "delete", label: "Delete", glyph: "quest-failed", tone: "danger", separated: true, onSelect: () => onDelete(table) },
+            { id: "open", label: consoleUiText("Open", locale), glyph: "system-tables", onSelect: () => onOpen(table) },
+            { id: "roll", label: consoleUiText("Roll", locale), glyph: dieGlyph(coverage.die), disabled: busy === table.id, onSelect: () => onRoll(table) },
+            { id: "duplicate", label: consoleUiText("Duplicate", locale), glyph: "tab-notes", disabled: busy === `copy-${table.id}`, onSelect: () => onDuplicate(table) },
+            { id: "delete", label: consoleUiText("Delete", locale), glyph: "quest-failed", tone: "danger", separated: true, onSelect: () => onDelete(table) },
           ];
           return (
             <ContextMenu as="li" key={table.id} label={table.name} items={items} className={cn(ui.cardHover, "min-w-0 p-3")}>
@@ -146,12 +152,12 @@ export function TableRows({
                   <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
                     <span className="font-display tracking-wide text-amber-50">{table.name}</span>
                     <span className="rounded-sm border border-amber-400/30 bg-amber-400/10 px-1.5 py-0.5 font-display text-[10px] tracking-wider text-amber-300">
-                      d{coverage.die}
+                      {consoleFrame("die", { die: coverage.die }, locale)}
                     </span>
                   </span>
                   <span className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-stone-500">
                     <span>
-                      {coverage.rows} {coverage.rows === 1 ? "row" : "rows"}
+                      {consoleFrame(coverage.rows === 1 ? "rowOne" : "rowMany", { count: coverage.rows }, locale)}
                     </span>
                     <span
                       className={cn(
@@ -159,11 +165,11 @@ export function TableRows({
                         clean ? COVERED : PATCHY,
                       )}
                     >
-                      {coverageLabel(coverage)}
+                      {tableCoverageText(coverage, locale)}
                     </span>
                     {table.noReplacement ? (
                       <span className="rounded-sm border border-violet-500/40 bg-violet-500/10 px-1.5 py-0.5 font-display text-[10px] tracking-wider text-violet-300">
-                        deck, {table.drawn.length} dealt
+                        {consoleFrame("deck", { count: table.drawn.length }, locale)}
                       </span>
                     ) : null}
                   </span>
@@ -175,7 +181,7 @@ export function TableRows({
                     disabled={busy === table.id}
                     className={cn(ui.btnSecondary, "h-9")}
                   >
-                    {busy === table.id ? <Loader2 className="size-3.5 animate-spin" /> : "Roll"}
+                    {busy === table.id ? <Loader2 className="size-3.5 animate-spin" /> : consoleUiText("Roll", locale)}
                   </button>
                   <RowMenu items={items} label={table.name} />
                 </span>
@@ -183,9 +189,9 @@ export function TableRows({
               {result?.tableId === table.id ? (
                 <div className="live-in mt-2 rounded-lg border border-amber-500/20 bg-stone-950/50 px-3 py-2 text-sm text-stone-300">
                   <p>
-                    <span className="text-amber-200">{result.total}:</span> {result.text}
+                    <span className="text-amber-200">{result.total}:</span> {result.missingResult ? consoleNotice(result.text, locale) : result.text}
                     {result.remaining !== null ? (
-                      <span className="ml-1 text-stone-500">({result.remaining} left)</span>
+                      <span className="ml-1 text-stone-500">{consoleFrame("left", { count: result.remaining }, locale)}</span>
                     ) : null}
                   </p>
                   {result.chain.map((line, index) => (
@@ -212,21 +218,21 @@ export function TableRows({
               <GameIcon icon={{ kind: "glyph", key: "system-tables" }} size="size-10" />
               <Plus className="absolute -bottom-1 -right-1 size-4 rounded-full bg-stone-900 text-amber-300" aria-hidden="true" />
             </span>
-            <span className="font-display tracking-wide">New table</span>
+            <span className="font-display tracking-wide">{consoleUiText("New table", locale)}</span>
           </button>
         </li>
       </ul>
 
       {loadError && !loaded ? (
-        <LoadFailed error={loadError} onRetry={onRetry} />
+        <LoadFailed error={consoleNotice(loadError, locale)} onRetry={onRetry} />
       ) : tables.length === 0 ? (
         <p className="reveal text-[11px] text-stone-500">
-          {loaded ? "No tables yet. Start one with New table, or paste one out of a book." : "Loading..."}
+          {loaded ? consoleUiText("No tables yet. Start one with New table, or paste one out of a book.", locale) : consoleUiText("Loading...", locale)}
         </p>
       ) : shown.length === 0 ? (
-        <p className="live-in text-xs text-stone-500">No table by that name.</p>
+        <p className="live-in text-xs text-stone-500">{consoleUiText("No table by that name.", locale)}</p>
       ) : null}
-      {loaded && loadError ? <LoadFailed error={loadError} onRetry={onRetry} /> : null}
+      {loaded && loadError ? <LoadFailed error={consoleNotice(loadError, locale)} onRetry={onRetry} /> : null}
     </div>
   );
 }

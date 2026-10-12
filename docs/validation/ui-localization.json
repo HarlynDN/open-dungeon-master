@@ -269,7 +269,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmBeatComposer.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped DM-console/table workflow: owned tab/action/floor/queue/palette chrome, beats, temporary cover/monster receipts, enemy HP correction, table count/coverage/deck notices and statblock lookup localized. Source-bound action labels/keywords project while original catalog/command/tab IDs and request fields stay native. Raw user/history/beat/table result/chain and briefing text preserved; explicit missingResult flag separates native absence from identical authored table text. HP receipts keep structured raw data; original alive/min/max rules and corrected values unchanged. Statblock lookup opts into registered-locale aliases with identical native-genre provenance gating names, preserving pack/custom titles and source fields. HTTP/network failures surface native retryable notices without optimistic floor changes. Keyboard/IME, filtering/action callbacks and remaining child owners retain independent coverage."
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmBestiaryPanel.tsx",
@@ -283,7 +284,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmConsolePanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped DM-console/table workflow: owned tab/action/floor/queue/palette chrome, beats, temporary cover/monster receipts, enemy HP correction, table count/coverage/deck notices and statblock lookup localized. Source-bound action labels/keywords project while original catalog/command/tab IDs and request fields stay native. Raw user/history/beat/table result/chain and briefing text preserved; explicit missingResult flag separates native absence from identical authored table text. HP receipts keep structured raw data; original alive/min/max rules and corrected values unchanged. Statblock lookup opts into registered-locale aliases with identical native-genre provenance gating names, preserving pack/custom titles and source fields. HTTP/network failures surface native retryable notices without optimistic floor changes. Keyboard/IME, filtering/action callbacks and remaining child owners retain independent coverage."
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmConsoleParts.tsx",
@@ -292,7 +294,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmDelegationPanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped DM-console/table workflow: owned tab/action/floor/queue/palette chrome, beats, temporary cover/monster receipts, enemy HP correction, table count/coverage/deck notices and statblock lookup localized. Source-bound action labels/keywords project while original catalog/command/tab IDs and request fields stay native. Raw user/history/beat/table result/chain and briefing text preserved; explicit missingResult flag separates native absence from identical authored table text. HP receipts keep structured raw data; original alive/min/max rules and corrected values unchanged. Statblock lookup opts into registered-locale aliases with identical native-genre provenance gating names, preserving pack/custom titles and source fields. HTTP/network failures surface native retryable notices without optimistic floor changes. Keyboard/IME, filtering/action callbacks and remaining child owners retain independent coverage."
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmEncounterPrepPanel.tsx",
@@ -301,7 +304,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmEnemyHpCard.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped DM-console/table workflow: owned tab/action/floor/queue/palette chrome, beats, temporary cover/monster receipts, enemy HP correction, table count/coverage/deck notices and statblock lookup localized. Source-bound action labels/keywords project while original catalog/command/tab IDs and request fields stay native. Raw user/history/beat/table result/chain and briefing text preserved; explicit missingResult flag separates native absence from identical authored table text. HP receipts keep structured raw data; original alive/min/max rules and corrected values unchanged. Statblock lookup opts into registered-locale aliases with identical native-genre provenance gating names, preserving pack/custom titles and source fields. HTTP/network failures surface native retryable notices without optimistic floor changes. Keyboard/IME, filtering/action callbacks and remaining child owners retain independent coverage."
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmInboxPanel.tsx",
@@ -1694,11 +1698,13 @@
     },
     {
       "path": "src/app/workshop/tables/StatblockFinder.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped DM-console/table workflow: owned tab/action/floor/queue/palette chrome, beats, temporary cover/monster receipts, enemy HP correction, table count/coverage/deck notices and statblock lookup localized. Source-bound action labels/keywords project while original catalog/command/tab IDs and request fields stay native. Raw user/history/beat/table result/chain and briefing text preserved; explicit missingResult flag separates native absence from identical authored table text. HP receipts keep structured raw data; original alive/min/max rules and corrected values unchanged. Statblock lookup opts into registered-locale aliases with identical native-genre provenance gating names, preserving pack/custom titles and source fields. HTTP/network failures surface native retryable notices without optimistic floor changes. Keyboard/IME, filtering/action callbacks and remaining child owners retain independent coverage."
     },
     {
       "path": "src/app/workshop/tables/TableRows.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped DM-console/table workflow: owned tab/action/floor/queue/palette chrome, beats, temporary cover/monster receipts, enemy HP correction, table count/coverage/deck notices and statblock lookup localized. Source-bound action labels/keywords project while original catalog/command/tab IDs and request fields stay native. Raw user/history/beat/table result/chain and briefing text preserved; explicit missingResult flag separates native absence from identical authored table text. HP receipts keep structured raw data; original alive/min/max rules and corrected values unchanged. Statblock lookup opts into registered-locale aliases with identical native-genre provenance gating names, preserving pack/custom titles and source fields. HTTP/network failures surface native retryable notices without optimistic floor changes. Keyboard/IME, filtering/action callbacks and remaining child owners retain independent coverage."
     },
     {
       "path": "src/app/workshop/types.ts",
@@ -1733,7 +1739,8 @@
     },
     {
       "path": "src/components/CommandPalette.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped DM-console/table workflow: owned tab/action/floor/queue/palette chrome, beats, temporary cover/monster receipts, enemy HP correction, table count/coverage/deck notices and statblock lookup localized. Source-bound action labels/keywords project while original catalog/command/tab IDs and request fields stay native. Raw user/history/beat/table result/chain and briefing text preserved; explicit missingResult flag separates native absence from identical authored table text. HP receipts keep structured raw data; original alive/min/max rules and corrected values unchanged. Statblock lookup opts into registered-locale aliases with identical native-genre provenance gating names, preserving pack/custom titles and source fields. HTTP/network failures surface native retryable notices without optimistic floor changes. Keyboard/IME, filtering/action callbacks and remaining child owners retain independent coverage."
     },
     {
       "path": "src/components/CopyLine.tsx",
