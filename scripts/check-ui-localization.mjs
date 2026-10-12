@@ -22,6 +22,7 @@ import { TTS_VOICES } from "../src/lib/tts-voices.ts";
 import { CLASS_OPTION_MATERIAL } from "../src/lib/i18n/class-option-metadata.ts";
 import { NATIVE_FEATURE_MATERIAL, NATIVE_FEAT_MATERIAL } from "../src/lib/i18n/feature-material-metadata.ts";
 import { HELP_TOPICS, HELP_TOURS } from "../src/lib/i18n/app-help-metadata.ts";
+import { MAP_MODE_SOURCE, MAP_HOTKEY_TITLES, MAP_EDIT_KEYS } from "../src/lib/i18n/map-tool-metadata.ts";
 import { COMPOSER_GATE_SOURCE } from "../src/lib/i18n/composer-gate-metadata.ts";
 import { DM_TOUR, PLAYER_TOUR } from "../src/lib/tours/table.ts";
 import { BOOK_HEADERS, BOOK_TEXT_KEYS } from "../src/lib/i18n/book-ui-metadata.ts";
@@ -31,6 +32,8 @@ import { CHARACTER_SUBCLASS_METADATA } from "../src/lib/i18n/character-subclass-
 
 // Calendar normalization shares pure helpers through the project alias.
 register("./lib/register-alias.mjs", import.meta.url);
+const { SHAPE_EFFECTS } = await import("../src/lib/battlemap/tools.ts");
+const { BOARD_PANEL_NOTICES } = await import("../src/lib/i18n/board-control-presentations.ts");
 const { CALENDAR_PRESETS, DAY_PARTS, SEASONS } = await import("../src/lib/dm/calendar.ts");
 
 const root = fileURLToPath(new URL("../", import.meta.url));
@@ -92,6 +95,15 @@ for (const [kind, steps] of [["player", PLAYER_TOUR], ["dm", DM_TOUR]]) for (con
 for (const [phase, source] of Object.entries(COMPOSER_GATE_SOURCE)) {
   if (MESSAGE_CATALOGS.en[`composeUi.placeholder.${phase}`] !== source) problems.push(`Composer gate source changed: ${phase}`);
 }
+
+for (const [mode, source] of Object.entries(MAP_MODE_SOURCE)) {
+  if (MESSAGE_CATALOGS.en[`mapSceneUi.mode.${mode}`] !== source.label || MESSAGE_CATALOGS.en[`mapSceneUi.modeHint.${mode}`] !== source.hint) problems.push(`Map mode source changed: ${mode}`);
+}
+for (const mode of ["line", "rect", "box", "fill"]) if (MAP_MODE_SOURCE[mode].hint !== SHAPE_EFFECTS[mode]) problems.push(`Map shape hint source changed: ${mode}`);
+const nativeMapHelp = Object.entries(MESSAGE_CATALOGS.en).filter(([key]) => key.startsWith("mapEditorUi.hotkeys.")).map(([, text]) => text);
+for (const source of [...MAP_HOTKEY_TITLES, ...MAP_EDIT_KEYS.map(row => row.does)]) if (!nativeMapHelp.includes(source)) problems.push(`Map hotkey source changed: ${source}`);
+const nativeBoardErrors = Object.entries(MESSAGE_CATALOGS.en).filter(([key]) => key.startsWith("boardUi.error.")).map(([, text]) => text);
+for (const source of Object.values(BOARD_PANEL_NOTICES)) if (!nativeBoardErrors.includes(source)) problems.push(`Board notice source changed: ${source}`);
 for (const guide of WORKSHOP_GUIDES) {
   const prefix = `workshopHelp.guide.${guide.id}`;
   for (const [field, source] of [["title", guide.title], ["purpose", guide.purpose], ...guide.steps.map((value, i) => [`step.${i}`, value]), ...guide.tips.map((value, i) => [`tip.${i}`, value])]) {

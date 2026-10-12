@@ -43,7 +43,7 @@ import { createTranslator, type MessageKey } from "@/lib/i18n/translator";
 import { combatName } from "@/lib/i18n/combat-ui-presentations";
 import { conditionLabel, resolveConditionInput } from "@/lib/i18n/condition-presentations";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
-import { boardDisplayName, boardRulerText, boardPanelErrorText } from "@/lib/i18n/board-control-presentations";
+import { boardDisplayName, boardRulerText, boardPanelErrorText, BOARD_PANEL_NOTICES } from "@/lib/i18n/board-control-presentations";
 import { jumpRulerFor, moveNotesFrom, rulerFor } from "@/lib/battlemap/board-move";
 import { BoardMoveHints, JumpArc, useBoardMoveModes } from "@/app/campaigns/[campaignId]/BoardMoveModes";
 import { TILE_FEET } from "@/lib/battlemap/types";
@@ -342,12 +342,12 @@ export function BattleMapPanel({
       });
       const data = (await response.json().catch(() => ({}))) as { error?: string } & Record<string, unknown>;
       if (!response.ok) {
-        setError(data.error ?? "That was not allowed.");
+        setError(data.error ?? BOARD_PANEL_NOTICES.allowed);
         return null;
       }
       return data;
     } catch {
-      setError("Could not reach the table.");
+      setError(BOARD_PANEL_NOTICES.network);
       return null;
     } finally {
       setBusy(false);
@@ -396,7 +396,7 @@ export function BattleMapPanel({
         error?: string;
         result?: { error?: string };
       };
-      const failure = !response.ok ? data.error ?? "That was not allowed." : data.result?.error;
+      const failure = !response.ok ? data.error ?? BOARD_PANEL_NOTICES.allowed : data.result?.error;
       if (failure) {
         setError(failure);
         return false;
@@ -404,7 +404,7 @@ export function BattleMapPanel({
       await refreshBattleMap();
       return true;
     } catch {
-      setError("Could not reach the table.");
+      setError(BOARD_PANEL_NOTICES.network);
       return false;
     } finally {
       setBusy(false);
@@ -491,10 +491,10 @@ export function BattleMapPanel({
       // engine's sentence, shown on the board's own error line.
       if (!response.ok) {
         const data = (await response.json().catch(() => ({}))) as { error?: string };
-        setError(data.error ?? "The turn could not be ended.");
+        setError(data.error ?? BOARD_PANEL_NOTICES.end);
       }
     } catch {
-      setError("Could not reach the table.");
+      setError(BOARD_PANEL_NOTICES.network);
     } finally {
       setEndingTurn(false);
     }
@@ -546,10 +546,10 @@ export function BattleMapPanel({
       });
       if (!response.ok) {
         const data = (await response.json().catch(() => ({}))) as { error?: string };
-        setError(data.error ?? "Nothing to erase.");
+        setError(data.error ?? BOARD_PANEL_NOTICES.erase);
       }
     } catch {
-      setError("Could not reach the table.");
+      setError(BOARD_PANEL_NOTICES.network);
       return;
     } finally {
       setBusy(false);
@@ -714,7 +714,7 @@ export function BattleMapPanel({
       }
       if (tool === "place") {
         if (!placeName.trim()) {
-          setError("Name it first.");
+          setError(BOARD_PANEL_NOTICES.name);
           return;
         }
         void board({ do: "add", kind: placeKind, name: placeName.trim(), x, y }).then((ok) => {
@@ -751,7 +751,7 @@ export function BattleMapPanel({
               error?: string;
             };
             if (!response.ok) {
-              setError(data.error ?? "That area could not be measured.");
+              setError(data.error ?? BOARD_PANEL_NOTICES.measure);
               return;
             }
             setMeasure({
@@ -761,7 +761,7 @@ export function BattleMapPanel({
             });
             setMeasureOrigin(null);
           } catch {
-            setError("Could not reach the table.");
+            setError(BOARD_PANEL_NOTICES.network);
           } finally {
             setBusy(false);
           }
@@ -797,7 +797,7 @@ export function BattleMapPanel({
     }
     if (targeting && onCompose) {
       if (token.kind !== "enemy" && token.kind !== "npc") {
-        setError("Pick an enemy.");
+        setError(BOARD_PANEL_NOTICES.enemy);
         return;
       }
       onCompose(
@@ -898,7 +898,7 @@ export function BattleMapPanel({
       } else {
         const amount = Number.parseInt(value, 10);
         if (!Number.isFinite(amount) || amount < 1) {
-          setError("Give a number of hit points.");
+          setError(BOARD_PANEL_NOTICES.hp);
           return;
         }
         if (prompt.kind === "damage") {

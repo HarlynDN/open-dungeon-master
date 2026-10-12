@@ -43,7 +43,8 @@
     "XXXX-XXXX-XXXX-XXXX",
     "d",
     "chrome://flags/#enable-web-bluetooth",
-    "CC-BY-4.0"
+    "CC-BY-4.0",
+    "esc"
   ],
   "files": [
     {
@@ -111,8 +112,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/BattleMapPanel.tsx",
-      "state": "pending",
-      "review": "Main board chrome uses viewer uiLocale. Known native move/jump/drag/draw/placement refusals now display through complete source frames with typed token-name context; raw diagnostics/protocol fields remain unchanged. Exact Chinese condition labels resolve to native names; ambiguous labels block invocation and authored/English names stay literal. Failed HTTP invoke without error text now refuses; erase/measure network failures show feedback and release busy without retry. Main owner remains pending for full special move-effect notes and broader native engine diagnostic closure; no blanket fallback or final acceptance claim. Movement notices now capture the pre-refresh token-name/kind projection; new whole special-effect adapters cover fall, form return, damage mitigation and quake notices. Broader diagnostic/remaining-owner closure still pending; no full-play acceptance claim."
+      "state": "covered",
+      "review": "Previously localized board/grid/order/area/tool/movement chrome and campaign-locale action sentences audited; native notice producers now use source-bound compatibility constants recognized by existing board display adapter. IDs, scene/token names, geometry, numeric prompts, audience and original request/condition-resolution semantics unchanged. Child owners and effects/audio remain independently pending."
     },
     {
       "path": "src/app/campaigns/[campaignId]/BoardAreaAim.tsx",
@@ -629,7 +630,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/MonsterHand.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "DM monster hand chrome/target HP-AC, generic mechanism names, structured routine/ability/flee notes, preview sentence and native refusal/result display localized. Original cards/intent fields, attack/ability names, target IDs, dice/condition/advantage values and invoke/initiative bodies unchanged. PC name provenance is independent from AC-known target kind. Receipt holds raw result/name snapshot for language switching; both HTTP and 200 engine refusals retain raised aim. Unknown/custom mechanism names and manual trait text remain raw pending content review."
     },
     {
       "path": "src/app/campaigns/[campaignId]/MonsterKitFields.tsx",
@@ -940,7 +942,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/mapToolState.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Pure tool mode/key/caps/brush/shape defaults remain canonical. English compatibility captions sit in keyed i18n metadata with source binding to existing locale rail/hotkey adapters; all modes and help rows are gated. Library/live capability filters, CanvasTool outputs and shortcut key sequences remain native."
     },
     {
       "path": "src/app/campaigns/[campaignId]/mapUi.tsx",

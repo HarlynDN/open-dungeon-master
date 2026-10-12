@@ -84,3 +84,5 @@ export function boardSquareLabel(raw: string, locale: AppLocale): string {
   const key = Object.entries(catalogFor("en", "boardUi.area.")).find(([key, source]) => (key === "boardUi.area.centre" || key === "boardUi.area.toward") && source === raw)?.[0];
   return key ? createTranslator(locale)(key as MessageKey) : raw;
 }
+
+export const BOARD_PANEL_NOTICES = { allowed: "That was not allowed.", network: "Could not reach the table.", end: "The turn could not be ended.", erase: "Nothing to erase.", name: "Name it first.", measure: "That area could not be measured.", enemy: "Pick an enemy.", hp: "Give a number of hit points." } as const;

@@ -1,3 +1,4 @@
+import { monsterCardName } from "./monster-hand-presentations.ts";
 import { catalogFor, createTranslator, type MessageKey } from "./translator.ts";
 import type { AppLocale } from "./locales.ts";
 import { referenceDisplayName } from "./references.ts";
@@ -52,6 +53,7 @@ function naturalAttackName(card: HandCard, locale: AppLocale): string | null {
 export function handCardName(card: HandCard, locale: AppLocale): string {
   if (locale === "en") return card.name;
   const intent = card.intent;
+  if (intent.card === "monster") return monsterCardName(card, locale);
   const natural = naturalAttackName(card, locale);
   if (natural) return natural;
   if ((intent.card === "spell" || intent.card === "reaction") && intent.spell === card.name) return referenceDisplayName("spell", card.name, locale);
@@ -84,7 +86,7 @@ export function handChoiceLabel(card: HandCard, label: string, locale: AppLocale
 }
 
 export function handAimName(aim: HandAim, locale: AppLocale): string {
-  return aim.kind === "enemy" ? referenceDisplayName("monster", aim.name, locale) : aim.name;
+  return aim.kind === "enemy" && aim.nameRole !== "character" ? referenceDisplayName("monster", aim.name, locale) : aim.name;
 }
 
 export function handCostLabel(cost: HandCost, locale: AppLocale): string {

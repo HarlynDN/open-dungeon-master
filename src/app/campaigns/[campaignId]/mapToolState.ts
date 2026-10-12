@@ -1,3 +1,4 @@
+import { MAP_MODE_SOURCE, MAP_HOTKEY_TITLES, MAP_EDIT_KEYS } from "@/lib/i18n/map-tool-metadata";
 import {
   Armchair,
   Brush as BrushIcon,
@@ -20,7 +21,7 @@ import {
 import { BRUSH_LABELS, type Brush as BrushName } from "@/lib/battlemap/paint";
 import type { ZoneKind } from "@/lib/battlemap/scene";
 import type { StampKind } from "@/lib/battlemap/stamp";
-import { SHAPE_EFFECTS, type ShapeTool } from "@/lib/battlemap/tools";
+import { type ShapeTool } from "@/lib/battlemap/tools";
 import type { AmbientLight } from "@/lib/battlemap/types";
 import type { CanvasTool } from "@/app/campaigns/[campaignId]/TerrainCanvas";
 
@@ -146,42 +147,36 @@ export const MODES: ReadonlyArray<{
   needs?: keyof SurfaceCaps;
   group: ModeGroup;
 }> = [
-  { mode: "brush", label: "Brush", key: "B", icon: BrushIcon, hint: "Drag to paint, one tile or a square of them.", group: "paint" },
-  { mode: "line", label: "Line", key: "L", icon: Minus, hint: SHAPE_EFFECTS.line, group: "paint" },
-  { mode: "rect", label: "Outline", key: "R", icon: SquareDashed, hint: SHAPE_EFFECTS.rect, group: "paint" },
-  { mode: "box", label: "Box", key: "X", icon: Square, hint: SHAPE_EFFECTS.box, group: "paint" },
-  { mode: "fill", label: "Fill", key: "F", icon: PaintBucket, hint: SHAPE_EFFECTS.fill, group: "paint" },
-  { mode: "stamp", label: "Stamp", key: "S", icon: Shapes, hint: "Rooms and corridors in one tap.", group: "paint" },
-  { mode: "pick", label: "Pick", key: "I", icon: Pipette, hint: "Tap a tile to pick up the brush that painted it.", group: "paint" },
-  { mode: "select", label: "Select", key: "V", icon: MousePointer2, hint: "Tap a placed thing to edit, move, copy or delete it. Shift-tap adds to the selection.", needs: "scene", group: "scene" },
-  { mode: "light", label: "Light", key: "T", icon: Flame, hint: "Tap a tile to put a light there, or take one away.", needs: "lights", group: "scene" },
-  { mode: "door", label: "Door", key: "D", icon: DoorClosed, hint: "Tap a door: open, locked, secret.", needs: "scene", group: "scene" },
-  { mode: "label", label: "Label", key: "A", icon: Tag, hint: "Tap a tile to name it.", needs: "scene", group: "scene" },
-  { mode: "prop", label: "Prop", key: "P", icon: Armchair, hint: "Tap a tile to put furniture or a bystander there.", needs: "props", group: "scene" },
-  { mode: "zone", label: "Light zone", key: "Z", icon: Sun, hint: "Drag a box of light or dark.", needs: "scene", group: "scene" },
-  { mode: "roll", label: "Roll", key: "N", icon: Dices, hint: "Roll the whole field from a seed. It lands in the history, so undo puts the old one back.", group: "other" },
-  { mode: "pan", label: "Move", key: "M", icon: Hand, hint: "Drag to move the map. Two fingers or the wheel zoom it.", group: "other" },
-  { mode: "backdrop", label: "Align picture", key: "K", icon: ImageIcon, hint: "Drag the picture's corners into register with the grid.", group: "other" },
+  { mode: "brush", ...MAP_MODE_SOURCE.brush, key: "B", icon: BrushIcon, group: "paint" },
+  { mode: "line", ...MAP_MODE_SOURCE.line, key: "L", icon: Minus, group: "paint" },
+  { mode: "rect", ...MAP_MODE_SOURCE.rect, key: "R", icon: SquareDashed, group: "paint" },
+  { mode: "box", ...MAP_MODE_SOURCE.box, key: "X", icon: Square, group: "paint" },
+  { mode: "fill", ...MAP_MODE_SOURCE.fill, key: "F", icon: PaintBucket, group: "paint" },
+  { mode: "stamp", ...MAP_MODE_SOURCE.stamp, key: "S", icon: Shapes, group: "paint" },
+  { mode: "pick", ...MAP_MODE_SOURCE.pick, key: "I", icon: Pipette, group: "paint" },
+  { mode: "select", ...MAP_MODE_SOURCE.select, key: "V", icon: MousePointer2, needs: "scene", group: "scene" },
+  { mode: "light", ...MAP_MODE_SOURCE.light, key: "T", icon: Flame, needs: "lights", group: "scene" },
+  { mode: "door", ...MAP_MODE_SOURCE.door, key: "D", icon: DoorClosed, needs: "scene", group: "scene" },
+  { mode: "label", ...MAP_MODE_SOURCE.label, key: "A", icon: Tag, needs: "scene", group: "scene" },
+  { mode: "prop", ...MAP_MODE_SOURCE.prop, key: "P", icon: Armchair, needs: "props", group: "scene" },
+  { mode: "zone", ...MAP_MODE_SOURCE.zone, key: "Z", icon: Sun, needs: "scene", group: "scene" },
+  { mode: "roll", ...MAP_MODE_SOURCE.roll, key: "N", icon: Dices, group: "other" },
+  { mode: "pan", ...MAP_MODE_SOURCE.pan, key: "M", icon: Hand, group: "other" },
+  { mode: "backdrop", ...MAP_MODE_SOURCE.backdrop, key: "K", icon: ImageIcon, group: "other" },
 ];
 
 // The sheet the `?` key opens (src/components/ui/HotkeyOverlay.tsx).
 export function mapHotkeyGroups(caps: SurfaceCaps) {
   const chips = MODES.filter((entry) => !entry.needs || caps[entry.needs]);
   return [
-    { title: "Tools", rows: chips.map((entry) => ({ keys: [entry.key], does: entry.label })) },
+    { title: MAP_HOTKEY_TITLES[0], rows: chips.map((entry) => ({ keys: [entry.key], does: entry.label })) },
     {
-      title: "Brushes",
+      title: MAP_HOTKEY_TITLES[1],
       rows: Object.entries(BRUSH_KEYS).map(([key, brush]) => ({ keys: [key], does: BRUSH_LABELS[brush] })),
     },
     {
-      title: "Editing",
-      rows: [
-        { keys: ["Ctrl", "Z"], does: "Undo" },
-        { keys: ["Ctrl", "Shift", "Z"], does: "Redo" },
-        { keys: ["Esc"], does: "Put the tool down, or clear the selection" },
-        { keys: ["Del"], does: "Delete the selection" },
-        { keys: ["?"], does: "This sheet" },
-      ],
+      title: MAP_HOTKEY_TITLES[2],
+      rows: MAP_EDIT_KEYS.map(row => ({ ...row, keys: [...row.keys] })),
     },
   ];
 }

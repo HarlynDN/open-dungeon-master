@@ -1,3 +1,4 @@
+import { monsterCardRules, monsterHandRefusal } from "./monster-hand-presentations.ts";
 import type { AppLocale } from "./locales.ts";
 import { catalogFor, createTranslator, type MessageKey } from "./translator.ts";
 import { handCostLabel, handTermLabel, handCurrentActorName, type HandTurnContext } from "./hand-presentations.ts";
@@ -245,9 +246,10 @@ export function handCardMaterial(card: HandCard, locale: AppLocale, context?: Ha
     // sentence. Chinese shows the already-reviewed complete guidance.
     if (source && card.rules === source.split(". ")[0].replace(/\.?$/, ".")) rules = createTranslator(locale)(key);
   }
+  if (card.intent.card === "monster") rules = monsterCardRules(card, locale);
   return { range: handFactText(card.range, locale), dice: handFactText(card.dice, locale), roll: handFactText(card.roll, locale), rules,
     resource: handResourceText(card.resource, locale, card.intent.card === "feature" ? card.intent.resourceId : undefined),
-    condition: handFactText(card.condition, locale), disabled: card.disabled ? handRefusalText(card.disabled, locale, context) : null };
+    condition: handFactText(card.condition, locale), disabled: card.disabled ? card.intent.card === "monster" ? monsterHandRefusal(handRefusalText(card.disabled, locale, context), locale, context?.enemies.map(enemy => enemy.name)) : handRefusalText(card.disabled, locale, context) : null };
 }
 
 export function handPreviewRow(row: PreviewRow, locale: AppLocale): PreviewRow {

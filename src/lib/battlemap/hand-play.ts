@@ -23,6 +23,8 @@ import { areaArgs, describePick, hasPick, type AreaPick, type HandArea } from "@
 // this one (src/lib/battlemap/view-tactics.ts, the engine's coverFor and
 // flanking): absent off the map.
 export type HandAim = {
+  // Display identity is independent of the preview's AC-known target kind.
+  nameRole?: "character" | "enemy";
   id: string;
   name: string;
   kind: "enemy" | "ally" | "self";

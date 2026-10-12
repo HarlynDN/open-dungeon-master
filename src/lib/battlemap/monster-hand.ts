@@ -52,6 +52,7 @@ const BASE = {
 };
 
 function attackCard(enemy: MonsterHandEnemy, actions: PublicEnemyActions, attack: PublicEnemyAttack): HandCard {
+  const ruleSegments = [swingsLine(attack.swings), attack.spellAttack ? "A spell attack." : ""].filter(Boolean);
   return {
     ...BASE,
     id: `monster:${enemy.id}:attack:${cardKey(attack.name)}`,
@@ -60,7 +61,9 @@ function attackCard(enemy: MonsterHandEnemy, actions: PublicEnemyActions, attack
     range: attack.range,
     dice: `${attack.damage} ${attack.type}`.trim(),
     roll: `${signed(attack.toHit)} to hit`,
-    rules: [swingsLine(attack.swings), attack.spellAttack ? "A spell attack." : ""].filter(Boolean).join(" "),
+    rules: ruleSegments.join(" "),
+    ruleSegments,
+    monsterSwings: [...attack.swings],
     condition: attack.onHit ?? "",
     icon: { kind: "action", key: "attack" },
     target: "enemy",
@@ -86,13 +89,12 @@ function abilityCard(enemy: MonsterHandEnemy, actions: PublicEnemyActions, abili
     ...(ability.condition ? { condition: ability.condition } : {}),
     ...(ability.rounds ? { rounds: ability.rounds } : {}),
   };
-  const rules = [
+  const ruleSegments = [
     ability.halfOnSave ? "Half damage on a save." : "",
     ability.rounds ? `Lasts ${ability.rounds} round${ability.rounds === 1 ? "" : "s"}.` : "",
     "Pick everyone caught in it.",
   ]
-    .filter(Boolean)
-    .join(" ");
+    .filter(Boolean);
   return {
     ...BASE,
     id: `monster:${enemy.id}:ability:${cardKey(ability.name)}`,
@@ -101,7 +103,8 @@ function abilityCard(enemy: MonsterHandEnemy, actions: PublicEnemyActions, abili
     range: "",
     dice: ability.damage ? `${ability.damage} ${ability.damageType ?? ""}`.trim() : (ability.condition ?? ""),
     roll: `${saveWord(ability.save)} save DC ${ability.dc}`,
-    rules,
+    rules: ruleSegments.join(" "),
+    ruleSegments,
     resource: ability.resource,
     condition: ability.condition ?? "",
     icon: { kind: "action", key: "cast" },
@@ -129,6 +132,7 @@ function fleeCard(enemy: MonsterHandEnemy): HandCard {
     dice: "",
     roll: "no roll",
     rules: "Leaves the fight alive. The party still earns it.",
+    ruleSegments: ["Leaves the fight alive. The party still earns it."],
     icon: { kind: "action", key: "escape" },
     target: "none",
     toHit: null,
