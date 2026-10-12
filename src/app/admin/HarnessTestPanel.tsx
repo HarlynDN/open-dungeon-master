@@ -3,17 +3,20 @@
 import { Check, Loader2, Minus, PlayCircle, X } from "lucide-react";
 import { useState } from "react";
 import { ui } from "@/lib/ui";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { setupFlowMessage, SETUP_FLOW_ERRORS } from "@/lib/i18n/setup-flow-presentations";
+import type { MessageKey } from "@/lib/i18n/messages";
 import { HarnessPictureTest } from "@/app/admin/HarnessPictureTest";
 
 type Stage = { id: string; ok: boolean | null; detail?: string };
 
-const STAGE_LABELS: Record<string, string> = {
-  found: "Found on this machine",
-  signedIn: "Signed in",
-  handshake: "Connected to the table's engine",
-  toolCall: "Called a rule and used its answer",
-  lockdown: "Kept to the table's tools only",
-  streaming: "Streamed its reply",
+const STAGE_LABELS: Record<string, MessageKey> = {
+  found: "setupFlow.harness.stage.found",
+  signedIn: "setupFlow.harness.stage.signedIn",
+  handshake: "setupFlow.harness.stage.handshake",
+  toolCall: "setupFlow.harness.stage.toolCall",
+  lockdown: "setupFlow.harness.stage.lockdown",
+  streaming: "setupFlow.harness.stage.streaming",
 };
 
 const STAGE_ORDER = ["found", "signedIn", "handshake", "toolCall", "lockdown", "streaming"];
@@ -39,6 +42,7 @@ export function HarnessTestPanel({
   onVerified: () => void;
   onAdopted?: () => void;
 }) {
+  const { t, locale } = useLocale();
   const [testing, setTesting] = useState(false);
   const [stages, setStages] = useState<Stage[] | null>(null);
   const [error, setError] = useState("");
@@ -55,13 +59,13 @@ export function HarnessTestPanel({
       });
       const data = (await response.json().catch(() => ({}))) as { stages?: Stage[]; error?: string };
       if (!response.ok || !data.stages) {
-        setError(data.error ?? "The test could not run.");
+        setError(data.error ?? SETUP_FLOW_ERRORS.testRun);
         setStages(null);
         return;
       }
       setStages(data.stages);
     } catch {
-      setError("Could not reach the server.");
+      setError(SETUP_FLOW_ERRORS.network);
       setStages(null);
     } finally {
       setTesting(false);
@@ -82,12 +86,12 @@ export function HarnessTestPanel({
           aria-busy={testing}
         >
           {testing ? <Loader2 className="size-4 animate-spin" /> : <PlayCircle className="size-4" />}
-          Test the table
+          {t("setupFlow.harness.test")}
         </button>
         <span className="text-xs text-stone-500">
           {saved
-            ? "Runs one tiny real turn: start, connect, call a rule, answer. Uses a little of the plan."
-            : "Save the choice first; the test runs the program the tables will use."}
+            ? t("setupFlow.harness.saved")
+            : t("setupFlow.harness.unsaved")}
         </span>
       </div>
 
@@ -115,10 +119,10 @@ export function HarnessTestPanel({
                 </span>
                 <span>
                   <span className={state === "bad" ? "text-red-300" : state === "ok" ? "text-stone-200" : "text-stone-500"}>
-                    {STAGE_LABELS[stage.id] ?? stage.id}
+                    {STAGE_LABELS[stage.id] ? t(STAGE_LABELS[stage.id]) : stage.id}
                   </span>
                   {stage.detail ? (
-                    <span className="block text-xs text-stone-500">{stage.detail}</span>
+                    <span className="block text-xs text-stone-500">{setupFlowMessage(stage.detail, locale)}</span>
                   ) : null}
                 </span>
               </li>
@@ -128,16 +132,16 @@ export function HarnessTestPanel({
       ) : null}
       {passed ? (
         <p role="status" className="inline-flex items-center gap-1 text-sm text-emerald-400">
-          <Check className="tick-in size-4" /> Ready to run a table.
+          <Check className="tick-in size-4" /> {t("setupFlow.harness.ready")}
         </p>
       ) : failed && !testing ? (
         <p role="alert" className="motion-shake text-sm text-red-400">
-          {failed.detail ?? "The test stopped at the step marked above."}
+          {setupFlowMessage(failed.detail ?? "The test stopped at the step marked above.", locale)}
         </p>
       ) : null}
       {error ? (
         <p role="alert" className="motion-shake text-sm text-red-400">
-          {error}
+          {setupFlowMessage(error, locale)}
         </p>
       ) : null}
 

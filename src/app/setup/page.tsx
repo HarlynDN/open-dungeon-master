@@ -1,5 +1,6 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { PageLoading, PageNotice } from "@/components/PageShell";
@@ -12,6 +13,7 @@ type Me = { id: string; username: string; isAdmin: boolean; avatar?: { url: stri
 // account lands here; an admin can come back from the admin panel any time.
 // Every API it calls re-checks the admin flag server-side.
 export default function SetupPage() {
+  const { t } = useLocale();
   const [me, setMe] = useState<Me | null>(null);
   const [config, setConfig] = useState<MaskedConfig | null>(null);
   const [info, setInfo] = useState<SetupInfo | null>(null);
@@ -49,9 +51,9 @@ export default function SetupPage() {
   if (!me?.isAdmin) {
     return (
       <PageNotice user={me}>
-        Only the server&apos;s admins can set it up.{" "}
+        {t("setupFlow.page.onlyAdmins")}{" "}
         <Link href="/" className="text-amber-200 hover:text-amber-400">
-          Back to campaigns
+          {t("setupFlow.page.home")}
         </Link>
       </PageNotice>
     );
@@ -61,9 +63,9 @@ export default function SetupPage() {
   if (info?.deviceWorld) {
     return (
       <PageNotice user={me}>
-        This world runs inside the app, which sets up its storyteller on its Story AI screen.{" "}
+        {t("setupFlow.page.device")}{" "}
         <Link href="/admin" className="text-amber-200 hover:text-amber-400">
-          Open the admin panel
+          {t("setupFlow.page.admin")}
         </Link>
       </PageNotice>
     );
@@ -72,9 +74,9 @@ export default function SetupPage() {
   if (!config || !info) {
     return (
       <PageNotice user={me}>
-        The setup could not load this server&apos;s settings.{" "}
+        {t("setupFlow.page.failed")}{" "}
         <Link href="/admin" className="text-amber-200 hover:text-amber-400">
-          Open the admin panel
+          {t("setupFlow.page.admin")}
         </Link>
       </PageNotice>
     );

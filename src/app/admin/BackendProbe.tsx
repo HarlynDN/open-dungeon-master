@@ -4,15 +4,18 @@ import { Check, Loader2, X, Zap } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/cn";
 import { ui } from "@/lib/ui";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { setupFlowMessage } from "@/lib/i18n/setup-flow-presentations";
+import type { MessageKey } from "@/lib/i18n/messages";
 
 // The three things the DM loop needs from a backend, in the order the probe
 // tries them (scripts/lib/provider-capability-probe.mjs). A model that fails
 // one of these will fail mid-story, so the admin can run the same probe the
 // CLI runs before assigning a backend to a campaign.
 const STAGES = [
-  { key: "streaming", label: "Streams tokens" },
-  { key: "toolCall", label: "Makes structured tool calls" },
-  { key: "toolContinuation", label: "Continues after a tool result" },
+  { key: "streaming", labelKey: "setupFlow.probe.stage.streaming" },
+  { key: "toolCall", labelKey: "setupFlow.probe.stage.toolCall" },
+  { key: "toolContinuation", labelKey: "setupFlow.probe.stage.toolContinuation" },
 ] as const;
 
 type ProbeStage = { ok?: boolean; sample?: string; name?: string | null };
@@ -29,9 +32,9 @@ type ProbeResult = {
   stages?: Record<string, ProbeStage>;
 };
 
-const ROUTE_NOTES: Record<string, string> = {
-  "chat-no-reasoning": "with its reasoning off, the only way its tools run on Chat Completions",
-  responses: "through OpenAI's Responses API, the only place its tools run",
+const ROUTE_NOTES: Record<string, MessageKey> = {
+  "chat-no-reasoning": "setupFlow.probe.route.chat-no-reasoning",
+  responses: "setupFlow.probe.route.responses",
 };
 
 // baseUrl/model/apiKey are the field values as typed; blanks fall back to the
@@ -48,6 +51,7 @@ export function BackendProbe({
   model: string;
   apiKey?: string;
 }) {
+  const { t, locale } = useLocale();
   const [testing, setTesting] = useState(false);
   const [result, setResult] = useState<ProbeResult | null>(null);
 
@@ -84,15 +88,15 @@ export function BackendProbe({
           className={ui.btnSmall}
         >
           {testing ? <Loader2 className="size-4 animate-spin" /> : <Zap className="size-4" />}
-          Test backend
+          {t("setupFlow.probe.test")}
         </button>
         <span className="text-xs text-stone-500">
-          Checks streaming and tool calls, the way a campaign uses them. Takes a few seconds.
+          {t("setupFlow.probe.help")}
         </span>
       </div>
       {testing ? (
         <p role="status" className="live-in mt-2 text-sm text-stone-400">
-          Asking the backend for a streamed reply, a tool call, and a continuation…
+          {t("setupFlow.probe.busy")}
         </p>
       ) : null}
       {result ? (
@@ -107,30 +111,29 @@ export function BackendProbe({
                 ) : (
                   <X className="size-4 shrink-0 text-red-400" />
                 )}
-                <span className={state.ok ? "text-stone-300" : "text-red-400"}>{stage.label}</span>
+                <span className={state.ok ? "text-stone-300" : "text-red-400"}>{t(stage.labelKey)}</span>
               </p>
             );
           })}
           {result.ok ? (
             <p role="status" className="inline-flex items-center gap-1 text-emerald-400">
-              <Check className="size-4" /> {result.model} can run the storyteller loop
-              {result.route && ROUTE_NOTES[result.route] ? ` (${ROUTE_NOTES[result.route]})` : ""}.
+              <Check className="size-4" /> {t("setupFlow.probe.success", { model: result.model ?? "", route: result.route && ROUTE_NOTES[result.route] ? ` (${t(ROUTE_NOTES[result.route])})` : "" })}
             </p>
           ) : (
             <p role="alert" className="motion-shake text-red-400">
               {result.error
-                ? result.error
-                : `${result.model || "This model"} cannot run the storyteller loop`}
+                ? setupFlowMessage(result.error, locale)
+                : t("setupFlow.probe.failed", { model: result.model || t("setupFlow.probe.thisModel") })}
               {!result.error && result.stages?.streaming?.ok
-                ? " — see the failed checks above."
-                : "."}
+                ? t("setupFlow.probe.failedChecks")
+                : t("setupFlow.probe.period")}
             </p>
           )}
         </div>
       ) : null}
       {failed && result?.endpoint ? (
         <p className={cn("mt-1 break-all text-xs text-stone-500")} title={result.endpoint}>
-          Probed {result.endpoint}
+          {t("setupFlow.probe.endpoint", { endpoint: result.endpoint })}
         </p>
       ) : null}
     </div>

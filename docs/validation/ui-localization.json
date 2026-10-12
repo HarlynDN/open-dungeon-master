@@ -70,7 +70,8 @@
     },
     {
       "path": "src/app/admin/AdminInvitesSection.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped setup-flow localization: viewer uiLocale for entry notices, wizard steps/blockers/saves, discovery recap, joining choices, invite controls/confirmation/counts and personal-agent permissions. Reuses existing scope translations. Draft/settings patches, step navigation, signup modes, scope IDs, URLs, commands, secrets, raw diagnostics and authored names/notes remain native; own agent default name is localized once on draft creation. Known owned errors project at render time; unknown external/schema diagnostics remain literal. No service calls/downloads/auth or Chinese STT acceptance."
     },
     {
       "path": "src/app/admin/AdminSettingsFields.tsx",
@@ -78,19 +79,23 @@
     },
     {
       "path": "src/app/admin/BackendProbe.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped setup-flow localization: viewer uiLocale for owned choices, labels, stage/route descriptions, count frames and known native failure/status frames. Native defaults, provider/stage IDs, commands, URLs, keys, model/voice names, raw responses, authored campaign titles, external diagnostics and request/decision callbacks preserved. Provider-switch notice stores provider identity and renders in current locale. Built-in speech card translates existing recognition controls only; no Chinese STT or real service acceptance claim."
     },
     {
       "path": "src/app/admin/BuiltinSpeechCard.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped setup-flow localization: viewer uiLocale for owned choices, labels, stage/route descriptions, count frames and known native failure/status frames. Native defaults, provider/stage IDs, commands, URLs, keys, model/voice names, raw responses, authored campaign titles, external diagnostics and request/decision callbacks preserved. Provider-switch notice stores provider identity and renders in current locale. Built-in speech card translates existing recognition controls only; no Chinese STT or real service acceptance claim."
     },
     {
       "path": "src/app/admin/HarnessPictureTest.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped setup-flow localization: viewer uiLocale for owned choices, labels, stage/route descriptions, count frames and known native failure/status frames. Native defaults, provider/stage IDs, commands, URLs, keys, model/voice names, raw responses, authored campaign titles, external diagnostics and request/decision callbacks preserved. Provider-switch notice stores provider identity and renders in current locale. Built-in speech card translates existing recognition controls only; no Chinese STT or real service acceptance claim."
     },
     {
       "path": "src/app/admin/HarnessTestPanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped setup-flow localization: viewer uiLocale for owned choices, labels, stage/route descriptions, count frames and known native failure/status frames. Native defaults, provider/stage IDs, commands, URLs, keys, model/voice names, raw responses, authored campaign titles, external diagnostics and request/decision callbacks preserved. Provider-switch notice stores provider identity and renders in current locale. Built-in speech card translates existing recognition controls only; no Chinese STT or real service acceptance claim."
     },
     {
       "path": "src/app/campaigns/[campaignId]/AskPanel.tsx",
@@ -1419,7 +1424,8 @@
     },
     {
       "path": "src/app/setup/PlayersStep.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped setup-flow localization: viewer uiLocale for entry notices, wizard steps/blockers/saves, discovery recap, joining choices, invite controls/confirmation/counts and personal-agent permissions. Reuses existing scope translations. Draft/settings patches, step navigation, signup modes, scope IDs, URLs, commands, secrets, raw diagnostics and authored names/notes remain native; own agent default name is localized once on draft creation. Known owned errors project at render time; unknown external/schema diagnostics remain literal. No service calls/downloads/auth or Chinese STT acceptance."
     },
     {
       "path": "src/app/setup/ReadyStep.tsx",
@@ -1433,27 +1439,33 @@
     },
     {
       "path": "src/app/setup/SetupWizard.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped setup-flow localization: viewer uiLocale for entry notices, wizard steps/blockers/saves, discovery recap, joining choices, invite controls/confirmation/counts and personal-agent permissions. Reuses existing scope translations. Draft/settings patches, step navigation, signup modes, scope IDs, URLs, commands, secrets, raw diagnostics and authored names/notes remain native; own agent default name is localized once on draft creation. Known owned errors project at render time; unknown external/schema diagnostics remain literal. No service calls/downloads/auth or Chinese STT acceptance."
     },
     {
       "path": "src/app/setup/StorytellerStep.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped setup-flow localization: viewer uiLocale for owned choices, labels, stage/route descriptions, count frames and known native failure/status frames. Native defaults, provider/stage IDs, commands, URLs, keys, model/voice names, raw responses, authored campaign titles, external diagnostics and request/decision callbacks preserved. Provider-switch notice stores provider identity and renders in current locale. Built-in speech card translates existing recognition controls only; no Chinese STT or real service acceptance claim."
     },
     {
       "path": "src/app/setup/WelcomeStep.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped setup-flow localization: viewer uiLocale for entry notices, wizard steps/blockers/saves, discovery recap, joining choices, invite controls/confirmation/counts and personal-agent permissions. Reuses existing scope translations. Draft/settings patches, step navigation, signup modes, scope IDs, URLs, commands, secrets, raw diagnostics and authored names/notes remain native; own agent default name is localized once on draft creation. Known owned errors project at render time; unknown external/schema diagnostics remain literal. No service calls/downloads/auth or Chinese STT acceptance."
     },
     {
       "path": "src/app/setup/YourAgentStep.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped setup-flow localization: viewer uiLocale for entry notices, wizard steps/blockers/saves, discovery recap, joining choices, invite controls/confirmation/counts and personal-agent permissions. Reuses existing scope translations. Draft/settings patches, step navigation, signup modes, scope IDs, URLs, commands, secrets, raw diagnostics and authored names/notes remain native; own agent default name is localized once on draft creation. Known owned errors project at render time; unknown external/schema diagnostics remain literal. No service calls/downloads/auth or Chinese STT acceptance."
     },
     {
       "path": "src/app/setup/draft.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Source-only draft/default/model/provider machinery unchanged. Model/voice/URL IDs are protocol values, not translated UI. keyProviderLabel has no current callers; rendered provider choices and recap use explicit locale projections in separately covered components. No global defaults changed."
     },
     {
       "path": "src/app/setup/page.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped setup-flow localization: viewer uiLocale for entry notices, wizard steps/blockers/saves, discovery recap, joining choices, invite controls/confirmation/counts and personal-agent permissions. Reuses existing scope translations. Draft/settings patches, step navigation, signup modes, scope IDs, URLs, commands, secrets, raw diagnostics and authored names/notes remain native; own agent default name is localized once on draft creation. Known owned errors project at render time; unknown external/schema diagnostics remain literal. No service calls/downloads/auth or Chinese STT acceptance."
     },
     {
       "path": "src/app/workshop/ContentImportPicker.tsx",

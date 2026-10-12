@@ -3,9 +3,12 @@
 import { Loader2, Plug } from "lucide-react";
 import { useState } from "react";
 import { ui } from "@/lib/ui";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { Switch } from "@/components/ui/Switch";
 import { AgentConnectLines } from "@/components/AgentConnectLines";
-import { AGENT_SCOPE_CHOICES } from "@/app/settings/ConnectedAgentsSection";
+import { AGENT_SCOPE_CHOICES } from "@/lib/i18n/account-metadata";
+import { agentScopeLabel } from "@/lib/i18n/account-presentations";
+import { setupFlowMessage, SETUP_FLOW_ERRORS } from "@/lib/i18n/setup-flow-presentations";
 
 export type MadeConnection = { id: string; token: string; mcpUrl: string };
 
@@ -21,7 +24,8 @@ export function YourAgentStep({
   made: MadeConnection | null;
   onMade: (connection: MadeConnection) => void;
 }) {
-  const [name, setName] = useState("My agent");
+  const { t, locale } = useLocale();
+  const [name, setName] = useState(t("setupFlow.agent.defaultName"));
   const [scopes, setScopes] = useState<string[]>(["read", "play", "dm"]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -33,16 +37,16 @@ export function YourAgentStep({
       const response = await fetch("/api/profile/agents", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name.trim() || "My agent", scopes, campaignId: null }),
+        body: JSON.stringify({ name: name.trim() || t("setupFlow.agent.defaultName"), scopes, campaignId: null }),
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
-        setError(data.error ?? "Could not make the connection.");
+        setError(data.error ?? SETUP_FLOW_ERRORS.connection);
         return;
       }
       onMade({ id: data.grant.id, token: data.token, mcpUrl: data.mcpUrl });
     } catch {
-      setError("Could not reach this server.");
+      setError(SETUP_FLOW_ERRORS.unreachable);
     } finally {
       setBusy(false);
     }
@@ -52,10 +56,10 @@ export function YourAgentStep({
     return (
       <div className="hx-token space-y-3">
         <p className="text-sm text-amber-100">
-          The connection is made. Its token is shown only here; copy the line for your program now.
+          {t("setupFlow.agent.made")}
         </p>
         <AgentConnectLines grantId={made.id} token={made.token} mcpUrl={made.mcpUrl} />
-        <p className="text-[11px] text-stone-500">Revoke it, or make more, under Settings, Connected agents.</p>
+        <p className="text-[11px] text-stone-500">{t("setupFlow.agent.settings")}</p>
       </div>
     );
   }
@@ -63,40 +67,38 @@ export function YourAgentStep({
   return (
     <div className="space-y-4">
       <p className="text-sm text-stone-300">
-        If you use Claude Code, Codex, opencode or another MCP client, it can work here as you: read your campaigns, play your
-        character, or run a table from the DM seat. It gets only what you tick, never your password or this server&apos;s
-        settings. Skip this if you do not use one.
+        {t("setupFlow.agent.help")}
       </p>
       <label className="block">
-        <span className="mb-1 block text-xs font-medium text-stone-400">Name</span>
+        <span className="mb-1 block text-xs font-medium text-stone-400">{t("setupFlow.agent.name")}</span>
         <input className={ui.input} value={name} maxLength={60} onChange={(event) => setName(event.target.value)} />
       </label>
       <div className="space-y-2">
-        <span className="block text-xs font-medium text-stone-400">What it may do</span>
+        <span className="block text-xs font-medium text-stone-400">{t("setupFlow.agent.mayDo")}</span>
         {AGENT_SCOPE_CHOICES.map((scope) => {
           const on = scopes.includes(scope.id);
           return (
             <label key={scope.id} className="flex items-start gap-3 text-sm text-stone-300">
               <Switch
-                label={scope.label}
+                label={agentScopeLabel(scope.id, locale)}
                 on={on}
                 onChange={(next) => setScopes((current) => (next ? [...current, scope.id] : current.filter((entry) => entry !== scope.id)))}
               />
               <span>
-                {scope.label}
-                <span className="block text-xs text-stone-500">{scope.hint}</span>
+                {agentScopeLabel(scope.id, locale)}
+                <span className="block text-xs text-stone-500">{agentScopeLabel(scope.id, locale, "hint")}</span>
               </span>
             </label>
           );
         })}
       </div>
       {error ? (
-        <p key={error} role="alert" className="motion-shake text-sm text-red-400">
-          {error}
+        <p key={setupFlowMessage(error, locale)} role="alert" className="motion-shake text-sm text-red-400">
+          {setupFlowMessage(error, locale)}
         </p>
       ) : null}
       <button type="button" className={ui.btnSecondary} onClick={connect} disabled={busy || scopes.length === 0} aria-busy={busy}>
-        {busy ? <Loader2 className="size-4 animate-spin" /> : <Plug className="size-4" />} Make the connection
+        {busy ? <Loader2 className="size-4 animate-spin" /> : <Plug className="size-4" />} {t("setupFlow.agent.connect")}
       </button>
     </div>
   );

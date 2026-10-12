@@ -4,6 +4,8 @@ import { ExternalLink, Loader2, RefreshCw, Search } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 import { ui } from "@/lib/ui";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { setupFlowMessage } from "@/lib/i18n/setup-flow-presentations";
 import { BackendProbe } from "@/app/admin/BackendProbe";
 import { CopyLine } from "@/components/CopyLine";
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
@@ -19,6 +21,14 @@ import {
   type KeyProviderId,
   type ListedModel,
 } from "@/lib/setup/discovery-logic";
+
+const STORY_EXAMPLES = { address: "http://192.168.1.20:8080", model: "qwen3.6-35b", provider: "https://api.example.com/v1" } as const;
+
+const MODEL_COMMANDS = {
+  llama: "llama-server -m Qwen3.6-35B-A3B-Q8_0.gguf -c 65536 --jinja --flash-attn on --cache-type-k q8_0 --cache-type-v q8_0 --temp 0.7 --top-p 0.95 --top-k 20 --min-p 0.0 --port 8001 --alias qwen3.6-35b",
+  container: " --host 0.0.0.0",
+  ollama: "ollama pull qwen3.6:35b-a3b-q8_0 && ollama create qwen3.6-dm -f models/qwen3.6-dm.Modelfile",
+} as const;
 
 type Update = (change: (draft: Draft) => Draft) => void;
 
@@ -68,39 +78,40 @@ export function StorytellerStep({
   savedKeyBase: string;
   inContainer: boolean;
 }) {
+  const { t } = useLocale();
   const found = scan?.text ?? [];
   const pick = (story: Draft["story"]) => update((current) => ({ ...current, story }));
   return (
     <div className="space-y-4">
-      <ChoiceCards label="Who tells the story">
+      <ChoiceCards label={t("setupFlow.story.who")}>
         <ChoiceCard
           picked={draft.story === "local"}
           onPick={() => pick("local")}
           glyph="system-lore"
-          title="A model on this computer"
-          sub="llama.cpp, Ollama, LM Studio, vLLM or another server you run. Free to play, private, needs a capable GPU."
-          badge={scanning ? { text: "Looking…", tone: "off" } : found.length ? { text: `Found ${found.length}`, tone: "ready" } : null}
+          title={t("setupFlow.story.local")}
+          sub={t("setupFlow.story.localHelp")}
+          badge={scanning ? { text: t("setupFlow.local.looking"), tone: "off" } : found.length ? { text: t("setupFlow.local.foundCount", { count: found.length }), tone: "ready" } : null}
         />
         <ChoiceCard
           picked={draft.story === "key"}
           onPick={() => pick("key")}
           glyph="tab-admin"
-          title="An API key"
-          sub="OpenAI, OpenRouter or another provider. No GPU needed; each turn is billed to the key."
+          title={t("setupFlow.story.key")}
+          sub={t("setupFlow.story.keyHelp")}
         />
         <ChoiceCard
           picked={draft.story === "agent"}
           onPick={() => pick("agent")}
           glyph="system-share"
-          title="An agent you already pay for"
-          sub="Claude Code, Codex, opencode or Grok Build, signed in on this computer, narrating on its own plan."
+          title={t("setupFlow.story.agent")}
+          sub={t("setupFlow.story.agentHelp")}
         />
         <ChoiceCard
           picked={draft.story === "none"}
           onPick={() => pick("none")}
           glyph="tab-characters"
-          title="A person at the table"
-          sub="No AI. Someone narrates, usually over voice chat, and the app keeps the sheets, dice and maps."
+          title={t("setupFlow.story.person")}
+          sub={t("setupFlow.story.personHelp")}
         />
       </ChoiceCards>
 
@@ -126,9 +137,7 @@ export function StorytellerStep({
         </div>
       ) : draft.story === "none" ? (
         <p key="none" className="reveal su-note">
-          Tables on this server will have a person in the Dungeon Master&apos;s seat. The app still rolls the dice, keeps
-          every sheet and map, and can step in for the monsters or a read-aloud when the DM asks. You can add an AI
-          storyteller here later.
+          {t("setupFlow.story.personNote")}
         </p>
       ) : null}
     </div>
@@ -152,6 +161,7 @@ function LocalPanel({
   savedKeyBase: string;
   inContainer: boolean;
 }) {
+  const { t, locale } = useLocale();
   const local = draft.local;
   const [looking, setLooking] = useState(false);
   const setLocal = (patch: Partial<Draft["local"]>) => update((current) => ({ ...current, local: { ...current.local, ...patch } }));
@@ -194,14 +204,14 @@ function LocalPanel({
       <div className="flex items-center justify-between gap-2">
         <span className="flex items-center gap-2 text-xs font-medium text-stone-400">
           <ScanMark scanning={scanning} found={found.length > 0} />
-          {scanning ? "Looking for model servers on this computer…" : found.length ? "Found on this computer" : "Nothing is answering on this computer yet"}
+          {scanning ? t("setupFlow.local.scanning") : found.length ? t("setupFlow.local.found") : t("setupFlow.local.absent")}
         </span>
         <button type="button" className={ui.btnSmall} onClick={onRescan} disabled={scanning} aria-busy={scanning}>
-          <RefreshCw className={cn("size-3.5", scanning && "animate-spin")} /> Look again
+          <RefreshCw className={cn("size-3.5", scanning && "animate-spin")} /> {t("setupFlow.local.again")}
         </button>
       </div>
 
-      <div role="radiogroup" aria-label="Model servers" className="stagger space-y-2">
+      <div role="radiogroup" aria-label={t("setupFlow.local.servers")} className="stagger space-y-2">
         {found.map((entry) => (
           <FoundRow
             key={entry.baseUrl}
@@ -217,15 +227,15 @@ function LocalPanel({
               })
             }
             title={`${entry.label} · ${host(entry.baseUrl)}`}
-            detail={entry.needsKey ? "Wants its API key" : `${entry.models.length} ${entry.models.length === 1 ? "model" : "models"}${entry.recommended ? `, ${entry.recommended}` : ""}`}
+            detail={entry.needsKey ? t("setupFlow.local.needsKey") : t(entry.models.length === 1 ? "setupFlow.local.modelOne" : "setupFlow.local.models", { count: entry.models.length, recommended: entry.recommended ? `, ${entry.recommended}` : "" })}
             tone={entry.needsKey ? "warn" : "ok"}
           />
         ))}
         <FoundRow
           picked={local.typed}
           onPick={() => setLocal({ typed: true, list: NO_LIST })}
-          title="Somewhere else"
-          detail="Another port, or another computer on your network"
+          title={t("setupFlow.local.elsewhere")}
+          detail={t("setupFlow.local.elsewhereHelp")}
           tone="off"
         />
       </div>
@@ -235,16 +245,16 @@ function LocalPanel({
       {local.typed ? (
         <div key="typed" className="reveal flex flex-wrap items-end gap-2">
           <label className="block min-w-0 flex-1">
-            <span className="mb-1 block text-xs font-medium text-stone-400">Server address</span>
+            <span className="mb-1 block text-xs font-medium text-stone-400">{t("setupFlow.local.address")}</span>
             <input
               className={ui.input}
               value={local.baseUrl}
               onChange={(event) => setLocal({ baseUrl: event.target.value, list: NO_LIST })}
-              placeholder="http://192.168.1.20:8080"
+              placeholder={STORY_EXAMPLES.address}
             />
           </label>
           <button type="button" className={ui.btnSecondary} onClick={look} disabled={looking || !local.baseUrl.trim()} aria-busy={looking}>
-            {looking ? <Loader2 className="size-4 animate-spin" /> : <Search className="size-4" />} Look
+            {looking ? <Loader2 className="size-4 animate-spin" /> : <Search className="size-4" />} {t("setupFlow.local.look")}
           </button>
         </div>
       ) : null}
@@ -252,31 +262,31 @@ function LocalPanel({
       {local.list.needsKey || local.apiKey ? (
         <div key="key" className="reveal flex flex-wrap items-end gap-2">
           <label className="block min-w-0 flex-1">
-            <span className="mb-1 block text-xs font-medium text-stone-400">The server&apos;s API key</span>
+            <span className="mb-1 block text-xs font-medium text-stone-400">{t("setupFlow.local.apiKey")}</span>
             <input
               type="password"
               className={ui.input}
               value={local.apiKey}
               onChange={(event) => setLocal({ apiKey: event.target.value })}
-              placeholder={keySavedHere ? "•••••••• (saved, leave blank to keep it)" : "The --api-key it was started with"}
+              placeholder={keySavedHere ? t("setupMedia.key.saved") : t("setupFlow.local.apiKeyHint")}
               autoComplete="off"
             />
           </label>
           <button type="button" className={ui.btnSecondary} onClick={look} disabled={looking || (!local.apiKey.trim() && !keySavedHere)} aria-busy={looking}>
-            {looking ? <Loader2 className="size-4 animate-spin" /> : <Search className="size-4" />} Look again
+            {looking ? <Loader2 className="size-4 animate-spin" /> : <Search className="size-4" />} {t("setupFlow.local.again")}
           </button>
         </div>
       ) : null}
 
       {local.list.state === "failed" && local.list.error ? (
         <p key={local.list.error} role="alert" className="motion-shake text-sm text-red-400">
-          {local.list.error}
+          {setupFlowMessage(local.list.error, locale)}
         </p>
       ) : null}
 
       {local.list.models.length ? (
         <ModelPicker
-          label="Model"
+          label={t("setupFlow.local.model")}
           models={local.list.models}
           value={local.model}
           recommended={local.list.recommended}
@@ -284,9 +294,9 @@ function LocalPanel({
         />
       ) : local.typed || local.baseUrl ? (
         <label className="reveal block">
-          <span className="mb-1 block text-xs font-medium text-stone-400">Model name</span>
-          <input className={ui.input} value={local.model} onChange={(event) => setLocal({ model: event.target.value })} placeholder="qwen3.6-35b" />
-          <span className="mt-1 block text-[11px] text-stone-500">The name the server knows it by. Look fills this in once the server answers.</span>
+          <span className="mb-1 block text-xs font-medium text-stone-400">{t("setupFlow.local.modelName")}</span>
+          <input className={ui.input} value={local.model} onChange={(event) => setLocal({ model: event.target.value })} placeholder={STORY_EXAMPLES.model} />
+          <span className="mt-1 block text-[11px] text-stone-500">{t("setupFlow.local.nameHelp")}</span>
         </label>
       ) : null}
 
@@ -299,30 +309,29 @@ function LocalPanel({
 
 // What to run when nothing answered. The commands match the README's.
 function StartHints({ inContainer }: { inContainer: boolean }) {
+  const { t } = useLocale();
   return (
     <details className="reveal rounded-lg border border-stone-800 bg-stone-950/40 px-3 py-2">
-      <summary className="cursor-pointer text-sm text-stone-300">How do I start one?</summary>
+      <summary className="cursor-pointer text-sm text-stone-300">{t("setupFlow.hints.start")}</summary>
       <div className="mt-3 space-y-3 text-xs text-stone-400">
         {inContainer ? (
           <p className="su-note">
-            This server runs in a container, so it looks for your model server on the host as host.docker.internal. Start
-            the server on the host listening on 0.0.0.0, not only 127.0.0.1.
+            {t("setupFlow.hints.container")}
           </p>
         ) : null}
         <div>
-          <span className="mb-1 block">llama.cpp with the default storyteller (Qwen3.6-35B-A3B, 64K window):</span>
+          <span className="mb-1 block">{t("setupFlow.hints.llama")}</span>
           <CopyLine
-            text={`llama-server -m Qwen3.6-35B-A3B-Q8_0.gguf -c 65536 --jinja --flash-attn on --cache-type-k q8_0 --cache-type-v q8_0 --temp 0.7 --top-p 0.95 --top-k 20 --min-p 0.0 --port 8001 --alias qwen3.6-35b${inContainer ? " --host 0.0.0.0" : ""}`}
-            label="llama-server command"
+            text={MODEL_COMMANDS.llama + (inContainer ? MODEL_COMMANDS.container : "")}
+            label={t("setupFlow.hints.llamaCommand")}
           />
         </div>
         <div>
-          <span className="mb-1 block">Ollama, with the same settings baked in:</span>
-          <CopyLine text="ollama pull qwen3.6:35b-a3b-q8_0 && ollama create qwen3.6-dm -f models/qwen3.6-dm.Modelfile" label="Ollama commands" />
+          <span className="mb-1 block">{t("setupFlow.hints.ollama")}</span>
+          <CopyLine text={MODEL_COMMANDS.ollama} label={t("setupFlow.hints.ollamaCommand")} />
         </div>
         <p>
-          LM Studio: load a model and switch on its local server. Any server with OpenAI-style tool calls works. Then press
-          Look again.
+          {t("setupFlow.hints.studio")}
         </p>
       </div>
     </details>
@@ -330,10 +339,11 @@ function StartHints({ inContainer }: { inContainer: boolean }) {
 }
 
 function KeyPanel({ draft, update, savedKeyFor }: { draft: Draft; update: Update; savedKeyFor: KeyProviderId | null }) {
+  const { t, locale } = useLocale();
   const key = draft.key;
   const provider = keyProvider(key.provider);
   const [checking, setChecking] = useState(false);
-  const [switched, setSwitched] = useState("");
+  const [switched, setSwitched] = useState<KeyProviderId | null>(null);
   const keptKey = savedKeyFor === key.provider && !key.apiKey.trim();
   const setKey = (patch: Partial<Draft["key"]>) => update((current) => ({ ...current, key: { ...current.key, ...patch } }));
 
@@ -372,7 +382,7 @@ function KeyPanel({ draft, update, savedKeyFor }: { draft: Draft; update: Update
   function typeKey(value: string) {
     const guess = providerForKey(value);
     if (guess && guess !== key.provider && key.provider !== "other") {
-      setSwitched(`That looks like an ${keyProvider(guess).label} key, so ${keyProvider(guess).label} is chosen.`);
+      setSwitched(guess);
       setKey({ apiKey: value, provider: guess, list: NO_LIST, model: "" });
       return;
     }
@@ -383,39 +393,39 @@ function KeyPanel({ draft, update, savedKeyFor }: { draft: Draft; update: Update
     <div className="space-y-3">
       <div className="-mx-1 overflow-x-auto px-1 pb-1 [scrollbar-width:none]">
         <SegmentedControl
-          options={KEY_PROVIDERS.map((entry) => ({ value: entry.id, label: entry.label }))}
+          options={KEY_PROVIDERS.map((entry) => ({ value: entry.id, label: entry.id === "other" ? t("setupFlow.key.other") : entry.label }))}
           value={key.provider}
           onChange={(next) => {
-            setSwitched("");
+            setSwitched(null);
             setKey({ provider: next, list: NO_LIST, model: "" });
           }}
-          label="Provider"
+          label={t("setupFlow.key.provider")}
           className="w-max"
         />
       </div>
       {switched ? (
         <p key={switched} role="status" className="reveal text-xs text-amber-200">
-          {switched}
+          {t("setupFlow.key.switched", { provider: keyProvider(switched).label })}
         </p>
       ) : null}
       {key.provider === "other" ? (
         <label key="base" className="reveal block">
-          <span className="mb-1 block text-xs font-medium text-stone-400">The provider&apos;s OpenAI-compatible address</span>
+          <span className="mb-1 block text-xs font-medium text-stone-400">{t("setupFlow.key.address")}</span>
           <input
             className={ui.input}
             value={key.baseUrl}
             onChange={(event) => setKey({ baseUrl: event.target.value, list: NO_LIST })}
-            placeholder="https://api.example.com/v1"
+            placeholder={STORY_EXAMPLES.provider}
           />
         </label>
       ) : null}
       <div className="flex flex-wrap items-end gap-2">
         <label className="block min-w-0 flex-1">
           <span className="mb-1 flex items-center justify-between gap-2 text-xs font-medium text-stone-400">
-            API key
+            {t("setupFlow.key.apiKey")}
             {provider.keyUrl ? (
               <a href={provider.keyUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-amber-200 hover:text-amber-100">
-                Get a {provider.label} key <ExternalLink className="size-3" />
+                {t("setupFlow.key.get", { provider: provider.label })} <ExternalLink className="size-3" />
               </a>
             ) : null}
           </span>
@@ -431,7 +441,7 @@ function KeyPanel({ draft, update, savedKeyFor }: { draft: Draft; update: Update
                 typeKey(pasted);
               }
             }}
-            placeholder={keptKey ? "•••••••• (saved, leave blank to keep it)" : provider.keyPlaceholder}
+            placeholder={keptKey ? t("setupMedia.key.saved") : provider.keyPlaceholder}
             autoComplete="off"
           />
         </label>
@@ -442,25 +452,23 @@ function KeyPanel({ draft, update, savedKeyFor }: { draft: Draft; update: Update
           disabled={checking || (!key.apiKey.trim() && !keptKey) || (key.provider === "other" && !key.baseUrl.trim())}
           aria-busy={checking}
         >
-          {checking ? <Loader2 className="size-4 animate-spin" /> : <Search className="size-4" />} Check the key
+          {checking ? <Loader2 className="size-4 animate-spin" /> : <Search className="size-4" />} {t("setupFlow.key.check")}
         </button>
       </div>
       <p className="text-[11px] leading-4 text-stone-500">
-        Saved on this server and never shown again, to anyone. Every table on the server narrates on it, so the Players step can
-        keep strangers out.
+        {t("setupFlow.key.savedHelp")}
       </p>
       {key.list.state === "failed" ? (
         <p key={key.list.error} role="alert" className="motion-shake text-sm text-red-400">
-          {key.list.error}
+          {setupFlowMessage(key.list.error, locale)}
         </p>
       ) : null}
       {key.list.models.length ? (
-        <ModelPicker label="Model" models={key.list.models} value={key.model} recommended={key.list.recommended} onChange={(model) => setKey({ model })} />
+        <ModelPicker label={t("setupFlow.local.model")} models={key.list.models} value={key.model} recommended={key.list.recommended} onChange={(model) => setKey({ model })} />
       ) : null}
       {provider.coversMedia ? (
         <p className="su-note">
-          One OpenAI key also paints the pictures, reads the story aloud and takes dictation. The next two steps can use it with
-          nothing more to paste.
+          {t("setupFlow.key.media")}
         </p>
       ) : null}
       {key.model && key.list.state === "ok" ? (

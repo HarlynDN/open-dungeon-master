@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { setupFlowMessage, SETUP_FLOW_ERRORS } from "@/lib/i18n/setup-flow-presentations";
 import { Loader2, X } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Wizard, type WizardStep } from "@/components/ui/Wizard";
@@ -56,6 +58,7 @@ function storyChoice(draft: Draft): StoryChoice | null {
 // chosen. The scan of this computer starts with the page and fills in what
 // it finds while the admin reads the first step.
 export function SetupWizard({ config: initialConfig, info }: { config: MaskedConfig; info: SetupInfo }) {
+  const { t, locale } = useLocale();
   const [config, setConfig] = useState(initialConfig);
   const firstRun = !info.state.finishedAt;
   const [draft, setDraft] = useState<Draft>(() => draftFromConfig(initialConfig, firstRun));
@@ -125,7 +128,7 @@ export function SetupWizard({ config: initialConfig, info }: { config: MaskedCon
     }).catch(() => null);
     const data = await response?.json().catch(() => null);
     if (!response?.ok) {
-      setSaveError(data?.error || "Could not save. Try again.");
+      setSaveError(data?.error || SETUP_FLOW_ERRORS.save);
       return false;
     }
     if (data?.config) setConfig(data.config as MaskedConfig);
@@ -236,17 +239,17 @@ export function SetupWizard({ config: initialConfig, info }: { config: MaskedCon
   const steps: Array<WizardStep & { key: StepKey }> = [
     {
       key: "welcome",
-      label: "Welcome",
-      title: title("Welcome", "Let's get your table ready", "welcome"),
-      blurb: "A few questions, a few minutes. Everything here can be changed later in the admin panel.",
+      label: t("setupFlow.wizard.welcome"),
+      title: title(t("setupFlow.wizard.welcome"), t("setupFlow.wizard.welcomeTitle"), "welcome"),
+      blurb: t("setupFlow.wizard.welcomeHelp"),
       content: <WelcomeStep draft={draft} update={update} scan={scan} scanning={scanning} />,
-      continueLabel: "Begin",
+      continueLabel: t("setupFlow.wizard.begin"),
     },
     {
       key: "story",
-      label: "Storyteller",
-      title: title("Step 1", "Who tells the story?", "story"),
-      blurb: "The Dungeon Master's voice. The server always rolls the dice and keeps the rules; this only chooses who narrates.",
+      label: t("setupFlow.wizard.story"),
+      title: title(t("setupFlow.wizard.step", { step: 1 }), t("setupFlow.wizard.storyTitle"), "story"),
+      blurb: t("setupFlow.wizard.storyHelp"),
       content: (
         <StorytellerStep
           draft={draft}
@@ -259,14 +262,14 @@ export function SetupWizard({ config: initialConfig, info }: { config: MaskedCon
           inContainer={info.inContainer}
         />
       ),
-      blocker: storyBlocker,
+      blocker: storyBlocker ? setupFlowMessage(storyBlocker, locale) : null,
       canContinue: !storyBlocker,
     },
     {
       key: "pictures",
-      label: "Pictures",
-      title: title("Step 2", "Should the table have pictures?", "pictures"),
-      blurb: "Character portraits, scene art and battle maps. Every table works without them.",
+      label: t("setupFlow.wizard.pictures"),
+      title: title(t("setupFlow.wizard.step", { step: 2 }), t("setupFlow.wizard.picturesTitle"), "pictures"),
+      blurb: t("setupFlow.wizard.picturesHelp"),
       content: (
         <PicturesStep
           draft={draft}
@@ -281,14 +284,14 @@ export function SetupWizard({ config: initialConfig, info }: { config: MaskedCon
           openaiKeySaved={config.images.hasOpenaiApiKey}
         />
       ),
-      blocker: picturesBlocker,
+      blocker: picturesBlocker ? setupFlowMessage(picturesBlocker, locale) : null,
       canContinue: !picturesBlocker,
     },
     {
       key: "voice",
-      label: "Voice",
-      title: title("Step 3", "Should the storyteller speak?", "voice"),
-      blurb: "Narration reads each passage aloud; dictation lets players talk instead of type. Both are optional.",
+      label: t("setupFlow.wizard.voice"),
+      title: title(t("setupFlow.wizard.step", { step: 3 }), t("setupFlow.wizard.voiceTitle"), "voice"),
+      blurb: t("setupFlow.wizard.voiceHelp"),
       content: (
         <VoiceStep
           draft={draft}
@@ -299,31 +302,31 @@ export function SetupWizard({ config: initialConfig, info }: { config: MaskedCon
           ttsKeySaved={config.speech.hasTtsApiKey || config.images.hasOpenaiApiKey}
         />
       ),
-      blocker: voiceBlocker,
+      blocker: voiceBlocker ? setupFlowMessage(voiceBlocker, locale) : null,
       canContinue: !voiceBlocker,
     },
     {
       key: "players",
-      label: "Players",
-      title: title("Step 4", "How do players get in?", "players"),
-      blurb: "The address to send your friends, and who may make an account.",
+      label: t("setupFlow.wizard.players"),
+      title: title(t("setupFlow.wizard.step", { step: 4 }), t("setupFlow.wizard.playersTitle"), "players"),
+      blurb: t("setupFlow.wizard.playersHelp"),
       content: (
         <PlayersStep draft={draft} update={update} lanUrls={info.lanUrls} />
       ),
     },
     {
       key: "agent",
-      label: "Your agent",
-      title: title("Step 5", "Bring your own AI agent?", "agent"),
-      blurb: "Optional. Connect Claude Code, Codex or opencode to this server over MCP, as you.",
+      label: t("setupFlow.wizard.agent"),
+      title: title(t("setupFlow.wizard.step", { step: 5 }), t("setupFlow.wizard.agentTitle"), "agent"),
+      blurb: t("setupFlow.wizard.agentHelp"),
       content: <YourAgentStep made={made} onMade={setMade} />,
-      continueLabel: made ? "Continue" : "Skip for now",
+      continueLabel: made ? t("setupFlow.wizard.continue") : t("setupFlow.wizard.skip"),
     },
     {
       key: "ready",
-      label: "Ready",
-      title: title("All set", "Your server is ready", "ready"),
-      blurb: "Here is what it can do right now. Change any of it here, or later in the admin panel.",
+      label: t("setupFlow.wizard.ready"),
+      title: title(t("setupFlow.wizard.allSet"), t("setupFlow.wizard.readyTitle"), "ready"),
+      blurb: t("setupFlow.wizard.readyHelp"),
       content: (
         <ReadyStep
           key={readyVisit}
@@ -342,14 +345,14 @@ export function SetupWizard({ config: initialConfig, info }: { config: MaskedCon
     <>
       <button
         type="button"
-        aria-label="Leave setup"
+        aria-label={t("setupFlow.wizard.leave")}
         onClick={() => navigateTo("/")}
         className="absolute right-3 top-3 z-10 rounded p-1 text-stone-400 hover:bg-stone-900 sm:right-5 sm:top-5"
       >
         <X className="size-4" />
       </button>
       <Wizard
-        title="Server setup"
+        title={t("setupFlow.wizard.title")}
         variant="diamonds"
         steps={steps.map((entry) =>
           entry.key === KEYS[step] && saving
@@ -357,7 +360,7 @@ export function SetupWizard({ config: initialConfig, info }: { config: MaskedCon
                 ...entry,
                 continueLabel: (
                   <>
-                    <Loader2 className="size-4 animate-spin" /> Saving
+                    <Loader2 className="size-4 animate-spin" /> {t("setupFlow.wizard.saving")}
                   </>
                 ),
               }
@@ -367,12 +370,12 @@ export function SetupWizard({ config: initialConfig, info }: { config: MaskedCon
         onStepChange={(next) => void changeStep(next)}
         // A failed save says so above the steps; Continue stays live so
         // the same answer can be sent again.
-        notice={saveError ? { message: saveError, onDismiss: () => setSaveError("") } : undefined}
+        notice={saveError ? { message: setupFlowMessage(saveError, locale), onDismiss: () => setSaveError("") } : undefined}
         onDone={() => void finish()}
         doneLabel={
           <>
             {saving ? <Loader2 className="size-4 animate-spin" /> : null}
-            Start your first campaign
+            {t("setupFlow.wizard.start")}
           </>
         }
         className="[&>header]:pr-9"

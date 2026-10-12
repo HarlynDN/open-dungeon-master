@@ -7,6 +7,8 @@ import { useEffect, useState } from "react";
 import { copyText } from "@/lib/clipboard";
 import { cn } from "@/lib/cn";
 import { ui } from "@/lib/ui";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { setupFlowMessage, SETUP_FLOW_ERRORS } from "@/lib/i18n/setup-flow-presentations";
 import { EmptyState } from "@/components/EmptyState";
 import { appConfirm } from "@/components/ui/ConfirmDialog";
 import { NumberStepper } from "@/components/ui/NumberStepper";
@@ -25,6 +27,7 @@ type AccountInvite = {
 // while the signup mode is invite-only. Codes gate account creation, not
 // campaign membership; the campaign room code is a different thing.
 export function AdminInvitesSection() {
+  const { t, locale } = useLocale();
   const [invites, setInvites] = useState<AccountInvite[] | null>(null);
   // A refused or failed read is shown in the server's words with a way to
   // ask again, never as "nothing here yet" (issue 140).
@@ -56,13 +59,13 @@ export function AdminInvitesSection() {
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
-        setError(data.error || "Could not create the invite.");
+        setError(data.error || SETUP_FLOW_ERRORS.inviteCreate);
         return;
       }
       setInvites([data.invite, ...(invites ?? [])]);
       setNote("");
     } catch {
-      setError("Could not reach the server.");
+      setError(SETUP_FLOW_ERRORS.network);
     } finally {
       setCreating(false);
     }
@@ -70,9 +73,9 @@ export function AdminInvitesSection() {
 
   async function remove(code: string) {
     // A revoked code cannot be brought back, and somebody may be holding it.
-    const sure = await appConfirm(`Revoke the invite ${code}? Anyone still holding it will not be able to register with it.`, {
-      title: "Revoke this invite?",
-      actionLabel: "Revoke",
+    const sure = await appConfirm(t("setupFlow.invites.confirm", { code }), {
+      title: t("setupFlow.invites.confirmTitle"),
+      actionLabel: t("setupFlow.invites.revoke"),
       tone: "danger",
     });
     if (!sure) return;
@@ -91,28 +94,28 @@ export function AdminInvitesSection() {
 
   if (invites === null) {
     return (
-      <div className="skeleton-block mt-3 h-16 rounded-xl" aria-label="Loading invites" />
+      <div className="skeleton-block mt-3 h-16 rounded-xl" aria-label={t("setupFlow.invites.loading")} />
     );
   }
 
   return (
     <div className="mt-4 space-y-3">
-      <SectionHead title="Invite codes" glyph="tab-handout" level="h3" aside={<span className="tabular-nums">{invites.length}</span>} />
+      <SectionHead title={t("setupFlow.invites.title")} glyph="tab-handout" level="h3" aside={<span className="tabular-nums">{invites.length}</span>} />
       <div className="flex flex-wrap items-end gap-2">
         <label className="min-w-40 flex-1 text-sm">
-          <span className="mb-1 block text-xs font-medium text-stone-400">Note (optional)</span>
+          <span className="mb-1 block text-xs font-medium text-stone-400">{t("setupFlow.invites.note")}</span>
           <input
             className={ui.input}
             value={note}
             maxLength={200}
             onChange={(event) => setNote(event.target.value)}
-            placeholder="Who this invite is for"
+            placeholder={t("setupFlow.invites.noteHint")}
           />
         </label>
         <div className="text-sm">
-          <span className="mb-1 block text-xs font-medium text-stone-400">Uses</span>
+          <span className="mb-1 block text-xs font-medium text-stone-400">{t("setupFlow.invites.uses")}</span>
           <NumberStepper
-            label="Uses"
+            label={t("setupFlow.invites.uses")}
             min={1}
             max={1000}
             value={maxUses}
@@ -121,12 +124,12 @@ export function AdminInvitesSection() {
         </div>
         <button type="button" onClick={create} disabled={creating} aria-busy={creating} className={ui.btnSmall}>
           {creating ? <Loader2 className="size-4 animate-spin" /> : <Plus className="size-4" />}
-          New invite
+          {t("setupFlow.invites.new")}
         </button>
       </div>
-      {error ? <p role="alert" className="motion-shake text-sm text-red-400">{error}</p> : null}
+      {error ? <p role="alert" className="motion-shake text-sm text-red-400">{setupFlowMessage(error, locale)}</p> : null}
       {invites.length === 0 ? (
-        (loadError ? <LoadFailed error={loadError} onRetry={() => setReloads((current) => current + 1)} /> : loaded ? <EmptyState art="scrolls" size="sm" title="No invite codes yet. Nobody can register until you create one." /> : null)
+        (loadError ? <LoadFailed error={setupFlowMessage(loadError, locale)} onRetry={() => setReloads((current) => current + 1)} /> : loaded ? <EmptyState art="scrolls" size="sm" title={t("setupFlow.invites.empty")} /> : null)
       ) : (
         <ul className="stagger space-y-2">
           {invites.map((invite) => {
@@ -140,7 +143,7 @@ export function AdminInvitesSection() {
                 <button
                   type="button"
                   onClick={() => copy(invite.code)}
-                  title="Copy the invite code"
+                  title={t("setupFlow.invites.copy")}
                   className={cn(ui.btnSmall, "font-mono text-amber-200")}
                 >
                   {copiedCode === invite.code ? (
@@ -151,7 +154,7 @@ export function AdminInvitesSection() {
                   {invite.code}
                 </button>
                 <span className={exhausted ? "text-xs text-red-400" : "text-xs text-stone-500"}>
-                  {invite.usedCount}/{invite.maxUses} used
+                  {t("setupFlow.invites.used", { used: invite.usedCount, max: invite.maxUses })}
                 </span>
                 {invite.note ? (
                   <span className="truncate text-xs text-stone-500">{invite.note}</span>
@@ -159,8 +162,8 @@ export function AdminInvitesSection() {
                 <button
                   type="button"
                   onClick={() => remove(invite.code)}
-                  title="Revoke this invite"
-                  aria-label={`Revoke the invite ${invite.code}`}
+                  title={t("setupFlow.invites.revokeTitle")}
+                  aria-label={t("setupFlow.invites.revokeLabel", { code: invite.code })}
                   className={cn(ui.btnSmall, "ml-auto px-2 hover:border-red-500/50 hover:text-red-400")}
                 >
                   <Trash2 className="size-3.5" />
