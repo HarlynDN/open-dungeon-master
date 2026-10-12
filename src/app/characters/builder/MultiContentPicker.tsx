@@ -37,7 +37,7 @@ export default function MultiContentPicker({
   renderMeta?: (entry: PickerEntry) => string;
 }) {
   const { locale, t } = useLocale();
-  const { query, setQuery, results, setResults, open, setOpen, loading, unavailable, unadmitted } =
+  const { query, setQuery, results, setResults, open, setOpen, loading, unavailable, failed, retry, unadmitted } =
     useContentSearch(kind, extraParams);
   const [pending, setPending] = useState<Array<MultiPick & { source?: PickerEntry["source"] }>>([]);
   const container = useRef<HTMLDivElement>(null);
@@ -172,7 +172,8 @@ export default function MultiContentPicker({
           ) : null}
           {unavailable ? (
             <li className="px-3 py-1.5 text-xs text-stone-500">
-              {t("gearUi.multi.packMissing")}
+              {t(failed ? "pickerFlow.loadFailed" : "gearUi.multi.packMissing")}
+              {failed ? <button type="button" onClick={retry} className="ml-2 underline">{t("pickerFlow.retry")}</button> : null}
             </li>
           ) : null}
           {unadmitted.length ? (

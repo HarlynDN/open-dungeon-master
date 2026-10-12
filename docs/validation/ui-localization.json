@@ -1099,7 +1099,7 @@
     {
       "path": "src/app/characters/builder/CatalogBrowser.tsx",
       "state": "pending",
-      "review": "Equipment names and owned browse/search/item-help chrome migrated. Exact project-owned feat descriptions now localize without changing selection data or homebrew text. Other native spell/magic-item and pack material remain pending; this owner is not complete."
+      "review": "Picker-flow checkpoint: viewer-language alias queries, registered spell fact/metadata summaries, canonical help name/slug, per-native-filter/scope catalog cache and distinct retryable read failures reviewed. Lazy content holds matched name/source/request key, suppresses stale references and preserves homebrew text. This owner stays pending for remaining owned long descriptions/help body audit; no full material translation or real browser acceptance claim."
     },
     {
       "path": "src/app/characters/builder/CharacterBuilder.tsx",
@@ -1109,7 +1109,7 @@
     {
       "path": "src/app/characters/builder/ContentPicker.tsx",
       "state": "pending",
-      "review": "Equipment names and owned browse/search/item-help chrome migrated. Exact project-owned feat descriptions now localize without changing selection data or homebrew text. Other native spell/magic-item and pack material remain pending; this owner is not complete."
+      "review": "Picker-flow checkpoint: viewer-language alias queries, registered spell fact/metadata summaries, canonical help name/slug, per-native-filter/scope catalog cache and distinct retryable read failures reviewed. Lazy content holds matched name/source/request key, suppresses stale references and preserves homebrew text. This owner stays pending for remaining owned long descriptions/help body audit; no full material translation or real browser acceptance claim."
     },
     {
       "path": "src/app/characters/builder/Dice.tsx",
@@ -1138,7 +1138,7 @@
     {
       "path": "src/app/characters/builder/MultiContentPicker.tsx",
       "state": "pending",
-      "review": "Owned selection/add/remove/pack/admission chrome, registered names and spell-summary metadata localized. Pending selection provenance preserves custom names without entering callback payloads; exact Chinese catalog names no longer offer duplicate custom rows. Generic native source descriptions remain separately pending."
+      "review": "Picker-flow checkpoint: viewer-language alias queries, registered spell fact/metadata summaries, canonical help name/slug, per-native-filter/scope catalog cache and distinct retryable read failures reviewed. Lazy content holds matched name/source/request key, suppresses stale references and preserves homebrew text. This owner stays pending for remaining owned long descriptions/help body audit; no full material translation or real browser acceptance claim."
     },
     {
       "path": "src/app/characters/builder/OptionCardGrid.tsx",
@@ -1177,7 +1177,8 @@
     },
     {
       "path": "src/app/characters/builder/pickerRows.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Pure canonical-name deduplication and mundane-versus-magic-item preference; no displayed label or generated prose. Original names/source/order/kind and row identities remain unchanged; actual picker owners localize their display separately. No runtime change."
     },
     {
       "path": "src/app/characters/builder/reconcile.ts",
@@ -1245,7 +1246,8 @@
     },
     {
       "path": "src/app/characters/builder/useContentSearch.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Debounced content search sends registered viewer locale only for nonempty alias queries, retaining English/browse request shape and all canonical filters/scope. Response key hides rows/admission notices from older queries/scopes; signal is rechecked after JSON. Failure clears selectable stale rows and exposes retry; returned entries remain native for picker display/provenance adapters. New interface has no per-language branch except legacy English compatibility. No rulebook/third-party body translation claim."
     },
     {
       "path": "src/app/characters/builder/useFeatDescs.ts",
@@ -2079,7 +2081,7 @@
     {
       "path": "src/components/ui/InfoDialog.tsx",
       "state": "pending",
-      "review": "Equipment names and owned item-help chrome migrated. Exact project-owned feat summaries now localize at render time from raw loaded state, preserving English and authored replacements. Generic spell/magic-item/pack prose remains pending; this owner is not complete."
+      "review": "Picker-flow checkpoint: viewer-language alias queries, registered spell fact/metadata summaries, canonical help name/slug, per-native-filter/scope catalog cache and distinct retryable read failures reviewed. Lazy content holds matched name/source/request key, suppresses stale references and preserves homebrew text. This owner stays pending for remaining owned long descriptions/help body audit; no full material translation or real browser acceptance claim."
     },
     {
       "path": "src/components/ui/ListControls.tsx",

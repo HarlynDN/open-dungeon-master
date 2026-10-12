@@ -1,5 +1,7 @@
 "use client";
 
+import { pickerQueryParams, pickerSectionKey } from "@/lib/i18n/picker-requests";
+import { spellSummaryView } from "@/lib/i18n/spell-ui-presentations";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { nativeFeatHelp } from "@/lib/i18n/feature-material-presentations";
 import { pickerName, pickerMatches } from "@/lib/i18n/gear-ui-presentations";
@@ -8,7 +10,7 @@ import { Check, ChevronDown, ChevronRight, Loader2, Plus } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { InfoButton } from "@/components/ui/InfoDialog";
 import { cn } from "@/lib/cn";
-import { contentSlug, describeContentEntry, spellSummary } from "@/lib/help";
+import { contentSlug, describeContentEntry } from "@/lib/help";
 import { uniqueByName } from "./pickerRows";
 import type { PickerEntry } from "./useContentSearch";
 
@@ -51,7 +53,7 @@ export type CatalogSection = {
 // rides along for spells so a cantrip picked here is counted as one.
 export type CatalogSuggestion = { name: string; note?: string; level?: number };
 
-type Loaded = { rows: PickerEntry[]; truncated: boolean };
+type Loaded = { rows: PickerEntry[]; truncated: boolean; unavailable?: boolean; failed?: boolean };
 
 
 export default function CatalogBrowser({
@@ -93,7 +95,6 @@ export default function CatalogBrowser({
   const [expanded, setExpanded] = useState<string[]>(openSections);
   const [loaded, setLoaded] = useState<Record<string, Loaded>>({});
   const [loading, setLoading] = useState<string[]>([]);
-  const [unavailable, setUnavailable] = useState(false);
   const [filter, setFilter] = useState("");
   // The table the browse is for (src/lib/content-scope.tsx).
   const campaignId = useContentCampaign();
@@ -107,23 +108,31 @@ export default function CatalogBrowser({
     [selectedNames],
   );
 
+  const sectionParams = useCallback((section: CatalogSection) =>
+    pickerQueryParams(new URLSearchParams(scopedParams(section.params ?? {}, campaignId)), locale), [campaignId, locale]);
+  const sectionKey = useCallback((section: CatalogSection) =>
+    pickerSectionKey(kind, campaignId, section.key, sectionParams(section)), [kind, campaignId, sectionParams]);
+
   const load = useCallback(
     async (section: CatalogSection) => {
-      if (fetched.current.has(section.key)) {
+      const key = sectionKey(section);
+      if (fetched.current.has(key)) {
         return;
       }
-      fetched.current.add(section.key);
-      setLoading((current) => [...current, section.key]);
+      fetched.current.add(key);
+      setLoading((current) => [...current, key]);
       const rows: PickerEntry[] = [];
       let truncated = false;
+      let unavailable = false;
+      let failed = false;
       try {
         for (let offset = 0; offset < MAX_ROWS; offset += PAGE) {
-          const params = new URLSearchParams(
-            scopedParams({ limit: String(PAGE), offset: String(offset), ...(section.params ?? {}) }, campaignId),
-          );
+          const params = pickerQueryParams(new URLSearchParams(scopedParams({
+            limit: String(PAGE), offset: String(offset), ...(section.params ?? {}),
+          }, campaignId)), locale);
           const response = await fetch(`/api/content/${kind}?${params}`);
           if (!response.ok) {
-            setUnavailable(true);
+            failed = true;
             break;
           }
           const body = (await response.json()) as {
@@ -133,7 +142,7 @@ export default function CatalogBrowser({
           // The route answers 200 with no rows when the pack is missing;
           // that is "nothing to browse", not "nothing here".
           if (body.packInstalled === false && section.params?.native !== "1") {
-            setUnavailable(true);
+            unavailable = true;
           }
           const page: PickerEntry[] = body.results ?? [];
           rows.push(...page);
@@ -146,17 +155,19 @@ export default function CatalogBrowser({
         }
         setLoaded((current) => ({
           ...current,
-          [section.key]: { rows: uniqueByName(rows), truncated },
+          [key]: { rows: uniqueByName(rows), truncated, unavailable, failed },
         }));
       } catch {
         // A failed browse leaves the search box, which is the same catalog by
         // another door; forgetting the attempt lets a retry through.
-        fetched.current.delete(section.key);
+        failed = true;
+        setLoaded(current => ({ ...current, [key]: { rows: uniqueByName(rows), truncated, failed: true } }));
       } finally {
-        setLoading((current) => current.filter((key) => key !== section.key));
+        if (failed) fetched.current.delete(key);
+        setLoading((current) => current.filter((entry) => entry !== key));
       }
     },
-    [kind, campaignId],
+    [kind, campaignId, locale, sectionKey],
   );
 
   // Sections open from the start fetch from the start. `load` remembers what
@@ -276,8 +287,10 @@ export default function CatalogBrowser({
 
           {sections.map((section) => {
             const isOpen = expanded.includes(section.key);
-            const isLoading = loading.includes(section.key);
-            const rows = loaded[section.key]?.rows ?? [];
+            const key = sectionKey(section);
+            const data = loaded[key];
+            const isLoading = loading.includes(key) || (isOpen && !data);
+            const rows = data?.rows ?? [];
             const visible = needle
               ? rows.filter((entry) => pickerMatches(kind, entry, needle, locale))
               : rows;
@@ -296,7 +309,7 @@ export default function CatalogBrowser({
                   )}
                   <span className="grow">{section.label}</span>
                   {isLoading ? <Loader2 className="size-3.5 animate-spin text-stone-500" /> : null}
-                  {!isLoading && loaded[section.key] ? (
+                  {!isLoading && data ? (
                     <span className="text-[11px] text-stone-500">{rows.length}</span>
                   ) : null}
                 </button>
@@ -305,9 +318,13 @@ export default function CatalogBrowser({
                     {section.note ? (
                       <p className="px-1 pb-1 text-[11px] text-stone-500">{section.note}</p>
                     ) : null}
-                    {!isLoading && !rows.length ? (
+                    {!isLoading && data?.failed ? <p role="alert" className="px-1 py-1 text-[11px] text-amber-200">
+                      {t("pickerFlow.loadFailed")}
+                      <button type="button" onClick={() => { fetched.current.delete(key); void load(section); }} className="ml-2 underline">{t("pickerFlow.retry")}</button>
+                    </p> : null}
+                    {!isLoading && !data?.failed && !rows.length ? (
                       <p className="px-1 py-1 text-[11px] text-stone-500">
-                        {unavailable
+                        {data?.unavailable
                           ? t("gearUi.listMissing")
                           : t("gearUi.nothing")}
                       </p>
@@ -359,7 +376,7 @@ export default function CatalogBrowser({
                                       reading it before adding costs nothing. */}
                                   <InfoButton
                                     label={pickerName(kind, entry, locale)}
-                                    meta={kind === "spells" ? spellSummary(entry.data) : undefined}
+                                    meta={kind === "spells" ? spellSummaryView(entry.data, locale, entry.source === "homebrew") : undefined}
                                     text={kind === "feats" && entry.source !== "homebrew" ? nativeFeatHelp(entry.name, describeContentEntry(entry.data), locale) : describeContentEntry(entry.data)}
                                     reference={
                                       entry.source === "homebrew"
@@ -374,7 +391,7 @@ export default function CatalogBrowser({
                         </li>
                       ))}
                     </ul>
-                    {loaded[section.key]?.truncated ? (
+                    {data?.truncated ? (
                       <p className="px-1 pt-1 text-[11px] text-stone-500">
                         {t("gearUi.truncated", { count: rows.length })}
                       </p>

@@ -106,10 +106,13 @@ function ContentBody({ reference }: { reference: ContentRef }) {
   const { locale, t } = useLocale();
   // The table the dialog opened at reads its DMs' homebrew.
   const campaignId = useContentCampaign();
-  const [state, setState] = useState<{ text: string | null; loading: boolean }>({
+  const [state, setState] = useState<{ text: string | null; loading: boolean; name?: string; source?: string; for?: string; failed?: boolean }>({
     text: null,
     loading: true,
   });
+
+  const [attempt, setAttempt] = useState(0);
+  const requestKey = JSON.stringify([reference.kind, reference.slug, reference.name, campaignId, attempt]);
 
   useEffect(() => {
     let cancelled = false;
@@ -124,7 +127,7 @@ function ContentBody({ reference }: { reference: ContentRef }) {
           const text = describeContentEntry(data?.entry?.data);
           if (text) {
             if (!cancelled) {
-              setState({ text, loading: false });
+              setState({ for: requestKey, text, name: data?.entry?.name, source: data?.entry?.source, loading: false });
             }
             return;
           }
@@ -135,16 +138,20 @@ function ContentBody({ reference }: { reference: ContentRef }) {
         const search = await fetch(
           `/api/content/${reference.kind}?q=${encodeURIComponent(wanted)}&limit=20&mechanics=1${scopeQuery(campaignId, "&")}`,
         );
-        const results = search.ok ? ((await search.json()).results ?? []) : [];
+        if (!search.ok) {
+          if (!cancelled) setState({ for: requestKey, text: null, loading: false, failed: true });
+          return;
+        }
+        const results = (await search.json()).results ?? [];
         const hit = results.find(
-          (entry: { name: string }) => entry.name.trim().toLowerCase() === wanted,
+          (entry: { name: string; source?: string; data?: Record<string, unknown> }) => entry.name.trim().toLowerCase() === wanted,
         );
         if (!cancelled) {
-          setState({ text: describeContentEntry(hit?.data), loading: false });
+          setState({ for: requestKey, text: describeContentEntry(hit?.data), name: hit?.name, source: hit?.source, loading: false });
         }
       } catch {
         if (!cancelled) {
-          setState({ text: null, loading: false });
+          setState({ for: requestKey, text: null, loading: false, failed: true });
         }
       }
     }
@@ -152,15 +159,16 @@ function ContentBody({ reference }: { reference: ContentRef }) {
     return () => {
       cancelled = true;
     };
-  }, [reference.kind, reference.slug, reference.name, campaignId]);
+  }, [reference.kind, reference.slug, reference.name, campaignId, attempt, requestKey]);
 
-  if (state.loading) {
+  if (state.for !== requestKey || state.loading) {
     return (
       <p className="flex items-center gap-2 text-sm text-stone-500">
         <Loader2 className="size-4 animate-spin" /> {t("itemHelp.loading")}
       </p>
     );
   }
+  if (state.failed) return <p role="alert" className="text-sm text-amber-200">{t("pickerFlow.helpFailed")} <button type="button" onClick={() => setAttempt(value => value + 1)} className="underline">{t("pickerFlow.retry")}</button></p>;
   if (!state.text) {
     return (
       <p className="text-sm text-stone-500">
@@ -168,7 +176,7 @@ function ContentBody({ reference }: { reference: ContentRef }) {
       </p>
     );
   }
-  return <>{renderRules(reference.kind === "feats" ? nativeFeatHelp(reference.name, state.text, locale) ?? state.text : state.text)}</>;
+  return <>{renderRules(reference.kind === "feats" && state.source !== "homebrew" ? nativeFeatHelp(state.name ?? reference.name, state.text, locale) ?? state.text : state.text)}</>;
 }
 
 function StatTile({ label, value, note }: { label: string; value: string | null; note?: string | null }) {

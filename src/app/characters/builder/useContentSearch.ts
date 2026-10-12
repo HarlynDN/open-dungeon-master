@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { pickerQueryParams } from "@/lib/i18n/picker-requests";
 import { useEffect, useRef, useState } from "react";
 import { scopedParams, useContentCampaign } from "@/lib/content-scope";
 import { uniqueByName } from "./pickerRows";
@@ -56,6 +58,7 @@ export type PickerEntry = {
 // says so instead of "nothing matched".
 export function useContentSearch(kind: string, extraParams: Record<string, string> = {}) {
   const campaignId = useContentCampaign();
+  const { locale } = useLocale();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<PickerEntry[]>([]);
   const [open, setOpen] = useState(false);
@@ -63,13 +66,21 @@ export function useContentSearch(kind: string, extraParams: Record<string, strin
   const [packMissing, setPackMissing] = useState(false);
   const [failed, setFailed] = useState(false);
   const [unadmitted, setUnadmitted] = useState<string[]>([]);
+  const [answered, setAnswered] = useState<string | null>(null);
+  const [attempt, setAttempt] = useState(0);
+  const trimmed = query.trim();
+  const rawParams = new URLSearchParams(scopedParams({ limit: trimmed ? "12" : "30", ...extraParams }, campaignId));
+  if (trimmed) rawParams.set("q", trimmed);
+  const paramsText = pickerQueryParams(rawParams, locale).toString();
+  const url = `/api/content/${kind}?${paramsText}`;
+  const requestKey = JSON.stringify([url, attempt]);
+  const current = answered === requestKey;
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (timer.current) {
       clearTimeout(timer.current);
     }
-    const trimmed = query.trim();
     // A slow browse prefetch must not land on top of the typed results that
     // replaced it; each request is cancelled by the next.
     const controller = new AbortController();
@@ -77,29 +88,28 @@ export function useContentSearch(kind: string, extraParams: Record<string, strin
       async () => {
         setLoading(true);
         try {
-          const params = new URLSearchParams(scopedParams({ limit: trimmed ? "12" : "30", ...extraParams }, campaignId));
-          if (trimmed) {
-            params.set("q", trimmed);
-          }
-          const response = await fetch(`/api/content/${kind}?${params}`, {
-            signal: controller.signal,
-          });
+          const response = await fetch(url, { signal: controller.signal });
+          if (controller.signal.aborted) return;
           if (response.ok) {
             const data = (await response.json()) as {
               results?: PickerEntry[];
               packInstalled?: boolean;
               unadmitted?: string[];
             };
+            if (controller.signal.aborted) return;
+            setAnswered(requestKey);
             setFailed(false);
             setPackMissing(data.packInstalled === false);
             setUnadmitted(Array.isArray(data.unadmitted) ? data.unadmitted : []);
-            setResults(uniqueByName(data.results ?? []));
+            setResults(uniqueByName(Array.isArray(data.results) ? data.results : []));
             if (trimmed) {
               setOpen(true);
             }
           } else {
+            setAnswered(requestKey);
             setFailed(true);
             setResults([]);
+            setUnadmitted([]);
             if (trimmed) {
               setOpen(true);
             }
@@ -108,7 +118,10 @@ export function useContentSearch(kind: string, extraParams: Record<string, strin
           // Aborted by a newer query: the newer one answers. The network
           // gone: said so until a later request gets through.
           if (!controller.signal.aborted && (error as { name?: string })?.name !== "AbortError") {
+            setAnswered(requestKey);
             setFailed(true);
+            setResults([]);
+            setUnadmitted([]);
           }
         } finally {
           if (!controller.signal.aborted) {
@@ -125,8 +138,12 @@ export function useContentSearch(kind: string, extraParams: Record<string, strin
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query, kind, campaignId, JSON.stringify(extraParams)]);
+  }, [requestKey]);
 
-  const unavailable = failed || (packMissing && !results.length && !query.trim());
-  return { query, setQuery, results, setResults, open, setOpen, loading, unavailable, packMissing, failed, unadmitted };
+  const visibleResults = current ? results : [];
+  const unavailable = current && (failed || (packMissing && !visibleResults.length && !trimmed));
+  return { query, setQuery, results: visibleResults, setResults, open, setOpen,
+    loading: !current || loading, unavailable, packMissing: current && packMissing,
+    failed: current && failed, unadmitted: current ? unadmitted : [],
+    retry: () => setAttempt(value => value + 1) };
 }

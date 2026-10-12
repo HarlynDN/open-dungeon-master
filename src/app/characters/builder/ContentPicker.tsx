@@ -1,13 +1,14 @@
 "use client";
 
 import { Loader2, Plus } from "lucide-react";
+import { spellSummaryView } from "@/lib/i18n/spell-ui-presentations";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { nativeFeatHelp } from "@/lib/i18n/feature-material-presentations";
 import { pickerName } from "@/lib/i18n/gear-ui-presentations";
 import { useEffect, useRef } from "react";
 import { cn } from "@/lib/cn";
 import { InfoButton } from "@/components/ui/InfoDialog";
-import { describeContentEntry, spellSummary } from "@/lib/help";
+import { describeContentEntry } from "@/lib/help";
 import { useContentSearch, type PickerEntry } from "./useContentSearch";
 
 export type { PickerEntry } from "./useContentSearch";
@@ -34,7 +35,7 @@ export default function ContentPicker({
   renderMeta?: (entry: PickerEntry) => string;
 }) {
   const { locale, t } = useLocale();
-  const { query, setQuery, results, setResults, open, setOpen, loading, unavailable, unadmitted } =
+  const { query, setQuery, results, setResults, open, setOpen, loading, unavailable, failed, retry, unadmitted } =
     useContentSearch(kind, extraParams);
   const container = useRef<HTMLDivElement>(null);
 
@@ -71,7 +72,8 @@ export default function ContentPicker({
       </div>
       {unavailable ? (
         <p className="mt-1 rounded-lg border border-amber-900/50 bg-amber-950/20 px-3 py-2 text-xs text-amber-200/80">
-          {t("gearUi.packMissing")}
+          {t(failed ? "pickerFlow.loadFailed" : "gearUi.packMissing")}
+          {failed ? <button type="button" onClick={retry} className="ml-2 underline">{t("pickerFlow.retry")}</button> : null}
         </p>
       ) : open && !results.length && query.trim() && !loading ? (
         <p className="mt-1 rounded-lg border border-stone-800 bg-stone-950/60 px-3 py-2 text-xs text-stone-500">
@@ -114,10 +116,10 @@ export default function ContentPicker({
                   before adding it costs no extra request. */}
               <InfoButton
                 label={pickerName(kind, entry, locale)}
-                meta={kind === "spells" ? spellSummary(entry.data) : undefined}
+                meta={kind === "spells" ? spellSummaryView(entry.data, locale, entry.source === "homebrew") : undefined}
                 text={kind === "feats" && entry.source !== "homebrew" ? nativeFeatHelp(entry.name, describeContentEntry(entry.data), locale) : describeContentEntry(entry.data)}
                 reference={
-                  entry.source === "homebrew" ? undefined : { kind, slug: entry.slug }
+                  entry.source === "homebrew" ? undefined : { kind, slug: entry.slug, name: entry.name }
                 }
               />
             </li>
