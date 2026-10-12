@@ -1,3 +1,4 @@
+import { NPC_EDITOR_MESSAGES } from "./npc-editor-messages.ts";
 import { DM_TOOLS_MESSAGES } from "./dm-tools-messages.ts";
 import { DM_ACTION_MESSAGES } from "./dm-action-messages.ts";
 import { REFERENCE_METRICS_MESSAGES } from "./reference-metrics-messages.ts";
@@ -122,6 +123,7 @@ const en = {
     ...REGION_MESSAGES.en,
     ...MAP_SCENE_MESSAGES.en,
     ...MAP_EDITOR_MESSAGES.en,
+    ...NPC_EDITOR_MESSAGES.en,
     ...DM_TOOLS_MESSAGES.en,
   ...DM_ACTION_MESSAGES.en,
   ...REFERENCE_METRICS_MESSAGES.en,
@@ -248,6 +250,7 @@ const zhCN: Messages = {
     ...REGION_MESSAGES["zh-CN"],
     ...MAP_SCENE_MESSAGES["zh-CN"],
     ...MAP_EDITOR_MESSAGES["zh-CN"],
+    ...NPC_EDITOR_MESSAGES["zh-CN"],
     ...DM_TOOLS_MESSAGES["zh-CN"],
   ...DM_ACTION_MESSAGES["zh-CN"],
   ...REFERENCE_METRICS_MESSAGES["zh-CN"],

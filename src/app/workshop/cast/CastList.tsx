@@ -1,14 +1,18 @@
 "use client";
 
+import { npcDraftDescription, npcRoleDisplay } from "@/lib/i18n/npc-editor-presentations";
+import { npcAttitudeLabel } from "@/lib/i18n/story-control-presentations";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+
 import { useState } from "react";
 import { Search, UserPlus } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { ui } from "@/lib/ui";
-import { npcPlaceholder, npcRoleLabel } from "@/lib/placeholders";
+import { npcPlaceholder } from "@/lib/placeholders";
 import { GameIcon } from "@/components/ui/GameIcon";
 import { SectionHead } from "@/components/ui/SectionHead";
 import { ListTally, sortRows, type RowSort } from "@/app/workshop/ListHead";
-import { describeNpc, draftFrom } from "@/lib/npcs/forge";
+import { draftFrom } from "@/lib/npcs/forge";
 
 // The cast, two ways. CastChips is the DM console's compact row of names,
 // moved here unchanged from DmNpcForgePanel. CastRows is the workshop's
@@ -46,22 +50,23 @@ type ListProps = {
 };
 
 export function CastChips({ npcs, selectedId, onOpen }: ListProps) {
+  const { locale, t } = useLocale();
   return (
     <section className="panel space-y-2 rounded-xl p-3">
-      <SectionHead title="The cast" glyph="system-cast" className="mb-0" />
+      <SectionHead title={t("npcEditor.cast")} glyph="system-cast" className="mb-0" />
       <div className="flex flex-wrap gap-1.5 text-xs">
         <button
           type="button"
           onClick={() => onOpen(null)}
           className={cn(ui.btnSmall, "px-2 py-1", selectedId === "" && "border-amber-500/60 bg-amber-400/10 text-amber-100")}
         >
-          <UserPlus className="size-3" /> Someone new
+          <UserPlus className="size-3" /> {t("npcEditor.new")}
         </button>
         {npcs.map((npc) => (
           <button
             key={npc.id}
             type="button"
-            title={describeNpc(draftFrom(npc as Parameters<typeof draftFrom>[0]))}
+            title={npcDraftDescription(draftFrom(npc as Parameters<typeof draftFrom>[0]), locale)}
             onClick={() => onOpen(npc)}
             className={cn(
               ui.btnSmall,
@@ -82,7 +87,7 @@ export function CastChips({ npcs, selectedId, onOpen }: ListProps) {
       </div>
       {npcs.length === 0 ? (
         <p className="reveal text-[11px] text-stone-500">
-          Nobody written yet. Everything here also fills itself in as the party meets people.
+          {t("npcEditor.empty")}
         </p>
       ) : null}
     </section>
@@ -119,6 +124,7 @@ function matches(npc: Npc, query: string): boolean {
 }
 
 export function CastRows({ npcs, onOpen, factionNames }: Omit<ListProps, "selectedId">) {
+  const { locale, t } = useLocale();
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<RowSort>("made");
   const shown = sortRows(npcs.filter((npc) => matches(npc, query)), sort, (npc) => npc.name);
@@ -130,12 +136,12 @@ export function CastRows({ npcs, onOpen, factionNames }: Omit<ListProps, "select
         <input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="Search the cast"
-          aria-label="Search the cast by name or alias"
+          placeholder={t("npcEditor.search")}
+          aria-label={t("npcEditor.searchLabel")}
           className={`${ui.input} pl-9`}
         />
       </label>
-      <ListTally shown={shown.length} total={npcs.length} noun={["person", "people"]} sort={sort} onSort={setSort} />
+      <ListTally shown={shown.length} total={npcs.length} noun={[t("npcEditor.person"), t("npcEditor.people")]} sort={sort} onSort={setSort} />
 
       <ul className="stagger space-y-2">
         {shown.map((npc) => {
@@ -162,7 +168,7 @@ export function CastRows({ npcs, onOpen, factionNames }: Omit<ListProps, "select
                   <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                     <span className="font-display tracking-wide text-amber-50">{npc.name}</span>
                     {npc.role ? (
-                      <span className="text-xs text-stone-400">{npcRoleLabel(npc.role)}</span>
+                      <span className="text-xs text-stone-400">{npcRoleDisplay(npc.role, locale)}</span>
                     ) : null}
                     <span
                       className={cn(
@@ -171,7 +177,7 @@ export function CastRows({ npcs, onOpen, factionNames }: Omit<ListProps, "select
                       )}
                     >
                       <GameIcon icon={{ kind: "glyph", key: ATTITUDE_GLYPH[npc.attitude] ?? "attitude-neutral" }} size="size-4" />
-                      {npc.attitude}
+                      {npcAttitudeLabel(npc.attitude, locale)}
                     </span>
                     {npc.factionId && factionNames?.get(npc.factionId) ? (
                       <span className="flex items-center gap-0.5 rounded-sm border border-amber-800/60 bg-amber-950/30 px-1.5 py-0.5 text-[10px] tracking-wide text-amber-200/90">
@@ -180,7 +186,7 @@ export function CastRows({ npcs, onOpen, factionNames }: Omit<ListProps, "select
                     ) : null}
                     {npc.archived ? (
                       <span className="rounded-sm border border-stone-600/60 px-1.5 py-0.5 font-display text-[10px] capitalize tracking-wider text-stone-500">
-                        set aside
+                        {t("npcEditor.archived")}
                       </span>
                     ) : null}
                   </div>
@@ -191,8 +197,8 @@ export function CastRows({ npcs, onOpen, factionNames }: Omit<ListProps, "select
                     <p className="reveal mt-1 line-clamp-2 text-sm text-stone-300">{npc.trait}</p>
                   ) : null}
                   <p className="mt-1 truncate text-[11px] text-stone-500">
-                    {relations} {relations === 1 ? "relationship" : "relationships"}
-                    {goal ? <> · wants: {goal}</> : null}
+                    {t(relations === 1 ? "npcEditor.relationshipOne" : "npcEditor.relationshipMany", { count: relations })}
+                    {goal ? <>{t("npcEditor.wants", { goal })}</> : null}
                   </p>
                 </div>
               </button>
@@ -213,17 +219,17 @@ export function CastRows({ npcs, onOpen, factionNames }: Omit<ListProps, "select
               <GameIcon icon={{ kind: "glyph", key: "system-cast" }} size="size-11" />
               <UserPlus className="absolute -bottom-1 -right-1 size-4 rounded-full bg-stone-900 p-0.5 text-amber-300" aria-hidden="true" />
             </span>
-            <span className="font-display tracking-wide">Someone new</span>
+            <span className="font-display tracking-wide">{t("npcEditor.new")}</span>
           </button>
         </li>
       </ul>
 
       {npcs.length === 0 ? (
         <p className="reveal text-[11px] text-stone-500">
-          Nobody written yet. Everything here also fills itself in as the party meets people.
+          {t("npcEditor.empty")}
         </p>
       ) : shown.length === 0 ? (
-        <p className="live-in text-xs text-stone-500">Nobody by that name or alias.</p>
+        <p className="live-in text-xs text-stone-500">{t("npcEditor.notFound")}</p>
       ) : null}
     </div>
   );

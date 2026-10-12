@@ -26,6 +26,7 @@ const {
   normalizeNpcDraft,
   normalizePersonality,
   parsePersonalityWords,
+  parsePersonalitySuggestion,
   personalityVocabulary,
   relationGraph,
   removeRelation,
@@ -421,7 +422,7 @@ test("an NPC with nothing written about them has an empty line, not a stub", () 
   assert.equal(describeNpc(draftOf({ name: "Marla" })), "");
 });
 
-console.log(`npc forge: ${passed} assertions passed.`);
+
 
 // ---- role ----
 
@@ -435,3 +436,22 @@ test("a role is kept as typed, trimmed and bounded, and absent reads as blank", 
   assert.equal(normalizeNpcDraft({ name: "Marla", role: "x".repeat(80) }).draft.role.length, 40);
   assert.equal(blankDraft().role, "");
 });
+
+// The same machine result applies in every locale; narrative words never
+// determine numeric personality. Invalid suggestions leave the draft intact.
+test("numeric personality suggestions support JSON and retain legacy English", () => {
+  const personality = { ...BLANK_PERSONALITY, drive: 2, warmth: 1, composure: -1 };
+  const json = JSON.stringify(personality, null, 2);
+  assert.deepEqual(parsePersonalitySuggestion(json), personality);
+  assert.deepEqual(parsePersonalitySuggestion("```json\n" + json + "\n```"), personality);
+  assert.deepEqual(applyGeneratedField(blankDraft(), "personality", json).personality, personality);
+  assert.equal(parsePersonalitySuggestion("very warm, cautious").warmth, 2);
+  const invalid = ["积极进取、热情", "{}", "[]", JSON.stringify({ ...personality, drive: 3 }),
+    JSON.stringify({ ...personality, warmth: "1" }), JSON.stringify({ ...personality, invented: 1 }),
+    '{"drive":1,"words":"very warm"}', JSON.stringify({ ...personality, drive: 0.5 })];
+  for (const text of invalid) {
+    assert.equal(parsePersonalitySuggestion(text), null, text);
+    assert.equal(applyGeneratedField(blankDraft(), "personality", text).personality, null);
+  }
+});
+console.log(`npc forge: ${passed} assertions passed.`);

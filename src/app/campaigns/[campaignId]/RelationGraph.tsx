@@ -1,8 +1,11 @@
 "use client";
 
+import { npcGraphRelation } from "@/lib/i18n/npc-editor-presentations";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+
 import { EmptyState } from "@/components/EmptyState";
 import { isComposingInput } from "@/lib/input-composition";
-import { useMemo, type KeyboardEvent } from "react";
+import { useId, useMemo, type KeyboardEvent } from "react";
 import { cn } from "@/lib/cn";
 import { HostSvgImage } from "@/components/ui/HostSvgImage";
 import { layoutGraph } from "@/lib/npcs/graph-layout";
@@ -17,10 +20,6 @@ import type { RelationGraph as Graph } from "@/lib/npcs/forge";
 const WIDTH = 640;
 const HEIGHT = 420;
 const RADIUS = 20;
-
-function describe(score: number): string {
-  return score >= 2 ? "close" : score >= 1 ? "friendly" : score <= -2 ? "hates" : score <= -1 ? "wary" : "knows";
-}
 
 export function RelationGraph({
   graph,
@@ -37,6 +36,9 @@ export function RelationGraph({
   onOpen: (name: string) => void;
   className?: string;
 }) {
+  const { locale, t } = useLocale();
+  const facePrefix = useId();
+  const faceId = (name: string) => `${facePrefix}-face-${Array.from(name, char => char.codePointAt(0)!.toString(16)).join("-")}`;
   const layout = useMemo(
     () =>
       new Map(
@@ -51,7 +53,7 @@ export function RelationGraph({
     [graph],
   );
   if (!graph.nodes.length) {
-    return <EmptyState size="sm" art="board" title="Write two people who know each other and the map draws itself." />;
+    return <EmptyState size="sm" art="board" title={t("npcEditor.graphEmpty")} />;
   }
   // A faction's hull: a soft disc around its members' centre, wide enough
   // to hold them all (docs/vtt-parity-implementation-plan.md section 6).
@@ -75,14 +77,14 @@ export function RelationGraph({
     <svg
       viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
       role="img"
-      aria-label="Who knows whom"
+      aria-label={t("npcEditor.graph")}
       className={cn("panel w-full rounded-lg", className)}
     >
       <defs>
         {graph.nodes.map((node) => {
           const face = portraits.get(node.name);
           return face ? (
-            <pattern key={node.name} id={`face-${slug(node.name)}`} patternUnits="objectBoundingBox" width="1" height="1">
+            <pattern key={node.name} id={faceId(node.name)} patternUnits="objectBoundingBox" width="1" height="1">
               <HostSvgImage href={face} width={RADIUS * 2} height={RADIUS * 2} preserveAspectRatio="xMidYMid slice" />
             </pattern>
           ) : null;
@@ -122,8 +124,8 @@ export function RelationGraph({
               textAnchor="middle"
               className="fill-stone-400 text-[9px]"
             >
-              {edge.note || describe(edge.score)}
-              {edge.backScore !== undefined && edge.backScore !== edge.score ? ` / ${describe(edge.backScore)}` : ""}
+              {edge.note || npcGraphRelation(edge.score, locale)}
+              {edge.backScore !== undefined && edge.backScore !== edge.score ? ` / ${npcGraphRelation(edge.backScore, locale)}` : ""}
             </text>
           </g>
         );
@@ -142,7 +144,7 @@ export function RelationGraph({
               ? {
                   role: "button",
                   tabIndex: 0,
-                  "aria-label": `Open ${node.name}`,
+                  "aria-label": t("npcEditor.open", { name: node.name }),
                   onClick: () => onOpen(node.name),
                   onKeyDown: (event: KeyboardEvent<SVGGElement>) => {
                     if (isComposingInput(event)) return;
@@ -152,12 +154,12 @@ export function RelationGraph({
                     }
                   },
                 }
-              : { "aria-label": `${node.name} (unwritten)` })}
+              : { "aria-label": t("npcEditor.unwritten", { name: node.name }) })}
             className={cn(node.known ? "cursor-pointer" : "cursor-default")}
           >
             <circle
               r={RADIUS}
-              fill={face ? `url(#face-${slug(node.name)})` : node.known ? "#1c1917" : "#0c0a09"}
+              fill={face ? `url(#${faceId(node.name)})` : node.known ? "#1c1917" : "#0c0a09"}
               stroke={node.known ? "#d4ab3a" : "#57534e"}
               strokeWidth={node.known ? 1.5 : 1}
               strokeDasharray={node.known ? undefined : "3 3"}
@@ -175,8 +177,4 @@ export function RelationGraph({
       })}
     </svg>
   );
-}
-
-function slug(name: string): string {
-  return name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
 }

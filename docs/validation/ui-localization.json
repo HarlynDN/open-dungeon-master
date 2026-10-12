@@ -648,7 +648,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/NpcFields.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped NPC workflow: owned form, personality/relationship score projections, goal captions, source-bound role labels, roster search/counts and graph accessibility localized. Raw names, authored prose, notes, IDs and numeric updates preserved; locale labels resolve uniquely to canonical role IDs, custom roles stay editable. Shared child owners retain independent scope; stat-block IDs remain machine references. Numeric personality suggestions validate canonical axes with legacy English compatibility; Chinese comma aliases and collision-free Unicode graph portrait IDs covered by focused batch checks."
     },
     {
       "path": "src/app/campaigns/[campaignId]/NpcReviewPanel.tsx",
@@ -712,7 +713,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/RelationGraph.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped NPC workflow: owned form, personality/relationship score projections, goal captions, source-bound role labels, roster search/counts and graph accessibility localized. Raw names, authored prose, notes, IDs and numeric updates preserved; locale labels resolve uniquely to canonical role IDs, custom roles stay editable. Shared child owners retain independent scope; stat-block IDs remain machine references. Numeric personality suggestions validate canonical axes with legacy English compatibility; Chinese comma aliases and collision-free Unicode graph portrait IDs covered by focused batch checks."
     },
     {
       "path": "src/app/campaigns/[campaignId]/RenarrateDialog.tsx",
@@ -1537,11 +1539,13 @@
     },
     {
       "path": "src/app/workshop/cast/CastList.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped NPC workflow: owned form, personality/relationship score projections, goal captions, source-bound role labels, roster search/counts and graph accessibility localized. Raw names, authored prose, notes, IDs and numeric updates preserved; locale labels resolve uniquely to canonical role IDs, custom roles stay editable. Shared child owners retain independent scope; stat-block IDs remain machine references. Numeric personality suggestions validate canonical axes with legacy English compatibility; Chinese comma aliases and collision-free Unicode graph portrait IDs covered by focused batch checks."
     },
     {
       "path": "src/app/workshop/cast/NpcEditorFields.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped NPC workflow: owned form, personality/relationship score projections, goal captions, source-bound role labels, roster search/counts and graph accessibility localized. Raw names, authored prose, notes, IDs and numeric updates preserved; locale labels resolve uniquely to canonical role IDs, custom roles stay editable. Shared child owners retain independent scope; stat-block IDs remain machine references. Numeric personality suggestions validate canonical axes with legacy English compatibility; Chinese comma aliases and collision-free Unicode graph portrait IDs covered by focused batch checks."
     },
     {
       "path": "src/app/workshop/encounters/EncounterExtras.tsx",

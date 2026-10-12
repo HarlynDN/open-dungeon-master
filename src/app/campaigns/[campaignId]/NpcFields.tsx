@@ -1,13 +1,13 @@
 "use client";
 
+import { npcAxisName, npcAxisDescription, npcRelationDescription } from "@/lib/i18n/npc-editor-presentations";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+
 import { Trash2 } from "lucide-react";
 import { Slider } from "@/components/ui/Slider";
 import { PERSONALITY_AXES } from "@/lib/dm/npc-logic";
 import {
-  AXIS_LABELS,
   BLANK_PERSONALITY,
-  describeAxis,
-  describeRelation,
   removeRelation,
   setRelation,
   type NpcDraft,
@@ -32,12 +32,13 @@ export function PersonalitySliders({
   draft: NpcDraft;
   onChange: (draft: NpcDraft) => void;
 }) {
+  const { locale, t } = useLocale();
   const personality = draft.personality ?? BLANK_PERSONALITY;
   return (
     <>
       {PERSONALITY_AXES.map((axis) => (
         <label key={axis} className="flex items-center gap-2 text-[11px] text-stone-500">
-          <span className="w-16 shrink-0">{AXIS_LABELS[axis].name}</span>
+          <span className="w-16 shrink-0">{npcAxisName(axis, locale)}</span>
           <Slider
             min={-3}
             max={3}
@@ -49,17 +50,16 @@ export function PersonalitySliders({
                 personality: { ...personality, [axis]: next },
               })
             }
-            label={AXIS_LABELS[axis].name}
+            label={npcAxisName(axis, locale)}
             className="min-w-0 flex-1"
           />
           <span className="w-24 shrink-0 text-right text-stone-400">
-            {describeAxis(axis, personality[axis] ?? 0)}
+            {npcAxisDescription(axis, personality[axis] ?? 0, locale)}
           </span>
         </label>
       ))}
       <p className="text-[10px] text-stone-600">
-        These drift on their own as the party treats them well or badly. Neither is a real answer,
-        and most people are unremarkable on most of it.
+        {t("npcEditor.personalityNote")}
       </p>
     </>
   );
@@ -120,6 +120,7 @@ export function RelationEditor({
   others: string[];
   onChange: (draft: NpcDraft) => void;
 }) {
+  const { locale, t } = useLocale();
   const edgeFor = (name: string) =>
     graph.edges.find((entry) => {
       const pair = [entry.from.toLowerCase(), entry.to.toLowerCase()];
@@ -147,11 +148,11 @@ export function RelationEditor({
                   relations: setRelation(draft.relations, relation.npcName, next, relation.note),
                 })
               }
-              label={`How they stand with ${relation.npcName}`}
+              label={t("npcEditor.relationLabel", { name: relation.npcName })}
               className="w-24 shrink-0"
             />
             <span className="w-20 shrink-0 text-[11px] text-stone-400">
-              {describeRelation(relation.score)}
+              {npcRelationDescription(relation.score, locale)}
             </span>
             <input
               value={relation.note ?? ""}
@@ -166,17 +167,17 @@ export function RelationEditor({
                   ),
                 })
               }
-              placeholder="why"
+              placeholder={t("npcEditor.why")}
               className="min-w-20 flex-1 rounded-md border border-stone-700 bg-stone-950 px-1.5 py-0.5 text-[11px] text-stone-400"
             />
             {edge?.dangling ? (
-              <span className="text-[10px] text-amber-300/80">nobody by that name yet</span>
+              <span className="text-[10px] text-amber-300/80">{t("npcEditor.dangling")}</span>
             ) : edge?.mutual ? (
               <span className="text-[10px] text-stone-600">
-                they say {describeRelation(theirScore)}
+                {t("npcEditor.mutual", { relation: npcRelationDescription(theirScore, locale) })}
               </span>
             ) : (
-              <span className="text-[10px] text-stone-600">one-sided</span>
+              <span className="text-[10px] text-stone-600">{t("npcEditor.oneSided")}</span>
             )}
             <button
               type="button"
@@ -186,6 +187,7 @@ export function RelationEditor({
                   relations: removeRelation(draft.relations, relation.npcName),
                 })
               }
+              aria-label={t("npcEditor.removeRelation", { name: relation.npcName })}
               className="text-stone-600 hover:text-red-300"
             >
               <Trash2 className="size-3" />

@@ -2,7 +2,7 @@ import type { Campaign } from "@/lib/db/campaigns";
 import { arcTextTimeoutMs } from "@/lib/model-client";
 import { requestUtilityMessage } from "@/lib/dm/model";
 import { stripReasoningArtifacts } from "@/lib/story-prompt";
-import { cleanSuggestion, type GeneratableField } from "@/lib/npcs/forge";
+import { cleanSuggestion, parsePersonalitySuggestion, personalitySuggestionInstruction, type GeneratableField } from "@/lib/npcs/forge";
 
 // One field of one NPC, suggested by the model.
 //
@@ -33,12 +33,11 @@ const FIELD_PROMPTS: Record<GeneratableField, string> = {
     "Write what this person is working toward over the next few sessions. One concrete objective that could plausibly succeed or fail, under 20 words.",
   ambition:
     "Write this person's defining ambition: the thing they would give up everything else for. One sentence, under 25 words.",
-  personality:
-    "Describe this person by choosing from THIS LIST ONLY and nothing else. Pick two to four, optionally prefixed with 'very'. Answer as a bare comma-separated list with no other words.",
+  personality: personalitySuggestionInstruction(),
 };
 
 const SYSTEM =
-  "You write one small piece of a non-player character for a tabletop RPG, for a Dungeon Master who will accept it or throw it away. Answer with the piece itself and nothing else: no preamble, no quotation marks, no explanation, no options to choose between. Concrete and specific beats evocative and vague every time.";
+  "You write one small piece of a non-player character for a tabletop RPG, for a Dungeon Master who will accept it or throw it away. Answer with the piece itself and nothing else: no preamble, no explanation, no options to choose between. Concrete and specific beats evocative and vague every time.";
 
 export type SuggestInput = {
   field: GeneratableField;
@@ -47,8 +46,7 @@ export type SuggestInput = {
   location?: string;
   attitude?: string;
   hint?: string;
-  // The adjectives the personality axes are built from, so a personality
-  // comes back in the vocabulary the forge can read.
+  // Legacy caller metadata; numeric personality suggestions use canonical axes.
   vocabulary: string;
 };
 
@@ -76,7 +74,6 @@ export async function suggestNpcField(
         content: [
           `Setting: ${campaign.theme || campaign.gameSettings.genre.replace(/_/g, " ")}`,
           ...known,
-          input.field === "personality" ? `The list: ${input.vocabulary}` : "",
           input.hint ? `The DM asks for: ${input.hint}` : "",
           FIELD_PROMPTS[input.field],
         ]
@@ -90,6 +87,12 @@ export async function suggestNpcField(
     return { text: "", error: "The model could not be reached." };
   }
 
-  const text = cleanSuggestion(stripReasoningArtifacts(String(message?.content ?? "")));
+  const raw = stripReasoningArtifacts(String(message?.content ?? ""));
+  if (input.field === "personality") {
+    const personality = parsePersonalitySuggestion(raw);
+    return personality ? { text: JSON.stringify(personality) }
+      : { text: "", error: "The model returned nothing usable." };
+  }
+  const text = cleanSuggestion(raw);
   return text ? { text } : { text: "", error: "The model returned nothing usable." };
 }
