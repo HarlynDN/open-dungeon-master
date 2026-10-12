@@ -42,6 +42,8 @@ export function levelUpClassLine(source: string, locale: AppLocale): string {
   return match ? createTranslator(locale)("sessionUi.level.classLine", { class: characterLabel("class", match[1], locale), level: match[2] }) : source;
 }
 
+export const LEVEL_UP_FAILURES = { refused: "The level-up was refused.", network: "Could not reach the server." } as const;
+
 // Whole known frames only. Stored server responses and history remain English;
 // unknown authored diagnostics are kept intact. No choice or rule computation.
 export function levelUpNotice(source: string, locale: AppLocale): string {
@@ -65,8 +67,8 @@ export function levelUpNotice(source: string, locale: AppLocale): string {
       return t(key as MessageKey, args);
     }
   }
-  if (source === "The level-up was refused.") return t("sessionUi.level.refused");
-  if (source === "Could not reach the server.") return t("sessionUi.level.network");
+  if (source === LEVEL_UP_FAILURES.refused) return t("sessionUi.level.refused");
+  if (source === LEVEL_UP_FAILURES.network) return t("sessionUi.level.network");
   const school = /^An (Eldritch Knight|Arcane Trickster) of level (\d+) learns (\w+) and (\w+) spells, and (\d+) from any other school; this would make (\d+)\. Pick an \3 or \4 spell instead\.$/.exec(source);
   if (school) return t("sessionUi.level.schoolRefusal", {
     subclass: subclassLabel(school[1] === "Eldritch Knight" ? "fighter" : "rogue", school[1], locale),

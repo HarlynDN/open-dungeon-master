@@ -463,8 +463,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/LevelUpDialog.tsx",
-      "state": "pending",
-      "review": "Owned progression chrome, labels, native grants/refusals and all 135 bundled option names/descriptions/requirements reviewed. Canonical rolled/ASI/spell PATCH shapes, native option keys and 26 frozen English JSX states checked. Selected option and shared/class-specific native feature help localize by complete source; canonical feature IDs stay original. Specific/themed feature help and other server refusals remain pending; authored overrides stay raw."
+      "state": "covered",
+      "review": "Guided HP/class/ASI/expertise/options/styles/subclass/spell/result copy now uses the complete locale catalog directly, without duplicated English-only JSX. Native grant/prerequisite/refusal/resource/spell references use existing reviewed adapters; unknown authored pack prose stays literal. English 26-state render fingerprints and canonical rolled/ASI/spell PATCH callback checks preserved. Business choices, step readiness, HP preview, IDs, feature names and server request/result data unchanged."
     },
     {
       "path": "src/app/campaigns/[campaignId]/Lobby.tsx",
