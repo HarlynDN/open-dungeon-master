@@ -1,3 +1,4 @@
+import { characterFlowSource } from "@/lib/characters/flow-source";
 // What a character sheet shows about the character's state, computed by the
 // engine's own functions so the sheet dialog, the party panel and the party
 // rail say what the rules engine holds:
@@ -106,14 +107,14 @@ export function stateTags(sheet: CharacterSheet, locale: AppLocale = "en"): Stat
   const tags: StateTag[] = [];
   const saves = sheet.deathSaves;
   if (saves?.dead) {
-    tags.push({ id: "dead", label: "Dead", tone: "harm", note: "Only magic that raises the dead brings them back." });
+    tags.push({ id: "dead", label: characterFlowSource("sheetPlay.dead"), tone: "harm", note: "Only magic that raises the dead brings them back." });
   } else if (saves && sheet.currentHp <= 0) {
     tags.push(
       saves.stable
-        ? { id: "stable", label: "Stable", tone: "neutral", note: "Unconscious at 0 hit points, no longer rolling death saves." }
+        ? { id: "stable", label: characterFlowSource("sheetPlay.stable"), tone: "neutral", note: "Unconscious at 0 hit points, no longer rolling death saves." }
         : {
             id: "dying",
-            label: `Dying ${saves.successes}/${saves.failures}`,
+            label: characterFlowSource("sheetPlay.dying.count", { successes: saves.successes, failures: saves.failures }),
             tone: "harm",
             note: `Death saves: ${saves.successes} success${saves.successes === 1 ? "" : "es"}, ${saves.failures} failure${saves.failures === 1 ? "" : "s"}. Three successes stabilize, three failures kill.`,
           },
@@ -121,16 +122,16 @@ export function stateTags(sheet: CharacterSheet, locale: AppLocale = "en"): Stat
   }
   const stopped = incapacitatedBy(sheet.conditions);
   if (stopped && sheet.currentHp > 0) {
-    tags.push({ id: "incapacitated", label: `Cannot act (${stopped})`, tone: "harm", note: `${sheet.name} can take no actions or reactions while ${stopped}.` });
+    tags.push({ id: "incapacitated", label: characterFlowSource("sheetPlay.incapacitated", { condition: stopped }), tone: "harm", note: `${sheet.name} can take no actions or reactions while ${stopped}.` });
   }
   const exhaustion = sheet.exhaustion ?? 0;
   if (exhaustion > 0) {
-    tags.push({ id: "exhaustion", label: `Exhaustion ${exhaustion}`, tone: "harm", note: `${describeExhaustion(exhaustion)}. A long rest lowers it by one.` });
+    tags.push({ id: "exhaustion", label: characterFlowSource("sheetPlay.exhaustion", { level: exhaustion }), tone: "harm", note: `${describeExhaustion(exhaustion)}. A long rest lowers it by one.` });
   }
   if (sheet.concentratingOn) {
     tags.push({
       id: "concentration",
-      label: `Concentrating: ${sheet.concentratingOn}`,
+      label: characterFlowSource("sheetPlay.concentration", { spell: sheet.concentratingOn }),
       tone: "bless",
       note: "Damage calls for a CON save (DC 10 or half the damage); another concentration spell, or falling unconscious, ends it.",
     });
@@ -140,14 +141,14 @@ export function stateTags(sheet: CharacterSheet, locale: AppLocale = "en"): Stat
     const trigger = sheet.conditionMeta?.[readied]?.source;
     tags.push({
       id: "readied",
-      label: "Readied",
+      label: characterFlowSource("sheetPlay.readied"),
       tone: "ward",
       note: trigger ? `When ${trigger}: the readied attack, with the reaction. It lapses when their next turn starts.` : "An action held for its trigger; it lapses when their next turn starts.",
     });
   }
   const inspiration = sheet.resources?.inspiration;
   if (inspiration && inspiration.used < inspiration.max) {
-    tags.push({ id: "inspiration", label: "Inspiration", tone: "bless", note: "Spend it for advantage on one attack, save or check." });
+    tags.push({ id: "inspiration", label: characterFlowSource("sheetPlay.inspiration"), tone: "bless", note: "Spend it for advantage on one attack, save or check." });
   }
   if (locale === "en") return tags;
   const t = createTranslator(locale);

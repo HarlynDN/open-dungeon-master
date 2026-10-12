@@ -471,8 +471,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/LeadEditDialog.tsx",
-      "state": "pending",
-      "review": "Owned correction/inventory/spell/feat/AC controls and native correction notices reviewed, with frozen English JSX and unchanged PATCH shape. Standard Chinese condition entry becomes canonical English, including across UI switching. Remaining complex condition/material/magic-item names and child source descriptions remain pending."
+      "state": "covered",
+      "review": "All correction fields, descriptions, saving controls and source-held refusals render existing localized sheetDialog/playEdit projections. Save/network defaults source-bound to those keys; raw errors/held lines remain stored. Draft item/spell IDs, numerical correction payload, conditions, authority and onClose behavior unchanged. No extra write or automatic resubmission on language switch."
     },
     {
       "path": "src/app/campaigns/[campaignId]/LeadEditParts.tsx",
@@ -1161,7 +1161,8 @@
     },
     {
       "path": "src/app/characters/builder/lineage.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Pure canonical lineage/art/ASI/choice/trait/carousel helpers retain original English/source data and identity matching; actual LineageCarousel uses lineageChipViews, lineageChoiceViews, lineageTraitView and lineageTaglineView for localized built-in presentation. ALL is source-bound to lineageUi.allAbilities without changing its native sentinel or numeric bumps. Authored/third-party traits remain original; separate bundled material translations retain their own source binding."
     },
     {
       "path": "src/app/characters/builder/pickerRows.ts",
@@ -1216,7 +1217,8 @@
     },
     {
       "path": "src/app/characters/builder/submit.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "All identity/ancestry/calling/score/spell/equipment gates already pair native English with typed BuilderPresentation or RuleProblem details; footer/jump paths render builderFeedbackText with viewer locale. Source-bind final score/roll/name gates and no-spells confirmation without changing block targets, reconciliation, payloads, stored character data, canonical IDs, rules or names. Original English returns retained for pure consumers."
     },
     {
       "path": "src/app/characters/builder/useBuilderDerived.ts",
@@ -1244,7 +1246,8 @@
     },
     {
       "path": "src/app/characters/builder/useTableRules.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Table settings and ability/wealth roll defaults source-bound to existing finishRulesErrorText, abilityRollErrorText and gearWealthError display adapters. Raw server refutations remain intact in state and can rerender on locale switch. Existing POST kind/campaign/class, kept dice faces/totals, reroll threshold, wealth class ownership, defaults and retry callbacks unchanged. This hook emits native results rather than translated mechanism identifiers."
     },
     {
       "path": "src/app/characters/new/page.tsx",
@@ -1956,8 +1959,8 @@
     },
     {
       "path": "src/components/sheet/sheet-state.ts",
-      "state": "pending",
-      "review": "HP/speed/state/defense/condition/charge/counter display adapters localized with English defaults preserved. Unlimited resource guidance and attunement refusal prose still need review."
+      "state": "covered",
+      "review": "Reviewed all live call sites: HP/speed/state/defense/condition/charge/counter display receives viewer locale; multiclass hit-die IDs are localized at the SheetState caller. State labels source-bound to existing sheetPlay keys while English defaults remain exact. Known unlimited guidance uses source-gated resource help; attunement refusals project at SheetGearRow through sheetUsageMessage. Names/unknown conditions/trigger text and equipment matching remain authored or canonical."
     },
     {
       "path": "src/components/sheet/useSpellPool.ts",
@@ -2044,7 +2047,8 @@
     },
     {
       "path": "src/components/ui/ImageLightbox.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Shared enlarge/download/close chrome localized; source/alt/caption remain authored and thumbnail/download URLs unchanged. Download filename preserves Unicode letters/numbers for Chinese captions, retaining original English slug behavior and extension parsing. Dialog/escape/overlay handling unchanged."
     },
     {
       "path": "src/components/ui/InfoDialog.tsx",

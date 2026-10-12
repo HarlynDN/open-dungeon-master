@@ -1,3 +1,4 @@
+import { CHARACTER_FLOW_SOURCE } from "../src/lib/characters/flow-source.ts";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -74,6 +75,11 @@ if (args.has("--sync")) {
   process.exit(0);
 }
 const problems = [];
+// Native compatibility errors/labels and their existing display keys form one
+// source contract. Editing a producer caption requires reviewing its locale.
+for (const [key, source] of Object.entries(CHARACTER_FLOW_SOURCE)) {
+  if (MESSAGE_CATALOGS.en[key] !== source) problems.push(`Character-flow source changed: ${key}`);
+}
 const nativeBook = JSON.parse(fs.readFileSync(path.join(root, "src/lib/rulebook/srd-5.1.json"), "utf8"));
 for (const [kind, rows] of [["part", nativeBook.parts], ["chapter", nativeBook.chapters]]) for (const row of rows) {
   for (const field of ["title", "blurb"]) if (BOOK_HEADERS[`${kind}:${row.id}`]?.[field] !== row[field] || MESSAGE_CATALOGS.en[`bookUi.${kind}.${row.id}.${field}`] !== row[field]) problems.push(`Rulebook navigation source changed: ${kind}.${row.id}.${field}`);

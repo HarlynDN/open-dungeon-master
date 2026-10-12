@@ -1,5 +1,6 @@
 "use client";
 
+import { characterFlowSource } from "@/lib/characters/flow-source";
 import { useCallback, useEffect, useState } from "react";
 import type { HpMethod } from "@/lib/srd/hit-points";
 import type { StartingWealthMethod } from "@/lib/srd/starting-wealth";
@@ -63,9 +64,9 @@ export async function requestAbilityPool(): Promise<AbilityPoolAnswer | { error:
     });
     const data = await response.json().catch(() => ({}));
     const answer = response.ok ? shapePool(data?.abilities) : null;
-    return answer ?? { error: data?.error || "The server could not roll the dice. Try again." };
+    return answer ?? { error: data?.error || characterFlowSource("abilityUi.errorRoll") };
   } catch {
-    return { error: "Could not reach the server to roll the dice." };
+    return { error: characterFlowSource("abilityUi.errorNetwork") };
   }
 }
 
@@ -134,7 +135,7 @@ export function useTableRules(
         if (!ok || !data?.campaign) {
           // Rules stay unknown; the server still derives the real numbers
           // when the character is saved.
-          setRulesError(data?.error || "This table's rules could not be read, so the numbers shown are the defaults.");
+          setRulesError(data?.error || characterFlowSource("finishUi.rulesReadError"));
           return;
         }
         // A setting the table never changed is the server's default.
@@ -147,7 +148,7 @@ export function useTableRules(
       })
       .catch(() => {
         if (!cancelled) {
-          setRulesError("Could not reach the server for this table's rules, so the numbers shown are the defaults.");
+          setRulesError(characterFlowSource("finishUi.rulesNetworkError"));
         }
       });
     return () => {
@@ -202,10 +203,10 @@ export function useTableRules(
         if (ok && data?.wealth) {
           setWealth(data.wealth);
         } else {
-          setWealthError(data?.error || "The server could not roll your starting wealth. Try again.");
+          setWealthError(data?.error || characterFlowSource("gearUi.errorWealth"));
         }
       })
-      .catch(() => setWealthError("Could not reach the server to roll your starting wealth."))
+      .catch(() => setWealthError(characterFlowSource("gearUi.errorWealthNetwork")))
       .finally(() => setWealthBusy(false));
   }, [campaignId, classId, wealthBusy]);
 

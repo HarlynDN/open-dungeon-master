@@ -32,7 +32,7 @@ flow remains incomplete; the review-repair checkpoint is a separate scoped task.
 | Locale foundation | Registry, persistence, browser fallback, typed complete catalogs, model locale policy, classified token proxy, chapter budget, CJK retrieval, IME protection | Real prompt-usage calibration; keep legacy campaign/history regressions |
 | DM safety | Per-event engine conclusions with English/Chinese renderers; AI prose separated; one text-only correction and safe fallback; shared localized enemy names and held-resource names/IDs; scoped resource aliases and ambiguity retries; real Codex combat/resource acceptance | Untracked feature/reaction options and broader spell/condition/pack coverage; conservative regex coverage is not full language understanding |
 | Embeddings | Original English deployment default retained; explicit multilingual opt-in; fixed bilingual calibration/holdout and hard-negative policy | Broader pack quality; opt-in affects English campaigns and rebuilds indexes |
-| UI | **320/440** covered files, **39** pending literal sites, **15293** message keys; scoped AST gate; earlier play/session surfaces plus hand labels/targets/area selection, campaign-locale action sentences, native previews, basic/reaction rules, common casting refusals, spell selectors, all 113 owned mechanic notes, 103 native technique and 23 maneuver labels, attack/bonus-route and material/ritual refusals, built-in form attack names and verified current-actor labels, correction/multi-picker chrome, native downtime facts and inventory/vitals approval/player-trade controls, guided progression chrome, rest/loot/travel moments and all native option summaries, owned generic feature/feat summaries, feat choice controls, campaign/map entry notices the complete app help walkthrough story/chronicle/arc controls, NPC roster review, campaign model controls market/shelf/trade, party-lead, quest-log/faction controls plus facts, pinned memories, context-trace presentation and passage edit/reroll/action controls and character/companion entry and private-chat/media presentation and audit/timeline controls and dice tray/source controls and board movement/camera/order/area/target/drawing and DM placement/measurement controls | Remaining dynamic text keeps hand files pending; general play/inventory/rest/level-up/save/resume surfaces and full sheet/party dialogs; file fraction is not overall completion or an effort estimate |
+| UI | **326/440** covered files, **17** pending literal sites, **15296** message keys; scoped AST gate; earlier play/session surfaces plus hand labels/targets/area selection, campaign-locale action sentences, native previews, basic/reaction rules, common casting refusals, spell selectors, all 113 owned mechanic notes, 103 native technique and 23 maneuver labels, attack/bonus-route and material/ritual refusals, built-in form attack names and verified current-actor labels, correction/multi-picker chrome, native downtime facts and inventory/vitals approval/player-trade controls, guided progression chrome, rest/loot/travel moments and all native option summaries, owned generic feature/feat summaries, feat choice controls, campaign/map entry notices the complete app help walkthrough story/chronicle/arc controls, NPC roster review, campaign model controls market/shelf/trade, party-lead, quest-log/faction controls plus facts, pinned memories, context-trace presentation and passage edit/reroll/action controls and character/companion entry and private-chat/media presentation and audit/timeline controls and dice tray/source controls and board movement/camera/order/area/target/drawing and DM placement/measurement controls | Remaining dynamic text keeps hand files pending; general play/inventory/rest/level-up/save/resume surfaces and full sheet/party dialogs; file fraction is not overall completion or an effort estimate |
 | Character creation/material | Identity, ancestry, class introductions, ability allocation, gear, spell book/preparation and finish preview; 517 spell and 228 equipment names; 257-entry contextual terminology policy and lint gate; 415/415 static registered resource names and guidance shared with DM references; 135/135 bundled option names/descriptions plus all 20 nonempty requirement frames; 146 shared/class-specific feature summaries, 54 native feat summaries and owned feat choice controls; four native pregen card summaries and backstories; original-source review records | Remaining specific/themed feature and magic-item material; dynamic free-cast resources and user-authored/pack text remain outside the static resource review |
 | Player system logs | Structured rule diagnostics, engine-generated combat conclusions and structured audit/timeline presentation retain English protocol semantics with localized display | General player-visible log templates; model-facing English tool results remain independent |
 | Resource delivery | UI/content/help scopes; selected-locale help loads independently on open, with retry; character/campaign boundaries; generated resources checked by lint; production Turbopack build and anonymous bilingual browser switch/reload succeed; home/character/campaign SSR and initial-script payloads measured | Hydrated/lazy network totals, authenticated campaign switching and active-play browser acceptance; route-level JS payload remains large |
@@ -81,6 +81,39 @@ Message (传讯术); those are different contexts. Current default Turbopack bui
 attempts were blocked at its internal port binding by the execution environment,
 including the escalated attempt; this batch does not claim a passing production
 build. Keep that gate for the next phase boundary rather than retrying per batch.
+
+The latest character-flow checkpoint closes six owners after reviewing the live
+builder/sheet/correction display paths: submission gates, server roll/table-rule
+feedback, sheet state, native lineage helpers, lead correction and shared image
+lightbox. Existing typed BuilderPresentation and RuleProblem paths already
+localize the builder's blockers; this batch source-binds their native English
+compatibility strings to those same display keys. It does not claim new
+translations for already translated gates. The metadata lives in the characters
+module and has no runtime catalog or active-locale dependency, preserving the
+pure submission boundary. The AST gate checks all 22 source bindings against
+the existing English catalog. HP/speed/state/defense/charge/counter call sites
+pass viewer locale; hit-die class IDs and attunement refusals are projected at
+their actual sheet callers. Stored names, ready triggers and unknown condition
+or spell text stay raw. ALL retains its native ASI sentinel and numeric values.
+The original source-review records were refreshed only for the four inspected
+changed source files, with the new shared source dependency recorded for builder
+feedback; existing catalog values and frozen outputs were not regenerated.
+
+Three new UI keys cover image enlargement, download and close. Authored caption,
+alt and asset URL are unchanged. Filename generation now retains Unicode letters
+and numbers, so a Chinese portrait caption yields a Chinese filename; English
+slugs and extension handling remain the same.
+
+Validation: translation/AST/terminology and types passed; the existing builder
+feedback check passed after restoring its required pure-module import boundary
+and refreshing the reviewed source fingerprint (11 enforced checks, including
+all 32 real gate codes and 13 frozen picker outputs). One grouped mock check
+compares six actual sheet-state scenarios to the pre-edit English result and
+checks bilingual image controls, Unicode filenames and authored text/URL
+preservation (`/tmp/odm-character-flow-ui-check.log`). No model, audio, full-suite
+or production build was repeated. Current UI: 326/440, 17 pending literal sites,
+15296 message keys. Remaining zero-literal owners still require dynamic review;
+these figures are not whole-goal completion.
 
 The latest content-import checkpoint completes the picker from source selection
 through preview and the immediate import receipt. Its 24 native planner notice

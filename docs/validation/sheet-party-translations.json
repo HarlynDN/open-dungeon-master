@@ -23,7 +23,7 @@
     "src/components/sheet/SheetCounters.tsx": "649bf1de0c499e00874d6edfdbf397db883eb913786bd58bf5f471978bab003d",
     "src/components/sheet/SheetParts.tsx": "e47623ce33dfbf4f8f4ea14bafa08f253d2fa6e6e95af05be55d4deebb3ae363",
     "src/components/sheet/SheetState.tsx": "d664ff1c154de748ef0605e2dc44a05ae5b534b4c071070d6cc6a3da2621906b",
-    "src/components/sheet/sheet-state.ts": "213c086dd18e14a7036c09029752c7793907085889f97eea90257fd8c577ce56",
+    "src/components/sheet/sheet-state.ts": "690e43d5e6276af98c09d23745bf8f78f048e995ea5eb4450cd69568b57bbf23",
     "src/lib/i18n/roll-presentations.ts": "3999299af4647b88f15531dfeca1c5bae09350bbd2479b877eba0c8d7706d582",
     "src/lib/i18n/sheet-play-messages.ts": "bb0d4fedc82ddce4fbd7bb8703182b085c97eb17532ac9251424cd01581056ff",
     "src/lib/i18n/sheet-play-presentations.ts": "5c0500769004e486e789698dc2e72aa2852153280a67cf2b1fc5d5b67add6622",

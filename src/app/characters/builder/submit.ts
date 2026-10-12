@@ -1,3 +1,4 @@
+import { characterFlowSource } from "@/lib/characters/flow-source";
 import { builderGate, builderRules, type BuilderPresentation, type BuilderValidation } from "@/lib/characters/builder-feedback";
 import { ruleTerm, type RuleProblem } from "@/lib/characters/problems";
 import { backgroundFeatureFor } from "@/lib/backgrounds";
@@ -73,7 +74,7 @@ type SubmitInput = {
 // block on the step where the pick is made.
 export function identityBlocker(state: BuilderState, background?: BackgroundOption): StepBlock | null {
   if (!state.name.trim()) {
-    return block("name", "Give your character a name.", builderGate("builderGate.name"));
+    return block("name", characterFlowSource("builderGate.name"), builderGate("builderGate.name"));
   }
   if (background?.skillChoice && state.backgroundSkills.filter(Boolean).length < background.skillChoice.count) {
     return block("backgroundSkills", `Pick your ${background.name} skill proficiencies first.`, builderGate("builderGate.backgroundSkills", { background: ruleTerm("background", background.name) }));
@@ -283,7 +284,7 @@ export function abilitiesBlocker(
   state?: Pick<BuilderState, "method" | "scores"> & Partial<Pick<BuilderState, "rollPool" | "featChoices">>,
 ): StepBlock | null {
   if (!derived.abilities) {
-    return block("scores", "Assign all six ability scores first.", builderGate("builderGate.scores"));
+    return block("scores", characterFlowSource("builderGate.scores"), builderGate("builderGate.scores"));
   }
   const placed = state ? Object.values(state.scores).map((score) => score ?? POINT_BUY_MIN) : [];
   if (state?.method === "standard" && !sameNumbers(placed, STANDARD_ARRAY)) {
@@ -302,7 +303,7 @@ export function abilitiesBlocker(
   if (state?.method === "roll") {
     const thrown = (state.rollPool ?? []).map((entry) => entry.total);
     if (!sameNumbers(placed, thrown)) {
-      return block("scores", "Rolled scores are the six totals thrown, each placed on one ability. Roll the dice, then place all six.", builderGate("builderGate.roll"));
+      return block("scores", characterFlowSource("builderGate.roll"), builderGate("builderGate.roll"));
     }
   }
   const unresolvedSlot = derived.activeAsiChoices.findIndex(
@@ -344,7 +345,7 @@ export function validateBuilder(
 ): BuilderValidation | null {
   const { derived, race, klass, background } = input;
   if (!derived.abilities || !derived.preview || !race || !klass || !background) {
-    return { kind: "error", message: "Assign all six ability scores first.", presentation: builderGate("builderGate.scores") };
+    return { kind: "error", message: characterFlowSource("builderGate.scores"), presentation: builderGate("builderGate.scores") };
   }
   // The gates read the picks as the sheet will carry them, not as they were
   // typed: buildBuilderResult reconciles once more, and a pick that step
@@ -370,7 +371,7 @@ export function validateBuilder(
   if (derived.castingLabel && !state.spells.length && !state.cantrips.length && !state.spellWarningAck) {
     return {
       kind: "spellWarning",
-      message: `${state.name.trim() || "This character"} has no ${derived.castingLabel.toLowerCase()} selected and will start unable to cast. Press again to continue anyway.`,
+      message: characterFlowSource("builderGate.spellWarning", { name: state.name.trim() || characterFlowSource("builder.character"), casting: derived.castingLabel.toLowerCase() }),
       presentation: builderGate("builderGate.spellWarning", { name: state.name.trim(), casting: ruleTerm("castingKind", derived.castingLabel) }),
     };
   }

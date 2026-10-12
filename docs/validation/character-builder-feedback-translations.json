@@ -5,7 +5,7 @@
   "provenance": "Original Chinese prose drafted against current repository English gates, option labels, style names and class/world casting labels. No proprietary Chinese rulebook translation used.",
   "review": "Implementation agent compared numeric/count/method/filing semantics, unchanged source English and catalog names with their repository sources. Not human or external approval.",
   "sources": {
-    "src/app/characters/builder/submit.ts": "87583860ba64030390052b1f4e390e31af778db7659549984c07a69008443992",
+    "src/app/characters/builder/submit.ts": "dc5846e2077e9565c5194a72a51a0a2d0a48f4d52c81df1149a2836f23551b56",
     "src/app/characters/builder/reconcile.ts": "809d7b82512f778e6a2bf5cc34902e6fdd6a30154e722369ffd67ffecb349ea7",
     "src/lib/srd/options.json": "282c28e994ebab973231ced19e6caeea7a3ae102338a04309fc26e3103919a9d",
     "src/lib/srd/feature-effects.ts": "0a7f3b483608a2207bfd8af110edc36e8f4c96b7e0a5fc51e1e874e979a1b95e",
@@ -23,7 +23,8 @@
     "src/lib/classes/resources.json": "d50bca1b6efecb6abc30de5ef3f0d9f2b3e35ae45783a497e47762bc848cf5a9",
     "src/lib/classes/steampunk-features.json": "7793dd7b5280309f798868bd685e63e7df237e921bc035fc34f2f94ef5c52221",
     "src/lib/classes/steampunk.json": "8713ba8905dfdedbab59c34ac0d18668033a52f3bdd7040c184b138afeb831d7",
-    "src/lib/worlds/bundled/saltmarch.json": "e4583a2f5a97a89b7b8b59993ce4d6e23882d314f57e8f484cef46e1f506f4a8"
+    "src/lib/worlds/bundled/saltmarch.json": "e4583a2f5a97a89b7b8b59993ce4d6e23882d314f57e8f484cef46e1f506f4a8",
+    "src/lib/characters/flow-source.ts": "d3f7be16f55d357ca6a41c415d53c923d0356b628559a918770d9fbd8bfadb5b"
   },
   "catalog": "src/lib/i18n/builder-messages.ts",
   "catalogSha256": "c4737a9fc88a0de8ed319707fd48d7f55e0cab93d7c8b7b13cc695c6e2106807",

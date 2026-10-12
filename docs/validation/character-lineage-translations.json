@@ -7,7 +7,7 @@
   "sources": {
     "src/lib/srd/races.json": "a3661913715291b4ca72cc730f4d261b4da98cd6d9240490bbf5fa0550e6871e",
     "src/lib/srd/racial-grants.ts": "616e2e333bdf3ee48a8ea070e5531cab2e04686cb515fea5e96aed108be095ac",
-    "src/app/characters/builder/lineage.ts": "92b08312611e79e79f0430e97f6477f852d36e636a236ea5b86b021f16403587",
+    "src/app/characters/builder/lineage.ts": "fbb0199825c6582e8405d661c4d22adf0ea4fb8946d3196f82acef0816e67169",
     "src/app/characters/builder/steps/AncestryStep.tsx": "0c8618fd8b354a36a2f85f710f542fc0afb2e5e0c8db24021298f1ab52270625",
     "src/app/characters/builder/LineageCarousel.tsx": "6ac6a4980e58da73573833bbca3797eccbd96d873ff8481c789672606dac897b",
     "src/app/characters/builder/OptionCardGrid.tsx": "e77b970222d0368ac74330bdcaaf26a64f4590893384ea6ff7abcddd259c2386",

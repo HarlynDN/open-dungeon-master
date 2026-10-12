@@ -1,3 +1,4 @@
+import { characterFlowSource } from "@/lib/characters/flow-source";
 // The pure half of the lineage grid and the class cards: which plate a card
 // shows, its one-line character, its chips, what a trait row opens onto, and
 // the order the carousel walks. No React and no fetches, so
@@ -132,7 +133,8 @@ export function asiChips(asi: Partial<Record<Ability, number>>): AsiChip[] {
   // Six equal bumps read better as one chip than as the first two of six.
   if (bumps.length === 6 && bumps.every(([, bonus]) => bonus === bumps[0][1])) {
     const bonus = `+${bumps[0][1]}`;
-    return [{ ability: "ALL", bonus, label: `ALL ${bonus}` }];
+    const ability = characterFlowSource("lineageUi.allAbilities");
+    return [{ ability, bonus, label: `${ability} ${bonus}` }];
   }
   return bumps.map(([ability, value]) => {
     const bonus = value > 0 ? `+${value}` : String(value);

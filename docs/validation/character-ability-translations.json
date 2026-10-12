@@ -13,7 +13,7 @@
     "src/app/characters/builder/steps/FinishStep.tsx": "c21709faab972c02f4a3233114d8eb867ce3118802a664a48448fbab9431245a",
     "src/app/characters/builder/abilityDice.ts": "2274f564b6a0516d8ef6940acd4074711a4809654d21ea14420d59375c148aec",
     "src/app/characters/builder/abilityGains.ts": "db7adcd8fd8e9a46cf1c2851da4c80a5162d25d472674c10e86c13bebbad45ab",
-    "src/app/characters/builder/useTableRules.ts": "29068b9cce2bb1754412e479b29e54ba927e907f21c4416942589ceef342e750",
+    "src/app/characters/builder/useTableRules.ts": "5a28340d296f579ac16db524bd59394d596bbdfe05ab95793dba5956b95324c0",
     "src/app/api/characters/rolls/route.ts": "8ada7f9282076e5204a93dbc35e811a903d9564598ffbee9666a888ae7217c3a",
     "src/lib/i18n/ability-ui-presentations.ts": "20b5234266e6d6ebd5ebccc2a4001e6c5ec84d7857f75ba4bb1cccfa82524794",
     "src/app/characters/builder/Dice.tsx": "e4ff37631e1d8026397e8bb265f05fbad402dddf6a94f3fb39e00a6c7966c497"

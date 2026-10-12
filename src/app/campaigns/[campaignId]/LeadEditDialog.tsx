@@ -1,5 +1,6 @@
 "use client";
 
+import { characterFlowSource } from "@/lib/characters/flow-source";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { referenceDisplayName } from "@/lib/i18n/references";
 import { gearKind, gearRarity, gearCostText } from "@/lib/i18n/gear-ui-presentations";
@@ -207,7 +208,7 @@ export function LeadEditDialog({
         });
         const data = (await response.json().catch(() => ({}))) as { error?: string; held?: string[] };
         if (!response.ok) {
-          setError(data.error || "Could not save the correction.");
+          setError(data.error || characterFlowSource("sheetDialog.edit.error.save"));
           return;
         }
         if (Array.isArray(data.held) && data.held.length) {
@@ -216,7 +217,7 @@ export function LeadEditDialog({
         }
         onClose();
       } catch {
-        setError("Could not reach the server.");
+        setError(characterFlowSource("sheetDialog.edit.error.network"));
       } finally {
         setBusy(false);
       }

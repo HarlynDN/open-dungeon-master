@@ -1,3 +1,4 @@
+import { IMAGE_UI_MESSAGES } from "./image-ui-messages.ts";
 import { IMPORT_FLOW_MESSAGES } from "./import-flow-messages.ts";
 import { MONSTER_HAND_MESSAGES } from "./monster-hand-messages.ts";
 import { PLAY_REVIEW_MESSAGES } from "./play-review-messages.ts";
@@ -137,6 +138,7 @@ const en = {
     ...MAP_EDITOR_MESSAGES.en,
     ...NPC_EDITOR_MESSAGES.en,
     ...DM_RESULT_MESSAGES.en,
+    ...IMAGE_UI_MESSAGES.en,
     ...IMPORT_FLOW_MESSAGES.en,
     ...MONSTER_HAND_MESSAGES.en,
     ...PLAY_REVIEW_MESSAGES.en,
@@ -276,6 +278,7 @@ const zhCN: Messages = {
     ...MAP_EDITOR_MESSAGES["zh-CN"],
     ...NPC_EDITOR_MESSAGES["zh-CN"],
     ...DM_RESULT_MESSAGES["zh-CN"],
+    ...IMAGE_UI_MESSAGES["zh-CN"],
     ...IMPORT_FLOW_MESSAGES["zh-CN"],
     ...MONSTER_HAND_MESSAGES["zh-CN"],
     ...PLAY_REVIEW_MESSAGES["zh-CN"],
