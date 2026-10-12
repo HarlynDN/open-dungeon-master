@@ -1,5 +1,9 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { combatName } from "@/lib/i18n/combat-ui-presentations";
+import type { AppLocale } from "@/lib/i18n/locales";
+
 import { useState } from "react";
 import { X } from "lucide-react";
 import { cn } from "@/lib/cn";
@@ -39,12 +43,7 @@ export function initialValue(field: CatalogField): Value {
   return "";
 }
 
-const SHARES = [
-  { value: "full", label: "Full" },
-  { value: "half", label: "Half" },
-  { value: "double", label: "Double" },
-  { value: "none", label: "None" },
-];
+const SHARES = ["full", "half", "double", "none"] as const;
 
 function hitDiceLeft(sheet: CharacterSheet): number {
   if (sheet.hitDicePools?.length) {
@@ -53,8 +52,8 @@ function hitDiceLeft(sheet: CharacterSheet): number {
   return Math.max(0, sheet.hitDice.total - sheet.hitDice.spent);
 }
 
-function enemyLabel(enemy: Enemy): string {
-  return `${enemy.name}${enemy.currentHp !== undefined ? ` (${enemy.currentHp}/${enemy.maxHp})` : ""}`;
+function enemyLabel(enemy: Enemy, locale: AppLocale): string {
+  return `${combatName(enemy.name, "enemy", locale)}${enemy.currentHp !== undefined ? ` (${enemy.currentHp}/${enemy.maxHp})` : ""}`;
 }
 
 // A pick from a list that may also be typed: the SRD conditions plus a
@@ -72,13 +71,14 @@ function PickOrType({
   options: SelectOption<string>[];
   placeholder: string;
 }) {
+  const { t } = useLocale();
   const known = options.some((option) => option.value === value);
   const [typing, setTyping] = useState(Boolean(value) && !known);
   const other = field.other;
   const all: SelectOption<string>[] = [
     { value: "", label: placeholder },
     ...options,
-    ...(other ? [{ value: OTHER, label: `${other.label}...` }] : []),
+    ...(other ? [{ value: OTHER, label: t("dmField.other", { label: other.label }) }] : []),
   ];
   return (
     <div className="space-y-1.5">
@@ -125,20 +125,21 @@ function ShareRows({
   sheets: CharacterSheet[];
   enemies: Enemy[];
 }) {
+  const { locale, t } = useLocale();
   const refOf = (row: ShareRow) => (row.enemyId ? `enemy:${row.enemyId}` : `character:${row.characterId}`);
   const taken = new Set(value.map(refOf));
   const choices: SelectOption<string>[] = [
     ...enemies.map((enemy) => ({
       value: `enemy:${enemy.id}`,
-      label: enemyLabel(enemy),
+      label: enemyLabel(enemy, locale),
       icon: { kind: "glyph" as const, key: "system-bestiary" },
-      group: "Enemies",
+      group: t("dmField.enemies"),
     })),
     ...sheets.map((sheet) => ({
       value: `character:${sheet.id}`,
       label: sheet.name,
       icon: { kind: "glyph" as const, key: "tab-characters" },
-      group: "Characters",
+      group: t("dmField.characters"),
     })),
   ];
   const nameOf = (ref: string) => choices.find((choice) => choice.value === ref)?.label ?? ref;
@@ -157,14 +158,14 @@ function ShareRows({
             <span className="min-w-0 grow truncate text-sm text-stone-200">{nameOf(refOf(row))}</span>
             <SegmentedControl
               size="sm"
-              label={`Share for ${nameOf(refOf(row))}`}
-              options={SHARES}
+              label={t("dmField.share", { name: nameOf(refOf(row)) })}
+              options={SHARES.map(value => ({ value, label: t(`dmField.${value}`) }))}
               value={row.share}
               onChange={(share) => onChange(value.map((entry, at) => (at === index ? { ...entry, share } : entry)))}
             />
             <button
               type="button"
-              aria-label={`Take ${nameOf(refOf(row))} off`}
+              aria-label={t("dmField.takeOff", { name: nameOf(refOf(row)) })}
               onClick={() => onChange(value.filter((_, at) => at !== index))}
               className={cn(ui.btnSmall, "min-h-9 px-2")}
             >
@@ -177,11 +178,11 @@ function ShareRows({
         value=""
         onChange={add}
         options={[
-          { value: "", label: "Add a creature" },
+          { value: "", label: t("dmField.addCreature") },
           ...choices.map((choice) => ({ ...choice, disabled: taken.has(choice.value) })),
         ]}
-        label={`Add to ${field.label}`}
-        placeholder="Add a creature"
+        label={t("dmField.addTo", { field: field.label })}
+        placeholder={t("dmField.addCreature")}
       />
     </div>
   );
@@ -196,6 +197,7 @@ function HitDiceRows({
   onChange: (value: Value) => void;
   sheets: CharacterSheet[];
 }) {
+  const { t } = useLocale();
   const diceFor = (id: string) => value.find((row) => row.characterId === id)?.dice ?? 0;
   const set = (id: string, dice: number) =>
     onChange([...value.filter((row) => row.characterId !== id), ...(dice > 0 ? [{ characterId: id, dice }] : [])]);
@@ -208,7 +210,7 @@ function HitDiceRows({
             <span className="min-w-0 grow">
               <span className="block truncate text-sm text-stone-200">{sheet.name}</span>
               <span className="block text-[11px] text-stone-500">
-                {left ? `${left} left, ${sheet.hitDice.die}` : "No hit dice left"}
+                {left ? t("dmField.diceLeft", { left, die: sheet.hitDice.die }) : t("dmField.noDice")}
               </span>
             </span>
             <NumberStepper
@@ -217,7 +219,7 @@ function HitDiceRows({
               min={0}
               max={Math.min(20, left)}
               disabled={left === 0}
-              label={`Hit dice for ${sheet.name}`}
+              label={t("dmField.diceFor", { name: sheet.name })}
               onChange={(dice) => set(sheet.id, dice)}
             />
           </li>
@@ -279,19 +281,20 @@ export function FieldInput({
   sheets: CharacterSheet[];
   enemies: Enemy[];
 }) {
+  const { locale, t } = useLocale();
   switch (field.kind) {
     case "character": {
       // The empty row stays in the list, as it did in the browser's own
       // select, so a picked target can be unpicked.
       const options: SelectOption<string>[] = [
-        { value: "", label: "Pick a character" },
+        { value: "", label: t("dmField.pickCharacter") },
         ...sheets.map((sheet) => ({
           value: sheet.id,
           label: sheet.name,
           icon: { kind: "glyph" as const, key: "tab-characters" },
         })),
       ];
-      return <Select value={String(value ?? "")} onChange={onChange} options={options} label={field.label} placeholder="Pick a character" />;
+      return <Select value={String(value ?? "")} onChange={onChange} options={options} label={field.label} placeholder={t("dmField.pickCharacter")} />;
     }
     case "characters":
       return (
@@ -300,7 +303,7 @@ export function FieldInput({
           picked={Array.isArray(value) ? (value as string[]) : []}
           choices={sheets.map((sheet) => ({ id: sheet.id, name: sheet.name }))}
           onChange={onChange}
-          empty="Nobody has a character yet."
+          empty={t("dmField.noCharacters")}
         />
       );
     case "enemies":
@@ -308,21 +311,21 @@ export function FieldInput({
         <ChipPicks
           label={field.label}
           picked={Array.isArray(value) ? (value as string[]) : []}
-          choices={enemies.map((enemy) => ({ id: enemy.id, name: enemyLabel(enemy) }))}
+          choices={enemies.map((enemy) => ({ id: enemy.id, name: enemyLabel(enemy, locale) }))}
           onChange={onChange}
-          empty="No enemy is standing."
+          empty={t("dmField.noEnemy")}
         />
       );
     case "enemy": {
       const options: SelectOption<string>[] = [
-        { value: "", label: "Pick an enemy" },
+        { value: "", label: t("dmField.pickEnemy") },
         ...enemies.map((enemy) => ({
           value: enemy.id,
-          label: enemyLabel(enemy),
+          label: enemyLabel(enemy, locale),
           icon: { kind: "glyph" as const, key: "system-bestiary" },
         })),
       ];
-      return <Select value={String(value ?? "")} onChange={onChange} options={options} label={field.label} placeholder="Pick an enemy" />;
+      return <Select value={String(value ?? "")} onChange={onChange} options={options} label={field.label} placeholder={t("dmField.pickEnemy")} />;
     }
     case "combatant":
       return (
@@ -330,19 +333,19 @@ export function FieldInput({
           field={field}
           value={String(value ?? "")}
           onChange={onChange}
-          placeholder="Pick who"
+          placeholder={t("dmField.pickWho")}
           options={[
             ...sheets.map((sheet) => ({
               value: sheet.id,
               label: sheet.name,
               icon: { kind: "glyph" as const, key: "tab-characters" },
-              group: "Characters",
+              group: t("dmField.characters"),
             })),
             ...enemies.map((enemy) => ({
               value: enemy.id,
-              label: enemyLabel(enemy),
+              label: enemyLabel(enemy, locale),
               icon: { kind: "glyph" as const, key: "system-bestiary" },
-              group: "Enemies",
+              group: t("dmField.enemies"),
             })),
           ]}
         />
@@ -362,15 +365,15 @@ export function FieldInput({
     case "select": {
       const options = (field.options ?? []).map((option) => ({ value: option.value, label: option.label }));
       if (field.other) {
-        return <PickOrType field={field} value={String(value ?? "")} onChange={onChange} options={options} placeholder="Not set" />;
+        return <PickOrType field={field} value={String(value ?? "")} onChange={onChange} options={options} placeholder={t("dmField.notSet")} />;
       }
       return (
         <Select
           value={String(value ?? "")}
           onChange={onChange}
-          options={[{ value: "", label: "Not set" }, ...options]}
+          options={[{ value: "", label: t("dmField.notSet") }, ...options]}
           label={field.label}
-          placeholder="Not set"
+          placeholder={t("dmField.notSet")}
         />
       );
     }
@@ -384,7 +387,7 @@ export function FieldInput({
           max={field.max}
           onChange={onChange}
           label={field.label}
-          emptyHint="Not set"
+          emptyHint={t("dmField.notSet")}
         />
       );
     case "longtext":
@@ -429,7 +432,7 @@ export function argsFor(fields: CatalogField[], values: Record<string, Value>): 
   for (const field of fields) {
     const value = values[field.name];
     if (field.kind === "list" && typeof value === "string") {
-      const list = value.split(/[,\n]/).map((entry) => entry.trim()).filter(Boolean);
+      const list = value.split(/[,，\n]/).map((entry) => entry.trim()).filter(Boolean);
       if (list.length) {
         out[field.name] = list;
       }

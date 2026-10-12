@@ -1,5 +1,10 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { dmActionSource, dmActionView } from "@/lib/i18n/dm-action-presentations";
+import { dmCatalogText, dmFieldView, dmActionError, DM_ACTION_NETWORK_FAILURE, DM_ACTION_REFUSED } from "@/lib/i18n/dm-field-presentations";
+import { dmResultPresentation } from "@/lib/i18n/dm-result-presentations";
+
 import { useMemo, useState } from "react";
 import { Loader2, Play } from "lucide-react";
 import { cn } from "@/lib/cn";
@@ -16,7 +21,7 @@ import {
 } from "@/app/campaigns/[campaignId]/DmActionFields";
 import type { CatalogEntry, CatalogField } from "@/lib/dm/invoke-catalog";
 import { needsConfirm } from "@/lib/dm/catalog-types";
-import { describeAdjudicationResult, type ResultLine } from "@/lib/dm/catalog-result";
+import { describeAdjudicationResult } from "@/lib/dm/catalog-result";
 import { holdConsoleOutcome } from "@/app/campaigns/[campaignId]/ConsoleOutcomeBanner";
 import type { PublicEncounter } from "@/lib/db/encounter-view";
 import type { CharacterSheet } from "@/lib/schemas/sheet";
@@ -87,6 +92,8 @@ export function DmActionForm({
   // wears the same face the row did.
   glyph?: string;
 }) {
+  const { locale, t } = useLocale();
+  const view = dmActionView(entry, locale);
   const [values, setValues] = useState<Record<string, Value>>(() =>
     Object.fromEntries(
       entry.fields.map((field) => [
@@ -98,7 +105,7 @@ export function DmActionForm({
   );
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  const [outcome, setOutcome] = useState<ResultLine[]>([]);
+  const [outcome, setOutcome] = useState<{ result: unknown } | null>(null);
 
   const enemies = useMemo(
     // The dead and the fled are still on the encounter so the log reads
@@ -107,6 +114,9 @@ export function DmActionForm({
     [encounter],
   );
   const blocked = entry.needsEncounter && !encounter;
+  const names = { characters: sheets.map(sheet => sheet.name), enemies: (encounter?.enemies ?? []).map(enemy => enemy.name) };
+  const lines = outcome ? describeAdjudicationResult(outcome.result, dmResultPresentation(locale, names)) : [];
+  const fields = entry.fields.map(field => dmActionSource(entry) ? dmFieldView(entry.name, field, locale) : field);
 
   function set(name: string, value: Value) {
     setValues((current) => ({ ...current, [name]: value }));
@@ -117,12 +127,12 @@ export function DmActionForm({
     // What cannot be taken back asks first (end the fight, dismiss a
     // companion, a death).
     const question = needsConfirm(entry, args);
-    if (question && !(await appConfirm(question, { title: entry.label, actionLabel: "Run it" }))) {
+    if (question && !(await appConfirm(dmActionSource(entry) ? dmCatalogText(question, locale) : question, { title: view.label, actionLabel: t("dmField.runConfirm") }))) {
       return;
     }
     setBusy(true);
     setError("");
-    setOutcome([]);
+    setOutcome(null);
     try {
       const response = await fetch(`/api/campaigns/${campaignId}/dm/invoke`, {
         method: "POST",
@@ -131,13 +141,15 @@ export function DmActionForm({
       });
       const body = await response.json().catch(() => ({}));
       if (!response.ok) {
-        setError(String(body.error ?? "The engine refused that."));
+        setError(String(body.error ?? DM_ACTION_REFUSED));
         return;
       }
       const lines = describeAdjudicationResult(body.result);
-      setOutcome(lines);
+      setOutcome({ result: body.result });
       // Starting a fight moves the panel to the board: the result waits there.
-      if (entry.name === "start_encounter") holdConsoleOutcome(campaignId, entry.label, lines);
+      if (entry.name === "start_encounter") holdConsoleOutcome(campaignId, entry.label, lines, {
+        result: body.result, action: { name: entry.name, label: entry.label, summary: entry.summary }, names,
+      });
       // Keep the picked character or enemy: a DM usually runs several
       // actions against the same target in a row.
       setValues((current) =>
@@ -152,7 +164,7 @@ export function DmActionForm({
       );
       onRan?.();
     } catch {
-      setError("Could not reach the server.");
+      setError(DM_ACTION_NETWORK_FAILURE);
     } finally {
       setBusy(false);
     }
@@ -163,15 +175,15 @@ export function DmActionForm({
       <div className="flex items-start gap-2.5">
         <GameIcon icon={{ kind: "glyph", key: glyph }} size="size-8" className="shrink-0" />
         <div className="min-w-0">
-          <p className="gold-title font-display text-sm tracking-wide">{entry.label}</p>
-          <p className="text-xs leading-snug text-stone-400">{entry.summary}</p>
+          <p className="gold-title font-display text-sm tracking-wide">{view.label}</p>
+          <p className="text-xs leading-snug text-stone-400">{view.summary}</p>
         </div>
       </div>
 
       {blocked ? (
         <p className="reveal flex items-center gap-2 rounded-lg border border-amber-500/25 bg-stone-900/60 px-2.5 py-2 text-xs text-stone-300">
           <GameIcon icon={{ kind: "glyph", key: "tab-battle" }} size="size-5" className="shrink-0" />
-          Needs a fight running. Start one first.
+          {t("dmField.blocked")}
         </p>
       ) : null}
 
@@ -179,7 +191,7 @@ export function DmActionForm({
           label would press the first of them (the stepper's minus) whenever
           its caption was tapped. Each control carries the field's name. */}
       <div className="stagger space-y-2.5">
-        {entry.fields.map((field) => (
+        {fields.map((field) => (
           <div key={field.name} className={cn(field.kind === "boolean" && "flex flex-wrap items-center justify-between gap-x-3")}>
             <div className={cn(field.square && "flex flex-wrap items-center gap-x-2")}>
               <FieldLabel className={cn((field.kind === "boolean" || field.square) && "mb-0")}>
@@ -221,19 +233,19 @@ export function DmActionForm({
           className={ui.btnPrimary}
         >
           {busy ? <Loader2 className="size-4 animate-spin" /> : <Play className="size-4" />}
-          Run
+          {t("dmField.run")}
         </button>
         {error ? (
           <span role="alert" className="motion-shake inline-block text-xs text-red-300">
-            {error}
+            {dmActionError(error, entry, locale)}
           </span>
         ) : null}
       </div>
-      {outcome.length ? (
+      {lines.length ? (
         // The engine's answer, line by line: the hit points it moved, the
         // resistance it applied, the concentration it broke.
         <ul className="reveal stagger space-y-0.5 rounded-lg border border-stone-700/50 bg-stone-950/40 px-2.5 py-2 text-xs" aria-live="polite">
-          {outcome.map((line, index) => (
+          {lines.map((line, index) => (
             <li
               key={`${index}-${line.text}`}
               className={cn(

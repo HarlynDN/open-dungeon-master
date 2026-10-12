@@ -1,9 +1,13 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { dmActionView } from "@/lib/i18n/dm-action-presentations";
+import { dmResultPresentation, type DmResultNames } from "@/lib/i18n/dm-result-presentations";
+
 import { X } from "lucide-react";
 import { useSyncExternalStore } from "react";
 import { cn } from "@/lib/cn";
-import type { ResultLine } from "@/lib/dm/catalog-result";
+import { describeAdjudicationResult, type ResultLine } from "@/lib/dm/catalog-result";
 
 // What the DM console's "Start a fight" said (the ambush's surprise rolls,
 // who is placed where), kept for the Battle tab. Starting a fight moves the
@@ -11,7 +15,8 @@ import type { ResultLine } from "@/lib/dm/catalog-result";
 // before anyone could read it; the result now waits on the board until it
 // is dismissed.
 
-type Held = { campaignId: string; title: string; lines: ResultLine[]; seq: number };
+type HeldResult = { result: unknown; action: { name: string; label: string; summary: string }; names: DmResultNames };
+type Held = { campaignId: string; title: string; lines: ResultLine[]; seq: number; source?: HeldResult };
 
 let held: Held | null = null;
 const listeners = new Set<() => void>();
@@ -21,8 +26,8 @@ function subscribe(listener: () => void) {
   return () => listeners.delete(listener);
 }
 
-export function holdConsoleOutcome(campaignId: string, title: string, lines: ResultLine[]) {
-  held = { campaignId, title, lines, seq: (held?.seq ?? 0) + 1 };
+export function holdConsoleOutcome(campaignId: string, title: string, lines: ResultLine[], source?: HeldResult) {
+  held = { campaignId, title, lines, source, seq: (held?.seq ?? 0) + 1 };
   for (const listener of listeners) listener();
 }
 
@@ -32,8 +37,11 @@ function dismiss() {
 }
 
 export function ConsoleOutcomeBanner({ campaignId }: { campaignId: string }) {
+  const { locale, t } = useLocale();
   const shown = useSyncExternalStore(subscribe, () => held, () => null);
   if (!shown || shown.campaignId !== campaignId || !shown.lines.length) return null;
+  const title = shown.source ? dmActionView(shown.source.action, locale).label : shown.title;
+  const lines = shown.source ? describeAdjudicationResult(shown.source.result, dmResultPresentation(locale, shown.source.names)) : shown.lines;
   return (
     <div
       key={shown.seq}
@@ -41,18 +49,18 @@ export function ConsoleOutcomeBanner({ campaignId }: { campaignId: string }) {
       className="reveal-banner mb-2 rounded-lg border border-amber-500/30 bg-stone-950/80 px-3 py-2 text-xs"
     >
       <div className="flex items-center justify-between gap-2">
-        <p className="gold-title font-display text-[11px] uppercase tracking-[0.18em]">{shown.title}</p>
+        <p className="gold-title font-display text-[11px] uppercase tracking-[0.18em]">{title}</p>
         <button
           type="button"
           onClick={dismiss}
-          aria-label="Dismiss the result"
+          aria-label={t("dmField.dismiss")}
           className="motion-press flex size-7 items-center justify-center rounded-md text-stone-500 hover:text-amber-200"
         >
           <X className="size-3.5" />
         </button>
       </div>
       <ul className="stagger mt-1 space-y-0.5">
-        {shown.lines.map((line, index) => (
+        {lines.map((line, index) => (
           <li
             key={`${index}-${line.text}`}
             className={cn(

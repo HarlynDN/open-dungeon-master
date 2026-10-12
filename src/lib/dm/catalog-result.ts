@@ -15,6 +15,22 @@
 export type ResultTone = "good" | "bad" | "info";
 export type ResultLine = { text: string; tone: ResultTone };
 
+// Optional display adapter; the default still yields the original English
+// protocol-derived readout. It never changes handler results or verdicts.
+export type ResultPresentation = {
+  frame: (source: string, values: Record<string, string | number>) => string;
+  term: (kind: string, value: string) => string;
+  native: (source: string, key: string) => string;
+  label: (key: string, fallback: string) => string;
+  join: (parts: string[], separator: string) => string;
+};
+function frame(p: ResultPresentation | undefined, source: string, values: Record<string, string | number> = {}): string {
+  return p ? p.frame(source, values) : source.replace(/\{(\w+)\}/g, (_, key: string) => String(values[key] ?? `{${key}}`));
+}
+const term = (p: ResultPresentation | undefined, kind: string, value: string) => p?.term(kind, value) ?? value;
+const native = (p: ResultPresentation | undefined, text: string, key: string) => p?.native(forAPerson(text), key) ?? text;
+const join = (p: ResultPresentation | undefined, parts: string[], separator = ", ") => p?.join(parts, separator) ?? parts.join(separator);
+
 type Row = Record<string, unknown>;
 
 const isRecord = (value: unknown): value is Row =>
@@ -82,7 +98,7 @@ function scalar(value: unknown): string | null {
 }
 
 // One creature an area or a split touched: "Goblin 1: failed the save (8), 14 damage, dead".
-function describeRow(row: Row): ResultLine | null {
+function describeRow(row: Row, p?: ResultPresentation): ResultLine | null {
   const who = scalar(row.target) ?? scalar(row.name) ?? scalar(row.character) ?? scalar(row.enemy);
   if (!who) {
     return null;
@@ -90,40 +106,40 @@ function describeRow(row: Row): ResultLine | null {
   const parts: string[] = [];
   if (typeof row.success === "boolean") {
     const rolled = typeof row.save === "number" ? ` (${row.save})` : "";
-    parts.push(row.success ? `made the save${rolled}` : `failed the save${rolled}`);
+    parts.push(frame(p, row.success ? "made the save{rolled}" : "failed the save{rolled}", { rolled }));
   }
   if (typeof row.autoFailed === "string") {
-    parts.push(`failed automatically: ${row.autoFailed}`);
+    parts.push(frame(p, "failed automatically: {reason}", { reason: native(p, row.autoFailed, "autoFailed") }));
   }
   const damage = typeof row.damage === "number" ? row.damage : typeof row.amount === "number" ? row.amount : null;
   if (damage !== null) {
-    parts.push(`${damage} damage`);
+    parts.push(frame(p, "{damage} damage", { damage }));
   }
   for (const key of ["hp", "health", "conditionApplied", "note", "resistance"]) {
     const text = scalar(row[key]);
     if (text) {
-      parts.push(key === "hp" ? `HP ${text}` : text);
+      parts.push(key === "hp" ? frame(p, "HP {hp}", { hp: text }) : native(p, text, key));
     }
   }
   // Prismatic Spray: the rays each creature drew and what each did
   // (src/lib/dm/prismatic.ts), the engine's own words.
   const rays = scalar(row.rays);
   if (rays) {
-    parts.push(`${Array.isArray(row.rays) && row.rays.length > 1 ? "rays" : "ray"} ${rays}`);
+    parts.push(frame(p, Array.isArray(row.rays) && row.rays.length > 1 ? "rays {rays}" : "ray {rays}", { rays: Array.isArray(row.rays) ? join(p, row.rays.map(ray => term(p, "color", String(ray)))) : term(p, "color", rays) }));
   }
   if (Array.isArray(row.effects)) {
-    parts.push(...row.effects.filter((entry): entry is string => typeof entry === "string" && entry.trim() !== ""));
+    parts.push(...row.effects.filter((entry): entry is string => typeof entry === "string" && entry.trim() !== "").map(text => native(p, text, "effects")));
   }
   if (typeof row.tempHpAbsorbed === "number" && row.tempHpAbsorbed > 0) {
-    parts.push(`temp HP absorbed ${row.tempHpAbsorbed}`);
+    parts.push(frame(p, "temp HP absorbed {amount}", { amount: row.tempHpAbsorbed }));
   }
   if (typeof row.concentrationBroken === "string") {
-    parts.push(`concentration on ${row.concentrationBroken} broken`);
+    parts.push(frame(p, "concentration on {spell} broken", { spell: term(p, "spell", row.concentrationBroken) }));
   }
   if (row.dead === true) {
-    parts.push("dead");
+    parts.push(frame(p, "dead"));
   } else if (row.dropped === true) {
-    parts.push("down at 0 HP");
+    parts.push(frame(p, "down at 0 HP"));
   }
   const bad = row.dead === true || row.dropped === true || typeof row.concentrationBroken === "string";
   // A row can say the same thing twice (its health word "dead" and its dead
@@ -135,29 +151,29 @@ function describeRow(row: Row): ResultLine | null {
     said.add(key);
     return true;
   });
-  return { text: `${who}: ${once.join(", ") || "no effect"}`, tone: bad ? "bad" : "info" };
+  return { text: frame(p, "{who}: {effects}", { who: term(p, "name", who), effects: join(p, once) || frame(p, "no effect") }), tone: bad ? "bad" : "info" };
 }
 
-function concentrationLine(value: unknown): ResultLine | null {
+function concentrationLine(value: unknown, p?: ResultPresentation): ResultLine | null {
   if (!isRecord(value)) {
     return null;
   }
-  const spell = scalar(value.spell) ?? "their spell";
-  const rolled = typeof value.rolled === "number" ? `rolled ${value.rolled}` : null;
-  const dc = typeof value.dc === "number" ? `DC ${value.dc}` : null;
+  const spell = scalar(value.spell) ? term(p, "spell", scalar(value.spell)!) : frame(p, "their spell");
+  const rolled = typeof value.rolled === "number" ? frame(p, "rolled {total}", { total: value.rolled }) : null;
+  const dc = typeof value.dc === "number" ? frame(p, "DC {dc}", { dc: value.dc }) : null;
   const held = value.held === true || value.kept === true || value.broken === false;
   const broken = value.held === false || value.kept === false || value.broken === true;
-  const verdict = held ? "held" : broken ? "broken" : null;
-  const detail = [rolled && dc ? `${rolled} against ${dc}` : rolled ?? dc, verdict].filter(Boolean).join(", ");
+  const verdict = held ? frame(p, "held") : broken ? frame(p, "broken") : null;
+  const detail = join(p, [rolled && dc ? frame(p, "{rolled} against {dc}", { rolled, dc }) : rolled ?? dc, verdict].filter((part): part is string => Boolean(part)));
   return {
-    text: `Concentration on ${spell}${detail ? `: ${detail}` : ""}`,
+    text: frame(p, detail ? "Concentration on {spell}: {detail}" : "Concentration on {spell}", { spell, detail }),
     tone: broken ? "bad" : "info",
   };
 }
 
-export function describeAdjudicationResult(result: unknown): ResultLine[] {
+export function describeAdjudicationResult(result: unknown, p?: ResultPresentation): ResultLine[] {
   if (!isRecord(result)) {
-    return [{ text: "Done.", tone: "good" }];
+    return [{ text: frame(p, "Done."), tone: "good" }];
   }
   const lines: ResultLine[] = [];
   const used = new Set<string>();
@@ -170,15 +186,15 @@ export function describeAdjudicationResult(result: unknown): ResultLine[] {
   const total = take("total");
   const success = take("success");
   if (typeof total === "number") {
-    const verdict = typeof success === "boolean" ? (success ? ", success" : ", failure") : "";
-    lines.push({ text: `Rolled ${total}${verdict}`, tone: success === false ? "bad" : "info" });
+    const verdict = typeof success === "boolean" ? frame(p, success ? ", success" : ", failure") : "";
+    lines.push({ text: frame(p, "Rolled {total}{verdict}", { total, verdict }), tone: success === false ? "bad" : "info" });
   } else if (typeof success === "boolean") {
-    lines.push({ text: success ? "Success" : "Failure", tone: success ? "good" : "bad" });
+    lines.push({ text: frame(p, success ? "Success" : "Failure"), tone: success ? "good" : "bad" });
   }
   const hit = take("hit");
   if (typeof hit === "boolean") {
     const crit = take("crit") === true;
-    lines.push({ text: hit ? (crit ? "Critical hit" : "Hit") : "Miss", tone: hit ? "good" : "info" });
+    lines.push({ text: frame(p, hit ? (crit ? "Critical hit" : "Hit") : "Miss"), tone: hit ? "good" : "info" });
   }
 
   // What the hit points did.
@@ -186,54 +202,54 @@ export function describeAdjudicationResult(result: unknown): ResultLine[] {
   used.add("damageApplied");
   used.add("damageRolled");
   if (typeof damage === "number") {
-    lines.push({ text: `${damage} damage`, tone: "info" });
+    lines.push({ text: frame(p, "{damage} damage", { damage }), tone: "info" });
   }
   const hp = scalar(take("hp"));
   if (hp) {
-    lines.push({ text: `HP now ${hp}`, tone: "info" });
+    lines.push({ text: frame(p, "HP now {hp}", { hp }), tone: "info" });
   }
   const health = scalar(take("health"));
   if (health) {
-    lines.push({ text: health, tone: "info" });
+    lines.push({ text: native(p, health, "health"), tone: "info" });
   }
   const absorbed = take("tempHpAbsorbed");
   if (typeof absorbed === "number" && absorbed > 0) {
-    lines.push({ text: `Temporary hit points absorbed ${absorbed}`, tone: "info" });
+    lines.push({ text: frame(p, "Temporary hit points absorbed {amount}", { amount: absorbed }), tone: "info" });
   }
   const broken = take("concentrationBroken");
   if (typeof broken === "string" && broken) {
-    lines.push({ text: `Concentration on ${broken} broken`, tone: "bad" });
+    lines.push({ text: frame(p, "Concentration on {spell} broken", { spell: term(p, "spell", broken) }), tone: "bad" });
   }
-  const concentration = concentrationLine(take("concentration"));
+  const concentration = concentrationLine(take("concentration"), p);
   if (concentration) {
     lines.push(concentration);
   }
-  const enemyConcentration = concentrationLine(take("enemyConcentration"));
+  const enemyConcentration = concentrationLine(take("enemyConcentration"), p);
   if (enemyConcentration) {
     lines.push(enemyConcentration);
   }
   if (take("dead") === true) {
-    lines.push({ text: "Dead", tone: "bad" });
+    lines.push({ text: frame(p, "Dead"), tone: "bad" });
   } else if (take("dropped") === true) {
-    lines.push({ text: "Down at 0 HP", tone: "bad" });
+    lines.push({ text: frame(p, "Down at 0 HP"), tone: "bad" });
   }
   const dying = scalar(take("dying"));
   if (dying) {
-    lines.push({ text: `Dying: ${dying}`, tone: "bad" });
+    lines.push({ text: frame(p, "Dying: {detail}", { detail: native(p, dying, "dying") }), tone: "bad" });
   }
 
   // The save the effect forced, in the words a table uses: "DEX save, DC 15".
   const dc = take("dc");
   if (typeof dc === "number") {
     const ability = scalar(result.saveAbility);
-    lines.push({ text: ability ? `${ability.toUpperCase()} save, DC ${dc}` : `Save DC ${dc}`, tone: "info" });
+    lines.push({ text: ability ? frame(p, "{ability} save, DC {dc}", { ability: term(p, "ability", ability.toUpperCase()), dc }) : frame(p, "Save DC {dc}", { dc }), tone: "info" });
   }
 
   // The engine's own sentences.
   for (const key of SENTENCE_KEYS) {
     const text = scalar(take(key));
     if (text) {
-      lines.push({ text, tone: "info" });
+      lines.push({ text: native(p, text, key), tone: "info" });
     }
   }
 
@@ -242,7 +258,7 @@ export function describeAdjudicationResult(result: unknown): ResultLine[] {
     if (Array.isArray(list)) {
       for (const text of list) {
         if (typeof text === "string" && text.trim()) {
-          lines.push({ text: text.trim(), tone });
+          lines.push({ text: native(p, text.trim(), key), tone });
         }
       }
     }
@@ -253,7 +269,7 @@ export function describeAdjudicationResult(result: unknown): ResultLine[] {
     const rows = take(key);
     if (Array.isArray(rows)) {
       for (const row of rows) {
-        const line = isRecord(row) ? describeRow(row) : null;
+        const line = isRecord(row) ? describeRow(row, p) : null;
         if (line) {
           lines.push(line);
         }
@@ -261,13 +277,13 @@ export function describeAdjudicationResult(result: unknown): ResultLine[] {
     }
   }
   if (take("encounterOver") === true) {
-    lines.push({ text: "The fight is over.", tone: "good" });
+    lines.push({ text: frame(p, "The fight is over."), tone: "good" });
   }
   // A round number on its own reads as a label; with a sentence that already
   // names the round it is said once.
   const round = take("round");
-  if (typeof round === "number" && !lines.some((line) => line.text.toLowerCase().includes(`round ${round}`))) {
-    lines.push({ text: `Round ${round}`, tone: "info" });
+  if (typeof round === "number" && !lines.some((line) => line.text.toLowerCase().includes(frame(p, "Round {round}", { round }).toLowerCase()))) {
+    lines.push({ text: frame(p, "Round {round}", { round }), tone: "info" });
   }
 
   // Anything else a handler said in words, labelled by its key.
@@ -277,13 +293,13 @@ export function describeAdjudicationResult(result: unknown): ResultLine[] {
     }
     const text = scalar(value);
     if (text) {
-      lines.push({ text: typeof value === "string" && /\s/.test(value) ? text : `${words(key)}: ${text}`, tone: "info" });
+      lines.push({ text: typeof value === "string" && /\s/.test(value) ? native(p, text, key) : frame(p, "{label}: {value}", { label: p?.label(key, words(key)) ?? words(key), value: term(p, key, text) }), tone: "info" });
     } else if (value === true) {
-      lines.push({ text: words(key), tone: "info" });
+      lines.push({ text: p?.label(key, words(key)) ?? words(key), tone: "info" });
     }
   }
   const readable = lines
     .map((line) => ({ ...line, text: forAPerson(line.text) }))
     .filter((line) => line.text);
-  return readable.length ? readable : [{ text: "Done.", tone: "good" }];
+  return readable.length ? readable : [{ text: frame(p, "Done."), tone: "good" }];
 }

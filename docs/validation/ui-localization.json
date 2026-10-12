@@ -220,7 +220,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/ConsoleOutcomeBanner.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Shared DM action workflow: all 99 native actions/565 fields use source-bound locale projections for labels, help, examples, options and conditional confirms. Original names/field values/defaults/ranges/IDs, encounter gates and request bodies stay native. Form and held board banner retain raw results for viewer-locale changes; structured roll/HP/save/concentration/area rows use an optional display adapter without changing English handler/model results. Known facade refusals translate; authored/custom/unknown diagnostics remain raw. Picker IDs, sharing/hit dice/typed custom values and Chinese-comma lists checked in the grouped fixture. Imported child owners retain their own scope; general engine sentence/pack prose coverage remains a separate log gate."
     },
     {
       "path": "src/app/campaigns/[campaignId]/ContextPanel.tsx",
@@ -253,11 +254,13 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmActionFields.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Shared DM action workflow: all 99 native actions/565 fields use source-bound locale projections for labels, help, examples, options and conditional confirms. Original names/field values/defaults/ranges/IDs, encounter gates and request bodies stay native. Form and held board banner retain raw results for viewer-locale changes; structured roll/HP/save/concentration/area rows use an optional display adapter without changing English handler/model results. Known facade refusals translate; authored/custom/unknown diagnostics remain raw. Picker IDs, sharing/hit dice/typed custom values and Chinese-comma lists checked in the grouped fixture. Imported child owners retain their own scope; general engine sentence/pack prose coverage remains a separate log gate."
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmActionForm.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Shared DM action workflow: all 99 native actions/565 fields use source-bound locale projections for labels, help, examples, options and conditional confirms. Original names/field values/defaults/ranges/IDs, encounter gates and request bodies stay native. Form and held board banner retain raw results for viewer-locale changes; structured roll/HP/save/concentration/area rows use an optional display adapter without changing English handler/model results. Known facade refusals translate; authored/custom/unknown diagnostics remain raw. Picker IDs, sharing/hit dice/typed custom values and Chinese-comma lists checked in the grouped fixture. Imported child owners retain their own scope; general engine sentence/pack prose coverage remains a separate log gate."
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmAssistPanel.tsx",

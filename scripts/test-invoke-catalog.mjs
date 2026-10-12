@@ -889,4 +889,40 @@ test("Correct a sheet turns a named field and its value into the sheet's own key
   }
 });
 
+// Shared console localization must not change the catalog protocol, and new
+// native fields/options must not silently fall back to English after review.
+await import("../src/lib/i18n/messages.ts");
+const { DM_FIELD_COPY } = await import("../src/lib/i18n/dm-field-metadata.ts");
+const { dmFieldView } = await import("../src/lib/i18n/dm-field-presentations.ts");
+const { dmResultPresentation } = await import("../src/lib/i18n/dm-result-presentations.ts");
+test("every native console field has a source-bound translation with original values", () => {
+  for (const entry of ADJUDICATIONS) {
+    for (const field of entry.fields) {
+      const view = dmFieldView(entry.name, field, "zh-CN");
+      assert.equal(dmFieldView(entry.name, field, "en"), field);
+      const protocol = value => ({ ...value, label: undefined, help: undefined, placeholder: undefined,
+        options: value.options?.map(option => ({ ...option, label: undefined })),
+        other: value.other ? { ...value.other, label: undefined, placeholder: undefined } : undefined });
+      assert.deepEqual(protocol(view), protocol(field));
+      for (const source of [field.label, field.help, field.placeholder, field.other?.label,
+        field.other?.placeholder, ...(field.options ?? []).map(option => option.label)].filter(Boolean)) {
+        assert.ok(Object.hasOwn(DM_FIELD_COPY, source), `${entry.name}/${field.name}: ${source}`);
+      }
+    }
+    if (entry.confirm) assert.ok(Object.hasOwn(DM_FIELD_COPY, entry.confirm.message));
+  }
+});
+test("Chinese result presentation retains engine verdicts and raw authored notes", () => {
+  const result = { hit: false, damage: 0, hp: "7/7", note: "Authored narrative", concentrationBroken: "Bless" };
+  const original = structuredClone(result);
+  const english = describeAdjudicationResult(result);
+  const chinese = describeAdjudicationResult(result, dmResultPresentation("zh-CN", { characters: [], enemies: [] }));
+  assert.deepEqual(result, original);
+  assert.deepEqual(chinese.map(line => line.tone), english.map(line => line.tone));
+  assert.ok(chinese.some(line => line.text === "未命中"));
+  assert.ok(chinese.some(line => line.text === "0 点伤害"));
+  assert.ok(chinese.some(line => line.text === "祝福术的专注中断"));
+  assert.ok(chinese.some(line => line.text === "Authored narrative"));
+});
+
 console.log(`invoke-catalog: ${passed} tests passed`);
