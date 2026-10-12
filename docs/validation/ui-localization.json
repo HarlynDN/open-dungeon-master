@@ -619,8 +619,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/MessageParts.tsx",
-      "state": "pending",
-      "review": "Owned player/lead/blocked-message chrome and copy/dispute/report action labels now follow viewer locale; authored names and raw transcript bodies remain literal. General native server system-log templates are still pending, so this owner is not claimed complete."
+      "state": "covered",
+      "review": "Owned action/role/banner labels already use passageUi/viewer locale. Player, lead, join and plain system content remains literal; new typed systemEvent supplies glyph independent of translated prose, with original English glyph heuristic as legacy fallback. Stored source/campaign locale is not re-projected under viewer uiLocale; raw copy/report/dispute message IDs/content and authored names preserved. General backend log producers retain a separate unfinished goal gate."
     },
     {
       "path": "src/app/campaigns/[campaignId]/Moments.tsx",
@@ -769,7 +769,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/SessionBanner.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Shared banner frame/CSS helper adds no natural-language default; title, children, lead and action nodes are owned by callers with independent reviews. Native glyph/tone and button classes unchanged; no runtime/caption rewrite."
     },
     {
       "path": "src/app/campaigns/[campaignId]/SessionChatColumn.tsx",
@@ -856,7 +857,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/TheatreInserts.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Speaker DTO controls names/faces; only explicit monster-kind names use the existing combat display adapter. PC/NPC proper names and source IDs/cast lookup remain raw, including a PC name matching a creature kind. Timing/portrait URLs and source speaker records unchanged. This review does not claim Chinese prose-attribution heuristics or multiple character voice acceptance."
     },
     {
       "path": "src/app/campaigns/[campaignId]/TimelinePanel.tsx",

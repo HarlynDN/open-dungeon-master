@@ -18,6 +18,7 @@ import {
   toContextItems,
   type MessageAction,
 } from "@/app/campaigns/[campaignId]/MessageActions";
+import { systemEventGlyph, type SystemEvent } from "@/lib/system-events";
 import { systemLineGlyph } from "@/app/campaigns/[campaignId]/sessionGlyphs";
 
 // The transcript's smaller voices: the table's own notices and what the
@@ -71,7 +72,7 @@ export function reportAction(message: CampaignMessage, onReport: (message: Campa
 
 // A notice that is not a halted turn: the lead's public direction as a card,
 // a joiner, or a plain line with the painting its words call for.
-export function SystemMessage({ content }: { content: string }) {
+export function SystemMessage({ content, systemEvent }: { content: string; systemEvent?: SystemEvent }) {
   const { t } = useLocale();
   if (content.startsWith(LEAD_NOTE_PREFIX)) {
     return (
@@ -85,7 +86,7 @@ export function SystemMessage({ content }: { content: string }) {
   const text = join ? content.slice(JOIN_NOTE_PREFIX.length) : content;
   return (
     <p className="session-sysline">
-      <GameIcon icon={{ kind: "glyph", key: join ? "system-party" : systemLineGlyph(text) }} size="size-6" />
+      <GameIcon icon={{ kind: "glyph", key: join ? "system-party" : systemEventGlyph(systemEvent) ?? systemLineGlyph(text) }} size="size-6" />
       <span className="min-w-0">{text}</span>
     </p>
   );

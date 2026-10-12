@@ -1,3 +1,4 @@
+import { SYSTEM_LOG_MESSAGES } from "./system-log-messages.ts";
 import { PICKER_FLOW_MESSAGES } from "./picker-flow-messages.ts";
 import { SURFACE_MESSAGES } from "./surface-messages.ts";
 import { IMAGE_UI_MESSAGES } from "./image-ui-messages.ts";
@@ -140,6 +141,7 @@ const en = {
     ...MAP_EDITOR_MESSAGES.en,
     ...NPC_EDITOR_MESSAGES.en,
     ...DM_RESULT_MESSAGES.en,
+    ...SYSTEM_LOG_MESSAGES.en,
     ...PICKER_FLOW_MESSAGES.en,
     ...SURFACE_MESSAGES.en,
     ...IMAGE_UI_MESSAGES.en,
@@ -282,6 +284,7 @@ const zhCN: Messages = {
     ...MAP_EDITOR_MESSAGES["zh-CN"],
     ...NPC_EDITOR_MESSAGES["zh-CN"],
     ...DM_RESULT_MESSAGES["zh-CN"],
+    ...SYSTEM_LOG_MESSAGES["zh-CN"],
     ...PICKER_FLOW_MESSAGES["zh-CN"],
     ...SURFACE_MESSAGES["zh-CN"],
     ...IMAGE_UI_MESSAGES["zh-CN"],

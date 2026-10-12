@@ -1560,6 +1560,9 @@ function ensureSchema(db: SqliteDatabase) {
   }
 
   addColumns("campaign_messages", [
+    // Optional typed facts for newly generated system logs. NULL preserves
+    // all historical content and legacy message rendering.
+    ["system_event_json", `TEXT`],
     // Who a DM message is spoken as (docs/vtt-parity-implementation-plan.md
     // 8.1). NULL is the narrator.
     ["speaker_json", `TEXT`],

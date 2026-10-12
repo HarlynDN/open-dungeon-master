@@ -1,3 +1,4 @@
+import { parseSystemEvent, type SystemEvent } from "@/lib/system-events";
 import { normalizeSpeaker, type Speaker } from "@/lib/dm/speech";
 import { getDatabase, nowIso, parseJson } from "@/lib/db/core";
 import { touchCampaign } from "@/lib/db/campaigns";
@@ -34,6 +35,7 @@ export type CampaignMessage = {
   speaker?: Speaker;
   // The card a player's action was played from, when it came from the Hand.
   intent?: MessageIntent;
+  systemEvent?: SystemEvent;
   createdAt: string;
 };
 
@@ -53,10 +55,12 @@ type MessageRow = {
   dm_turn_id: string | null;
   speaker_json: string | null;
   intent_json?: string | null;
+  system_event_json?: string | null;
   created_at: string;
 };
 
 function mapMessage(row: MessageRow): CampaignMessage {
+  const systemEvent = parseSystemEvent(parseJson<unknown>(row.system_event_json ?? "null", null));
   return {
     id: row.id,
     campaignId: row.campaign_id,
@@ -73,6 +77,7 @@ function mapMessage(row: MessageRow): CampaignMessage {
     dmTurnId: row.dm_turn_id ?? undefined,
     speaker: normalizeSpeaker(parseJson<unknown>(row.speaker_json ?? "null", null)) ?? undefined,
     intent: parseMessageIntent(parseJson<unknown>(row.intent_json ?? "null", null)) ?? undefined,
+    ...(systemEvent ? { systemEvent } : {}),
     createdAt: row.created_at,
   };
 }
@@ -89,6 +94,7 @@ export function insertCampaignMessage(input: {
   dmTurnId?: string;
   speaker?: Speaker | null;
   intent?: MessageIntent | null;
+  systemEvent?: SystemEvent;
 }): CampaignMessage {
   const id = crypto.randomUUID();
   getDatabase()
@@ -96,9 +102,9 @@ export function insertCampaignMessage(input: {
       `
         INSERT INTO campaign_messages (
           id, campaign_id, seq, author_type, user_id, character_id, content,
-          image_request_json, location_id, dm_turn_id, speaker_json, intent_json, created_at
+          image_request_json, location_id, dm_turn_id, speaker_json, intent_json, system_event_json, created_at
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
     )
     .run(
@@ -114,6 +120,7 @@ export function insertCampaignMessage(input: {
       input.dmTurnId ?? null,
       input.speaker && input.speaker.kind !== "narrator" ? JSON.stringify(input.speaker) : null,
       input.intent ? JSON.stringify(input.intent) : null,
+      input.authorType === "system" && input.systemEvent ? JSON.stringify(input.systemEvent) : null,
       nowIso(),
     );
   touchCampaign(input.campaignId);
