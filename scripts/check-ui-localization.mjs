@@ -22,6 +22,8 @@ import { TTS_VOICES } from "../src/lib/tts-voices.ts";
 import { CLASS_OPTION_MATERIAL } from "../src/lib/i18n/class-option-metadata.ts";
 import { NATIVE_FEATURE_MATERIAL, NATIVE_FEAT_MATERIAL } from "../src/lib/i18n/feature-material-metadata.ts";
 import { HELP_TOPICS, HELP_TOURS } from "../src/lib/i18n/app-help-metadata.ts";
+import { WORKSHOP_GUIDES } from "../src/lib/tours/workshop-guide.ts";
+import { SHELF_TOUR } from "../src/lib/tours/workshop.ts";
 import { CHARACTER_SUBCLASS_METADATA } from "../src/lib/i18n/character-subclass-metadata.ts";
 
 // Calendar normalization shares pure helpers through the project alias.
@@ -66,6 +68,16 @@ if (args.has("--sync")) {
   process.exit(0);
 }
 const problems = [];
+for (const guide of WORKSHOP_GUIDES) {
+  const prefix = `workshopHelp.guide.${guide.id}`;
+  for (const [field, source] of [["title", guide.title], ["purpose", guide.purpose], ...guide.steps.map((value, i) => [`step.${i}`, value]), ...guide.tips.map((value, i) => [`tip.${i}`, value])]) {
+    if (MESSAGE_CATALOGS.en[`${prefix}.${field}`] !== source) problems.push(`Workshop guide source changed: ${prefix}.${field}`);
+  }
+}
+for (const step of SHELF_TOUR) for (const field of ["title", "body"]) {
+  if (MESSAGE_CATALOGS.en[`entryHub.tour.${step.id}.${field}`] !== step[field]) problems.push(`Workshop shelf tour source changed: ${step.id}.${field}`);
+}
+
 // Story edit refusals are rendered from English protocol text. New/reworded
 // native refusals need an explicit display translation before this owner stays
 // covered; count limits use the parameterized frame instead of a fixed number.

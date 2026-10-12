@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { entryText, workshopGuideView } from "@/lib/i18n/entry-ui-presentations";
+
 import {
   BookOpen,
   CircleHelp,
@@ -13,7 +16,11 @@ import { cn } from "@/lib/cn";
 import { ui } from "@/lib/ui";
 import { WORKSHOP_GUIDES } from "@/lib/tours/workshop-guide";
 import { Dialog } from "@/components/ui/Dialog";
-import { Section } from "@/components/HelpDialog";
+import { Section } from "@/components/HelpParts";
+import { useEffect, useState } from "react";
+import { catalogFor } from "@/lib/i18n/translator";
+import { loadLocaleMessages } from "@/lib/i18n/client-catalogs";
+import type { AppLocale } from "@/lib/i18n/locales";
 
 // The workshop's own help. The main HelpDialog is written for a table
 // mid-session; a workshop has no table, no transcript and no AI turns, so
@@ -24,7 +31,7 @@ import { Section } from "@/components/HelpDialog";
 
 export type HelpTour = { label: string; detail: string; onStart: () => void };
 
-export function WorkshopHelpDialog({
+function WorkshopHelpBody({
   open,
   onOpenChange,
   tours,
@@ -37,46 +44,44 @@ export function WorkshopHelpDialog({
   // The tool open right now, whose guide leads and starts unfolded.
   system?: string | null;
 }) {
+  const { locale } = useLocale();
   const guides = [
     ...WORKSHOP_GUIDES.filter((guide) => guide.id === system),
     ...WORKSHOP_GUIDES.filter((guide) => guide.id !== system),
-  ];
+  ].map(guide => workshopGuideView(guide, locale));
   return (
     <Dialog
       open={open}
       onOpenChange={onOpenChange}
-      title="Workshop help"
+      title={entryText("Workshop help", locale)}
       icon={<CircleHelp className="size-5 text-amber-500/80" />}
       width="w-[min(94vw,44rem)]"
     >
       {tours && tours.length ? (
-        <Section icon={Footprints} title="Guided tours">
+        <Section icon={Footprints} title={entryText("Guided tours", locale)}>
           <p>
-            A spotlight walk through the controls, one at a time. Each tour ran once when you
-            first opened its page; take it again whenever you like.
-          </p>
+            {entryText("A spotlight walk through the controls, one at a time. Each tour ran once when you first opened its page; take it again whenever you like.", locale)}</p>
           <div className="flex flex-wrap gap-2">
             {tours.map((tour) => (
               <button
-                key={tour.label}
+                key={entryText(tour.label, locale)}
                 type="button"
                 onClick={() => {
                   onOpenChange(false);
                   tour.onStart();
                 }}
                 className={ui.btnSmall}
-                title={tour.detail}
+                title={entryText(tour.detail, locale)}
               >
-                <Footprints className="size-4" /> {tour.label}
+                <Footprints className="size-4" /> {entryText(tour.label, locale)}
               </button>
             ))}
           </div>
         </Section>
       ) : null}
-      <Section icon={Wrench} title="The tools, one by one">
+      <Section icon={Wrench} title={entryText("The tools, one by one", locale)}>
         <p>
-          What each tool is for, how a first session with it goes, and the things people miss.
-          {system ? " The tool you have open comes first." : ""}
+          {entryText("What each tool is for, how a first session with it goes, and the things people miss.", locale)}{system ? entryText("The tool you have open comes first.", locale) : ""}
         </p>
         <div className="space-y-1.5">
           {guides.map((guide) => (
@@ -117,43 +122,45 @@ export function WorkshopHelpDialog({
           ))}
         </div>
       </Section>
-      <Section icon={Hammer} title="What a workshop is">
+      <Section icon={Hammer} title={entryText("What a workshop is", locale)}>
         <p>
-          A prep space: everything a campaign holds, with no players, no transcript and no AI
-          narrator. Build the material on your own time, then bring it into a real campaign when
-          the table sits down. Nothing you do here can start a fight or move a story, because
-          there is no story running. The stand-in party bar at the top sets the party size and
-          level your prep is measured against, so encounter difficulty readouts mean something
-          before real characters exist.
-        </p>
+          {entryText("A prep space: everything a campaign holds, with no players, no transcript and no AI narrator. Build the material on your own time, then bring it into a real campaign when the table sits down. Nothing you do here can start a fight or move a story, because there is no story running. The stand-in party bar at the top sets the party size and level your prep is measured against, so encounter difficulty readouts mean something before real characters exist.", locale)}</p>
       </Section>
-      <Section icon={Share2} title="Into a campaign, and back out">
+      <Section icon={Share2} title={entryText("Into a campaign, and back out", locale)}>
         <p>
-          Creating a campaign offers a <span className="text-stone-300">Bring in prep</span> step:
-          pick a workshop (or another campaign you can see) and choose what to copy in. A campaign
-          lobby can import the same way after creation. Copies are copies: the workshop keeps its
-          version, the campaign owns its own from then on, and name collisions get numbered
-          instead of overwritten. The Share tool exports the whole workshop as a bundle file
-          another server can import, and can compile a draft world pack from it.
-        </p>
+          {entryText("Creating a campaign offers a", locale)}{" "}<span className="text-stone-300">{entryText("Bring in prep", locale)}</span> {" "}{entryText("step: pick a workshop (or another campaign you can see) and choose what to copy in. A campaign lobby can import the same way after creation. Copies are copies: the workshop keeps its version, the campaign owns its own from then on, and name collisions get numbered instead of overwritten. The Share tool exports the whole workshop as a bundle file another server can import, and can compile a draft world pack from it.", locale)}</p>
       </Section>
-      <Section icon={Copy} title="Copying things">
+      <Section icon={Copy} title={entryText("Copying things", locale)}>
         <p>
-          A whole workshop can be cloned from the shelf or the hub, and individual pieces (maps,
-          NPCs, monsters, encounters, tables, lore) each have a duplicate action, for the
-          version-two-of-this-boss workflow. Homebrew monsters, items, spells and options belong
-          to your account rather than to any one workshop, so they follow you everywhere but do
-          not travel inside bundles sent to other people.
-        </p>
+          {entryText("A whole workshop can be cloned from the shelf or the hub, and individual pieces (maps, NPCs, monsters, encounters, tables, lore) each have a duplicate action, for the version-two-of-this-boss workflow. Homebrew monsters, items, spells and options belong to your account rather than to any one workshop. The Share tool can include your whole shelf or just the entries this workshop uses; imported conflicts get their own names instead of changing your existing rules.", locale)}</p>
       </Section>
-      <Section icon={BookOpen} title="Where the rules live">
+      <Section icon={BookOpen} title={entryText("Where the rules live", locale)}>
         <p>
-          Everything here is still 5e underneath: attack expressions have to roll, challenge
-          ratings show their working, and imported material behaves in a campaign exactly like
-          material made there. When you want the numbers themselves, the rules reference and its
-          calculators are one click away in the account menu.
-        </p>
+          {entryText("Everything here is still 5e underneath: attack expressions have to roll, challenge ratings show their working, and imported material behaves in a campaign exactly like material made there. When you want the numbers themselves, the rules reference and its calculators are one click away in the account menu.", locale)}</p>
       </Section>
     </Dialog>
   );
+}
+
+// Long help copy is loaded for the selected locale only when opened.
+export function WorkshopHelpDialog(props: Parameters<typeof WorkshopHelpBody>[0]) {
+  const { locale, t } = useLocale();
+  const [readyLocale, setReadyLocale] = useState<AppLocale | null>(() => catalogFor(locale, "workshopHelp.copy.m048")["workshopHelp.copy.m048"] ? locale : null);
+  const [failedLocale, setFailedLocale] = useState<AppLocale | null>(null);
+  const [retry, setRetry] = useState(0);
+  useEffect(() => {
+    if (!props.open) return;
+    let live = true;
+    loadLocaleMessages(locale, "help").then(() => { if (live) setReadyLocale(locale); })
+      .catch(() => { if (live) setFailedLocale(locale); });
+    return () => { live = false; };
+  }, [locale, props.open, retry]);
+  if (!props.open) return null;
+  if (readyLocale === locale) return <WorkshopHelpBody {...props} />;
+  return <Dialog open onOpenChange={props.onOpenChange} title={t("nav.help")} width="w-[min(94vw,44rem)]">
+    {failedLocale === locale ? <div role="alert" className="space-y-2 text-sm text-stone-400">
+      <p>{t("helpLoading.error")}</p>
+      <button type="button" className={ui.btnSmall} onClick={() => { setFailedLocale(null); setRetry(value => value + 1); }}>{t("helpLoading.retry")}</button>
+    </div> : <p role="status" className="text-sm text-stone-400">{t("common.loading")}</p>}
+  </Dialog>;
 }

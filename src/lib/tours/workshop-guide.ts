@@ -141,7 +141,7 @@ export const WORKSHOP_GUIDES: ToolGuide[] = [
       "Save the block. The rating is derived and shows its working.",
     ],
     tips: [
-      "Monsters belong to your account, not the workshop, so they follow you everywhere but do not travel in bundles sent to others.",
+      "Monsters belong to your account, not the workshop, so they follow you everywhere. The Share tool can include your whole shelf or just the entries this workshop uses.",
       "Put a round of casting into extra damage so the rating counts it.",
     ],
   },
@@ -236,7 +236,7 @@ export const WORKSHOP_GUIDES: ToolGuide[] = [
     ],
     tips: [
       "Pictures travel with the bundle within the size caps; nothing from any campaign does.",
-      "Hand-built monsters are yours, not the workshop's, so they are not in a bundle sent to other people.",
+      "Hand-built monsters and homebrew belong to your account. Choose the whole shelf or only the entries this workshop uses when exporting a bundle.",
     ],
   },
 ];

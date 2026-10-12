@@ -1,3 +1,5 @@
+import { ENTRY_UI_MESSAGES } from "./entry-ui-messages.ts";
+import { WORKSHOP_HELP_MESSAGES } from "./workshop-help-messages.ts";
 import { STORYBOARD_UI_MESSAGES } from "./storyboard-ui-messages.ts";
 import { DM_CONSOLE_MESSAGES } from "./dm-console-messages.ts";
 import { MONSTER_UI_MESSAGES } from "./monster-ui-messages.ts";
@@ -131,6 +133,8 @@ const en = {
     ...MAP_EDITOR_MESSAGES.en,
     ...NPC_EDITOR_MESSAGES.en,
     ...DM_RESULT_MESSAGES.en,
+    ...ENTRY_UI_MESSAGES.en,
+    ...WORKSHOP_HELP_MESSAGES.en,
     ...STORYBOARD_UI_MESSAGES.en,
     ...DM_CONSOLE_MESSAGES.en,
     ...MONSTER_UI_MESSAGES.en,
@@ -264,6 +268,8 @@ const zhCN: Messages = {
     ...MAP_EDITOR_MESSAGES["zh-CN"],
     ...NPC_EDITOR_MESSAGES["zh-CN"],
     ...DM_RESULT_MESSAGES["zh-CN"],
+    ...ENTRY_UI_MESSAGES["zh-CN"],
+    ...WORKSHOP_HELP_MESSAGES["zh-CN"],
     ...STORYBOARD_UI_MESSAGES["zh-CN"],
     ...DM_CONSOLE_MESSAGES["zh-CN"],
     ...MONSTER_UI_MESSAGES["zh-CN"],

@@ -1373,7 +1373,8 @@
     },
     {
       "path": "src/app/join/[code]/page.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Invite/session/auth chrome, known genre, metadata and stable auth-code failures localized. Native uppercase invite code and POST body unchanged; campaign name preserved, unknown genre keeps legacy projection."
     },
     {
       "path": "src/app/layout.tsx",
@@ -1503,7 +1504,8 @@
     },
     {
       "path": "src/app/workshop/ImportBundleButton.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Two-step preview/confirm chrome, canonical kind captions, dependency counts, known native warnings/errors/rename report and shared-home choices localized. Bundle text/manifests/authored names/unknown extension strings and preview/kinds/sharedWorkshopId protocol stay raw."
     },
     {
       "path": "src/app/workshop/ListHead.tsx",
@@ -1671,7 +1673,8 @@
     },
     {
       "path": "src/app/workshop/page.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Shelf/create/context menus/target-party/native shelf tour and known load/action failures localized. Authored titles/IDs/native party values and endpoints unchanged; refused/failed load renders retry, failed mutations visible without removing rows."
     },
     {
       "path": "src/app/workshop/plates.ts",
@@ -1865,7 +1868,8 @@
     },
     {
       "path": "src/components/WorkshopHelpDialog.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Chrome and all native tool-guide title/purpose/step/tip sources localized; source binding gate catches guide edits. Selected-locale help loads only on open with failure/retry state. Native ordering, current-tool open state and tour callbacks preserved; custom tour strings raw."
     },
     {
       "path": "src/components/WorldPackGallery.tsx",
@@ -2003,7 +2007,8 @@
     },
     {
       "path": "src/components/ui/GuidedTour.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Tour chrome/counter/accessibility localized; caller owns native/custom step title/body. Anchors, resolution/placement/prepare/focus/keyboard/IME behavior unchanged; shelf caller supplies memoized translated native steps."
     },
     {
       "path": "src/components/ui/HostSvgImage.tsx",

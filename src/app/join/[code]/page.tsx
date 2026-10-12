@@ -1,6 +1,10 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { entryText, entryFrame, joinGenreLabel } from "@/lib/i18n/entry-ui-presentations";
+
 import Link from "next/link";
+import { requestErrorText, type UiRequestError } from "@/lib/i18n/api-errors";
 import { use, useCallback, useEffect, useState } from "react";
 import { CampaignCover } from "@/components/CampaignCover";
 import AuthForm from "@/app/AuthForm";
@@ -31,15 +35,13 @@ type Preview = {
 };
 
 // The preview sends the stored genre id ("high_fantasy"); a person reads words.
-function genreLabel(genre: string): string {
-  return genre.replace(/[-_]+/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
-}
 
 export default function JoinPage({ params }: { params: Promise<{ code: string }> }) {
+  const { locale } = useLocale();
   const { code } = use(params);
   const roomCode = code.toUpperCase();
   const [state, setState] = useState<"checking" | "auth" | "joining" | "error">("checking");
-  const [error, setError] = useState("");
+  const [error, setError] = useState<UiRequestError | null>(null);
   const [preview, setPreview] = useState<Preview | null>(null);
 
   useEffect(() => {
@@ -67,13 +69,13 @@ export default function JoinPage({ params }: { params: Promise<{ code: string }>
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
-        setError(data.error || "Could not join the campaign.");
+        setError({ data, fallback: "auth.roomUnavailable" });
         setState("error");
         return;
       }
       navigateTo(`/campaigns/${data.campaign.id}`);
     } catch {
-      setError("Could not reach the server.");
+      setError({ data: {}, fallback: "prep.networkError" });
       setState("error");
     }
   }, [roomCode]);
@@ -95,39 +97,38 @@ export default function JoinPage({ params }: { params: Promise<{ code: string }>
     <main className="bg-starfield flex flex-1 items-center justify-center p-4 sm:p-6">
       <div className="w-full max-w-sm animate-fade-up-slow">
         {/* The invitation: the cover as the letterhead, sealed in wax. */}
-        <section className={cn(ui.card, "ornate texture-noise invite-letter mb-8 p-3")} aria-label="Campaign invite">
+        <section className={cn(ui.card, "ornate texture-noise invite-letter mb-8 p-3")} aria-label={entryText("Campaign invite", locale)}>
           <CampaignCover
             cover={preview?.cover ? { id: "", url: preview.cover.url } : null}
-            title={preview?.title ?? `Room ${roomCode}`}
+            title={preview?.title ?? entryFrame("room", { code: roomCode }, locale)}
             genre={preview?.genre}
             seed={roomCode}
           />
           <div className="px-2 pb-3 pt-4 text-center">
             <p className="eyebrow text-[10px] text-amber-400/80">
-              {preview ? "You\u2019re invited to" : "You\u2019re invited"}
+              {preview ? entryText("You’re invited to", locale) : entryText("You’re invited", locale)}
             </p>
             <h1 className="gold-title mt-1 text-balance font-display text-2xl tracking-wide">
-              {preview?.title ?? "Join the table"}
+              {preview?.title ?? entryText("Join the table", locale)}
             </h1>
             {preview ? (
               <p className="reveal mt-2 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-stone-400">
                 <span className="inline-flex items-center gap-1">
                   <GameIcon icon={{ kind: "glyph", key: "tab-party" }} size="size-5" />
-                  {preview.playerCount}/{preview.maxPlayers} adventurers
-                </span>
+                  {preview.playerCount}/{preview.maxPlayers} {entryText("adventurers", locale)}</span>
                 <span className="inline-flex items-center gap-1">
                   <GameIcon icon={{ kind: "glyph", key: "tab-campaigns" }} size="size-5" />
-                  {genreLabel(preview.genre)}
+                  {joinGenreLabel(preview.genre, locale)}
                 </span>
                 <span className="inline-flex items-center gap-1">
                   <GameIcon icon={{ kind: "glyph", key: "rest-level-up" }} size="size-5" />
-                  Lvl {preview.startingLevel}
+                  {entryFrame("level", { level: preview.startingLevel }, locale)}
                 </span>
-                {preview.seatOpen ? null : <span className="w-full text-amber-300/90">not taking new players right now</span>}
+                {preview.seatOpen ? null : <span className="w-full text-amber-300/90">{entryText("not taking new players right now", locale)}</span>}
               </p>
             ) : null}
             <p className="mt-3 text-sm text-stone-500">
-              Room code <span className="room-chip">{roomCode}</span>
+              {entryText("Room code", locale)}{" "}<span className="room-chip">{roomCode}</span>
             </p>
           </div>
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -139,7 +140,7 @@ export default function JoinPage({ params }: { params: Promise<{ code: string }>
             <div className="reveal flex flex-col items-center gap-3 py-6" role="status">
               <D20Spinner className="size-7 text-amber-300" />
               <p className="font-serif text-sm text-stone-400">
-                {state === "joining" ? "Taking your seat" : "Checking your session"}
+                {state === "joining" ? entryText("Taking your seat", locale) : entryText("Checking your session", locale)}
               </p>
             </div>
           ) : state === "error" ? (
@@ -148,15 +149,14 @@ export default function JoinPage({ params }: { params: Promise<{ code: string }>
                 role="alert"
                 className="motion-shake rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-300"
               >
-                {error}
+                {requestErrorText(locale, error)}
               </p>
               <Link href="/" className={ui.btnSecondary}>
-                Back to Open Dungeon Master
-              </Link>
+                {entryText("Back to Open Dungeon Master", locale)}</Link>
             </div>
           ) : (
             <>
-              <SectionHead title="Sign in to take your seat" glyph="tab-admin" level="h2" />
+              <SectionHead title={entryText("Sign in to take your seat", locale)} glyph="tab-admin" level="h2" />
               <AuthForm joinCode={roomCode} onAuthed={() => join()} />
             </>
           )}

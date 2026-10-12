@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { entryText, entryFrame, entryNotice, ENTRY_NOTICES, shelfTourView } from "@/lib/i18n/entry-ui-presentations";
+
 import { LoadFailed } from "@/app/campaigns/[campaignId]/PanelKit";
 import { readLoad, useLoadStatus } from "@/lib/load-state";
 import { EmptyState } from "@/components/EmptyState";
@@ -11,7 +14,7 @@ import { headIcon } from "@/app/workshop/kit";
 import { PageSkeleton } from "@/components/PageSkeleton";
 import { appConfirm } from "@/components/ui/ConfirmDialog";
 import Link from "next/link";
-import { type FormEvent, useEffect, useState } from "react";
+import { type FormEvent, useEffect, useMemo, useState } from "react";
 import { cn } from "@/lib/cn";
 import { ui } from "@/lib/ui";
 import { workshopPlate } from "@/app/workshop/plates";
@@ -35,6 +38,8 @@ import { navigateTo } from "@/lib/navigation";
 // top of it as their own buttons, since a button cannot live inside a link.
 
 export default function WorkshopListPage() {
+  const { locale } = useLocale();
+  const shelfTour = useMemo(() => shelfTourView(SHELF_TOUR, locale), [locale]);
   const [workshops, setWorkshops] = useState<WorkshopSummary[]>([]);
   const [loading, setLoading] = useState(true);
   // A refused or failed read is shown in the server's words with a way to
@@ -95,10 +100,12 @@ export default function WorkshopListPage() {
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
-        setError(data.error || "Could not create that workshop.");
+        setError(data.error || ENTRY_NOTICES.create);
         return;
       }
       navigateTo(`/workshop/${data.workshop.id}`);
+    } catch {
+      setError(ENTRY_NOTICES.network);
     } finally {
       setBusy(false);
     }
@@ -108,17 +115,24 @@ export default function WorkshopListPage() {
   // (src/lib/db/campaign-clone.ts). The usual reason is a second version of
   // the same region without risking the first.
   async function clone(workshop: WorkshopSummary) {
+    setError("");
     setCloningId(workshop.id);
     try {
       const response = await fetch(`/api/campaigns/${workshop.id}/clone`, { method: "POST" });
       if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        setError(data.error || ENTRY_NOTICES.clone);
         return;
       }
       const listed = await fetch("/api/workshops").catch(() => null);
       if (listed?.ok) {
         const data = await listed.json();
         setWorkshops(data.workshops ?? []);
+      } else {
+        setError(ENTRY_NOTICES.refresh);
       }
+    } catch {
+      setError(ENTRY_NOTICES.network);
     } finally {
       setCloningId("");
     }
@@ -127,14 +141,22 @@ export default function WorkshopListPage() {
   async function remove(workshop: WorkshopSummary) {
     if (
       !await appConfirm(
-        `Delete "${workshop.title}"? Every map, NPC, table and note in it is lost. Anything already imported into a campaign stays there.`,
+        entryFrame("deleteConfirm", { name: workshop.title }, locale),
       )
     ) {
       return;
     }
-    const response = await fetch(`/api/workshops/${workshop.id}`, { method: "DELETE" });
-    if (response.ok) {
-      setWorkshops((current) => current.filter((entry) => entry.id !== workshop.id));
+    setError("");
+    try {
+      const response = await fetch(`/api/workshops/${workshop.id}`, { method: "DELETE" });
+      if (response.ok) {
+        setWorkshops((current) => current.filter((entry) => entry.id !== workshop.id));
+      } else {
+        const data = await response.json().catch(() => ({}));
+        setError(data.error || ENTRY_NOTICES.delete);
+      }
+    } catch {
+      setError(ENTRY_NOTICES.network);
     }
   }
 
@@ -145,16 +167,14 @@ export default function WorkshopListPage() {
         <div className="flex items-center gap-3">
           <GameIcon icon={{ kind: "glyph", key: "system-homebrew" }} size="size-12" />
           <div>
-            <h1 className="gold-title animate-fade-up font-display text-2xl">Workshop</h1>
+            <h1 className="gold-title animate-fade-up font-display text-2xl">{entryText("Workshop", locale)}</h1>
             <p className="text-sm text-stone-500">
-              Build maps, NPCs, monsters, story and rules before the table exists. Import any of
-              it when you start a campaign.
-            </p>
+              {entryText("Build maps, NPCs, monsters, story and rules before the table exists. Import any of it when you start a campaign.", locale)}</p>
           </div>
           <button
             type="button"
-            aria-label="How workshops work"
-            title="Guides and tours"
+            aria-label={entryText("How workshops work", locale)}
+            title={entryText("Guides and tours", locale)}
             onClick={() => setHelpOpen(true)}
             data-tour="shelf-help"
             className={cn(ui.iconAction, headIcon, "ml-auto self-start")}
@@ -168,46 +188,42 @@ export default function WorkshopListPage() {
         onOpenChange={setHelpOpen}
         tours={[
           {
-            label: "Tour the shelf",
-            detail: "Starting a workshop, importing a bundle, and what the tiles do.",
+            label: entryText("Tour the shelf", locale),
+            detail: entryText("Starting a workshop, importing a bundle, and what the tiles do.", locale),
             onStart: () => setTouring(true),
           },
         ]}
       />
-      <GuidedTour open={touring} steps={SHELF_TOUR} onClose={closeTour} />
+      <GuidedTour open={touring} steps={shelfTour} onClose={closeTour} />
 
       <section className="mb-6">
         {creating ? (
           <form onSubmit={create} className={`${ui.card} reveal ornate space-y-3 p-4`}>
-            <SectionHead title="New workshop" glyph="system-storyboard" />
+            <SectionHead title={entryText("New workshop", locale)} glyph="system-storyboard" />
             <label className="block">
-              <span className="mb-1 block font-display text-[11px] tracking-[0.1em] text-amber-300/85">Name</span>
+              <span className="mb-1 block font-display text-[11px] tracking-[0.1em] text-amber-300/85">{entryText("Name", locale)}</span>
               <input
                 autoFocus
                 value={title}
                 onChange={(event) => setTitle(event.target.value)}
                 maxLength={80}
-                placeholder="The Saltmarch campaign, Session zero prep..."
+                placeholder={entryText("The Saltmarch campaign, Session zero prep...", locale)}
                 className={ui.input}
               />
             </label>
             <div>
-              <span className="mb-1 block font-display text-[11px] tracking-[0.1em] text-amber-300/85">Building for a party of</span>
+              <span className="mb-1 block font-display text-[11px] tracking-[0.1em] text-amber-300/85">{entryText("Building for a party of", locale)}</span>
               <div className="flex flex-wrap items-center gap-2">
-                <NumberStepper label="Party size" min={1} max={8} value={size} onChange={setSize} />
-                <span className="text-sm text-stone-400">heroes at level</span>
-                <NumberStepper label="Party level" min={1} max={20} value={level} onChange={setLevel} />
+                <NumberStepper label={entryText("Party size", locale)} min={1} max={8} value={size} onChange={setSize} />
+                <span className="text-sm text-stone-400">{entryText("heroes at level", locale)}</span>
+                <NumberStepper label={entryText("Party level", locale)} min={1} max={20} value={level} onChange={setLevel} />
               </div>
               <span className="mt-1 block text-xs text-stone-500">
-                The encounter calculator and the odds preview budget against this. Change it
-                anytime.
-              </span>
+                {entryText("The encounter calculator and the odds preview budget against this. Change it anytime.", locale)}</span>
             </div>
-            {error ? <p className="motion-shake text-sm text-red-400">{error}</p> : null}
             <div className="flex gap-2">
               <button type="submit" disabled={busy || !title.trim()} className={ui.btnPrimary}>
-                {busy ? <Loader2 className="size-4 animate-spin" /> : null} Create
-              </button>
+                {busy ? <Loader2 className="size-4 animate-spin" /> : null} {entryText("Create", locale)}</button>
               <button
                 type="button"
                 onClick={() => {
@@ -216,8 +232,7 @@ export default function WorkshopListPage() {
                 }}
                 className={ui.btnSecondary}
               >
-                Cancel
-              </button>
+                {entryText("Cancel", locale)}</button>
             </div>
           </form>
         ) : (
@@ -228,8 +243,7 @@ export default function WorkshopListPage() {
               data-tour="shelf-new"
               className={ui.btnPrimary}
             >
-              <Plus className="size-4" /> New workshop
-            </button>
+              <Plus className="size-4" /> {entryText("New workshop", locale)}</button>
             <div data-tour="shelf-import">
               <ImportBundleButton />
             </div>
@@ -237,6 +251,8 @@ export default function WorkshopListPage() {
         )}
       </section>
 
+      {error ? <p role="alert" className="motion-shake mb-3 text-sm text-red-400">{entryNotice(error, locale)}</p> : null}
+      {loadError ? <LoadFailed error={entryNotice(loadError, locale)} onRetry={() => { setLoading(true); setReloads((current) => current + 1); }} /> : null}
       {loading ? (
         <PageSkeleton kind="shelf" className="px-0 py-2" />
       ) : workshops.length ? (
@@ -249,9 +265,9 @@ export default function WorkshopListPage() {
               label={workshop.title}
               // The tile's link and its two buttons again; both stay on the tile.
               items={[
-                { id: "open", label: "Open", glyph: "system-storyboard", onSelect: () => navigateTo(`/workshop/${workshop.id}`) },
-                { id: "duplicate", label: "Duplicate", glyph: "tab-notes", disabled: cloningId === workshop.id, onSelect: () => void clone(workshop) },
-                { id: "delete", label: "Delete", glyph: "quest-failed", tone: "danger", separated: true, onSelect: () => void remove(workshop) },
+                { id: "open", label: entryText("Open", locale), glyph: "system-storyboard", onSelect: () => navigateTo(`/workshop/${workshop.id}`) },
+                { id: "duplicate", label: entryText("Duplicate", locale), glyph: "tab-notes", disabled: cloningId === workshop.id, onSelect: () => void clone(workshop) },
+                { id: "delete", label: entryText("Delete", locale), glyph: "quest-failed", tone: "danger", separated: true, onSelect: () => void remove(workshop) },
               ]}
             >
               <Link
@@ -273,8 +289,7 @@ export default function WorkshopListPage() {
                   {workshop.title}
                 </span>
                 <span className="text-xs text-stone-500">
-                  Party of {workshop.gameSettings.targetParty.size} at level{" "}
-                  {workshop.gameSettings.targetParty.level}
+                  {entryFrame("party", { size: workshop.gameSettings.targetParty.size, level: workshop.gameSettings.targetParty.level }, locale)}
                 </span>
               </Link>
               <div className="absolute right-2 top-2 flex gap-0.5">
@@ -282,8 +297,8 @@ export default function WorkshopListPage() {
                   type="button"
                   disabled={cloningId === workshop.id}
                   onClick={() => void clone(workshop)}
-                  aria-label={`Duplicate ${workshop.title}`}
-                  title="Duplicate this workshop and everything in it"
+                  aria-label={entryFrame("duplicate", { name: workshop.title }, locale)}
+                  title={entryText("Duplicate this workshop and everything in it", locale)}
                   className={ui.iconAction}
                 >
                   {cloningId === workshop.id ? (
@@ -295,7 +310,7 @@ export default function WorkshopListPage() {
                 <button
                   type="button"
                   onClick={() => void remove(workshop)}
-                  aria-label={`Delete ${workshop.title}`}
+                  aria-label={entryFrame("delete", { name: workshop.title }, locale)}
                   className={ui.iconAction}
                 >
                   <Trash2 className="size-4" />
@@ -306,7 +321,7 @@ export default function WorkshopListPage() {
         </ul>
       ) : (
         <div className={`${ui.card} ornate p-4`}>
-          (loadError ? <LoadFailed error={loadError} onRetry={() => { setLoading(true); setReloads((current) => current + 1); }} /> : loaded ? <EmptyState art="map" title="No workshops yet." hint="A workshop is yours alone. Nothing in it reaches a table until you import it." /> : null)
+          {loaded && !loadError ? <EmptyState art="map" title={entryText("No workshops yet.", locale)} hint={entryText("A workshop is yours alone. Nothing in it reaches a table until you import it.", locale)} /> : null}
         </div>
       )}
     </main>

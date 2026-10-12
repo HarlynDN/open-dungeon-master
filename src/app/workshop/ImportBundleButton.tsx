@@ -1,10 +1,14 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { entryText, entryFrame, entryNotice, ENTRY_NOTICES, bundleFileTooLarge } from "@/lib/i18n/entry-ui-presentations";
+
 import { appNotice } from "@/components/ui/ConfirmDialog";
 import { Check, FileUp, Loader2 } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { SectionHead } from "@/components/ui/SectionHead";
 import { chip, chipOn, chipRow } from "@/app/workshop/kit";
+import type { AppLocale } from "@/lib/i18n/locales";
 import { useRef, useState } from "react";
 import { ui } from "@/lib/ui";
 import { UnofficialPackNotice } from "@/components/UnofficialPackNotice";
@@ -57,24 +61,25 @@ function kindsOf(preview: Preview): string[] {
 
 // What the current ticks drop: every link from a ticked kind into an
 // unticked one.
-function droppedLinks(preview: Preview, kinds: string[]): string[] {
+function droppedLinks(preview: Preview, kinds: string[], locale: AppLocale): string[] {
   return (preview.dependencies ?? [])
     .filter((dependency) => kinds.includes(dependency.from) && !kinds.includes(dependency.to))
     .map(
       (dependency) =>
-        `${dependency.count} link${dependency.count === 1 ? "" : "s"} from ${BUNDLE_KIND_LABELS[dependency.from] ?? dependency.from} to ${BUNDLE_KIND_LABELS[dependency.to] ?? dependency.to} ${dependency.count === 1 ? "is" : "are"} dropped while those stay behind.`,
+        entryFrame(dependency.count === 1 ? "droppedOne" : "droppedMany", { count: dependency.count, from: entryText(BUNDLE_KIND_LABELS[dependency.from] ?? dependency.from, locale), to: entryText(BUNDLE_KIND_LABELS[dependency.to] ?? dependency.to, locale) }, locale),
     );
 }
 
 // `label` and `className` let the hub header show the same control as a
 // small "Import a bundle" action; the shelf keeps the defaults.
 export function ImportBundleButton({
-  label = "Open a bundle",
+  label,
   className = ui.btnSecondary,
 }: {
   label?: string;
   className?: string;
 } = {}) {
+  const { locale } = useLocale();
   const input = useRef<HTMLInputElement>(null);
   const [text, setText] = useState("");
   const [preview, setPreview] = useState<Preview | null>(null);
@@ -91,10 +96,10 @@ export function ImportBundleButton({
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
-    });
+    }).catch(() => { throw new Error(ENTRY_NOTICES.network); });
     const data = await response.json().catch(() => ({}));
     if (!response.ok) {
-      throw new Error(data.error ?? "That bundle could not be read.");
+      throw new Error(data.error ?? ENTRY_NOTICES.read);
     }
     return data;
   }
@@ -108,7 +113,7 @@ export function ImportBundleButton({
     // Checked here as well as on the server: reading a gigabyte into memory
     // to be told no is a bad experience even when the answer is correct.
     if (file.size > MAX_BUNDLE_BYTES) {
-      setError(`That file is larger than ${MAX_BUNDLE_BYTES / 1024 / 1024} MB.`);
+      setError(bundleFileTooLarge(MAX_BUNDLE_BYTES / 1024 / 1024));
       return;
     }
     setBusy(true);
@@ -120,7 +125,7 @@ export function ImportBundleButton({
       setKinds(kindsOf(data));
       setSharedWorkshopId((data as Preview).sharedHomes?.[0]?.id ?? "");
     } catch (thrown) {
-      setError(thrown instanceof Error ? thrown.message : "That bundle could not be read.");
+      setError(thrown instanceof Error ? thrown.message : ENTRY_NOTICES.read);
     } finally {
       setBusy(false);
     }
@@ -135,11 +140,11 @@ export function ImportBundleButton({
       // said before the new workshop opens (workshop-bundle-shelf.ts).
       const renamed = ((data as { shelf?: { renamed?: string[] } }).shelf?.renamed ?? []).filter(Boolean);
       if (renamed.length) {
-        await appNotice(`${renamed.join(" ")} The new workshop's Cast, fights and pregens use these names; your other workshops are unchanged.`, "Kept beside your own");
+        await appNotice(entryFrame("renameNotice", { items: renamed.map(line => entryNotice(line, locale)).join(" ") }, locale), entryText("Kept beside your own", locale));
       }
       navigateTo(`/workshop/${data.workshopId}`);
     } catch (thrown) {
-      setError(thrown instanceof Error ? thrown.message : "That bundle could not be imported.");
+      setError(thrown instanceof Error ? thrown.message : ENTRY_NOTICES.import);
       setBusy(false);
     }
   }
@@ -158,24 +163,24 @@ export function ImportBundleButton({
         onClick={() => input.current?.click()}
         disabled={busy}
         className={className}
-        title="A workshop bundle, or a world exported from WorldForge"
+        title={entryText("A workshop bundle, or a world exported from WorldForge", locale)}
       >
         {busy && !preview ? (
           <Loader2 className="size-4 animate-spin" />
         ) : (
           <FileUp className="size-4" />
         )}
-        {label}
+        {entryText(label ?? "Open a bundle", locale)}
       </button>
 
-      {error ? <p className="motion-shake mt-2 text-sm text-red-300">{error}</p> : null}
+      {error ? <p className="motion-shake mt-2 text-sm text-red-300">{entryNotice(error, locale)}</p> : null}
 
       {preview ? (
         <div className={`${ui.card} mt-3 p-4`}>
           <SectionHead title={preview.manifest.name} glyph="system-share" />
           <p className="text-sm text-stone-400">{preview.manifest.blurb}</p>
           {preview.manifest.author ? (
-            <p className="reveal mt-0.5 text-xs text-stone-500">by {preview.manifest.author}</p>
+            <p className="reveal mt-0.5 text-xs text-stone-500">{entryFrame("author", { name: preview.manifest.author }, locale)}</p>
           ) : null}
 
           {/* Each kind is a tick: a DM who only wants the monsters takes the
@@ -197,16 +202,16 @@ export function ImportBundleButton({
                   >
                     <Check className={cn("size-3.5", ticked ? "text-amber-300" : "opacity-20")} aria-hidden="true" />
                     {preview.counts[kind] === undefined ? "" : `${preview.counts[kind]} `}
-                    {BUNDLE_KIND_LABELS[kind] ?? kind}
+                    {entryText(BUNDLE_KIND_LABELS[kind] ?? kind, locale)}
                   </button>
                 </li>
               );
             })}
           </ul>
 
-          {droppedLinks(preview, kinds).length ? (
+          {droppedLinks(preview, kinds, locale).length ? (
             <ul className="stagger mt-2 space-y-1">
-              {droppedLinks(preview, kinds).map((line) => (
+              {droppedLinks(preview, kinds, locale).map((line) => (
                 <li key={line} className="reveal text-xs text-amber-300/90">
                   {line}
                 </li>
@@ -219,26 +224,25 @@ export function ImportBundleButton({
               {preview.sharedHomes?.length ? (
                 <>
                   <p className="mb-1 text-xs text-stone-400">
-                    The records its cards pick from &quot;{preview.dependsOn.name}&quot;:
+                    {entryFrame("sharedRecords", { name: preview.dependsOn.name }, locale)}
                   </p>
                   <Select
-                    label="Shared records"
+                    label={entryText("Shared records", locale)}
                     value={sharedWorkshopId}
                     onChange={setSharedWorkshopId}
                     options={[
                       ...preview.sharedHomes.map((home) => ({
                         value: home.id,
-                        label: `Link to my "${home.title}"`,
-                        hint: `${home.found} of ${home.total} found there; the rest land here.`,
+                        label: entryFrame("linkHome", { name: home.title }, locale),
+                        hint: entryFrame("sharedFound", { found: home.found, total: home.total }, locale),
                       })),
-                      { value: "", label: "Bring them in as this workshop's own" },
+                      { value: "", label: entryText("Bring them in as this workshop's own", locale) },
                     ]}
                   />
                 </>
               ) : (
                 <p className="text-xs text-stone-400">
-                  Its records from &quot;{preview.dependsOn.name}&quot; land as this workshop&apos;s
-                  own. Import that workshop&apos;s bundle first to link them to it instead.
+                  {entryFrame("ownShared", { name: preview.dependsOn.name }, locale)}
                 </p>
               )}
             </div>
@@ -254,25 +258,23 @@ export function ImportBundleButton({
             <ul className="stagger mt-3 space-y-1">
               {preview.warnings.map((warning) => (
                 <li key={warning} className="text-xs text-amber-200/80">
-                  {warning}
+                  {entryNotice(warning, locale)}
                 </li>
               ))}
             </ul>
           ) : null}
 
           <p className="mt-3 text-xs text-stone-500">
-            This creates a new workshop of your own. Nothing is written into any campaign you
-            already have.
-          </p>
+            {entryText("This creates a new workshop of your own. Nothing is written into any campaign you already have.", locale)}</p>
 
           <div className="mt-3 flex gap-2">
             <button type="button" onClick={() => void confirm()} disabled={busy} className={ui.btnPrimary}>
               {busy ? <Loader2 className="size-4 animate-spin" /> : null}{" "}
               {kinds.length === 0
-                ? "Import an empty workshop"
+                ? entryText("Import an empty workshop", locale)
                 : kinds.length === kindsOf(preview).length
-                  ? "Import it"
-                  : `Import ${kinds.length} of ${kindsOf(preview).length} kinds`}
+                  ? entryText("Import it", locale)
+                  : entryFrame("importKinds", { count: kinds.length, total: kindsOf(preview).length }, locale)}
             </button>
             <button
               type="button"
@@ -282,8 +284,7 @@ export function ImportBundleButton({
               }}
               className={ui.btnSecondary}
             >
-              Cancel
-            </button>
+              {entryText("Cancel", locale)}</button>
           </div>
         </div>
       ) : null}
