@@ -273,7 +273,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmBestiaryPanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped bestiary workflow: owned creation/list/editor chrome, basic stats/attack details/defences/movement/catalogue/readout, borrowing and printed-block chrome localized. Source-bound feature/material summaries and owned search names reuse existing translators; authored names/descriptions/traits/borrowed/printed book prose remain raw. Closed damage/condition input labels roundtrip to canonical values; ranges, saves, IDs, booleans, class/armor/weapon operations and numeric CR readouts unchanged. Raw API/readout/template notices project on viewer-locale changes; network create/save failures show retryable native errors. Native printed prose/full rulebook remains deferred; deeper block-action/stat/spellcasting children retain independent pending coverage."
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmBoardControls.tsx",
@@ -615,7 +616,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/MonsterFields.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped bestiary workflow: owned creation/list/editor chrome, basic stats/attack details/defences/movement/catalogue/readout, borrowing and printed-block chrome localized. Source-bound feature/material summaries and owned search names reuse existing translators; authored names/descriptions/traits/borrowed/printed book prose remain raw. Closed damage/condition input labels roundtrip to canonical values; ranges, saves, IDs, booleans, class/armor/weapon operations and numeric CR readouts unchanged. Raw API/readout/template notices project on viewer-locale changes; network create/save failures show retryable native errors. Native printed prose/full rulebook remains deferred; deeper block-action/stat/spellcasting children retain independent pending coverage."
     },
     {
       "path": "src/app/campaigns/[campaignId]/MonsterHand.tsx",
@@ -623,7 +625,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/MonsterKitFields.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped bestiary workflow: owned creation/list/editor chrome, basic stats/attack details/defences/movement/catalogue/readout, borrowing and printed-block chrome localized. Source-bound feature/material summaries and owned search names reuse existing translators; authored names/descriptions/traits/borrowed/printed book prose remain raw. Closed damage/condition input labels roundtrip to canonical values; ranges, saves, IDs, booleans, class/armor/weapon operations and numeric CR readouts unchanged. Raw API/readout/template notices project on viewer-locale changes; network create/save failures show retryable native errors. Native printed prose/full rulebook remains deferred; deeper block-action/stat/spellcasting children retain independent pending coverage."
     },
     {
       "path": "src/app/campaigns/[campaignId]/MonsterRosterPicker.tsx",
@@ -1503,7 +1506,8 @@
     },
     {
       "path": "src/app/workshop/bestiary/AttackDetails.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped bestiary workflow: owned creation/list/editor chrome, basic stats/attack details/defences/movement/catalogue/readout, borrowing and printed-block chrome localized. Source-bound feature/material summaries and owned search names reuse existing translators; authored names/descriptions/traits/borrowed/printed book prose remain raw. Closed damage/condition input labels roundtrip to canonical values; ranges, saves, IDs, booleans, class/armor/weapon operations and numeric CR readouts unchanged. Raw API/readout/template notices project on viewer-locale changes; network create/save failures show retryable native errors. Native printed prose/full rulebook remains deferred; deeper block-action/stat/spellcasting children retain independent pending coverage."
     },
     {
       "path": "src/app/workshop/bestiary/BlockActionFields.tsx",
@@ -1511,23 +1515,28 @@
     },
     {
       "path": "src/app/workshop/bestiary/BorrowParts.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped bestiary workflow: owned creation/list/editor chrome, basic stats/attack details/defences/movement/catalogue/readout, borrowing and printed-block chrome localized. Source-bound feature/material summaries and owned search names reuse existing translators; authored names/descriptions/traits/borrowed/printed book prose remain raw. Closed damage/condition input labels roundtrip to canonical values; ranges, saves, IDs, booleans, class/armor/weapon operations and numeric CR readouts unchanged. Raw API/readout/template notices project on viewer-locale changes; network create/save failures show retryable native errors. Native printed prose/full rulebook remains deferred; deeper block-action/stat/spellcasting children retain independent pending coverage."
     },
     {
       "path": "src/app/workshop/bestiary/MonsterBuildControls.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped bestiary workflow: owned creation/list/editor chrome, basic stats/attack details/defences/movement/catalogue/readout, borrowing and printed-block chrome localized. Source-bound feature/material summaries and owned search names reuse existing translators; authored names/descriptions/traits/borrowed/printed book prose remain raw. Closed damage/condition input labels roundtrip to canonical values; ranges, saves, IDs, booleans, class/armor/weapon operations and numeric CR readouts unchanged. Raw API/readout/template notices project on viewer-locale changes; network create/save failures show retryable native errors. Native printed prose/full rulebook remains deferred; deeper block-action/stat/spellcasting children retain independent pending coverage."
     },
     {
       "path": "src/app/workshop/bestiary/MonsterEditor.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped bestiary workflow: owned creation/list/editor chrome, basic stats/attack details/defences/movement/catalogue/readout, borrowing and printed-block chrome localized. Source-bound feature/material summaries and owned search names reuse existing translators; authored names/descriptions/traits/borrowed/printed book prose remain raw. Closed damage/condition input labels roundtrip to canonical values; ranges, saves, IDs, booleans, class/armor/weapon operations and numeric CR readouts unchanged. Raw API/readout/template notices project on viewer-locale changes; network create/save failures show retryable native errors. Native printed prose/full rulebook remains deferred; deeper block-action/stat/spellcasting children retain independent pending coverage."
     },
     {
       "path": "src/app/workshop/bestiary/MonsterRows.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped bestiary workflow: owned creation/list/editor chrome, basic stats/attack details/defences/movement/catalogue/readout, borrowing and printed-block chrome localized. Source-bound feature/material summaries and owned search names reuse existing translators; authored names/descriptions/traits/borrowed/printed book prose remain raw. Closed damage/condition input labels roundtrip to canonical values; ranges, saves, IDs, booleans, class/armor/weapon operations and numeric CR readouts unchanged. Raw API/readout/template notices project on viewer-locale changes; network create/save failures show retryable native errors. Native printed prose/full rulebook remains deferred; deeper block-action/stat/spellcasting children retain independent pending coverage."
     },
     {
       "path": "src/app/workshop/bestiary/PrintedBlockView.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped bestiary workflow: owned creation/list/editor chrome, basic stats/attack details/defences/movement/catalogue/readout, borrowing and printed-block chrome localized. Source-bound feature/material summaries and owned search names reuse existing translators; authored names/descriptions/traits/borrowed/printed book prose remain raw. Closed damage/condition input labels roundtrip to canonical values; ranges, saves, IDs, booleans, class/armor/weapon operations and numeric CR readouts unchanged. Raw API/readout/template notices project on viewer-locale changes; network create/save failures show retryable native errors. Native printed prose/full rulebook remains deferred; deeper block-action/stat/spellcasting children retain independent pending coverage."
     },
     {
       "path": "src/app/workshop/bestiary/SpellcastingFields.tsx",

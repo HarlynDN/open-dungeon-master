@@ -1,5 +1,9 @@
 "use client";
 
+import { referenceRowName } from "@/lib/i18n/reference-ui-presentations";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { monsterUiText, monsterUiFrame, monsterUiError, monsterSummary, MONSTER_NETWORK_FAILURE, MONSTER_PANEL_NOTICES, monsterMissingCopyNotice } from "@/lib/i18n/monster-ui-presentations";
+
 import { EmptyState } from "@/components/EmptyState";
 import { appConfirm } from "@/components/ui/ConfirmDialog";
 import { useCallback, useEffect, useState } from "react";
@@ -44,6 +48,7 @@ export function DmBestiaryPanel({
   campaignId: string;
   layout?: "list" | "rows";
 }) {
+  const { locale } = useLocale();
   const [monsters, setMonsters] = useState<Monster[]>([]);
   const [found, setFound] = useState<Found[]>([]);
   // The table's setting, for the boss plate on high-rating thumbnails.
@@ -69,7 +74,7 @@ export function DmBestiaryPanel({
   const load = useCallback(
     (search?: string) =>
       readLoad<{ monsters: Monster[]; found: Found[]; genre?: string }>(
-        fetch(`/api/campaigns/${campaignId}/dm/bestiary${search ? `?q=${encodeURIComponent(search)}` : ""}`),
+        fetch(`/api/campaigns/${campaignId}/dm/bestiary${search ? `?${new URLSearchParams({ q: search, ...(locale === "en" ? {} : { localized: "1", locale }) })}` : ""}`),
         "The bestiary",
       ).then((outcome) => {
         if (outcome.payload) {
@@ -79,7 +84,7 @@ export function DmBestiaryPanel({
         }
         settle(outcome);
       }),
-    [campaignId, settle],
+    [campaignId, settle, locale],
   );
 
   useEffect(() => {
@@ -115,9 +120,9 @@ export function DmBestiaryPanel({
       const row = rows.find((entry) => entry.documentSlug === "wotc-srd") ?? rows[0];
       if (!live) return;
       if (row) {
-        await create({ from: "monster", slug: row.slug, name: `${row.name} Variant`.slice(0, MONSTER_NAME_MAX) });
+        await create({ from: "monster", slug: row.slug, name: monsterUiFrame("variant", { name: referenceRowName("monsters", { ...row, source: row.source ?? "", data: {} }, locale) }, locale).slice(0, MONSTER_NAME_MAX) });
       } else {
-        setError(`${page.page.title} is not in the content pack on this server, so there is no block to copy.`);
+        setError(monsterMissingCopyNotice(page.page.title));
       }
       done();
     })();
@@ -154,12 +159,15 @@ export function DmBestiaryPanel({
         error?: string;
       };
       if (!response.ok || !payload.monster) {
-        setError(payload.error ?? "That could not be built.");
+        setError(payload.error ?? MONSTER_PANEL_NOTICES.built);
         return false;
       }
       await load(query || undefined);
       open(payload.monster);
       return true;
+    } catch {
+      setError(MONSTER_NETWORK_FAILURE);
+      return false;
     } finally {
       setBusy(false);
     }
@@ -172,7 +180,7 @@ export function DmBestiaryPanel({
     return create({
       from: "draft",
       draft: {
-        name: `${monster.draft.name} (copy)`.slice(0, MONSTER_NAME_MAX),
+        name: monsterUiFrame("duplicate", { name: monster.draft.name }, locale).slice(0, MONSTER_NAME_MAX),
         ...monster.draft.stats,
         extraDamagePerRound: monster.draft.extraDamagePerRound,
       },
@@ -203,12 +211,14 @@ export function DmBestiaryPanel({
         error?: string;
       };
       if (!response.ok || !payload.monster) {
-        setError(payload.error ?? "That could not be saved.");
+        setError(payload.error ?? MONSTER_PANEL_NOTICES.saved);
         return;
       }
       setReadout(payload.monster.readout);
       setDraft(payload.monster.draft);
       await load(query || undefined);
+    } catch {
+      setError(MONSTER_NETWORK_FAILURE);
     } finally {
       setBusy(false);
     }
@@ -220,8 +230,8 @@ export function DmBestiaryPanel({
     const id = monster.id;
     if (
       !(await appConfirm(
-        `Forget ${monster.draft.name}? It leaves the bestiary and its pickers. An NPC, a prepared fight or a template that already names it still fights with its stat block as it is now.`,
-        { title: "Forget this monster?", actionLabel: "Forget it" },
+        monsterUiFrame("forget", { name: monster.draft.name }, locale),
+        { title: monsterUiText("Forget this monster?", locale), actionLabel: monsterUiText("Forget it", locale) },
       ))
     ) {
       return;
@@ -230,7 +240,7 @@ export function DmBestiaryPanel({
     const response = await fetch(`/api/campaigns/${campaignId}/dm/bestiary/${id}`, { method: "DELETE" }).catch(() => null);
     if (!response?.ok) {
       const payload = (await response?.json().catch(() => ({}))) as { error?: string } | undefined;
-      setError(payload?.error ?? (response ? "That could not be deleted." : "Could not reach the server."));
+      setError(payload?.error ?? (response ? MONSTER_PANEL_NOTICES.deleted : MONSTER_NETWORK_FAILURE));
       return;
     }
     if (openId === id) {
@@ -264,7 +274,7 @@ export function DmBestiaryPanel({
             open={building}
             onToggle={() => setBuilding((current) => !current)}
             glyph="system-bestiary"
-            title="Build a monster"
+            title={monsterUiText("Build a monster", locale)}
             tour="bestiary-build"
           />
           {building ? (
@@ -285,7 +295,7 @@ export function DmBestiaryPanel({
         </section>
 
         <div data-tour="bestiary-list">
-          <Listed loaded={loaded} error={loadError} onRetry={() => void load()} loading="Opening the bestiary...">
+          <Listed loaded={loaded} error={monsterUiError(loadError, locale)} onRetry={() => void load()} loading={monsterUiText("Opening the bestiary...", locale)}>
             <MonsterRows
               monsters={monsters}
               busy={busy}
@@ -300,7 +310,7 @@ export function DmBestiaryPanel({
         <Sheet
           open={editorOpen && editor !== null}
           onOpenChange={setEditorOpen}
-          title={draft?.name || "Monster"}
+          title={draft?.name || monsterUiText("Monster", locale)}
           className="top-0 h-dvh max-h-none rounded-none lg:top-1/2 lg:h-auto lg:max-h-[92vh] lg:w-[min(96vw,64rem)] lg:rounded-xl"
         >
           {editor}
@@ -324,13 +334,13 @@ export function DmBestiaryPanel({
 
       <div className="flex flex-col gap-1.5">
         <SectionHead
-          title="Your monsters"
+          title={monsterUiText("Your monsters", locale)}
           glyph="system-bestiary"
           aside={monsters.length ? <span key={monsters.length} className="count-pop">{monsters.length}</span> : undefined}
         />
-        <Listed loaded={loaded} error={loadError} onRetry={() => void load()} loading="Opening the bestiary...">
+        <Listed loaded={loaded} error={monsterUiError(loadError, locale)} onRetry={() => void load()} loading={monsterUiText("Opening the bestiary...", locale)}>
           {monsters.length === 0 ? (
-            <EmptyState size="sm" art="chest" title="Nothing built yet. A monster made here answers to its name wherever a fight starts." />
+            <EmptyState size="sm" art="chest" title={monsterUiText("Nothing built yet. A monster made here answers to its name wherever a fight starts.", locale)} />
           ) : null}
         </Listed>
         {monsters.map((monster) => {
@@ -338,9 +348,9 @@ export function DmBestiaryPanel({
           const toggle = () => (isOpen ? setOpenId(null) : open(monster));
           // The labels are the names the two icon buttons always announced.
           const items: ContextMenuItem[] = [
-            { id: "open", label: isOpen ? "Close the stat block" : "Open the stat block", glyph: "system-bestiary", onSelect: toggle },
-            { id: "duplicate", label: `Duplicate ${monster.draft.name}`, glyph: "system-homebrew", disabled: busy, onSelect: () => void duplicate(monster) },
-            { id: "delete", label: `Delete ${monster.draft.name}`, glyph: "quest-failed", tone: "danger", separated: true, onSelect: () => void remove(monster) },
+            { id: "open", label: monsterUiText(isOpen ? "Close the stat block" : "Open the stat block", locale), glyph: "system-bestiary", onSelect: toggle },
+            { id: "duplicate", label: monsterUiFrame("duplicateAction", { name: monster.draft.name }, locale), glyph: "system-homebrew", disabled: busy, onSelect: () => void duplicate(monster) },
+            { id: "delete", label: monsterUiFrame("deleteAction", { name: monster.draft.name }, locale), glyph: "quest-failed", tone: "danger", separated: true, onSelect: () => void remove(monster) },
           ];
           return (
             <ContextMenu key={monster.id} items={items} label={monster.draft.name} className={cn(ui.card, "rounded-lg")}>
@@ -354,7 +364,7 @@ export function DmBestiaryPanel({
                 />
                 <button type="button" onClick={toggle} aria-expanded={isOpen} className={cn(ui.btnSmall, quietRow, "flex-1 flex-wrap gap-x-2 gap-y-0")}>
                   <span className="text-sm text-stone-100">{monster.draft.name}</span>
-                  <span className="text-[11px] text-stone-400">{monster.summary}</span>
+                  <span className="text-[11px] text-stone-400">{monsterSummary(monster.summary, locale)}</span>
                 </button>
                 <RowMenu items={items} label={monster.draft.name} />
               </div>

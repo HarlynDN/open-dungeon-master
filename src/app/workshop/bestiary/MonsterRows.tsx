@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { monsterUiText, monsterUiFrame, monsterClosedTerm } from "@/lib/i18n/monster-ui-presentations";
+
 import { EmptyState } from "@/components/EmptyState";
 import { cn } from "@/lib/cn";
 import { MonsterTile, ui } from "@/lib/ui";
@@ -43,15 +46,16 @@ export function MonsterRows({
   onDuplicate: (monster: Monster) => void;
   onDelete: (monster: Monster) => void;
 }) {
+  const { locale } = useLocale();
   const head = useListHead(monsters, readMonster);
   if (!monsters.length) {
     return (
-      <EmptyState size="md" art="chest" title="Nothing built yet. A monster made here answers to its name wherever a fight starts." />
+      <EmptyState size="md" art="chest" title={monsterUiText("Nothing built yet. A monster made here answers to its name wherever a fight starts.", locale)} />
     );
   }
   return (
     <>
-    <ListHead head={head} noun={["monster", "monsters"]} placeholder="Find a monster" />
+    <ListHead head={head} noun={[monsterUiText("monster", locale), monsterUiText("monsters", locale)]} placeholder={monsterUiText("Find a monster", locale)} tagLabel={value => monsterClosedTerm("type", value, locale)} />
     <ul className="stagger space-y-2">
       {head.shown.map((monster) => {
         const { stats } = monster.draft;
@@ -59,9 +63,9 @@ export function MonsterRows({
         // One list for both doors: the kebab on the row and the right-click
         // or long-press menu. Opening stays the row itself.
         const items: ContextMenuItem[] = [
-          { id: "open", label: "Open", glyph: "system-bestiary", onSelect: () => onOpen(monster) },
-          { id: "duplicate", label: "Duplicate", glyph: "tab-notes", disabled: busy, onSelect: () => onDuplicate(monster) },
-          { id: "delete", label: "Delete", glyph: "quest-failed", tone: "danger", separated: true, onSelect: () => onDelete(monster) },
+          { id: "open", label: monsterUiText("Open", locale), glyph: "system-bestiary", onSelect: () => onOpen(monster) },
+          { id: "duplicate", label: monsterUiText("Duplicate", locale), glyph: "tab-notes", disabled: busy, onSelect: () => onDuplicate(monster) },
+          { id: "delete", label: monsterUiText("Delete", locale), glyph: "quest-failed", tone: "danger", separated: true, onSelect: () => onDelete(monster) },
         ];
         return (
           <ContextMenu
@@ -88,19 +92,18 @@ export function MonsterRows({
                   {monster.draft.name}
                 </span>
                 <span className="rounded-sm border border-amber-400/30 bg-amber-400/10 px-1.5 py-0.5 font-display text-[10px] tracking-wider text-amber-300">
-                  CR {crLabel(stats.cr)}
+                  {monsterUiText("CR", locale)}{crLabel(stats.cr)}
                 </span>
               </div>
               <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-stone-300">
                 <span className="inline-flex items-center gap-1">
-                  <GameIcon icon={{ kind: "glyph", key: "rest-ac" }} size="size-5" /> AC {stats.ac}
+                  <GameIcon icon={{ kind: "glyph", key: "rest-ac" }} size="size-5" />  {monsterUiFrame("ac", { ac: stats.ac }, locale)}
                 </span>
                 <span className="inline-flex items-center gap-1">
-                  <GameIcon icon={{ kind: "glyph", key: "rest-hp" }} size="size-5" /> {stats.maxHp} hp
-                </span>
+                  <GameIcon icon={{ kind: "glyph", key: "rest-hp" }} size="size-5" /> {monsterUiFrame("hp", { hp: stats.maxHp }, locale)}</span>
               </p>
               <p className="text-xs text-stone-500">
-                {swings} swing{swings === 1 ? "" : "s"} a turn · Dex {signed(stats.dexMod)}
+                {monsterUiFrame(swings === 1 ? "rowOne" : "rowMany", { swings, dex: signed(stats.dexMod) }, locale)}
               </p>
               <div className="mt-1">
                 <RatingLine readout={monster.readout} />

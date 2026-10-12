@@ -37,12 +37,14 @@ export function ListHead({
   head,
   noun,
   placeholder,
+  tagLabel,
   className = "mb-2",
 }: {
   head: { controls: ReturnType<typeof useListControls>; total: number; active: boolean; shown: readonly unknown[] };
   // What one row is called: "monster", "entry".
   noun: [one: string, many: string];
   placeholder?: string;
+  tagLabel?: (value: string) => string;
   className?: string;
 }) {
   const { t } = useLocale();
@@ -52,7 +54,7 @@ export function ListHead({
   const count = head.shown.length;
   return (
     <div className={className}>
-      <ListControls controls={head.controls} placeholder={placeholder} />
+      <ListControls controls={head.controls} placeholder={placeholder} tagLabel={tagLabel} />
       <p className="mt-1 text-[11px] text-stone-500" aria-live="polite">
         {count === head.total
           ? t("list.total", { count: head.total, noun: head.total === 1 ? noun[0] : noun[1] })

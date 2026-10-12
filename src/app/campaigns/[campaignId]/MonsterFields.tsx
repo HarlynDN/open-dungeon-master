@@ -1,5 +1,9 @@
 "use client";
 
+import { abilityLabel } from "@/lib/i18n/character-presentations";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { monsterUiText, monsterUiFrame, monsterClosedTerm, monsterTypedValue, monsterAttackExtras } from "@/lib/i18n/monster-ui-presentations";
+
 import { useId, useState } from "react";
 import { ChevronDown, Plus, Trash2 } from "lucide-react";
 import { cn } from "@/lib/cn";
@@ -66,6 +70,7 @@ export function AttackEditor({
   draft: MonsterDraft;
   onChange: (draft: MonsterDraft) => void;
 }) {
+  const { locale } = useLocale();
   // One list per mounted editor: a fixed id collided when two were open.
   const damageListId = useId();
   // Which rows show their reach, range, riders and on-hit effect.
@@ -85,7 +90,7 @@ export function AttackEditor({
     <div className="flex flex-col gap-1.5">
       <datalist id={damageListId}>
         {DAMAGE_TYPES.map((type) => (
-          <option key={type} value={type} />
+          <option key={type} value={monsterClosedTerm("damage", type, locale)} />
         ))}
       </datalist>
       {attacks.map((attack, index) => (
@@ -100,17 +105,16 @@ export function AttackEditor({
                 ),
               )
             }
-            placeholder="Bite"
+            placeholder={monsterUiText("Bite", locale)}
             className={cn(input, "w-28")}
           />
           <span className="flex items-center gap-1 text-[10px] text-stone-500">
-            to hit
-            <NumberStepper
+            {monsterUiText("to hit", locale)}<NumberStepper
               min={-5}
               max={20}
               value={attack.toHit}
               onChange={(toHit) => setAttacks(attacks.map((row, at) => (at === index ? { ...row, toHit } : row)))}
-              label={`To hit, ${attack.name || "attack"}`}
+              label={monsterUiFrame("toHit", { name: attack.name || monsterUiText("Attack", locale) }, locale)}
               size="sm"
             />
           </span>
@@ -123,7 +127,7 @@ export function AttackEditor({
                 ),
               )
             }
-            placeholder="2d6+3"
+            placeholder={monsterUiText("2d6+3", locale)}
             className={cn(input, "w-24")}
           />
           {/* A list rather than a select: the thirteen types the engine
@@ -131,15 +135,15 @@ export function AttackEditor({
               typeable for a monster that wants it. */}
           <input
             list={damageListId}
-            value={attack.type}
+            value={monsterClosedTerm("damage", attack.type, locale)}
             onChange={(event) =>
               setAttacks(
                 attacks.map((row, at) =>
-                  at === index ? { ...row, type: event.target.value } : row,
+                  at === index ? { ...row, type: monsterTypedValue("damage", event.target.value, locale) } : row,
                 ),
               )
             }
-            placeholder="slashing"
+            placeholder={monsterUiText("slashing", locale)}
             className={cn(input, "w-24")}
           />
           <button
@@ -148,7 +152,7 @@ export function AttackEditor({
             onClick={() => toggle(index)}
             className="inline-flex items-center gap-1 rounded-md border border-stone-700 px-1.5 py-0.5 text-[10px] text-stone-400 hover:text-amber-100"
           >
-            {attackExtras(attack)}
+            {monsterAttackExtras(attack, locale)}
             <ChevronDown className={cn("size-3 transition-transform duration-200", opened.has(index) && "rotate-180")} />
           </button>
           <button
@@ -158,7 +162,7 @@ export function AttackEditor({
               setOpened(new Set());
             }}
             className="text-stone-600 hover:text-red-300"
-            aria-label={`Remove ${attack.name || "attack"}`}
+            aria-label={monsterUiFrame("removeAttack", { name: attack.name || monsterUiText("Attack", locale) }, locale)}
           >
             <Trash2 className="size-3.5" />
           </button>
@@ -181,26 +185,12 @@ export function AttackEditor({
           }
           className="inline-flex w-fit items-center gap-1 rounded-md border border-stone-700 px-2 py-0.5 text-[11px] text-stone-400 hover:text-amber-100"
         >
-          <Plus className="size-3" /> Attack
-        </button>
+          <Plus className="size-3" /> {monsterUiText("Attack", locale)}</button>
       ) : null}
       <p className="text-[10px] text-stone-600">
-        The engine swings the Multiattack routine when the block has one, otherwise its best attack
-        as many times as Swings says. Damage has to be something the dice roller can read.
-      </p>
+        {monsterUiText("The engine swings the Multiattack routine when the block has one, otherwise its best attack as many times as Swings says. Damage has to be something the dice roller can read.", locale)}</p>
     </div>
   );
-}
-
-// The word on an attack's details button: what it carries beyond its dice,
-// or "Details" when it carries nothing yet.
-function attackExtras(attack: MonsterDraft["stats"]["attacks"][number]): string {
-  const bits = [
-    attack.range ? `${attack.range.normal}/${attack.range.long} ft` : attack.reach && attack.reach > 5 ? `reach ${attack.reach}` : "",
-    attack.riders?.length ? `+${attack.riders.map((rider) => rider.type).join(", ")}` : "",
-    attack.onHit?.condition ?? (attack.onHit?.damage ? "on hit" : ""),
-  ].filter(Boolean);
-  return bits.length ? bits.join(" · ") : "Details";
 }
 
 export function SaveEditor({
@@ -210,6 +200,7 @@ export function SaveEditor({
   draft: MonsterDraft;
   onChange: (draft: MonsterDraft) => void;
 }) {
+  const { locale } = useLocale();
   const saves = draft.stats.saveMods ?? { str: 0, dex: 0, con: 0, int: 0, wis: 0, cha: 0 };
   return (
     // A stepper is wider than the bare box it replaced, so the columns are as
@@ -218,7 +209,7 @@ export function SaveEditor({
     <div className="stagger-up grid grid-cols-[repeat(auto-fill,minmax(6rem,1fr))] gap-1">
       {SAVE_ABILITIES.map((ability) => (
         <div key={ability} className="flex flex-col gap-0.5">
-          <span className="text-[10px] uppercase text-stone-500">{ability}</span>
+          <span className="text-[10px] uppercase text-stone-500">{locale === "en" ? ability : abilityLabel(ability, locale)}</span>
           <NumberStepper
             min={-5}
             max={20}
@@ -232,7 +223,7 @@ export function SaveEditor({
                 },
               })
             }
-            label={`${ability.toUpperCase()} save`}
+            label={monsterUiText(`${ability.toUpperCase()} save`, locale)}
             size="sm"
             className="w-fit"
           />
@@ -253,6 +244,7 @@ export function TraitEditor({
   draft: MonsterDraft;
   onChange: (draft: MonsterDraft) => void;
 }) {
+  const { locale } = useLocale();
   const traits = draft.stats.traits;
   const setTraits = (next: string[]) =>
     onChange({ ...draft, stats: { ...draft.stats, traits: next } });
@@ -265,14 +257,14 @@ export function TraitEditor({
             onChange={(event) =>
               setTraits(traits.map((row, at) => (at === index ? event.target.value : row)))
             }
-            placeholder="Fire Breath (Recharge 5-6): DC 15 Dex save, 6d6 fire, half on a success"
+            placeholder={monsterUiText("Fire Breath (Recharge 5-6): DC 15 Dex save, 6d6 fire, half on a success", locale)}
             className={cn(input, "flex-1")}
           />
           <button
             type="button"
             onClick={() => setTraits(traits.filter((_, at) => at !== index))}
             className="text-stone-600 hover:text-red-300"
-            aria-label="Remove trait"
+            aria-label={monsterUiText("Remove trait", locale)}
           >
             <Trash2 className="size-3.5" />
           </button>
@@ -284,8 +276,7 @@ export function TraitEditor({
           onClick={() => setTraits([...traits, ""])}
           className="inline-flex w-fit items-center gap-1 rounded-md border border-stone-700 px-2 py-0.5 text-[11px] text-stone-400 hover:text-amber-100"
         >
-          <Plus className="size-3" /> Trait, legendary action or lair action
-        </button>
+          <Plus className="size-3" /> {monsterUiText("Trait, legendary action or lair action", locale)}</button>
       ) : null}
     </div>
   );
@@ -298,18 +289,19 @@ export function SizeAndDefences({
   draft: MonsterDraft;
   onChange: (draft: MonsterDraft) => void;
 }) {
+  const { locale } = useLocale();
   const set = (patch: Partial<MonsterDraft["stats"]>) =>
     onChange({ ...draft, stats: { ...draft.stats, ...patch } });
   return (
     <div className="flex flex-col gap-2.5">
       <div className="flex flex-wrap items-end gap-3">
         <label className="flex flex-col gap-0.5">
-          <span className="text-[10px] uppercase tracking-wide text-stone-500">Size</span>
+          <span className="text-[10px] uppercase tracking-wide text-stone-500">{monsterUiText("Size", locale)}</span>
           <Select
             value={draft.stats.size ?? "Medium"}
             onChange={(size) => set({ size })}
-            options={SIZES.map((size) => ({ value: size as string, label: size }))}
-            label="Size"
+            options={SIZES.map((size) => ({ value: size as string, label: monsterClosedTerm("size", size, locale) }))}
+            label={monsterUiText("Size", locale)}
             size="sm"
             className="w-32"
           />
@@ -318,12 +310,12 @@ export function SizeAndDefences({
             thumbnail: every list the monster appears in draws the plate for
             its type until somebody paints it a portrait. */}
         <label className="flex flex-col gap-0.5">
-          <span className="text-[10px] uppercase tracking-wide text-stone-500">Type</span>
+          <span className="text-[10px] uppercase tracking-wide text-stone-500">{monsterUiText("Type", locale)}</span>
           <Select
             value={creatureTypeOf(draft.stats) as string}
             onChange={(type) => set({ type })}
-            options={CREATURE_TYPES.map((type) => ({ value: type as string, label: type.charAt(0).toUpperCase() + type.slice(1) }))}
-            label="Type"
+            options={CREATURE_TYPES.map((type) => ({ value: type as string, label: locale === "en" ? type.charAt(0).toUpperCase() + type.slice(1) : monsterClosedTerm("type", type, locale) }))}
+            label={monsterUiText("Type", locale)}
             size="sm"
             className="w-32"
           />
@@ -345,7 +337,7 @@ export function SizeAndDefences({
       ).map(([field, label, known]) => (
         <TermPicker
           key={field}
-          label={label}
+          label={monsterUiText(label, locale)}
           value={draft.stats[field]}
           known={known}
           onChange={(value) => set({ [field]: value })}
@@ -363,18 +355,19 @@ export function SizeAndDefences({
 // will not trust a difficulty rating they cannot audit, and the ratings
 // worth auditing are exactly the ones that disagree with their instinct.
 export function Working({ parts, notes }: { parts: CrPart[]; notes: string[] }) {
+  const { locale } = useLocale();
   return (
     <div className="flex flex-col gap-1 rounded-lg border border-stone-800 bg-stone-950/60 p-2">
       {parts.map((part) => (
-        <div key={part.label} className="flex flex-wrap items-baseline gap-x-2 text-[11px]">
-          <span className="w-28 shrink-0 text-stone-500">{part.label}</span>
-          <span className="w-16 shrink-0 text-amber-100">{part.value}</span>
-          <span className="flex-1 text-stone-500">{part.detail}</span>
+        <div key={monsterUiText(part.label, locale)} className="flex flex-wrap items-baseline gap-x-2 text-[11px]">
+          <span className="w-28 shrink-0 text-stone-500">{monsterUiText(part.label, locale)}</span>
+          <span className="w-16 shrink-0 text-amber-100">{monsterUiText(part.value, locale)}</span>
+          <span className="flex-1 text-stone-500">{monsterUiText(part.detail, locale)}</span>
         </div>
       ))}
       {notes.map((note) => (
         <p key={note} className="text-[10px] text-amber-300/70">
-          {note}
+          {monsterUiText(note, locale)}
         </p>
       ))}
     </div>
@@ -382,13 +375,12 @@ export function Working({ parts, notes }: { parts: CrPart[]; notes: string[] }) 
 }
 
 export function RatingLine({ readout }: { readout: MonsterReadout }) {
+  const { locale } = useLocale();
   return (
     <p className={cn("text-[11px]", readout.agrees ? "text-stone-500" : "text-amber-300/80")}>
       {readout.agrees
-        ? `The numbers agree: CR ${crLabel(readout.statedCr)}.`
-        : `Written as CR ${crLabel(readout.statedCr)}; the numbers say CR ${crLabel(
-            readout.derived.cr,
-          )}.`}
+        ? monsterUiFrame("ratingAgrees", { cr: crLabel(readout.statedCr) }, locale)
+        : monsterUiFrame("ratingDifferent", { stated: crLabel(readout.statedCr), derived: crLabel(readout.derived.cr) }, locale)}
     </p>
   );
 }

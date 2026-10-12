@@ -1,5 +1,9 @@
 "use client";
 
+import { rosterMonsterName } from "@/lib/i18n/encounter-prep-presentations";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { monsterUiText, monsterUiError } from "@/lib/i18n/monster-ui-presentations";
+
 import { useState } from "react";
 import { isComposingInput } from "@/lib/input-composition";
 import { Search } from "lucide-react";
@@ -47,6 +51,7 @@ export function MonsterBuildControls({
   // The table's setting, so a high-rating find draws the boss plate.
   genre?: string | null;
 }) {
+  const { locale } = useLocale();
   const [newName, setNewName] = useState("");
   const [newCr, setNewCr] = useState(1);
 
@@ -65,19 +70,19 @@ export function MonsterBuildControls({
       )}
     >
       {variant === "card" ? (
-        <SectionHead title="Build a monster" glyph="system-bestiary" className="mb-0" />
+        <SectionHead title={monsterUiText("Build a monster", locale)} glyph="system-bestiary" className="mb-0" />
       ) : null}
       <div className="flex flex-wrap items-end gap-2">
-        <Field as="label" label="Name" className="min-w-40 flex-1 sm:max-w-64">
+        <Field as="label" label={monsterUiText("Name", locale)} className="min-w-40 flex-1 sm:max-w-64">
           <input
             value={newName}
             onChange={(event) => setNewName(event.target.value.slice(0, MONSTER_NAME_MAX))}
-            placeholder="Bone Tyrant"
+            placeholder={monsterUiText("Bone Tyrant", locale)}
             className={ui.input}
           />
         </Field>
-        <Field label="Starting CR" className="w-24">
-          <Select label="Starting CR" value={String(newCr)} onChange={(next) => setNewCr(Number(next))} options={CR_OPTIONS} />
+        <Field label={monsterUiText("Starting CR", locale)} className="w-24">
+          <Select label={monsterUiText("Starting CR", locale)} value={String(newCr)} onChange={(next) => setNewCr(Number(next))} options={CR_OPTIONS} />
         </Field>
         <button
           type="button"
@@ -85,12 +90,11 @@ export function MonsterBuildControls({
           onClick={() => void create({ from: "cr", name: newName.trim(), cr: newCr })}
           className={ui.btnPrimary}
         >
-          Start from the baseline
-        </button>
+          {monsterUiText("Start from the baseline", locale)}</button>
       </div>
 
       <div className="flex flex-wrap items-end gap-2">
-        <Field as="label" label="Or start from something that exists" className="flex-1">
+        <Field as="label" label={monsterUiText("Or start from something that exists", locale)} className="flex-1">
           <div className="flex gap-1.5">
             <input
               value={query}
@@ -101,12 +105,11 @@ export function MonsterBuildControls({
                   onFind();
                 }
               }}
-              placeholder="owlbear"
+              placeholder={monsterUiText("owlbear", locale)}
               className={cn(ui.input, "flex-1")}
             />
             <button type="button" onClick={onFind} className={ui.btnSecondary}>
-              <Search className="size-3.5" /> Find
-            </button>
+              <Search className="size-3.5" /> {monsterUiText("Find", locale)}</button>
           </div>
         </Field>
       </div>
@@ -121,7 +124,7 @@ export function MonsterBuildControls({
                 void create({
                   from: "monster",
                   slug: entry.slug,
-                  name: newName.trim() || undefined,
+                  name: newName.trim() || (locale === "en" ? undefined : rosterMonsterName(entry, locale)),
                 })
               }
               className={cn(ui.btnSmall, "px-2 py-1")}
@@ -133,12 +136,12 @@ export function MonsterBuildControls({
                 seed={entry.slug}
                 size="size-7"
               />
-              {entry.name} <span className="text-stone-600">CR {crLabel(entry.cr)}</span>
+              {rosterMonsterName(entry, locale)} <span className="text-stone-600">{monsterUiText("CR", locale)} {crLabel(entry.cr)}</span>
             </button>
           ))}
         </div>
       ) : null}
-      {error ? <p className="motion-shake text-xs text-red-400">{error}</p> : null}
+      {error ? <p className="motion-shake text-xs text-red-400">{monsterUiError(error, locale)}</p> : null}
     </div>
   );
 }

@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { monsterUiText, monsterUiFrame, monsterUiError } from "@/lib/i18n/monster-ui-presentations";
+
 import { useState } from "react";
 import { Check, Plus, X } from "lucide-react";
 import { cn } from "@/lib/cn";
@@ -33,15 +36,16 @@ function statsOf(entry: { source: string; name: string; data: Record<string, unk
 }
 
 export function BorrowParts({ draft, onChange }: { draft: MonsterDraft; onChange: (draft: MonsterDraft) => void }) {
+  const { locale } = useLocale();
   const [source, setSource] = useState<{ name: string; parts: BorrowPart[] } | null>(null);
   const [taken, setTaken] = useState<Set<string>>(() => new Set());
   return (
     <div className="flex flex-col gap-2">
-      <SectionHead title="Borrow from the books" glyph="tab-reference" className="mb-0" />
+      <SectionHead title={monsterUiText("Borrow from the books", locale)} glyph="tab-reference" className="mb-0" />
       <ContentPick
         kind="monsters"
-        label="Find a monster to borrow a part from"
-        placeholder="Borrow from... adult red dragon, ghoul, mage"
+        label={monsterUiText("Find a monster to borrow a part from", locale)}
+        placeholder={monsterUiText("Borrow from... adult red dragon, ghoul, mage", locale)}
         onPick={(entry) => {
           setSource({ name: entry.name, parts: borrowParts(statsOf(entry)) });
           setTaken(new Set());
@@ -50,8 +54,8 @@ export function BorrowParts({ draft, onChange }: { draft: MonsterDraft; onChange
       {source ? (
         <div className="reveal flex flex-col gap-1 rounded-lg border border-stone-800 bg-stone-950/50 p-2">
           <span className="flex items-center justify-between gap-2 text-xs text-stone-300">
-            From {source.name}
-            <button type="button" aria-label="Close the borrowed monster" onClick={() => setSource(null)} className={ui.iconAction}>
+            {monsterUiText("From", locale)}{source.name}
+            <button type="button" aria-label={monsterUiText("Close the borrowed monster", locale)} onClick={() => setSource(null)} className={ui.iconAction}>
               <X className="size-3.5" />
             </button>
           </span>
@@ -65,7 +69,7 @@ export function BorrowParts({ draft, onChange }: { draft: MonsterDraft; onChange
                     <button
                       type="button"
                       disabled={Boolean(blocked) && !done}
-                      title={blocked ?? undefined}
+                      title={blocked ? monsterUiError(blocked, locale) : undefined}
                       onClick={() => {
                         onChange(borrowInto(draft, part));
                         setTaken((current) => new Set(current).add(part.key));
@@ -73,7 +77,7 @@ export function BorrowParts({ draft, onChange }: { draft: MonsterDraft; onChange
                       className={cn(ui.btnSmall, addChip, "shrink-0", done && "border-emerald-500/40 text-emerald-200")}
                     >
                       {done ? <Check className="size-3" /> : <Plus className="size-3" />}
-                      {KIND_WORDS[part.kind]}
+                      {monsterUiText(KIND_WORDS[part.kind], locale)}
                     </button>
                     <span className="min-w-0 text-[11px] leading-snug text-stone-400">{part.label}</span>
                   </li>
@@ -81,7 +85,7 @@ export function BorrowParts({ draft, onChange }: { draft: MonsterDraft; onChange
               })}
             </ul>
           ) : (
-            <p className="text-[11px] text-stone-500">Nothing on this block travels on its own.</p>
+            <p className="text-[11px] text-stone-500">{monsterUiText("Nothing on this block travels on its own.", locale)}</p>
           )}
         </div>
       ) : null}

@@ -46,10 +46,12 @@ export function useListControls<T extends Listed>(items: T[]) {
 export function ListControls({
   controls,
   placeholder,
+  tagLabel,
   className,
 }: {
   controls: ReturnType<typeof useListControls>;
   placeholder?: string;
+  tagLabel?: (value: string) => string;
   className?: string;
 }) {
   const { t } = useLocale();
@@ -71,7 +73,7 @@ export function ListControls({
         <div data-pill-group="" className="reveal flex flex-wrap items-center gap-1">
           {tags.slice(0, 8).map((entry) => (
             <button data-on={tag === entry ? "" : undefined}
-              key={entry}
+              key={tagLabel ? tagLabel(entry) : entry}
               type="button"
               aria-pressed={tag === entry}
               onClick={() => setTag(tag === entry ? "" : entry)}
@@ -80,7 +82,7 @@ export function ListControls({
                 tag === entry ? "border-amber-700 bg-amber-950/50 text-amber-100" : "border-stone-700 text-stone-400 hover:text-stone-200",
               )}
             >
-              {entry}
+              {tagLabel ? tagLabel(entry) : entry}
             </button>
           ))}
         </div>

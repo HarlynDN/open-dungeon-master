@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { monsterUiText, monsterUiFrame, monsterUiError } from "@/lib/i18n/monster-ui-presentations";
+
 import { PrintedBlockView } from "@/app/workshop/bestiary/PrintedBlockView";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/cn";
@@ -66,6 +69,7 @@ export function MonsterEditor({
   onSave: () => void;
   layout?: "inline" | "sheet";
 }) {
+  const { locale } = useLocale();
   const sheet = layout === "sheet";
   const setStats = (patch: Partial<MonsterDraft["stats"]>) =>
     onDraft({ ...draft, stats: { ...draft.stats, ...patch } });
@@ -76,7 +80,7 @@ export function MonsterEditor({
         sheet ? "grid grid-cols-2 gap-2 sm:grid-cols-3" : "flex flex-wrap items-end gap-2",
       )}
     >
-      <Field as="label" label="Name" className={cn(sheet && "col-span-2 sm:col-span-3")}>
+      <Field as="label" label={monsterUiText("Name", locale)} className={cn(sheet && "col-span-2 sm:col-span-3")}>
         <input
           value={draft.name}
           onChange={(event) =>
@@ -85,33 +89,33 @@ export function MonsterEditor({
           className={cn(ui.input, sheet ? "w-full" : "w-48")}
         />
       </Field>
-      <Field label="Challenge">
+      <Field label={monsterUiText("Challenge", locale)}>
         <span className={cn("block", !sheet && "w-24")}>
           <Select
-            label="Challenge"
+            label={monsterUiText("Challenge", locale)}
             value={String(draft.stats.cr)}
             onChange={(next) => setStats({ cr: Number(next) })}
             options={CR_OPTIONS}
           />
         </span>
       </Field>
-      <NumberField label="AC" value={draft.stats.ac} min={1} max={30} onChange={(ac) => setStats({ ac })} />
+      <NumberField label={monsterUiText("AC", locale)} value={draft.stats.ac} min={1} max={30} onChange={(ac) => setStats({ ac })} />
       <NumberField
-        label="Hit points"
+        label={monsterUiText("Hit points", locale)}
         value={draft.stats.maxHp}
         min={1}
         max={2000}
         onChange={(maxHp) => setStats({ maxHp })}
       />
       <NumberField
-        label="Swings"
+        label={monsterUiText("Swings", locale)}
         value={draft.stats.attacksPerTurn ?? 1}
         min={1}
         max={MAX_SWINGS}
         onChange={(attacksPerTurn) => setStats({ attacksPerTurn })}
       />
       <NumberField
-        label="Dex mod"
+        label={monsterUiText("Dex mod", locale)}
         value={draft.stats.dexMod}
         min={-5}
         max={10}
@@ -122,22 +126,22 @@ export function MonsterEditor({
 
   const extraDamage = (
     <NumberField
-      label="Extra damage a round"
+      label={monsterUiText("Extra damage a round", locale)}
       value={draft.extraDamagePerRound}
       min={0}
       max={400}
       onChange={(extraDamagePerRound) => onDraft({ ...draft, extraDamagePerRound })}
-      hint="A breath weapon or a round of spellcasting, averaged. The rating cannot see it otherwise."
+      hint={monsterUiText("A breath weapon or a round of spellcasting, averaged. The rating cannot see it otherwise.", locale)}
     />
   );
 
   const description = (
-    <Field as="label" label="What it is">
+    <Field as="label" label={monsterUiText("What it is", locale)}>
       <textarea
         value={desc}
         onChange={(event) => onDesc(event.target.value)}
         rows={2}
-        placeholder="A knight's armour walking with nobody inside it."
+        placeholder={monsterUiText("A knight's armour walking with nobody inside it.", locale)}
         className={cn(ui.input, "resize-y")}
       />
     </Field>
@@ -145,20 +149,20 @@ export function MonsterEditor({
 
   const rating = readout ? (
     <>
-      <SectionHead title="The rating the numbers support" glyph="rest-xp" className="mb-0" />
+      <SectionHead title={monsterUiText("The rating the numbers support", locale)} glyph="rest-xp" className="mb-0" />
       <RatingLine readout={readout} />
       <Working parts={readout.derived.parts} notes={readout.derived.notes} />
       <div className="stagger-pop flex flex-wrap gap-x-4 gap-y-1 text-[11px]">
         {readout.against.map((row) => (
-          <span key={row.label} className="text-stone-500">
-            {row.label}{" "}
+          <span key={monsterUiText(row.label, locale)} className="text-stone-500">
+            {monsterUiText(row.label, locale)}{" "}
             <span
               className={cn(row.verdict === "as expected" ? "text-stone-400" : "text-amber-300/80")}
             >
-              {row.stat}
+              {monsterUiText(row.stat, locale)}
             </span>{" "}
             <span className="text-stone-600">
-              ({row.verdict}, CR {crLabel(readout.statedCr)} wants {row.expected})
+              {monsterUiFrame("comparison", { verdict: monsterUiText(row.verdict, locale), cr: crLabel(readout.statedCr), expected: monsterUiText(row.expected, locale) }, locale)}
             </span>
           </span>
         ))}
@@ -168,7 +172,7 @@ export function MonsterEditor({
 
   const footer = (
     <>
-      {error ? <p className="motion-shake text-[11px] text-red-400">{error}</p> : null}
+      {error ? <p className="motion-shake text-[11px] text-red-400">{monsterUiError(error, locale)}</p> : null}
       <div className="flex flex-wrap items-center gap-3">
         <button
           type="button"
@@ -177,11 +181,9 @@ export function MonsterEditor({
           className={ui.btnPrimary}
         >
           {busy ? <Loader2 className="size-3.5 animate-spin" /> : null}
-          Save the block
-        </button>
+          {monsterUiText("Save the block", locale)}</button>
         <span className="text-[11px] text-stone-500">
-          Saving recalculates the rating from what is on screen.
-        </span>
+          {monsterUiText("Saving recalculates the rating from what is on screen.", locale)}</span>
       </div>
     </>
   );
@@ -191,7 +193,7 @@ export function MonsterEditor({
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-4 lg:grid lg:grid-cols-2 lg:gap-6">
           <div className="flex flex-col gap-3">
-            <SectionHead title="The block" glyph="system-bestiary" className="mb-0" />
+            <SectionHead title={monsterUiText("The block", locale)} glyph="system-bestiary" className="mb-0" />
             {coreStats}
             <AbilityScores draft={draft} onChange={onDraft} />
             <AttackEditor draft={draft} onChange={onDraft} />
@@ -203,7 +205,7 @@ export function MonsterEditor({
             <PrintedBlockView draft={draft} />
           </div>
           <div className="flex flex-col gap-3">
-            <SectionHead title="Catalogue and defences" glyph="rest-ac" className="mb-0" />
+            <SectionHead title={monsterUiText("Catalogue and defences", locale)} glyph="rest-ac" className="mb-0" />
             <MonsterKitPanel draft={draft} onChange={onDraft} />
             <BorrowParts draft={draft} onChange={onDraft} />
             <SizeAndDefences draft={draft} onChange={onDraft} />
@@ -222,7 +224,7 @@ export function MonsterEditor({
 
   return (
     <div className="flex flex-col gap-3 border-t border-stone-800 p-3">
-      <SectionHead title="The block" glyph="system-bestiary" className="mb-0" />
+      <SectionHead title={monsterUiText("The block", locale)} glyph="system-bestiary" className="mb-0" />
       {coreStats}
       <AbilityScores draft={draft} onChange={onDraft} />
       <MonsterKitPanel draft={draft} onChange={onDraft} />
