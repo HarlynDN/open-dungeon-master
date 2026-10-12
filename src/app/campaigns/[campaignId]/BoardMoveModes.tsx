@@ -1,5 +1,9 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { createTranslator } from "@/lib/i18n/translator";
+import { DEFAULT_LOCALE, type AppLocale } from "@/lib/i18n/locales";
+import { combatName } from "@/lib/i18n/combat-ui-presentations";
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import { cn } from "@/lib/cn";
 import { dragReach } from "@/lib/battlemap/board-move";
@@ -20,18 +24,19 @@ export function effectiveMoveMode(mode: MoveMode, moves: PlayerMapView["moves"])
   return mode;
 }
 
-export function moveModeHint(mode: MoveMode, moves: PlayerMapView["moves"]): string {
+export function moveModeHint(mode: MoveMode, moves: PlayerMapView["moves"], locale: AppLocale = DEFAULT_LOCALE): string {
+  const t = createTranslator(locale);
   if (!moves || mode === "walk") return "";
   if (mode === "jump") {
     return moves.runningStart
-      ? `Long jump: up to ${moves.jumpFeet} feet in a straight line, each foot a foot of movement. Tap where you land.`
-      : `Standing long jump: up to ${moves.jumpFeet} feet (twice that after a 10-foot run this turn). Tap where you land.`;
+      ? t("boardUi.move.long", { feet: moves.jumpFeet })
+      : t("boardUi.move.standing", { feet: moves.jumpFeet });
   }
   const drag = moves.drag;
   if (!drag) return "";
   return drag.factor > 1
-    ? `Dragging ${drag.names.join(" and ")}: every square costs double. Tap where you stop.`
-    : `Dragging ${drag.names.join(" and ")}: two sizes smaller, so it costs nothing extra. Tap where you stop.`;
+    ? t("boardUi.move.dragDouble", { names: drag.names.map(name => combatName(name, "enemy", locale)).join(t("boardUi.and")) })
+    : t("boardUi.move.dragSmall", { names: drag.names.map(name => combatName(name, "enemy", locale)).join(t("boardUi.and")) });
 }
 
 export function BoardMoveModes({
@@ -43,15 +48,16 @@ export function BoardMoveModes({
   moves: PlayerMapView["moves"];
   onMode: (mode: MoveMode) => void;
 }) {
+  const { locale, t } = useLocale();
   if (!moves) return null;
   const options: Array<{ id: MoveMode; label: string; note: string }> = [
-    { id: "walk", label: "Walk", note: "Move square by square." },
-    { id: "jump", label: "Jump", note: `A long jump of up to ${moves.jumpFeet} feet; a high jump of ${moves.highJumpFeet}.` },
-    ...(moves.drag ? [{ id: "drag" as const, label: "Drag", note: `Take ${moves.drag.names.join(" and ")} with you.` }] : []),
+    { id: "walk", label: t("boardUi.move.walk"), note: t("boardUi.move.walkNote") },
+    { id: "jump", label: t("boardUi.move.jump"), note: t("boardUi.move.jumpNote", { long: moves.jumpFeet, high: moves.highJumpFeet }) },
+    ...(moves.drag ? [{ id: "drag" as const, label: t("boardUi.move.drag"), note: t("boardUi.move.dragNote", { names: moves.drag.names.map(name => combatName(name, "enemy", locale)).join(t("boardUi.and")) }) }] : []),
   ];
   return (
-    <div className="flex flex-wrap items-center gap-1.5" role="radiogroup" aria-label="How you move" data-pill-group="">
-      <span className="text-[10px] uppercase tracking-[0.18em] text-stone-500">Move</span>
+    <div className="flex flex-wrap items-center gap-1.5" role="radiogroup" aria-label={t("boardUi.move.group")} data-pill-group="">
+      <span className="text-[10px] uppercase tracking-[0.18em] text-stone-500">{t("boardUi.move.label")}</span>
       {options.map((option, index) => {
         const on = option.id === mode;
         return (
@@ -162,14 +168,15 @@ export function BoardMoveHints({
   areaHint: string | null | undefined;
   caught: string[];
 }) {
+  const { locale, t } = useLocale();
   return (
     <>
       {moves ? (
         <div className="space-y-1">
           <BoardMoveModes mode={moveMode} moves={moves} onMode={onMode} />
-          {moveModeHint(moveMode, moves) ? (
+          {moveModeHint(moveMode, moves, locale) ? (
             <p key={moveMode} className="animate-fade-up text-[11px] leading-4 text-amber-200/80">
-              {moveModeHint(moveMode, moves)}
+              {moveModeHint(moveMode, moves, locale)}
             </p>
           ) : null}
         </div>
@@ -177,7 +184,7 @@ export function BoardMoveHints({
       {areaHint ? (
         <p key={areaHint} className="animate-fade-up text-[11px] leading-4 text-amber-200/90">
           {areaHint}
-          {caught.length ? <span className="text-stone-400"> Catches {caught.join(", ")}.</span> : null}
+          {caught.length ? <span className="text-stone-400">{t("boardUi.caught", { names: caught.join(t("boardUi.list")) })}</span> : null}
         </p>
       ) : null}
     </>

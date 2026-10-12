@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { boardMoveNoteText, type BoardDisplayName } from "@/lib/i18n/board-control-presentations";
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import { Flame, Footprints, Swords } from "lucide-react";
 import { cn } from "@/lib/cn";
@@ -7,8 +9,8 @@ import type { MoveNote } from "@/lib/battlemap/board-move";
 
 // What a walk met on the way, as the move route reported it
 // (src/lib/battlemap/board-move.ts moveNotesFrom): an enemy's opportunity
-// attack, Spike Growth's spikes, a web's hold. The engine's own lines, never
-// rewritten. They rise over the board one after another, hold long enough to
+// attack, Spike Growth's spikes, a web's hold. Native lines remain unchanged
+// in state; a display adapter localizes recognized complete frames. They rise over the board one after another, hold long enough to
 // read, and leave on their own; the timer removes them, so they still go
 // where the animation is switched off.
 
@@ -45,7 +47,8 @@ export function useMoveNotes() {
   return { notes, push };
 }
 
-export function BoardMoveNotes({ notes }: { notes: Shown[] }) {
+export function BoardMoveNotes({ notes, names = [] }: { notes: Shown[]; names?: readonly BoardDisplayName[] }) {
+  const { locale } = useLocale();
   if (!notes.length) return null;
   return (
     <div
@@ -73,7 +76,7 @@ export function BoardMoveNotes({ notes }: { notes: Shown[] }) {
           ) : (
             <Flame className="mt-0.5 size-3.5 shrink-0" />
           )}
-          {note.text}
+          {boardMoveNoteText(note.text, locale, names)}
         </p>
       ))}
     </div>

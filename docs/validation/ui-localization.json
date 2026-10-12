@@ -102,7 +102,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/BattleMapPanel.tsx",
-      "state": "pending"
+      "state": "pending",
+      "review": "Board movement hints, rulers/aim distances, camera/order child controls and recognized move-note display now use viewer locale. Costs/paths/coordinates/commands unchanged. Remaining parent controls, area-aim text, native refusals/other board owners and special move effects remain pending; this main owner is not complete."
     },
     {
       "path": "src/app/campaigns/[campaignId]/BoardAreaAim.tsx",
@@ -131,15 +132,18 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/BoardMoveModes.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned movement modes/hints, key/camera/order controls and contextual board instructions localized. Walk/jump/drag and pull/lock/free IDs, path/reach/budget math and geometry unchanged. English helper calls remain compatible via optional locale; typed enemy names display through shared references, PC names stay literal. Area-aim and imported children retain independent scope; callback/display validation performs no real movement."
     },
     {
       "path": "src/app/campaigns/[campaignId]/BoardMoveNotes.tsx",
-      "state": "pending"
+      "state": "pending",
+      "review": "Known jump/landing, opportunity hit/miss, save/evasion, condition, push/hold, damage and concentration frames localized at display only. Original lines/tone/expiry remain raw and unchanged. Mixed damage modifier details, quake/fissure, drift and other special native notes still need migration; this owner remains pending."
     },
     {
       "path": "src/app/campaigns/[campaignId]/BoardPanelParts.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned movement modes/hints, key/camera/order controls and contextual board instructions localized. Walk/jump/drag and pull/lock/free IDs, path/reach/budget math and geometry unchanged. English helper calls remain compatible via optional locale; typed enemy names display through shared references, PC names stay literal. Area-aim and imported children retain independent scope; callback/display validation performs no real movement."
     },
     {
       "path": "src/app/campaigns/[campaignId]/BoardStage.tsx",

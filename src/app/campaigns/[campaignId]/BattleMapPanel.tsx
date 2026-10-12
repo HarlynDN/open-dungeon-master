@@ -39,6 +39,8 @@ import {
 } from "@/lib/battlemap/scene";
 import { PromptDialog } from "@/components/ui/PromptDialog";
 import { cn } from "@/lib/cn";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { boardDisplayName, boardRulerText } from "@/lib/i18n/board-control-presentations";
 import { jumpRulerFor, moveNotesFrom, rulerFor } from "@/lib/battlemap/board-move";
 import { BoardMoveHints, JumpArc, useBoardMoveModes } from "@/app/campaigns/[campaignId]/BoardMoveModes";
 import { TILE_FEET } from "@/lib/battlemap/types";
@@ -168,6 +170,7 @@ export function BattleMapPanel({
   visible?: boolean;
 }) {
   // The board's picture, painted on this device from the terrain it was sent.
+  const { locale } = useLocale();
   const painted = usePaintedMap(view, genre);
   // A face for every token: the character's plate by lineage and class (an
   // uploaded portrait overrides it in the grid), a monster's plate by creature
@@ -455,21 +458,21 @@ export function BattleMapPanel({
       fromTokenId: myToken.id,
       targetIds: aimTargets.map((entry) => entry.token.id),
       hoverId: aimHoverId,
-      labels: Object.fromEntries(aimTargets.map((entry) => [entry.token.id, `${entry.feet} ft`])),
+      labels: Object.fromEntries(aimTargets.map((entry) => [entry.token.id, boardRulerText(`${entry.feet} ft`, locale)])),
     };
-  }, [targeting, myToken, aimTargets, aimHoverId]);
+  }, [targeting, myToken, aimTargets, aimHoverId, locale]);
 
   const overlay = useMemo<MapOverlay>(
     () => ({
       template: liveMeasure?.tiles,
-      ruler,
+      ruler: ruler ? { ...ruler, label: boardRulerText(ruler.label, locale) } : null,
       pings,
       selectedTokenId: held ?? teleporting,
       sketch: sketch ? { kind: drawKind, points: sketch, tone: drawTone } : null,
       aim,
       area: areaAim.overlay,
     }),
-    [liveMeasure, ruler, pings, held, teleporting, sketch, drawKind, drawTone, aim, areaAim.overlay],
+    [liveMeasure, ruler, pings, held, teleporting, sketch, drawKind, drawTone, aim, areaAim.overlay, locale],
   );
 
   async function endTurn() {
@@ -1059,7 +1062,7 @@ export function BattleMapPanel({
         <TurnBanner key={bannerKey} text={myTurn ? "Your turn" : view.currentTurnName} mine={myTurn} />
       ) : null}
       {fieldRoll ? <FieldDie label={fieldRoll.label} /> : null}
-      <BoardMoveNotes notes={moveNotes.notes} />
+      <BoardMoveNotes notes={moveNotes.notes} names={view.tokens} />
       {targeting ? (
         <div className="absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 items-center gap-2.5 rounded-[10px] border border-[rgba(224,112,58,0.5)] bg-[rgba(13,11,28,0.94)] px-3 py-1.5 shadow-elev-2">
           <span className="whitespace-nowrap font-display text-[10px] font-semibold uppercase tracking-[0.18em] text-[#ffbe8f]">
@@ -1283,7 +1286,7 @@ export function BattleMapPanel({
         moves={!canDirect && canMove && !areaAim.active ? view.moves : undefined}
         onMode={setMoveMode}
         areaHint={areaAim.hint}
-        caught={areaAim.caught}
+        caught={areaAim.caught.map(name => boardDisplayName(name, locale, view.tokens))}
       />
       <p className="text-[11px] leading-4 text-stone-500">
         {boardHintText({
@@ -1299,7 +1302,7 @@ export function BattleMapPanel({
           scene,
           budgetLeft: view.budgetLeft,
           hasToken: Boolean(view.myTokenId),
-        })}
+        }, locale)}
       </p>
       {error ? <p className="text-[11px] text-red-400">{error}</p> : null}
       {targeting ? (

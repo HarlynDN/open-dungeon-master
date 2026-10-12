@@ -1,5 +1,9 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { createTranslator, type MessageKey } from "@/lib/i18n/translator";
+import { DEFAULT_LOCALE, type AppLocale } from "@/lib/i18n/locales";
+import { combatName } from "@/lib/i18n/combat-ui-presentations";
 import { Keyboard, LocateFixed, Lock, Maximize2, Unlock, Users, ZoomIn, ZoomOut } from "lucide-react";
 import { isComposingInput } from "@/lib/input-composition";
 import { useState } from "react";
@@ -19,13 +23,13 @@ const CAMERA_BUTTON =
 
 // What the board does with the keyboard and the mouse (issue 90). The keys
 // only reach the board while it has focus, so the list says that first.
-const BOARD_KEYS: Array<{ keys: string[]; does: string }> = [
-  { keys: ["←", "↑", "↓", "→"], does: "Move the view" },
-  { keys: ["+", "−"], does: "Zoom in and out" },
-  { keys: ["0"], does: "Fit the whole board" },
-  { keys: ["Esc"], does: "Cancel an aim or a drag" },
-  { keys: ["Scroll"], does: "Zoom at the pointer" },
-  { keys: ["Drag"], does: "Move the view" },
+const BOARD_KEYS: Array<{ keys: string[]; does: MessageKey }> = [
+  { keys: ["←", "↑", "↓", "→"], does: "boardUi.keys.moveView" },
+  { keys: ["+", "−"], does: "boardUi.keys.zoom" },
+  { keys: ["0"], does: "boardUi.keys.fit" },
+  { keys: ["Esc"], does: "boardUi.keys.cancel" },
+  { keys: ["Scroll"], does: "boardUi.keys.pointer" },
+  { keys: ["Drag"], does: "boardUi.keys.moveView" },
 ];
 
 // The short form, shown for a few seconds each time the board takes the
@@ -33,20 +37,21 @@ const BOARD_KEYS: Array<{ keys: string[]; does: string }> = [
 // and not by hunting for a help page. Hidden where there is no keyboard to
 // speak of.
 export function BoardKeyStrip() {
+  const { t } = useLocale();
   return (
     <div className="board-keys-strip" aria-hidden="true">
       <span>
         <span className="kbd-key">←</span>
         <span className="kbd-key">↑</span>
         <span className="kbd-key">↓</span>
-        <span className="kbd-key">→</span> move
+        <span className="kbd-key">→</span>{t("boardUi.strip.move")}
       </span>
       <span>
         <span className="kbd-key">+</span>
-        <span className="kbd-key">−</span> zoom
+        <span className="kbd-key">−</span>{t("boardUi.strip.zoom")}
       </span>
       <span>
-        <span className="kbd-key">0</span> fit
+        <span className="kbd-key">0</span>{t("boardUi.strip.fit")}
       </span>
     </div>
   );
@@ -71,6 +76,7 @@ export function BoardCameraControls({
   // Present for the DM seat only.
   onDirect?: (mode: "pull" | "lock" | "free") => void;
 }) {
+  const { t } = useLocale();
   const [keysOpen, setKeysOpen] = useState(false);
   return (
     <div className={cn("board-cam absolute bottom-2 right-2 z-10 flex flex-col gap-1", onDirect && "board-cam-long")}>
@@ -87,44 +93,44 @@ export function BoardCameraControls({
             }
           }}
         >
-          <p className="board-eyebrow mb-1.5">Board controls</p>
+          <p className="board-eyebrow mb-1.5">{t("boardUi.keys.title")}</p>
           <dl>
             {BOARD_KEYS.map((row) => (
               <div key={row.keys.join()}>
                 <dt>
                   {row.keys.map((key) => (
                     <span key={key} className="kbd-key">
-                      {key}
+                      {key === "Scroll" ? t("boardUi.keys.scroll") : key === "Drag" ? t("boardUi.keys.drag") : key}
                     </span>
                   ))}
                 </dt>
-                <dd>{row.does}</dd>
+                <dd>{t(row.does)}</dd>
               </div>
             ))}
           </dl>
           <p className="mt-1.5 text-[10px] leading-snug text-[#8f8aab]">
-            The keys work while the board is lit: click it, or Tab to it.
+            {t("boardUi.keys.focus")}
           </p>
         </div>
       ) : null}
       <button
         type="button"
         onClick={() => setKeysOpen((open) => !open)}
-        aria-label="Board keys and mouse controls"
+        aria-label={t("boardUi.keys.label")}
         aria-expanded={keysOpen}
         aria-controls="board-keys-card"
-        title="Keys and mouse controls"
+        title={t("boardUi.keys.tip")}
         className={cn(CAMERA_BUTTON, "board-keys-button", keysOpen && "border-amber-600/80 text-amber-200")}
       >
         <Keyboard className="size-4" />
       </button>
-      <button type="button" onClick={onZoomIn} aria-label="Zoom in" className={CAMERA_BUTTON}>
+      <button type="button" onClick={onZoomIn} aria-label={t("boardUi.camera.in")} className={CAMERA_BUTTON}>
         <ZoomIn className="size-4" />
       </button>
-      <button type="button" onClick={onZoomOut} aria-label="Zoom out" className={CAMERA_BUTTON}>
+      <button type="button" onClick={onZoomOut} aria-label={t("boardUi.camera.out")} className={CAMERA_BUTTON}>
         <ZoomOut className="size-4" />
       </button>
-      <button type="button" onClick={onFit} aria-label="Fit the board" className={CAMERA_BUTTON}>
+      <button type="button" onClick={onFit} aria-label={t("boardUi.camera.fit")} className={CAMERA_BUTTON}>
         <Maximize2 className="size-4" />
       </button>
       {followTurn !== null ? (
@@ -132,8 +138,8 @@ export function BoardCameraControls({
           type="button"
           onClick={onFollowTurn}
           aria-pressed={followTurn}
-          aria-label="Follow the turn"
-          title="Follow the turn"
+          aria-label={t("boardUi.camera.follow")}
+          title={t("boardUi.camera.follow")}
           className={cn(
             "motion-press rounded-md border p-1",
             followTurn
@@ -148,8 +154,8 @@ export function BoardCameraControls({
         <>
           <button
             type="button"
-            title="Pull everyone here"
-            aria-label="Pull everyone to this view"
+            title={t("boardUi.camera.pullTip")}
+            aria-label={t("boardUi.camera.pull")}
             onClick={() => onDirect("pull")}
             className="motion-press rounded-md border border-amber-700/70 bg-stone-950/85 p-1 text-amber-200 hover:bg-amber-950/60"
           >
@@ -157,8 +163,8 @@ export function BoardCameraControls({
           </button>
           <button
             type="button"
-            title="Lock everyone to my view"
-            aria-label="Lock everyone to this view"
+            title={t("boardUi.camera.lockTip")}
+            aria-label={t("boardUi.camera.lock")}
             onClick={() => onDirect("lock")}
             className={CAMERA_BUTTON}
           >
@@ -166,8 +172,8 @@ export function BoardCameraControls({
           </button>
           <button
             type="button"
-            title="Free everyone's view"
-            aria-label="Free everyone's view"
+            title={t("boardUi.camera.free")}
+            aria-label={t("boardUi.camera.free")}
             onClick={() => onDirect("free")}
             className={CAMERA_BUTTON}
           >
@@ -198,11 +204,12 @@ export function BoardOrderDialog({
   canDirect: boolean;
   faceOf: FaceLookup;
 }) {
+  const { locale, t } = useLocale();
   return (
     <Dialog
       open={open && Boolean(encounter)}
       onOpenChange={onOpenChange}
-      title={`Initiative, round ${round}`}
+      title={t("boardUi.order.title", { round })}
       width="w-[min(94vw,26rem)]"
     >
       {encounter && canDirect ? (
@@ -221,13 +228,13 @@ export function BoardOrderDialog({
             >
               <TokenFace
                 candidates={faceOf(entry)}
-                name={entry.name}
+                name={combatName(entry.name, entry.kind, locale)}
                 enemy={entry.kind === "enemy"}
                 className="size-7 rounded-full border border-stone-700"
               />
-              <span className="min-w-0 flex-1 truncate">{entry.name}{entry.reflex ? <sup className="motion-pop ml-0.5 text-[9px] text-amber-300" title="Thief's Reflexes: a second turn this round">2nd</sup> : null}</span>
+              <span className="min-w-0 flex-1 truncate">{combatName(entry.name, entry.kind, locale)}{entry.reflex ? <sup className="motion-pop ml-0.5 text-[9px] text-amber-300" title={t("boardUi.order.reflexTip")}>{t("boardUi.order.second")}</sup> : null}</span>
               {index === encounter.turnIndex ? (
-                <span className="text-[10px] uppercase tracking-wide text-amber-300">up now</span>
+                <span className="text-[10px] uppercase tracking-wide text-amber-300">{t("boardUi.order.now")}</span>
               ) : null}
             </li>
           ))}
@@ -252,42 +259,44 @@ export function boardHintText(input: {
   scene: boolean;
   budgetLeft: number;
   hasToken: boolean;
-}): string {
+}, locale: AppLocale = DEFAULT_LOCALE): string {
+  const t = createTranslator(locale);
   const { canDirect, tool, teleporting, held, liveOrigin, pointing, drawing, targeting, canMove, scene } = input;
   return canDirect
     ? tool === "draw"
-      ? "Drag to draw. Everyone sees it; it is a plan, not a fact."
+      ? t("boardUi.hint.drawDm")
       : teleporting
-      ? "Tap the tile it appears on. No path, no movement spent."
+      ? t("boardUi.hint.teleport")
       : held
-        ? "Tap where it should stand. The round's movement is not charged for this."
+        ? t("boardUi.hint.held")
         : tool === "measure"
           ? liveOrigin
-            ? "Now tap where it points."
-            : "Tap where the area starts."
+            ? t("boardUi.hint.direction")
+            : t("boardUi.hint.origin")
           : tool === "point"
-            ? "Tap a tile and everyone looks at it."
+            ? t("boardUi.hint.pointDm")
             : tool === "place"
-              ? "Name it, then tap a tile."
-              : "Tap a piece for its actions. Nothing here is charged against the round."
+              ? t("boardUi.hint.place")
+              : t("boardUi.hint.dm")
     : pointing
-      ? "Tap a tile to point at it."
+      ? t("boardUi.hint.point")
       : drawing
-        ? "Drag to draw. The table sees it; erase it when the plan changes."
+        ? t("boardUi.hint.draw")
       : targeting
-        ? "Tap the enemy."
+        ? t("boardUi.hint.target")
         : canMove
           ? scene
-            ? "Tap anywhere you can walk. Nothing is being counted out here."
-            : `Tap a highlighted tile to move (${input.budgetLeft * TILE_FEET} ft left this turn). Tap your figure for actions.`
+            ? t("boardUi.hint.scene")
+            : t("boardUi.hint.move", { feet: input.budgetLeft * TILE_FEET })
           : input.hasToken
-            ? "You can move on your turn. The shroud shows what your character cannot see."
-            : "You have no token on this field.";
+            ? t("boardUi.hint.wait")
+            : t("boardUi.hint.noToken");
 }
 
 // The turn order under the board, the pointer's entry lit; a thief's second
 // turn in round 1 is marked (Thief's Reflexes). Split from BattleMapPanel.tsx.
 export function BoardOrderStrip({ encounter, faceOf }: { encounter: PublicEncounter | null | undefined; faceOf: FaceLookup }) {
+  const { locale, t } = useLocale();
   if (!encounter?.orderReady) return null;
   return (
     <ol className="flex flex-wrap gap-1 text-[11px] text-stone-400">
@@ -301,16 +310,16 @@ export function BoardOrderStrip({ encounter, faceOf }: { encounter: PublicEncoun
         >
           <TokenFace
             candidates={faceOf(entry)}
-            name={entry.name}
+            name={combatName(entry.name, entry.kind, locale)}
             enemy={entry.kind === "enemy"}
             className={cn(
               "size-5 rounded-full border",
               index === encounter.turnIndex ? "border-amber-500" : "border-stone-700",
             )}
           />
-          {entry.name}
-          {entry.hidden ? " (hidden)" : ""}
-          {entry.reflex ? <sup className="motion-pop ml-0.5 text-[9px] text-amber-300" title="Thief's Reflexes: a second turn this round">2nd</sup> : null}
+          {combatName(entry.name, entry.kind, locale)}
+          {entry.hidden ? t("boardUi.order.hidden") : ""}
+          {entry.reflex ? <sup className="motion-pop ml-0.5 text-[9px] text-amber-300" title={t("boardUi.order.reflexTip")}>{t("boardUi.order.second")}</sup> : null}
         </li>
       ))}
     </ol>
