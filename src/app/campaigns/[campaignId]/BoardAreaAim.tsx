@@ -1,6 +1,11 @@
 "use client";
 
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { createTranslator } from "@/lib/i18n/translator";
+import { referenceDisplayName } from "@/lib/i18n/references";
+import { boardSquareLabel } from "@/lib/i18n/board-control-presentations";
+import { handAreaHintText } from "@/lib/i18n/hand-presentations";
 import { isComposingInput } from "@/lib/input-composition";
 import { area as areaPath, outline, TONE } from "@/app/campaigns/[campaignId]/BoardZoneLayer";
 import {
@@ -49,6 +54,8 @@ export type AreaAimOverlay = {
 const pointOf = (layout: ZoneLayout | null) => (layout ? layout.cells.join(",") : "");
 
 export function useAreaAim(view: PlayerMapView, canDirect: boolean, hover: { x: number; y: number } | null) {
+  const { locale } = useLocale();
+  const t = createTranslator(locale);
   const [aim, setAim] = useState<Aim | null>(null);
 
   useEffect(() => {
@@ -149,8 +156,8 @@ export function useAreaAim(view: PlayerMapView, canDirect: boolean, hover: { x: 
   const hint = !aim
     ? ""
     : aim.source === "hand"
-      ? `${aim.area.spell}: ${pickHint(aim.area, aim.pick)}`
-      : `Tap the square for ${aim.request.label.toLowerCase()}. Esc stops.`;
+      ? t("boardUi.area.hand", { spell: referenceDisplayName("spell", aim.area.spell, locale), hint: handAreaHintText(pickHint(aim.area, aim.pick), locale) })
+      : t("boardUi.area.console", { label: locale === "en" ? aim.request.label.toLowerCase() : boardSquareLabel(aim.request.label, locale) });
 
   return { active: taking, overlay, caught, tap, hint };
 }

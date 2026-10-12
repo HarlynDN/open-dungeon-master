@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Crosshair } from "lucide-react";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { createTranslator } from "@/lib/i18n/translator";
 import { cn } from "@/lib/cn";
 import { ui } from "@/lib/ui";
 import {
@@ -41,6 +43,8 @@ export function DmSquarePick({
   values: Values;
   onPick: (square: { x: number; y: number }) => void;
 }) {
+  const { locale } = useLocale();
+  const t = createTranslator(locale);
   const [state, setState] = useState<"idle" | "asking" | "armed" | "absent">("idle");
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const pickRef = useRef(onPick);
@@ -104,9 +108,9 @@ export function DmSquarePick({
   return (
     <span className="ml-auto inline-flex items-center gap-1.5">
       {state === "absent" ? (
-        <span className="motion-shake text-[11px] text-stone-400">Open the battle map to pick, or type the numbers.</span>
+        <span className="motion-shake text-[11px] text-stone-400">{t("boardUi.area.absent")}</span>
       ) : state === "armed" ? (
-        <span className="animate-fade-up text-[11px] text-amber-200/90">Tap the square on the map.</span>
+        <span className="animate-fade-up text-[11px] text-amber-200/90">{t("boardUi.area.tap")}</span>
       ) : null}
       <button
         type="button"
@@ -119,7 +123,7 @@ export function DmSquarePick({
         )}
       >
         <Crosshair className="size-3.5" />
-        {state === "armed" ? "Stop" : "Pick on the board"}
+        {t(state === "armed" ? "boardUi.area.stop" : "boardUi.area.pick")}
       </button>
     </span>
   );

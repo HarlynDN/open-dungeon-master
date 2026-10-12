@@ -1,4 +1,4 @@
-import { createTranslator } from "./translator.ts";
+import { catalogFor, createTranslator, type MessageKey } from "./translator.ts";
 import { referenceDisplayName } from "./references.ts";
 import { combatName } from "./combat-ui-presentations.ts";
 import { abilityLabel, skillLabel } from "./character-presentations.ts";
@@ -6,6 +6,7 @@ import { conditionLabel } from "./condition-presentations.ts";
 import { damageListLabel } from "./sheet-play-presentations.ts";
 import { featTermLabel } from "./feat-presentations.ts";
 import { nativeFeatureName } from "./feature-material-presentations.ts";
+import { handRefusalText } from "./hand-material-presentations.ts";
 import type { AppLocale } from "./locales.ts";
 
 export type BoardDisplayName = { name: string; kind: string };
@@ -62,4 +63,16 @@ export function boardMoveNoteText(source: string, locale: AppLocale, names: read
   if (m) return t("boardUi.note.knocked", { name: who(m[1]), spell: spell(m[2]) });
   m = /^(.*) is ([a-z_]+) by (.*)\.$/.exec(source);
   return m ? t("boardUi.note.condition", { name: who(m[1]), condition: conditionLabel(m[2], locale), spell: spell(m[3]) }) : source;
+}
+
+// Raw diagnostics remain available; only owned complete messages are translated.
+export function boardPanelErrorText(raw: string, locale: AppLocale): string {
+  if (locale === "en" || !raw) return raw;
+  const known = Object.entries(catalogFor("en", "boardUi.error.")).find(([, source]) => source === raw);
+  return known ? createTranslator(locale)(known[0] as MessageKey) : handRefusalText(raw, locale);
+}
+
+export function boardSquareLabel(raw: string, locale: AppLocale): string {
+  const key = Object.entries(catalogFor("en", "boardUi.area.")).find(([key, source]) => (key === "boardUi.area.centre" || key === "boardUi.area.toward") && source === raw)?.[0];
+  return key ? createTranslator(locale)(key as MessageKey) : raw;
 }

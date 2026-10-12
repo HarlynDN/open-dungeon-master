@@ -39,8 +39,10 @@ import {
 } from "@/lib/battlemap/scene";
 import { PromptDialog } from "@/components/ui/PromptDialog";
 import { cn } from "@/lib/cn";
+import { createTranslator, type MessageKey } from "@/lib/i18n/translator";
+import { combatName } from "@/lib/i18n/combat-ui-presentations";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
-import { boardDisplayName, boardRulerText } from "@/lib/i18n/board-control-presentations";
+import { boardDisplayName, boardRulerText, boardPanelErrorText } from "@/lib/i18n/board-control-presentations";
 import { jumpRulerFor, moveNotesFrom, rulerFor } from "@/lib/battlemap/board-move";
 import { BoardMoveHints, JumpArc, useBoardMoveModes } from "@/app/campaigns/[campaignId]/BoardMoveModes";
 import { TILE_FEET } from "@/lib/battlemap/types";
@@ -171,6 +173,8 @@ export function BattleMapPanel({
 }) {
   // The board's picture, painted on this device from the terrain it was sent.
   const { locale } = useLocale();
+  const t = createTranslator(locale);
+  const currentName = boardDisplayName(view.currentTurnName, locale, view.tokens);
   const painted = usePaintedMap(view, genre);
   // A face for every token: the character's plate by lineage and class (an
   // uploaded portrait overrides it in the grid), a monster's plate by creature
@@ -792,8 +796,8 @@ export function BattleMapPanel({
       }
       onCompose(
         targeting === "attack"
-          ? `I attack ${token.name}.`
-          : `I cast  at ${token.name}.`,
+          ? t("boardUi.sent.attack", { name: combatName(token.name, token.kind, locale) })
+          : t("boardUi.sent.cast", { name: combatName(token.name, token.kind, locale) }),
       );
       setTargeting(null);
       setAimHoverId(null);
@@ -850,7 +854,7 @@ export function BattleMapPanel({
           void board({ do: "remove", tokenId: hudToken.id });
           setHudTokenId(null);
         },
-      });
+      }, locale);
     }
     // The same engine questions the Hand asks (src/lib/battlemap/hand-hud.ts),
     // so a sigil the engine would refuse says so instead of composing.
@@ -863,12 +867,14 @@ export function BattleMapPanel({
       (mode) => setTargeting(mode),
       mySheet && !scene ? boardHudGates(mySheet, encounter ?? null, { myTurn, currentName: view.currentTurnName }) : undefined,
       (reason) => setError(reason),
+      locale,
     );
     // `board` is a closure over state; the actions are rebuilt per token.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hudToken, canDirect, onCompose, mySheet, encounter, myTurn, view.currentTurnName, scene]);
+  }, [hudToken, canDirect, onCompose, mySheet, encounter, myTurn, view.currentTurnName, scene, locale]);
 
   const promptToken = prompt ? tokensById.get(prompt.tokenId) : undefined;
+  const promptName = promptToken ? combatName(promptToken.name, promptToken.kind, locale) : "";
   const submitPrompt = useCallback(
     (value: string) => {
       if (!prompt || !promptToken) {
@@ -901,7 +907,7 @@ export function BattleMapPanel({
     <div
       ref={attachFrame}
       tabIndex={0}
-      aria-label="Board view. Scroll or pinch to zoom, drag or use the arrow keys to pan, plus and minus to zoom, 0 to fit."
+      aria-label={t("boardUi.panel.view")}
       // A container, so the stage chrome sizes to the board it sits on (the
       // side panel, a phone, the enlarged dialog) and not to the window.
       // board-view (board.css) draws the ring that says the board has the
@@ -978,7 +984,7 @@ export function BattleMapPanel({
         {drawActive ? (
           <div
             className="absolute inset-0 z-10 cursor-crosshair"
-            aria-label="Drawing surface"
+            aria-label={t("boardUi.panel.drawing")}
             data-no-pan=""
             onPointerDown={onDrawDown}
             onPointerMove={onDrawMove}
@@ -996,10 +1002,10 @@ export function BattleMapPanel({
             hint={
               targeting
                 ? targeting === "attack"
-                  ? "Tap the enemy you attack"
-                  : "Tap the enemy you cast at"
+                  ? t("boardUi.panel.attackHint")
+                  : t("boardUi.panel.castHint")
                 : teleporting === hudToken.id
-                  ? "Tap the tile it appears on"
+                  ? t("boardUi.panel.teleportHint")
                   : undefined
             }
             onClose={() => {
@@ -1048,7 +1054,7 @@ export function BattleMapPanel({
       ) : null}
       {!scene ? (
         <TurnHud
-          actorName={view.currentTurnName}
+          actorName={currentName}
           mine={myTurn}
           budget={turnBudget}
           speedLeftFeet={myTurn ? view.budgetLeft * TILE_FEET : null}
@@ -1059,14 +1065,14 @@ export function BattleMapPanel({
         />
       ) : null}
       {!scene && bannerKey ? (
-        <TurnBanner key={bannerKey} text={myTurn ? "Your turn" : view.currentTurnName} mine={myTurn} />
+        <TurnBanner key={bannerKey} text={myTurn ? t("boardUi.panel.yourTurn") : currentName} mine={myTurn} />
       ) : null}
       {fieldRoll ? <FieldDie label={fieldRoll.label} /> : null}
       <BoardMoveNotes notes={moveNotes.notes} names={view.tokens} />
       {targeting ? (
         <div className="absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 items-center gap-2.5 rounded-[10px] border border-[rgba(224,112,58,0.5)] bg-[rgba(13,11,28,0.94)] px-3 py-1.5 shadow-elev-2">
           <span className="whitespace-nowrap font-display text-[10px] font-semibold uppercase tracking-[0.18em] text-[#ffbe8f]">
-            {targeting === "attack" ? "Attack" : "Cast"} · pick a target
+            {t("boardUi.panel.target", { action: t(targeting === "attack" ? "boardUi.hud.attack" : "boardUi.hud.cast") })}
           </span>
           <button
             type="button"
@@ -1074,7 +1080,7 @@ export function BattleMapPanel({
               setTargeting(null);
               setAimHoverId(null);
             }}
-            aria-label="Cancel aiming"
+            aria-label={t("boardUi.panel.cancel")}
             className="motion-press rounded-md border border-[rgba(107,99,148,0.5)] bg-[rgba(21,18,41,0.8)] px-2 py-0.5 text-[#aeaac6] hover:text-[#e9e6f4]"
           >
             {/* The size sits on a span: globals.css resets a button's own font. */}
@@ -1086,7 +1092,7 @@ export function BattleMapPanel({
           the frame, so the buttons can ask how tall the board is and lie in
           a row along the bottom when a column would not fit (board.css). */}
       <span className="sr-only" aria-live="polite">
-        {!scene && view.currentTurnName ? (myTurn ? "Your turn." : `${view.currentTurnName}'s turn.`) : ""}
+        {!scene && view.currentTurnName ? (myTurn ? t("boardUi.panel.yourTurnLive") : t("boardUi.panel.turn", { name: currentName })) : ""}
       </span>
       <div className="board-corner">
       {myTurn && !scene && !targeting ? (
@@ -1096,7 +1102,7 @@ export function BattleMapPanel({
           disabled={endingTurn}
           className="board-endturn motion-press absolute bottom-2 right-11 z-10 rounded-lg border border-[rgba(107,99,148,0.5)] bg-[rgba(13,11,28,0.9)] px-3 py-1.5 text-[#e9e6f4] shadow-elev-1 hover:border-[rgba(212,171,58,0.6)] hover:text-[#f9ecc8] disabled:opacity-50"
         >
-          <span className="block font-display text-[10px] font-semibold uppercase tracking-[0.16em]">End turn</span>
+          <span className="block font-display text-[10px] font-semibold uppercase tracking-[0.16em]">{t("boardUi.panel.end")}</span>
         </button>
       ) : null}
       {/* Camera controls: corner buttons for everyone, the DM's pull and
@@ -1127,10 +1133,10 @@ export function BattleMapPanel({
       {cam.locked ? (
         <div className="absolute bottom-2 left-2 z-10 flex items-center gap-2 rounded-md border border-amber-800/60 bg-stone-950/90 px-2 py-1 text-[11px] text-amber-200 shadow-elev-1">
           <Lock className="size-3" />
-          The DM is steering the view
+          {t("boardUi.panel.steering")}
           {cam.canRelease ? (
             <button type="button" onClick={cam.release} className="ml-1 text-stone-300 underline">
-              look around anyway
+              {t("boardUi.panel.release")}
             </button>
           ) : null}
         </div>
@@ -1148,15 +1154,15 @@ export function BattleMapPanel({
           {scene ? (
             <>
               <Footprints className="size-4 text-amber-400" />
-              Exploring
+              {t("boardUi.panel.explore")}
             </>
           ) : (
             <>
               <Swords className="size-4 text-red-400" />
-              Round {view.round}
+              {t("boardUi.panel.round", { round: view.round })}
               {view.currentTurnName ? (
                 <span className="text-xs font-normal text-stone-400">
-                  {view.currentTurnName}&apos;s turn
+                  {t("boardUi.panel.turnShort", { name: currentName })}
                 </span>
               ) : null}
             </>
@@ -1168,7 +1174,7 @@ export function BattleMapPanel({
               <button
                 type="button"
                 onClick={() => setPointing((current) => !current)}
-                title="Point at a tile"
+                title={t("boardUi.panel.point")}
                 aria-pressed={pointing}
                 className={`rounded p-1 ${
                   pointing ? "bg-amber-950/60 text-amber-300" : "text-stone-400 hover:bg-stone-900"
@@ -1180,7 +1186,7 @@ export function BattleMapPanel({
                 <button
                   type="button"
                   onClick={() => setDrawing((current) => !current)}
-                  title="Draw on the board"
+                  title={t("boardUi.panel.draw")}
                   aria-pressed={drawing}
                   className={`rounded p-1 ${
                     drawing ? "bg-amber-950/60 text-amber-300" : "text-stone-400 hover:bg-stone-900"
@@ -1195,7 +1201,7 @@ export function BattleMapPanel({
             type="button"
             onClick={() => setEnlarged(true)}
             className="rounded p-1 text-stone-400 hover:bg-stone-900 hover:text-stone-200"
-            aria-label="Enlarge battle map"
+            aria-label={t("boardUi.panel.enlarge")}
           >
             <Maximize2 className="size-4" />
           </button>
@@ -1235,7 +1241,7 @@ export function BattleMapPanel({
                 drawKind === kind ? "border-amber-700 bg-amber-950/50 text-amber-100" : "border-stone-700 text-stone-400",
               )}
             >
-              {kind}
+              {t(`boardUi.draw.${kind}` as MessageKey)}
             </button>
           ))}
           <span className="mx-1 h-4 w-px bg-stone-800" />
@@ -1243,7 +1249,7 @@ export function BattleMapPanel({
             <button
               key={tone}
               type="button"
-              aria-label={`${tone} ink`}
+              aria-label={t("boardUi.panel.ink", { tone: t(`boardUi.tone.${tone}` as MessageKey) })}
               aria-pressed={drawTone === tone}
               onClick={() => setDrawTone(tone)}
               className={cn(
@@ -1255,16 +1261,16 @@ export function BattleMapPanel({
           ))}
           <label className="ml-1 flex items-center gap-1 text-[11px] text-stone-500">
             <input type="checkbox" checked={drawTtl} onChange={(event) => setDrawTtl(event.target.checked)} />
-            fades next round
+            {t("boardUi.panel.fade")}
           </label>
           <button
             type="button"
             onClick={() => void eraseDrawings()}
             className="ml-auto flex items-center gap-1 rounded-md border border-stone-700 px-2 py-0.5 text-[11px] text-stone-400 hover:text-red-300"
-            title={canDirect ? "Clear every mark" : "Erase your marks"}
+            title={t(canDirect ? "boardUi.panel.clearTip" : "boardUi.panel.eraseTip")}
           >
             <Eraser className="size-3" />
-            {canDirect ? "Clear" : "Erase mine"}
+            {t(canDirect ? "boardUi.panel.clear" : "boardUi.panel.erase")}
           </button>
         </div>
       ) : null}
@@ -1304,7 +1310,7 @@ export function BattleMapPanel({
           hasToken: Boolean(view.myTokenId),
         }, locale)}
       </p>
-      {error ? <p className="text-[11px] text-red-400">{error}</p> : null}
+      {error ? <p className="text-[11px] text-red-400">{boardPanelErrorText(error, locale)}</p> : null}
       {targeting ? (
         <TargetChips
           targets={aimTargets.map((entry) => ({
@@ -1322,14 +1328,14 @@ export function BattleMapPanel({
         open={Boolean(prompt && promptToken)}
         title={
           prompt?.kind === "damage"
-            ? `Damage ${promptToken?.name ?? ""}`
+            ? t("boardUi.panel.damage", { name: promptName })
             : prompt?.kind === "heal"
-              ? `Heal ${promptToken?.name ?? ""}`
-              : `Condition on ${promptToken?.name ?? ""}`
+              ? t("boardUi.panel.heal", { name: promptName })
+              : t("boardUi.panel.condition", { name: promptName })
         }
-        label={prompt?.kind === "condition" ? "Condition" : "Hit points"}
+        label={t(prompt?.kind === "condition" ? "boardUi.panel.conditionLabel" : "boardUi.panel.hp")}
         placeholder={prompt?.kind === "condition" ? "prone" : "8"}
-        submitLabel={prompt?.kind === "damage" ? "Deal it" : prompt?.kind === "heal" ? "Heal" : "Apply"}
+        submitLabel={t(prompt?.kind === "damage" ? "boardUi.panel.deal" : prompt?.kind === "heal" ? "boardUi.panel.healSubmit" : "boardUi.panel.apply")}
         onSubmit={submitPrompt}
         onOpenChange={(open) => {
           if (!open) {
@@ -1354,9 +1360,9 @@ export function BattleMapPanel({
           <Dialog.Content className="cine-tabletop fixed inset-0 z-50 flex flex-col outline-none">
             <div className="cine-tabletop-head">
               <Dialog.Title className="cine-tabletop-title">
-                {scene ? "The ground here" : `Battle map, round ${view.round}`}
+                {scene ? t("boardUi.panel.ground") : t("boardUi.panel.title", { round: view.round })}
               </Dialog.Title>
-              <Dialog.Close className="cine-tabletop-close" aria-label="Close the board">
+              <Dialog.Close className="cine-tabletop-close" aria-label={t("boardUi.panel.close")}>
                 <X className="size-4" />
               </Dialog.Close>
             </div>

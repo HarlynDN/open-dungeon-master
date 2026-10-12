@@ -17,6 +17,11 @@ import {
   Wand2,
   X,
 } from "lucide-react";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { createTranslator } from "@/lib/i18n/translator";
+import { DEFAULT_LOCALE, type AppLocale } from "@/lib/i18n/locales";
+import { combatName } from "@/lib/i18n/combat-ui-presentations";
+import { handRefusalText } from "@/lib/i18n/hand-material-presentations";
 import { cn } from "@/lib/cn";
 import type { StageToken } from "@/app/campaigns/[campaignId]/BoardStage";
 import type { HudGateId } from "@/lib/battlemap/hand-hud";
@@ -48,18 +53,20 @@ export function playerActions(
   // the casting state, asked the way the Hand asks them.
   gates?: Partial<Record<HudGateId, string | null>>,
   refuse?: (reason: string) => void,
+  locale: AppLocale = DEFAULT_LOCALE,
 ): HudAction[] {
+  const t = createTranslator(locale);
   const gate = (id: HudGateId, action: Omit<HudAction, "disabled">): HudAction => {
     const reason = gates?.[id] ?? null;
     return reason ? { ...action, disabled: reason, onPick: () => refuse?.(reason) } : action;
   };
   return [
-    gate("attack", { id: "attack", label: "Attack", icon: Crosshair, tone: "ember", onPick: () => pickTarget("attack") }),
-    gate("cast", { id: "cast", label: "Cast", icon: Wand2, tone: "gold", onPick: () => pickTarget("cast") }),
-    gate("dodge", { id: "dodge", label: "Dodge", icon: Shield, onPick: () => compose("I take the Dodge action.") }),
-    gate("dash", { id: "dash", label: "Dash", icon: Wind, onPick: () => compose("I Dash.") }),
-    gate("disengage", { id: "disengage", label: "Disengage", icon: ArrowRightLeft, onPick: () => compose("I Disengage and step away.") }),
-    gate("help", { id: "help", label: "Help", icon: HandHelping, onPick: () => compose("I take the Help action for ") }),
+    gate("attack", { id: "attack", label: t("boardUi.hud.attack"), icon: Crosshair, tone: "ember", onPick: () => pickTarget("attack") }),
+    gate("cast", { id: "cast", label: t("boardUi.hud.cast"), icon: Wand2, tone: "gold", onPick: () => pickTarget("cast") }),
+    gate("dodge", { id: "dodge", label: t("boardUi.hud.dodge"), icon: Shield, onPick: () => compose(t("boardUi.sent.dodge")) }),
+    gate("dash", { id: "dash", label: t("boardUi.hud.dash"), icon: Wind, onPick: () => compose(t("boardUi.sent.dash")) }),
+    gate("disengage", { id: "disengage", label: t("boardUi.hud.disengage"), icon: ArrowRightLeft, onPick: () => compose(t("boardUi.sent.disengage")) }),
+    gate("help", { id: "help", label: t("boardUi.hud.help"), icon: HandHelping, onPick: () => compose(t("boardUi.sent.help")) }),
   ];
 }
 
@@ -74,32 +81,34 @@ export function dmActions(
     condition: () => void;
     remove: () => void;
   },
+  locale: AppLocale = DEFAULT_LOCALE,
 ): HudAction[] {
+  const t = createTranslator(locale);
   const adhoc = token.kind === "npc" || token.kind === "prop";
   const combatant = token.kind === "pc" || token.kind === "enemy";
   const actions: HudAction[] = [
-    { id: "hold", label: "Pick up", icon: Hand, tone: "gold", onPick: handlers.hold },
-    { id: "teleport", label: "Teleport", icon: Sparkles, onPick: handlers.teleport },
+    { id: "hold", label: t("boardUi.hud.hold"), icon: Hand, tone: "gold", onPick: handlers.hold },
+    { id: "teleport", label: t("boardUi.hud.teleport"), icon: Sparkles, onPick: handlers.teleport },
   ];
   if (token.kind !== "pc") {
     actions.push({
       id: "visibility",
-      label: token.hidden ? "Reveal" : "Hide",
+      label: t(token.hidden ? "boardUi.hud.reveal" : "boardUi.hud.hide"),
       icon: token.hidden ? Eye : EyeOff,
       onPick: () => handlers.visibility(!token.hidden),
     });
   }
   if (combatant) {
     actions.push(
-      { id: "damage", label: "Damage", icon: HeartCrack, tone: "ember", onPick: handlers.damage },
-      { id: "condition", label: "Condition", icon: Tag, onPick: handlers.condition },
+      { id: "damage", label: t("boardUi.hud.damage"), icon: HeartCrack, tone: "ember", onPick: handlers.damage },
+      { id: "condition", label: t("boardUi.hud.condition"), icon: Tag, onPick: handlers.condition },
     );
   }
   if (token.kind === "pc") {
-    actions.push({ id: "heal", label: "Heal", icon: Heart, onPick: handlers.heal });
+    actions.push({ id: "heal", label: t("boardUi.hud.heal"), icon: Heart, onPick: handlers.heal });
   }
   if (adhoc) {
-    actions.push({ id: "remove", label: "Take off", icon: Trash2, tone: "ember", onPick: handlers.remove });
+    actions.push({ id: "remove", label: t("boardUi.hud.remove"), icon: Trash2, tone: "ember", onPick: handlers.remove });
   }
   return actions.slice(0, 7);
 }
@@ -122,6 +131,10 @@ export function TokenHud({
   hint?: string;
   onClose: () => void;
 }) {
+  const { locale } = useLocale();
+  const t = createTranslator(locale);
+  const name = combatName(token.name, token.kind, locale);
+  const shownActions = actions.map(action => ({ ...action, disabled: action.disabled ? handRefusalText(action.disabled, locale) : action.disabled }));
   const cx = ((token.x + footprint / 2) / boardWidth) * 100;
   const cy = ((token.y + footprint / 2) / boardHeight) * 100;
   // The arc opens upward, or downward near the top edge so it stays on the board.
@@ -133,13 +146,13 @@ export function TokenHud({
     <div
       className="pointer-events-none absolute inset-0 z-20"
       role="menu"
-      aria-label={`Actions for ${token.name}`}
+      aria-label={t("boardUi.hud.actions", { name })}
     >
       <div
         className="absolute"
         style={{ left: `${cx}%`, top: `${cy}%`, width: 0, height: 0 }}
       >
-        {actions.map((action, index) => {
+        {shownActions.map((action, index) => {
           const angle = start + (actions.length === 1 ? spread / 2 : (index / (actions.length - 1)) * spread);
           const x = Math.cos(angle) * radius;
           const y = Math.sin(angle) * radius;
@@ -188,7 +201,7 @@ export function TokenHud({
             event.stopPropagation();
             onClose();
           }}
-          aria-label="Close"
+          aria-label={t("boardUi.hud.close")}
           className="token-sigil pointer-events-auto fx-pop absolute flex size-7 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-[rgba(107,99,148,0.6)] text-[#aeaac6] hover:text-white"
           style={{ left: 0, top: flip ? -radius - 16 : radius + 16 }}
         >
@@ -202,7 +215,7 @@ export function TokenHud({
             {hint}
           </p>
         ) : null}
-        {actions.map((action, index) => {
+        {shownActions.map((action, index) => {
           const angle = start + (actions.length === 1 ? spread / 2 : (index / (actions.length - 1)) * spread);
           const x = Math.cos(angle) * (radius + 28);
           const y = Math.sin(angle) * (radius + 28);

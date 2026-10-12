@@ -103,11 +103,12 @@
     {
       "path": "src/app/campaigns/[campaignId]/BattleMapPanel.tsx",
       "state": "pending",
-      "review": "Board movement hints, rulers/aim distances, camera/order child controls and recognized move-note display now use viewer locale. Costs/paths/coordinates/commands unchanged. Remaining parent controls, area-aim text, native refusals/other board owners and special move effects remain pending; this main owner is not complete."
+      "review": "Main board/camera/order/movement/target/drawing/prompt/turn labels and player action sentences now use campaign locale; known complete local errors display translated from raw state. Special move effects, broader engine refusal diagnostics and other board owners remain pending. Free-text condition entry still accepts canonical rule names, shown explicitly. Coordinates/costs/requests/drawing enums and keys unchanged."
     },
     {
       "path": "src/app/campaigns/[campaignId]/BoardAreaAim.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Known Hand spell/pick hints and the two native console column labels use campaign locale. Unknown authored/pack labels remain literal. Hand/console event IDs, selected coordinates and native geometry unchanged."
     },
     {
       "path": "src/app/campaigns/[campaignId]/BoardChrome.tsx",
@@ -311,7 +312,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmSquarePick.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Picker labels, armed/absent help localized at display. Request still carries native field label, ID, role, coordinates, caster and spell area; no locale-dependent event protocol."
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmStoryboardPanel.tsx",
@@ -801,7 +803,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/TokenHud.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Native player/DM action labels and player shortcut sentences use an optional locale with unchanged English default. Native IDs, icon positions, visibility values and callbacks unchanged. Provided custom action labels/hints/refusals remain literal; recognized native gate diagnostics use shared Hand renderer."
     },
     {
       "path": "src/app/campaigns/[campaignId]/TradeDialog.tsx",
