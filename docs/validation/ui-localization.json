@@ -1153,7 +1153,8 @@
     },
     {
       "path": "src/app/characters/builder/LineageCarousel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned dialog/navigation/choose/portrait/fact captions, trait/choice/chip and language display audited. Native fragments flow through existing full-source lineage adapters; explicit display names, world blurbs, book/group names and unknown authored prose stay literal. Canonical choice ID/close behavior and actual bilingual carousel checked; no translated stored race data."
     },
     {
       "path": "src/app/characters/builder/MultiContentPicker.tsx",
@@ -1172,7 +1173,8 @@
     },
     {
       "path": "src/app/characters/builder/RacialChoicesSection.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned ASI/skill/repeat/tool/ancestry/feat/cantrip choice chrome and accessibility audited. Native display values use existing ability/skill/tool/language/spell/feat projectors; selections, canonical IDs and original feat descriptions used by mechanics remain intact. Native and authored race names respect builder provenance. Actual bilingual tool-choice callback checked; independent picker/info material owners keep their own gates."
     },
     {
       "path": "src/app/characters/builder/abilityDice.ts",
@@ -1241,7 +1243,8 @@
     },
     {
       "path": "src/app/characters/builder/steps/IdentityStep.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned identity/role/gender/level/alignment/background skill/tool and pack-notice chrome audited. All 49 bundled background blurbs/feature names/help use exact ID/source-field bindings; background group/detail tooltip receives viewer locale and scoped display name. Authored name hints/seeds/world labels and homebrew/third-party replacements remain literal; canonical callbacks unchanged. Grouped actual bilingual identity/picker/source checks pass; independent full-book/third-party content scope remains deferred."
     },
     {
       "path": "src/app/characters/builder/steps/SpellsGearStep.tsx",
@@ -1264,7 +1267,8 @@
     },
     {
       "path": "src/app/characters/builder/useBuilderOptions.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Raw option/world/archetype retrieval, cancellation, scope and fallback/register flows audited. Canonical names/IDs/English rule descriptions, document/source/homebrew metadata and subclass extras remain parser inputs; the hook never renders prose or translates caches. Display adaptation is delegated to independently tracked groups/material components."
     },
     {
       "path": "src/app/characters/builder/useBuilderState.ts",
@@ -1282,7 +1286,8 @@
     },
     {
       "path": "src/app/characters/builder/usePickerGroups.ts",
-      "state": "pending"
+      "state": "pending",
+      "review": "Native alignment/source/genre/reskin grouping and locale memo dependencies inspected. Background option help now receives locale and exact source-bound translations for all 49 native backgrounds. Grouped actual background output preserves canonical IDs/refs. Class/subclass imported long descriptions and remaining material/source-ownership review stay open; this owner is not prematurely complete."
     },
     {
       "path": "src/app/characters/builder/useTableRules.ts",

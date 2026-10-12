@@ -1,8 +1,10 @@
 "use client";
 
 import { useLocale } from "@/lib/i18n/LocaleProvider";
-import { characterLabel, skillLabel } from "@/lib/i18n/character-presentations";
+import { skillLabel } from "@/lib/i18n/character-presentations";
+import { builderOptionName } from "@/lib/i18n/builder-picker-presentations";
 import { builderToolChoicesText } from "@/lib/i18n/builder-presentations";
+import { backgroundField } from "@/lib/i18n/background-material-presentations";
 import { UnofficialPackNotice } from "@/components/UnofficialPackNotice";
 import { GameTerm } from "@/components/ui/GameTerm";
 import { InfoButton } from "@/components/ui/InfoDialog";
@@ -174,10 +176,10 @@ export function IdentityStep({
                   {background.feature ? (
                     <span className="whitespace-nowrap">
                       {background.skills.length ? " · " : " "}
-                      {t("builderIdentity.feature", { feature: background.feature })}
+                      {t("builderIdentity.feature", { feature: backgroundField(background, "feature", locale)! })}
                       <InfoButton
-                        label={background.feature}
-                        text={background.featureDesc || undefined}
+                        label={backgroundField(background, "feature", locale)!}
+                        text={backgroundField(background, "featureDesc", locale) || undefined}
                         reference={
                           background.featureDesc ? undefined : { kind: "backgrounds", slug: background.id }
                         }
@@ -186,8 +188,8 @@ export function IdentityStep({
                   ) : null}
                 </span>
                 <InfoButton
-                  label={characterLabel("background", background.name, locale)}
-                  text={backgroundInfoText(background)}
+                  label={builderOptionName("background", background, locale)}
+                  text={backgroundInfoText(background, locale)}
                   reference={{ kind: "backgrounds", slug: background.id }}
                 />
               </span>

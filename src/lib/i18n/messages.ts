@@ -50,6 +50,7 @@ import { APP_HELP_MESSAGES } from "./app-help-messages.ts";
 import { FEAT_CHOICE_MESSAGES } from "./feat-choice-messages.ts";
 import { FEATURE_MATERIAL_MESSAGES } from "./feature-material-messages.ts";
 import { CORE_FEATURE_MESSAGES } from "./core-feature-messages.ts";
+import { BACKGROUND_MATERIAL_MESSAGES } from "./background-material-messages.ts";
 import { NOTIFICATION_MESSAGES } from "./notification-messages.ts";
 import { STARTER_MATERIAL_MESSAGES } from "./starter-material-messages.ts";
 import { SUBCLASS_FEATURE_MESSAGES } from "./subclass-feature-messages.ts";
@@ -128,6 +129,7 @@ const en = {
     ...CLASS_OPTION_MESSAGES.en,
     ...FEATURE_MATERIAL_MESSAGES.en,
     ...CORE_FEATURE_MESSAGES.en,
+    ...BACKGROUND_MATERIAL_MESSAGES.en,
     ...NOTIFICATION_MESSAGES.en,
     ...STARTER_MATERIAL_MESSAGES.en,
     ...SUBCLASS_FEATURE_MESSAGES.en,
@@ -277,6 +279,7 @@ const zhCN: Messages = {
     ...CLASS_OPTION_MESSAGES["zh-CN"],
     ...FEATURE_MATERIAL_MESSAGES["zh-CN"],
     ...CORE_FEATURE_MESSAGES["zh-CN"],
+    ...BACKGROUND_MATERIAL_MESSAGES["zh-CN"],
     ...NOTIFICATION_MESSAGES["zh-CN"],
     ...STARTER_MATERIAL_MESSAGES["zh-CN"],
     ...SUBCLASS_FEATURE_MESSAGES["zh-CN"],

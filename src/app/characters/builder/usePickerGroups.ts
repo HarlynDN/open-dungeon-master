@@ -8,6 +8,7 @@ import { classHelpText, subclassHelpText } from "@/lib/i18n/calling-material-pre
 import type { Genre } from "@/lib/schemas/game-settings";
 import { characterLabel, skillLabel, subclassLabel } from "@/lib/i18n/character-presentations";
 import { builderOptionName } from "@/lib/i18n/builder-picker-presentations";
+import { backgroundHelp, type BackgroundHelpEntry } from "@/lib/i18n/background-material-presentations";
 import { createTranslator } from "@/lib/i18n/translator";
 import { genreLabel } from "@/lib/i18n/settings";
 import type { AppLocale } from "@/lib/i18n/locales";
@@ -178,18 +179,8 @@ export function classInfoText(entry: { id?: string; name?: string; packBlurb?: s
   return classHelpText(entry, locale);
 }
 
-export function backgroundInfoText(entry: {
-  packBlurb?: string;
-  blurb?: string;
-  desc?: string;
-  feature?: string;
-  featureDesc?: string;
-}): string | undefined {
-  const feature = entry.feature
-    ? `**Feature: ${entry.feature}.**${entry.featureDesc ? ` ${entry.featureDesc}` : ""}`
-    : "";
-  const parts = [entry.packBlurb || entry.blurb, feature, entry.desc].filter(Boolean);
-  return parts.length ? parts.join("\n\n") : undefined;
+export function backgroundInfoText(entry: BackgroundHelpEntry, locale: AppLocale = "en"): string | undefined {
+  return backgroundHelp(entry, locale);
 }
 
 export function usePickerGroups({
@@ -432,7 +423,7 @@ export function usePickerGroups({
         .map((skillId) => skillLabel(skillId, locale))
         .join(", "),
       ...(showSource && entry.source && !isCoreDocument(entry.documentSlug) ? { source: entry.source } : {}),
-      infoText: backgroundInfoText(entry),
+      infoText: backgroundInfoText(entry, locale),
       reference: { kind: "backgrounds", slug: entry.id, name: entry.name },
     });
     if (backgroundTier.recommended.length) {

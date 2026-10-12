@@ -1,6 +1,7 @@
 "use client";
 
 import { nativeFeatureName, nativeFeatureHelp, nativeFeatHelp } from "@/lib/i18n/feature-material-presentations";
+import { backgroundGrantView } from "@/lib/i18n/background-material-presentations";
 import { featTermLabel } from "@/lib/i18n/feat-presentations";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { abilityLabel, skillLabel, characterLabel } from "@/lib/i18n/character-presentations";
@@ -319,13 +320,14 @@ export function FeatureChips({
         const ownerSubclass = entries.length === 1 ? entries[0].subclass ?? ""
           : owner.trim().toLowerCase() === classId.trim().toLowerCase() ? subclass ?? "" : "";
         const help = describeFeature(owner, ownerSubclass, feature.name);
+        const background = feature.source === "background" ? backgroundGrantView(feature.name, help, locale) : null;
         return {
           id: feature.name,
-          name: feature.source === "story" ? feature.name : nativeFeatureName(feature.name, locale),
+          name: background?.name ?? (feature.source === "story" ? feature.name : nativeFeatureName(feature.name, locale)),
           icon: { kind: "feature" as const, key: feature.name, family: `class-${owner.toLowerCase()}` },
           note: feature.source === "story" ? t("sheet.storySource") : undefined,
           meta: feature.level ? t("library.level", { level: feature.level }) : undefined,
-          text: (feature.source === "story" ? help : nativeFeatureHelp(owner, feature.name, help, locale)) ?? undefined,
+          text: (background ? background.help : feature.source === "story" ? help : nativeFeatureHelp(owner, feature.name, help, locale)) ?? undefined,
         };
       })}
     />
