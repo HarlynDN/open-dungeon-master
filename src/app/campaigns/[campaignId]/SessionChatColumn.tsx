@@ -1,5 +1,7 @@
 "use client";
 
+import { normalizeLocale } from "@/lib/i18n/locales";
+import { selectedNarrationExcerpt } from "@/lib/i18n/selection";
 import { SURFACE_SOURCE } from "@/lib/i18n/surface-presentations";
 import { useMemo, useState, type ReactNode } from "react";
 import { cn } from "@/lib/cn";
@@ -66,6 +68,7 @@ export function SessionChatColumn({
   children: ReactNode;
 }) {
   const { campaign, messages, rolls, sheets, locations, dmStatus, utilityCalls } = state;
+  const narrativeLocale = normalizeLocale(campaign?.gameSettings?.locale);
   const [reportTarget, setReportTarget] = useState<ReportTarget | null>(null);
   // The passage a player is objecting to (DisputeDialog.tsx); only a table
   // the AI narrates has rulings to dispute this way.
@@ -132,8 +135,8 @@ export function SessionChatColumn({
         onLoreCheck={(message) => {
           // Whatever text was selected when the flag was raised, captured at
           // click, before the dialog steals focus.
-          const selection = window.getSelection()?.toString().trim() ?? "";
-          onLoreCheck(message, selection.length > 3 ? selection : "");
+          const selection = selectedNarrationExcerpt(window.getSelection()?.toString() ?? "", narrativeLocale);
+          onLoreCheck(message, selection);
         }}
         onRenarrate={steersStory ? onRenarrate : undefined}
         onContinueScene={
@@ -211,8 +214,8 @@ export function SessionChatColumn({
             // NE-P's isFullMessage distinction: a selection is an excerpt, no
             // selection pins the whole narration. Any member may pin, unlike
             // onPinCanon (facts), which is lead-only canon.
-            const selection = window.getSelection()?.toString().trim() ?? "";
-            const isFullMessage = selection.length <= 3;
+            const selection = selectedNarrationExcerpt(window.getSelection()?.toString() ?? "", narrativeLocale);
+            const isFullMessage = !selection;
             const response = await fetch(`/api/campaigns/${campaignId}/pins`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -238,8 +241,8 @@ export function SessionChatColumn({
                 try {
                   // The lead's selected text inside the message wins;
                   // otherwise the passage's opening is pinned.
-                  const selection = window.getSelection()?.toString().trim() ?? "";
-                  const excerpt = (selection.length > 3 ? selection : message.content)
+                  const selection = selectedNarrationExcerpt(window.getSelection()?.toString() ?? "", narrativeLocale);
+                  const excerpt = (selection || message.content)
                     .trim()
                     .slice(0, 300);
                   if (!excerpt) {

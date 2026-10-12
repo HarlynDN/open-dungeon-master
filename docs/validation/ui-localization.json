@@ -65,7 +65,8 @@
     },
     {
       "path": "src/app/TopoBackground.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Aria-hidden procedural visual backdrop, with no natural-language display or accessibility captions. Seed/noise/color/frame/resize/visibility logic unchanged; no translation resource needed."
     },
     {
       "path": "src/app/WorldSetupFields.tsx",
@@ -773,7 +774,7 @@
     {
       "path": "src/app/campaigns/[campaignId]/SessionChatColumn.tsx",
       "state": "covered",
-      "review": "Shared children retain separate reviews; this owner passes raw history/content and canonical message IDs/take indices/edits/excerpts. Generic report labels carry role metadata and display at ReportDialog; four native action failures are bound to render-time composer/passage projections. Authored name/username is not inferred as a generic label. No translated content or locale field is posted to message routes. Five message action callbacks settle network failures through the original English error channel; a refused canon pin does not refresh facts as if the write succeeded."
+      "review": "Shared children retain separate reviews; this owner passes raw history/content and canonical message IDs/take indices/edits/excerpts. Generic report labels carry role metadata and display at ReportDialog; four native action failures are bound to render-time composer/passage projections. Authored name/username is not inferred as a generic label. No translated content or locale field is posted to message routes. Five message action callbacks settle network failures through the original English error channel; a refused canon pin does not refresh facts as if the write succeeded. Short selection now uses registered campaign-locale policy for lore checks, memory pins and canon pins; English/missing locale retains four UTF-16 characters, Chinese accepts one. Viewer uiLocale does not change excerpt boundaries; no text translation or protocol change."
     },
     {
       "path": "src/app/campaigns/[campaignId]/SessionGlyph.tsx",
@@ -908,7 +909,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/coalesce.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Refresh coalescer only handles opaque response strings, load/apply callbacks and queue equality. No user-visible fallback message or locale-sensitive inspection. Response contents remain source data; their separate owners project labels."
     },
     {
       "path": "src/app/campaigns/[campaignId]/composerGate.ts",
@@ -917,7 +919,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/dmStatusPhrases.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "All 38 original English phrase variants render through MessageList sessionSourceText(status phrase, viewer locale). A per-status/index English source binding now rejects drift in the AST gate; random choice, pool order and status IDs remain native. No extra translation or re-selection on locale switch."
     },
     {
       "path": "src/app/campaigns/[campaignId]/handTargets.ts",
@@ -925,7 +928,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/headerButton.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "CSS class helper only; caller owns button label/title/action. Lit state, caller class and returned CSS identifiers unchanged."
     },
     {
       "path": "src/app/campaigns/[campaignId]/lead-edit-logic.ts",
@@ -969,7 +973,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/streamWatchdog.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Ping/silence timer and liveness callbacks only; no displayed text or locale-sensitive payload. Stream health descriptions belong to reviewed connection banners. No timing/reconnect behavior changed."
     },
     {
       "path": "src/app/campaigns/[campaignId]/table/page.tsx",
@@ -986,7 +991,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/transcript-capture.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Binary MediaRecorder rings, MIME negotiation and transport timestamps only; no owned UI caption. This review does not add or claim Chinese speech recognition. Recorder language behavior, API/FormData fields, ring timing and original audio stay unchanged."
     },
     {
       "path": "src/app/campaigns/[campaignId]/useAmbienceAudio.ts",
@@ -1579,7 +1585,8 @@
     },
     {
       "path": "src/app/workshop/bestiary/types.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Bestiary/lookup row contracts, numeric CR choices and CSS input class only. Names/descriptions/source/type stay original reference/authored data for existing reviewed bestiary display adapters. No locale-dependent label or new fallback here."
     },
     {
       "path": "src/app/workshop/cast/CastList.tsx",
@@ -1613,7 +1620,8 @@
     },
     {
       "path": "src/app/workshop/encounters/types.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Prepared-encounter/map/readout/form types plus empty draft and shared native template extras. Draft name/text fields start empty; verdict/unknown-monster are native server facts projected by EncounterRows/encounter adapters. Canonical roster/map/light/visibility IDs and numerical settings unchanged; no own caption."
     },
     {
       "path": "src/app/workshop/kit.tsx",
@@ -1738,7 +1746,8 @@
     },
     {
       "path": "src/app/workshop/types.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Data contracts only for workshop/import-source summaries. Titles remain authored, kinds are canonical, timestamps/counts stay raw for their own display owners. No owned caption, serialization or data mutation."
     },
     {
       "path": "src/components/AboutDialog.tsx",
@@ -1846,7 +1855,8 @@
     },
     {
       "path": "src/components/ParticleCanvas.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Aria-hidden visual canvas accepts numeric coordinates and native particle families/colors. No owned text/labels; canvas context, visibility events and animation identifiers are machine values. No behavior change or locale subscription added."
     },
     {
       "path": "src/components/SafetyToneFields.tsx",
@@ -1855,7 +1865,8 @@
     },
     {
       "path": "src/components/SceneTitle.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Scene/act title and subtitle are supplied by TitleCard and remain authored/generated under their own campaign text locale. This owner adds only decorative layers and timing, including a plain reduced-motion branch, with no English fallback caption. Native title-card ID/tone/hold and onShown callback unchanged."
     },
     {
       "path": "src/components/ScheduleSection.tsx",
@@ -1869,7 +1880,8 @@
     },
     {
       "path": "src/components/SkyLayer.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Decorative aria-hidden weather/sky layer; all string constants are weather/day-part/placement IDs or CSS gradients. No text caption or locale-dependent data interpretation. Source ambience and intensity numbers remain native; future translated weather captions belong to their UI owners."
     },
     {
       "path": "src/components/TranslatedText.tsx",
@@ -2001,7 +2013,8 @@
     },
     {
       "path": "src/components/ui/D20Spinner.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Reviewed rendering/ARIA/defaults and source literals. This primitive has no owned natural-language captions; caller labels, titles, tooltip content, bubble formatters and children remain caller-owned and retain independent coverage. Decoration is aria-hidden or uses empty alt; CSS/SVG/keyboard/asset/state identifiers and callback values stay native. No runtime or visual behavior change."
     },
     {
       "path": "src/components/ui/DateTimePicker.tsx",
@@ -2020,11 +2033,13 @@
     },
     {
       "path": "src/components/ui/FxSprite.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Reviewed rendering/ARIA/defaults and source literals. This primitive has no owned natural-language captions; caller labels, titles, tooltip content, bubble formatters and children remain caller-owned and retain independent coverage. Decoration is aria-hidden or uses empty alt; CSS/SVG/keyboard/asset/state identifiers and callback values stay native. No runtime or visual behavior change."
     },
     {
       "path": "src/components/ui/GameIcon.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Reviewed rendering/ARIA/defaults and source literals. This primitive has no owned natural-language captions; caller labels, titles, tooltip content, bubble formatters and children remain caller-owned and retain independent coverage. Decoration is aria-hidden or uses empty alt; CSS/SVG/keyboard/asset/state identifiers and callback values stay native. No runtime or visual behavior change."
     },
     {
       "path": "src/components/ui/GameTerm.tsx",
@@ -2033,7 +2048,8 @@
     },
     {
       "path": "src/components/ui/GoldTitle.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Reviewed rendering/ARIA/defaults and source literals. This primitive has no owned natural-language captions; caller labels, titles, tooltip content, bubble formatters and children remain caller-owned and retain independent coverage. Decoration is aria-hidden or uses empty alt; CSS/SVG/keyboard/asset/state identifiers and callback values stay native. No runtime or visual behavior change."
     },
     {
       "path": "src/components/ui/GuidedTour.tsx",
@@ -2042,7 +2058,8 @@
     },
     {
       "path": "src/components/ui/HostSvgImage.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Reviewed rendering/ARIA/defaults and source literals. This primitive has no owned natural-language captions; caller labels, titles, tooltip content, bubble formatters and children remain caller-owned and retain independent coverage. Decoration is aria-hidden or uses empty alt; CSS/SVG/keyboard/asset/state identifiers and callback values stay native. No runtime or visual behavior change."
     },
     {
       "path": "src/components/ui/HotkeyOverlay.tsx",
@@ -2051,7 +2068,8 @@
     },
     {
       "path": "src/components/ui/IconRail.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Reviewed rendering/ARIA/defaults and source literals. This primitive has no owned natural-language captions; caller labels, titles, tooltip content, bubble formatters and children remain caller-owned and retain independent coverage. Decoration is aria-hidden or uses empty alt; CSS/SVG/keyboard/asset/state identifiers and callback values stay native. No runtime or visual behavior change."
     },
     {
       "path": "src/components/ui/ImageLightbox.tsx",
@@ -2090,23 +2108,28 @@
     },
     {
       "path": "src/components/ui/Reveal.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Reviewed rendering/ARIA/defaults and source literals. This primitive has no owned natural-language captions; caller labels, titles, tooltip content, bubble formatters and children remain caller-owned and retain independent coverage. Decoration is aria-hidden or uses empty alt; CSS/SVG/keyboard/asset/state identifiers and callback values stay native. No runtime or visual behavior change."
     },
     {
       "path": "src/components/ui/Ribbon.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Reviewed rendering/ARIA/defaults and source literals. This primitive has no owned natural-language captions; caller labels, titles, tooltip content, bubble formatters and children remain caller-owned and retain independent coverage. Decoration is aria-hidden or uses empty alt; CSS/SVG/keyboard/asset/state identifiers and callback values stay native. No runtime or visual behavior change."
     },
     {
       "path": "src/components/ui/Scroll.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Reviewed rendering/ARIA/defaults and source literals. This primitive has no owned natural-language captions; caller labels, titles, tooltip content, bubble formatters and children remain caller-owned and retain independent coverage. Decoration is aria-hidden or uses empty alt; CSS/SVG/keyboard/asset/state identifiers and callback values stay native. No runtime or visual behavior change."
     },
     {
       "path": "src/components/ui/SectionHead.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Reviewed rendering/ARIA/defaults and source literals. This primitive has no owned natural-language captions; caller labels, titles, tooltip content, bubble formatters and children remain caller-owned and retain independent coverage. Decoration is aria-hidden or uses empty alt; CSS/SVG/keyboard/asset/state identifiers and callback values stay native. No runtime or visual behavior change."
     },
     {
       "path": "src/components/ui/SegmentedControl.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Reviewed rendering/ARIA/defaults and source literals. This primitive has no owned natural-language captions; caller labels, titles, tooltip content, bubble formatters and children remain caller-owned and retain independent coverage. Decoration is aria-hidden or uses empty alt; CSS/SVG/keyboard/asset/state identifiers and callback values stay native. No runtime or visual behavior change."
     },
     {
       "path": "src/components/ui/Select.tsx",
@@ -2125,19 +2148,23 @@
     },
     {
       "path": "src/components/ui/Slider.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Reviewed rendering/ARIA/defaults and source literals. This primitive has no owned natural-language captions; caller labels, titles, tooltip content, bubble formatters and children remain caller-owned and retain independent coverage. Decoration is aria-hidden or uses empty alt; CSS/SVG/keyboard/asset/state identifiers and callback values stay native. No runtime or visual behavior change."
     },
     {
       "path": "src/components/ui/StepWipe.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Reviewed rendering/ARIA/defaults and source literals. This primitive has no owned natural-language captions; caller labels, titles, tooltip content, bubble formatters and children remain caller-owned and retain independent coverage. Decoration is aria-hidden or uses empty alt; CSS/SVG/keyboard/asset/state identifiers and callback values stay native. No runtime or visual behavior change."
     },
     {
       "path": "src/components/ui/Switch.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Reviewed rendering/ARIA/defaults and source literals. This primitive has no owned natural-language captions; caller labels, titles, tooltip content, bubble formatters and children remain caller-owned and retain independent coverage. Decoration is aria-hidden or uses empty alt; CSS/SVG/keyboard/asset/state identifiers and callback values stay native. No runtime or visual behavior change."
     },
     {
       "path": "src/components/ui/Tooltip.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Reviewed rendering/ARIA/defaults and source literals. This primitive has no owned natural-language captions; caller labels, titles, tooltip content, bubble formatters and children remain caller-owned and retain independent coverage. Decoration is aria-hidden or uses empty alt; CSS/SVG/keyboard/asset/state identifiers and callback values stay native. No runtime or visual behavior change."
     },
     {
       "path": "src/components/ui/Wizard.tsx",

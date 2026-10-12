@@ -1,3 +1,4 @@
+import { DM_STATUS_PHRASES } from "../src/app/campaigns/[campaignId]/dmStatusPhrases.ts";
 import { SURFACE_SOURCE } from "../src/lib/i18n/surface-presentations.ts";
 import { CHARACTER_FLOW_SOURCE } from "../src/lib/characters/flow-source.ts";
 import fs from "node:fs";
@@ -76,6 +77,11 @@ if (args.has("--sync")) {
   process.exit(0);
 }
 const problems = [];
+for (const [status, pool] of Object.entries(DM_STATUS_PHRASES)) {
+  pool.forEach((source, index) => {
+    if (MESSAGE_CATALOGS.en[`sessionUi.phrase.${status}.${index}`] !== source) problems.push(`DM status phrase changed: ${status}.${index}`);
+  });
+}
 // Native compatibility errors/labels and their existing display keys form one
 // source contract. Editing a producer caption requires reviewing its locale.
 for (const [key, source] of Object.entries({ ...CHARACTER_FLOW_SOURCE, ...SURFACE_SOURCE })) {

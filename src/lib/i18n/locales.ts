@@ -12,6 +12,9 @@ export type LocaleDefinition = {
   direction: "ltr" | "rtl";
   segmentationLocale: string;
   browserLanguages: readonly string[];
+  // UTF-16 length keeps the legacy English selection rule. CJK prose can
+  // carry a complete name/term in one or two characters.
+  narrationSelectionMinLength: number;
   tts: { langCode: string; defaultVoice: string; singleNarrator: boolean };
 };
 
@@ -22,6 +25,7 @@ export const LOCALE_DEFINITIONS: Record<AppLocale, LocaleDefinition> = {
     direction: "ltr",
     segmentationLocale: "en",
     browserLanguages: ["en"],
+    narrationSelectionMinLength: 4,
     tts: { langCode: "a", defaultVoice: "af_heart", singleNarrator: false },
   },
   "zh-CN": {
@@ -30,6 +34,7 @@ export const LOCALE_DEFINITIONS: Record<AppLocale, LocaleDefinition> = {
     direction: "ltr",
     segmentationLocale: "zh-CN",
     browserLanguages: ["zh"],
+    narrationSelectionMinLength: 1,
     tts: { langCode: "z", defaultVoice: "zf_xiaobei", singleNarrator: true },
   },
 };
