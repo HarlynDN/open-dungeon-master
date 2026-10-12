@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { storyboardText, storyboardFrame } from "@/lib/i18n/storyboard-ui-presentations";
+
 import { Loader2, Trash2 } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { ui } from "@/lib/ui";
@@ -59,6 +62,7 @@ export function BeatEditor({
   onSave: () => void;
   onDelete?: () => void;
 }) {
+  const { locale } = useLocale();
   const saveButton = (
     <button
       type="button"
@@ -67,48 +71,47 @@ export function BeatEditor({
       className={cn(ui.btnPrimary, "w-fit")}
     >
       {busy ? <Loader2 className="size-3.5 animate-spin" /> : null}
-      Save the card
-    </button>
+      {storyboardText("Save the card", locale)}</button>
   );
 
   return (
     <>
-      <SectionHead title="The card" glyph={KIND_GLYPH[edit.kind]} className="mb-0" />
+      <SectionHead title={storyboardText("The card", locale)} glyph={KIND_GLYPH[edit.kind]} className="mb-0" />
       <div className="flex flex-wrap gap-2">
         <span className="w-full sm:w-52">
           <Select<BeatKind>
-            label="Kind of card"
+            label={storyboardText("Kind of card", locale)}
             value={edit.kind}
             onChange={(kind) => onChange({ ...edit, kind })}
-            options={BEAT_KINDS.map((kind) => ({ value: kind, label: BEAT_LABELS[kind], icon: { kind: "glyph" as const, key: KIND_GLYPH[kind] } }))}
+            options={BEAT_KINDS.map((kind) => ({ value: kind, label: storyboardText(BEAT_LABELS[kind], locale), icon: { kind: "glyph" as const, key: KIND_GLYPH[kind] } }))}
           />
         </span>
         <input
           value={edit.title}
-          aria-label="Title"
+          aria-label={storyboardText("Title", locale)}
           onChange={(event) =>
             onChange({ ...edit, title: event.target.value.slice(0, TITLE_MAX) })
           }
           className={cn(ui.input, "min-w-40 flex-1")}
         />
       </div>
-      <DictateField label="What happens" onTranscript={(text) => onChange({ ...edit, body: appendDictation(edit.body, text) })}>
+      <DictateField label={storyboardText("What happens", locale)} onTranscript={(text) => onChange({ ...edit, body: appendDictation(edit.body, text) })}>
         <textarea
           value={edit.body}
           onChange={(event) => onChange({ ...edit, body: event.target.value })}
           rows={3}
-          placeholder="What actually happens, and what it means if the party is not there."
-          aria-label="What happens"
+          placeholder={storyboardText("What actually happens, and what it means if the party is not there.", locale)}
+          aria-label={storyboardText("What happens", locale)}
           className={cn(ui.input, "resize-y")}
         />
       </DictateField>
 
-      <SectionHead title="Who and where" glyph="system-cast" className="mb-0 pt-1" />
+      <SectionHead title={storyboardText("Who and where", locale)} glyph="system-cast" className="mb-0 pt-1" />
       <div className="stagger-up grid gap-2 sm:grid-cols-2">
         {LINK_FIELDS.map(([field, bucket, label]) => (
-          <Field key={field} label={label}>
+          <Field key={field} label={storyboardText(label, locale)}>
             <Select
-              label={label}
+              label={storyboardText(label, locale)}
               value={edit.links[field] ?? ""}
               onChange={(next) =>
                 onChange({
@@ -117,34 +120,30 @@ export function BeatEditor({
                 })
               }
               options={[
-                { value: "", label: "nobody in particular" },
+                { value: "", label: storyboardText("nobody in particular", locale) },
                 ...(broken.includes(field) && edit.links[field]
-                  ? [{ value: edit.links[field] as string, label: "Missing: no longer in this workshop or its shared one", disabled: true }]
+                  ? [{ value: edit.links[field] as string, label: storyboardText("Missing: no longer in this workshop or its shared one", locale), disabled: true }]
                   : []),
                 ...inventory[bucket].map((entry) => ({
                   value: entry.id,
                   label: entry.name,
                   icon: { kind: "glyph" as const, key: LINK_GLYPH[field] },
-                  ...(entry.from ? { group: `From ${entry.from}` } : {}),
+                  ...(entry.from ? { group: storyboardFrame("from", { name: entry.from }, locale) } : {}),
                 })),
               ]}
             />
             {broken.includes(field) ? (
               <p className="reveal mt-1 text-[11px] text-amber-300/80">
-                What this card picked is gone. Pick again, or clear it.
-              </p>
+                {storyboardText("What this card picked is gone. Pick again, or clear it.", locale)}</p>
             ) : null}
           </Field>
         ))}
       </div>
 
       <div className="flex flex-col gap-1">
-        <SectionHead title="Leads to" glyph="pace-normal" className="mb-1 pt-1" />
+        <SectionHead title={storyboardText("Leads to", locale)} glyph="pace-normal" className="mb-1 pt-1" />
         <p className="text-[11px] leading-snug text-stone-500">
-          An arrow is &quot;then&quot; unless you say otherwise. Mark the routes the party chooses
-          between, or a scene that only happens if something holds; those arrive in a campaign
-          as moments the storyteller can run or drop, not as beats it waits on.
-        </p>
+          {storyboardText("An arrow is \"then\" unless you say otherwise. Mark the routes the party chooses between, or a scene that only happens if something holds; those arrive in a campaign as moments the storyteller can run or drop, not as beats it waits on.", locale)}</p>
         <div className={cn("stagger-pop", chipRow)}>
           {others.map((other) => {
             const on = edit.edges.includes(other.id);
@@ -193,12 +192,12 @@ export function BeatEditor({
                   <span className="min-w-28 flex-1 truncate text-stone-300">{target.title}</span>
                   <span className="w-full sm:w-48">
                     <Select<"then" | RouteKind>
-                      label={`How "${target.title}" follows`}
+                      label={storyboardFrame("follow", { name: target.title }, locale)}
                       value={route?.kind ?? "then"}
                       onChange={(kind) => setRoute(kind)}
                       options={(["then", ...ROUTE_KINDS] as const).map((kind) => ({
                         value: kind,
-                        label: ROUTE_LABELS[kind],
+                        label: storyboardText(ROUTE_LABELS[kind], locale),
                       }))}
                     />
                   </span>
@@ -206,8 +205,8 @@ export function BeatEditor({
                     <input
                       value={route.label}
                       onChange={(event) => setRoute(route.kind, event.target.value)}
-                      placeholder={route.kind === "choice" ? "if they side with the guild" : "if they search the cellar"}
-                      aria-label={`When the party takes the route to "${target.title}"`}
+                      placeholder={route.kind === "choice" ? storyboardText("if they side with the guild", locale) : storyboardText("if they search the cellar", locale)}
+                      aria-label={storyboardFrame("when", { name: target.title }, locale)}
                       className={cn(ui.input, "reveal min-w-40 flex-1 py-1 text-xs")}
                     />
                   ) : null}
@@ -225,11 +224,10 @@ export function BeatEditor({
             type="button"
             disabled={busy}
             onClick={onDelete}
-            aria-label={`Delete ${edit.title}`}
+            aria-label={storyboardFrame("delete", { name: edit.title }, locale)}
             className={cn(ui.btnSmall, "ml-auto hover:border-red-500/50 hover:text-red-300")}
           >
-            <Trash2 className="size-3.5" /> Delete
-          </button>
+            <Trash2 className="size-3.5" /> {storyboardText("Delete", locale)}</button>
         </div>
       ) : (
         saveButton

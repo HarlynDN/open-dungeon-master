@@ -309,7 +309,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmInboxPanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Inbox chrome, timestamp locale, status/reply accessibility and known transport errors localized; sender names/private content and send_whisper protocol preserved, composition gate unchanged."
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmInitiativePanel.tsx",
@@ -343,7 +344,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmStoryboardPanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Both list and board layout chrome, kinds/hints, native suggestion frames, route and missing-link summaries, compiler preview and load/mutation errors localized. Save/POST/DELETE bodies and authored card names/body/routes stay raw; failed delete retains editor and cards."
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmTablesPanel.tsx",
@@ -1677,15 +1679,18 @@
     },
     {
       "path": "src/app/workshop/storyboard/BeatBoard.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Kind/link chips, shared/missing provenance, route counts and open accessibility localized. Title/excerpt/inventory names and native graph callbacks preserved."
     },
     {
       "path": "src/app/workshop/storyboard/BeatEditor.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Card fields, native kind/route/link labels, shared groups, broken-link captions and named accessibility localized. Authored titles/body/route labels, link IDs, enum values, edge selection/removal and length limits preserved."
     },
     {
       "path": "src/app/workshop/storyboard/BoardAsides.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Native suggestion and compiler adapters require bounded original source frames; custom extensions and authored names preserved. Shared choices/chapter names stay raw; PATCH failures settle with visible error."
     },
     {
       "path": "src/app/workshop/storyboard/beat-fields.ts",

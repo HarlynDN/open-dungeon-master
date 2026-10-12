@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { storyboardText, storyboardFrame } from "@/lib/i18n/storyboard-ui-presentations";
+
 import { EmptyState } from "@/components/EmptyState";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/cn";
@@ -36,9 +39,10 @@ export function BeatBoard({
   broken?: Record<string, Array<keyof BeatLinks>>;
   onOpen: (node: BoardNode) => void;
 }) {
+  const { locale } = useLocale();
   if (board.nodes.length === 0) {
     return (
-      <EmptyState size="md" art="board" title="Nothing on the board. Start with a reason the party would go somewhere." />
+      <EmptyState size="md" art="board" title={storyboardText("Nothing on the board. Start with a reason the party would go somewhere.", locale)} />
     );
   }
   return (
@@ -59,7 +63,7 @@ export function BeatBoard({
             return [{ field, short, name: entry.name, from: entry.from ?? "", missing: false }];
           }
           return (broken[node.id] ?? []).includes(field)
-            ? [{ field, short, name: "missing", from: "", missing: true }]
+            ? [{ field, short, name: storyboardText("missing", locale), from: "", missing: true }]
             : [];
         });
         const choices = node.out.filter((target) => routeOf(node, target) === "choice").length;
@@ -69,7 +73,7 @@ export function BeatBoard({
             <button
               type="button"
               onClick={() => onOpen(node)}
-              aria-label={`Open ${node.title}`}
+              aria-label={storyboardFrame("open", { name: node.title }, locale)}
               className={cn(
                 ui.cardHover,
                 "flex h-full w-full flex-col gap-2 p-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400/40",
@@ -83,7 +87,7 @@ export function BeatBoard({
                     KIND_CHIP[node.kind],
                   )}
                 >
-                  {BEAT_LABELS[node.kind]}
+                  {storyboardText(BEAT_LABELS[node.kind], locale)}
                 </span>
               </span>
               <span className="font-display tracking-wide text-amber-50">{node.title}</span>
@@ -93,25 +97,25 @@ export function BeatBoard({
                   {links.map((link) => (
                     <span
                       key={link.field}
-                      title={link.from ? `From ${link.from}` : undefined}
+                      title={link.from ? storyboardFrame("from", { name: link.from }, locale) : undefined}
                       className={cn(
                         "inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[11px]",
                         link.missing ? "border-amber-500/50 text-amber-300" : "border-stone-700 text-stone-400",
                       )}
                     >
                       <GameIcon icon={{ kind: "glyph", key: LINK_GLYPH[link.field] }} size="size-4" />
-                      <span className="text-stone-500">{link.short} </span>
+                      <span className="text-stone-500">{storyboardText(link.short, locale)} </span>
                       {link.name}
-                      {link.from ? <span className="text-sky-300/70"> (shared)</span> : null}
+                      {link.from ? <span className="text-sky-300/70">  {storyboardText("(shared)", locale)}</span> : null}
                     </span>
                   ))}
                 </span>
               ) : null}
               <span className="mt-auto flex items-center gap-1 text-[11px] text-stone-500">
                 <ArrowRight className="size-3" aria-hidden="true" />
-                leads to {node.out.length}
-                {choices ? <span className="text-amber-300/70"> · {choices} route{choices === 1 ? "" : "s"} to choose</span> : null}
-                {optional ? <span className="text-sky-300/70"> · {optional} only if</span> : null}
+                {storyboardFrame("leads", { count: node.out.length }, locale)}
+                {choices ? <span className="text-amber-300/70">{storyboardFrame(choices === 1 ? "choiceOne" : "choiceMany", { count: choices }, locale)}</span> : null}
+                {optional ? <span className="text-sky-300/70">{storyboardFrame("optional", { count: optional }, locale)}</span> : null}
               </span>
             </button>
           </li>

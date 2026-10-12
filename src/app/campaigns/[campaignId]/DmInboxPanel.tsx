@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { STORYBOARD_NOTICES, storyboardText, storyboardFrame, storyboardNotice } from "@/lib/i18n/storyboard-ui-presentations";
+
 import { Send } from "lucide-react";
 import { isComposingInput } from "@/lib/input-composition";
 import { useState } from "react";
@@ -22,6 +25,7 @@ export function DmInboxPanel({
   inbox: InboxWhisper[];
   refreshWhispers: () => Promise<void>;
 }) {
+  const { locale } = useLocale();
   const waiting = inbox.filter((whisper) => !whisper.answered).length;
   const [open, setOpen] = useState(waiting > 0);
   const [replyTo, setReplyTo] = useState<string | null>(null);
@@ -33,7 +37,7 @@ export function DmInboxPanel({
     const date = new Date(iso);
     return Number.isNaN(date.getTime())
       ? ""
-      : date.toLocaleString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
+      : date.toLocaleString(locale, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
   }
 
   async function reply(characterId: string) {
@@ -51,14 +55,14 @@ export function DmInboxPanel({
       });
       if (!response.ok) {
         const body = (await response.json().catch(() => ({}))) as { error?: string };
-        setError(body.error ?? "The whisper did not go through.");
+        setError(body.error ?? STORYBOARD_NOTICES.whisper);
         return;
       }
       setDraft("");
       setReplyTo(null);
       await refreshWhispers();
     } catch {
-      setError("Could not reach the table.");
+      setError(STORYBOARD_NOTICES.table);
     } finally {
       setSending(false);
     }
@@ -70,7 +74,7 @@ export function DmInboxPanel({
         open={open}
         onToggle={() => setOpen((current) => !current)}
         glyph="tab-dm"
-        title="Whispers to you"
+        title={storyboardText("Whispers to you", locale)}
         aside={
           waiting > 0 ? (
             <span key={waiting} className="count-pop rounded-full bg-gradient-to-b from-amber-300 to-amber-500 px-1.5 text-[10px] font-semibold text-amber-950 shadow-glow-gold">
@@ -82,9 +86,7 @@ export function DmInboxPanel({
       {open ? (
         <div className="reveal space-y-2 border-t border-amber-500/20 px-2 py-2">
           <p className="text-[11px] leading-4 text-amber-200/70">
-            Private messages from the players. Only you and the sender see them; a player can have two
-            waiting on you at a time.
-          </p>
+            {storyboardText("Private messages from the players. Only you and the sender see them; a player can have two waiting on you at a time.", locale)}</p>
           {inbox.length ? (
             <ul className="stagger space-y-2">
               {inbox.map((whisper) => (
@@ -101,7 +103,7 @@ export function DmInboxPanel({
                     <span>
                       {formatWhen(whisper.createdAt)}
                       {" | "}
-                      {whisper.answered ? "Answered" : "Waiting on you"}
+                      {whisper.answered ? storyboardText("Answered", locale) : storyboardText("Waiting on you", locale)}
                     </span>
                     {whisper.characterId && replyTo !== whisper.id ? (
                       <button
@@ -113,8 +115,7 @@ export function DmInboxPanel({
                         }}
                         className="ml-auto text-amber-300 underline decoration-dotted underline-offset-2 motion-press"
                       >
-                        Reply
-                      </button>
+                        {storyboardText("Reply", locale)}</button>
                     ) : null}
                   </div>
                   {replyTo === whisper.id && whisper.characterId ? (
@@ -133,8 +134,8 @@ export function DmInboxPanel({
                         maxLength={1000}
                         rows={2}
                         disabled={sending}
-                        placeholder={`Whisper to ${whisper.characterName}...`}
-                        aria-label={`Reply privately to ${whisper.characterName}`}
+                        placeholder={storyboardFrame("whisper", { name: whisper.characterName }, locale)}
+                        aria-label={storyboardFrame("reply", { name: whisper.characterName }, locale)}
                         className={cn(ui.input, "min-h-[3rem] flex-1 resize-none disabled:opacity-60")}
                       />
                       <button
@@ -142,7 +143,7 @@ export function DmInboxPanel({
                         onClick={() => void reply(whisper.characterId as string)}
                         disabled={!draft.trim() || sending}
                         className={cn(ui.btnSecondary, "size-10 shrink-0 px-0 text-amber-200")}
-                        aria-label={`Send the reply to ${whisper.characterName}`}
+                        aria-label={storyboardFrame("send", { name: whisper.characterName }, locale)}
                       >
                         <Send className="size-4" />
                       </button>
@@ -152,9 +153,9 @@ export function DmInboxPanel({
               ))}
             </ul>
           ) : (
-            <p className="text-xs text-stone-500">No whispers yet.</p>
+            <p className="text-xs text-stone-500">{storyboardText("No whispers yet.", locale)}</p>
           )}
-          {error ? <p className="motion-shake text-[11px] text-red-400">{error}</p> : null}
+          {error ? <p className="motion-shake text-[11px] text-red-400">{storyboardNotice(error, locale)}</p> : null}
         </div>
       ) : null}
     </div>

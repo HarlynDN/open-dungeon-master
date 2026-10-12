@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { STORYBOARD_NOTICES, storyboardText, storyboardFrame, storyboardNotice, storyboardSuggestion, storyboardSummary } from "@/lib/i18n/storyboard-ui-presentations";
+
 import { useState, type ReactNode } from "react";
 import { Select } from "@/components/ui/Select";
 import { ChevronDown, ChevronRight } from "lucide-react";
@@ -61,24 +64,24 @@ export function SuggestionsCard({
   busy: boolean;
   onAdd: (kind: BeatKind, title: string) => void;
 }) {
+  const { locale } = useLocale();
   if (!suggestions.length) {
     return null;
   }
   return (
-    <AsideCard title="What this board is missing" icon={<GameIcon icon={{ kind: "glyph", key: "rest-inspiration" }} size="size-7" />} tour="storyboard-missing">
+    <AsideCard title={storyboardText("What this board is missing", locale)} icon={<GameIcon icon={{ kind: "glyph", key: "rest-inspiration" }} size="size-7" />} tour="storyboard-missing">
       <p className="text-[11px] text-stone-500">
-        Counted, not guessed. Nothing here asked a model what your story needs.
-      </p>
+        {storyboardText("Counted, not guessed. Nothing here asked a model what your story needs.", locale)}</p>
       {suggestions.map((suggestion) => (
         <div key={suggestion.id} className="flex flex-wrap items-center gap-2 text-xs">
-          <span className="flex-1 text-xs text-stone-400">{suggestion.reason}</span>
+          <span className="flex-1 text-xs text-stone-400">{storyboardSuggestion(suggestion, locale).reason}</span>
           <button
             type="button"
             disabled={busy}
-            onClick={() => onAdd(suggestion.kind, suggestion.title)}
+            onClick={() => onAdd(suggestion.kind, storyboardSuggestion(suggestion, locale).title)}
             className={cn(ui.btnSmall, "px-2 py-1.5")}
           >
-            + {BEAT_LABELS[suggestion.kind]}
+            + {storyboardText(BEAT_LABELS[suggestion.kind], locale)}
           </button>
         </div>
       ))}
@@ -103,6 +106,7 @@ export function SharedWorkshopCard({
   };
   onChanged: () => void;
 }) {
+  const { locale } = useLocale();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
@@ -117,10 +121,12 @@ export function SharedWorkshopCard({
       });
       const payload = (await response.json().catch(() => ({}))) as { error?: string };
       if (!response.ok) {
-        setError(payload.error ?? "That could not be changed.");
+        setError(payload.error ?? STORYBOARD_NOTICES.shared);
         return;
       }
       onChanged();
+    } catch {
+      setError(STORYBOARD_NOTICES.network);
     } finally {
       setBusy(false);
     }
@@ -128,31 +134,25 @@ export function SharedWorkshopCard({
 
   return (
     <AsideCard
-      title="Shared workshop"
+      title={storyboardText("Shared workshop", locale)}
       icon={<GameIcon icon={{ kind: "glyph", key: "system-cast" }} size="size-7" />}
       tour="storyboard-shared"
     >
       {shared.chapters.length ? (
         <p className="text-xs text-stone-400">
-          {shared.chapters.length === 1 ? "One chapter draws" : `${shared.chapters.length} chapters draw`} on
-          this workshop: {shared.chapters.map((chapter) => chapter.title).join(", ")}. Its cast,
-          places, maps and fights show in their pickers.
+          {storyboardFrame(shared.chapters.length === 1 ? "chaptersOne" : "chaptersMany", { count: shared.chapters.length, names: shared.chapters.map((chapter) => chapter.title).join(storyboardFrame("list", {}, locale)) }, locale)}
         </p>
       ) : (
         <>
           <p className="text-xs text-stone-400">
-            Write the recurring cast, places, maps and fights once in one workshop, and let each
-            chapter&apos;s cards pick from it. Picks follow the shared rows as they change. A
-            campaign that imports this chapter brings what its cards pick, once, and later
-            chapters reuse it.
-          </p>
+            {storyboardText("Write the recurring cast, places, maps and fights once in one workshop, and let each chapter's cards pick from it. Picks follow the shared rows as they change. A campaign that imports this chapter brings what its cards pick, once, and later chapters reuse it.", locale)}</p>
           <Select
-            label="Draws on"
+            label={storyboardText("Draws on", locale)}
             value={shared.common?.id ?? ""}
             disabled={busy}
             onChange={(id) => void choose(id)}
             options={[
-              { value: "", label: "Nothing shared" },
+              { value: "", label: storyboardText("Nothing shared", locale) },
               ...shared.choices.map((choice) => ({
                 value: choice.id,
                 label: choice.title,
@@ -162,21 +162,20 @@ export function SharedWorkshopCard({
           />
         </>
       )}
-      {error ? <p className="motion-shake text-[11px] text-red-400">{error}</p> : null}
+      {error ? <p className="motion-shake text-[11px] text-red-400">{storyboardNotice(error, locale)}</p> : null}
     </AsideCard>
   );
 }
 
 export function CompileCard({ summary }: { summary: CompileSummary }) {
+  const { locale } = useLocale();
   return (
-    <AsideCard title="What this becomes" icon={<GameIcon icon={{ kind: "glyph", key: "tab-campaigns" }} size="size-7" />} tour="storyboard-compile">
+    <AsideCard title={storyboardText("What this becomes", locale)} icon={<GameIcon icon={{ kind: "glyph", key: "tab-campaigns" }} size="size-7" />} tour="storyboard-compile">
       <p className="text-xs text-stone-400">
-        {summary.lines.length
-          ? `Imported into a campaign, this board becomes ${summary.lines.join(", ")}.`
-          : "Nothing yet. Cards become lore, quests, prepared fights, DM notes and the story arc."}
+        {storyboardSummary(summary, locale).text}
       </p>
       {summary.arcRefusal ? (
-        <p className="reveal text-[11px] text-amber-300/70">{summary.arcRefusal}</p>
+        <p className="reveal text-[11px] text-amber-300/70">{storyboardSummary(summary, locale).refusal}</p>
       ) : null}
     </AsideCard>
   );
