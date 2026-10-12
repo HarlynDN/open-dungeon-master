@@ -1,5 +1,7 @@
 "use client";
 
+import { isComposingInput } from "@/lib/input-composition";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { useState } from "react";
 import { Dialog } from "@/components/ui/Dialog";
 import { ui } from "@/lib/ui";
@@ -29,11 +31,12 @@ function PromptForm({
   defaultValue = "",
   placeholder,
   maxLength = 80,
-  submitLabel = "Save",
+  submitLabel,
   allowEmpty = false,
   onSubmit,
   onClose,
 }: PromptProps) {
+  const { t } = useLocale();
   const [value, setValue] = useState(defaultValue);
   const trimmed = value.trim();
   const canSubmit = allowEmpty || trimmed.length > 0;
@@ -58,15 +61,18 @@ function PromptForm({
           maxLength={maxLength}
           placeholder={placeholder}
           onChange={(event) => setValue(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" && isComposingInput(event)) event.preventDefault();
+          }}
           className={`${ui.input} mt-1 w-full`}
         />
       </label>
       <div className="flex justify-end gap-2">
         <button type="button" onClick={onClose} className={ui.btnSecondary}>
-          Cancel
+          {t("surfaceUi.prompt.cancel")}
         </button>
         <button type="submit" disabled={!canSubmit} className={ui.btnPrimary}>
-          {submitLabel}
+          {submitLabel ?? t("surfaceUi.prompt.save")}
         </button>
       </div>
     </form>

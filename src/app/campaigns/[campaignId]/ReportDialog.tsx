@@ -7,6 +7,7 @@ import { ui } from "@/lib/ui";
 import { Dialog } from "@/components/ui/Dialog";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { messageTemplate } from "@/lib/i18n/translator";
+import { reportLabelText, type GenericReportLabel } from "@/lib/i18n/surface-presentations";
 import { journalErrorText } from "@/lib/i18n/journal-presentations";
 
 export type ReportTarget = {
@@ -17,13 +18,14 @@ export type ReportTarget = {
   authorType: "player" | "dm";
   // What the dialog calls the thing: a character name, or "the Dungeon Master".
   label: string;
+  genericLabel?: GenericReportLabel;
   // Open straight on the block confirmation, no report.
   mode?: "report" | "block";
 };
 
 const REASONS = ["harassment", "sexual", "hate", "violence", "spam", "other"] as const;
 
-type ReportDone = { key: "journalUi.report.blocked" | "journalUi.report.both" | "journalUi.report.sent"; name: string };
+type ReportDone = { key: "journalUi.report.blocked" | "journalUi.report.both" | "journalUi.report.sent"; name: string; genericLabel?: GenericReportLabel; authorType?: ReportTarget["authorType"] };
 
 // Flags a passage, a message or a player to this server's admins, with the
 // option to block the player at the same time. There is no central service,
@@ -48,8 +50,7 @@ export function ReportDialog({
   const [error, setError] = useState("");
   const [done, setDone] = useState<ReportDone | null>(null);
   const blockOnly = target?.mode === "block";
-  const targetLabel = target?.authorType === "dm" && target.label === messageTemplate("en", "journalUi.report.dmLabel")
-    ? t("journalUi.report.dmLabel") : target?.label ?? "";
+  const targetLabel = target ? reportLabelText(target, locale) : "";
 
   function close() {
     setReason("harassment");
@@ -82,7 +83,7 @@ export function ReportDialog({
     try {
       if (blockOnly) {
         if (target.userId && (await blockUser(target.userId))) {
-          setDone({ key: "journalUi.report.blocked", name: target.label });
+          setDone({ key: "journalUi.report.blocked", name: target.label, genericLabel: target.genericLabel, authorType: target.authorType });
         }
         return;
       }
@@ -104,7 +105,9 @@ export function ReportDialog({
       if (block && target.userId && !(await blockUser(target.userId))) {
         return;
       }
-      setDone({ key: block && target.userId ? "journalUi.report.both" : "journalUi.report.sent", name: target.label });
+      setDone({ key: block && target.userId ? "journalUi.report.both" : "journalUi.report.sent", name: target.label, genericLabel: target.genericLabel, authorType: target.authorType });
+    } catch {
+      setError(messageTemplate("en", "journalUi.error.network"));
     } finally {
       setBusy(false);
     }
@@ -119,7 +122,7 @@ export function ReportDialog({
     >
       {done ? (
         <div className="reveal space-y-4">
-          <p className="text-sm text-stone-300">{t(done.key, { name: done.name })}</p>
+          <p className="text-sm text-stone-300">{t(done.key, { name: reportLabelText({ label: done.name, genericLabel: done.genericLabel, authorType: done.authorType }, locale) })}</p>
           <div className="flex justify-end">
             <button type="button" onClick={close} className={ui.btnPrimary}>
               {t("journalUi.report.done")}

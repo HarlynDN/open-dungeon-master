@@ -1,3 +1,4 @@
+import { SURFACE_SOURCE } from "../src/lib/i18n/surface-presentations.ts";
 import { CHARACTER_FLOW_SOURCE } from "../src/lib/characters/flow-source.ts";
 import fs from "node:fs";
 import path from "node:path";
@@ -77,8 +78,8 @@ if (args.has("--sync")) {
 const problems = [];
 // Native compatibility errors/labels and their existing display keys form one
 // source contract. Editing a producer caption requires reviewing its locale.
-for (const [key, source] of Object.entries(CHARACTER_FLOW_SOURCE)) {
-  if (MESSAGE_CATALOGS.en[key] !== source) problems.push(`Character-flow source changed: ${key}`);
+for (const [key, source] of Object.entries({ ...CHARACTER_FLOW_SOURCE, ...SURFACE_SOURCE })) {
+  if (MESSAGE_CATALOGS.en[key] !== source) problems.push(`Owned UI source changed: ${key}`);
 }
 const nativeBook = JSON.parse(fs.readFileSync(path.join(root, "src/lib/rulebook/srd-5.1.json"), "utf8"));
 for (const [kind, rows] of [["part", nativeBook.parts], ["chapter", nativeBook.chapters]]) for (const row of rows) {

@@ -1,5 +1,6 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { cn } from "@/lib/cn";
 import { ui } from "@/lib/ui";
 import { Select, type SelectOption } from "@/components/ui/Select";
@@ -144,6 +145,7 @@ export function SecretField({
   onChange: (value: string) => void;
   hint?: string;
 }) {
+  const { t } = useLocale();
   const kept = value === SECRET_KEPT;
   return (
     <Field label={label} hint={hint}>
@@ -151,7 +153,7 @@ export function SecretField({
         <input
           type="password"
           className={ui.input}
-          placeholder={isSet && kept ? "•••••••• (set)" : "Not set"}
+          placeholder={t(isSet && kept ? "surfaceUi.secret.kept" : "surfaceUi.secret.unset")}
           value={kept ? "" : value}
           onChange={(event) => onChange(event.target.value)}
         />
@@ -161,7 +163,7 @@ export function SecretField({
             onClick={() => onChange("")}
             className={cn(ui.btnSmall, "shrink-0 hover:text-red-400")}
           >
-            Clear
+            {t("surfaceUi.secret.clear")}
           </button>
         ) : null}
       </div>

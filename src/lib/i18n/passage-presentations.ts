@@ -1,3 +1,4 @@
+import { surfaceErrorText } from "./surface-presentations.ts";
 import { catalogFor, createTranslator, type MessageKey } from "./translator.ts";
 import { controlText } from "./story-control-presentations.ts";
 import type { AppLocale } from "./locales.ts";
@@ -15,6 +16,8 @@ export function renarratePresetLabel(source: string, locale: AppLocale): string 
 // never pass through translation, nor are historical bodies rewritten.
 export function passageText(source: string, locale: AppLocale): string {
   if (locale === "en") return source;
+  const surface = surfaceErrorText(source, locale);
+  if (surface !== source) return surface;
   const t = createTranslator(locale);
   const row = Object.entries(catalogFor("en", "passageUi.error.")).find(([, text]) => text === source && !/\{\w+\}/.test(text));
   if (row) return t(row[0] as MessageKey);

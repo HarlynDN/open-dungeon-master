@@ -1,3 +1,4 @@
+import { surfaceErrorText } from "./surface-presentations.ts";
 import { COMPOSER_GATE_SOURCE, type ComposerGatePhase } from "./composer-gate-metadata.ts";
 import { catalogFor, createTranslator, type MessageKey } from "./translator.ts";
 import type { AppLocale } from "./locales.ts";
@@ -27,6 +28,8 @@ export function askCitationLabel(kind: string, locale: AppLocale): string {
 }
 export function composeErrorText(raw: string, locale: AppLocale, fallback: MessageKey, enemyNames: readonly string[] = []): string {
   if (!raw || locale === "en") return raw;
+  const surface = surfaceErrorText(raw, locale);
+  if (surface !== raw) return surface;
   const localized = nativeFrame(raw, locale, "composeUi.error.");
   if (localized !== raw) return localized;
   return turnControlErrorText({ data: { error: raw }, fallback }, locale, enemyNames);

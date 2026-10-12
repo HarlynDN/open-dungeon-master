@@ -152,6 +152,7 @@ export type HintRead = {
   words: Array<{ text: string; hit: HintHit | null }>;
 };
 
+const CAVE_PROBE_THEME: MapTheme = "cave";
 const PROBE = { seed: 1, width: MAP_SIZE.minWidth, height: MAP_SIZE.minHeight, pcCount: 0, enemyCount: 0 } as const;
 
 function defaultAmbient(theme: MapTheme): AmbientLight {
@@ -172,7 +173,7 @@ function readWord(word: string): WordRead {
   if (!light) {
     // A word for daylight changes nothing in a field, which is bright anyway;
     // under a cave's dark it shows.
-    const under = generateBattleMap({ ...PROBE, hint: `cave ${word}` });
+    const under = generateBattleMap({ ...PROBE, hint: `${CAVE_PROBE_THEME} ${word}` });
     light = under.ambient === "bright" ? "bright" : null;
   }
   // The rough-ground words add blobs the same theme would not have had.

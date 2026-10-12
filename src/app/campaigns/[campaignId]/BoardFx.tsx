@@ -1,9 +1,12 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { fxOutcomeCaption } from "@/lib/i18n/surface-presentations";
+import { conditionLabel } from "@/lib/i18n/condition-presentations";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { TILE } from "@/app/campaigns/[campaignId]/battleMapCells";
 import { damageTone } from "@/lib/battlemap/damage-palette";
-import { fxTone, type FxEvent, type FxOutcome } from "@/lib/battlemap/fx-plan";
+import { fxTone, type FxEvent } from "@/lib/battlemap/fx-plan";
 import { haptic, prefersReducedMotion, useLowEffects } from "@/lib/effects-mode";
 import type { ParticleHandle } from "@/components/ParticleCanvas";
 import type { XY } from "@/lib/battlemap/types";
@@ -279,15 +282,6 @@ function emitParticles(
   }
 }
 
-const CAPTION: Partial<Record<FxOutcome, string>> = {
-  miss: "miss",
-  fumble: "fumble",
-  save: "saved",
-  half: "half",
-  fail: "",
-  crit: "critical",
-};
-
 function Caption({
   at,
   text,
@@ -368,6 +362,7 @@ function FloatingNumber({
 
 // The SVG half of one effect.
 function EffectShape({ fx, sheet }: { fx: FxEvent; sheet: BeatSheet }) {
+  const { locale, t } = useLocale();
   const reduced = prefersReducedMotion();
   const low = lowEffectsNow();
   const color = fxTone(fx);
@@ -407,7 +402,7 @@ function EffectShape({ fx, sheet }: { fx: FxEvent; sheet: BeatSheet }) {
         </g>,
       );
     }
-    const caption = fx.outcome ? CAPTION[fx.outcome] : "";
+    const caption = fxOutcomeCaption(fx.outcome, locale);
     if (caption) {
       const at = fx.outcome === "fumble" && from ? from : first;
       if ((fx.outcome === "miss" || fx.outcome === "fumble") && !reduced) {
@@ -452,7 +447,7 @@ function EffectShape({ fx, sheet }: { fx: FxEvent; sheet: BeatSheet }) {
         />,
       );
     }
-    const caption = fx.outcome ? CAPTION[fx.outcome] : "";
+    const caption = fxOutcomeCaption(fx.outcome, locale);
     if (caption) {
       if (fx.outcome === "miss" && !reduced) {
         nodes.push(<MissChip key="cap" at={first} text={caption} delay={plan.row.delay} />);
@@ -486,7 +481,7 @@ function EffectShape({ fx, sheet }: { fx: FxEvent; sheet: BeatSheet }) {
     }
     targets.forEach((tile, index) => {
       const outcome = outcomes[index];
-      const caption = outcome ? CAPTION[outcome] : "";
+      const caption = fxOutcomeCaption(outcome, locale);
       if (caption) {
         nodes.push(<Caption key={`c-${index}`} at={centre(tile)} text={caption} color="#d6cfc2" hold={rise} />);
       }
@@ -516,7 +511,7 @@ function EffectShape({ fx, sheet }: { fx: FxEvent; sheet: BeatSheet }) {
       <Caption
         key="cap"
         at={first}
-        text={fx.outcome === "save" ? `${fx.label ?? ""} ends` : fx.label ?? ""}
+        text={fx.outcome === "save" ? t("surfaceUi.fx.ends", { label: conditionLabel(fx.label ?? "", locale) }) : conditionLabel(fx.label ?? "", locale)}
         color={fx.outcome === "save" ? "#d6cfc2" : "#ff9d5c"}
         hold={sheet.status}
       />,
@@ -552,7 +547,7 @@ function EffectShape({ fx, sheet }: { fx: FxEvent; sheet: BeatSheet }) {
         />,
       );
     }
-    nodes.push(<Caption key="cap" at={first} text="slain" color="#a985d9" hold={sheet.status} />);
+    nodes.push(<Caption key="cap" at={first} text={t("surfaceUi.fx.death")} color="#a985d9" hold={sheet.status} />);
   } else if (fx.kind === "door" && first) {
     const tile = targets[0];
     if (!reduced && (fx.state === "open" || fx.state === "closed")) {
@@ -601,7 +596,7 @@ function EffectShape({ fx, sheet }: { fx: FxEvent; sheet: BeatSheet }) {
       <Caption
         key="cap"
         at={first}
-        text={fx.state === "found" ? "a door" : fx.state ?? ""}
+        text={fx.state ? t(`surfaceUi.fx.door.${fx.state}`) : ""}
         color="#d4ab3a"
         hold={sheet.impact + sheet.clear}
       />,

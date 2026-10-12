@@ -34,7 +34,7 @@ function ItemPicker({ sheet, picked, onChange, title }: { sheet: CharacterSheet;
                   className={cn("min-w-0 flex-1 truncate rounded border px-1.5 py-0.5 text-left", qty > 0 ? "border-amber-700 bg-amber-950/40 text-amber-100" : "border-stone-800 text-stone-400 hover:text-stone-200")}
                 >
                   {referenceDisplayName("equipment", item.name, locale)}
-                  {item.qty > 1 ? <span className="text-stone-500"> x{item.qty}</span> : null}
+                  {item.qty > 1 ? <span className="text-stone-500">{" "}{t("surfaceUi.qty", { count: item.qty })}</span> : null}
                 </button>
                 {qty > 0 && item.qty > 1 ? (
                   <NumberStepper

@@ -6,6 +6,7 @@ import { ServerAddressButton } from "@/components/ServerAddressButton";
 import { ConfirmHost } from "@/components/ui/ConfirmDialog";
 import { LocaleProvider } from "@/lib/i18n/LocaleProvider";
 import { getUiLocale, getLocaleResources } from "@/lib/i18n/server";
+import { createTranslator } from "@/lib/i18n/translator";
 import { LOCALE_DEFINITIONS } from "@/lib/i18n/locales";
 import "./globals.css";
 
@@ -40,16 +41,19 @@ const cinzel = localFont({
   weight: "400 900",
 });
 
-export const metadata: Metadata = {
-  title: "Open Dungeon Master",
-  description: "Multiplayer D&D 5e campaigns with an AI Dungeon Master.",
-  applicationName: "Open Dungeon Master",
-  appleWebApp: {
-    capable: true,
-    title: "Open DM",
-    statusBarStyle: "black-translucent",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getUiLocale();
+  return {
+    title: "Open Dungeon Master",
+    description: createTranslator(locale)("surfaceUi.siteDescription"),
+    applicationName: "Open Dungeon Master",
+    appleWebApp: {
+      capable: true,
+      title: "Open DM",
+      statusBarStyle: "black-translucent",
+    },
+  };
+}
 
 export const viewport: Viewport = {
   width: "device-width",

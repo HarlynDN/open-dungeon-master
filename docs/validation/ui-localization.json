@@ -44,7 +44,8 @@
     "d",
     "chrome://flags/#enable-web-bluetooth",
     "CC-BY-4.0",
-    "esc"
+    "esc",
+    "Open DM"
   ],
   "files": [
     {
@@ -78,7 +79,8 @@
     },
     {
       "path": "src/app/admin/AdminSettingsFields.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Shared setup controls: secret kept/unset/clear display localized; labels/hints/options remain caller-owned and their sections reviewed separately. SECRET_KEPT, blank password value, clear callback and persisted settings/API/provider identifiers unchanged; no secret exposed to translations."
     },
     {
       "path": "src/app/admin/BackendProbe.tsx",
@@ -135,7 +137,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/BoardFx.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "All native outcome captions, condition labels/end frame, death and five door states project at render time. Absent hit/fail captions stay absent, known conditions use the existing registry and unknown/authored labels stay raw. FxEvent, outcome enums, visibility/numeric projection, queue timing, delivery, particles/stings/haptics and animation IDs unchanged; locale switch does not plan/replay an event."
     },
     {
       "path": "src/app/campaigns/[campaignId]/BoardIntent.tsx",
@@ -741,7 +744,7 @@
     {
       "path": "src/app/campaigns/[campaignId]/ReportDialog.tsx",
       "state": "covered",
-      "review": "Owned report/block forms, reason labels and success/refusal templates localized. Stable reason enums and requests unchanged; success state holds a template key and original name to rerender on language switch. Only the typed DM generic label is localized; player names stay original."
+      "review": "Owned report/block forms, reason labels and success/refusal templates localized. Stable reason enums and requests unchanged; success state holds a template key and original name to rerender on language switch. Only the typed DM generic label is localized; player names stay original. Generic role labels remain metadata in target/completion state and re-project on locale switch; a proper name equal to a generic caption is preserved without the role flag. Network failure now settles as an error without changing report/block request bodies."
     },
     {
       "path": "src/app/campaigns/[campaignId]/RollCard.tsx",
@@ -769,7 +772,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/SessionChatColumn.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Shared children retain separate reviews; this owner passes raw history/content and canonical message IDs/take indices/edits/excerpts. Generic report labels carry role metadata and display at ReportDialog; four native action failures are bound to render-time composer/passage projections. Authored name/username is not inferred as a generic label. No translated content or locale field is posted to message routes. Five message action callbacks settle network failures through the original English error channel; a refused canon pin does not refresh facts as if the write succeeded."
     },
     {
       "path": "src/app/campaigns/[campaignId]/SessionGlyph.tsx",
@@ -846,7 +850,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/TerrainCanvas.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Shared renderer owns zoom in/out/fit captions only; localized with viewer locale. Authored map labels/props and original geometry/ground/tile IDs, bitmap paths, pointer/wheel/pinch behavior and canvas drawing are unchanged. Field labels/tools/helper rules owned by their separately tracked callers."
     },
     {
       "path": "src/app/campaigns/[campaignId]/TheatreInserts.tsx",
@@ -864,8 +869,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/TradeDialog.tsx",
-      "state": "pending",
-      "review": "Owned player-trade controls, registered equipment labels, quantity accessibility and native item/coin refusals localized. Chinese UI retains canonical item names and copper amounts in requests; frozen English render reviewed. Full magic-item/material names remain pending; custom names stay literal."
+      "state": "covered",
+      "review": "Trade form/display already uses sessionUi and equipment reference presentation; quantity glyph now preserves x in English and uses × in Chinese. Canonical item names, quantities, gold and target IDs, acceptance/request bodies and author names unchanged."
     },
     {
       "path": "src/app/campaigns/[campaignId]/UtilityCallStrip.tsx",
@@ -1390,7 +1395,8 @@
     },
     {
       "path": "src/app/layout.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Request-local description uses resolved account/cookie/browser uiLocale. Open Dungeon Master/Open DM are invariant app brands. Existing lang/direction, fonts, viewport, root UI resource scope and provider hierarchy unchanged; no URL language prefix."
     },
     {
       "path": "src/app/page.tsx",
@@ -1602,7 +1608,8 @@
     },
     {
       "path": "src/app/workshop/encounters/budget-bar.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Pure geometry exposes typed native threshold/ceiling identifiers and numeric percentages, with no user-authored prose. Actual EncounterRows displays tick titles via encounterBudgetTick(viewer locale); no translated enum or difficulty calculation. BUDGET_CEILING retains exact native ceiling ID."
     },
     {
       "path": "src/app/workshop/encounters/types.ts",
@@ -1679,7 +1686,8 @@
     },
     {
       "path": "src/app/workshop/maps/forge.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Map forge algorithms and private field/cave probes expose native theme/light/tile IDs and numeric preview facts; canonical cave probe is not a UI caption. Shared forge surfaces own their translated controls/hints and display adapters. No change to generation/seed/parser input or output and no claim that its natural-language classifier supports Chinese."
     },
     {
       "path": "src/app/workshop/maps/types.ts",
@@ -2077,7 +2085,8 @@
     },
     {
       "path": "src/components/ui/PromptDialog.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Default save/cancel chrome follows viewer locale; caller title/label/placeholder/custom submit text remains caller-owned. Trimming, empty acceptance, max length and onSubmit/onClose behavior unchanged. New openings still remount their form state. Composition-confirming Enter, including Safari keyCode 229, prevents implicit form submission; ordinary Enter is unchanged."
     },
     {
       "path": "src/components/ui/Reveal.tsx",

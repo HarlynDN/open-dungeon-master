@@ -1,5 +1,6 @@
 "use client";
 
+import { SURFACE_SOURCE } from "@/lib/i18n/surface-presentations";
 import { useMemo, useState, type ReactNode } from "react";
 import { cn } from "@/lib/cn";
 import { MessageList } from "@/app/campaigns/[campaignId]/MessageList";
@@ -107,18 +108,20 @@ export function SessionChatColumn({
         onDispute={narratedByAi && !steersStory ? (message) => setDisputeMessageId(message.id) : undefined}
         onReport={(message) => {
           if (message.authorType === "dm") {
-            setReportTarget({ messageId: message.id, authorType: "dm", label: "the Dungeon Master" });
+            setReportTarget({ messageId: message.id, authorType: "dm", label: SURFACE_SOURCE["journalUi.report.dmLabel"], genericLabel: "dm" });
             return;
           }
           const sheet =
             sheets.find((entry) => entry.id === message.characterId) ??
             sheets.find((entry) => entry.userId === message.userId);
           const member = state.members.find((entry) => entry.userId === message.userId);
+          const authorName = sheet?.name ?? member?.username;
           setReportTarget({
             messageId: message.id,
             userId: message.userId ?? undefined,
             authorType: "player",
-            label: sheet?.name ?? member?.username ?? "this player",
+            label: authorName ?? SURFACE_SOURCE["surfaceUi.thisPlayer"],
+            genericLabel: authorName == null ? "player" : undefined,
           });
         }}
         locations={locations}
@@ -136,16 +139,20 @@ export function SessionChatColumn({
         onContinueScene={
           steersStory
             ? async (message) => {
-                // No dialog: a continue takes no options, so the button is
-                // the whole interaction. The server publishes
-                // message_updated with the extended prose.
-                const response = await fetch(
-                  `/api/campaigns/${campaignId}/messages/${message.id}/continue`,
-                  { method: "POST" },
-                );
-                if (!response.ok) {
-                  const data = await response.json().catch(() => ({}));
-                  onError(data.error || "Could not continue the scene.");
+                try {
+                  // No dialog: a continue takes no options, so the button is
+                  // the whole interaction. The server publishes
+                  // message_updated with the extended prose.
+                  const response = await fetch(
+                    `/api/campaigns/${campaignId}/messages/${message.id}/continue`,
+                    { method: "POST" },
+                  );
+                  if (!response.ok) {
+                    const data = await response.json().catch(() => ({}));
+                    onError(data.error || SURFACE_SOURCE["surfaceUi.error.continue"]);
+                  }
+                } catch {
+                  onError(SURFACE_SOURCE["journalUi.error.network"]);
                 }
               }
             : undefined
@@ -153,19 +160,23 @@ export function SessionChatColumn({
         onSelectVariant={
           steersStory
             ? async (message, index) => {
-                // The server publishes message_updated, so every player's
-                // chat swaps to the picked take.
-                const response = await fetch(
-                  `/api/campaigns/${campaignId}/messages/${message.id}/renarrate`,
-                  {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ action: "select", index }),
-                  },
-                );
-                if (!response.ok) {
-                  const data = await response.json().catch(() => ({}));
-                  onError(data.error || "Could not switch takes.");
+                try {
+                  // The server publishes message_updated, so every player's
+                  // chat swaps to the picked take.
+                  const response = await fetch(
+                    `/api/campaigns/${campaignId}/messages/${message.id}/renarrate`,
+                    {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ action: "select", index }),
+                    },
+                  );
+                  if (!response.ok) {
+                    const data = await response.json().catch(() => ({}));
+                    onError(data.error || SURFACE_SOURCE["surfaceUi.error.switch"]);
+                  }
+                } catch {
+                  onError(SURFACE_SOURCE["journalUi.error.network"]);
                 }
               }
             : undefined
@@ -173,69 +184,86 @@ export function SessionChatColumn({
         onEditSave={
           steersStory
             ? async (message, content) => {
-                // Returns the server's refusal so the editor can show it
-                // inline; the roll-marker rule lives server-side.
-                const response = await fetch(
-                  `/api/campaigns/${campaignId}/messages/${message.id}/edit`,
-                  {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ content }),
-                  },
-                );
-                if (!response.ok) {
-                  const data = await response.json().catch(() => ({}));
-                  return data.error || "Could not save that edit.";
+                try {
+                  // Returns the server's refusal so the editor can show it
+                  // inline; the roll-marker rule lives server-side.
+                  const response = await fetch(
+                    `/api/campaigns/${campaignId}/messages/${message.id}/edit`,
+                    {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ content }),
+                    },
+                  );
+                  if (!response.ok) {
+                    const data = await response.json().catch(() => ({}));
+                    return data.error || SURFACE_SOURCE["surfaceUi.error.edit"];
+                  }
+                  return null;
+                } catch {
+                  return SURFACE_SOURCE["journalUi.error.network"];
                 }
-                return null;
               }
             : undefined
         }
         onPinMemory={async (message) => {
-          // NE-P's isFullMessage distinction: a selection is an excerpt, no
-          // selection pins the whole narration. Any member may pin, unlike
-          // onPinCanon (facts), which is lead-only canon.
-          const selection = window.getSelection()?.toString().trim() ?? "";
-          const isFullMessage = selection.length <= 3;
-          const response = await fetch(`/api/campaigns/${campaignId}/pins`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              messageId: message.id,
-              text: isFullMessage ? message.content : selection,
-              isFullMessage,
-            }),
-          });
-          if (!response.ok) {
-            const data = await response.json().catch(() => ({}));
-            onError(data.error || "Could not pin that.");
-            return;
+          try {
+            // NE-P's isFullMessage distinction: a selection is an excerpt, no
+            // selection pins the whole narration. Any member may pin, unlike
+            // onPinCanon (facts), which is lead-only canon.
+            const selection = window.getSelection()?.toString().trim() ?? "";
+            const isFullMessage = selection.length <= 3;
+            const response = await fetch(`/api/campaigns/${campaignId}/pins`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                messageId: message.id,
+                text: isFullMessage ? message.content : selection,
+                isFullMessage,
+              }),
+            });
+            if (!response.ok) {
+              const data = await response.json().catch(() => ({}));
+              onError(data.error || SURFACE_SOURCE["surfaceUi.error.pin"]);
+              return;
+            }
+            onPinned();
+          } catch {
+            onError(SURFACE_SOURCE["journalUi.error.network"]);
           }
-          onPinned();
         }}
         onPinCanon={
           steersStory
             ? async (message) => {
-                // The lead's selected text inside the message wins;
-                // otherwise the passage's opening is pinned.
-                const selection = window.getSelection()?.toString().trim() ?? "";
-                const excerpt = (selection.length > 3 ? selection : message.content)
-                  .trim()
-                  .slice(0, 300);
-                if (!excerpt) {
-                  return;
+                try {
+                  // The lead's selected text inside the message wins;
+                  // otherwise the passage's opening is pinned.
+                  const selection = window.getSelection()?.toString().trim() ?? "";
+                  const excerpt = (selection.length > 3 ? selection : message.content)
+                    .trim()
+                    .slice(0, 300);
+                  if (!excerpt) {
+                    return;
+                  }
+                  const response = await fetch(`/api/campaigns/${campaignId}/facts`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      category: "lore",
+                      subject: "",
+                      fact: excerpt,
+                      sourceSeq: message.seq,
+                    }),
+                  });
+                  if (!response.ok) {
+                    const data = await response.json().catch(() => ({}));
+                    onError(data.error || SURFACE_SOURCE["surfaceUi.error.pin"]);
+                    return;
+                  }
+                  await refreshFacts();
+                } catch {
+                  onError(SURFACE_SOURCE["journalUi.error.network"]);
                 }
-                await fetch(`/api/campaigns/${campaignId}/facts`, {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({
-                    category: "lore",
-                    subject: "",
-                    fact: excerpt,
-                    sourceSeq: message.seq,
-                  }),
-                });
-                await refreshFacts();
               }
             : undefined
         }

@@ -10,7 +10,8 @@
 
 export type Thresholds = { easy: number; medium: number; hard: number; deadly: number };
 
-export type BudgetTick = { label: string; percent: number };
+export const BUDGET_CEILING = "ceiling" as const;
+export type BudgetTick = { label: keyof Thresholds | typeof BUDGET_CEILING; percent: number };
 
 export type BudgetBarGeometry = {
   // How far along the strip the roster reaches, 0 to 100.
@@ -41,7 +42,7 @@ export function budgetBarGeometry(input: {
     }
   }
   if (input.ceiling > 0) {
-    ticks.push({ label: "ceiling", percent: percentOf(input.ceiling, scale) });
+    ticks.push({ label: BUDGET_CEILING, percent: percentOf(input.ceiling, scale) });
   }
   return {
     fillPercent: overflow ? 100 : percentOf(Math.max(0, input.adjustedXp), scale),
