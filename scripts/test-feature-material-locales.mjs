@@ -5,11 +5,28 @@ import {createHash} from 'node:crypto';
 import {openCombatRenderer} from './lib/combat-ui-fixtures.mjs';
 import {MESSAGE_CATALOGS} from '../src/lib/i18n/messages.ts';
 import {NATIVE_FEATURE_MATERIAL, NATIVE_FEAT_MATERIAL} from '../src/lib/i18n/feature-material-metadata.ts';
+import {SUBCLASS_FEATURE_MATERIAL} from '../src/lib/i18n/subclass-feature-metadata.ts';
 const {nativeFeatureName, nativeFeatureHelp, nativeFeatHelp, nativeFeatPrerequisite} = await import('../src/lib/i18n/feature-material-presentations.ts');
 import {normalizeRulesText} from '../src/lib/help/rules-text.ts';
 const {describeFeature} = await import('../src/lib/help/index.ts');
 const {authoredFeatDesc, featAbilityIncrease} = await import('../src/lib/srd/feat-effects.ts');
 const {featGrantSpec} = await import('../src/lib/srd/feat-grant-text.ts');
+
+// Verify this material batch against the actual authored source/resolver, not
+// a copied English golden. Unknown or changed prose must remain untouched.
+const authoredSubclasses = JSON.parse(fs.readFileSync(new URL('../src/lib/srd/subclasses.json', import.meta.url), 'utf8')).classes;
+for (const row of SUBCLASS_FEATURE_MATERIAL) {
+  const subclass = authoredSubclasses[row.classId].find(entry => entry.name === row.subclass);
+  const feature = Object.values(subclass.levels).flat().find(entry => entry.n === row.name);
+  assert.equal(MESSAGE_CATALOGS.en[row.nameKey], feature.n);
+  assert.equal(MESSAGE_CATALOGS.en[row.descriptionKey], feature.d);
+  assert.equal(describeFeature(row.classId, row.subclass, row.name), feature.d);
+  assert.equal(nativeFeatureName(row.name, 'zh-CN'), MESSAGE_CATALOGS['zh-CN'][row.nameKey]);
+  assert.equal(nativeFeatureHelp(row.classId, row.name, feature.d, 'en'), feature.d);
+  assert.equal(nativeFeatureHelp(row.classId, row.name, feature.d, 'zh-CN'), MESSAGE_CATALOGS['zh-CN'][row.descriptionKey]);
+  assert.equal(nativeFeatureHelp(row.classId, row.name, feature.d + ' Authored extension.', 'zh-CN'), feature.d + ' Authored extension.');
+  assert.equal(nativeFeatureHelp('authored-class', row.name, feature.d, 'zh-CN'), feature.d);
+}
 
 for (const row of NATIVE_FEATURE_MATERIAL) {
   const source = MESSAGE_CATALOGS.en[row.descriptionKey];
@@ -82,10 +99,15 @@ const calling = await openCombatRenderer({files: ['src/app/characters/builder/st
   '../OptionPicker': url('export default ()=>null;'),
   './ClassChoices': url('export const ClassChoices=()=>null;'),
 }});
-for (const [classId, featureName, chinese] of [['rogue', 'Sneak Attack', '偷袭'], ['fighter', 'Second Wind', '回气']]) {
+for (const [classId, featureName, chinese, subclass = ''] of [
+  ['rogue', 'Sneak Attack', '偷袭'], ['fighter', 'Second Wind', '回气'],
+  ['barbarian', 'Totem Spirit', '图腾精魂', 'Path of the Totem Warrior'],
+  ['fighter', 'War Magic', '战争魔法', 'Eldritch Knight'],
+  ['rogue', 'Psychic Blades', '心灵之刃', 'Soulknife'],
+]) {
   const feature = {name: featureName, source: 'class', level: 1};
   const klass = srdClassOptions().find(row => row.id === classId);
-  const props = {state: {subclass: '', gender: '', chosenSkills: [], racialSkills: [], backgroundSkills: []},
+  const props = {state: {subclass, gender: '', chosenSkills: [], racialSkills: [], backgroundSkills: []},
     derived: {effectiveLevel: 1, grantedFeatures: [feature]}, actions: {}, klass, pack: null,
     classes: [], classGroups: [], subclassGroups: [], offersSubclass: false, subclassLockedAt: null, chosenArchetype: null};
   const before = JSON.stringify(feature);
@@ -94,8 +116,8 @@ for (const [classId, featureName, chinese] of [['rogue', 'Sneak Attack', '偷袭
     assert(calling.render('CallingStep', props, locale).includes(name));
     const tooltip = calling.elements().find(row => row.props.label === name && row.props.meta);
     assert(tooltip);
-    assert.equal(tooltip.props.text, nativeFeatureHelp(classId, featureName, describeFeature(classId, '', featureName), locale));
-    assert(chips.render('FeatureChips', {features: [feature], classId}, locale).includes(name));
+    assert.equal(tooltip.props.text, nativeFeatureHelp(classId, featureName, describeFeature(classId, subclass, featureName), locale));
+    assert(chips.render('FeatureChips', {features: [feature], classId, subclass}, locale).includes(name));
     assert.equal(chips.elements().find(row => row.props.items).props.items[0].id, featureName);
   }
   const replacement = {features: [{from: featureName, name: 'Authored calling', blurb: 'Authored feature help.'}]};
@@ -109,3 +131,4 @@ for (const [classId, featureName, chinese] of [['rogue', 'Sneak Attack', '偷袭
 }
 console.log('PASS: 146 native feature and 54 feat summaries, class overrides, source-bound display, unchanged parser inputs, canonical chip/reference identities, lazy feat help and English render parity.');
 console.log('PASS: bilingual core features across actual creation and sheet components; localized tooltip props, canonical identities and explicit pack names/help preserved.');
+console.log(`PASS: ${SUBCLASS_FEATURE_MATERIAL.length} authored subclass source bindings and the actual creation/sheet projection for barbarian, fighter and rogue; changed or unrelated-class prose preserved.`);

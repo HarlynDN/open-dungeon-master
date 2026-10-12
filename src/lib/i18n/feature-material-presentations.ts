@@ -1,7 +1,8 @@
 import { NATIVE_FEATURE_MATERIAL, NATIVE_FEAT_MATERIAL } from "./feature-material-metadata.ts";
 import { CORE_FEATURE_NAMES, CORE_FEATURE_HELP } from "./core-feature-metadata.ts";
+import { SUBCLASS_FEATURE_MATERIAL } from "./subclass-feature-metadata.ts";
 import { classOptionFeatureName, classOptionHelp } from "./class-option-presentations.ts";
-import { catalogFor, createTranslator } from "./translator.ts";
+import { catalogFor, createTranslator, registeredMessageTemplate } from "./translator.ts";
 import { normalizeRulesText } from "../help/rules-text.ts";
 import type { AppLocale } from "./locales.ts";
 
@@ -13,6 +14,8 @@ export function nativeFeatureName(name: string, locale: AppLocale): string {
   if (option !== name) return option;
   const core = CORE_FEATURE_NAMES.find(entry => entry.name === name);
   if (core) return createTranslator(locale)(core.key);
+  const subclass = SUBCLASS_FEATURE_MATERIAL.find(entry => entry.name === name);
+  if (subclass) return createTranslator(locale)(subclass.nameKey);
   const row = NATIVE_FEATURE_MATERIAL.find(entry => entry.name === name);
   return row ? createTranslator(locale)(row.nameKey) : name;
 }
@@ -24,6 +27,9 @@ export function nativeFeatureHelp(classId: string, name: string, source: string 
   const core = CORE_FEATURE_HELP.find(entry => entry.classId === classId.trim().toLowerCase()
     && entry.name === name && entry.description === source);
   if (core) return createTranslator(locale)(core.descriptionKey);
+  const subclass = SUBCLASS_FEATURE_MATERIAL.find(entry => entry.classId === classId.trim().toLowerCase()
+    && entry.name === name && registeredMessageTemplate("en", entry.descriptionKey) === source);
+  if (subclass) return createTranslator(locale)(subclass.descriptionKey);
   const en = { ...catalogFor("en", "callingMaterial.nativeFeature."), ...catalogFor("en", "callingMaterial.featureOverride.") };
   const row = NATIVE_FEATURE_MATERIAL.find(entry => {
     if (entry.name !== name || ("classId" in entry && entry.classId !== classId.trim().toLowerCase())) return false;
