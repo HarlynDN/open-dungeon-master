@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { synthesizeSpeech, type TtsBackend } from "@/lib/tts-backend";
 import type { SpeechRequest } from "@/lib/tts-segments";
+import type { AppLocale } from "./i18n/locales.ts";
 
 // How a passage's speech requests are run (issue 97). A passage with voices
 // is many short requests instead of one long one, so three things keep it
@@ -63,13 +64,13 @@ async function withSlot<T>(limit: number, work: () => Promise<T>): Promise<T> {
 
 const CLIP_CACHE_BYTES = 16 * 1024 * 1024;
 
-function clipKey(request: SpeechRequest, backend: Pick<TtsBackend, "v1" | "model">): string {
+function clipKey(request: SpeechRequest, backend: TtsBackend): string {
   return createHash("sha1")
-    .update(`${backend.v1}\n${backend.model}\n${request.voice}\n${request.speed}\n${request.text}`)
+    .update(`${backend.v1}\n${backend.model}\n${request.voice}\n${request.speed}\n${request.text}${request.locale && request.locale !== "en" ? `\n${request.locale}\n${backend.provider}\n${backend.defaultVoice}` : ""}`)
     .digest("hex");
 }
 
-export type Synthesize = (text: string, voice: string, speed: number, backend: TtsBackend) => Promise<Buffer>;
+export type Synthesize = (text: string, voice: string, speed: number, backend: TtsBackend, locale?: AppLocale) => Promise<Buffer>;
 
 function renderClip(request: SpeechRequest, backend: TtsBackend, limit: number, synthesize: Synthesize): Promise<Buffer> {
   const clips = (globalThis.__odmSpeechClips ??= { bytes: 0, byKey: new Map(), inFlight: new Map() });
@@ -85,7 +86,7 @@ function renderClip(request: SpeechRequest, backend: TtsBackend, limit: number, 
   if (running) {
     return running;
   }
-  const render = withSlot(limit, () => synthesize(request.text, request.voice, request.speed, backend))
+  const render = withSlot(limit, () => synthesize(request.text, request.voice, request.speed, backend, request.locale))
     .then((audio) => {
       clips.byKey.set(key, audio);
       clips.bytes += audio.length;

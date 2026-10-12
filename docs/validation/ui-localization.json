@@ -211,7 +211,7 @@
     {
       "path": "src/app/campaigns/[campaignId]/CharacterVoices.tsx",
       "state": "covered",
-      "review": "Reviewed group labels, counts, speaker controls, accessibility and rerendered request errors; canonical roster keys, voice IDs and authored names preserved. Chinese single-narrator policy and TTS transport remain pending in unit 4."
+      "review": "Reviewed roster controls/errors and saved IDs/proper names. Single-narrator locale now avoids roster discovery/casting controls while preserving metadata and narrator pace; casting POST is guarded and narration planning ignores cast assignments. English retains its roster flow. Mock integration passed; real audio remains a separate deployment gate."
     },
     {
       "path": "src/app/campaigns/[campaignId]/CinematicParts.tsx",
@@ -1908,11 +1908,12 @@
     {
       "path": "src/components/VoicePicker.tsx",
       "state": "covered",
-      "review": "Reviewed own menu, custom-input accessibility, backend examples and source-matched stock display names. Server/custom labels, IDs, blends and language-neutral cached rows preserved; locale-aware TTS voice selection remains pending in unit 4."
+      "review": "Reviewed locale-scoped voice discovery/cache and stale responses, source-matched English/Chinese labels and custom-input IME controls. Campaign speech locale selects matching stock/default voice separately from viewer locale, while unknown custom strings and saved IDs remain native. Mock route/creator/control integration passed; actual installed voices/audio quality remain a deployment gate."
     },
     {
       "path": "src/components/VoicePreviewButton.tsx",
-      "state": "pending"
+      "state": "pending",
+      "review": "Campaign speech locale is separate from viewer locale; the request URL, sample and cache now carry locale. Stops on voice/locale replacement, guards stale callbacks and scopes failure data to the source URL; stable preview codes and native speech failure frames localize. API/queue mock checks passed, but real browser/native playback and interruption/retry acceptance remain pending."
     },
     {
       "path": "src/components/WorkshopHelpDialog.tsx",

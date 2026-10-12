@@ -11,6 +11,14 @@ export const TTS_VOICES = [
   { id: "bf_emma", label: "Emma (British female)" },
   { id: "bm_george", label: "George (British male)" },
   { id: "bm_fable", label: "Fable (British narrator)" },
+  { id: "zf_xiaobei", label: "Xiaobei (Mandarin female)" },
+  { id: "zf_xiaoni", label: "Xiaoni (Mandarin female)" },
+  { id: "zf_xiaoxiao", label: "Xiaoxiao (Mandarin female)" },
+  { id: "zf_xiaoyi", label: "Xiaoyi (Mandarin female)" },
+  { id: "zm_yunjian", label: "Yunjian (Mandarin male)" },
+  { id: "zm_yunxia", label: "Yunxia (Mandarin male)" },
+  { id: "zm_yunxi", label: "Yunxi (Mandarin male)" },
+  { id: "zm_yunyang", label: "Yunyang (Mandarin male)" },
 ] as const;
 
 export type TtsVoiceId = (typeof TTS_VOICES)[number]["id"];

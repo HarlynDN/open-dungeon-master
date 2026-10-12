@@ -4,6 +4,8 @@ import type { AppLocale } from "./locales.ts";
 // Stable auth response codes are additive: the English error remains
 // available to API consumers, while UI rendering survives locale changes.
 export const AUTH_ERROR_KEYS = {
+  tts_single_narrator: "voicePicker.singleNarrator",
+  tts_voice_unknown: "voicePicker.unknown", tts_disabled: "voicePicker.disabled", tts_preview_rate_limited: "voicePicker.rateLimited",
   invalid_input: "auth.invalidInput", username_rules: "auth.usernameRules", password_rules: "auth.passwordRules",
   rate_limited: "auth.rateLimited", wrong_credentials: "auth.wrongCredentials", username_taken: "auth.usernameTaken",
   signups_disabled: "auth.signupsDisabled", invite_required: "auth.inviteRequired", invite_invalid: "auth.inviteInvalid",

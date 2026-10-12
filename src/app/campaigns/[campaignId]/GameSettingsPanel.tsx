@@ -64,7 +64,7 @@ export function GameSettingsPanel({
 }) {
   const { locale, t } = useLocale();
   const [busy, setBusy] = useState(false);
-  const voices = useTtsVoices();
+  const voices = useTtsVoices(settings.locale);
   // Every control here renders the server's settings, so a refused PATCH
   // changes nothing on screen; without this line it changes nothing silently.
   const [error, setError] = useState<UiRequestError | null>(null);
@@ -148,7 +148,7 @@ export function GameSettingsPanel({
   const selectClass =
     "min-w-0 max-w-full";
 
-  const summary = gameSettingsSummary(settings, voiceLabel(voices, settings.ttsVoice, locale), selectedPack?.name, locale);
+  const summary = gameSettingsSummary(settings, voiceLabel(voices, settings.ttsVoice, locale, settings.locale), selectedPack?.name, locale);
   const livingInfo = tableInfo("livingWorld", locale);
 
   if (!steersStory) {
@@ -357,12 +357,13 @@ export function GameSettingsPanel({
           {settings.ttsEnabled ? (
             <>
               <VoicePicker
+                speechLocale={settings.locale}
                 size="sm"
                 label={t("panel.narrationVoice")}
                 value={settings.ttsVoice}
                 onChange={(ttsVoice) => patch({ ttsVoice })}
               />
-              <VoicePreviewButton voice={settings.ttsVoice} />
+              <VoicePreviewButton voice={settings.ttsVoice} speechLocale={settings.locale} />
             </>
           ) : null}
         </div>

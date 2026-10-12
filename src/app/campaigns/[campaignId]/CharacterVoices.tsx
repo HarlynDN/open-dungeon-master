@@ -11,6 +11,7 @@ import { cn } from "@/lib/cn";
 import type { GameSettings } from "@/lib/schemas/game-settings";
 import { ui } from "@/lib/ui";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { LOCALE_DEFINITIONS } from "@/lib/i18n/locales";
 import { requestErrorText, type ApiUiError, type UiRequestError } from "@/lib/i18n/api-errors";
 import type { MessageKey } from "@/lib/i18n/translator";
 import { PanelError, SettingToggle } from "./PanelKit";
@@ -93,6 +94,7 @@ export function CharacterVoices({
   patch?: (update: Partial<GameSettings>) => void;
 }) {
   const { locale, t } = useLocale();
+  const singleNarrator = LOCALE_DEFINITIONS[settings.locale].tts.singleNarrator;
 
   const [roster, setRoster] = useState<Entry[] | null>(null);
   const [open, setOpen] = useState(false);
@@ -124,6 +126,7 @@ export function CharacterVoices({
   // Asked when the table is shown, and again whenever it is opened: someone
   // new may have walked on since, or been cast by the passage just read.
   useEffect(() => {
+    if (singleNarrator) return;
     let live = true;
     void fetch(url, { cache: "no-store" })
       .then((response) => (response.ok ? response.json() : null))
@@ -136,7 +139,7 @@ export function CharacterVoices({
     return () => {
       live = false;
     };
-  }, [url, open]);
+  }, [url, open, singleNarrator]);
 
   async function send(method: "PUT" | "POST", body?: unknown) {
     setError(null);
@@ -170,6 +173,12 @@ export function CharacterVoices({
     }
   }
 
+  if (singleNarrator) {
+    return <div className="reveal space-y-2 text-xs text-stone-400">
+      <p>{t("voicePicker.singleNarrator")}</p>
+      {steersStory ? <span className="flex items-center gap-2">{t("voicePicker.narratorPace")}<span className="w-24"><Slider label={t("voicePicker.narratorPace")} min={0.7} max={1.4} step={0.05} value={pace} onChange={speed => { setPace(speed); later("narrator", () => patch?.({ ttsSpeed: speed })); }} bubble={speed => speed.toFixed(2)} /></span><span>{pace.toFixed(2)}</span></span> : null}
+    </div>;
+  }
   if (!steersStory) {
     // A player's own characters, and nothing when they have none here.
     const mine = (roster ?? []).filter((entry) => entry.mine);

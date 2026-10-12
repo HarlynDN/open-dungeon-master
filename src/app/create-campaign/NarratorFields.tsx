@@ -1,6 +1,7 @@
 "use client";
 
 import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { LOCALE_DEFINITIONS } from "@/lib/i18n/locales";
 import { cn } from "@/lib/cn";
 import { Select } from "@/components/ui/Select";
 import { Slider } from "@/components/ui/Slider";
@@ -74,12 +75,13 @@ export function NarratorFields({
           <FieldLabel>{t("table.narratorVoice")}</FieldLabel>
           <div className="flex flex-wrap items-center gap-2">
             <VoicePicker
+              speechLocale={draft.locale}
               value={draft.ttsVoice}
               onChange={(ttsVoice) => patch({ ttsVoice })}
               label={t("table.narratorVoice")}
               className="grow"
             />
-            <VoicePreviewButton voice={draft.ttsVoice} />
+            <VoicePreviewButton voice={draft.ttsVoice} speechLocale={draft.locale} />
             <span className="flex items-center gap-2 text-xs text-stone-400">
               {t("table.pace")}
               <span className="w-28">
@@ -99,7 +101,7 @@ export function NarratorFields({
           {/* Character voices (issue 97): who reads whose lines is chosen at
               the table, once there are characters to choose for. This is only
               whether the table has to. */}
-          <div className="mt-3 flex items-start gap-2.5">
+          {LOCALE_DEFINITIONS[draft.locale].tts.singleNarrator ? <p className="mt-3 text-xs text-stone-400">{t("voicePicker.singleNarrator")}</p> : <div className="mt-3 flex items-start gap-2.5">
             <Switch
               on={draft.ttsAutoCast}
               onChange={(ttsAutoCast) => patch({ ttsAutoCast })}
@@ -114,7 +116,7 @@ export function NarratorFields({
                   : t("table.autoCast.offHint")}
               </span>
             </span>
-          </div>
+          </div>}
         </div>
       ) : null}
     </div>

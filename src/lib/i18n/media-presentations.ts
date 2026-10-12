@@ -8,6 +8,8 @@ const VOICE_KEYS: Record<TtsVoiceId, MessageKey> = {
   af_heart: "voicePicker.af_heart", af_bella: "voicePicker.af_bella", af_aoede: "voicePicker.af_aoede", af_nicole: "voicePicker.af_nicole",
   am_michael: "voicePicker.am_michael", am_fenrir: "voicePicker.am_fenrir", am_puck: "voicePicker.am_puck",
   bf_emma: "voicePicker.bf_emma", bm_george: "voicePicker.bm_george", bm_fable: "voicePicker.bm_fable",
+  zf_xiaobei: "voicePicker.zf_xiaobei", zf_xiaoni: "voicePicker.zf_xiaoni", zf_xiaoxiao: "voicePicker.zf_xiaoxiao", zf_xiaoyi: "voicePicker.zf_xiaoyi",
+  zm_yunjian: "voicePicker.zm_yunjian", zm_yunxia: "voicePicker.zm_yunxia", zm_yunxi: "voicePicker.zm_yunxi", zm_yunyang: "voicePicker.zm_yunyang",
 };
 
 export function voiceDisplayLabel(voice: { id: string; label: string }, locale: AppLocale = DEFAULT_LOCALE) {

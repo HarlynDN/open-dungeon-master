@@ -14,6 +14,8 @@ import { guessGender, type VoiceGender } from "@/lib/tts-cast";
 import { closeLiveNarration, openLiveNarration, pushLiveNarration, renderSpeech } from "@/lib/tts-render";
 import { castUnvoiced, voiceRoster, type RosterEntry } from "@/lib/tts-roster";
 import { baseCreatureName, planSpeech, speechRequests, type CastVoice } from "@/lib/tts-segments";
+import { DEFAULT_LOCALE, LOCALE_DEFINITIONS, normalizeLocale, type AppLocale } from "./i18n/locales.ts";
+import { localeNarratorVoice } from "./tts-locale.ts";
 
 // Narration TTS on the server's speech backend (src/lib/tts-backend.ts: the
 // local Kokoro-FastAPI service on :8880 unless the admin chose another).
@@ -52,7 +54,7 @@ export function narrationAudioUrl(campaignId: string, messageId: string, version
 }
 
 // What a passage is read with: the campaign's narration settings.
-export type NarrationSettings = { ttsVoice: string; ttsSpeed?: number; ttsAutoCast?: boolean };
+export type NarrationSettings = { ttsVoice: string; ttsSpeed?: number; ttsAutoCast?: boolean; locale?: AppLocale };
 
 function castOf(roster: RosterEntry[]): CastVoice[] {
   return roster.map((entry) => ({
@@ -119,6 +121,7 @@ export function enqueueNarrationAudio(
   speaker: Speaker | null = null,
 ) {
   const settings: NarrationSettings = typeof narration === "string" ? { ttsVoice: narration } : narration;
+  const locale = normalizeLocale(settings.locale);
   const speech = stripForSpeech(text);
   // Narration switched off server-wide is not a failure: nothing is asked
   // for, so nothing is announced.
@@ -141,11 +144,11 @@ export function enqueueNarrationAudio(
       try {
         let roster: RosterEntry[] = [];
         try {
-          roster = voiceRoster(campaignId);
+          if (!LOCALE_DEFINITIONS[locale].tts.singleNarrator) roster = voiceRoster(campaignId);
         } catch {
           // No readable roster: the narrator reads it all.
         }
-        if (settings.ttsAutoCast && roster.length) {
+        if (!LOCALE_DEFINITIONS[locale].tts.singleNarrator && settings.ttsAutoCast && roster.length) {
           const { keys, hints } = unvoicedSpeakers(speech, roster, speaker);
           if (keys.size) {
             await castUnvoiced(campaignId, roster, settings.ttsVoice, { only: keys, hints, backend });
@@ -159,10 +162,11 @@ export function enqueueNarrationAudio(
         // Prose in the narrator's voice, each attributed line in its
         // speaker's own, concatenated into the one file the transcript keys.
         const plan = planSpeech(speech, {
-          narratorVoice: settings.ttsVoice,
+          narratorVoice: localeNarratorVoice(settings.ttsVoice, locale, backend.defaultVoice),
           narratorSpeed: settings.ttsSpeed,
           cast: castOf(roster),
           speaker,
+          locale,
         });
         clips = await renderSpeech(speechRequests(plan), backend, (audio, index) => {
           pushLiveNarration(live, audio);
@@ -264,7 +268,7 @@ export function listNarrationAudio(campaignId: string): Record<string, string> {
 // purpose, so a preview never waits behind narration either; Kokoro runs on
 // CPU here and does not contend with the GPU jobs that queue exists to
 // serialize.
-export const PREVIEW_LINE = "The tavern door creaks open. Roll for initiative, adventurer.";
+export const PREVIEW_LINE = LOCALE_DEFINITIONS[DEFAULT_LOCALE].tts.previewText;
 
 const previewRenders = new Map<string, Promise<string>>();
 
@@ -277,25 +281,26 @@ export function isPreviewableVoice(voice: string): boolean {
 // The clip is named for the server, model and voice together, so a clip from
 // one server is never played as the sample of another's voice, and a custom
 // voice string never becomes a file name.
-export function voicePreviewName(voice: string, backend: Pick<TtsBackend, "v1" | "model">): string {
-  return `${createHash("sha256").update(`${backend.v1}\n${backend.model}\n${voice}`).digest("hex").slice(0, 32)}.mp3`;
+export function voicePreviewName(voice: string, backend: Pick<TtsBackend, "v1" | "model"> & Partial<Pick<TtsBackend, "defaultVoice">>, locale: AppLocale = DEFAULT_LOCALE): string {
+  const suffix = locale === DEFAULT_LOCALE ? "" : `\n${locale}\n${LOCALE_DEFINITIONS[locale].tts.previewText}\n${localeNarratorVoice(voice, locale, backend.defaultVoice)}`;
+  return `${createHash("sha256").update(`${backend.v1}\n${backend.model}\n${voice}${suffix}`).digest("hex").slice(0, 32)}.mp3`;
 }
 
 export function voicePreviewPath(name: string): string {
   return path.join(process.cwd(), "public", "generated-audio", "previews", name);
 }
 
-export function voicePreviewCached(voice: string): boolean {
-  return existsSync(voicePreviewPath(voicePreviewName(voice, ttsBackend())));
+export function voicePreviewCached(voice: string, locale: AppLocale = DEFAULT_LOCALE): boolean {
+  return existsSync(voicePreviewPath(voicePreviewName(voice, ttsBackend(), locale)));
 }
 
 // Resolves to the clip's file name under generated-audio/previews.
-export function renderVoicePreview(voice: string): Promise<string> {
+export function renderVoicePreview(voice: string, locale: AppLocale = DEFAULT_LOCALE): Promise<string> {
   if (!isPreviewableVoice(voice)) {
     return Promise.reject(new Error(`Unknown voice: ${voice}`));
   }
   const backend = ttsBackend();
-  const name = voicePreviewName(voice, backend);
+  const name = voicePreviewName(voice, backend, locale);
   const file = voicePreviewPath(name);
   if (existsSync(file)) {
     return Promise.resolve(name);
@@ -305,7 +310,7 @@ export function renderVoicePreview(voice: string): Promise<string> {
     return inFlight;
   }
   const render = (async () => {
-    const audio = await synthesizeSpeech(PREVIEW_LINE, voice, 1, backend);
+    const audio = await synthesizeSpeech(LOCALE_DEFINITIONS[locale].tts.previewText, voice, 1, backend, locale);
     mkdirSync(path.dirname(file), { recursive: true });
     writeFileSync(file, audio);
     return name;

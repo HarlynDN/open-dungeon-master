@@ -1,6 +1,7 @@
 import { currentUser, unauthorized } from "@/lib/auth";
 import { serveGeneratedFile } from "@/lib/serve-file";
 import { isPreviewableVoice, renderVoicePreview, voicePreviewCached } from "@/lib/tts";
+import { normalizeLocale } from "@/lib/i18n/locales";
 import { describeSpeechFailure, ttsBackend } from "@/lib/tts-backend";
 
 export const runtime = "nodejs";
@@ -35,20 +36,21 @@ export async function GET(request: Request) {
   }
 
   const voice = (new URL(request.url).searchParams.get("voice") ?? "").trim();
+  const locale = normalizeLocale(new URL(request.url).searchParams.get("locale"));
   if (!isPreviewableVoice(voice)) {
-    return Response.json({ error: "Unknown voice." }, { status: 400 });
+    return Response.json({ error: "Unknown voice.", errorCode: "tts_voice_unknown" }, { status: 400 });
   }
   const backend = ttsBackend();
   if (backend.provider === "off") {
-    return Response.json({ error: "Narration is switched off on this server." }, { status: 409 });
+    return Response.json({ error: "Narration is switched off on this server.", errorCode: "tts_disabled" }, { status: 409 });
   }
-  if (!voicePreviewCached(voice) && !mayRender(user.id)) {
-    return Response.json({ error: "That is a lot of new voices at once. Try again in a few minutes." }, { status: 429 });
+  if (!voicePreviewCached(voice, locale) && !mayRender(user.id)) {
+    return Response.json({ error: "That is a lot of new voices at once. Try again in a few minutes.", errorCode: "tts_preview_rate_limited" }, { status: 429 });
   }
 
   let name: string;
   try {
-    name = await renderVoicePreview(voice);
+    name = await renderVoicePreview(voice, locale);
   } catch (error) {
     console.error(`[tts] voice preview "${voice}" failed:`, error);
     return Response.json({ error: describeSpeechFailure(error, backend) }, { status: 502 });

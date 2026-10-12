@@ -4,6 +4,7 @@ import { publishCast } from "@/lib/dm/cast";
 import { normalizeNpcVoice } from "@/lib/npcs/forge";
 import { castUnvoiced, setRosterVoice, voiceRoster, type RosterEntry } from "@/lib/tts-roster";
 import { baseCreatureName } from "@/lib/tts-segments";
+import { LOCALE_DEFINITIONS } from "@/lib/i18n/locales";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -90,6 +91,9 @@ export async function POST(_request: Request, { params }: { params: Promise<{ ca
   }
   if (!runsTheTable(context)) {
     return Response.json({ error: "Only the Dungeon Master can cast the table." }, { status: 403 });
+  }
+  if (LOCALE_DEFINITIONS[context.campaign.gameSettings.locale].tts.singleNarrator) {
+    return Response.json({ error: "Character voice casting is not enabled for this campaign locale.", errorCode: "tts_single_narrator" }, { status: 409 });
   }
   const cast = await castUnvoiced(campaignId, voiceRoster(campaignId), context.campaign.gameSettings.ttsVoice);
   return Response.json({ roster: visibleRoster(context), cast });

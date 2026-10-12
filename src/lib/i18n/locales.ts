@@ -15,7 +15,7 @@ export type LocaleDefinition = {
   // UTF-16 length keeps the legacy English selection rule. CJK prose can
   // carry a complete name/term in one or two characters.
   narrationSelectionMinLength: number;
-  tts: { langCode: string; defaultVoice: string; singleNarrator: boolean };
+  tts: { langCode: string; defaultVoice: string; singleNarrator: boolean; voicePrefixes: readonly string[]; firstChunkChars: number; chunkChars: number; previewText: string };
 };
 
 export const LOCALE_DEFINITIONS: Record<AppLocale, LocaleDefinition> = {
@@ -26,7 +26,7 @@ export const LOCALE_DEFINITIONS: Record<AppLocale, LocaleDefinition> = {
     segmentationLocale: "en",
     browserLanguages: ["en"],
     narrationSelectionMinLength: 4,
-    tts: { langCode: "a", defaultVoice: "af_heart", singleNarrator: false },
+    tts: { langCode: "a", defaultVoice: "af_heart", singleNarrator: false, voicePrefixes: ["af_", "am_", "bf_", "bm_"], firstChunkChars: 320, chunkChars: 1200, previewText: "The tavern door creaks open. Roll for initiative, adventurer." },
   },
   "zh-CN": {
     nativeName: "简体中文",
@@ -35,7 +35,7 @@ export const LOCALE_DEFINITIONS: Record<AppLocale, LocaleDefinition> = {
     segmentationLocale: "zh-CN",
     browserLanguages: ["zh"],
     narrationSelectionMinLength: 1,
-    tts: { langCode: "z", defaultVoice: "zf_xiaobei", singleNarrator: true },
+    tts: { langCode: "z", defaultVoice: "zf_xiaobei", singleNarrator: true, voicePrefixes: ["zf_", "zm_"], firstChunkChars: 80, chunkChars: 160, previewText: "酒馆的木门缓缓打开。冒险者，请掷先攻。你恢复了七点生命值，还有两个一环法术位。" },
   },
 };
 

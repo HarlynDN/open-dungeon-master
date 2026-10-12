@@ -1,4 +1,6 @@
 import { attributeSpeech, type Speaker } from "@/lib/dm/speech";
+import { DEFAULT_LOCALE, LOCALE_DEFINITIONS, type AppLocale } from "./i18n/locales.ts";
+import { localeNarratorVoice } from "./tts-locale.ts";
 
 // Which voice reads which part of a message (docs/vtt-parity-
 // implementation-plan.md section 8.2, issue 97). Prose is the narrator's; a
@@ -10,7 +12,7 @@ import { attributeSpeech, type Speaker } from "@/lib/dm/speech";
 // `aliases` are other names the prose may use for them.
 export type CastVoice = { name: string; voiceId: string; speed: number; aliases?: string[] };
 
-export type SpeechPlan = Array<{ text: string; voice: string; speed: number; speaker: string | null }>;
+export type SpeechPlan = Array<{ text: string; voice: string; speed: number; speaker: string | null; locale?: AppLocale }>;
 
 export const SPEED_MIN = 0.7;
 export const SPEED_MAX = 1.4;
@@ -31,8 +33,13 @@ export function baseCreatureName(name: string): string {
 
 export function planSpeech(
   text: string,
-  options: { narratorVoice: string; narratorSpeed?: number; cast: CastVoice[]; speaker?: Speaker | null },
+  options: { narratorVoice: string; narratorSpeed?: number; cast: CastVoice[]; speaker?: Speaker | null; locale?: AppLocale },
 ): SpeechPlan {
+  const locale = options.locale ?? DEFAULT_LOCALE;
+  if (LOCALE_DEFINITIONS[locale].tts.singleNarrator) {
+    const flat = text.replace(/\s+/g, " ").trim();
+    return flat ? [{ text: flat, voice: localeNarratorVoice(options.narratorVoice, locale), speed: clampSpeed(options.narratorSpeed ?? 1), speaker: null, locale }] : [];
+  }
   const byName = new Map<string, CastVoice>();
   for (const entry of options.cast) {
     for (const name of [entry.name, ...(entry.aliases ?? [])]) {
@@ -52,7 +59,7 @@ export function planSpeech(
   // Spoken outright as one person: the whole message in their voice.
   if (options.speaker && options.speaker.kind !== "narrator") {
     const chosen = voiceFor(options.speaker.name);
-    return flat(text) ? [{ text: flat(text), ...chosen, speaker: options.speaker.name }] : [];
+    return flat(text) ? [{ text: flat(text), ...chosen, speaker: options.speaker.name, ...(locale !== DEFAULT_LOCALE ? { locale } : {}) }] : [];
   }
   // Lines are read with the whole cast, as the transcript reads them, so a
   // voiceless speaker's line is never handed to the voiced name beside it;
@@ -81,17 +88,35 @@ export function planSpeech(
       }
     }
   }
-  return plan;
+  return locale === DEFAULT_LOCALE ? plan : plan.map(part => ({ ...part, locale }));
 }
 
 // Text cut for the speech server. A long run is split at sentence ends so
 // no request is unreasonably large, and the passage's very first request is
 // kept short on purpose: it is the one the table waits on before a word is
 // heard, and a short one comes back in well under a second.
-export const FIRST_CHUNK_CHARS = 320;
-export const CHUNK_CHARS = 1_200;
+export const FIRST_CHUNK_CHARS = LOCALE_DEFINITIONS[DEFAULT_LOCALE].tts.firstChunkChars;
+export const CHUNK_CHARS = LOCALE_DEFINITIONS[DEFAULT_LOCALE].tts.chunkChars;
 
-export function chunkSentences(text: string, firstLimit = CHUNK_CHARS, limit = CHUNK_CHARS): string[] {
+export function chunkSentences(text: string, firstLimit = CHUNK_CHARS, limit = CHUNK_CHARS, locale: AppLocale = DEFAULT_LOCALE): string[] {
+  if (locale !== DEFAULT_LOCALE) {
+    const sentences = text.match(/[^.!?。！？；;…]+[.!?。！？；;…]+["')\]”’」』】）》]*\s*|.+$/gu) ?? [text];
+    const chunks: string[] = [];
+    let current = "";
+    for (const sentence of sentences) {
+      const chars = Array.from(sentence);
+      if (current && Array.from(current).length + chars.length > (chunks.length ? limit : firstLimit)) {
+        chunks.push(current.trim()); current = "";
+      }
+      for (const char of chars) {
+        const cap = Math.max(1, chunks.length ? limit : firstLimit);
+        if (Array.from(current).length >= cap) { chunks.push(current.trim()); current = ""; }
+        current += char;
+      }
+    }
+    if (current.trim()) chunks.push(current.trim());
+    return chunks.filter(Boolean);
+  }
   if (text.length <= firstLimit) {
     return [text];
   }
@@ -112,15 +137,16 @@ export function chunkSentences(text: string, firstLimit = CHUNK_CHARS, limit = C
   return chunks;
 }
 
-export type SpeechRequest = { text: string; voice: string; speed: number };
+export type SpeechRequest = { text: string; voice: string; speed: number; locale?: AppLocale };
 
 // The plan as the requests actually sent, in the order they are heard.
 export function speechRequests(plan: SpeechPlan): SpeechRequest[] {
   const requests: SpeechRequest[] = [];
   for (const part of plan) {
-    for (const text of chunkSentences(part.text, requests.length ? CHUNK_CHARS : FIRST_CHUNK_CHARS)) {
+    const locale = part.locale ?? DEFAULT_LOCALE, limits = LOCALE_DEFINITIONS[locale].tts;
+    for (const text of chunkSentences(part.text, requests.length ? limits.chunkChars : limits.firstChunkChars, limits.chunkChars, locale)) {
       if (/[\p{L}\p{N}]/u.test(text)) {
-        requests.push({ text, voice: part.voice, speed: part.speed });
+        requests.push({ text, voice: part.voice, speed: part.speed, ...(part.locale ? { locale: part.locale } : {}) });
       }
     }
   }

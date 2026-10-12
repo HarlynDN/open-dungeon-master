@@ -1,6 +1,8 @@
 import { configValue, getGlobalConfig } from "@/lib/app-config";
 import { openAiSpeechConfig } from "@/lib/openai-images";
 import { TTS_VOICES } from "@/lib/tts-voices";
+import { DEFAULT_LOCALE, LOCALE_DEFINITIONS, type AppLocale } from "./i18n/locales.ts";
+import { localeNarratorVoice, voiceSupportsLocale } from "./tts-locale.ts";
 
 // Where narration is rendered (issue 89). One setting names the kind of
 // speech server, the way the text model's does, and everything else follows
@@ -241,14 +243,14 @@ export function upstreamDetail(body: string): string {
   return text.replace(/\s+/g, " ").trim().slice(0, 160);
 }
 
-async function requestSpeech(backend: TtsBackend, input: string, voice: string, speed: number): Promise<Buffer> {
+async function requestSpeech(backend: TtsBackend, input: string, voice: string, speed: number, locale: AppLocale): Promise<Buffer> {
   const response = await fetch(`${backend.v1}/audio/speech`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       ...(backend.apiKey ? { Authorization: `Bearer ${backend.apiKey}` } : {}),
     },
-    body: JSON.stringify({ model: backend.model, voice, input, response_format: "mp3", ...(speed !== 1 ? { speed } : {}) }),
+    body: JSON.stringify({ model: backend.model, voice, input, response_format: "mp3", ...(speed !== 1 ? { speed } : {}), ...(backend.provider === "kokoro" && locale !== DEFAULT_LOCALE ? { lang_code: LOCALE_DEFINITIONS[locale].tts.langCode } : {}) }),
     signal: AbortSignal.timeout(180_000),
   });
   if (!response.ok) {
@@ -262,7 +264,7 @@ async function requestSpeech(backend: TtsBackend, input: string, voice: string, 
 }
 
 // One clip of speech from the configured server.
-export async function synthesizeSpeech(input: string, voice: string, speed = 1, backend: TtsBackend = ttsBackend()): Promise<Buffer> {
+export async function synthesizeSpeech(input: string, voice: string, speed = 1, backend: TtsBackend = ttsBackend(), locale: AppLocale = DEFAULT_LOCALE): Promise<Buffer> {
   if (backend.provider === "off") {
     throw new Error("Narration is switched off on this server.");
   }
@@ -270,7 +272,12 @@ export async function synthesizeSpeech(input: string, voice: string, speed = 1, 
   // A local server with no default named falls back to the first voice it
   // lists, as the admin form says it will.
   const defaultVoice = backend.defaultVoice || voices[0] || "";
-  return requestSpeech(backend, input, effectiveVoice(voice, { ...backend, defaultVoice }, voices), speed);
+  const asked = localeNarratorVoice(voice, locale, defaultVoice);
+  return requestSpeech(backend, input, effectiveVoice(asked, { ...backend, defaultVoice }, voices), speed, locale);
+}
+
+export function voicesForLocale(ids: string[], locale: AppLocale): string[] {
+  return ids.filter(id => voiceSupportsLocale(id, locale));
 }
 
 type VoiceCacheEntry = { at: number; ids: string[]; listed: boolean };

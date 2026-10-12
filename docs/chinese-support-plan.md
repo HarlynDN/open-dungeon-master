@@ -32,11 +32,11 @@ flow remains incomplete; the review-repair checkpoint is a separate scoped task.
 | Locale foundation | Registry, persistence, browser fallback, typed complete catalogs, model locale policy, classified token proxy, chapter budget, CJK retrieval, IME protection | Real prompt-usage calibration; keep legacy campaign/history regressions |
 | DM safety | Per-event engine conclusions with English/Chinese renderers; AI prose separated; one text-only correction and safe fallback; shared localized enemy names and held-resource names/IDs; scoped resource aliases and ambiguity retries; real Codex combat/resource acceptance | Untracked feature/reaction options and broader spell/condition/pack coverage; conservative regex coverage is not full language understanding |
 | Embeddings | Original English deployment default retained; explicit multilingual opt-in; fixed bilingual calibration/holdout and hard-negative policy | Broader pack quality; opt-in affects English campaigns and rebuilds indexes |
-| UI | **377/440** covered files, **0** pending literal sites, **15711** message keys; scoped AST gate; earlier play/session surfaces plus hand labels/targets/area selection, campaign-locale action sentences, native previews, basic/reaction rules, common casting refusals, spell selectors, all 113 owned mechanic notes, 103 native technique and 23 maneuver labels, attack/bonus-route and material/ritual refusals, built-in form attack names and verified current-actor labels, correction/multi-picker chrome, native downtime facts and inventory/vitals approval/player-trade controls, guided progression chrome, rest/loot/travel moments and all native option summaries, owned generic feature/feat summaries, feat choice controls, campaign/map entry notices the complete app help walkthrough story/chronicle/arc controls, NPC roster review, campaign model controls market/shelf/trade, party-lead, quest-log/faction controls plus facts, pinned memories, context-trace presentation and passage edit/reroll/action controls and character/companion entry and private-chat/media presentation and audit/timeline controls and dice tray/source controls and board movement/camera/order/area/target/drawing and DM placement/measurement controls | 63 zero-literal owners still require dynamic composition/source-ownership review; locale-sensitive selection thresholds and backend/native messages remain audit items; file fraction is not overall completion or an effort estimate |
+| UI | **377/440** covered files, **0** pending literal sites, **15724** message keys; scoped AST gate; earlier play/session surfaces plus hand labels/targets/area selection, campaign-locale action sentences, native previews, basic/reaction rules, common casting refusals, spell selectors, all 113 owned mechanic notes, 103 native technique and 23 maneuver labels, attack/bonus-route and material/ritual refusals, built-in form attack names and verified current-actor labels, correction/multi-picker chrome, native downtime facts and inventory/vitals approval/player-trade controls, guided progression chrome, rest/loot/travel moments and all native option summaries, owned generic feature/feat summaries, feat choice controls, campaign/map entry notices the complete app help walkthrough story/chronicle/arc controls, NPC roster review, campaign model controls market/shelf/trade, party-lead, quest-log/faction controls plus facts, pinned memories, context-trace presentation and passage edit/reroll/action controls and character/companion entry and private-chat/media presentation and audit/timeline controls and dice tray/source controls and board movement/camera/order/area/target/drawing and DM placement/measurement controls | 63 zero-literal owners still require dynamic composition/source-ownership review; locale-sensitive selection thresholds and backend/native messages remain audit items; file fraction is not overall completion or an effort estimate |
 | Character creation/material | Identity, ancestry, class introductions, ability allocation, gear, spell book/preparation and finish preview; 517 spell and 228 equipment names plus all 239 SRD magic-item titles and 52 exact variants; 257-entry contextual terminology policy and lint gate; 415/415 static registered resource names and guidance shared with DM references; 135/135 bundled option names/descriptions plus all 20 nonempty requirement frames; 146 shared/class-specific feature summaries, 54 native feat summaries and owned feat choice controls; four native pregen card summaries and backstories; original-source review records | Remaining specific/themed feature and magic-item material; dynamic free-cast resources and user-authored/pack text remain outside the static resource review |
 | Player system logs | Structured rule diagnostics, engine-generated combat conclusions and structured audit/timeline presentation retain English protocol semantics with localized display | Typed party-item/coin/banked-XP logs now persist campaign-locale text and original facts; other player-visible log templates remain pending; model-facing English tool results remain independent |
 | Resource delivery | UI/content/help scopes; selected-locale help loads independently on open, with retry; character/campaign boundaries; generated resources checked by lint; production Turbopack build and anonymous bilingual browser switch/reload succeed; home/character/campaign SSR and initial-script payloads measured | Hydrated/lazy network totals, authenticated campaign switching and active-play browser acceptance; route-level JS payload remains large |
-| Local Chinese TTS | Locale capability/voice preferences planned | Service not configured; implement/validate Unicode segmentation, voice discovery, locale-sensitive cache, numbers/units/names and real playback |
+| Local Chinese TTS | Locale-driven voice prefixes/defaults, Chinese single narrator, Unicode sentence/hard limits, campaign-language voice discovery and previews, cache isolation and Chinese failure UI implemented; mock transport/queue and English compatibility checks pass | Service not configured; actual model/voice/dependency versions, numeric/name pronunciation, browser/native playback, stream/replay/mute/retry and final bilingual journey acceptance remain open |
 | Final play flow | Recorded Chinese exploration/social/utility and combat/slot/correction acceptance on Codex | Complete Chinese journey, English regression and real local TTS acceptance |
 
 The concrete UI scope and deferred areas are in
@@ -107,6 +107,48 @@ Message (传讯术); those are different contexts. Current default Turbopack bui
 attempts were blocked at its internal port binding by the execution environment,
 including the escalated attempt; this batch does not claim a passing production
 build. Keep that gate for the next phase boundary rather than retrying per batch.
+
+The local-speech code checkpoint wires campaign locale through the existing
+narration queue, planner, requests, backend, preview routes and settings UI.
+Chinese uses one narrator regardless of saved cast/speaker/auto-cast choices;
+roster metadata is preserved. The locale registry owns language code, voice
+prefixes/default, sample text and chunk limits. Known mismatched Kokoro voice
+families fall back to the matching default; custom compatible-service voice
+strings remain explicit. Eight Mandarin voice labels now have source-matched
+English/Chinese display translations.
+
+Chinese sentence splitting includes punctuation and closing quotes, and even
+unpunctuated runs obey Unicode-code-point limits (80 first, 160 thereafter).
+English retains the established sentence behavior and 320/1200 limits. Chinese
+Kokoro requests pass lang_code z; other compatible endpoints receive no extra
+Kokoro-specific field. Language distinguishes clip/preview caches; Chinese preview
+identity also tracks sample text/effective fallback, while English preview URLs
+remain compatible. The creator/settings pass campaign speech locale separately
+from viewer locale. Voice-list state/cache is scoped by locale with stale-result
+protection; preview audio stops on voice/speech-locale changes, and late callbacks
+or old error state cannot attach to a replacement request. Chinese controls hide
+inactive cast options and keep narrator pace; the casting POST refuses the single
+narrator mode. Preview failures have localized stable codes/native speech-error
+presentation. No microphone or Chinese speech-input behavior was added.
+
+Validation: types, catalog/coverage/terminology and changed-file lint passed;
+13 keys added, UI remains 377/440 with 0 pending literal sites, 15724 keys.
+The grouped scripts/test-tts-locales.mjs covers voice policy, Unicode/quote/hard
+limits, mock Kokoro language/voice payloads, English payload parity, clip/preview
+cache identity, the actual narration queue and voice/cast routes, and bilingual
+creator/voice controls. Existing relevant segment/render/voice/backend suites
+passed (7, 5, 8 and 21 checks). The two loopback-server suites needed an approved
+sandbox escalation after listen was rejected; only those failed environmental
+runs were repeated. A creator fixture initially omitted its gates prop and was
+corrected. Stock-voice source checking now accepts any registered language prefix.
+
+No real speech service is running at the default 127.0.0.1:8880 address (fresh
+probe failed). Mock audio bytes do not prove acoustic quality, decoding or real
+playback. docs/setup/chinese-tts.md records the local deployment procedure,
+primary upstream interfaces/dependencies and the outstanding real acceptance
+checklist. This checkpoint does not close deployment or the overall goal, and no
+passed DM/name/full-build acceptance was repeated. Broader UI/material/log work
+and complete deployed play acceptance remain open.
 
 The survival-log checkpoint delivers campaign-locale system messages for death
 saves (success/failure, natural 20, stable/dead), massive/wound death and waking

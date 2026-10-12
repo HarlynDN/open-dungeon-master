@@ -280,7 +280,7 @@ for (const [namespace, rows, fields] of [
     if (MESSAGE_CATALOGS.en[`${namespace}.${row.id}.${field}`] !== row[field]) problems.push(`${namespace} ${row.id}: ${field} needs comparison against its current source.`);
   }
 }
-const voiceKeys = Object.keys(MESSAGE_CATALOGS.en).filter(key => /^voicePicker\.[ab][fm]_/.test(key));
+const voiceKeys = Object.keys(MESSAGE_CATALOGS.en).filter(key => /^voicePicker\.[a-z][fm]_/.test(key));
 if (voiceKeys.length !== TTS_VOICES.length) problems.push("Stock TTS voices changed; review all display translations.");
 for (const voice of TTS_VOICES) {
   if (MESSAGE_CATALOGS.en[`voicePicker.${voice.id}`] !== voice.label) problems.push(`Voice ${voice.id}: label needs comparison against its current source.`);
