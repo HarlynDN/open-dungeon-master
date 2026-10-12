@@ -48,6 +48,7 @@ export async function POST(request: Request) {
   notifyUsers([parsed.data.friendUserId], {
     campaignId: campaign.id,
     kind: "friend_invite",
+    presentation: { code: "friendInvite", params: { actor: user.username, campaign: campaign.title, roomCode: campaign.inviteCode } },
     body: `${user.username} invited you to "${campaign.title}". Join with room code ${campaign.inviteCode}.`,
   });
   return Response.json({ ok: true });

@@ -1,6 +1,9 @@
 import { createCampaign, setDmOutline, type Campaign } from "@/lib/db/campaigns";
 import { getUserSettings } from "@/lib/db/users";
 import { normalizeLocale } from "@/lib/i18n/locales";
+import type { AppLocale } from "@/lib/i18n/locales";
+import "@/lib/i18n/messages";
+import { starterMaterial } from "@/lib/i18n/starter-material-presentations";
 
 // The starter one-shot: a table that opens in ten minutes for people who
 // have never played. One evening, level 1, a village, a crypt, a twist.
@@ -29,16 +32,18 @@ export const STARTER_ONE_SHOT = {
   ].join("\n\n"),
 };
 
-export function createStarterCampaign(userId: string, options: { solo: boolean }): Campaign {
+export function createStarterCampaign(userId: string, options: { solo: boolean; locale?: AppLocale }): Campaign {
+  const locale = options.locale ?? normalizeLocale(getUserSettings(userId).uiLocale);
+  const material = starterMaterial(STARTER_ONE_SHOT, locale);
   const campaign = createCampaign(userId, {
-    title: STARTER_ONE_SHOT.title,
-    description: STARTER_ONE_SHOT.description,
-    theme: STARTER_ONE_SHOT.theme,
+    title: material.title,
+    description: material.description,
+    theme: material.theme,
     maxPlayers: options.solo ? 1 : 5,
     startingLevel: 1,
     difficulty: "normal",
     gameSettings: {
-      locale: normalizeLocale(getUserSettings(userId).uiLocale),
+      locale,
       dmMode: "ai",
       genre: "high_fantasy",
       campaignLength: "short",

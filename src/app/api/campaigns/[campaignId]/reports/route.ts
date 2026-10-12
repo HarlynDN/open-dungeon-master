@@ -77,6 +77,7 @@ export async function POST(
       .map((user) => user.id),
     {
       kind: "content_report",
+      presentation: { code: authorType === "dm" ? "reportDm" : "reportPlayer", params: { actor: context.user.username, campaign: context.campaign.title } },
       body: `${context.user.username} reported ${
         authorType === "dm" ? "a Dungeon Master passage" : "a player"
       } in ${context.campaign.title}.`,

@@ -8,6 +8,8 @@ import { GameIcon } from "@/components/ui/GameIcon";
 import { cn } from "@/lib/cn";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { DEFAULT_LOCALE, type AppLocale } from "@/lib/i18n/locales";
+import { notificationText } from "@/lib/i18n/notification-presentations";
+import type { NotificationPresentation } from "@/lib/notification-presentations";
 
 // The bell: out-of-game news (sessions planned, moved, called off; someone
 // can't make it; reminders and the idle-table nudge). Live over the
@@ -23,6 +25,7 @@ type BellNotification = {
   body: string;
   createdAt: string;
   readAt: string | null;
+  presentation?: NotificationPresentation;
 };
 
 // The glyph a notification leads with, read off its kind. Kinds are free
@@ -65,6 +68,10 @@ export function NotificationBell() {
   // can see why it is asking.
   const askedRef = useRef(false);
   const openRef = useRef(false);
+  const localeRef = useRef(locale);
+  useEffect(() => {
+    localeRef.current = locale;
+  }, [locale]);
   useEffect(() => {
     openRef.current = open;
   }, [open]);
@@ -97,7 +104,7 @@ export function NotificationBell() {
     }
     for (const item of fresh.slice(0, 3)) {
       try {
-        new Notification("Open Dungeon Master", { body: item.body, tag: item.id });
+        new Notification("Open Dungeon Master", { body: notificationText(item, localeRef.current), tag: item.id });
       } catch {
         // No notification daemon on this platform; the badge still shows.
       }
@@ -237,7 +244,7 @@ export function NotificationBell() {
                 >
                   <GameIcon icon={{ kind: "glyph", key: glyphFor(item.kind) }} size="size-8" className="shrink-0" />
                   <span className="min-w-0">
-                    <span className="block">{item.body}</span>
+                    <span className="block">{notificationText(item, locale)}</span>
                     <span className="block text-xs text-stone-600">{ago(item.createdAt, locale)}</span>
                   </span>
                 </li>

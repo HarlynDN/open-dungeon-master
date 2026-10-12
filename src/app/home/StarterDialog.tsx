@@ -6,6 +6,7 @@ import { ui } from "@/lib/ui";
 import { Dialog } from "@/components/ui/Dialog";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { apiErrorText, type ApiUiError } from "@/lib/i18n/api-errors";
+import type { AppLocale } from "@/lib/i18n/locales";
 
 type Starter = {
   oneShot: { id: string; title: string; tagline: string; description: string };
@@ -25,28 +26,34 @@ export function StarterDialog({
   onCreated: (campaignId: string) => void;
 }) {
   const { t, locale } = useLocale();
-  const [starter, setStarter] = useState<Starter | null>(null);
+  const [loaded, setLoaded] = useState<{ locale: AppLocale; data: Starter } | null>(null);
+  const starter = loaded?.locale === locale ? loaded.data : null;
   const [busy, setBusy] = useState<"" | "solo" | "friends">("");
   const [error, setError] = useState<ApiUiError | null>(null);
   const [networkError, setNetworkError] = useState(false);
-  const [loadFailed, setLoadFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  const [failedLocale, setFailedLocale] = useState<AppLocale | null>(null);
+  const loadFailed = failedLocale === locale;
 
   useEffect(() => {
     if (!open || starter) {
       return;
     }
-    fetch("/api/starter")
+    let cancelled = false;
+    fetch(`/api/starter?locale=${encodeURIComponent(locale)}`)
       .then((response) => (response.ok ? response.json() : null))
       .then((data: Starter | null) => {
+        if (cancelled) return;
         if (data) {
-          setStarter(data);
-          setLoadFailed(false);
+          setLoaded({ locale, data });
+          setFailedLocale(null);
         } else {
-          setLoadFailed(true);
+          setFailedLocale(locale);
         }
       })
-      .catch(() => setLoadFailed(true));
-  }, [open, starter]);
+      .catch(() => { if (!cancelled) setFailedLocale(locale); });
+    return () => { cancelled = true; };
+  }, [open, starter, locale, attempt]);
 
   async function start(solo: boolean) {
     setBusy(solo ? "solo" : "friends");
@@ -56,7 +63,7 @@ export function StarterDialog({
       const response = await fetch("/api/starter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ solo }),
+        body: JSON.stringify({ solo, locale }),
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
@@ -80,6 +87,7 @@ export function StarterDialog({
           <p className="mt-1 text-sm leading-6 text-stone-400">
             {starter?.oneShot.description ?? t(loadFailed ? "starter.loadFailed" : "starter.loading")}
           </p>
+          {loadFailed && !starter ? <button type="button" className={ui.btnSmall} onClick={() => { setFailedLocale(null); setAttempt(value => value + 1); }}>{t("starter.retry")}</button> : null}
         </div>
         <div>
           <p className="mb-1.5 text-xs uppercase tracking-wide text-stone-500">{t("starter.heroes")}</p>

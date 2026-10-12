@@ -35,6 +35,7 @@ export async function POST(
     notifyUsers([session.createdByUserId], {
       campaignId,
       kind: "rsvp",
+      presentation: { code: "rsvpNo", params: { actor: context.user.username, campaign: context.campaign.title, session: session.title } },
       body: `${context.user.username} can't make ${
         session.title || "the session"
       } in ${context.campaign.title}.`,

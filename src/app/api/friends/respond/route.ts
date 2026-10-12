@@ -32,6 +32,7 @@ export async function POST(request: Request) {
     }
     notifyUsers([parsed.data.userId], {
       kind: "friend_accept",
+      presentation: { code: "friendAccepted", params: { actor: user.username } },
       body: `${user.username} accepted your friend request.`,
     });
     return Response.json({ ok: true });

@@ -68,6 +68,7 @@ export async function POST(
     {
       campaignId,
       kind: "session_scheduled",
+      presentation: { code: "sessionScheduled", params: { campaign: context.campaign.title, session: session.title, startsAt: session.startsAt } },
       body: `${context.campaign.title}: ${
         session.title || "a session"
       } is planned for ${sessionWhen(session.startsAt)}.`,

@@ -55,6 +55,7 @@ export async function PATCH(
   notifyUsers(othersOf(campaignId, context.user.id), {
     campaignId,
     kind: "session_updated",
+    presentation: { code: "sessionUpdated", params: { campaign: context.campaign.title, session: session.title, startsAt: session.startsAt } },
     body: `${context.campaign.title}: ${
       session.title || "the session"
     } moved to ${sessionWhen(session.startsAt)}.`,
@@ -79,6 +80,7 @@ export async function DELETE(
   notifyUsers(othersOf(campaignId, context.user.id), {
     campaignId,
     kind: "session_cancelled",
+    presentation: { code: "sessionCancelled", params: { campaign: context.campaign.title, session: session.title, startsAt: session.startsAt } },
     body: `${context.campaign.title}: ${
       session.title || "the session"
     } on ${sessionWhen(session.startsAt)} was called off.`,

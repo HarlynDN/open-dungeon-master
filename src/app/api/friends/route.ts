@@ -68,6 +68,7 @@ export async function POST(request: Request) {
   if (result.outcome === "requested" && result.targetUserId) {
     notifyUsers([result.targetUserId], {
       kind: "friend_request",
+      presentation: { code: "friendRequest", params: { actor: user.username } },
       body: `${user.username} wants to be friends.`,
     });
   } else if (result.outcome === "accepted" && result.targetUserId) {
@@ -75,6 +76,7 @@ export async function POST(request: Request) {
     // requester owed the acceptance note.
     notifyUsers([result.targetUserId], {
       kind: "friend_accept",
+      presentation: { code: "friendAccepted", params: { actor: user.username } },
       body: `${user.username} accepted your friend request.`,
     });
   }

@@ -1400,8 +1400,8 @@
     },
     {
       "path": "src/app/home/StarterDialog.tsx",
-      "state": "pending",
-      "review": "Own chrome/errors localized; pending authored starter adventure and pregen API localization (content unit 3)."
+      "state": "covered",
+      "review": "Owned chrome/errors and native starter/pregen preview audited. Locale-keyed GET data prevents reuse across UI language changes; cleanup ignores late responses, localized failure state has explicit retry. POST carries the selected registered locale. Native source-bound starter/pregen prose localizes server-side, proper names/IDs remain native. Grouped bilingual preview, creation/retry callbacks and real scratch-DB inheritance/English creation verified; full browser journey remains a final gate."
     },
     {
       "path": "src/app/home/WorkshopSection.tsx",
@@ -1784,7 +1784,8 @@
     },
     {
       "path": "src/components/AppHeader.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Header composition/auth self-fetch audited. Proper app wordmark stays literal; AccountMenu/home/deletion/notification controls own their captions and have independent coverage. No additional native prose, user-name rewriting or locale-dependent auth state."
     },
     {
       "path": "src/components/AssistantLink.tsx",
@@ -1860,8 +1861,8 @@
     },
     {
       "path": "src/components/NotificationBell.tsx",
-      "state": "pending",
-      "review": "Own chrome/empty state/time localized; pending stored notification body localization (system-text unit 2c)."
+      "state": "covered",
+      "review": "Owned chrome/time/glyphs plus new structured notification bodies audited. All native friend/invite/report/schedule/RSVP/reminder/idle producers attach typed facts; list and browser announcement share notificationText at viewer locale. Old, arbitrary and invalid-metadata bodies remain literal. Authored names/room codes and UTC instants preserved, canonical kind/read/stream behavior retained. Scratch persistence/read isolation and grouped bilingual actual bell render passed; OS notification delivery remains platform-dependent final acceptance."
     },
     {
       "path": "src/components/PageShell.tsx",

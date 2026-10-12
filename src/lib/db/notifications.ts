@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { getDatabase, nowIso } from "@/lib/db/core";
 import { pingUsers } from "@/lib/user-events";
+import { parseNotificationPresentation, type NotificationPresentation } from "@/lib/notification-presentations";
 
 // The inbox behind the bell. Rows are cheap prose pointers ("a session was
 // scheduled"), never the source of truth for anything; the schedule tables
@@ -15,6 +16,7 @@ export type Notification = {
   body: string;
   createdAt: string;
   readAt: string | null;
+  presentation?: NotificationPresentation;
 };
 
 type NotificationRow = {
@@ -25,11 +27,14 @@ type NotificationRow = {
   body: string;
   created_at: string;
   read_at: string | null;
+  presentation_json: string | null;
 };
 
 const KEEP_PER_USER = 200;
 
 function mapRow(row: NotificationRow): Notification {
+  let presentation: NotificationPresentation | undefined;
+  try { presentation = parseNotificationPresentation(JSON.parse(row.presentation_json ?? "null")); } catch { /* Legacy or invalid metadata stays literal. */ }
   return {
     id: row.id,
     userId: row.user_id,
@@ -38,20 +43,21 @@ function mapRow(row: NotificationRow): Notification {
     body: row.body,
     createdAt: row.created_at,
     readAt: row.read_at,
+    ...(presentation ? { presentation } : {}),
   };
 }
 
 export function notifyUsers(
   userIds: string[],
-  input: { campaignId?: string; kind: string; body: string },
+  input: { campaignId?: string; kind: string; body: string; presentation?: NotificationPresentation },
 ): void {
   if (userIds.length === 0) {
     return;
   }
   const db = getDatabase();
   const insert = db.prepare(
-    `INSERT INTO notifications (id, user_id, campaign_id, kind, body, created_at)
-     VALUES (?, ?, ?, ?, ?, ?)`,
+    `INSERT INTO notifications (id, user_id, campaign_id, kind, body, created_at, presentation_json)
+     VALUES (?, ?, ?, ?, ?, ?, ?)`,
   );
   const prune = db.prepare(
     `DELETE FROM notifications WHERE user_id = ? AND id NOT IN (
@@ -60,7 +66,7 @@ export function notifyUsers(
   );
   const all = db.transaction((ids: string[]) => {
     for (const userId of ids) {
-      insert.run(randomUUID(), userId, input.campaignId ?? "", input.kind, input.body, nowIso());
+      insert.run(randomUUID(), userId, input.campaignId ?? "", input.kind, input.body, nowIso(), input.presentation ? JSON.stringify(input.presentation) : null);
       prune.run(userId, userId, KEEP_PER_USER);
     }
   });

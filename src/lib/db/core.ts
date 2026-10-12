@@ -1416,6 +1416,8 @@ function ensureSchema(db: SqliteDatabase) {
   addColumns("scheduled_sessions", [
     ["reminded_stage", `INTEGER NOT NULL DEFAULT 0`],
   ]);
+  // Opt-in facts for new inbox entries; older prose remains untouched.
+  addColumns("notifications", [["presentation_json", `TEXT`]]);
 
   // Self-service account deletion runs on a timer: the request stamps both
   // columns, sign-ins during the grace period can clear them again, and the

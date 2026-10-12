@@ -96,11 +96,13 @@ function sessionReminderJob(now: number) {
         ? {
             campaignId: session.campaignId,
             kind: "session_reminder",
+            presentation: { code: "sessionSoon", params: { campaign: campaign.title, session: session.title, startsAt: session.startsAt } },
             body: `${campaign.title}: ${title} starts soon, at ${sessionWhen(session.startsAt)}. See you at the table.`,
           }
         : {
             campaignId: session.campaignId,
             kind: "session_starting",
+            presentation: { code: "sessionStarting", params: { campaign: campaign.title, session: session.title } },
             body: `${campaign.title}: ${title} is starting now. To the table!`,
           },
     );
@@ -119,6 +121,7 @@ function idleCampaignJob(now: number) {
       {
         campaignId: campaign.id,
         kind: "campaign_idle",
+        presentation: { code: "campaignIdle", params: { campaign: campaign.title } },
         body: `The table misses you: ${campaign.title} has been quiet for a few days.`,
       },
     );
