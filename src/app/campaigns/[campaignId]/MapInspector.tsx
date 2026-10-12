@@ -1,8 +1,11 @@
 "use client";
 
 import { useMemo, useSyncExternalStore, type ReactNode } from "react";
-import { BRUSH_EFFECTS, BRUSH_LABELS, type Brush as BrushName } from "@/lib/battlemap/paint";
-import { listObjects, objectAt, refKey, sameRef, type MapObjects, type ObjectRef } from "@/lib/battlemap/objects";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { localizedMapObjects } from "@/lib/i18n/map-inspection-presentations";
+import { mapBrushEffect } from "@/lib/i18n/map-editor-presentations";
+import { type Brush as BrushName } from "@/lib/battlemap/paint";
+import { objectAt, refKey, sameRef, type MapObjects, type ObjectRef } from "@/lib/battlemap/objects";
 import { TERRAIN, TILE_FEET, tileAt, type XY } from "@/lib/battlemap/types";
 import { PanelHead } from "@/app/campaigns/[campaignId]/mapUi";
 
@@ -72,8 +75,9 @@ export function MapInspector({
   // The selection's actions (edit, move, duplicate, DM only, delete).
   selectionBar: ReactNode;
 }) {
+  const { locale, t } = useLocale();
   const hover = useHover(store);
-  const rows = useMemo(() => listObjects(objects), [objects]);
+  const rows = useMemo(() => localizedMapObjects(objects, locale), [objects, locale]);
   const first = refs[0] ?? null;
   const selected = first ? rows.find((row) => sameRef(row.ref, first)) : undefined;
 
@@ -82,11 +86,11 @@ export function MapInspector({
     body = (
       // Keyed by the thing, so the facts rise again when the selection moves on.
       <div key={refKey(first)} className="map-inspect-in space-y-2">
-        <p className="truncate text-[12px] text-amber-100">{refs.length > 1 ? `${refs.length} things selected` : selectionTitle}</p>
+        <p className="truncate text-[12px] text-amber-100">{refs.length > 1 ? t("mapInspectUi.inspector.many", { count: refs.length }) : selectionTitle}</p>
         {refs.length === 1 && selected ? (
           <dl className="space-y-1">
-            <Fact name="Where">{selected.detail}</Fact>
-            <Fact name="Seen by">{selected.dmOnly ? "Only you" : "Everyone who has been there"}</Fact>
+            <Fact name={t("mapInspectUi.inspector.where")}>{selected.detail}</Fact>
+            <Fact name={t("mapInspectUi.inspector.seen")}>{t(selected.dmOnly ? "mapInspectUi.inspector.you" : "mapInspectUi.inspector.everyone")}</Fact>
           </dl>
         ) : null}
         {selectionBar}
@@ -98,25 +102,25 @@ export function MapInspector({
     const thing = under ? rows.find((row) => sameRef(row.ref, under)) : undefined;
     body = (
       <dl className="space-y-1">
-        <Fact name="Tile">
+        <Fact name={t("mapInspectUi.inspector.tile")}>
           {hover.x}, {hover.y}
         </Fact>
-        <Fact name="Ground">{brush ? BRUSH_LABELS[brush] : "Unknown"}</Fact>
-        <Fact name="On it">{thing ? thing.name : "Nothing placed"}</Fact>
-        {brush ? <p className="pt-1 font-mono text-[9px] leading-snug text-stone-500">{BRUSH_EFFECTS[brush]}</p> : null}
+        <Fact name={t("mapInspectUi.inspector.ground")}>{brush ? t(`mapEditorUi.brushName.${brush}`) : t("mapInspectUi.inspector.unknown")}</Fact>
+        <Fact name={t("mapInspectUi.inspector.on")}>{thing ? thing.name : t("mapInspectUi.inspector.empty")}</Fact>
+        {brush ? <p className="pt-1 font-mono text-[9px] leading-snug text-stone-500">{mapBrushEffect(brush, locale)}</p> : null}
       </dl>
     );
   } else {
     body = (
       <p className="font-serif text-[12px] italic leading-snug text-stone-500">
-        Move over the canvas to read a tile, or take up Select and tap a placed thing to work on it.
+        {t("mapInspectUi.inspector.help")}
       </p>
     );
   }
 
   return (
     <section className="space-y-1.5">
-      <PanelHead>Inspector</PanelHead>
+      <PanelHead>{t("mapInspectUi.inspector.title")}</PanelHead>
       {body}
     </section>
   );
@@ -139,6 +143,7 @@ export function MapStatusLine({
   holding: string;
   extra?: ReactNode;
 }) {
+  const { locale, t } = useLocale();
   const hover = useHover(store);
   const brush = hover && hover.x < width && hover.y < height ? CHAR_TO_BRUSH[tileAt(terrain, width, hover.x, hover.y)] : undefined;
   const cell = (name: string, value: ReactNode) => (
@@ -149,10 +154,10 @@ export function MapStatusLine({
   );
   return (
     <div className="flex shrink-0 items-center gap-4 overflow-x-auto border-t border-stone-800 bg-stone-950/60 px-3 py-1.5 [scrollbar-width:none]">
-      {cell("Tile", hover ? `${hover.x}, ${hover.y}` : "·")}
-      {cell("Under", brush ? BRUSH_LABELS[brush] : "·")}
-      {cell("Size", `${width} × ${height} · ${width * TILE_FEET} × ${height * TILE_FEET} ft`)}
-      {cell("Holding", <span className="text-amber-200">{holding}</span>)}
+      {cell(t("mapInspectUi.inspector.tile"), hover ? `${hover.x}, ${hover.y}` : "·")}
+      {cell(t("mapInspectUi.status.under"), brush ? t(`mapEditorUi.brushName.${brush}`) : "·")}
+      {cell(t("mapInspectUi.status.size"), t("mapInspectUi.status.value", { width, height, feetWidth: width * TILE_FEET, feetHeight: height * TILE_FEET }))}
+      {cell(t("mapInspectUi.status.holding"), <span className="text-amber-200">{holding}</span>)}
       {extra}
     </div>
   );

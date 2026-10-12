@@ -2,12 +2,14 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CircleAlert, Check } from "lucide-react";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { mapToastText } from "@/lib/i18n/map-inspection-presentations";
 import { cn } from "@/lib/cn";
 
 // The ember toast (docs/visual-overhaul-plan.md 4.6). A refused stroke used to
 // land as a red line under the whole editor, easy to miss with the eyes on the
 // canvas; now it rises over the canvas, holds, and leaves on its own after 2.4
-// seconds. The words are the server's own sentence, never rewritten here. The
+// seconds. Raw server text stays in state; only the display is localized. The
 // timer removes it, so it still goes where the animation is switched off.
 
 export type MapToast = { id: number; text: string; tone: "refused" | "done" };
@@ -47,6 +49,7 @@ export function useMapToasts() {
 }
 
 export function MapToastStack({ toasts, className }: { toasts: MapToast[]; className?: string }) {
+  const { locale } = useLocale();
   return (
     <div
       role="status"
@@ -64,7 +67,7 @@ export function MapToastStack({ toasts, className }: { toasts: MapToast[]; class
           )}
         >
           {toast.tone === "refused" ? <CircleAlert className="size-3.5 shrink-0" /> : <Check className="size-3.5 shrink-0" />}
-          {toast.text}
+          {mapToastText(toast.text, toast.tone, locale)}
         </p>
       ))}
     </div>

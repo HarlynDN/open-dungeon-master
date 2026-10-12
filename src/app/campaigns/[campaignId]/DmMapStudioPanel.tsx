@@ -1,5 +1,7 @@
 "use client";
 
+import { REGION_FAILURES } from "@/lib/i18n/region-presentations";
+import { mapHoldingText, mapInspectionErrorText, MAP_INSPECT_FAILURES } from "@/lib/i18n/map-inspection-presentations";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { localizedMapHotkeyGroups } from "@/lib/i18n/map-editor-presentations";
 
@@ -9,7 +11,7 @@ import { HotkeyOverlay } from "@/components/ui/HotkeyOverlay";
 import { useMapSelection } from "@/app/campaigns/[campaignId]/useMapSelection";
 import { removeObjects, setDmOnly, type MapObjects } from "@/lib/battlemap/objects";
 import type { MapTheme } from "@/lib/battlemap/generate";
-import { BRUSH_LABELS, type Brush as BrushName } from "@/lib/battlemap/paint";
+import { type Brush as BrushName } from "@/lib/battlemap/paint";
 import { resolveSkin, type MapSkin } from "@/lib/battlemap/skins";
 import { TERRAIN, tileAt, type AmbientLight, type MapLight } from "@/lib/battlemap/types";
 import type { Backdrop, BackdropTransform } from "@/lib/battlemap/backdrop";
@@ -28,7 +30,6 @@ import { useCatalogue, usePaintedGround, usePaintedPreference } from "@/app/camp
 import {
   BOARD_CAPS,
   DEFAULT_MAP_TOOLS,
-  MODES,
   canvasToolFor,
   isPaintMode,
   mapHotkeyGroups,
@@ -140,10 +141,13 @@ export function DmMapStudioPanel({ campaignId }: { campaignId: string }) {
       });
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) {
-        setError((payload as { error?: string }).error ?? "That did not work.");
+        setError((payload as { error?: string }).error ?? REGION_FAILURES.update);
         return null;
       }
       return payload as Record<string, unknown>;
+    } catch {
+      setError(REGION_FAILURES.network);
+      return null;
     } finally {
       setBusy(false);
     }
@@ -181,18 +185,23 @@ export function DmMapStudioPanel({ campaignId }: { campaignId: string }) {
   // A refusal is the server's own sentence, shown over the canvas.
   const mark = useCallback(
     async (body: Record<string, unknown>) => {
-      const response = await fetch(`/api/campaigns/${campaignId}/dm/map-studio/paint`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-      if (!response.ok) {
-        const payload = await response.json().catch(() => ({}));
-        push((payload as { error?: string }).error ?? "That was refused.");
+      try {
+        const response = await fetch(`/api/campaigns/${campaignId}/dm/map-studio/paint`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+        if (!response.ok) {
+          const payload = await response.json().catch(() => ({}));
+          push((payload as { error?: string }).error ?? MAP_INSPECT_FAILURES.refused);
+          return false;
+        }
+        await load();
+        return true;
+      } catch {
+        push(REGION_FAILURES.network);
         return false;
       }
-      await load();
-      return true;
     },
     [campaignId, load, push],
   );
@@ -209,7 +218,7 @@ export function DmMapStudioPanel({ campaignId }: { campaignId: string }) {
     onUndo: () => void painter.undo(),
     onRedo: () => void painter.redo(),
   };
-  const { locale } = useLocale();
+  const { locale, t } = useLocale();
   const [keysOpen, setKeysOpen] = useState(false);
   const [grid, setGrid] = useState(true);
   const [dmView, setDmView] = useState(true);
@@ -303,8 +312,7 @@ export function DmMapStudioPanel({ campaignId }: { campaignId: string }) {
     }
   }
 
-  const held = MODES.find((entry) => entry.mode === tools.mode);
-  const holding = held ? (isPaintMode(tools.mode) ? `${held.label} · ${BRUSH_LABELS[tools.brush]}` : held.label) : "Nothing";
+  const holding = mapHoldingText(tools, locale);
   const backdropPanel = <BackdropControls backdrop={board?.backdrop ?? null} onChange={(next) => void setBackdrop(next)} busy={busy} />;
 
   return (
@@ -312,14 +320,14 @@ export function DmMapStudioPanel({ campaignId }: { campaignId: string }) {
       <section className="rounded-lg border border-stone-800 bg-stone-950/60 px-2.5 py-2">
         <p className="mb-1.5 flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-stone-500">
           <MapPinned className="size-3.5" />
-          The board
+          {t("mapInspectUi.studio.title")}
         </p>
         <p className="text-xs text-stone-400">
           {state.board === "fight"
-            ? `A fight is on the table, with ${state.enemyCount} ${state.enemyCount === 1 ? "enemy" : "enemies"}.`
+            ? t("mapInspectUi.studio.fight", { count: state.enemyCount, word: t(state.enemyCount === 1 ? "mapInspectUi.studio.enemy" : "mapInspectUi.studio.enemies") })
             : state.board === "scene"
-              ? "An exploration scene is on the table. The party can walk it freely."
-              : "Nothing is on the table. Open a scene to put the party on a map without a fight."}
+              ? t("mapInspectUi.studio.scene")
+              : t("mapInspectUi.studio.empty")}
         </p>
       </section>
 
@@ -338,42 +346,42 @@ export function DmMapStudioPanel({ campaignId }: { campaignId: string }) {
                     <button
                       type="button"
                       disabled={busy || !state.board}
-                      title={state.board ? "Replace the board's ground with this map" : "Nothing is on the table yet"}
+                      title={state.board ? t("mapInspectUi.studio.replace") : t("mapInspectUi.studio.noBoard")}
                       onClick={() => void apply(roll, clear)}
                       className="flex min-h-9 items-center gap-1.5 rounded-lg border border-amber-500/60 bg-amber-400/10 px-3 text-amber-100 disabled:opacity-40 motion-press"
                     >
-                      <Upload className="size-3.5" /> Put it on the table
+                      <Upload className="size-3.5" /> {t("mapInspectUi.studio.put")}
                     </button>
                     <button
                       type="button"
                       disabled={busy || state.board !== null}
-                      title={state.board ? "Something is already on the table" : "Put the party on this map with nobody to fight"}
+                      title={state.board ? t("mapInspectUi.studio.busy") : t("mapInspectUi.studio.openTip")}
                       onClick={() => void scene(true, roll, clear)}
                       className={mapButton}
                     >
-                      <Play className="size-3" /> Open it as a scene
+                      <Play className="size-3" /> {t("mapInspectUi.studio.open")}
                     </button>
                   </>
                 ) : null}
                 {state.board === "scene" ? (
                   <button type="button" disabled={busy} onClick={() => void scene(false, null, clear)} className={mapButton}>
-                    <Square className="size-3" /> Close the scene
+                    <Square className="size-3" /> {t("mapInspectUi.studio.close")}
                   </button>
                 ) : null}
               </div>
-              {roll ? <FinePrint>Seed {roll.seed}. Nobody else can see this yet.</FinePrint> : null}
+              {roll ? <FinePrint>{t("mapInspectUi.studio.preview", { seed: roll.seed })}</FinePrint> : null}
             </div>
           )}
         />
       </div>
-      {error ? <p className="text-[11px] text-red-400">{error}</p> : null}
+      {error ? <p className="text-[11px] text-red-400">{mapInspectionErrorText(error, locale)}</p> : null}
 
       {board ? (
         <div className="h-[min(86dvh,48rem)]">
           <MapEditorShell
             title={
               <h3 className="min-w-0 truncate font-display text-[15px] uppercase tracking-[0.08em] text-amber-100">
-                {state.board === "scene" ? "The scene on the table" : "The board on the table"}
+                {state.board === "scene" ? t("mapInspectUi.studio.sceneTitle") : t("mapInspectUi.studio.boardTitle")}
               </h3>
             }
             undo={undo}
@@ -401,11 +409,10 @@ export function DmMapStudioPanel({ campaignId }: { campaignId: string }) {
                 rollPanel={
                   <div className="space-y-2">
                     <FinePrint>
-                      The forge above rolls a new board where nobody else can see it. Put it on the table when you like it;
-                      everyone is stood somewhere legal on the new ground.
+                      {t("mapInspectUi.studio.forgeHelp")}
                     </FinePrint>
                     <button type="button" className={mapButton} onClick={() => forgeRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}>
-                      Go to the forge
+                      {t("mapInspectUi.studio.goForge")}
                     </button>
                   </div>
                 }
@@ -469,7 +476,7 @@ export function DmMapStudioPanel({ campaignId }: { campaignId: string }) {
                 extra={
                   board.seed ? (
                     <span className="flex shrink-0 items-baseline gap-1.5">
-                      <span className="font-display text-[8px] uppercase tracking-[0.16em] text-stone-600">Seed</span>
+                      <span className="font-display text-[8px] uppercase tracking-[0.16em] text-stone-600">{t("mapInspectUi.studio.seed")}</span>
                       <span className="font-mono text-[10px] text-stone-300">{board.seed}</span>
                     </span>
                   ) : null

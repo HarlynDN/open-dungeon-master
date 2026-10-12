@@ -1,14 +1,14 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { localizedMapObjects, mapObjectTitle } from "@/lib/i18n/map-inspection-presentations";
 import { useCallback, useMemo, useState } from "react";
 import { PromptDialog } from "@/components/ui/PromptDialog";
 import { SelectionBar, type SelectionAction } from "@/components/ui/SelectionBar";
 import {
   duplicateObject,
-  listObjects,
   moveObject,
   objectAt,
-  OBJECT_LABELS,
   refBounds,
   removeObjects,
   sameRef,
@@ -44,6 +44,7 @@ export function useMapSelection({
   save: Save;
   kinds: Array<keyof MapObjects>;
 }) {
+  const { locale, t } = useLocale();
   const [refs, setRefs] = useState<ObjectRef[]>([]);
   const [moving, setMoving] = useState(false);
   const [editing, setEditing] = useState<ObjectRef | null>(null);
@@ -204,9 +205,9 @@ export function useMapSelection({
     if (!first) {
       return "";
     }
-    const row = listObjects(objects).find((entry) => sameRef(entry.ref, first));
-    return row ? `${OBJECT_LABELS[first.kind]}: ${row.name}` : OBJECT_LABELS[first.kind];
-  }, [live, objects]);
+    const row = localizedMapObjects(objects, locale).find((entry) => sameRef(entry.ref, first));
+    return mapObjectTitle(first, row?.name, locale);
+  }, [live, objects, locale]);
 
   const actions = useMemo<SelectionAction[]>(() => {
     const first = live[0];
@@ -243,10 +244,10 @@ export function useMapSelection({
             }
           }}
           title={
-            editing?.kind === "lights" ? "Bright radius, in feet" : editing?.kind === "props" ? "Rename the prop" : "Change the label"
+            t(editing?.kind === "lights" ? "mapInspectUi.prompt.light" : editing?.kind === "props" ? "mapInspectUi.prompt.prop" : "mapInspectUi.prompt.label")
           }
           defaultValue={editValue}
-          submitLabel="Apply"
+          submitLabel={t("mapInspectUi.prompt.apply")}
           onSubmit={submitEdit}
         />
   );

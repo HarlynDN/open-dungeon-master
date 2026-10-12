@@ -304,8 +304,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmMapStudioPanel.tsx",
-      "state": "pending",
-      "review": "Map hotkey group display now uses viewer uiLocale through a text-only adapter; native key arrays, mapToolState and event handler semantics unchanged. Other controls, editor diagnostics and content remain pending."
+      "state": "covered",
+      "review": "Studio board/scene/preview/seed/holding/forge captions and error display localized. Network rejections in action/paint callbacks expose feedback and release busy state without retry. Canonical settings/action/paint bodies and raw API results preserved; child forge/editor panels remain separately owned."
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmNpcForgePanel.tsx",
@@ -507,11 +507,13 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/MapInspector.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Inspector/status chrome, terrain facts and selected object details use viewer uiLocale via typed object display projection. Ref IDs, coordinates, radius/dimension math, privacy and hover store unchanged; authored labels/props/selection titles survive literal lookalikes. Selection actions supplied by their own owner."
     },
     {
       "path": "src/app/campaigns/[campaignId]/MapLayersPanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Layer names/descriptions, hide/show/select/delete/bulk/privacy captions and typed native object names/details localized. Layer visibility remains a local canvas filter, not a map mutation. Native refs, counts, dmOnly flags, checkbox/delete/hide callbacks and order unchanged; authored label/prop names stay literal."
     },
     {
       "path": "src/app/campaigns/[campaignId]/MapOptions.tsx",
@@ -539,7 +541,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/MapToasts.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Raw diagnostics remain in state and timers/IDs/tones unchanged. Known refusal/operation diagnostics render localized with opaque-failure fallback; the two exact native deploy/scene completion notes translate, other authored completion text remains literal."
     },
     {
       "path": "src/app/campaigns/[campaignId]/MapToolbox.tsx",
@@ -968,7 +971,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/useMapSelection.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Selected object title/edit prompt labels localized from native typed ref and display facts. Editable initial values still come from raw objects; authored input saves unchanged. Existing movement/duplicate/remove/link/privacy actions, reference filtering, bounding boxes and geometry intact."
     },
     {
       "path": "src/app/campaigns/[campaignId]/useNarrationAudio.ts",
@@ -1571,8 +1575,8 @@
     },
     {
       "path": "src/app/workshop/maps/MapEditor.tsx",
-      "state": "pending",
-      "review": "Map hotkey group display now uses viewer uiLocale through a text-only adapter; native key arrays, mapToolState and event handler semantics unchanged. Other controls, editor diagnostics and content remain pending."
+      "state": "covered",
+      "review": "Library map controller deploy/open/duplicate/remove/status/theme/ambient captions and five SaveDot states localized. Native theme/ambient/action values, transforms, selections and save/deploy handlers unchanged; title/notes/tag editors and other child panes retain independent ownership. Viewer locale drives UI; no map data translated."
     },
     {
       "path": "src/app/workshop/maps/MapForge.tsx",
@@ -1993,7 +1997,8 @@
     },
     {
       "path": "src/components/ui/SelectionBar.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Generic selection toolbar captions/count/default actions use global UI translations. Caller title remains literal; native action IDs, moving state and clear/action callbacks unchanged."
     },
     {
       "path": "src/components/ui/Sheet.tsx",
