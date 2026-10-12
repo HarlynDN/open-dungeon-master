@@ -206,7 +206,7 @@
     {
       "path": "src/app/campaigns/[campaignId]/CharacterSheetDialog.tsx",
       "state": "pending",
-      "review": "Owned identity/vitals/derived/load/wild-shape/slot/resource/equipment/owed-choice/notes/export chrome and native usage refusals localized; all 415 static registered resource explanations and names reviewed (including 140 authored subclass/lineage counters and six native themes). Dynamic free-cast resources, magic-item names, feature/feat material and Chinese PDF output keep the full dialog pending. Current table-flow batch: Reviewed sheet dialog compositions and usage refusal/time state. Identity, derived explanations, vitals, condition details, slots, resource/gear help and owed choices use existing adapters; usage sends native IDs/counters, campaign action locale passes to feature choices. Authored names/backstory/notes stay literal; child material coverage remains independent. Remaining known material/native-output gaps above still prevent full-owner completion."
+      "review": "Owned identity/vitals/derived/load/wild-shape/slot/resource/equipment/owed-choice/notes/export chrome and native usage refusals localized; all 415 static registered resource explanations and names reviewed (including 140 authored subclass/lineage counters and six native themes). Dynamic free-cast resources, magic-item names, feature/feat material and Chinese PDF output keep the full dialog pending. Current table-flow batch: Reviewed sheet dialog compositions and usage refusal/time state. Identity, derived explanations, vitals, condition details, slots, resource/gear help and owed choices use existing adapters; usage sends native IDs/counters, campaign action locale passes to feature choices. Authored names/backstory/notes stay literal; child material coverage remains independent. Remaining known material/native-output gaps above still prevent full-owner completion. SRD magic naming batch: all 239 standard item titles and 52 exact variants now share the equipment/reference aliases. Long magic-item help, additional native/pack item names, feature/free-cast material and Chinese PDF output remain open."
     },
     {
       "path": "src/app/campaigns/[campaignId]/CharacterVoices.tsx",
@@ -471,7 +471,7 @@
     {
       "path": "src/app/campaigns/[campaignId]/ItemProposalBar.tsx",
       "state": "pending",
-      "review": "Owned approval/withdrawal/waiting controls and eight native summary kinds localized using source-bound public metadata. Trade summaries/refusals bind to native offers; six frozen English renders and canonical callbacks reviewed. Authored reasons/names and unknown, stale or truncated source frames retain original text. Full magic-item and complex-condition names remain pending. Current table-flow batch: Reviewed approve/decline/withdraw and passive proposal display. Typed native offer/summary/error adapters already project complete owned frames. Character names and authored reason stay literal; requests carry action/proposal IDs unchanged. Remaining known material/native-output gaps above still prevent full-owner completion."
+      "review": "Owned approval/withdrawal/waiting controls and eight native summary kinds localized using source-bound public metadata. Trade summaries/refusals bind to native offers; six frozen English renders and canonical callbacks reviewed. Authored reasons/names and unknown, stale or truncated source frames retain original text. Full magic-item and complex-condition names remain pending. Current table-flow batch: Reviewed approve/decline/withdraw and passive proposal display. Typed native offer/summary/error adapters already project complete owned frames. Character names and authored reason stay literal; requests carry action/proposal IDs unchanged. Remaining known material/native-output gaps above still prevent full-owner completion. SRD magic naming batch: native grant/remove/purchase/trade summaries now display the 239 standard magic-item names and 52 exact variants via the shared adapter; grouped gear/loot/proposal check preserves original tool summaries and canonical callback fields. Additional native/pack names and remaining complex-condition material remain open."
     },
     {
       "path": "src/app/campaigns/[campaignId]/LabelSheet.tsx",
@@ -631,7 +631,7 @@
     {
       "path": "src/app/campaigns/[campaignId]/Moments.tsx",
       "state": "pending",
-      "review": "Owned upgrade/rest/loot/travel text reviewed with original timers, queueing, audit inputs, icon keys and proper/authored names unchanged. Chinese long-rest label confirms completion rather than falsely asserting complete recovery. Registered equipment display names are localized; full magic-item names remain pending. Existing in-fiction audit reasons stay original. Current table-flow batch: Reviewed level/rest/loot/travel composition: existing translated captions and typed numerical audit facts; known equipment display labels. Character/pet/place names, generated/authored reason text and audit history stay literal. Timers/gain calculations are unchanged. Remaining known material/native-output gaps above still prevent full-owner completion."
+      "review": "Owned upgrade/rest/loot/travel text reviewed with original timers, queueing, audit inputs, icon keys and proper/authored names unchanged. Chinese long-rest label confirms completion rather than falsely asserting complete recovery. Registered equipment display names are localized; full magic-item names remain pending. Existing in-fiction audit reasons stay original. Current table-flow batch: Reviewed level/rest/loot/travel composition: existing translated captions and typed numerical audit facts; known equipment display labels. Character/pet/place names, generated/authored reason text and audit history stay literal. Timers/gain calculations are unchanged. Remaining known material/native-output gaps above still prevent full-owner completion. SRD magic naming batch: the real loot component renders standard magic-item names through the new shared alias catalog. Additional native/pack item names remain open; authored reasons/place names and existing timing/gain data stay literal."
     },
     {
       "path": "src/app/campaigns/[campaignId]/MonsterFields.tsx",
@@ -1967,7 +1967,7 @@
     {
       "path": "src/components/sheet/SheetGearRow.tsx",
       "state": "pending",
-      "review": "Owned wear/attune/charge/timing/death/combat/curse UI and known native refusals localized with original callbacks retained. Magic item catalog names and source material beyond existing aliases remain pending."
+      "review": "Owned wear/attune/charge/timing/death/combat/curse UI and known native refusals localized with original callbacks retained. Magic item catalog names and source material beyond existing aliases remain pending. SRD magic naming batch: standard magic-item names and exact resistance/giant/dragon/+N variants use the shared display alias. Grouped real gear renderer verifies attunement callback and unchanged inventory/mechanics. Additional native/pack item names remain open."
     },
     {
       "path": "src/components/sheet/SheetParts.tsx",

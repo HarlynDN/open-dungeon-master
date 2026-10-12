@@ -17,7 +17,8 @@ const key = (name: string) => name.normalize("NFKC").replace(/[‘’]/g, "'").t
 // An equipment bonus is part of the owned item's name: translating
 // Longsword +1 must not turn it into a different, plain Longsword.
 export function localizedReferenceAliases(kind: ReferenceKind, name: string, locale: AppLocale): readonly string[] {
-  const direct = referenceAliases(kind, name, locale);
+  const known = referenceAliases(kind, name, locale);
+  const direct = known.length ? known : referenceAliases(kind, key(name), locale);
   if (direct.length) return direct;
   if (kind === "monster") {
     const indexed = /^(.*?)\s+((?:#\s*)?\d+)$/.exec(name.trim());
@@ -70,9 +71,13 @@ export function resolveReference<T extends ReferenceCandidate>(
 
 export function translatedReferenceNames(kind: ReferenceKind, term: string, locale: AppLocale): string[] {
   const wanted = key(term);
-  const bonus = kind === "equipment" ? /^(.*?)\s*(\+[1-3])$/.exec(term.trim()) : null;
-  if (bonus) return translatedReferenceNames(kind, bonus[1].trim(), locale).map(name => `${name} ${bonus[2]}`);
-  return Object.entries(REFERENCE_NAMES[locale][kind] ?? {})
+  const direct = Object.entries(REFERENCE_NAMES[locale][kind] ?? {})
     .filter(([, aliases]) => aliases.some(alias => key(alias) === wanted))
     .map(([name]) => name);
+  // Some +N names are complete registered items (a War Mage wand), not a
+  // bonus appended to a mundane base item. Preserve those exact matches.
+  if (direct.length) return direct;
+  const bonus = kind === "equipment" ? /^(.*?)\s*(\+[1-3])$/.exec(term.trim()) : null;
+  if (bonus) return translatedReferenceNames(kind, bonus[1].trim(), locale).map(name => `${name} ${bonus[2]}`);
+  return [];
 }

@@ -3,6 +3,7 @@ import type { AppLocale } from './locales.ts';
 import { EQUIPMENT_NAMES } from "./equipment-name-messages.ts";
 import type { EQUIPMENT_NAME_MESSAGES as EQUIPMENT_NAME_MESSAGES_Shape } from "./equipment-name-messages.ts";
 import { REFERENCE_NAMES } from './reference-names.ts';
+import { referenceDisplayName } from './references.ts';
 
 const normalize = (value: string) => value.trim().toLowerCase().replace(/[‘’]/g, "'");
 const nativeNames = new Map(EQUIPMENT_NAMES.map(row => [normalize(row.name), row.key]));
@@ -13,7 +14,7 @@ export function equipmentName(value: string, locale: AppLocale, homebrew = false
   if (key) return EQUIPMENT_NAME_MESSAGES[locale][key];
   const bonus = /^(.*?)\s*(\+[1-3])$/.exec(value.trim());
   if (bonus && nativeNames.has(normalize(bonus[1]))) return `${equipmentName(bonus[1], locale)} ${bonus[2]}`;
-  return value;
+  return referenceDisplayName("equipment", value, locale);
 }
 
 // Match translated names and the established synonyms, including fragments.

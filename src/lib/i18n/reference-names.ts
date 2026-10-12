@@ -1,5 +1,6 @@
 import type { AppLocale } from "./locales.ts";
 import { EQUIPMENT_NAMES, EQUIPMENT_NAME_MESSAGES } from "./equipment-name-messages.ts";
+import { MAGIC_ITEM_NAMES, MAGIC_ITEM_NAME_MESSAGES } from "./magic-item-name-messages.ts";
 import { SPELL_NAMES, SPELL_NAME_MESSAGES } from "./spell-name-messages.ts";
 import { terminologyAliases } from "./terminology.ts";
 
@@ -16,6 +17,7 @@ export const REFERENCE_NAMES: Record<AppLocale, ReferenceNames> = {
     monster: terminologyAliases("monster", "zh-CN"),
     equipment: {
       ...Object.fromEntries(EQUIPMENT_NAMES.map(row => [row.name.toLowerCase(), [EQUIPMENT_NAME_MESSAGES["zh-CN"][row.key]]])),
+      ...Object.fromEntries(MAGIC_ITEM_NAMES.flatMap(row => [row.name, ...("aliases" in row ? row.aliases : [])].map(name => [name.toLowerCase(), [MAGIC_ITEM_NAME_MESSAGES["zh-CN"][row.key]]]))),
       club: ["短棒"], dagger: ["匕首"], greatclub: ["巨棒"], handaxe: ["手斧"],
       javelin: ["标枪"], "light hammer": ["轻锤"], mace: ["钉头锤"], quarterstaff: ["长棍"],
       sickle: ["镰刀"], spear: ["矛"], "light crossbow": ["轻弩"], dart: ["飞镖"],

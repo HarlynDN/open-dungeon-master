@@ -34,6 +34,7 @@ import { REGION_MESSAGES } from "./region-messages.ts";
 import { BOARD_TOOL_MESSAGES } from "./board-tool-messages.ts";
 import { BOARD_CONTROL_MESSAGES } from "./board-control-messages.ts";
 import { BOARD_ZONE_MESSAGES } from "./board-zone-messages.ts";
+import { MAGIC_ITEM_NAME_MESSAGES } from "./magic-item-name-messages.ts";
 import { DICE_CONTROL_MESSAGES } from "./dice-control-messages.ts";
 import { FEED_MESSAGES } from "./feed-messages.ts";
 import { CHAT_MESSAGES } from "./chat-messages.ts";
@@ -137,6 +138,7 @@ const en = {
   ...DICE_CONTROL_MESSAGES.en,
   ...BOARD_CONTROL_MESSAGES.en,
   ...BOARD_ZONE_MESSAGES.en,
+  ...MAGIC_ITEM_NAME_MESSAGES.en,
     ...BOARD_TOOL_MESSAGES.en,
     ...REGION_MESSAGES.en,
     ...MAP_SCENE_MESSAGES.en,
@@ -281,6 +283,7 @@ const zhCN: Messages = {
   ...DICE_CONTROL_MESSAGES["zh-CN"],
   ...BOARD_CONTROL_MESSAGES["zh-CN"],
   ...BOARD_ZONE_MESSAGES["zh-CN"],
+  ...MAGIC_ITEM_NAME_MESSAGES["zh-CN"],
     ...BOARD_TOOL_MESSAGES["zh-CN"],
     ...REGION_MESSAGES["zh-CN"],
     ...MAP_SCENE_MESSAGES["zh-CN"],
