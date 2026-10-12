@@ -1,3 +1,5 @@
+import { DM_TOOLS_MESSAGES } from "./dm-tools-messages.ts";
+import { DM_ACTION_MESSAGES } from "./dm-action-messages.ts";
 import { REFERENCE_METRICS_MESSAGES } from "./reference-metrics-messages.ts";
 import { REFERENCE_SOCIAL_MESSAGES } from "./reference-social-messages.ts";
 import { SETUP_FLOW_MESSAGES } from "./setup-flow-messages.ts";
@@ -120,7 +122,9 @@ const en = {
     ...REGION_MESSAGES.en,
     ...MAP_SCENE_MESSAGES.en,
     ...MAP_EDITOR_MESSAGES.en,
-    ...REFERENCE_METRICS_MESSAGES.en,
+    ...DM_TOOLS_MESSAGES.en,
+  ...DM_ACTION_MESSAGES.en,
+  ...REFERENCE_METRICS_MESSAGES.en,
   ...REFERENCE_SOCIAL_MESSAGES.en,
   ...SETUP_FLOW_MESSAGES.en,
   ...SETUP_MEDIA_MESSAGES.en,
@@ -244,7 +248,9 @@ const zhCN: Messages = {
     ...REGION_MESSAGES["zh-CN"],
     ...MAP_SCENE_MESSAGES["zh-CN"],
     ...MAP_EDITOR_MESSAGES["zh-CN"],
-    ...REFERENCE_METRICS_MESSAGES["zh-CN"],
+    ...DM_TOOLS_MESSAGES["zh-CN"],
+  ...DM_ACTION_MESSAGES["zh-CN"],
+  ...REFERENCE_METRICS_MESSAGES["zh-CN"],
   ...REFERENCE_SOCIAL_MESSAGES["zh-CN"],
   ...SETUP_FLOW_MESSAGES["zh-CN"],
   ...SETUP_MEDIA_MESSAGES["zh-CN"],

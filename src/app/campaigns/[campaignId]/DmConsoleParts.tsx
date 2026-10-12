@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { ChevronDown, ChevronRight, X } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { ui } from "@/lib/ui";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { GameIcon } from "@/components/ui/GameIcon";
 import { NumberStepper } from "@/components/ui/NumberStepper";
 import { SectionHead } from "@/components/ui/SectionHead";
@@ -138,6 +139,7 @@ export function OptionalNumber({
   emptyHint: string;
   size?: "sm" | "md";
 }) {
+  const { t } = useLocale();
   const floor = min ?? Number.NEGATIVE_INFINITY;
   const ceiling = max ?? Number.POSITIVE_INFINITY;
   const first = Math.min(ceiling, Math.max(floor, start ?? min ?? 0));
@@ -158,8 +160,8 @@ export function OptionalNumber({
         <button
           type="button"
           onClick={() => onChange("")}
-          aria-label={`Clear ${label}`}
-          title={`Clear: ${emptyHint}`}
+          aria-label={t("dmToolsUi.clearField", { label })}
+          title={t("dmToolsUi.clearHint", { hint: emptyHint })}
           className={cn(ui.iconAction, "!opacity-100")}
         >
           <X className="size-3.5" aria-hidden="true" />
@@ -171,11 +173,10 @@ export function OptionalNumber({
 
 // The quiet "Close" under an open form.
 export function CloseForm({ onClick }: { onClick: () => void }) {
+  const { t } = useLocale();
   return (
     <button type="button" onClick={onClick} className={cn(ui.btnSmall, "px-2 py-1 text-[11px]")}>
-      <X className="size-3" aria-hidden="true" />
-      Close
-    </button>
+      <X className="size-3" aria-hidden="true" />{t("dmToolsUi.close")}</button>
   );
 }
 

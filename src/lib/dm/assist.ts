@@ -1,3 +1,7 @@
+import { APP_LOCALES } from "@/lib/i18n/locales";
+import { DM_ACTION_MESSAGES } from "@/lib/i18n/dm-action-messages";
+import { DM_ACTION_KEYWORDS } from "@/lib/i18n/dm-action-keywords";
+import { dmActionSource } from "@/lib/i18n/dm-action-presentations";
 import type { Campaign } from "@/lib/db/campaigns";
 import { spellAuthorsFor } from "@/lib/dm/spell-authors";
 import { bestiaryFor, resolveMonster, suggestEnemies } from "@/lib/bestiary";
@@ -45,6 +49,10 @@ export async function suggestAdjudication(
   const ranked = rankAdjudications(intent, ADJUDICATIONS, {
     inEncounter: options.inEncounter,
     limit: 5,
+    localizedText: entry => {
+      const source = dmActionSource(entry);
+      return source ? APP_LOCALES.map(locale => ({ label: DM_ACTION_MESSAGES[locale][source.labelKey], summary: DM_ACTION_MESSAGES[locale][source.summaryKey], keywords: DM_ACTION_KEYWORDS[locale][entry.name] })) : [];
+    },
   });
   const suggestions: SuggestedAdjudication[] = ranked.map(({ entry }) => ({
     name: entry.name,

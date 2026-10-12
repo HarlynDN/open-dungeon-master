@@ -5,6 +5,10 @@ import { isComposingInput } from "@/lib/input-composition";
 import { Loader2, Sparkles } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { ui } from "@/lib/ui";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { dmToolsText, DM_TOOL_NOTICES } from "@/lib/i18n/dm-tools-presentations";
+import { metricText } from "@/lib/i18n/reference-metrics-presentations";
+import { dmActionView } from "@/lib/i18n/dm-action-presentations";
 import { GameIcon } from "@/components/ui/GameIcon";
 import {
   ActionPlate,
@@ -79,6 +83,7 @@ function IntentSuggest({
   intent: string;
   onIntentChange: (next: string) => void;
 }) {
+  const { t, locale } = useLocale();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
@@ -100,15 +105,15 @@ function IntentSuggest({
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
-        setError(data.error || "Could not work that out.");
+        setError(data.error || DM_TOOL_NOTICES.intent);
         return;
       }
       setSuggestions(data.suggestions ?? []);
       if (!data.suggestions?.length) {
-        setError("Nothing in the engine matches that. It may just be narration.");
+        setError(DM_TOOL_NOTICES.noIntent);
       }
     } catch {
-      setError("Could not reach the server.");
+      setError(DM_TOOL_NOTICES.network);
     } finally {
       setBusy(false);
     }
@@ -117,13 +122,13 @@ function IntentSuggest({
   const openEntry = open ? findAdjudication(ADJUDICATIONS, open.name) : null;
 
   return (
-    <DeskCard glyph="die-d20" title="What should I press?">
+    <DeskCard glyph="die-d20" title={t("dmToolsUi.assist.title")}>
       <textarea
         value={intent}
         onChange={(event) => onIntentChange(event.target.value.slice(0, 1000))}
         rows={2}
-        placeholder="I try to talk the guard into letting us through."
-        aria-label="What the player said"
+        placeholder={t("dmToolsUi.assist.intentHint")}
+        aria-label={t("dmToolsUi.assist.intent")}
         className={cn(inputClass, "resize-y")}
       />
       <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
@@ -134,20 +139,18 @@ function IntentSuggest({
           aria-busy={busy}
           className={ui.btnPrimary}
         >
-          {busy ? <Loader2 className="size-4 animate-spin" /> : <Sparkles className="size-4" />}
-          Suggest
-        </button>
+          {busy ? <Loader2 className="size-4 animate-spin" /> : <Sparkles className="size-4" />}{t("dmToolsUi.suggest")}</button>
         <button
           type="button"
           onClick={() => ask(false)}
           disabled={busy || !intent.trim()}
-          title="Skips the model and just matches keywords against the catalog."
+          title={t("dmToolsUi.assist.noModelTip")}
           className={cn(ui.btnSmall, "min-h-10 text-xs")}
         >
-          Without the model
+          {t("dmToolsUi.assist.noModel")}
         </button>
       </div>
-      {error ? <p className="motion-shake mt-1.5 text-xs text-red-400">{error}</p> : null}
+      {error ? <p className="motion-shake mt-1.5 text-xs text-red-400">{dmToolsText(error, locale)}</p> : null}
 
       {suggestions.length ? (
         <ul className="stagger mt-2 space-y-1.5">
@@ -168,15 +171,15 @@ function IntentSuggest({
               ) : (
                 <ActionPlate
                   glyph={adjudicationGlyph(suggestion.name, "tab-dm")}
-                  label={suggestion.label}
+                  label={dmActionView(suggestion, locale).label}
                   badge={
                     suggestion.args ? (
                       <span className="ml-1.5 rounded-full border border-amber-500/40 bg-amber-400/10 px-1.5 py-px align-middle font-display text-[10px] tracking-[0.1em] text-amber-200">
-                        filled in
+                        {t("dmToolsUi.assist.filled")}
                       </span>
                     ) : null
                   }
-                  summary={suggestion.why || suggestion.summary}
+                  summary={suggestion.why || dmActionView(suggestion, locale).summary}
                   onClick={() => setOpen(suggestion)}
                 />
               )}
@@ -190,24 +193,24 @@ function IntentSuggest({
 
 // The DMG's difficulty ladder, so "hard" is DC 20 in every scene.
 function DcLadder() {
+  const { t, locale } = useLocale();
   return (
-    <DeskCard glyph="rest-proficiency" title="What should this cost?">
+    <DeskCard glyph="rest-proficiency" title={t("dmToolsUi.assist.dcTitle")}>
       <div className="stagger-pop flex flex-wrap gap-1">
         {DIFFICULTY_TIERS.map((tier) => (
           <span
             key={tier}
             className="inline-flex items-center rounded-lg border border-amber-500/25 bg-stone-950/50 px-2 py-1 text-xs text-stone-200"
           >
-            {TIER_LABELS[tier]}
+            {metricText(TIER_LABELS[tier], locale, "difficulty")}
             <span className="ml-1.5 font-display font-semibold tracking-wide text-amber-200">
-              DC {dcForDifficulty(tier)}
+              {t("dmToolsUi.dc", { dc: dcForDifficulty(tier) })}
             </span>
           </span>
         ))}
       </div>
       <p className="mt-1.5 text-[11px] text-stone-500">
-        Naming the tier rather than the number is what keeps a hard lock the
-        same difficulty in chapter one and chapter nine.
+        {t("dmToolsUi.assist.dcNote")}
       </p>
     </DeskCard>
   );
@@ -221,6 +224,7 @@ function EncounterBudget({
   sheets: CharacterSheet[];
   encounter: PublicEncounter | null;
 }) {
+  const { t, locale } = useLocale();
   const evaluation = useMemo(() => {
     const levels = sheets.filter((sheet) => !sheet.deathSaves?.dead).map((sheet) => sheet.level);
     const crs = (encounter?.enemies ?? [])
@@ -234,28 +238,21 @@ function EncounterBudget({
 
   if (!evaluation) {
     return (
-      <DeskCard glyph="system-encounters" title="How hard is this fight?">
+      <DeskCard glyph="system-encounters" title={t("dmToolsUi.assist.budgetTitle")}>
         <p className="text-xs text-stone-500">
-          Nothing on the board yet. Add enemies and this reads the budget as
-          they land.
+          {t("dmToolsUi.assist.emptyBudget")}
         </p>
       </DeskCard>
     );
   }
   return (
-    <DeskCard glyph="system-encounters" title="How hard is this fight?">
+    <DeskCard glyph="system-encounters" title={t("dmToolsUi.assist.budgetTitle")}>
       <p key={evaluation.verdict} className={cn("count-pop flex items-center gap-2 font-display text-base tracking-wide", VERDICT_TONE[evaluation.verdict])}>
         <GameIcon icon={{ kind: "glyph", key: "tab-battle" }} size="size-6" />
-        {VERDICT_LABELS[evaluation.verdict]}
+        {metricText(VERDICT_LABELS[evaluation.verdict], locale, "verdict")}
       </p>
       <p className="mt-0.5 text-[11px] leading-snug text-stone-500">
-        {evaluation.adjustedXp.toLocaleString()} adjusted XP against thresholds
-        of {evaluation.thresholds.easy.toLocaleString()} easy,{" "}
-        {evaluation.thresholds.medium.toLocaleString()} medium,{" "}
-        {evaluation.thresholds.hard.toLocaleString()} hard,{" "}
-        {evaluation.thresholds.deadly.toLocaleString()} deadly. Raw XP is{" "}
-        {evaluation.totalXp.toLocaleString()}; the rest is the many-enemies
-        multiplier.
+        {t("dmToolsUi.assist.budget", { adjusted: evaluation.adjustedXp.toLocaleString(), easy: evaluation.thresholds.easy.toLocaleString(), medium: evaluation.thresholds.medium.toLocaleString(), hard: evaluation.thresholds.hard.toLocaleString(), deadly: evaluation.thresholds.deadly.toLocaleString(), raw: evaluation.totalXp.toLocaleString() })}
       </p>
     </DeskCard>
   );
@@ -270,6 +267,7 @@ function EncounterBudget({
 // rule_chunks, sorts pinned ones first, and tells the model they override the
 // standard rules.
 function RulesLookup({ campaignId }: { campaignId: string }) {
+  const { t, locale } = useLocale();
   const [question, setQuestion] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -294,19 +292,19 @@ function RulesLookup({ campaignId }: { campaignId: string }) {
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
-        setError(data.error || "Could not look that up.");
+        setError(data.error || DM_TOOL_NOTICES.lookup);
         return;
       }
       setAnswer({ answer: data.ask?.answer ?? "", citations: data.ask?.citations ?? [] });
     } catch {
-      setError("Could not reach the server.");
+      setError(DM_TOOL_NOTICES.network);
     } finally {
       setBusy(false);
     }
   }
 
   return (
-    <DeskCard glyph="system-rules" title="Look up a rule">
+    <DeskCard glyph="system-rules" title={t("dmToolsUi.assist.rulesTitle")}>
       <div className="flex gap-1.5">
         <input
           value={question}
@@ -317,8 +315,8 @@ function RulesLookup({ campaignId }: { campaignId: string }) {
               void look();
             }
           }}
-          placeholder="Can you cast a spell and use a bonus action?"
-          aria-label="Rules question"
+          placeholder={t("dmToolsUi.assist.ruleHint")}
+          aria-label={t("dmToolsUi.assist.question")}
           className={inputClass}
         />
         <button
@@ -328,10 +326,10 @@ function RulesLookup({ campaignId }: { campaignId: string }) {
           aria-busy={busy}
           className={cn(ui.btnSecondary, "shrink-0")}
         >
-          {busy ? <Loader2 className="size-4 animate-spin" /> : "Ask"}
+          {busy ? <Loader2 className="size-4 animate-spin" /> : t("dmToolsUi.ask")}
         </button>
       </div>
-      {error ? <p className="motion-shake mt-1.5 text-xs text-red-400">{error}</p> : null}
+      {error ? <p className="motion-shake mt-1.5 text-xs text-red-400">{dmToolsText(error, locale)}</p> : null}
       {answer ? (
         <div className="reveal mt-1.5 text-xs text-stone-300">
           <p className="whitespace-pre-wrap">{answer.answer}</p>

@@ -1,0 +1,31 @@
+import type { AppLocale } from "./locales.ts";
+// Lexical hints only. These never execute an action or rewrite tool arguments.
+export const DM_ACTION_KEYWORDS: Record<AppLocale, Partial<Record<string, readonly string[]>>> = {
+  en: {},
+  "zh-CN": {
+    pc_attack: ["攻击", "刺", "刺向", "挥剑", "射击", "砍", "斩"],
+    request_roll: ["检定", "豁免", "潜行", "躲藏", "攀爬", "搜索", "调查", "察觉", "跳跃", "游泳", "擒抱", "推撞", "追踪"],
+    cast_at_enemy: ["施法", "法术", "魔法", "施放", "施展"],
+    cast_at_player: ["施法", "法术", "护盾", "保护"],
+    cast_buff: ["增益", "祝福", "加速", "变大"],
+    aoe_damage: ["火球", "爆炸", "吐息", "范围"],
+    split_damage: ["爆炸", "吐息", "范围", "分配伤害"],
+    apply_damage: ["伤害", "受伤", "烧伤", "坠落"],
+    heal: ["治疗", "治愈", "恢复", "药水", "包扎"],
+    stabilize: ["稳定", "止血", "濒死", "昏迷"],
+    start_encounter: ["伏击", "战斗", "开战", "先攻"],
+    grant_item: ["给予", "奖励", "战利品", "获得物品"],
+    remove_item: ["丢弃", "丢失", "损毁", "偷走"],
+    modify_gold: ["金币", "钱币", "付款", "支付", "钱袋"],
+    purchase: ["购买", "买", "出售", "卖", "商店", "交易"],
+    set_condition: ["中毒", "倒地", "擒抱", "恐慌", "震慑", "目盲", "束缚"],
+    take_rest: ["休息", "短休", "长休", "睡觉", "扎营"],
+    npc_reaction: ["说服", "劝说", "贿赂", "威吓", "交谈", "讨价还价"],
+    social_check: ["说服", "欺瞒", "撒谎", "威吓", "表演"],
+    roll_treasure: ["宝藏", "宝箱", "战利品"],
+    travel: ["旅行", "旅途", "行军", "骑行", "赶路"],
+    move_party: ["离开", "进入", "到达", "前往"],
+    group_check: ["团体", "全队", "一起"],
+    damage_object: ["破坏", "砸门", "打碎", "锁链"],
+  },
+};

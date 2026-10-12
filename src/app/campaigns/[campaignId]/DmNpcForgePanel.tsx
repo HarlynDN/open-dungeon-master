@@ -16,6 +16,8 @@ import {
 import { cn } from "@/lib/cn";
 import { encodeImageForUpload } from "@/lib/image-encode";
 import { ui } from "@/lib/ui";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { dmToolsText, DM_TOOL_NOTICES } from "@/lib/i18n/dm-tools-presentations";
 import { GameIcon } from "@/components/ui/GameIcon";
 import { offersImages, offersStoryModel, useCapabilities } from "@/lib/use-capabilities";
 import {
@@ -60,6 +62,7 @@ export function DmNpcForgePanel({
   campaignId: string;
   layout?: "chips" | "rows";
 }) {
+  const { t, locale } = useLocale();
   const [npcs, setNpcs] = useState<Npc[]>([]);
   const [graph, setGraph] = useState<RelationGraph>({ nodes: [], edges: [] });
   const [showGraph, setShowGraph] = useState(false);
@@ -185,7 +188,7 @@ export function DmNpcForgePanel({
       });
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) {
-        setError((payload as { error?: string }).error ?? "That did not save.");
+        setError((payload as { error?: string }).error ?? DM_TOOL_NOTICES.npcSave);
         return;
       }
       await load();
@@ -245,11 +248,11 @@ export function DmNpcForgePanel({
       const response = await fetch(`/api/campaigns/${campaignId}/dm/npcs`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ draft: { ...base, name: `${base.name} (copy)`.slice(0, 80) } }),
+        body: JSON.stringify({ draft: { ...base, name: t("dmToolsUi.copyName", { name: base.name }).slice(0, 80) } }),
       });
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) {
-        setError((payload as { error?: string }).error ?? "That could not be copied.");
+        setError((payload as { error?: string }).error ?? DM_TOOL_NOTICES.copy);
         return;
       }
       await load();
@@ -284,7 +287,7 @@ export function DmNpcForgePanel({
       });
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) {
-        setError((payload as { error?: string }).error ?? "The model had nothing to say.");
+        setError((payload as { error?: string }).error ?? DM_TOOL_NOTICES.npcGenerate);
         return;
       }
       setDraft((current) => applyGeneratedField(current, field, String(payload.text ?? "")));
@@ -305,12 +308,12 @@ export function DmNpcForgePanel({
       });
       const payload = await upload.json().catch(() => ({}));
       if (!upload.ok) {
-        setError(payload.error || "That image would not upload.");
+        setError(payload.error || DM_TOOL_NOTICES.upload);
         return;
       }
       await patch({ portraitUrl: payload.url });
     } catch {
-      setError("That image would not upload.");
+      setError(DM_TOOL_NOTICES.upload);
     } finally {
       setBusy(false);
     }
@@ -322,7 +325,7 @@ export function DmNpcForgePanel({
       <button
         type="button"
         disabled={generating !== "" || busy}
-        title={`Ask the model for ${FIELD_LABELS[field].toLowerCase()}`}
+        title={t("dmToolsUi.npc.generate", { field: dmToolsText(FIELD_LABELS[field].toLowerCase(), locale) })}
         onClick={() => void suggest(field)}
         className={cn(ui.btnSmall, "shrink-0 gap-1 px-2 py-1 text-[10px]")}
       >
@@ -330,9 +333,7 @@ export function DmNpcForgePanel({
           <Loader2 className="size-3 animate-spin" />
         ) : (
           <Sparkles className="size-3" />
-        )}
-        Suggest
-      </button>
+        )}{t("dmToolsUi.suggest")}</button>
     ) : null;
 
   const editor = (
@@ -357,7 +358,7 @@ export function DmNpcForgePanel({
           data-tour="cast-save"
           className={ui.btnPrimary}
         >
-          {busy ? <Loader2 className="size-4 animate-spin" /> : null} Save them
+          {busy ? <Loader2 className="size-4 animate-spin" /> : null} {t("dmToolsUi.npc.save")}
         </button>
         {selected ? (
           <>
@@ -380,28 +381,28 @@ export function DmNpcForgePanel({
               onClick={() => fileRef.current?.click()}
               className={cn(ui.btnSmall, "min-h-9 gap-1 px-2 py-1 text-xs")}
             >
-              <ImageIcon className="size-3" /> {selected.portraitUrl ? "Replace face" : "Add a face"}
+              <ImageIcon className="size-3" /> {selected.portraitUrl ? t("dmToolsUi.npc.replaceFace") : t("dmToolsUi.npc.addFace")}
             </button>
             {canPaint ? (
               <button
                 type="button"
                 disabled={busy} aria-busy={busy}
-                title="Render one on the shared media queue"
+                title={t("dmToolsUi.npc.paintTip")}
                 onClick={() => void patch({ draft, generatePortrait: true })}
                 className={cn(ui.btnSmall, "min-h-9 gap-1 px-2 py-1 text-xs")}
               >
-                <Sparkles className="size-3" /> Paint one
+                <Sparkles className="size-3" /> {t("dmToolsUi.npc.paint")}
               </button>
             ) : null}
             {selected.portraitUrl ? (
               <button
                 type="button"
                 disabled={busy} aria-busy={busy}
-                title="Take the picture away and show the stand-in for their role instead"
+                title={t("dmToolsUi.npc.placeholderTip")}
                 onClick={() => void patch({ portraitUrl: "" })}
                 className={cn(ui.btnSmall, "min-h-9 gap-1 px-2 py-1 text-xs")}
               >
-                <ImageOff className="size-3" /> Use placeholder
+                <ImageOff className="size-3" /> {t("dmToolsUi.npc.placeholder")}
               </button>
             ) : null}
             <button
@@ -409,30 +410,30 @@ export function DmNpcForgePanel({
               disabled={busy} aria-busy={busy}
               title={
                 selected.archived
-                  ? "Put them back in the DM's prompt"
-                  : "Keep them, but take them out of the DM's prompt"
+                  ? t("dmToolsUi.npc.restoreTip")
+                  : t("dmToolsUi.npc.archiveTip")
               }
               onClick={() => void patch({ archived: !selected.archived })}
               className={cn(ui.btnSmall, "min-h-9 gap-1 px-2 py-1 text-xs")}
             >
               {selected.archived ? (
                 <>
-                  <ArchiveRestore className="size-3" /> Bring back
+                  <ArchiveRestore className="size-3" /> {t("dmToolsUi.npc.restore")}
                 </>
               ) : (
                 <>
-                  <Archive className="size-3" /> Set aside
+                  <Archive className="size-3" /> {t("dmToolsUi.npc.archive")}
                 </>
               )}
             </button>
             <button
               type="button"
               disabled={busy} aria-busy={busy}
-              aria-label={`Duplicate ${selected.name}`}
+              aria-label={t("dmToolsUi.duplicateName", { name: selected.name })}
               onClick={() => void duplicate()}
               className={cn(ui.btnSmall, "min-h-9 gap-1 px-2 py-1 text-xs")}
             >
-              <Copy className="size-3" /> Duplicate
+              <Copy className="size-3" /> {t("dmToolsUi.duplicate")}
             </button>
             <button
               type="button"
@@ -440,13 +441,13 @@ export function DmNpcForgePanel({
               onClick={() => void remove()}
               className={cn(ui.btnSmall, "ml-auto min-h-9 gap-1 px-2 py-1 text-xs hover:border-red-400/50 hover:text-red-300")}
             >
-              <Trash2 className="size-3" /> Forget them
+              <Trash2 className="size-3" /> {t("dmToolsUi.npc.forget")}
             </button>
           </>
         ) : null}
       </div>
 
-      {error ? <p className="motion-shake text-[11px] text-red-400">{error}</p> : null}
+      {error ? <p className="motion-shake text-[11px] text-red-400">{dmToolsText(error, locale)}</p> : null}
     </div>
   );
 
@@ -462,7 +463,7 @@ export function DmNpcForgePanel({
         className={cn(ui.btnSmall, "min-h-9 px-2 py-1 text-xs", showGraph && "border-amber-500/70 bg-amber-400/10 text-amber-100")}
       >
         <GameIcon icon={{ kind: "glyph", key: "tab-bonds" }} size="size-5" />
-        {showGraph ? "Hide who knows whom" : "Who knows whom"}
+        {showGraph ? t("dmToolsUi.npc.hideGraph") : t("dmToolsUi.npc.graph")}
       </button>
       {showGraph ? (
         <RelationGraphView
@@ -484,13 +485,13 @@ export function DmNpcForgePanel({
     return (
       <div className="space-y-3">
         {graphView}
-        <Listed loaded={loaded} error={loadError} onRetry={() => void load()} loading="Calling the cast...">
+        <Listed loaded={loaded} error={dmToolsText(loadError, locale)} onRetry={() => void load()} loading={t("dmToolsUi.npc.loading")}>
           <CastRows npcs={npcs} onOpen={open} factionNames={new Map(factions.map((faction) => [faction.id, faction.name]))} />
         </Listed>
         <Sheet
           open={editorOpen}
           onOpenChange={setEditorOpen}
-          title={selected ? selected.name : "Someone new"}
+          title={selected ? selected.name : t("dmToolsUi.npc.new")}
           className="lg:w-[min(92vw,40rem)]"
         >
           {editor}
@@ -503,7 +504,7 @@ export function DmNpcForgePanel({
     <div className="space-y-3">
       {graphView}
       {/* The chips and the editor fields draw their own heads and cards. */}
-      <Listed loaded={loaded} error={loadError} onRetry={() => void load()} loading="Calling the cast...">
+      <Listed loaded={loaded} error={dmToolsText(loadError, locale)} onRetry={() => void load()} loading={t("dmToolsUi.npc.loading")}>
         <CastChips npcs={npcs} selectedId={selectedId} onOpen={open} />
       </Listed>
       {editor}

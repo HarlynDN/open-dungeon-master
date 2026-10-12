@@ -1,3 +1,5 @@
+import { tokenize } from "./fusion-logic.ts";
+
 // Shaping for the DM's assist rail: turning a player's stated intent into a
 // shortlist of adjudications, and reading back what the model proposed.
 //
@@ -26,10 +28,11 @@ const STOP_WORDS = new Set([
 ]);
 
 export function intentTokens(text: string): string[] {
-  return String(text ?? "")
-    .toLowerCase()
-    .split(/[^a-z0-9]+/)
-    .filter((word) => word.length > 2 && !STOP_WORDS.has(word));
+  const raw = String(text ?? "");
+  return [
+    ...raw.toLowerCase().split(/[^a-z0-9]+/).filter(word => word.length > 2 && !STOP_WORDS.has(word)),
+    ...tokenize(raw).filter(word => /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u.test(word)),
+  ];
 }
 
 // Extra words that should reach an entry even though they are not in its
@@ -88,7 +91,7 @@ export type AdjudicationSuggestion = {
 export function rankAdjudications(
   intent: string,
   entries: CatalogEntry[],
-  options: { inEncounter?: boolean; limit?: number } = {},
+  options: { inEncounter?: boolean; limit?: number; localizedText?: (entry: CatalogEntry) => ReadonlyArray<{ label: string; summary: string; keywords?: readonly string[] }> } = {},
 ): AdjudicationSuggestion[] {
   const tokens = intentTokens(intent);
   if (!tokens.length) {
@@ -101,10 +104,13 @@ export function rankAdjudications(
     if (entry.needsEncounter && options.inEncounter === false) {
       continue;
     }
+    const localized = options.localizedText?.(entry) ?? [];
+    const keywords = new Set([...SYNONYMS[entry.name] ?? [], ...localized.flatMap(text => text.keywords ?? [])]);
     const haystack = new Set([
       ...intentTokens(entry.name.replace(/_/g, " ")),
       ...intentTokens(entry.label),
       ...intentTokens(entry.summary),
+      ...localized.flatMap(text => [...intentTokens(text.label), ...intentTokens(text.summary)]),
     ]);
     let score = 0;
     for (const token of unique) {
@@ -113,7 +119,7 @@ export function rankAdjudications(
       if (haystack.has(token)) {
         score += intentTokens(entry.name.replace(/_/g, " ")).includes(token) ? 3 : 1;
       }
-      if (SYNONYMS[entry.name]?.includes(token)) {
+      if (keywords.has(token)) {
         score += 3;
       }
     }

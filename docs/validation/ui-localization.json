@@ -261,7 +261,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmAssistPanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped DM tools: viewer uiLocale for owned chrome, known notices/list failures, forecast/readout frames, per-field generation captions, prepared-fight feedback, table metadata/gaps and clear/close controls. Catalog suggestions use source-bound bilingual action captions; model reasons/body, authored NPC/table/encounter names, table results/reference syntax and unknown diagnostics stay native. Raw numbers/IDs/inputs/request bodies/crit rules/cues/visibility/callbacks unchanged; new duplicate suffix follows viewer locale. Missing table results carry an explicit ephemeral flag. Shared form/picker/editor/row owners remain independently pending; no real model/mutation acceptance claim."
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmBeatComposer.tsx",
@@ -282,7 +283,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmConsoleParts.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped DM tools: viewer uiLocale for owned chrome, known notices/list failures, forecast/readout frames, per-field generation captions, prepared-fight feedback, table metadata/gaps and clear/close controls. Catalog suggestions use source-bound bilingual action captions; model reasons/body, authored NPC/table/encounter names, table results/reference syntax and unknown diagnostics stay native. Raw numbers/IDs/inputs/request bodies/crit rules/cues/visibility/callbacks unchanged; new duplicate suffix follows viewer locale. Missing table results carry an explicit ephemeral flag. Shared form/picker/editor/row owners remain independently pending; no real model/mutation acceptance claim."
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmDelegationPanel.tsx",
@@ -290,7 +292,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmEncounterPrepPanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped DM tools: viewer uiLocale for owned chrome, known notices/list failures, forecast/readout frames, per-field generation captions, prepared-fight feedback, table metadata/gaps and clear/close controls. Catalog suggestions use source-bound bilingual action captions; model reasons/body, authored NPC/table/encounter names, table results/reference syntax and unknown diagnostics stay native. Raw numbers/IDs/inputs/request bodies/crit rules/cues/visibility/callbacks unchanged; new duplicate suffix follows viewer locale. Missing table results carry an explicit ephemeral flag. Shared form/picker/editor/row owners remain independently pending; no real model/mutation acceptance claim."
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmEnemyHpCard.tsx",
@@ -317,11 +320,13 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmNpcForgePanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped DM tools: viewer uiLocale for owned chrome, known notices/list failures, forecast/readout frames, per-field generation captions, prepared-fight feedback, table metadata/gaps and clear/close controls. Catalog suggestions use source-bound bilingual action captions; model reasons/body, authored NPC/table/encounter names, table results/reference syntax and unknown diagnostics stay native. Raw numbers/IDs/inputs/request bodies/crit rules/cues/visibility/callbacks unchanged; new duplicate suffix follows viewer locale. Missing table results carry an explicit ephemeral flag. Shared form/picker/editor/row owners remain independently pending; no real model/mutation acceptance claim."
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmOddsPanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped DM tools: viewer uiLocale for owned chrome, known notices/list failures, forecast/readout frames, per-field generation captions, prepared-fight feedback, table metadata/gaps and clear/close controls. Catalog suggestions use source-bound bilingual action captions; model reasons/body, authored NPC/table/encounter names, table results/reference syntax and unknown diagnostics stay native. Raw numbers/IDs/inputs/request bodies/crit rules/cues/visibility/callbacks unchanged; new duplicate suffix follows viewer locale. Missing table results carry an explicit ephemeral flag. Shared form/picker/editor/row owners remain independently pending; no real model/mutation acceptance claim."
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmSquarePick.tsx",
@@ -334,7 +339,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmTablesPanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped DM tools: viewer uiLocale for owned chrome, known notices/list failures, forecast/readout frames, per-field generation captions, prepared-fight feedback, table metadata/gaps and clear/close controls. Catalog suggestions use source-bound bilingual action captions; model reasons/body, authored NPC/table/encounter names, table results/reference syntax and unknown diagnostics stay native. Raw numbers/IDs/inputs/request bodies/crit rules/cues/visibility/callbacks unchanged; new duplicate suffix follows viewer locale. Missing table results carry an explicit ephemeral flag. Shared form/picker/editor/row owners remain independently pending; no real model/mutation acceptance claim."
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmWhisperPanel.tsx",
@@ -343,7 +349,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmWorkbenchPanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped DM tools: viewer uiLocale for owned chrome, known notices/list failures, forecast/readout frames, per-field generation captions, prepared-fight feedback, table metadata/gaps and clear/close controls. Catalog suggestions use source-bound bilingual action captions; model reasons/body, authored NPC/table/encounter names, table results/reference syntax and unknown diagnostics stay native. Raw numbers/IDs/inputs/request bodies/crit rules/cues/visibility/callbacks unchanged; new duplicate suffix follows viewer locale. Missing table results carry an explicit ephemeral flag. Shared form/picker/editor/row owners remain independently pending; no real model/mutation acceptance claim."
     },
     {
       "path": "src/app/campaigns/[campaignId]/EditCampaignDialog.tsx",
