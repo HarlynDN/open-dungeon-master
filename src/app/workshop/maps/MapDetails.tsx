@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+
 import { useState, type ReactNode } from "react";
 import { AddFromList } from "@/components/ui/AddFromList";
 import { useAutosave, type SaveState } from "@/lib/use-autosave";
@@ -63,12 +65,13 @@ export function useMapWords(selected: PreparedMap, patch: (body: Record<string, 
 
 // The name, for the editor's top bar.
 export function MapNameField({ words }: { words: MapWords }) {
+  const { t } = useLocale();
   return (
     // The field takes its face from this wrapper: the app resets `font` on inputs.
     <span className="min-w-0 flex-1 font-display text-[15px]">
     <input
       value={words.words.name}
-      aria-label="Map name"
+      aria-label={t("mapLibraryUi.details.name")}
       maxLength={80}
       onChange={(event) => words.setName(event.target.value)}
       onBlur={() => void words.flush()}
@@ -81,37 +84,38 @@ export function MapNameField({ words }: { words: MapWords }) {
 // Tags, notes and the dials that came through as children (theme, light,
 // what it sounds like), in the right column.
 export function MapDetailsPanel({ words, knownTags, children }: { words: MapWords; knownTags: string[]; children?: ReactNode }) {
+  const { t } = useLocale();
   return (
     <section className="space-y-2">
-      <PanelHead>Details</PanelHead>
+      <PanelHead>{t("mapLibraryUi.details.title")}</PanelHead>
       {children}
       <div className="space-y-1">
-        <span className="font-display text-[9px] uppercase tracking-[0.18em] text-stone-500">Tags</span>
+        <span className="font-display text-[9px] uppercase tracking-[0.18em] text-stone-500">{t("mapLibraryUi.details.tags")}</span>
         <input
           value={words.tagText}
-          aria-label="Tags"
-          placeholder="Tags, comma separated: crypt, undead, act two"
+          aria-label={t("mapLibraryUi.details.tags")}
+          placeholder={t("mapLibraryUi.details.tagsHint")}
           onChange={(event) => words.setTagText(event.target.value)}
           onBlur={() => void words.flush()}
           className={mapInput}
         />
         <AddFromList
-          prompt="Add a tag you already use"
+          prompt={t("mapLibraryUi.details.addTag")}
           options={knownTags.filter((tag) => !words.words.tags.includes(tag))}
           onPick={(tag) => words.setTags([...words.words.tags, tag])}
         />
       </div>
       <div className="space-y-1">
-        <span className="font-display text-[9px] uppercase tracking-[0.18em] text-stone-500">Notes</span>
-        <DictateField label="Map notes" onTranscript={(text) => words.setNotes(appendDictation(words.words.notes, text, 4000))}>
+        <span className="font-display text-[9px] uppercase tracking-[0.18em] text-stone-500">{t("mapLibraryUi.details.notes")}</span>
+        <DictateField label={t("mapLibraryUi.details.mapNotes")} onTranscript={(text) => words.setNotes(appendDictation(words.words.notes, text, 4000))}>
           <textarea
             value={words.words.notes}
-            aria-label="Notes"
+            aria-label={t("mapLibraryUi.details.notes")}
             maxLength={4000}
             onChange={(event) => words.setNotes(event.target.value)}
             onBlur={() => void words.flush()}
             rows={3}
-            placeholder="What lives here. Nobody but you reads this."
+            placeholder={t("mapLibraryUi.details.notesHint")}
             className={mapInput}
           />
         </DictateField>

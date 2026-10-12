@@ -1,5 +1,9 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { mapLibraryErrorText, mapImportFeedbackText, MAP_LIBRARY_FAILURES, type MapImportFeedback } from "@/lib/i18n/map-library-presentations";
+import { MAP_INSPECT_FAILURES } from "@/lib/i18n/map-inspection-presentations";
+import { REGION_FAILURES } from "@/lib/i18n/region-presentations";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronDown, ChevronRight, Plus } from "lucide-react";
 import { cn } from "@/lib/cn";
@@ -44,6 +48,7 @@ export function DmMapLibraryPanel({
   campaignId: string;
   layout?: "drawer" | "gallery";
 }) {
+  const { locale, t } = useLocale();
   const [state, setState] = useState<LibraryState>({
     maps: [],
     board: null,
@@ -56,7 +61,7 @@ export function DmMapLibraryPanel({
   const [tools, setTools] = useState<MapTools>(DEFAULT_MAP_TOOLS);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  const [note, setNote] = useState("");
+  const [note, setNote] = useState<MapImportFeedback | null>(null);
   const { toasts, push } = useMapToasts();
 
   // The state lands in a .then callback rather than after an await, so the
@@ -130,11 +135,14 @@ export function DmMapLibraryPanel({
       });
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) {
-        setError((payload as { error?: string }).error ?? "That did not work.");
+        setError((payload as { error?: string }).error ?? REGION_FAILURES.update);
         return null;
       }
       await load();
       return payload as { map?: PreparedMap; notes?: string[] };
+    } catch {
+      setError(REGION_FAILURES.network);
+      return null;
     } finally {
       setBusy(false);
     }
@@ -162,19 +170,24 @@ export function DmMapLibraryPanel({
         return false;
       }
       setError("");
-      const response = await fetch(`/api/campaigns/${campaignId}/dm/maps/${mapId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-      if (!response.ok) {
-        const payload = await response.json().catch(() => ({}));
-        // The server's own sentence, over the canvas where the eyes are.
-        push((payload as { error?: string }).error ?? "That was refused.");
+      try {
+        const response = await fetch(`/api/campaigns/${campaignId}/dm/maps/${mapId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+        if (!response.ok) {
+          const payload = await response.json().catch(() => ({}));
+          // The server's own sentence, over the canvas where the eyes are.
+          push((payload as { error?: string }).error ?? MAP_INSPECT_FAILURES.refused);
+          return false;
+        }
+        await load();
+        return true;
+      } catch {
+        push(REGION_FAILURES.network);
         return false;
       }
-      await load();
-      return true;
     },
     [campaignId, load, push],
   );
@@ -185,7 +198,7 @@ export function DmMapLibraryPanel({
     }
     setBusy(true);
     setError("");
-    setNote("");
+    setNote(null);
     try {
       const response = await fetch(`/api/campaigns/${campaignId}/dm/maps/${selected.id}`, {
         method: "POST",
@@ -194,11 +207,13 @@ export function DmMapLibraryPanel({
       });
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) {
-        push((payload as { error?: string }).error ?? "That did not work.");
+        push((payload as { error?: string }).error ?? REGION_FAILURES.update);
         return;
       }
       push(action === "deploy" ? "It is on the table." : "The scene is open.", "done");
       await load();
+    } catch {
+      push(REGION_FAILURES.network);
     } finally {
       setBusy(false);
     }
@@ -216,7 +231,7 @@ export function DmMapLibraryPanel({
     const original = selected;
     const created = await post({
       do: "create",
-      name: `${original.name} (copy)`.slice(0, 80),
+      name: t("mapLibraryUi.library.copyName", { name: original.name }).slice(0, 80),
       width: original.width,
       height: original.height,
       blank: "rock",
@@ -253,11 +268,13 @@ export function DmMapLibraryPanel({
       });
       if (!response.ok) {
         const payload = await response.json().catch(() => ({}));
-        setError((payload as { error?: string }).error ?? "The copy could not be painted.");
+        setError((payload as { error?: string }).error ?? MAP_LIBRARY_FAILURES.copy);
         return;
       }
       setSelectedId(copy.id);
       await load();
+    } catch {
+      setError(REGION_FAILURES.network);
     } finally {
       setBusy(false);
     }
@@ -268,11 +285,19 @@ export function DmMapLibraryPanel({
       return;
     }
     setBusy(true);
+    setError("");
     try {
-      await fetch(`/api/campaigns/${campaignId}/dm/maps/${selected.id}`, { method: "DELETE" });
+      const response = await fetch(`/api/campaigns/${campaignId}/dm/maps/${selected.id}`, { method: "DELETE" });
+      if (!response.ok) {
+        const payload = await response.json().catch(() => ({}));
+        push((payload as { error?: string }).error ?? MAP_LIBRARY_FAILURES.remove);
+        return;
+      }
       setSelectedId("");
       setEditorOpen(false);
       await load();
+    } catch {
+      push(REGION_FAILURES.network);
     } finally {
       setBusy(false);
     }
@@ -284,26 +309,31 @@ export function DmMapLibraryPanel({
   async function importUvtt(file: File) {
     setBusy(true);
     setError("");
-    setNote("");
+    setNote(null);
     try {
       const parsed = JSON.parse(await file.text()) as Record<string, unknown>;
       const art = backdropDataUrl(parsed);
       let backdropPath: string | undefined;
-      let pictureRefused = "";
+      let pictureError: string | null = null;
       if (art) {
-        // UVTT exports carry the drawing as full-size PNG; sized and
-        // encoded here like any other picked picture.
-        const encoded = await encodeImageForUpload(art.dataUrl);
-        const upload = await fetch("/api/upload", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ dataUrl: encoded.dataUrl, name: file.name, type: encoded.type }),
-        });
-        const payload = await upload.json().catch(() => ({}));
-        if (upload.ok) {
-          backdropPath = payload.url;
-        } else {
-          pictureRefused = `The picture did not come along: ${payload.error || "it would not upload."}`;
+        try {
+          // UVTT exports carry the drawing as full-size PNG; sized and
+          // encoded here like any other picked picture.
+          const encoded = await encodeImageForUpload(art.dataUrl);
+          const upload = await fetch("/api/upload", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ dataUrl: encoded.dataUrl, name: file.name, type: encoded.type }),
+          });
+          const payload = await upload.json().catch(() => ({}));
+          if (upload.ok) {
+            backdropPath = payload.url;
+          } else {
+            pictureError = payload.error || MAP_LIBRARY_FAILURES.picture;
+          }
+        } catch {
+          // Geometry can still be imported when its separate image fails.
+          pictureError = MAP_LIBRARY_FAILURES.picture;
         }
         // A picture that will not upload is not a reason to lose the walls:
         // the geometry is the part the rules need, but the DM is told.
@@ -320,10 +350,10 @@ export function DmMapLibraryPanel({
       });
       if (result?.map) {
         select(result.map.id);
-        setNote([result.notes?.[0] ?? "Imported.", pictureRefused].filter(Boolean).join(" "));
+        setNote({ notes: result.notes ?? [], pictureError });
       }
     } catch {
-      setError("That file is not a Universal VTT export this can read.");
+      setError(MAP_LIBRARY_FAILURES.import);
     } finally {
       setBusy(false);
     }
@@ -350,8 +380,8 @@ export function DmMapLibraryPanel({
 
   const feedback = (
     <>
-      {note ? <p className="text-[11px] text-emerald-400">{note}</p> : null}
-      {error ? <p className="text-[11px] text-red-400">{error}</p> : null}
+      {note ? <p className="text-[11px] text-emerald-400">{mapImportFeedbackText(note, locale)}</p> : null}
+      {error ? <p className="text-[11px] text-red-400">{mapLibraryErrorText(error, locale)}</p> : null}
     </>
   );
 
@@ -367,7 +397,7 @@ export function DmMapLibraryPanel({
             className="flex w-full items-center gap-2 text-left font-display text-sm tracking-wide text-amber-100"
           >
             <Plus className="size-4 text-amber-300" />
-            New map
+            {t("mapLibraryUi.library.new")}
             {creating ? (
               <ChevronDown className="ml-auto size-4 text-stone-500" />
             ) : (
@@ -389,7 +419,7 @@ export function DmMapLibraryPanel({
         </section>
 
         <div data-tour="maps-gallery">
-          <Listed loaded={loaded} error={loadError} onRetry={() => void load()} loading="Opening the drawer...">
+          <Listed loaded={loaded} error={mapLibraryErrorText(loadError, locale)} onRetry={() => void load()} loading={t("mapLibraryUi.library.loading")}>
             <MapGallery maps={state.maps} selectedId={selectedId} genre={state.genre} onOpen={(map) => select(map.id)} />
           </Listed>
         </div>
@@ -398,7 +428,7 @@ export function DmMapLibraryPanel({
         <Sheet
           open={editorOpen && selected !== null}
           onOpenChange={setEditorOpen}
-          title={selected?.name ?? "Map"}
+          title={selected?.name ?? t("mapLibraryUi.library.map")}
           // The editor brings its own top bar, with the map's name in it.
           hideTitle
           className="top-0 h-dvh max-h-none rounded-none px-0 pb-0 pt-0 lg:top-1/2 lg:h-[94vh] lg:max-h-[94vh] lg:w-[min(98vw,110rem)] lg:rounded-xl lg:p-0"
@@ -419,7 +449,7 @@ export function DmMapLibraryPanel({
         onImport={(file) => void importUvtt(file)}
       />
 
-      <Listed loaded={loaded} error={loadError} onRetry={() => void load()} loading="Opening the drawer...">
+      <Listed loaded={loaded} error={mapLibraryErrorText(loadError, locale)} onRetry={() => void load()} loading={t("mapLibraryUi.library.loading")}>
       {state.maps.length ? (
         <div data-pill-group="" className="flex flex-wrap gap-1">
           {state.maps.map((map) => (
@@ -436,14 +466,14 @@ export function DmMapLibraryPanel({
             >
               {map.name}
               <span className="ml-1 text-stone-600">
-                {map.width}x{map.height}
+                {t("mapLibraryUi.library.size", { width: map.width, height: map.height })}
               </span>
             </button>
           ))}
         </div>
       ) : (
         <p className="text-xs text-stone-500">
-          Nothing in the drawer yet. Roll one, start from blank rock, or import a drawing.
+          {t("mapLibraryUi.library.empty")}
         </p>
       )}
       </Listed>

@@ -300,7 +300,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmMapLibraryPanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Library drawer/gallery parent chrome, load failures, exact native import notices and operation errors follow viewer uiLocale. Raw diagnostic strings and complete import-note list remain in state; unknown notes stay literal. All UVTT wall/omitted-door/light notices now shown, upload failure still permits geometry import. Refused/network DELETE retains selected editor; request failures settle without retries. Duplicate default suffix localized only on new name; original data and canonical carry/import/deploy/action bodies preserved. Child forge/gallery/editor chrome has independent ownership."
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmMapStudioPanel.tsx",
@@ -503,7 +504,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/MapEditorShell.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Narrow/wide editor shell, tool sheet, layers sheet, grid/DM view, undo/redo and zoom chrome follow viewer uiLocale. Native mode/icon and hotkey IDs, resize threshold, tool picking, callbacks and authored ReactNode slots unchanged. Child editor panes remain independently owned."
     },
     {
       "path": "src/app/campaigns/[campaignId]/MapInspector.tsx",
@@ -1571,7 +1573,8 @@
     },
     {
       "path": "src/app/workshop/maps/MapDetails.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Name/tag/notes chrome, prompts and accessibility follow viewer uiLocale. Authored values, English-comma tag delimiter, limits, dictation append contract and keyed autosave payloads/timing remain unchanged; names/notes/tags are never translated."
     },
     {
       "path": "src/app/workshop/maps/MapEditor.tsx",

@@ -8,7 +8,13 @@ import { MODES, isPaintMode, type MapTools } from "../../app/campaigns/[campaign
 
 export const MAP_INSPECT_FAILURES = { refused: "That was refused." } as const;
 export function mapInspectionErrorText(raw: string, locale: AppLocale): string {
-  return raw === MAP_INSPECT_FAILURES.refused && locale !== "en" ? createTranslator(locale)("mapInspectUi.error.refused") : mapSceneErrorText(raw, locale);
+  if (locale !== "en") {
+    const t = createTranslator(locale);
+    if (raw === MAP_INSPECT_FAILURES.refused) return t("mapInspectUi.error.refused");
+    const key = Object.entries(catalogFor("en", "mapLibraryUi.error.")).find(([, value]) => value === raw && !/\{\w+\}/.test(value))?.[0];
+    if (key) return t(key as MessageKey);
+  }
+  return mapSceneErrorText(raw, locale);
 }
 export function localizedMapObjects(objects: MapObjects, locale: AppLocale) {
   const rows = listObjects(objects);
