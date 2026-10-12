@@ -304,7 +304,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmMapStudioPanel.tsx",
-      "state": "pending"
+      "state": "pending",
+      "review": "Map hotkey group display now uses viewer uiLocale through a text-only adapter; native key arrays, mapToolState and event handler semantics unchanged. Other controls, editor diagnostics and content remain pending."
     },
     {
       "path": "src/app/campaigns/[campaignId]/DmNpcForgePanel.tsx",
@@ -514,7 +515,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/MapOptions.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Tool panel labels/hints use the shared text-only locale projection. Native modes/capabilities/dial handlers intact. Empty-tool help now derives the maximum digit shortcut from actual BRUSH_KEYS (1–7, correcting the old 1–6 text). Passed roll/backdrop/inspector panels remain owned elsewhere."
     },
     {
       "path": "src/app/campaigns/[campaignId]/MapPanel.tsx",
@@ -545,7 +547,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/MapTools.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Brush/stamp labels/effects, nib/size/distance and backdrop controls/help/errors use viewer uiLocale. Second-Story Work uses existing feature terminology. Native brushes/stamps, geometry previews, dimensions, radius limits, transforms and upload payloads unchanged; raw diagnostics retained with localized fallback."
     },
     {
       "path": "src/app/campaigns/[campaignId]/MarketPanel.tsx",
@@ -781,7 +784,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/StampPicker.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Picker chrome and 33 owned asset-set labels localized; Chinese set-name search augments native label/ID/set searches. Native object identity, order, own-set priority, asset labels/IDs/images and selection/clear callbacks preserved; custom set/object names stay literal. No promise of translating third-party object labels."
     },
     {
       "path": "src/app/campaigns/[campaignId]/StoryAiPanel.tsx",
@@ -1567,7 +1571,8 @@
     },
     {
       "path": "src/app/workshop/maps/MapEditor.tsx",
-      "state": "pending"
+      "state": "pending",
+      "review": "Map hotkey group display now uses viewer uiLocale through a text-only adapter; native key arrays, mapToolState and event handler semantics unchanged. Other controls, editor diagnostics and content remain pending."
     },
     {
       "path": "src/app/workshop/maps/MapForge.tsx",
@@ -1923,7 +1928,8 @@
     },
     {
       "path": "src/components/ui/HotkeyOverlay.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Shared default title/footer localized in global UI resources; custom title/groups remain supplied unchanged. Native keys and their event handlers are untouched; map owners pass separately localized group text."
     },
     {
       "path": "src/components/ui/IconRail.tsx",

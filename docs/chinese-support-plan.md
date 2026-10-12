@@ -12,6 +12,9 @@ flow remains incomplete; the review-repair checkpoint is a separate scoped task.
   fictional language. “地精” remains an accepted monster-input alias. Gnomish,
   Bugbear and Hobgoblin remain separate glossary entries.
 - Personal `uiLocale` and campaign `locale` stay separate from fictional languages.
+  UI captions read the viewer locale through `useLocale`; `content` is a resource
+  delivery scope, not a campaign-language override. Generation and explicit
+  campaign action boundaries continue to use campaign `locale`.
 - Existing URLs, historical messages, canonical IDs/rule names/tool protocols stay
   intact; old campaigns without a locale remain English. New campaign defaults
   follow the creator only when no explicit campaign locale was supplied.
@@ -29,7 +32,7 @@ flow remains incomplete; the review-repair checkpoint is a separate scoped task.
 | Locale foundation | Registry, persistence, browser fallback, typed complete catalogs, model locale policy, classified token proxy, chapter budget, CJK retrieval, IME protection | Real prompt-usage calibration; keep legacy campaign/history regressions |
 | DM safety | Per-event engine conclusions with English/Chinese renderers; AI prose separated; one text-only correction and safe fallback; shared localized enemy names and held-resource names/IDs; scoped resource aliases and ambiguity retries; real Codex combat/resource acceptance | Untracked feature/reaction options and broader spell/condition/pack coverage; conservative regex coverage is not full language understanding |
 | Embeddings | Original English deployment default retained; explicit multilingual opt-in; fixed bilingual calibration/holdout and hard-negative policy | Broader pack quality; opt-in affects English campaigns and rebuilds indexes |
-| UI | **206/439** covered files, **1795** pending literal sites, **10576** message keys; scoped AST gate; earlier play/session surfaces plus hand labels/targets/area selection, campaign-locale action sentences, native previews, basic/reaction rules, common casting refusals, spell selectors, all 113 owned mechanic notes, 103 native technique and 23 maneuver labels, attack/bonus-route and material/ritual refusals, built-in form attack names and verified current-actor labels, correction/multi-picker chrome, native downtime facts and inventory/vitals approval/player-trade controls, guided progression chrome, rest/loot/travel moments and all native option summaries, owned generic feature/feat summaries, feat choice controls, campaign/map entry notices the complete app help walkthrough story/chronicle/arc controls, NPC roster review, campaign model controls market/shelf/trade, party-lead, quest-log/faction controls plus facts, pinned memories, context-trace presentation and passage edit/reroll/action controls and character/companion entry and private-chat/media presentation and audit/timeline controls and dice tray/source controls and board movement/camera/order/area/target/drawing and DM placement/measurement controls | Remaining dynamic text keeps hand files pending; general play/inventory/rest/level-up/save/resume surfaces and full sheet/party dialogs; file fraction is not overall completion or an effort estimate |
+| UI | **210/439** covered files, **1760** pending literal sites, **10678** message keys; scoped AST gate; earlier play/session surfaces plus hand labels/targets/area selection, campaign-locale action sentences, native previews, basic/reaction rules, common casting refusals, spell selectors, all 113 owned mechanic notes, 103 native technique and 23 maneuver labels, attack/bonus-route and material/ritual refusals, built-in form attack names and verified current-actor labels, correction/multi-picker chrome, native downtime facts and inventory/vitals approval/player-trade controls, guided progression chrome, rest/loot/travel moments and all native option summaries, owned generic feature/feat summaries, feat choice controls, campaign/map entry notices the complete app help walkthrough story/chronicle/arc controls, NPC roster review, campaign model controls market/shelf/trade, party-lead, quest-log/faction controls plus facts, pinned memories, context-trace presentation and passage edit/reroll/action controls and character/companion entry and private-chat/media presentation and audit/timeline controls and dice tray/source controls and board movement/camera/order/area/target/drawing and DM placement/measurement controls | Remaining dynamic text keeps hand files pending; general play/inventory/rest/level-up/save/resume surfaces and full sheet/party dialogs; file fraction is not overall completion or an effort estimate |
 | Character creation/material | Identity, ancestry, class introductions, ability allocation, gear, spell book/preparation and finish preview; 517 spell and 228 equipment names; 257-entry contextual terminology policy and lint gate; 415/415 static registered resource names and guidance shared with DM references; 135/135 bundled option names/descriptions plus all 20 nonempty requirement frames; 146 shared/class-specific feature summaries, 54 native feat summaries and owned feat choice controls; four native pregen card summaries and backstories; original-source review records | Remaining specific/themed feature and magic-item material; dynamic free-cast resources and user-authored/pack text remain outside the static resource review |
 | Player system logs | Structured rule diagnostics, engine-generated combat conclusions and structured audit/timeline presentation retain English protocol semantics with localized display | General player-visible log templates; model-facing English tool results remain independent |
 | Resource delivery | UI/content/help scopes; selected-locale help loads independently on open, with retry; character/campaign boundaries; generated resources checked by lint; production Turbopack build and anonymous bilingual browser switch/reload succeed; home/character/campaign SSR and initial-script payloads measured | Hydrated/lazy network totals, authenticated campaign switching and active-play browser acceptance; route-level JS payload remains large |
@@ -62,7 +65,35 @@ attempts were blocked at its internal port binding by the execution environment,
 including the escalated attempt; this batch does not claim a passing production
 build. Keep that gate for the next phase boundary rather than retrying per batch.
 
-The latest location/scene checkpoint adds 159 content keys. Area-map menus,
+The latest editor-palette checkpoint adds 102 keys (100 content-scope and two
+global shared-hotkey keys). Options, seven brush names/effects, six stamp names/
+effects, nib/distance/backdrop controls, asset picker chrome and all 33 owned
+asset-set names now use viewer uiLocale. Second-Story Work reuses the reviewed
+feature terminology. Native brush/stamp IDs, geometry previews, radius/size
+limits, image paths and transform fields remain unchanged.
+
+Asset search matches translated owned set names alongside original labels/IDs/
+set text, keeping native order, own-set priority and object identity. Custom
+asset/set names remain literal, and the Chinese search hint states the original
+object-name/asset-set contract rather than promising translated third-party
+object names. Selection still passes the original object.
+
+The empty-tool hint now derives its digit-key range from actual BRUSH_KEYS;
+1–7 corrects the stale English 1–6. Shared hotkey chrome uses global UI resources,
+while studio/library map owners pass localized group text with unchanged native
+key arrays. The native mapToolState ledger and key handler are untouched.
+MapTools, MapOptions, StampPicker and HotkeyOverlay are newly covered; studio/
+library editor owners remain pending for other controls and diagnostics.
+
+Focused component checks passed eight exact English renders against 75b00666,
+the explicit 1–7 hint correction, native brush/stamp effects, Chinese set search
+with raw assets, palette/options/backdrop callbacks, upload payloads/transforms
+and unchanged key groups using mock transport. Types and catalog/AST/terminology
+passed: 210/439 covered, 1760 pending sites, 10678 keys, zero errors and 203
+contextual warnings. No actual map/key engine mutation, image/model/audio call,
+settled-name repetition, full regression, lint or build was run.
+
+The preceding location/scene checkpoint adds 159 content keys. Area-map menus,
 placeholder/render/loading/history/route captions and population summaries now
 use locale templates; generated population counts are held as structured facts
 so display can switch locale. Authored location/layout/hook text stays raw.

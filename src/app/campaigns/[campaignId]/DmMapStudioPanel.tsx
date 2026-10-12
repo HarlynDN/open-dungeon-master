@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { localizedMapHotkeyGroups } from "@/lib/i18n/map-editor-presentations";
+
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { MapPinned, Play, Square, Upload } from "lucide-react";
 import { HotkeyOverlay } from "@/components/ui/HotkeyOverlay";
@@ -206,6 +209,7 @@ export function DmMapStudioPanel({ campaignId }: { campaignId: string }) {
     onUndo: () => void painter.undo(),
     onRedo: () => void painter.redo(),
   };
+  const { locale } = useLocale();
   const [keysOpen, setKeysOpen] = useState(false);
   const [grid, setGrid] = useState(true);
   const [dmView, setDmView] = useState(true);
@@ -521,7 +525,7 @@ export function DmMapStudioPanel({ campaignId }: { campaignId: string }) {
         </div>
       ) : null}
       {selection.dialog}
-      <HotkeyOverlay open={keysOpen} onOpenChange={setKeysOpen} groups={mapHotkeyGroups(BOARD_CAPS)} />
+      <HotkeyOverlay open={keysOpen} onOpenChange={setKeysOpen} groups={localizedMapHotkeyGroups(mapHotkeyGroups(BOARD_CAPS), locale)} />
     </div>
   );
 }

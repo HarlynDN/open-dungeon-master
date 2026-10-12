@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { localizedMapHotkeyGroups } from "@/lib/i18n/map-editor-presentations";
+
 import { useCallback, useMemo, useRef, useState } from "react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { Copy, MoreVertical, Play, Trash2, Upload } from "lucide-react";
@@ -119,6 +122,7 @@ export function MapEditor({
       void painter.redo();
     },
   };
+  const { locale } = useLocale();
   const [keysOpen, setKeysOpen] = useState(false);
   const [grid, setGrid] = useState(true);
   const [dmView, setDmView] = useState(true);
@@ -494,7 +498,7 @@ export function MapEditor({
         }
       />
       {selection.dialog}
-      <HotkeyOverlay open={keysOpen} onOpenChange={setKeysOpen} groups={mapHotkeyGroups(LIBRARY_CAPS)} />
+      <HotkeyOverlay open={keysOpen} onOpenChange={setKeysOpen} groups={localizedMapHotkeyGroups(mapHotkeyGroups(LIBRARY_CAPS), locale)} />
     </>
   );
 }

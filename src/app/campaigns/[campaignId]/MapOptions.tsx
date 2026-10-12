@@ -1,10 +1,12 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { mapRailEntry } from "@/lib/i18n/map-scene-presentations";
 import type { ReactNode } from "react";
 import type { ObjectEntry } from "@/lib/battlemap/render/painted";
 import { BrushPalette, StampPalette } from "@/app/campaigns/[campaignId]/MapTools";
 import { DoorHint, LabelDial, LightDial, PropDial, ZoneDial } from "@/app/campaigns/[campaignId]/MapSceneTools";
-import { MODES, isPaintMode, type MapTools, type SurfaceCaps } from "@/app/campaigns/[campaignId]/MapToolbox";
+import { BRUSH_KEYS, MODES, isPaintMode, type MapTools, type SurfaceCaps } from "@/app/campaigns/[campaignId]/mapToolState";
 import { Blurb, FinePrint, PanelHead } from "@/app/campaigns/[campaignId]/mapUi";
 
 // The options column (docs/visual-overhaul-plan.md 4.3): the held tool's
@@ -48,26 +50,28 @@ export function MapOptions({
   rollPanel?: ReactNode;
   backdropPanel?: ReactNode;
 }) {
+  const { locale, t } = useLocale();
   const set = (patch: Partial<MapTools>) => onTools({ ...tools, ...patch });
   const entry = MODES.find((mode) => mode.mode === tools.mode);
 
   if (!entry) {
     return (
       <div className="space-y-2">
-        <PanelHead>Tools</PanelHead>
-        <Blurb>Pick a tool from the rail and draw on the map.</Blurb>
+        <PanelHead>{t("mapEditorUi.options.title")}</PanelHead>
+        <Blurb>{t("mapEditorUi.options.pick")}</Blurb>
         <FinePrint>
-          Pick a tool. Keys 1 to 6 pick a brush, Escape puts the tool down, Ctrl+Z takes back the last edit.
+          {t("mapEditorUi.options.keys", { max: Math.max(...Object.keys(BRUSH_KEYS).map(Number)) })}
         </FinePrint>
       </div>
     );
   }
 
+  const display = mapRailEntry(entry, locale);
   return (
     // Keyed by mode so the column slides in afresh for each tool.
     <div key={entry.mode} className="map-panel-in space-y-2.5">
-      <PanelHead aside={entry.key}>{entry.label}</PanelHead>
-      <Blurb>{entry.hint}</Blurb>
+      <PanelHead aside={entry.key}>{display.label}</PanelHead>
+      <Blurb>{display.hint}</Blurb>
 
       {isPaintMode(tools.mode) ? (
         <BrushPalette
@@ -117,12 +121,12 @@ export function MapOptions({
         />
       ) : null}
 
-      {tools.mode === "pick" ? <FinePrint>Tap a tile to pick up whatever brush painted it.</FinePrint> : null}
+      {tools.mode === "pick" ? <FinePrint>{t("mapEditorUi.options.pipette")}</FinePrint> : null}
       {tools.mode === "pan" ? (
-        <FinePrint>Drag to move. Pinch or scroll to zoom; the corner buttons do the same.</FinePrint>
+        <FinePrint>{t("mapEditorUi.options.pan")}</FinePrint>
       ) : null}
       {tools.mode === "select" ? (
-        <FinePrint>What you select shows in the inspector, with everything that can be done to it.</FinePrint>
+        <FinePrint>{t("mapEditorUi.options.select")}</FinePrint>
       ) : null}
       {tools.mode === "roll" ? rollPanel : null}
       {tools.mode === "backdrop" ? backdropPanel : null}

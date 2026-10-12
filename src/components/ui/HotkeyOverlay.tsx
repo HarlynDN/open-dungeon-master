@@ -1,5 +1,6 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { Dialog } from "@/components/ui/Dialog";
 
 // Every key an editor answers to, on one sheet (docs/vtt-parity-
@@ -11,7 +12,7 @@ export type HotkeyRow = { keys: string[]; does: string };
 export function HotkeyOverlay({
   open,
   onOpenChange,
-  title = "Keys",
+  title,
   groups,
 }: {
   open: boolean;
@@ -19,8 +20,9 @@ export function HotkeyOverlay({
   title?: string;
   groups: Array<{ title: string; rows: HotkeyRow[] }>;
 }) {
+  const { t } = useLocale();
   return (
-    <Dialog open={open} onOpenChange={onOpenChange} title={title} width="w-[min(92vw,30rem)]">
+    <Dialog open={open} onOpenChange={onOpenChange} title={title ?? t("hotkeyUi.title")} width="w-[min(92vw,30rem)]">
       <div className="stagger space-y-4">
         {groups.map((group) => (
           <section key={group.title}>
@@ -45,7 +47,7 @@ export function HotkeyOverlay({
           </section>
         ))}
         <p className="text-[11px] text-stone-500">
-          Every key has a button on screen; on a phone the buttons are the way in.
+          {t("hotkeyUi.help")}
         </p>
       </div>
     </Dialog>

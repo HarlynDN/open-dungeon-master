@@ -2,19 +2,18 @@
 
 import { useMemo, useRef, useState } from "react";
 import { Image as ImageIcon, Loader2, Trash2 } from "lucide-react";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { REGION_FAILURES, regionErrorText } from "@/lib/i18n/region-presentations";
+import { mapBrushEffect } from "@/lib/i18n/map-editor-presentations";
 import { cn } from "@/lib/cn";
 import { encodeImageForUpload } from "@/lib/image-encode";
 import {
   BRUSHES,
-  BRUSH_EFFECTS,
-  BRUSH_LABELS,
   MAX_BRUSH_RADIUS,
   type Brush as BrushName,
 } from "@/lib/battlemap/paint";
 import {
   STAMPS,
-  STAMP_EFFECTS,
-  STAMP_LABELS,
   STAMP_SIZE,
   stampFootprint,
   stampStrokes,
@@ -36,7 +35,7 @@ import { FLAT_TONES, FinePrint, RangeRow, Swatch, brushChar, mapButton, mapDange
 
 const NIBS = [0, 1, 2, 3].filter((radius) => radius <= MAX_BRUSH_RADIUS);
 
-// Six brushes as a list: the material the skin paints it with, its name, and
+// The brushes as a list: the material the skin paints it with, its name, and
 // what it costs a walker. A second press on the held brush lets it go.
 export function BrushPalette({
   brush,
@@ -54,6 +53,7 @@ export function BrushPalette({
   // Terrain character to the picture of the material the map's skin uses.
   swatches?: Record<string, string>;
 }) {
+  const { locale, t } = useLocale();
   return (
     <div className="space-y-2">
       <ul data-pill-group="" className="space-y-1">
@@ -65,7 +65,7 @@ export function BrushPalette({
                 type="button"
                 aria-pressed={active}
                 data-on={active ? "" : undefined}
-                title={`${BRUSH_EFFECTS[option]} (${index + 1})`}
+                title={t("mapEditorUi.brush.title", { effect: mapBrushEffect(option, locale), key: index + 1 })}
                 onClick={() => onPick(active ? "" : option)}
                 className={cn(
                   "flex w-full items-start gap-2 rounded-lg border px-2 py-1.5 text-left motion-press",
@@ -77,10 +77,10 @@ export function BrushPalette({
                 <Swatch char={brushChar(option)} src={swatches?.[brushChar(option)]} className="mt-0.5" />
                 <span className="min-w-0 flex-1">
                   <span className={cn("flex items-center justify-between text-[12px]", active ? "text-amber-100" : "text-stone-200")}>
-                    {BRUSH_LABELS[option]}
+                    {t(`mapEditorUi.brushName.${option}`)}
                     <span className="font-mono text-[8px] text-stone-600">{index + 1}</span>
                   </span>
-                  <span className="block font-mono text-[9px] leading-tight text-stone-500">{BRUSH_EFFECTS[option]}</span>
+                  <span className="block font-mono text-[9px] leading-tight text-stone-500">{mapBrushEffect(option, locale)}</span>
                 </span>
               </button>
             </li>
@@ -90,9 +90,9 @@ export function BrushPalette({
       {radius !== undefined && onRadius ? (
         <div className="space-y-1">
           <div className="flex items-center justify-between font-display text-[9px] uppercase tracking-[0.18em] text-stone-500">
-            Nib
+            {t("mapEditorUi.brush.nib")}
             <span className="font-mono normal-case tracking-normal text-amber-200">
-              {radius * 2 + 1} × {radius * 2 + 1} tiles
+              {t("mapEditorUi.brush.tiles", { width: radius * 2 + 1, height: radius * 2 + 1 })}
             </span>
           </div>
           <div data-pill-group="" className="grid grid-cols-4 gap-1">
@@ -101,7 +101,7 @@ export function BrushPalette({
                 key={nib}
                 type="button"
                 aria-pressed={radius === nib}
-                aria-label={`${nib * 2 + 1} by ${nib * 2 + 1} tiles`}
+                aria-label={t("mapEditorUi.brush.aria", { width: nib * 2 + 1, height: nib * 2 + 1 })}
                 onClick={() => onRadius(nib)}
                 className={cn(
                   "flex h-8 items-center justify-center rounded-md border motion-press",
@@ -117,11 +117,11 @@ export function BrushPalette({
             ))}
           </div>
           {/* The slider stays for the keyboard: arrow keys walk the same four sizes. */}
-          <RangeRow label="Size" min={0} max={MAX_BRUSH_RADIUS} value={radius} readout={`${radius * 2 + 1}x${radius * 2 + 1}`} onChange={onRadius} />
+          <RangeRow label={t("mapEditorUi.brush.size")} min={0} max={MAX_BRUSH_RADIUS} value={radius} readout={`${radius * 2 + 1}x${radius * 2 + 1}`} onChange={onRadius} />
         </div>
       ) : null}
       <FinePrint>
-        {brush ? "Drag across the map. Every stroke is checked before it lands." : "Pick a brush, then drag on the map."}
+        {t(brush ? "mapEditorUi.brush.drag" : "mapEditorUi.brush.pick")}
       </FinePrint>
     </div>
   );
@@ -178,6 +178,7 @@ export function StampPalette({
   onResize: (size: { width: number; height: number }) => void;
   swatches?: Record<string, string>;
 }) {
+  const { t } = useLocale();
   return (
     <div className="space-y-2">
       <div className="grid grid-cols-3 gap-1">
@@ -188,7 +189,7 @@ export function StampPalette({
               key={option}
               type="button"
               aria-pressed={active}
-              title={STAMP_EFFECTS[option]}
+              title={t(`mapEditorUi.stampEffect.${option}`)}
               onClick={() => onPick(active ? "" : option)}
               className={cn(
                 "flex flex-col items-center gap-1 rounded-lg border p-1.5 motion-press",
@@ -196,29 +197,29 @@ export function StampPalette({
               )}
             >
               <StampPreview kind={option} swatches={swatches} />
-              <span className={cn("text-[10px] leading-tight", active ? "text-amber-100" : "text-stone-300")}>{STAMP_LABELS[option]}</span>
+              <span className={cn("text-[10px] leading-tight", active ? "text-amber-100" : "text-stone-300")}>{t(`mapEditorUi.stampName.${option}`)}</span>
             </button>
           );
         })}
       </div>
       {stamp ? (
         <>
-          <FinePrint>{STAMP_EFFECTS[stamp]}</FinePrint>
+          <FinePrint>{t(`mapEditorUi.stampEffect.${stamp}`)}</FinePrint>
           {(["width", "height"] as const).map((side) => (
             <RangeRow
               key={side}
-              label={side === "width" ? "Across" : "Down"}
+              label={t(side === "width" ? "mapEditorUi.stamp.across" : "mapEditorUi.stamp.down")}
               min={STAMP_SIZE.min}
               max={STAMP_SIZE.max}
               value={size[side]}
-              readout={`${size[side] * TILE_FEET}ft`}
+              readout={t("mapEditorUi.stamp.feet", { feet: size[side] * TILE_FEET })}
               onChange={(value) => onResize({ ...size, [side]: value })}
             />
           ))}
-          <FinePrint>Click once on the map. The outline shows where it will land.</FinePrint>
+          <FinePrint>{t("mapEditorUi.stamp.click")}</FinePrint>
         </>
       ) : (
-        <FinePrint>Rooms and corridors in one click, drawn in the same five tiles the rules read.</FinePrint>
+        <FinePrint>{t("mapEditorUi.stamp.empty")}</FinePrint>
       )}
     </div>
   );
@@ -237,6 +238,7 @@ export function BackdropControls({
   onChange: (next: { path: string; transform: BackdropTransform }) => void;
   busy?: boolean;
 }) {
+  const { locale, t } = useLocale();
   const fileRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
@@ -254,12 +256,12 @@ export function BackdropControls({
       });
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) {
-        setError(payload.error || "That image would not upload.");
+        setError(payload.error || REGION_FAILURES.upload);
         return;
       }
       onChange({ path: payload.url, transform });
     } catch {
-      setError("That image would not upload.");
+      setError(REGION_FAILURES.upload);
     } finally {
       setUploading(false);
     }
@@ -271,7 +273,7 @@ export function BackdropControls({
   return (
     <div className="space-y-2">
       <p className="flex items-center gap-1.5 font-display text-[9px] uppercase tracking-[0.18em] text-stone-500">
-        <ImageIcon className="size-3.5" /> Picture under the grid
+        <ImageIcon className="size-3.5" /> {t("mapEditorUi.backdrop.title")}
       </p>
       <div className="flex flex-wrap items-center gap-1.5">
         <input
@@ -289,7 +291,7 @@ export function BackdropControls({
         />
         <button type="button" disabled={uploading || busy} onClick={() => fileRef.current?.click()} className={mapButton}>
           {uploading ? <Loader2 className="size-3 animate-spin" /> : <ImageIcon className="size-3" />}
-          {backdrop ? "Replace it" : "Add a picture"}
+          {t(backdrop ? "mapEditorUi.backdrop.replace" : "mapEditorUi.backdrop.add")}
         </button>
         {backdrop ? (
           <button
@@ -298,7 +300,7 @@ export function BackdropControls({
             onClick={() => onChange({ path: "", transform: DEFAULT_BACKDROP_TRANSFORM })}
             className={mapDanger}
           >
-            <Trash2 className="size-3" /> Take it away
+            <Trash2 className="size-3" /> {t("mapEditorUi.backdrop.remove")}
           </button>
         ) : null}
       </div>
@@ -307,7 +309,7 @@ export function BackdropControls({
         <>
           <div className="space-y-1">
             <RangeRow
-              label="Across"
+              label={t("mapEditorUi.backdrop.across")}
               min={-BACKDROP_LIMITS.maxOffset}
               max={BACKDROP_LIMITS.maxOffset}
               step={0.25}
@@ -316,7 +318,7 @@ export function BackdropControls({
               onChange={(offsetX) => set({ offsetX })}
             />
             <RangeRow
-              label="Down"
+              label={t("mapEditorUi.backdrop.down")}
               min={-BACKDROP_LIMITS.maxOffset}
               max={BACKDROP_LIMITS.maxOffset}
               step={0.25}
@@ -325,7 +327,7 @@ export function BackdropControls({
               onChange={(offsetY) => set({ offsetY })}
             />
             <RangeRow
-              label="Size"
+              label={t("mapEditorUi.brush.size")}
               min={BACKDROP_LIMITS.minScale}
               max={BACKDROP_LIMITS.maxScale}
               step={0.01}
@@ -334,7 +336,7 @@ export function BackdropControls({
               onChange={(scale) => set({ scale })}
             />
             <RangeRow
-              label="Strength"
+              label={t("mapEditorUi.backdrop.strength")}
               min={0}
               max={1}
               step={0.05}
@@ -344,12 +346,11 @@ export function BackdropControls({
             />
           </div>
           <FinePrint>
-            The picture is scenery. The walls that stop a rogue are the ones painted into the
-            terrain, so line the two up and check them before anyone plays on it.
+            {t("mapEditorUi.backdrop.help")}
           </FinePrint>
         </>
       ) : null}
-      {error ? <p className="text-[11px] text-red-400">{error}</p> : null}
+      {error ? <p className="text-[11px] text-red-400">{regionErrorText(error, locale, "regionUi.error.upload")}</p> : null}
     </div>
   );
 }
