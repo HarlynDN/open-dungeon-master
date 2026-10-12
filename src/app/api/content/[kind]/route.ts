@@ -1,3 +1,4 @@
+import { localizedReferenceSearch } from "@/lib/content/localized-reference-search";
 import { currentUser, unauthorized } from "@/lib/auth";
 import { catalogPrices } from "@/lib/characters/catalog";
 import { contentPackInstalled } from "@/lib/content/db";
@@ -76,7 +77,21 @@ export async function GET(
   switch (kind) {
     case "spells": {
       const levelRaw = Number.parseInt(url.searchParams.get("level") ?? "", 10);
-      results = searchSpells({
+      const search = (query: string, offset: number, limit: number) => searchSpells({
+        ...base, q: query, offset, limit,
+        classSlug: url.searchParams.get("class") ?? undefined,
+        ...(Number.isFinite(levelRaw) ? { level: levelRaw } : {}),
+        // A feat's pick: a 1st-level divination or enchantment spell
+        // (school=divination,enchantment), an attack cantrip (attack=1),
+        // exactly that level (exact=1).
+        school: url.searchParams.get("school") ?? undefined,
+        attack: url.searchParams.get("attack") === "1",
+        exactLevel: url.searchParams.get("exact") === "1",
+      });
+      results = url.searchParams.get("localized") === "1" ? localizedReferenceSearch({
+        q, kind: "spell", locale: normalizeLocale(url.searchParams.get("locale")),
+        offset: Math.max(0, base.offset ?? 0), limit: Math.max(1, Math.min(200, base.limit ?? 50)), search,
+      }) : searchSpells({
         ...base,
         classSlug: url.searchParams.get("class") ?? undefined,
         ...(Number.isFinite(levelRaw) ? { level: levelRaw } : {}),
@@ -101,6 +116,7 @@ export async function GET(
         const kind = itemKind && ITEM_KINDS.has(itemKind) ? itemKind as ItemEntry["kind"] : undefined;
         results = nativeEquipmentSearch({
           q, kind, locale: normalizeLocale(url.searchParams.get("locale")),
+          separateHomebrew: url.searchParams.get("localized") === "1",
           offset: Number.isFinite(offsetRaw) ? Math.max(0, offsetRaw) : 0,
           limit: Number.isFinite(limitRaw) ? Math.max(1, Math.min(200, limitRaw)) : 50,
           search: (query, offset, limit) => searchItems({ q: query, offset, limit, userIds: scope.userIds, ...(kind ? { kind } : {}) }),
@@ -152,7 +168,14 @@ export async function GET(
     }
     case "monsters": {
       const maxCrRaw = Number.parseFloat(url.searchParams.get("maxCr") ?? "");
-      results = searchMonsters({
+      const search = (query: string, offset: number, limit: number) => searchMonsters({
+        ...base, q: query, offset, limit,
+        ...(Number.isFinite(maxCrRaw) ? { maxCr: maxCrRaw } : {}),
+      });
+      results = url.searchParams.get("localized") === "1" ? localizedReferenceSearch({
+        q, kind: "monster", locale: normalizeLocale(url.searchParams.get("locale")),
+        offset: Math.max(0, base.offset ?? 0), limit: Math.max(1, Math.min(200, base.limit ?? 50)), search,
+      }) : searchMonsters({
         ...base,
         ...(Number.isFinite(maxCrRaw) ? { maxCr: maxCrRaw } : {}),
       });

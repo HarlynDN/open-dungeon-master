@@ -1,3 +1,5 @@
+import { tokenize } from "../dm/fusion-logic.ts";
+
 // The research desk's grounded answer, minus the model call.
 //
 // The plan's phrasing was that an ungrounded chat box over rules text would
@@ -100,6 +102,7 @@ export function deskTerms(question: string): string[] {
       terms.push(word);
     }
   }
+  terms.push(...tokenize(remainder).filter(term => /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u.test(term)));
   return [...new Set(terms)];
 }
 

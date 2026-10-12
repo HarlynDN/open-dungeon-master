@@ -16,7 +16,8 @@
     "src/app/reference/page.tsx",
     "src/app/rulebook/page.tsx",
     "src/app/workshop/page.tsx",
-    "src/app/setup/page.tsx"
+    "src/app/setup/page.tsx",
+    "src/app/reference/layout.tsx"
   ],
   "additionalSources": [
     "src/lib/i18n/LocalizedText.tsx",
@@ -1295,7 +1296,8 @@
     },
     {
       "path": "src/app/friends/page.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped social/reference-browse/desk/about checkpoint. Owned chrome, notices, glossary IDs and registered source-gated names/summaries project to viewer uiLocale; native query/category/slug/identity/icon keys, raw results, author names/house rules/quotes and unknown diagnostics stay literal. Open glossary/content dialogs retain source identity and rerender on locale switch. Badge IDs/tones and pure calculation/protocol remain independent. Reference requests opt in to stable alias paging. About clipboard report stays English for bug reports; Chinese dates use viewer locale. Compare/calculator child owners remain independently pending; extended rulebook/third-party prose is deferred. CategoryRail repositions on changed translated tabs."
     },
     {
       "path": "src/app/home/CampaignList.tsx",
@@ -1366,7 +1368,8 @@
     },
     {
       "path": "src/app/reference/CategoryRail.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped social/reference-browse/desk/about checkpoint. Owned chrome, notices, glossary IDs and registered source-gated names/summaries project to viewer uiLocale; native query/category/slug/identity/icon keys, raw results, author names/house rules/quotes and unknown diagnostics stay literal. Open glossary/content dialogs retain source identity and rerender on locale switch. Badge IDs/tones and pure calculation/protocol remain independent. Reference requests opt in to stable alias paging. About clipboard report stays English for bug reports; Chinese dates use viewer locale. Compare/calculator child owners remain independently pending; extended rulebook/third-party prose is deferred. CategoryRail repositions on changed translated tabs."
     },
     {
       "path": "src/app/reference/ComparePanel.tsx",
@@ -1374,15 +1377,18 @@
     },
     {
       "path": "src/app/reference/DeskPanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped social/reference-browse/desk/about checkpoint. Owned chrome, notices, glossary IDs and registered source-gated names/summaries project to viewer uiLocale; native query/category/slug/identity/icon keys, raw results, author names/house rules/quotes and unknown diagnostics stay literal. Open glossary/content dialogs retain source identity and rerender on locale switch. Badge IDs/tones and pure calculation/protocol remain independent. Reference requests opt in to stable alias paging. About clipboard report stays English for bug reports; Chinese dates use viewer locale. Compare/calculator child owners remain independently pending; extended rulebook/third-party prose is deferred. CategoryRail repositions on changed translated tabs."
     },
     {
       "path": "src/app/reference/ResultBadges.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped social/reference-browse/desk/about checkpoint. Owned chrome, notices, glossary IDs and registered source-gated names/summaries project to viewer uiLocale; native query/category/slug/identity/icon keys, raw results, author names/house rules/quotes and unknown diagnostics stay literal. Open glossary/content dialogs retain source identity and rerender on locale switch. Badge IDs/tones and pure calculation/protocol remain independent. Reference requests opt in to stable alias paging. About clipboard report stays English for bug reports; Chinese dates use viewer locale. Compare/calculator child owners remain independently pending; extended rulebook/third-party prose is deferred. CategoryRail repositions on changed translated tabs."
     },
     {
       "path": "src/app/reference/page.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped social/reference-browse/desk/about checkpoint. Owned chrome, notices, glossary IDs and registered source-gated names/summaries project to viewer uiLocale; native query/category/slug/identity/icon keys, raw results, author names/house rules/quotes and unknown diagnostics stay literal. Open glossary/content dialogs retain source identity and rerender on locale switch. Badge IDs/tones and pure calculation/protocol remain independent. Reference requests opt in to stable alias paging. About clipboard report stays English for bug reports; Chinese dates use viewer locale. Compare/calculator child owners remain independently pending; extended rulebook/third-party prose is deferred. CategoryRail repositions on changed translated tabs."
     },
     {
       "path": "src/app/rulebook/page.tsx",
@@ -1667,7 +1673,8 @@
     },
     {
       "path": "src/components/AboutDialog.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Grouped social/reference-browse/desk/about checkpoint. Owned chrome, notices, glossary IDs and registered source-gated names/summaries project to viewer uiLocale; native query/category/slug/identity/icon keys, raw results, author names/house rules/quotes and unknown diagnostics stay literal. Open glossary/content dialogs retain source identity and rerender on locale switch. Badge IDs/tones and pure calculation/protocol remain independent. Reference requests opt in to stable alias paging. About clipboard report stays English for bug reports; Chinese dates use viewer locale. Compare/calculator child owners remain independently pending; extended rulebook/third-party prose is deferred. CategoryRail repositions on changed translated tabs."
     },
     {
       "path": "src/components/AccountMenu.tsx",
@@ -2058,6 +2065,11 @@
       "path": "src/lib/i18n/LocalizedText.tsx",
       "state": "covered",
       "review": "Copy-free rich message owner: typed catalog keys, complete locale templates and single-pass node interpolation. Actual component and provider render in both locales; browser creation flow verifies interactive glossary links. Authored values are rendered as React text, with no HTML parsing or rule-ID mutation."
+    },
+    {
+      "path": "src/app/reference/layout.tsx",
+      "state": "covered",
+      "review": "Server route boundary supplies existing selected/English content resources to reference browsing; viewer uiLocale unchanged, no whole catalogs in root UI."
     }
   ]
 }

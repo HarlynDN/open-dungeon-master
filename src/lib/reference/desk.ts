@@ -1,3 +1,4 @@
+import { deskSearchQuestion } from "@/lib/i18n/reference-search";
 import {
   listConditions,
   searchFeats,
@@ -131,7 +132,9 @@ export async function runRulesDesk(
     return { error: "Ask a question first." };
   }
 
-  const evidence = selectEvidence(question, gatherSources(request.userId, question));
+  const locale = normalizeLocale(getUserSettings(request.userId).uiLocale);
+  const searchQuestion = deskSearchQuestion(question, locale);
+  const evidence = selectEvidence(searchQuestion, gatherSources(request.userId, searchQuestion));
   let result: DeskAnswer | { error: string } = {
     error: "The model is unavailable; try again shortly.",
   };
@@ -154,7 +157,7 @@ export async function runRulesDesk(
           ].join("\n\n"),
         },
       ],
-      { locale: normalizeLocale(getUserSettings(request.userId).uiLocale), timeoutMs: arcTextTimeoutMs() },
+      { locale, timeoutMs: arcTextTimeoutMs() },
     );
     if (error) {
       return;
@@ -178,7 +181,8 @@ export function previewSources(userId: string, question: string) {
   if (!clamped) {
     return [];
   }
-  return selectEvidence(clamped, gatherSources(userId, clamped)).map((source) => ({
+  const searchQuestion = deskSearchQuestion(clamped, normalizeLocale(getUserSettings(userId).uiLocale));
+  return selectEvidence(searchQuestion, gatherSources(userId, searchQuestion)).map((source) => ({
     kind: source.kind,
     ref: source.ref,
     name: source.name,

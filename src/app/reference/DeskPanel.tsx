@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { referenceNotice, REFERENCE_NOTICES, referenceSourceName, referenceOrigin } from "@/lib/i18n/reference-ui-presentations";
+import type { MessageKey } from "@/lib/i18n/translator";
 import { Loader2, Quote, Send } from "lucide-react";
 import { isComposingInput } from "@/lib/input-composition";
 import { useEffect, useState } from "react";
@@ -18,18 +21,19 @@ import { DESK_QUESTION_MAX, type DeskAnswer } from "@/lib/reference/desk-logic";
 
 type PreviewSource = { kind: string; ref: string; name: string; origin: string };
 
-const KIND_LABELS: Record<string, string> = {
-  spell: "spell",
-  monster: "monster",
-  item: "item",
-  condition: "condition",
-  feat: "feat",
-  glossary: "basics",
-  ruling: "your house rule",
-  variant: "your variant rule",
+const KIND_LABELS: Record<string, MessageKey> = {
+  spell: "referenceUi.source.spell",
+  monster: "referenceUi.source.monster",
+  item: "referenceUi.source.item",
+  condition: "referenceUi.source.condition",
+  feat: "referenceUi.source.feat",
+  glossary: "referenceUi.source.glossary",
+  ruling: "referenceUi.source.ruling",
+  variant: "referenceUi.source.variant",
 };
 
 export function DeskPanel() {
+  const { t, locale } = useLocale();
   const [question, setQuestion] = useState("");
   const [sources, setSources] = useState<PreviewSource[]>([]);
   const [answer, setAnswer] = useState<DeskAnswer | null>(null);
@@ -85,12 +89,12 @@ export function DeskPanel() {
       });
       const data = await response.json();
       if (!response.ok) {
-        setError(data.error ?? "The desk could not answer that.");
+        setError(data.error ?? REFERENCE_NOTICES.desk);
         return;
       }
       setAnswer(data.result);
     } catch {
-      setError("The desk could not answer that.");
+      setError(REFERENCE_NOTICES.desk);
     } finally {
       setAsking(false);
     }
@@ -99,9 +103,7 @@ export function DeskPanel() {
   return (
     <div>
       <p className="mb-3 text-sm text-stone-400">
-        A rules question, answered from the content pack, the rules basics and your own house
-        rules. Every citation is checked against what the desk actually supplied, so a source
-        listed here is one that exists.
+        {t("referenceUi.deskHelp")}
       </p>
 
       <div className="mb-3 flex gap-2">
@@ -115,8 +117,8 @@ export function DeskPanel() {
               void ask();
             }
           }}
-          placeholder="Does a readied spell need concentration?"
-          aria-label="Your rules question"
+          placeholder={t("referenceUi.questionHint")}
+          aria-label={t("referenceUi.question")}
           className={cn(ui.input, "h-10 min-w-0 flex-1")}
         />
         <button
@@ -126,7 +128,7 @@ export function DeskPanel() {
           className={ui.btnSecondary}
         >
           {asking ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
-          Ask
+          {t("referenceUi.askButton")}
         </button>
       </div>
 
@@ -134,8 +136,8 @@ export function DeskPanel() {
         <div className="reveal mb-4 rounded-lg border border-amber-500/15 bg-stone-950/40 p-3">
           <p className="section-head-title mb-2 whitespace-normal">
             {sources.length
-              ? `${sources.length} source${sources.length === 1 ? "" : "s"} the desk would read`
-              : "Nothing on file bears on this yet"}
+              ? t(sources.length === 1 ? "referenceUi.sourcesOne" : "referenceUi.sourcesMany", { count: sources.length })
+              : t("referenceUi.noSources")}
           </p>
           {sources.length ? (
             <ul className="stagger flex flex-wrap gap-1.5">
@@ -143,24 +145,24 @@ export function DeskPanel() {
                 <li
                   key={source.ref}
                   className="rounded-full border border-amber-500/25 bg-amber-400/5 px-2.5 py-0.5 text-xs text-stone-400"
-                  title={source.origin}
+                  title={referenceOrigin(source.origin, locale)}
                 >
-                  <span className="text-stone-300">{source.name}</span>
+                  <span className="text-stone-300">{referenceSourceName(source, locale)}</span>
                   <span className="ml-1.5 text-stone-500">
-                    {KIND_LABELS[source.kind] ?? source.kind}
+                    {KIND_LABELS[source.kind] ? t(KIND_LABELS[source.kind]) : source.kind}
                   </span>
                 </li>
               ))}
             </ul>
           ) : (
             <p className="text-xs text-stone-500">
-              The desk will still answer, from general rules knowledge, and will say that it did.
+              {t("referenceUi.general")}
             </p>
           )}
         </div>
       ) : null}
 
-      {error ? <p role="alert" className="motion-shake text-sm text-red-300">{error}</p> : null}
+      {error ? <p role="alert" className="motion-shake text-sm text-red-300">{referenceNotice(error, locale)}</p> : null}
 
       {answer ? (
         <div className="reveal panel ornate rounded-xl p-4">
@@ -173,8 +175,8 @@ export function DeskPanel() {
                 <li key={citation.ref} className="text-xs">
                   <span className="flex items-center gap-1.5 text-stone-400">
                     <Quote className="size-3 shrink-0 text-amber-600/70" />
-                    {citation.name}
-                    <span className="text-stone-500">{citation.origin}</span>
+                    {referenceSourceName(citation, locale)}
+                    <span className="text-stone-500">{referenceOrigin(citation.origin ?? "", locale)}</span>
                   </span>
                   <span className="mt-0.5 block border-l border-stone-800 pl-3 text-stone-500">
                     {citation.quote}
@@ -184,8 +186,7 @@ export function DeskPanel() {
             </ul>
           ) : (
             <p className="mt-4 border-t border-amber-500/15 pt-3 text-xs text-amber-200/80">
-              This answer cites nothing on file. Treat it as a starting point and check it against
-              a book before it settles anything at the table.
+              {t("referenceUi.ungrounded")}
             </p>
           )}
         </div>

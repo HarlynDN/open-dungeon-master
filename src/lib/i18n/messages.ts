@@ -1,3 +1,4 @@
+import { REFERENCE_SOCIAL_MESSAGES } from "./reference-social-messages.ts";
 import { SETUP_FLOW_MESSAGES } from "./setup-flow-messages.ts";
 import { SETUP_MEDIA_MESSAGES } from "./setup-media-messages.ts";
 import { SETUP_GUIDE_MESSAGES } from "./setup-guide-messages.ts";
@@ -118,7 +119,8 @@ const en = {
     ...REGION_MESSAGES.en,
     ...MAP_SCENE_MESSAGES.en,
     ...MAP_EDITOR_MESSAGES.en,
-    ...SETUP_FLOW_MESSAGES.en,
+    ...REFERENCE_SOCIAL_MESSAGES.en,
+  ...SETUP_FLOW_MESSAGES.en,
   ...SETUP_MEDIA_MESSAGES.en,
     ...SETUP_GUIDE_MESSAGES.en,
     ...BOARD_MOVE_EFFECT_MESSAGES.en,
@@ -240,7 +242,8 @@ const zhCN: Messages = {
     ...REGION_MESSAGES["zh-CN"],
     ...MAP_SCENE_MESSAGES["zh-CN"],
     ...MAP_EDITOR_MESSAGES["zh-CN"],
-    ...SETUP_FLOW_MESSAGES["zh-CN"],
+    ...REFERENCE_SOCIAL_MESSAGES["zh-CN"],
+  ...SETUP_FLOW_MESSAGES["zh-CN"],
   ...SETUP_MEDIA_MESSAGES["zh-CN"],
     ...SETUP_GUIDE_MESSAGES["zh-CN"],
     ...BOARD_MOVE_EFFECT_MESSAGES["zh-CN"],

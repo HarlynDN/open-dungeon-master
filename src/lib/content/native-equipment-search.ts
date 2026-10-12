@@ -5,8 +5,8 @@ import { bundledGearRows } from '@/lib/workshop/bundled-gear-rows';
 // An opt-in player browse/search over the same authorized pack/homebrew rows
 // plus native equipment. The legacy API keeps its original query behavior.
 // Page the combined result once so later pages do not repeat the native book.
-export function nativeEquipmentSearch<T extends { name: string; slug: string }>(input: {
-  q: string; kind?: string; locale: AppLocale; offset: number; limit: number;
+export function nativeEquipmentSearch<T extends { name: string; slug: string; source?: string }>(input: {
+  q: string; kind?: string; locale: AppLocale; offset: number; limit: number; separateHomebrew?: boolean;
   search: (q: string, offset: number, limit: number) => T[];
 }) {
   const queries = [...new Set([input.q, ...equipmentSearchNames(input.q, input.locale)])];
@@ -25,6 +25,13 @@ export function nativeEquipmentSearch<T extends { name: string; slug: string }>(
   for (const q of queries) for (const row of bundledGearRows(q, input.kind)) {
     if (!filedNames.has(row.name.trim().toLowerCase()) && !rows.has(row.slug)) rows.set(row.slug, row);
   }
-  return [...rows.values()].sort((a, b) => a.name.localeCompare(b.name, 'en'))
-    .slice(input.offset, input.offset + input.limit);
+  const sorted = [...rows.values()].sort((a, b) => a.name.localeCompare(b.name, 'en'));
+  // Reference pages count only pack/native rows in their offset. Other
+  // existing catalog callers keep the original combined offset contract.
+  if (input.separateHomebrew) {
+    const homebrew = input.offset === 0 ? sorted.filter(row => row.source === 'homebrew') : [];
+    const pack = sorted.filter(row => row.source !== 'homebrew');
+    return [...homebrew, ...pack.slice(input.offset, input.offset + input.limit)];
+  }
+  return sorted.slice(input.offset, input.offset + input.limit);
 }

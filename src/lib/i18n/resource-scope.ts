@@ -1,7 +1,7 @@
 // Heavy creator/help catalogs belong to the character and campaign routes.
 // App chrome and stock identity labels are available on every page.
 const CONTENT_PREFIXES = new Set([
-  "lineageUi", "lineageMaterial", "racialUi", "gameHelp", "closedHelp", "combatUi", "combatDetail", "combatRoll", "combatCheck", "combatSpecial", "cinematic", "sheetPlay", "sheetDialog",
+  "referenceUi", "lineageUi", "lineageMaterial", "racialUi", "gameHelp", "closedHelp", "combatUi", "combatDetail", "combatRoll", "combatCheck", "combatSpecial", "cinematic", "sheetPlay", "sheetDialog",
   "boardUi", "boardOpsUi", "boardEffectsUi", "boardTools", "regionUi", "mapSceneUi", "mapEditorUi", "mapInspectUi", "mapLibraryUi", "mapForgeUi", "mapSurfaceUi", "diceTrayUi", "feedUi", "chatUi", "entryCharacter", "passageUi", "memoryUi", "recordUi", "leadUi", "marketUi", "storyControl", "storyUi", "callingUi", "callingMaterial", "abilityUi", "spellUi", "finishUi", "turnUi", "journalUi", "composeUi", "sessionUi", "handUi", "handMaterial",
   "spellName", "spellMaterial", "gearUi", "equipmentName", "itemHelp", "builderPicker",
 ]);

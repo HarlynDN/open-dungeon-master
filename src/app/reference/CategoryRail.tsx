@@ -53,7 +53,7 @@ export function CategoryRail<T extends string>({
     const observer = new ResizeObserver(place);
     observer.observe(rail);
     return () => observer.disconnect();
-  }, [value, tabs.length]);
+  }, [value, tabs]);
 
   return (
     <div ref={railRef} className={cn("chip-rail flex flex-wrap gap-x-1.5 gap-y-2", className)} role="tablist" aria-label={label}>
