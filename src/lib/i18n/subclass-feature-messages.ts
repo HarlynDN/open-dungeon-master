@@ -3242,5 +3242,1029 @@ export const SUBCLASS_FEATURE_MESSAGES = /*#__PURE__*/ defineMessages({
   "callingMaterial.subclassFeature.paladin.oathbreaker.dread-lord.description": {
     "en": "For a minute: a 30-foot aura of magical darkness that deals 4d10 psychic damage to enemies who start their turn in it, gives attackers disadvantage against you, and lets you make a spectral 4d10 psychic attack as a bonus action.",
     "zh-CN": "持续一分钟，形成范围 30 尺的魔法黑暗灵光；敌人在其中开始回合时受到 4d10 心灵伤害，对你的攻击具有劣势，你还可用附赠动作进行一次造成 4d10 心灵伤害的灵体攻击。"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-valor.bonus-proficiencies-valor.name": {
+    "en": "Bonus Proficiencies (Valor)",
+    "zh-CN": "额外熟练项（勇气）"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-valor.bonus-proficiencies-valor.description": {
+    "en": "Proficiency with medium armor, shields and martial weapons.",
+    "zh-CN": "获得中甲、盾牌和军用武器的熟练。"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-valor.combat-inspiration.name": {
+    "en": "Combat Inspiration",
+    "zh-CN": "战斗激励"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-valor.combat-inspiration.description": {
+    "en": "A creature holding your Bardic Inspiration die may add it to a damage roll, or use a reaction to add it to AC against one attack.",
+    "zh-CN": "持有你的吟游激励骰的生物，可将其加到一次伤害掷骰中，或用反应将其加到对抗一次攻击的护甲等级上。"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-valor.extra-attack.name": {
+    "en": "Extra Attack",
+    "zh-CN": "额外攻击"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-valor.extra-attack.description": {
+    "en": "Attack twice when you take the Attack action.",
+    "zh-CN": "采取攻击动作时可攻击两次。"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-valor.battle-magic.name": {
+    "en": "Battle Magic",
+    "zh-CN": "战斗魔法"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-valor.battle-magic.description": {
+    "en": "After casting a spell with an action, a bonus action makes one weapon attack.",
+    "zh-CN": "用动作施放法术后，可用附赠动作进行一次武器攻击。"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-glamour.mantle-of-inspiration.name": {
+    "en": "Mantle of Inspiration",
+    "zh-CN": "激励披风"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-glamour.mantle-of-inspiration.description": {
+    "en": "A bonus action spends a Bardic Inspiration to give allies within 60 feet temporary hit points and an immediate reaction-free move.",
+    "zh-CN": "用附赠动作消耗一次吟游激励，使 60 尺内的盟友获得临时生命值，并立即移动，无需反应。"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-glamour.enthralling-performance.name": {
+    "en": "Enthralling Performance",
+    "zh-CN": "迷人表演"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-glamour.enthralling-performance.description": {
+    "en": "After a minute of performance, charm up to a proficiency-bonus number of humanoids that fail a Wisdom save; once per short or long rest.",
+    "zh-CN": "表演一分钟后，魅惑至多等于熟练加值数量的类人生物，目标须感知豁免失败；每次短休或长休后可用一次。"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-glamour.mantle-of-majesty.name": {
+    "en": "Mantle of Majesty",
+    "zh-CN": "威严斗篷"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-glamour.mantle-of-majesty.description": {
+    "en": "Cast command as a bonus action for a minute without a slot, with listeners charmed against retaliating; once per long rest.",
+    "zh-CN": "持续一分钟，可用附赠动作施放命令术，无需法术位，并使听者被魅惑而不能报复；每次长休后可用一次。"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-glamour.unbreakable-majesty.name": {
+    "en": "Unbreakable Majesty",
+    "zh-CN": "不破威严"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-glamour.unbreakable-majesty.description": {
+    "en": "A bonus action makes you awesome to behold for a minute: an attacker must pass a Charisma save or lose the attack and be unable to target you that turn.",
+    "zh-CN": "用附赠动作展现庄严难犯的威仪，持续一分钟；攻击者须通过魅力豁免，否则该攻击无效，且本回合无法再以你为目标。"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-swords.bonus-proficiencies-swords.name": {
+    "en": "Bonus Proficiencies (Swords)",
+    "zh-CN": "额外熟练项（剑舞）"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-swords.bonus-proficiencies-swords.description": {
+    "en": "Proficiency with medium armor and the scimitar; your weapon can serve as a spellcasting focus.",
+    "zh-CN": "获得中甲和弯刀的熟练，武器可作为施法法器。"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-swords.fighting-style-blade.name": {
+    "en": "Fighting Style (Blade)",
+    "zh-CN": "战斗风格（剑刃）"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-swords.fighting-style-blade.description": {
+    "en": "Choose the Dueling or Two-Weapon Fighting style.",
+    "zh-CN": "选择决斗或双武器战斗风格。"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-swords.blade-flourish.name": {
+    "en": "Blade Flourish",
+    "zh-CN": "剑刃华舞"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-swords.blade-flourish.description": {
+    "en": "Your speed rises by 10 feet on any turn you take the Attack action, and once per turn you may spend a Bardic Inspiration die on a Defensive, Slashing or Mobile flourish.",
+    "zh-CN": "采取攻击动作的回合，速度增加 10 尺；每回合一次，可消耗吟游激励骰施展防御、挥斩或机动华舞。"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-swords.extra-attack.name": {
+    "en": "Extra Attack",
+    "zh-CN": "额外攻击"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-swords.extra-attack.description": {
+    "en": "Attack twice when you take the Attack action.",
+    "zh-CN": "采取攻击动作时可攻击两次。"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-swords.master-s-flourish.name": {
+    "en": "Master's Flourish",
+    "zh-CN": "大师华舞"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-swords.master-s-flourish.description": {
+    "en": "Roll a d6 for a flourish instead of spending a Bardic Inspiration die.",
+    "zh-CN": "施展华舞时，可掷 d6，而不消耗吟游激励骰。"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-whispers.psychic-blades.name": {
+    "en": "Psychic Blades",
+    "zh-CN": "心灵之刃"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-whispers.psychic-blades.description": {
+    "en": "Spend a Bardic Inspiration die on a weapon hit for extra psychic damage, 2d6 at 3rd level and rising with bard level.",
+    "zh-CN": "武器命中时，可消耗一个吟游激励骰，造成额外心灵伤害；3 级时为 2d6，随吟游诗人等级提高。"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-whispers.words-of-terror.name": {
+    "en": "Words of Terror",
+    "zh-CN": "恐惧之言"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-whispers.words-of-terror.description": {
+    "en": "A minute of private conversation frightens a humanoid of you or someone you name for an hour on a failed Wisdom save; once per short or long rest.",
+    "zh-CN": "私下交谈一分钟后，类人生物感知豁免失败时，会恐惧你或你指定的人一小时；每次短休或长休后可用一次。"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-whispers.mantle-of-whispers.name": {
+    "en": "Mantle of Whispers",
+    "zh-CN": "低语斗篷"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-whispers.mantle-of-whispers.description": {
+    "en": "A reaction captures the shadow of a humanoid that just died, letting you wear their identity for an hour; once per short or long rest.",
+    "zh-CN": "用反应捕获一个刚死亡的类人生物的影子，可借此扮成其身份一小时；每次短休或长休后可用一次。"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-whispers.shadow-lore.name": {
+    "en": "Shadow Lore",
+    "zh-CN": "暗影秘闻"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-whispers.shadow-lore.description": {
+    "en": "Whisper a creature's darkest secret: on a failed Wisdom save it is charmed and obeys your requests for 8 hours; once per long rest.",
+    "zh-CN": "低声说出生物最黑暗的秘密；目标感知豁免失败时，被魅惑并听从你的要求八小时。每次长休后可用一次。"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-eloquence.silver-tongue.name": {
+    "en": "Silver Tongue",
+    "zh-CN": "巧舌"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-eloquence.silver-tongue.description": {
+    "en": "Treat any d20 of 9 or lower as a 10 on Persuasion and Deception checks.",
+    "zh-CN": "游说和欺瞒检定中，d20 掷出 9 或更低视为 10。"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-eloquence.unsettling-words.name": {
+    "en": "Unsettling Words",
+    "zh-CN": "扰心言辞"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-eloquence.unsettling-words.description": {
+    "en": "A bonus action spends a Bardic Inspiration die to subtract it from one creature's next saving throw.",
+    "zh-CN": "用附赠动作消耗一个吟游激励骰，将骰结果从一个生物的下一次豁免中减去。"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-eloquence.unfailing-inspiration.name": {
+    "en": "Unfailing Inspiration",
+    "zh-CN": "不败激励"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-eloquence.unfailing-inspiration.description": {
+    "en": "An inspiration die that fails to change the outcome is not spent.",
+    "zh-CN": "若激励骰未能改变结果，则不会被消耗。"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-eloquence.infectious-inspiration.name": {
+    "en": "Infectious Inspiration",
+    "zh-CN": "激励传递"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-eloquence.infectious-inspiration.description": {
+    "en": "A reaction copies a successful inspiration die onto another creature, a Charisma-modifier number of times per long rest.",
+    "zh-CN": "用反应，将成功生效的激励骰传递给另一个生物，每次长休后的使用次数等于魅力调整值。"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-creation.mote-of-potential.name": {
+    "en": "Mote of Potential",
+    "zh-CN": "潜能微光"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-creation.mote-of-potential.description": {
+    "en": "Your Bardic Inspiration also produces a mote whose burst helps the holder: extra damage on an attack, temporary hit points on a check, or an ally bonus on a save.",
+    "zh-CN": "你的吟游激励还会产生一枚微光，爆发时帮助持有者：攻击时增加伤害，检定时提供临时生命值，豁免时为盟友提供加值。"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-creation.performance-of-creation.name": {
+    "en": "Performance of Creation",
+    "zh-CN": "造物演奏"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-creation.performance-of-creation.description": {
+    "en": "Create a nonmagical item worth no more than 20 times your bard level as an action, once per long rest or with a spell slot.",
+    "zh-CN": "用一个动作创造非魔法物品，价值不超过吟游诗人等级的二十倍；每次长休后可用一次，也可消耗法术位使用。"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-creation.animating-performance.name": {
+    "en": "Animating Performance",
+    "zh-CN": "赋生演奏"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-creation.animating-performance.description": {
+    "en": "Animate a Large or smaller object as a dancing companion that acts on your turn and can make a thunderous Strength attack; once per long rest or with a spell slot.",
+    "zh-CN": "使大型或更小的物体成为起舞的伙伴，在你的回合行动，可进行造成雷鸣伤害的力量攻击。每次长休后可用一次，也可消耗法术位使用。"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-creation.creative-crescendo.name": {
+    "en": "Creative Crescendo",
+    "zh-CN": "造物高潮"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-creation.creative-crescendo.description": {
+    "en": "Performance of Creation makes several items at once and drops the cost limit on all but the largest.",
+    "zh-CN": "造物演奏可同时创造多个物品，除最大的物品外，其余不受价值上限限制。"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-spirits.guiding-whispers.name": {
+    "en": "Guiding Whispers",
+    "zh-CN": "指引低语"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-spirits.guiding-whispers.description": {
+    "en": "You know guidance and can cast it at 60 feet.",
+    "zh-CN": "掌握指引术，并可在 60 尺距离施放。"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-spirits.spiritual-focus.name": {
+    "en": "Spiritual Focus",
+    "zh-CN": "灵性法器"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-spirits.spiritual-focus.description": {
+    "en": "A candle, a deck, a talking board or the like serves as your spellcasting focus and adds a die to the damage or healing of your bard spells at higher levels.",
+    "zh-CN": "蜡烛、牌组、灵应盘等可作为施法法器；等级提高后，用于施放吟游诗人法术时，伤害或治疗可增加一个骰。"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-spirits.tales-from-beyond.name": {
+    "en": "Tales from Beyond",
+    "zh-CN": "彼岸传说"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-spirits.tales-from-beyond.description": {
+    "en": "Spend a Bardic Inspiration die and roll on a table of spirit tales, each with its own effect you can release on a target.",
+    "zh-CN": "消耗一个吟游激励骰，在精魂传说表上掷骰；每个传说各有可施加给目标的效果。"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-spirits.spirit-session.name": {
+    "en": "Spirit Session",
+    "zh-CN": "精魂降临"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-spirits.spirit-session.description": {
+    "en": "An hour-long seance with allies lets you learn one divination or necromancy spell of a level up to the ritual's length and cast it until your next long rest.",
+    "zh-CN": "与盟友举行一小时的降灵仪式，可学会一个预言系或死灵系法术，法术环数上限由仪式时长决定；直到下一次长休前都可施放。"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-spirits.mystical-connection.name": {
+    "en": "Mystical Connection",
+    "zh-CN": "神秘联结"
+  },
+  "callingMaterial.subclassFeature.bard.college-of-spirits.mystical-connection.description": {
+    "en": "Reroll an unwanted Tales from Beyond result, and roll for it without spending a die once per short rest.",
+    "zh-CN": "可重掷不想要的彼岸传说结果；每次短休后，还可不消耗骰子掷一次传说结果。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-shadow.shadow-arts.name": {
+    "en": "Shadow Arts",
+    "zh-CN": "暗影技艺"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-shadow.shadow-arts.description": {
+    "en": "Spend 2 ki to cast darkness, darkvision, pass without trace or silence, and you know minor illusion.",
+    "zh-CN": "消耗 2 点气，可施放黑暗术、黑暗视觉、无踪行走或沉默术，并掌握次级幻象。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-shadow.shadow-step.name": {
+    "en": "Shadow Step",
+    "zh-CN": "暗影步"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-shadow.shadow-step.description": {
+    "en": "A bonus action teleports 60 feet between two patches of dim light or darkness, granting advantage on your next melee attack this turn.",
+    "zh-CN": "用附赠动作在两个昏暗或黑暗区域之间传送，距离可达 60 尺；本回合下一次近战攻击具有优势。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-shadow.cloak-of-shadows.name": {
+    "en": "Cloak of Shadows",
+    "zh-CN": "暗影斗篷"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-shadow.cloak-of-shadows.description": {
+    "en": "Become invisible in dim light or darkness until you attack, cast, or step into light.",
+    "zh-CN": "在昏暗光照或黑暗中隐形，直到攻击、施法或步入光照区域。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-shadow.opportunist.name": {
+    "en": "Opportunist",
+    "zh-CN": "伺机者"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-shadow.opportunist.description": {
+    "en": "A reaction makes a melee attack against a creature within 5 feet that another creature just hit.",
+    "zh-CN": "5 尺内一个生物刚被其他生物命中时，可用反应对其进行一次近战攻击。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-four-elements.disciple-of-the-elements.name": {
+    "en": "Disciple of the Elements",
+    "zh-CN": "元素门徒"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-four-elements.disciple-of-the-elements.description": {
+    "en": "Learn elemental disciplines cast by spending ki, starting with Elemental Attunement and one other, and gaining more at 6th, 11th and 17th level; spell save DC and attacks use your ki save DC.",
+    "zh-CN": "学习消耗气施放的元素法门，起始掌握元素同调和另一种法门，6、11 和 17 级时学会更多；法术豁免难度和攻击使用气的豁免难度。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-four-elements.elemental-discipline-6th.name": {
+    "en": "Elemental Discipline (6th)",
+    "zh-CN": "元素法门（6 级）"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-four-elements.elemental-discipline-6th.description": {
+    "en": "One additional elemental discipline of a level your ki can pay for.",
+    "zh-CN": "额外学会一种你的气足以施放的元素法门。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-four-elements.elemental-discipline-11th.name": {
+    "en": "Elemental Discipline (11th)",
+    "zh-CN": "元素法门（11 级）"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-four-elements.elemental-discipline-11th.description": {
+    "en": "One additional elemental discipline.",
+    "zh-CN": "额外学会一种元素法门。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-four-elements.elemental-discipline-17th.name": {
+    "en": "Elemental Discipline (17th)",
+    "zh-CN": "元素法门（17 级）"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-four-elements.elemental-discipline-17th.description": {
+    "en": "One additional elemental discipline, up to the most powerful ones.",
+    "zh-CN": "额外学会一种元素法门，可选择最强大的法门。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-drunken-master.bonus-proficiencies-drunken-master.name": {
+    "en": "Bonus Proficiencies (Drunken Master)",
+    "zh-CN": "额外熟练项（醉拳宗师）"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-drunken-master.bonus-proficiencies-drunken-master.description": {
+    "en": "Performance and brewer's supplies.",
+    "zh-CN": "获得表演技能和酿酒工具的熟练。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-drunken-master.drunken-technique.name": {
+    "en": "Drunken Technique",
+    "zh-CN": "醉拳技法"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-drunken-master.drunken-technique.description": {
+    "en": "Flurry of Blows also grants the benefit of Disengage and 10 feet of extra movement.",
+    "zh-CN": "疾风连击同时提供撤离效果，并使移动距离增加 10 尺。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-drunken-master.tipsy-sway.name": {
+    "en": "Tipsy Sway",
+    "zh-CN": "醉步摇摆"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-drunken-master.tipsy-sway.description": {
+    "en": "Leap to your feet from prone at the cost of 5 feet of movement, and spend 1 ki as a reaction to redirect a miss against you into another creature within 5 feet.",
+    "zh-CN": "从倒地状态起身仅消耗 5 尺移动；可用反应消耗 1 点气，将针对你而未命中的攻击转移至 5 尺内另一个生物。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-drunken-master.drunkard-s-luck.name": {
+    "en": "Drunkard's Luck",
+    "zh-CN": "醉者之运"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-drunken-master.drunkard-s-luck.description": {
+    "en": "Spend 2 ki to cancel disadvantage on an attack, check or save.",
+    "zh-CN": "消耗 2 点气，取消一次攻击、检定或豁免的劣势。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-drunken-master.intoxicated-frenzy.name": {
+    "en": "Intoxicated Frenzy",
+    "zh-CN": "醉意狂舞"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-drunken-master.intoxicated-frenzy.description": {
+    "en": "Flurry of Blows grants up to three extra attacks, provided each one hits a different creature.",
+    "zh-CN": "疾风连击可额外攻击至多三次，但每次必须命中不同生物。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-kensei.path-of-the-kensei.name": {
+    "en": "Path of the Kensei",
+    "zh-CN": "剑圣之道"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-kensei.path-of-the-kensei.description": {
+    "en": "Two kensei weapons count as monk weapons, one ranged kensei weapon adds +2 AC as a bonus action, and an unarmed strike as a bonus action follows a kensei attack.",
+    "zh-CN": "两种剑圣武器视为武僧武器；一把远程剑圣武器可用附赠动作使护甲等级增加 2，剑圣攻击后可用附赠动作进行徒手打击。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-kensei.kensei-s-shot.name": {
+    "en": "Kensei's Shot",
+    "zh-CN": "剑圣之射"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-kensei.kensei-s-shot.description": {
+    "en": "A bonus action adds 1d4 damage to ranged kensei attacks this turn.",
+    "zh-CN": "用附赠动作，使本回合的远程剑圣攻击额外造成 1d4 伤害。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-kensei.one-with-the-blade.name": {
+    "en": "One with the Blade",
+    "zh-CN": "人剑合一"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-kensei.one-with-the-blade.description": {
+    "en": "Kensei weapons count as magical, and 1 ki adds your martial arts die to a hit's damage once per turn.",
+    "zh-CN": "剑圣武器视为魔法武器；每回合一次，可消耗 1 点气，将武艺骰加到一次命中的伤害中。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-kensei.sharpen-the-blade.name": {
+    "en": "Sharpen the Blade",
+    "zh-CN": "磨砺锋刃"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-kensei.sharpen-the-blade.description": {
+    "en": "Spend up to 3 ki as a bonus action for a matching bonus to attack and damage with a kensei weapon for a minute.",
+    "zh-CN": "用附赠动作消耗至多 3 点气，使剑圣武器的攻击和伤害获得同等加值，持续一分钟。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-kensei.unerring-accuracy.name": {
+    "en": "Unerring Accuracy",
+    "zh-CN": "精准无误"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-kensei.unerring-accuracy.description": {
+    "en": "Reroll a missed monk-weapon attack once per turn.",
+    "zh-CN": "每回合一次，可重掷一次未命中的武僧武器攻击。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-sun-soul.radiant-sun-bolt.name": {
+    "en": "Radiant Sun Bolt",
+    "zh-CN": "光耀日矢"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-sun-soul.radiant-sun-bolt.description": {
+    "en": "A ranged spell attack for your martial arts die plus Dexterity in radiant damage at 30 feet, usable with the Attack action and extendable with ki as a bonus action.",
+    "zh-CN": "对 30 尺内目标进行远程法术攻击，造成武艺骰加敏捷调整值的光耀伤害；可用于攻击动作，也可消耗气用附赠动作追加。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-sun-soul.searing-arc-strike.name": {
+    "en": "Searing Arc Strike",
+    "zh-CN": "灼热弧击"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-sun-soul.searing-arc-strike.description": {
+    "en": "After the Attack action, spend 2 ki or more as a bonus action to cast burning hands at a matching level.",
+    "zh-CN": "采取攻击动作后，可用附赠动作消耗至少 2 点气，施放对应环数的燃烧之手。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-sun-soul.searing-sunburst.name": {
+    "en": "Searing Sunburst",
+    "zh-CN": "灼热日爆"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-sun-soul.searing-sunburst.description": {
+    "en": "A 20-foot sphere within 150 feet deals 2d6 radiant on a failed Constitution save, up to 2d6 more per ki point spent.",
+    "zh-CN": "在 150 尺内形成 20 尺球体，对体质豁免失败的生物造成 2d6 光耀伤害；每消耗 1 点气，至多再增加 2d6。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-sun-soul.sun-shield.name": {
+    "en": "Sun Shield",
+    "zh-CN": "日光护盾"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-sun-soul.sun-shield.description": {
+    "en": "Shed 30 feet of bright light at will and deal 5 + Wisdom radiant damage to anyone who hits you in melee.",
+    "zh-CN": "可随意散发 30 尺明亮光照，对任何近战命中你的生物造成 5 加感知调整值的光耀伤害。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-long-death.touch-of-death.name": {
+    "en": "Touch of Death",
+    "zh-CN": "死亡之触"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-long-death.touch-of-death.description": {
+    "en": "When a creature within 5 feet drops to 0 hit points, gain temporary hit points equal to your Wisdom modifier plus your monk level.",
+    "zh-CN": "5 尺内一个生物的生命值降至 0 时，你获得等于感知调整值加武僧等级的临时生命值。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-long-death.hour-of-reaping.name": {
+    "en": "Hour of Reaping",
+    "zh-CN": "收割之时"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-long-death.hour-of-reaping.description": {
+    "en": "An action frightens every creature within 30 feet that fails a Wisdom save until the end of your next turn.",
+    "zh-CN": "用一个动作，使 30 尺内感知豁免失败的每个生物恐慌，持续至你的下一回合结束。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-long-death.mastery-of-death.name": {
+    "en": "Mastery of Death",
+    "zh-CN": "死亡掌控"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-long-death.mastery-of-death.description": {
+    "en": "Spend 1 ki to stay at 1 hit point instead of dropping to 0, as long as ki remains.",
+    "zh-CN": "消耗 1 点气，使生命值保留为 1，而非降至 0；只要有气，就可继续使用。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-long-death.touch-of-the-long-death.name": {
+    "en": "Touch of the Long Death",
+    "zh-CN": "长死之触"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-long-death.touch-of-the-long-death.description": {
+    "en": "Spend up to 10 ki to deal 2d10 necrotic per point to a creature within 5 feet, halved on a Constitution save.",
+    "zh-CN": "消耗至多 10 点气，对 5 尺内一个生物造成每点气 2d10 的黯蚀伤害，体质豁免成功则减半。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-mercy.implements-of-mercy.name": {
+    "en": "Implements of Mercy",
+    "zh-CN": "慈悲之具"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-mercy.implements-of-mercy.description": {
+    "en": "Proficiency in Insight and Medicine and with a herbalism kit, plus a mask you are known by.",
+    "zh-CN": "获得洞悉、医药技能和草药工具的熟练，并有一副作为你标志的面具。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-mercy.hand-of-healing.name": {
+    "en": "Hand of Healing",
+    "zh-CN": "治疗之手"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-mercy.hand-of-healing.description": {
+    "en": "Spend 1 ki as an action to heal a creature within 5 feet for your martial arts die plus your Wisdom modifier, or replace one Flurry of Blows attack with it.",
+    "zh-CN": "用一个动作消耗 1 点气，使 5 尺内一个生物恢复武艺骰加感知调整值的生命值；也可用此替换一次疾风连击攻击。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-mercy.hand-of-harm.name": {
+    "en": "Hand of Harm",
+    "zh-CN": "伤害之手"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-mercy.hand-of-harm.description": {
+    "en": "Once per turn, spend 1 ki on an unarmed hit for extra necrotic damage of your martial arts die plus your Wisdom modifier.",
+    "zh-CN": "每回合一次，徒手打击命中时消耗 1 点气，额外造成武艺骰加感知调整值的黯蚀伤害。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-mercy.physician-s-touch.name": {
+    "en": "Physician's Touch",
+    "zh-CN": "医师之触"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-mercy.physician-s-touch.description": {
+    "en": "Hand of Healing also ends one condition; Hand of Harm can poison the target until the end of your next turn.",
+    "zh-CN": "治疗之手还可结束一种状态；伤害之手可使目标中毒，持续至你的下一回合结束。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-mercy.flurry-of-healing-and-harm.name": {
+    "en": "Flurry of Healing and Harm",
+    "zh-CN": "治伤连击"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-mercy.flurry-of-healing-and-harm.description": {
+    "en": "Flurry of Blows can heal without ki cost, and one of its attacks can carry Hand of Harm free.",
+    "zh-CN": "疾风连击中可不消耗额外的气进行治疗，其中一次攻击还可不额外耗气附带伤害之手。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-mercy.hand-of-ultimate-mercy.name": {
+    "en": "Hand of Ultimate Mercy",
+    "zh-CN": "终极慈悲之手"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-mercy.hand-of-ultimate-mercy.description": {
+    "en": "Once per long rest, spend 5 ki to return a creature dead no more than 24 hours to life with 4d10 + Wisdom hit points.",
+    "zh-CN": "每次长休后可用一次，消耗 5 点气，使死亡不超过 24 小时的生物复活，恢复 4d10 加感知调整值的生命值。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-astral-self.arms-of-the-astral-self.name": {
+    "en": "Arms of the Astral Self",
+    "zh-CN": "星界之臂"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-astral-self.arms-of-the-astral-self.description": {
+    "en": "Spend 1 ki as a bonus action to summon spectral arms for 10 minutes: they use Wisdom for unarmed attacks, deal your martial arts die in force damage, add 5 feet of reach, and can shove creatures within 10 feet.",
+    "zh-CN": "用附赠动作消耗 1 点气，召唤灵体手臂十分钟。徒手攻击使用感知，造成武艺骰的力场伤害，触及范围增加 5 尺，并可推撞 10 尺内的生物。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-astral-self.visage-of-the-astral-self.name": {
+    "en": "Visage of the Astral Self",
+    "zh-CN": "星界之貌"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-astral-self.visage-of-the-astral-self.description": {
+    "en": "Spend 1 ki for a spirit visage granting darkvision, advantage on Insight and Intimidation, and an Astral Sight that pierces darkness.",
+    "zh-CN": "消耗 1 点气，显现灵体面貌，获得黑暗视觉，洞悉和威吓检定具有优势，星界视界可看穿黑暗。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-astral-self.body-of-the-astral-self.name": {
+    "en": "Body of the Astral Self",
+    "zh-CN": "星界之躯"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-astral-self.body-of-the-astral-self.description": {
+    "en": "With both arms and visage active, gain a Deflect Energy reaction and add 1d10 to a damage roll once per turn.",
+    "zh-CN": "手臂和面貌同时激活时，可用反应偏转能量，并每回合一次使一次伤害掷骰增加 1d10。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-astral-self.awakened-astral-self.name": {
+    "en": "Awakened Astral Self",
+    "zh-CN": "觉醒星界之身"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-astral-self.awakened-astral-self.description": {
+    "en": "Spend 5 ki for the complete astral body: +2 AC and an extra Arms attack when taking the Attack action.",
+    "zh-CN": "消耗 5 点气，显现完整星界之躯：护甲等级增加 2，采取攻击动作时可额外进行一次星界之臂攻击。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-ascendant-dragon.draconic-disciple.name": {
+    "en": "Draconic Disciple",
+    "zh-CN": "巨龙门徒"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-ascendant-dragon.draconic-disciple.description": {
+    "en": "You know Draconic, can shift your unarmed damage to acid, cold, fire, lightning or poison, and can add a d4 to a Charisma check once per short rest.",
+    "zh-CN": "掌握龙语，可将徒手伤害改为强酸、冷冻、火焰、闪电或毒素；每次短休后，还可使一次魅力检定增加 d4。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-ascendant-dragon.breath-of-the-dragon.name": {
+    "en": "Breath of the Dragon",
+    "zh-CN": "龙之吐息"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-ascendant-dragon.breath-of-the-dragon.description": {
+    "en": "Replace one Attack-action attack with a 20-foot cone or 30-foot line dealing your martial arts die in damage, twice per long rest or by spending 1 ki.",
+    "zh-CN": "将攻击动作中的一次攻击替换为 20 尺锥形或 30 尺线形吐息，造成武艺骰的伤害。每次长休后可用两次，也可消耗 1 点气使用。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-ascendant-dragon.wings-unfurled.name": {
+    "en": "Wings Unfurled",
+    "zh-CN": "展翼"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-ascendant-dragon.wings-unfurled.description": {
+    "en": "While airborne from a jump or effect, gain a flying speed equal to your walking speed, a proficiency-bonus number of times per long rest.",
+    "zh-CN": "因跳跃或其他效果身处空中时，可获得等于步行速度的飞行速度，每次长休后的使用次数等于熟练加值。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-ascendant-dragon.aspect-of-the-wyrm.name": {
+    "en": "Aspect of the Wyrm",
+    "zh-CN": "巨龙法相"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-ascendant-dragon.aspect-of-the-wyrm.description": {
+    "en": "A bonus action creates a 10-foot aura for a minute that either frightens enemies or grants allies resistance to your damage type; once per long rest or for 3 ki.",
+    "zh-CN": "用附赠动作形成范围 10 尺的灵光，持续一分钟，选择使敌人恐慌，或让盟友对你的伤害类型具有抗性。每次长休后可用一次，也可消耗 3 点气使用。"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-ascendant-dragon.ascendant-aspect.name": {
+    "en": "Ascendant Aspect",
+    "zh-CN": "升华之相"
+  },
+  "callingMaterial.subclassFeature.monk.way-of-the-ascendant-dragon.ascendant-aspect.description": {
+    "en": "Aspect of the Wyrm reaches 30 feet, grants blindsight, and once per turn lets you deal 3d10 damage to up to three creatures in it as a reaction.",
+    "zh-CN": "巨龙法相范围增至 30 尺，提供盲视，并每回合一次允许你用反应对其中至多三个生物造成 3d10 伤害。"
+  },
+  "callingMaterial.subclassFeature.ranger.beast-master.ranger-s-companion.name": {
+    "en": "Ranger's Companion",
+    "zh-CN": "游侠伙伴"
+  },
+  "callingMaterial.subclassFeature.ranger.beast-master.ranger-s-companion.description": {
+    "en": "A beast of CR 1/4 or lower obeys your commands, adds your proficiency bonus to its rolls and AC, uses your hit points formula and takes the Dodge action unless you command otherwise.",
+    "zh-CN": "挑战等级不超过 1/4 的野兽听从你的指挥，掷骰和护甲等级加上你的熟练加值，使用你的生命值计算公式；除非另有指令，否则采取闪避动作。"
+  },
+  "callingMaterial.subclassFeature.ranger.beast-master.exceptional-training.name": {
+    "en": "Exceptional Training",
+    "zh-CN": "卓越训练"
+  },
+  "callingMaterial.subclassFeature.ranger.beast-master.exceptional-training.description": {
+    "en": "A bonus action lets the companion Dash, Disengage, Dodge or Help, and its attacks count as magical.",
+    "zh-CN": "用附赠动作让伙伴疾走、撤离、闪避或协助，其攻击视为魔法攻击。"
+  },
+  "callingMaterial.subclassFeature.ranger.beast-master.bestial-fury.name": {
+    "en": "Bestial Fury",
+    "zh-CN": "野兽狂怒"
+  },
+  "callingMaterial.subclassFeature.ranger.beast-master.bestial-fury.description": {
+    "en": "Your companion makes two attacks when you command it to attack.",
+    "zh-CN": "命令伙伴攻击时，它可攻击两次。"
+  },
+  "callingMaterial.subclassFeature.ranger.beast-master.share-spells.name": {
+    "en": "Share Spells",
+    "zh-CN": "共享法术"
+  },
+  "callingMaterial.subclassFeature.ranger.beast-master.share-spells.description": {
+    "en": "A spell you cast on yourself also affects your companion within 30 feet.",
+    "zh-CN": "对自己施放的法术，也影响 30 尺内的伙伴。"
+  },
+  "callingMaterial.subclassFeature.ranger.gloom-stalker.dread-ambusher.name": {
+    "en": "Dread Ambusher",
+    "zh-CN": "恐怖伏击者"
+  },
+  "callingMaterial.subclassFeature.ranger.gloom-stalker.dread-ambusher.description": {
+    "en": "+ your Wisdom modifier to initiative, and on your first turn 10 extra feet of speed plus one extra attack dealing an extra 1d8.",
+    "zh-CN": "先攻加上感知调整值；首回合速度增加 10 尺，可额外攻击一次，该攻击额外造成 1d8 伤害。"
+  },
+  "callingMaterial.subclassFeature.ranger.gloom-stalker.umbral-sight.name": {
+    "en": "Umbral Sight",
+    "zh-CN": "幽暗视觉"
+  },
+  "callingMaterial.subclassFeature.ranger.gloom-stalker.umbral-sight.description": {
+    "en": "Darkvision 60 feet, or 30 more if you had it, and you are invisible to creatures relying on darkvision to see you in darkness.",
+    "zh-CN": "获得 60 尺黑暗视觉，若已有则增加 30 尺；黑暗中，依赖黑暗视觉观察你的生物无法看见你。"
+  },
+  "callingMaterial.subclassFeature.ranger.gloom-stalker.iron-mind.name": {
+    "en": "Iron Mind",
+    "zh-CN": "钢铁心智"
+  },
+  "callingMaterial.subclassFeature.ranger.gloom-stalker.iron-mind.description": {
+    "en": "Proficiency in Wisdom saves, or Intelligence or Charisma if you already have it.",
+    "zh-CN": "获得感知豁免熟练；若已有，则改为智力或魅力豁免熟练。"
+  },
+  "callingMaterial.subclassFeature.ranger.gloom-stalker.stalker-s-flurry.name": {
+    "en": "Stalker's Flurry",
+    "zh-CN": "潜猎连击"
+  },
+  "callingMaterial.subclassFeature.ranger.gloom-stalker.stalker-s-flurry.description": {
+    "en": "Once per turn, a missed attack lets you make another one.",
+    "zh-CN": "每回合一次，一次攻击未命中时，可再攻击一次。"
+  },
+  "callingMaterial.subclassFeature.ranger.gloom-stalker.shadowy-dodge.name": {
+    "en": "Shadowy Dodge",
+    "zh-CN": "幽影闪避"
+  },
+  "callingMaterial.subclassFeature.ranger.gloom-stalker.shadowy-dodge.description": {
+    "en": "A reaction imposes disadvantage on an attack against you that would otherwise hit.",
+    "zh-CN": "用反应，使原本会命中你的攻击具有劣势。"
+  },
+  "callingMaterial.subclassFeature.ranger.horizon-walker.detect-portal.name": {
+    "en": "Detect Portal",
+    "zh-CN": "侦测传送门"
+  },
+  "callingMaterial.subclassFeature.ranger.horizon-walker.detect-portal.description": {
+    "en": "Sense a planar portal within a mile once per short or long rest.",
+    "zh-CN": "每次短休或长休后，可感知一英里内的位面传送门一次。"
+  },
+  "callingMaterial.subclassFeature.ranger.horizon-walker.planar-warrior.name": {
+    "en": "Planar Warrior",
+    "zh-CN": "位面战士"
+  },
+  "callingMaterial.subclassFeature.ranger.horizon-walker.planar-warrior.description": {
+    "en": "A bonus action marks a target so your next hit this turn deals its weapon damage plus 1d8 force as force damage; 2d8 from 11th level.",
+    "zh-CN": "用附赠动作标记目标，使你本回合下一次命中造成的武器伤害，加上 1d8 力场伤害后，全部转为力场伤害；11 级起额外伤害增至 2d8。"
+  },
+  "callingMaterial.subclassFeature.ranger.horizon-walker.ethereal-step.name": {
+    "en": "Ethereal Step",
+    "zh-CN": "以太步伐"
+  },
+  "callingMaterial.subclassFeature.ranger.horizon-walker.ethereal-step.description": {
+    "en": "Cast etherealness as a bonus action for one turn, once per short or long rest.",
+    "zh-CN": "每次短休或长休后，可用附赠动作施放以太化一次，持续一个回合。"
+  },
+  "callingMaterial.subclassFeature.ranger.horizon-walker.distant-strike.name": {
+    "en": "Distant Strike",
+    "zh-CN": "远距打击"
+  },
+  "callingMaterial.subclassFeature.ranger.horizon-walker.distant-strike.description": {
+    "en": "Teleport 10 feet before each attack, and attack a third creature if you struck two others this turn.",
+    "zh-CN": "每次攻击前可传送 10 尺；若本回合已攻击两个不同生物，可再攻击第三个。"
+  },
+  "callingMaterial.subclassFeature.ranger.horizon-walker.spectral-defense.name": {
+    "en": "Spectral Defense",
+    "zh-CN": "幽灵防御"
+  },
+  "callingMaterial.subclassFeature.ranger.horizon-walker.spectral-defense.description": {
+    "en": "A reaction halves the damage of an attack that hits you.",
+    "zh-CN": "用反应使命中你的一次攻击伤害减半。"
+  },
+  "callingMaterial.subclassFeature.ranger.monster-slayer.hunter-s-sense.name": {
+    "en": "Hunter's Sense",
+    "zh-CN": "猎人感知"
+  },
+  "callingMaterial.subclassFeature.ranger.monster-slayer.hunter-s-sense.description": {
+    "en": "An action reveals a creature's damage immunities, resistances and vulnerabilities, a Wisdom-modifier number of times per long rest.",
+    "zh-CN": "用一个动作获知生物的伤害免疫、抗性和易伤，每次长休后的使用次数等于感知调整值。"
+  },
+  "callingMaterial.subclassFeature.ranger.monster-slayer.slayer-s-prey.name": {
+    "en": "Slayer's Prey",
+    "zh-CN": "屠戮者猎物"
+  },
+  "callingMaterial.subclassFeature.ranger.monster-slayer.slayer-s-prey.description": {
+    "en": "A bonus action marks a creature so your first hit against it each turn deals an extra 1d6.",
+    "zh-CN": "用附赠动作标记一个生物，使你每回合首次命中它时额外造成 1d6 伤害。"
+  },
+  "callingMaterial.subclassFeature.ranger.monster-slayer.supernatural-defense.name": {
+    "en": "Supernatural Defense",
+    "zh-CN": "超自然防御"
+  },
+  "callingMaterial.subclassFeature.ranger.monster-slayer.supernatural-defense.description": {
+    "en": "Add 1d6 to saves and escape checks against effects from your Slayer's Prey target.",
+    "zh-CN": "对抗屠戮者猎物目标造成的效果时，豁免和脱逃检定增加 1d6。"
+  },
+  "callingMaterial.subclassFeature.ranger.monster-slayer.magic-user-s-nemesis.name": {
+    "en": "Magic-User's Nemesis",
+    "zh-CN": "施法者克星"
+  },
+  "callingMaterial.subclassFeature.ranger.monster-slayer.magic-user-s-nemesis.description": {
+    "en": "A reaction forces a caster or teleporter within 60 feet to make a Wisdom save or lose the spell; once per short or long rest.",
+    "zh-CN": "用反应迫使 60 尺内的施法者或传送者进行感知豁免，失败则失去该法术；每次短休或长休后可用一次。"
+  },
+  "callingMaterial.subclassFeature.ranger.monster-slayer.slayer-s-counter.name": {
+    "en": "Slayer's Counter",
+    "zh-CN": "屠戮者反击"
+  },
+  "callingMaterial.subclassFeature.ranger.monster-slayer.slayer-s-counter.description": {
+    "en": "A reaction attacks your prey when it forces a save on you, and a hit means the save automatically succeeds.",
+    "zh-CN": "猎物迫使你进行豁免时，可用反应攻击它；若命中，该豁免自动成功。"
+  },
+  "callingMaterial.subclassFeature.ranger.fey-wanderer.dreadful-strikes.name": {
+    "en": "Dreadful Strikes",
+    "zh-CN": "骇人打击"
+  },
+  "callingMaterial.subclassFeature.ranger.fey-wanderer.dreadful-strikes.description": {
+    "en": "Once per turn, a weapon hit deals an extra 1d4 psychic damage, rising to 1d6 at 11th level.",
+    "zh-CN": "每回合一次，武器命中时额外造成 1d4 心灵伤害，11 级时增至 1d6。"
+  },
+  "callingMaterial.subclassFeature.ranger.fey-wanderer.otherworldly-glamour.name": {
+    "en": "Otherworldly Glamour",
+    "zh-CN": "异界魅力"
+  },
+  "callingMaterial.subclassFeature.ranger.fey-wanderer.otherworldly-glamour.description": {
+    "en": "Add your Wisdom modifier to Charisma checks, and gain proficiency in one Charisma skill.",
+    "zh-CN": "魅力检定加上感知调整值，并获得一项魅力技能的熟练。"
+  },
+  "callingMaterial.subclassFeature.ranger.fey-wanderer.fey-wanderer-magic.name": {
+    "en": "Fey Wanderer Magic",
+    "zh-CN": "精类漫游者魔法"
+  },
+  "callingMaterial.subclassFeature.ranger.fey-wanderer.fey-wanderer-magic.description": {
+    "en": "Charm person and other fey spells are always prepared and do not count against your spells known.",
+    "zh-CN": "始终准备魅惑人类等妖精法术，不占已知法术数量。"
+  },
+  "callingMaterial.subclassFeature.ranger.fey-wanderer.beguiling-twist.name": {
+    "en": "Beguiling Twist",
+    "zh-CN": "惑心转移"
+  },
+  "callingMaterial.subclassFeature.ranger.fey-wanderer.beguiling-twist.description": {
+    "en": "Advantage on saves against being charmed or frightened, and a reaction redirects a nearby charm or fear onto another creature.",
+    "zh-CN": "对抗魅惑或恐慌的豁免具有优势；可用反应将附近的魅惑或恐慌转移给另一个生物。"
+  },
+  "callingMaterial.subclassFeature.ranger.fey-wanderer.fey-reinforcements.name": {
+    "en": "Fey Reinforcements",
+    "zh-CN": "妖精援军"
+  },
+  "callingMaterial.subclassFeature.ranger.fey-wanderer.fey-reinforcements.description": {
+    "en": "Summon fey is always prepared and can be cast once per long rest without a slot, with the summon able to turn invisible.",
+    "zh-CN": "始终准备召唤妖精，每次长休后可不消耗法术位施放一次，召唤物能够隐形。"
+  },
+  "callingMaterial.subclassFeature.ranger.fey-wanderer.misty-wanderer.name": {
+    "en": "Misty Wanderer",
+    "zh-CN": "迷雾漫游者"
+  },
+  "callingMaterial.subclassFeature.ranger.fey-wanderer.misty-wanderer.description": {
+    "en": "Cast misty step without a slot a Wisdom-modifier number of times per long rest, bringing a willing creature within 5 feet along.",
+    "zh-CN": "可不消耗法术位施放迷雾步，每次长休后的次数等于感知调整值，并可带上 5 尺内一个愿意的生物。"
+  },
+  "callingMaterial.subclassFeature.ranger.swarmkeeper.gathered-swarm.name": {
+    "en": "Gathered Swarm",
+    "zh-CN": "集群虫群"
+  },
+  "callingMaterial.subclassFeature.ranger.swarmkeeper.gathered-swarm.description": {
+    "en": "Once per turn, a hit lets your swarm deal 1d6 piercing damage, move the target 15 feet, or move you 5 feet without provoking; 1d8 from 11th level.",
+    "zh-CN": "每回合一次，命中时可让虫群造成 1d6 穿刺伤害、将目标移动 15 尺，或将你移动 5 尺且不引发借机攻击；11 级起伤害增至 1d8。"
+  },
+  "callingMaterial.subclassFeature.ranger.swarmkeeper.swarmkeeper-magic.name": {
+    "en": "Swarmkeeper Magic",
+    "zh-CN": "虫群守卫魔法"
+  },
+  "callingMaterial.subclassFeature.ranger.swarmkeeper.swarmkeeper-magic.description": {
+    "en": "Mage hand and a short list of swarm spells are always prepared and do not count against your spells known.",
+    "zh-CN": "始终准备法师之手和一组虫群法术，不占已知法术数量。"
+  },
+  "callingMaterial.subclassFeature.ranger.swarmkeeper.writhing-tide.name": {
+    "en": "Writhing Tide",
+    "zh-CN": "翻涌虫潮"
+  },
+  "callingMaterial.subclassFeature.ranger.swarmkeeper.writhing-tide.description": {
+    "en": "A bonus action grants a 10-foot flying speed for a minute, a proficiency-bonus number of times per long rest.",
+    "zh-CN": "用附赠动作获得 10 尺飞行速度，持续一分钟，每次长休后的使用次数等于熟练加值。"
+  },
+  "callingMaterial.subclassFeature.ranger.swarmkeeper.mighty-swarm.name": {
+    "en": "Mighty Swarm",
+    "zh-CN": "强大虫群"
+  },
+  "callingMaterial.subclassFeature.ranger.swarmkeeper.mighty-swarm.description": {
+    "en": "Gathered Swarm knocks moved targets prone, gives you half cover when it moves you, and adds 1d6 to its damage.",
+    "zh-CN": "集群虫群可将被移动的目标击倒；移动你时提供半身掩护，伤害还增加 1d6。"
+  },
+  "callingMaterial.subclassFeature.ranger.swarmkeeper.swarming-dispersal.name": {
+    "en": "Swarming Dispersal",
+    "zh-CN": "虫群散逸"
+  },
+  "callingMaterial.subclassFeature.ranger.swarmkeeper.swarming-dispersal.description": {
+    "en": "A reaction gives resistance to damage taken and teleports you 30 feet, a proficiency-bonus number of times per long rest.",
+    "zh-CN": "用反应对所受伤害获得抗性，并传送 30 尺，每次长休后的使用次数等于熟练加值。"
+  },
+  "callingMaterial.subclassFeature.ranger.drakewarden.draconic-gift.name": {
+    "en": "Draconic Gift",
+    "zh-CN": "龙族赠礼"
+  },
+  "callingMaterial.subclassFeature.ranger.drakewarden.draconic-gift.description": {
+    "en": "You know thaumaturgy and can speak Draconic.",
+    "zh-CN": "掌握奇术，并会说龙语。"
+  },
+  "callingMaterial.subclassFeature.ranger.drakewarden.drake-companion.name": {
+    "en": "Drake Companion",
+    "zh-CN": "幼龙伙伴"
+  },
+  "callingMaterial.subclassFeature.ranger.drakewarden.drake-companion.description": {
+    "en": "Summon a Small drake once per long rest or with a spell slot; it acts on your turn, adds your proficiency bonus to its rolls, and has an elemental breath.",
+    "zh-CN": "每次长休后可召唤一次小型幼龙，也可消耗法术位召唤。幼龙在你的回合行动，掷骰加上你的熟练加值，并具有元素吐息。"
+  },
+  "callingMaterial.subclassFeature.ranger.drakewarden.bond-of-fang-and-scale.name": {
+    "en": "Bond of Fang and Scale",
+    "zh-CN": "牙与鳞的联结"
+  },
+  "callingMaterial.subclassFeature.ranger.drakewarden.bond-of-fang-and-scale.description": {
+    "en": "While the drake is out, you gain resistance to its damage type, the drake gains a fly speed, and your attacks count as magical with extra elemental damage.",
+    "zh-CN": "幼龙存在时，你对其伤害类型具有抗性，幼龙获得飞行速度，你的攻击视为魔法攻击，并造成额外元素伤害。"
+  },
+  "callingMaterial.subclassFeature.ranger.drakewarden.drake-s-breath.name": {
+    "en": "Drake's Breath",
+    "zh-CN": "幼龙吐息"
+  },
+  "callingMaterial.subclassFeature.ranger.drakewarden.drake-s-breath.description": {
+    "en": "Once per long rest, the drake exhales a 30-foot cone dealing 8d6 of its element, halved on a Dexterity save.",
+    "zh-CN": "每次长休后，幼龙可喷出一次 30 尺锥形吐息，造成 8d6 对应元素伤害，敏捷豁免成功则减半。"
+  },
+  "callingMaterial.subclassFeature.ranger.drakewarden.perfected-bond.name": {
+    "en": "Perfected Bond",
+    "zh-CN": "完美联结"
+  },
+  "callingMaterial.subclassFeature.ranger.drakewarden.perfected-bond.description": {
+    "en": "The drake becomes Large and rideable, gains extra hit points, and adds your proficiency bonus in damage to its attacks.",
+    "zh-CN": "幼龙变为大型，可骑乘，获得额外生命值，攻击伤害加上你的熟练加值。"
+  },
+  "callingMaterial.subclassFeature.artificer.alchemist.tool-proficiency-alchemist.name": {
+    "en": "Tool Proficiency (Alchemist)",
+    "zh-CN": "工具熟练（炼金师）"
+  },
+  "callingMaterial.subclassFeature.artificer.alchemist.tool-proficiency-alchemist.description": {
+    "en": "Proficiency with alchemist's supplies.",
+    "zh-CN": "获得炼金工具熟练。"
+  },
+  "callingMaterial.subclassFeature.artificer.alchemist.experimental-elixir.name": {
+    "en": "Experimental Elixir",
+    "zh-CN": "实验灵药"
+  },
+  "callingMaterial.subclassFeature.artificer.alchemist.experimental-elixir.description": {
+    "en": "After a long rest you brew an elixir with a random effect: healing, swiftness, resilience, boldness, flight or transformation. You can brew more by spending spell slots, and the number rises with level.",
+    "zh-CN": "长休后调制一瓶效果随机的灵药，可能提供治疗、迅捷、韧性、勇气、飞行或变形。可消耗法术位调制更多，数量也随等级提高。"
+  },
+  "callingMaterial.subclassFeature.artificer.alchemist.alchemical-savant.name": {
+    "en": "Alchemical Savant",
+    "zh-CN": "炼金学者"
+  },
+  "callingMaterial.subclassFeature.artificer.alchemist.alchemical-savant.description": {
+    "en": "Add your Intelligence modifier to one damage or healing roll of any spell you cast through your alchemical tools.",
+    "zh-CN": "通过炼金工具施法时，可将智力调整值加到该法术的一次伤害或治疗掷骰中。"
+  },
+  "callingMaterial.subclassFeature.artificer.alchemist.restorative-reagents.name": {
+    "en": "Restorative Reagents",
+    "zh-CN": "复原试剂"
+  },
+  "callingMaterial.subclassFeature.artificer.alchemist.restorative-reagents.description": {
+    "en": "You can cast lesser restoration without a slot a proficiency-bonus number of times per long rest, and your elixirs also grant temporary hit points.",
+    "zh-CN": "每次长休后，可不消耗法术位施放次级复原术，次数等于熟练加值；灵药还会提供临时生命值。"
+  },
+  "callingMaterial.subclassFeature.artificer.alchemist.chemical-mastery.name": {
+    "en": "Chemical Mastery",
+    "zh-CN": "化学精通"
+  },
+  "callingMaterial.subclassFeature.artificer.alchemist.chemical-mastery.description": {
+    "en": "You gain resistance to acid and poison damage, immunity to the poisoned condition, and can cast greater restoration and heal once per long rest each without a slot.",
+    "zh-CN": "具有强酸和毒素伤害抗性，免疫中毒状态；每次长休后，还可分别不消耗法术位施放高等复原术和医疗术一次。"
+  },
+  "callingMaterial.subclassFeature.artificer.armorer.tool-proficiency-armorer.name": {
+    "en": "Tool Proficiency (Armorer)",
+    "zh-CN": "工具熟练（装甲师）"
+  },
+  "callingMaterial.subclassFeature.artificer.armorer.tool-proficiency-armorer.description": {
+    "en": "Proficiency with smith's tools.",
+    "zh-CN": "获得铁匠工具熟练。"
+  },
+  "callingMaterial.subclassFeature.artificer.armorer.arcane-armor.name": {
+    "en": "Arcane Armor",
+    "zh-CN": "奥术护甲"
+  },
+  "callingMaterial.subclassFeature.artificer.armorer.arcane-armor.description": {
+    "en": "Your armor becomes a magical suit that needs no Strength, cannot be removed against your will, and replaces missing limbs.",
+    "zh-CN": "护甲变为魔法装甲，无力量要求，不能违背你的意愿被移除，并可替代缺失的肢体。"
+  },
+  "callingMaterial.subclassFeature.artificer.armorer.armor-model.name": {
+    "en": "Armor Model",
+    "zh-CN": "护甲模式"
+  },
+  "callingMaterial.subclassFeature.artificer.armorer.armor-model.description": {
+    "en": "Choose Guardian, whose thunder gauntlets punish enemies who ignore you and whose Defensive Field grants temporary hit points, or Infiltrator, whose lightning launcher fires at range and whose powered steps add speed and stealth.",
+    "zh-CN": "选择守护者或渗透者模式。守护者：雷鸣护手惩罚忽视你的敌人，防御力场提供临时生命值。渗透者：闪电发射器可远程攻击，动力步伐增强速度和隐匿。"
+  },
+  "callingMaterial.subclassFeature.artificer.armorer.extra-attack.name": {
+    "en": "Extra Attack",
+    "zh-CN": "额外攻击"
+  },
+  "callingMaterial.subclassFeature.artificer.armorer.extra-attack.description": {
+    "en": "Attack twice whenever you take the Attack action.",
+    "zh-CN": "采取攻击动作时可攻击两次。"
+  },
+  "callingMaterial.subclassFeature.artificer.armorer.armor-modifications.name": {
+    "en": "Armor Modifications",
+    "zh-CN": "护甲改装"
+  },
+  "callingMaterial.subclassFeature.artificer.armorer.armor-modifications.description": {
+    "en": "Your armor counts as four separate items for infusions: its armor, its weapon, and its helmet and boots.",
+    "zh-CN": "进行魔法灌注时，护甲视为四件独立物品：护甲本体、武器、头盔和靴子。"
+  },
+  "callingMaterial.subclassFeature.artificer.armorer.perfected-armor.name": {
+    "en": "Perfected Armor",
+    "zh-CN": "完美护甲"
+  },
+  "callingMaterial.subclassFeature.artificer.armorer.perfected-armor.description": {
+    "en": "Guardian armor pulls in enemies within 30 feet and knocks them prone; Infiltrator armor makes a struck target glow, granting attackers advantage and dealing extra force damage.",
+    "zh-CN": "守护者护甲可将 30 尺内的敌人拉近并击倒；渗透者护甲使被命中的目标发光，让攻击者具有优势，并造成额外力场伤害。"
+  },
+  "callingMaterial.subclassFeature.artificer.artillerist.tool-proficiency-artillerist.name": {
+    "en": "Tool Proficiency (Artillerist)",
+    "zh-CN": "工具熟练（炮术师）"
+  },
+  "callingMaterial.subclassFeature.artificer.artillerist.tool-proficiency-artillerist.description": {
+    "en": "Proficiency with woodcarver's tools.",
+    "zh-CN": "获得木雕工具熟练。"
+  },
+  "callingMaterial.subclassFeature.artificer.artillerist.eldritch-cannon.name": {
+    "en": "Eldritch Cannon",
+    "zh-CN": "魔能炮"
+  },
+  "callingMaterial.subclassFeature.artificer.artillerist.eldritch-cannon.description": {
+    "en": "A bonus action creates a Tiny or Small cannon that acts on your command: a flamethrower cone, a force ballista that pushes, or a protector that hands out temporary hit points. Once per long rest, or by spending a spell slot.",
+    "zh-CN": "用附赠动作创造听从指挥的微型或小型炮台，可选择锥形喷火器、能推动目标的力场弩炮，或提供临时生命值的保护者。每次长休后可用一次，也可消耗法术位使用。"
+  },
+  "callingMaterial.subclassFeature.artificer.artillerist.arcane-firearm.name": {
+    "en": "Arcane Firearm",
+    "zh-CN": "奥术火器"
+  },
+  "callingMaterial.subclassFeature.artificer.artillerist.arcane-firearm.description": {
+    "en": "A wand, staff or rod becomes your firearm, adding 1d8 to one damage roll of each artificer spell you cast through it.",
+    "zh-CN": "将魔杖、法杖或权杖变为火器，通过它施放的每个奇械师法术，可在一次伤害掷骰中增加 1d8。"
+  },
+  "callingMaterial.subclassFeature.artificer.artillerist.explosive-cannon.name": {
+    "en": "Explosive Cannon",
+    "zh-CN": "爆炸炮台"
+  },
+  "callingMaterial.subclassFeature.artificer.artillerist.explosive-cannon.description": {
+    "en": "Your cannon deals an extra 1d8, and you can detonate it as an action for 3d8 force damage in a 20-foot radius, halved on a successful Dexterity save.",
+    "zh-CN": "炮台额外造成 1d8 伤害；可用一个动作引爆，在半径 20 尺内造成 3d8 力场伤害，敏捷豁免成功则减半。"
+  },
+  "callingMaterial.subclassFeature.artificer.artillerist.fortified-position.name": {
+    "en": "Fortified Position",
+    "zh-CN": "坚固阵地"
+  },
+  "callingMaterial.subclassFeature.artificer.artillerist.fortified-position.description": {
+    "en": "You can have two cannons at once, and you and your allies have half cover within 10 feet of one.",
+    "zh-CN": "可同时拥有两个炮台；你和盟友在任一炮台 10 尺内时，具有半身掩护。"
+  },
+  "callingMaterial.subclassFeature.artificer.battle-smith.tool-proficiency-battle-smith.name": {
+    "en": "Tool Proficiency (Battle Smith)",
+    "zh-CN": "工具熟练（战斗铁匠）"
+  },
+  "callingMaterial.subclassFeature.artificer.battle-smith.tool-proficiency-battle-smith.description": {
+    "en": "Proficiency with smith's tools.",
+    "zh-CN": "获得铁匠工具熟练。"
+  },
+  "callingMaterial.subclassFeature.artificer.battle-smith.battle-ready.name": {
+    "en": "Battle Ready",
+    "zh-CN": "战斗就绪"
+  },
+  "callingMaterial.subclassFeature.artificer.battle-smith.battle-ready.description": {
+    "en": "Proficiency with martial weapons, and you use Intelligence instead of Strength or Dexterity for attack and damage with magic weapons.",
+    "zh-CN": "获得军用武器熟练；使用魔法武器时，攻击和伤害可使用智力，而非力量或敏捷。"
+  },
+  "callingMaterial.subclassFeature.artificer.battle-smith.steel-defender.name": {
+    "en": "Steel Defender",
+    "zh-CN": "钢铁守卫"
+  },
+  "callingMaterial.subclassFeature.artificer.battle-smith.steel-defender.description": {
+    "en": "A construct companion that acts on your turn, attacks with a force-empowered bite, and can use its reaction to impose disadvantage on an attack against a nearby ally.",
+    "zh-CN": "构装伙伴在你的回合行动，以力场强化的啮咬攻击，还可用反应使针对附近盟友的一次攻击具有劣势。"
+  },
+  "callingMaterial.subclassFeature.artificer.battle-smith.extra-attack.name": {
+    "en": "Extra Attack",
+    "zh-CN": "额外攻击"
+  },
+  "callingMaterial.subclassFeature.artificer.battle-smith.extra-attack.description": {
+    "en": "Attack twice whenever you take the Attack action.",
+    "zh-CN": "采取攻击动作时可攻击两次。"
+  },
+  "callingMaterial.subclassFeature.artificer.battle-smith.arcane-jolt.name": {
+    "en": "Arcane Jolt",
+    "zh-CN": "奥术震击"
+  },
+  "callingMaterial.subclassFeature.artificer.battle-smith.arcane-jolt.description": {
+    "en": "Once per turn, a hit from your magic weapon or your defender deals an extra 2d6 force damage, or heals a creature within 30 feet for 2d6.",
+    "zh-CN": "每回合一次，你的魔法武器或守卫命中时，可额外造成 2d6 力场伤害，或治疗 30 尺内一个生物 2d6 生命值。"
+  },
+  "callingMaterial.subclassFeature.artificer.battle-smith.improved-defender.name": {
+    "en": "Improved Defender",
+    "zh-CN": "精通守卫"
+  },
+  "callingMaterial.subclassFeature.artificer.battle-smith.improved-defender.description": {
+    "en": "Arcane Jolt rises to 4d6, your defender gains +2 AC, and its deflecting reaction also deals force damage to the attacker.",
+    "zh-CN": "奥术震击增至 4d6，守卫护甲等级增加 2，其偏转反应还会对攻击者造成力场伤害。"
   }
 });

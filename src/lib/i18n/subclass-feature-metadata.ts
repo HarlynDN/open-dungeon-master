@@ -2834,5 +2834,901 @@ export const SUBCLASS_FEATURE_MATERIAL = [
     "name": "Dread Lord",
     "nameKey": "callingMaterial.subclassFeature.paladin.oathbreaker.dread-lord.name",
     "descriptionKey": "callingMaterial.subclassFeature.paladin.oathbreaker.dread-lord.description"
+  },
+  {
+    "classId": "bard",
+    "subclass": "College of Valor",
+    "name": "Bonus Proficiencies (Valor)",
+    "nameKey": "callingMaterial.subclassFeature.bard.college-of-valor.bonus-proficiencies-valor.name",
+    "descriptionKey": "callingMaterial.subclassFeature.bard.college-of-valor.bonus-proficiencies-valor.description"
+  },
+  {
+    "classId": "bard",
+    "subclass": "College of Valor",
+    "name": "Combat Inspiration",
+    "nameKey": "callingMaterial.subclassFeature.bard.college-of-valor.combat-inspiration.name",
+    "descriptionKey": "callingMaterial.subclassFeature.bard.college-of-valor.combat-inspiration.description"
+  },
+  {
+    "classId": "bard",
+    "subclass": "College of Valor",
+    "name": "Extra Attack",
+    "nameKey": "callingMaterial.subclassFeature.bard.college-of-valor.extra-attack.name",
+    "descriptionKey": "callingMaterial.subclassFeature.bard.college-of-valor.extra-attack.description"
+  },
+  {
+    "classId": "bard",
+    "subclass": "College of Valor",
+    "name": "Battle Magic",
+    "nameKey": "callingMaterial.subclassFeature.bard.college-of-valor.battle-magic.name",
+    "descriptionKey": "callingMaterial.subclassFeature.bard.college-of-valor.battle-magic.description"
+  },
+  {
+    "classId": "bard",
+    "subclass": "College of Glamour",
+    "name": "Mantle of Inspiration",
+    "nameKey": "callingMaterial.subclassFeature.bard.college-of-glamour.mantle-of-inspiration.name",
+    "descriptionKey": "callingMaterial.subclassFeature.bard.college-of-glamour.mantle-of-inspiration.description"
+  },
+  {
+    "classId": "bard",
+    "subclass": "College of Glamour",
+    "name": "Enthralling Performance",
+    "nameKey": "callingMaterial.subclassFeature.bard.college-of-glamour.enthralling-performance.name",
+    "descriptionKey": "callingMaterial.subclassFeature.bard.college-of-glamour.enthralling-performance.description"
+  },
+  {
+    "classId": "bard",
+    "subclass": "College of Glamour",
+    "name": "Mantle of Majesty",
+    "nameKey": "callingMaterial.subclassFeature.bard.college-of-glamour.mantle-of-majesty.name",
+    "descriptionKey": "callingMaterial.subclassFeature.bard.college-of-glamour.mantle-of-majesty.description"
+  },
+  {
+    "classId": "bard",
+    "subclass": "College of Glamour",
+    "name": "Unbreakable Majesty",
+    "nameKey": "callingMaterial.subclassFeature.bard.college-of-glamour.unbreakable-majesty.name",
+    "descriptionKey": "callingMaterial.subclassFeature.bard.college-of-glamour.unbreakable-majesty.description"
+  },
+  {
+    "classId": "bard",
+    "subclass": "College of Swords",
+    "name": "Bonus Proficiencies (Swords)",
+    "nameKey": "callingMaterial.subclassFeature.bard.college-of-swords.bonus-proficiencies-swords.name",
+    "descriptionKey": "callingMaterial.subclassFeature.bard.college-of-swords.bonus-proficiencies-swords.description"
+  },
+  {
+    "classId": "bard",
+    "subclass": "College of Swords",
+    "name": "Fighting Style (Blade)",
+    "nameKey": "callingMaterial.subclassFeature.bard.college-of-swords.fighting-style-blade.name",
+    "descriptionKey": "callingMaterial.subclassFeature.bard.college-of-swords.fighting-style-blade.description"
+  },
+  {
+    "classId": "bard",
+    "subclass": "College of Swords",
+    "name": "Blade Flourish",
+    "nameKey": "callingMaterial.subclassFeature.bard.college-of-swords.blade-flourish.name",
+    "descriptionKey": "callingMaterial.subclassFeature.bard.college-of-swords.blade-flourish.description"
+  },
+  {
+    "classId": "bard",
+    "subclass": "College of Swords",
+    "name": "Extra Attack",
+    "nameKey": "callingMaterial.subclassFeature.bard.college-of-swords.extra-attack.name",
+    "descriptionKey": "callingMaterial.subclassFeature.bard.college-of-swords.extra-attack.description"
+  },
+  {
+    "classId": "bard",
+    "subclass": "College of Swords",
+    "name": "Master's Flourish",
+    "nameKey": "callingMaterial.subclassFeature.bard.college-of-swords.master-s-flourish.name",
+    "descriptionKey": "callingMaterial.subclassFeature.bard.college-of-swords.master-s-flourish.description"
+  },
+  {
+    "classId": "bard",
+    "subclass": "College of Whispers",
+    "name": "Psychic Blades",
+    "nameKey": "callingMaterial.subclassFeature.bard.college-of-whispers.psychic-blades.name",
+    "descriptionKey": "callingMaterial.subclassFeature.bard.college-of-whispers.psychic-blades.description"
+  },
+  {
+    "classId": "bard",
+    "subclass": "College of Whispers",
+    "name": "Words of Terror",
+    "nameKey": "callingMaterial.subclassFeature.bard.college-of-whispers.words-of-terror.name",
+    "descriptionKey": "callingMaterial.subclassFeature.bard.college-of-whispers.words-of-terror.description"
+  },
+  {
+    "classId": "bard",
+    "subclass": "College of Whispers",
+    "name": "Mantle of Whispers",
+    "nameKey": "callingMaterial.subclassFeature.bard.college-of-whispers.mantle-of-whispers.name",
+    "descriptionKey": "callingMaterial.subclassFeature.bard.college-of-whispers.mantle-of-whispers.description"
+  },
+  {
+    "classId": "bard",
+    "subclass": "College of Whispers",
+    "name": "Shadow Lore",
+    "nameKey": "callingMaterial.subclassFeature.bard.college-of-whispers.shadow-lore.name",
+    "descriptionKey": "callingMaterial.subclassFeature.bard.college-of-whispers.shadow-lore.description"
+  },
+  {
+    "classId": "bard",
+    "subclass": "College of Eloquence",
+    "name": "Silver Tongue",
+    "nameKey": "callingMaterial.subclassFeature.bard.college-of-eloquence.silver-tongue.name",
+    "descriptionKey": "callingMaterial.subclassFeature.bard.college-of-eloquence.silver-tongue.description"
+  },
+  {
+    "classId": "bard",
+    "subclass": "College of Eloquence",
+    "name": "Unsettling Words",
+    "nameKey": "callingMaterial.subclassFeature.bard.college-of-eloquence.unsettling-words.name",
+    "descriptionKey": "callingMaterial.subclassFeature.bard.college-of-eloquence.unsettling-words.description"
+  },
+  {
+    "classId": "bard",
+    "subclass": "College of Eloquence",
+    "name": "Unfailing Inspiration",
+    "nameKey": "callingMaterial.subclassFeature.bard.college-of-eloquence.unfailing-inspiration.name",
+    "descriptionKey": "callingMaterial.subclassFeature.bard.college-of-eloquence.unfailing-inspiration.description"
+  },
+  {
+    "classId": "bard",
+    "subclass": "College of Eloquence",
+    "name": "Infectious Inspiration",
+    "nameKey": "callingMaterial.subclassFeature.bard.college-of-eloquence.infectious-inspiration.name",
+    "descriptionKey": "callingMaterial.subclassFeature.bard.college-of-eloquence.infectious-inspiration.description"
+  },
+  {
+    "classId": "bard",
+    "subclass": "College of Creation",
+    "name": "Mote of Potential",
+    "nameKey": "callingMaterial.subclassFeature.bard.college-of-creation.mote-of-potential.name",
+    "descriptionKey": "callingMaterial.subclassFeature.bard.college-of-creation.mote-of-potential.description"
+  },
+  {
+    "classId": "bard",
+    "subclass": "College of Creation",
+    "name": "Performance of Creation",
+    "nameKey": "callingMaterial.subclassFeature.bard.college-of-creation.performance-of-creation.name",
+    "descriptionKey": "callingMaterial.subclassFeature.bard.college-of-creation.performance-of-creation.description"
+  },
+  {
+    "classId": "bard",
+    "subclass": "College of Creation",
+    "name": "Animating Performance",
+    "nameKey": "callingMaterial.subclassFeature.bard.college-of-creation.animating-performance.name",
+    "descriptionKey": "callingMaterial.subclassFeature.bard.college-of-creation.animating-performance.description"
+  },
+  {
+    "classId": "bard",
+    "subclass": "College of Creation",
+    "name": "Creative Crescendo",
+    "nameKey": "callingMaterial.subclassFeature.bard.college-of-creation.creative-crescendo.name",
+    "descriptionKey": "callingMaterial.subclassFeature.bard.college-of-creation.creative-crescendo.description"
+  },
+  {
+    "classId": "bard",
+    "subclass": "College of Spirits",
+    "name": "Guiding Whispers",
+    "nameKey": "callingMaterial.subclassFeature.bard.college-of-spirits.guiding-whispers.name",
+    "descriptionKey": "callingMaterial.subclassFeature.bard.college-of-spirits.guiding-whispers.description"
+  },
+  {
+    "classId": "bard",
+    "subclass": "College of Spirits",
+    "name": "Spiritual Focus",
+    "nameKey": "callingMaterial.subclassFeature.bard.college-of-spirits.spiritual-focus.name",
+    "descriptionKey": "callingMaterial.subclassFeature.bard.college-of-spirits.spiritual-focus.description"
+  },
+  {
+    "classId": "bard",
+    "subclass": "College of Spirits",
+    "name": "Tales from Beyond",
+    "nameKey": "callingMaterial.subclassFeature.bard.college-of-spirits.tales-from-beyond.name",
+    "descriptionKey": "callingMaterial.subclassFeature.bard.college-of-spirits.tales-from-beyond.description"
+  },
+  {
+    "classId": "bard",
+    "subclass": "College of Spirits",
+    "name": "Spirit Session",
+    "nameKey": "callingMaterial.subclassFeature.bard.college-of-spirits.spirit-session.name",
+    "descriptionKey": "callingMaterial.subclassFeature.bard.college-of-spirits.spirit-session.description"
+  },
+  {
+    "classId": "bard",
+    "subclass": "College of Spirits",
+    "name": "Mystical Connection",
+    "nameKey": "callingMaterial.subclassFeature.bard.college-of-spirits.mystical-connection.name",
+    "descriptionKey": "callingMaterial.subclassFeature.bard.college-of-spirits.mystical-connection.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of Shadow",
+    "name": "Shadow Arts",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-shadow.shadow-arts.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-shadow.shadow-arts.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of Shadow",
+    "name": "Shadow Step",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-shadow.shadow-step.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-shadow.shadow-step.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of Shadow",
+    "name": "Cloak of Shadows",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-shadow.cloak-of-shadows.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-shadow.cloak-of-shadows.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of Shadow",
+    "name": "Opportunist",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-shadow.opportunist.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-shadow.opportunist.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of the Four Elements",
+    "name": "Disciple of the Elements",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-the-four-elements.disciple-of-the-elements.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-the-four-elements.disciple-of-the-elements.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of the Four Elements",
+    "name": "Elemental Discipline (6th)",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-the-four-elements.elemental-discipline-6th.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-the-four-elements.elemental-discipline-6th.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of the Four Elements",
+    "name": "Elemental Discipline (11th)",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-the-four-elements.elemental-discipline-11th.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-the-four-elements.elemental-discipline-11th.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of the Four Elements",
+    "name": "Elemental Discipline (17th)",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-the-four-elements.elemental-discipline-17th.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-the-four-elements.elemental-discipline-17th.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of the Drunken Master",
+    "name": "Bonus Proficiencies (Drunken Master)",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-the-drunken-master.bonus-proficiencies-drunken-master.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-the-drunken-master.bonus-proficiencies-drunken-master.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of the Drunken Master",
+    "name": "Drunken Technique",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-the-drunken-master.drunken-technique.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-the-drunken-master.drunken-technique.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of the Drunken Master",
+    "name": "Tipsy Sway",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-the-drunken-master.tipsy-sway.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-the-drunken-master.tipsy-sway.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of the Drunken Master",
+    "name": "Drunkard's Luck",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-the-drunken-master.drunkard-s-luck.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-the-drunken-master.drunkard-s-luck.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of the Drunken Master",
+    "name": "Intoxicated Frenzy",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-the-drunken-master.intoxicated-frenzy.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-the-drunken-master.intoxicated-frenzy.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of the Kensei",
+    "name": "Path of the Kensei",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-the-kensei.path-of-the-kensei.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-the-kensei.path-of-the-kensei.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of the Kensei",
+    "name": "Kensei's Shot",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-the-kensei.kensei-s-shot.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-the-kensei.kensei-s-shot.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of the Kensei",
+    "name": "One with the Blade",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-the-kensei.one-with-the-blade.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-the-kensei.one-with-the-blade.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of the Kensei",
+    "name": "Sharpen the Blade",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-the-kensei.sharpen-the-blade.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-the-kensei.sharpen-the-blade.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of the Kensei",
+    "name": "Unerring Accuracy",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-the-kensei.unerring-accuracy.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-the-kensei.unerring-accuracy.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of the Sun Soul",
+    "name": "Radiant Sun Bolt",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-the-sun-soul.radiant-sun-bolt.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-the-sun-soul.radiant-sun-bolt.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of the Sun Soul",
+    "name": "Searing Arc Strike",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-the-sun-soul.searing-arc-strike.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-the-sun-soul.searing-arc-strike.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of the Sun Soul",
+    "name": "Searing Sunburst",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-the-sun-soul.searing-sunburst.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-the-sun-soul.searing-sunburst.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of the Sun Soul",
+    "name": "Sun Shield",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-the-sun-soul.sun-shield.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-the-sun-soul.sun-shield.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of the Long Death",
+    "name": "Touch of Death",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-the-long-death.touch-of-death.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-the-long-death.touch-of-death.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of the Long Death",
+    "name": "Hour of Reaping",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-the-long-death.hour-of-reaping.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-the-long-death.hour-of-reaping.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of the Long Death",
+    "name": "Mastery of Death",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-the-long-death.mastery-of-death.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-the-long-death.mastery-of-death.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of the Long Death",
+    "name": "Touch of the Long Death",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-the-long-death.touch-of-the-long-death.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-the-long-death.touch-of-the-long-death.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of Mercy",
+    "name": "Implements of Mercy",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-mercy.implements-of-mercy.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-mercy.implements-of-mercy.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of Mercy",
+    "name": "Hand of Healing",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-mercy.hand-of-healing.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-mercy.hand-of-healing.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of Mercy",
+    "name": "Hand of Harm",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-mercy.hand-of-harm.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-mercy.hand-of-harm.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of Mercy",
+    "name": "Physician's Touch",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-mercy.physician-s-touch.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-mercy.physician-s-touch.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of Mercy",
+    "name": "Flurry of Healing and Harm",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-mercy.flurry-of-healing-and-harm.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-mercy.flurry-of-healing-and-harm.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of Mercy",
+    "name": "Hand of Ultimate Mercy",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-mercy.hand-of-ultimate-mercy.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-mercy.hand-of-ultimate-mercy.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of the Astral Self",
+    "name": "Arms of the Astral Self",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-the-astral-self.arms-of-the-astral-self.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-the-astral-self.arms-of-the-astral-self.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of the Astral Self",
+    "name": "Visage of the Astral Self",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-the-astral-self.visage-of-the-astral-self.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-the-astral-self.visage-of-the-astral-self.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of the Astral Self",
+    "name": "Body of the Astral Self",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-the-astral-self.body-of-the-astral-self.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-the-astral-self.body-of-the-astral-self.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of the Astral Self",
+    "name": "Awakened Astral Self",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-the-astral-self.awakened-astral-self.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-the-astral-self.awakened-astral-self.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of the Ascendant Dragon",
+    "name": "Draconic Disciple",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-the-ascendant-dragon.draconic-disciple.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-the-ascendant-dragon.draconic-disciple.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of the Ascendant Dragon",
+    "name": "Breath of the Dragon",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-the-ascendant-dragon.breath-of-the-dragon.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-the-ascendant-dragon.breath-of-the-dragon.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of the Ascendant Dragon",
+    "name": "Wings Unfurled",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-the-ascendant-dragon.wings-unfurled.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-the-ascendant-dragon.wings-unfurled.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of the Ascendant Dragon",
+    "name": "Aspect of the Wyrm",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-the-ascendant-dragon.aspect-of-the-wyrm.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-the-ascendant-dragon.aspect-of-the-wyrm.description"
+  },
+  {
+    "classId": "monk",
+    "subclass": "Way of the Ascendant Dragon",
+    "name": "Ascendant Aspect",
+    "nameKey": "callingMaterial.subclassFeature.monk.way-of-the-ascendant-dragon.ascendant-aspect.name",
+    "descriptionKey": "callingMaterial.subclassFeature.monk.way-of-the-ascendant-dragon.ascendant-aspect.description"
+  },
+  {
+    "classId": "ranger",
+    "subclass": "Beast Master",
+    "name": "Ranger's Companion",
+    "nameKey": "callingMaterial.subclassFeature.ranger.beast-master.ranger-s-companion.name",
+    "descriptionKey": "callingMaterial.subclassFeature.ranger.beast-master.ranger-s-companion.description"
+  },
+  {
+    "classId": "ranger",
+    "subclass": "Beast Master",
+    "name": "Exceptional Training",
+    "nameKey": "callingMaterial.subclassFeature.ranger.beast-master.exceptional-training.name",
+    "descriptionKey": "callingMaterial.subclassFeature.ranger.beast-master.exceptional-training.description"
+  },
+  {
+    "classId": "ranger",
+    "subclass": "Beast Master",
+    "name": "Bestial Fury",
+    "nameKey": "callingMaterial.subclassFeature.ranger.beast-master.bestial-fury.name",
+    "descriptionKey": "callingMaterial.subclassFeature.ranger.beast-master.bestial-fury.description"
+  },
+  {
+    "classId": "ranger",
+    "subclass": "Beast Master",
+    "name": "Share Spells",
+    "nameKey": "callingMaterial.subclassFeature.ranger.beast-master.share-spells.name",
+    "descriptionKey": "callingMaterial.subclassFeature.ranger.beast-master.share-spells.description"
+  },
+  {
+    "classId": "ranger",
+    "subclass": "Gloom Stalker",
+    "name": "Dread Ambusher",
+    "nameKey": "callingMaterial.subclassFeature.ranger.gloom-stalker.dread-ambusher.name",
+    "descriptionKey": "callingMaterial.subclassFeature.ranger.gloom-stalker.dread-ambusher.description"
+  },
+  {
+    "classId": "ranger",
+    "subclass": "Gloom Stalker",
+    "name": "Umbral Sight",
+    "nameKey": "callingMaterial.subclassFeature.ranger.gloom-stalker.umbral-sight.name",
+    "descriptionKey": "callingMaterial.subclassFeature.ranger.gloom-stalker.umbral-sight.description"
+  },
+  {
+    "classId": "ranger",
+    "subclass": "Gloom Stalker",
+    "name": "Iron Mind",
+    "nameKey": "callingMaterial.subclassFeature.ranger.gloom-stalker.iron-mind.name",
+    "descriptionKey": "callingMaterial.subclassFeature.ranger.gloom-stalker.iron-mind.description"
+  },
+  {
+    "classId": "ranger",
+    "subclass": "Gloom Stalker",
+    "name": "Stalker's Flurry",
+    "nameKey": "callingMaterial.subclassFeature.ranger.gloom-stalker.stalker-s-flurry.name",
+    "descriptionKey": "callingMaterial.subclassFeature.ranger.gloom-stalker.stalker-s-flurry.description"
+  },
+  {
+    "classId": "ranger",
+    "subclass": "Gloom Stalker",
+    "name": "Shadowy Dodge",
+    "nameKey": "callingMaterial.subclassFeature.ranger.gloom-stalker.shadowy-dodge.name",
+    "descriptionKey": "callingMaterial.subclassFeature.ranger.gloom-stalker.shadowy-dodge.description"
+  },
+  {
+    "classId": "ranger",
+    "subclass": "Horizon Walker",
+    "name": "Detect Portal",
+    "nameKey": "callingMaterial.subclassFeature.ranger.horizon-walker.detect-portal.name",
+    "descriptionKey": "callingMaterial.subclassFeature.ranger.horizon-walker.detect-portal.description"
+  },
+  {
+    "classId": "ranger",
+    "subclass": "Horizon Walker",
+    "name": "Planar Warrior",
+    "nameKey": "callingMaterial.subclassFeature.ranger.horizon-walker.planar-warrior.name",
+    "descriptionKey": "callingMaterial.subclassFeature.ranger.horizon-walker.planar-warrior.description"
+  },
+  {
+    "classId": "ranger",
+    "subclass": "Horizon Walker",
+    "name": "Ethereal Step",
+    "nameKey": "callingMaterial.subclassFeature.ranger.horizon-walker.ethereal-step.name",
+    "descriptionKey": "callingMaterial.subclassFeature.ranger.horizon-walker.ethereal-step.description"
+  },
+  {
+    "classId": "ranger",
+    "subclass": "Horizon Walker",
+    "name": "Distant Strike",
+    "nameKey": "callingMaterial.subclassFeature.ranger.horizon-walker.distant-strike.name",
+    "descriptionKey": "callingMaterial.subclassFeature.ranger.horizon-walker.distant-strike.description"
+  },
+  {
+    "classId": "ranger",
+    "subclass": "Horizon Walker",
+    "name": "Spectral Defense",
+    "nameKey": "callingMaterial.subclassFeature.ranger.horizon-walker.spectral-defense.name",
+    "descriptionKey": "callingMaterial.subclassFeature.ranger.horizon-walker.spectral-defense.description"
+  },
+  {
+    "classId": "ranger",
+    "subclass": "Monster Slayer",
+    "name": "Hunter's Sense",
+    "nameKey": "callingMaterial.subclassFeature.ranger.monster-slayer.hunter-s-sense.name",
+    "descriptionKey": "callingMaterial.subclassFeature.ranger.monster-slayer.hunter-s-sense.description"
+  },
+  {
+    "classId": "ranger",
+    "subclass": "Monster Slayer",
+    "name": "Slayer's Prey",
+    "nameKey": "callingMaterial.subclassFeature.ranger.monster-slayer.slayer-s-prey.name",
+    "descriptionKey": "callingMaterial.subclassFeature.ranger.monster-slayer.slayer-s-prey.description"
+  },
+  {
+    "classId": "ranger",
+    "subclass": "Monster Slayer",
+    "name": "Supernatural Defense",
+    "nameKey": "callingMaterial.subclassFeature.ranger.monster-slayer.supernatural-defense.name",
+    "descriptionKey": "callingMaterial.subclassFeature.ranger.monster-slayer.supernatural-defense.description"
+  },
+  {
+    "classId": "ranger",
+    "subclass": "Monster Slayer",
+    "name": "Magic-User's Nemesis",
+    "nameKey": "callingMaterial.subclassFeature.ranger.monster-slayer.magic-user-s-nemesis.name",
+    "descriptionKey": "callingMaterial.subclassFeature.ranger.monster-slayer.magic-user-s-nemesis.description"
+  },
+  {
+    "classId": "ranger",
+    "subclass": "Monster Slayer",
+    "name": "Slayer's Counter",
+    "nameKey": "callingMaterial.subclassFeature.ranger.monster-slayer.slayer-s-counter.name",
+    "descriptionKey": "callingMaterial.subclassFeature.ranger.monster-slayer.slayer-s-counter.description"
+  },
+  {
+    "classId": "ranger",
+    "subclass": "Fey Wanderer",
+    "name": "Dreadful Strikes",
+    "nameKey": "callingMaterial.subclassFeature.ranger.fey-wanderer.dreadful-strikes.name",
+    "descriptionKey": "callingMaterial.subclassFeature.ranger.fey-wanderer.dreadful-strikes.description"
+  },
+  {
+    "classId": "ranger",
+    "subclass": "Fey Wanderer",
+    "name": "Otherworldly Glamour",
+    "nameKey": "callingMaterial.subclassFeature.ranger.fey-wanderer.otherworldly-glamour.name",
+    "descriptionKey": "callingMaterial.subclassFeature.ranger.fey-wanderer.otherworldly-glamour.description"
+  },
+  {
+    "classId": "ranger",
+    "subclass": "Fey Wanderer",
+    "name": "Fey Wanderer Magic",
+    "nameKey": "callingMaterial.subclassFeature.ranger.fey-wanderer.fey-wanderer-magic.name",
+    "descriptionKey": "callingMaterial.subclassFeature.ranger.fey-wanderer.fey-wanderer-magic.description"
+  },
+  {
+    "classId": "ranger",
+    "subclass": "Fey Wanderer",
+    "name": "Beguiling Twist",
+    "nameKey": "callingMaterial.subclassFeature.ranger.fey-wanderer.beguiling-twist.name",
+    "descriptionKey": "callingMaterial.subclassFeature.ranger.fey-wanderer.beguiling-twist.description"
+  },
+  {
+    "classId": "ranger",
+    "subclass": "Fey Wanderer",
+    "name": "Fey Reinforcements",
+    "nameKey": "callingMaterial.subclassFeature.ranger.fey-wanderer.fey-reinforcements.name",
+    "descriptionKey": "callingMaterial.subclassFeature.ranger.fey-wanderer.fey-reinforcements.description"
+  },
+  {
+    "classId": "ranger",
+    "subclass": "Fey Wanderer",
+    "name": "Misty Wanderer",
+    "nameKey": "callingMaterial.subclassFeature.ranger.fey-wanderer.misty-wanderer.name",
+    "descriptionKey": "callingMaterial.subclassFeature.ranger.fey-wanderer.misty-wanderer.description"
+  },
+  {
+    "classId": "ranger",
+    "subclass": "Swarmkeeper",
+    "name": "Gathered Swarm",
+    "nameKey": "callingMaterial.subclassFeature.ranger.swarmkeeper.gathered-swarm.name",
+    "descriptionKey": "callingMaterial.subclassFeature.ranger.swarmkeeper.gathered-swarm.description"
+  },
+  {
+    "classId": "ranger",
+    "subclass": "Swarmkeeper",
+    "name": "Swarmkeeper Magic",
+    "nameKey": "callingMaterial.subclassFeature.ranger.swarmkeeper.swarmkeeper-magic.name",
+    "descriptionKey": "callingMaterial.subclassFeature.ranger.swarmkeeper.swarmkeeper-magic.description"
+  },
+  {
+    "classId": "ranger",
+    "subclass": "Swarmkeeper",
+    "name": "Writhing Tide",
+    "nameKey": "callingMaterial.subclassFeature.ranger.swarmkeeper.writhing-tide.name",
+    "descriptionKey": "callingMaterial.subclassFeature.ranger.swarmkeeper.writhing-tide.description"
+  },
+  {
+    "classId": "ranger",
+    "subclass": "Swarmkeeper",
+    "name": "Mighty Swarm",
+    "nameKey": "callingMaterial.subclassFeature.ranger.swarmkeeper.mighty-swarm.name",
+    "descriptionKey": "callingMaterial.subclassFeature.ranger.swarmkeeper.mighty-swarm.description"
+  },
+  {
+    "classId": "ranger",
+    "subclass": "Swarmkeeper",
+    "name": "Swarming Dispersal",
+    "nameKey": "callingMaterial.subclassFeature.ranger.swarmkeeper.swarming-dispersal.name",
+    "descriptionKey": "callingMaterial.subclassFeature.ranger.swarmkeeper.swarming-dispersal.description"
+  },
+  {
+    "classId": "ranger",
+    "subclass": "Drakewarden",
+    "name": "Draconic Gift",
+    "nameKey": "callingMaterial.subclassFeature.ranger.drakewarden.draconic-gift.name",
+    "descriptionKey": "callingMaterial.subclassFeature.ranger.drakewarden.draconic-gift.description"
+  },
+  {
+    "classId": "ranger",
+    "subclass": "Drakewarden",
+    "name": "Drake Companion",
+    "nameKey": "callingMaterial.subclassFeature.ranger.drakewarden.drake-companion.name",
+    "descriptionKey": "callingMaterial.subclassFeature.ranger.drakewarden.drake-companion.description"
+  },
+  {
+    "classId": "ranger",
+    "subclass": "Drakewarden",
+    "name": "Bond of Fang and Scale",
+    "nameKey": "callingMaterial.subclassFeature.ranger.drakewarden.bond-of-fang-and-scale.name",
+    "descriptionKey": "callingMaterial.subclassFeature.ranger.drakewarden.bond-of-fang-and-scale.description"
+  },
+  {
+    "classId": "ranger",
+    "subclass": "Drakewarden",
+    "name": "Drake's Breath",
+    "nameKey": "callingMaterial.subclassFeature.ranger.drakewarden.drake-s-breath.name",
+    "descriptionKey": "callingMaterial.subclassFeature.ranger.drakewarden.drake-s-breath.description"
+  },
+  {
+    "classId": "ranger",
+    "subclass": "Drakewarden",
+    "name": "Perfected Bond",
+    "nameKey": "callingMaterial.subclassFeature.ranger.drakewarden.perfected-bond.name",
+    "descriptionKey": "callingMaterial.subclassFeature.ranger.drakewarden.perfected-bond.description"
+  },
+  {
+    "classId": "artificer",
+    "subclass": "Alchemist",
+    "name": "Tool Proficiency (Alchemist)",
+    "nameKey": "callingMaterial.subclassFeature.artificer.alchemist.tool-proficiency-alchemist.name",
+    "descriptionKey": "callingMaterial.subclassFeature.artificer.alchemist.tool-proficiency-alchemist.description"
+  },
+  {
+    "classId": "artificer",
+    "subclass": "Alchemist",
+    "name": "Experimental Elixir",
+    "nameKey": "callingMaterial.subclassFeature.artificer.alchemist.experimental-elixir.name",
+    "descriptionKey": "callingMaterial.subclassFeature.artificer.alchemist.experimental-elixir.description"
+  },
+  {
+    "classId": "artificer",
+    "subclass": "Alchemist",
+    "name": "Alchemical Savant",
+    "nameKey": "callingMaterial.subclassFeature.artificer.alchemist.alchemical-savant.name",
+    "descriptionKey": "callingMaterial.subclassFeature.artificer.alchemist.alchemical-savant.description"
+  },
+  {
+    "classId": "artificer",
+    "subclass": "Alchemist",
+    "name": "Restorative Reagents",
+    "nameKey": "callingMaterial.subclassFeature.artificer.alchemist.restorative-reagents.name",
+    "descriptionKey": "callingMaterial.subclassFeature.artificer.alchemist.restorative-reagents.description"
+  },
+  {
+    "classId": "artificer",
+    "subclass": "Alchemist",
+    "name": "Chemical Mastery",
+    "nameKey": "callingMaterial.subclassFeature.artificer.alchemist.chemical-mastery.name",
+    "descriptionKey": "callingMaterial.subclassFeature.artificer.alchemist.chemical-mastery.description"
+  },
+  {
+    "classId": "artificer",
+    "subclass": "Armorer",
+    "name": "Tool Proficiency (Armorer)",
+    "nameKey": "callingMaterial.subclassFeature.artificer.armorer.tool-proficiency-armorer.name",
+    "descriptionKey": "callingMaterial.subclassFeature.artificer.armorer.tool-proficiency-armorer.description"
+  },
+  {
+    "classId": "artificer",
+    "subclass": "Armorer",
+    "name": "Arcane Armor",
+    "nameKey": "callingMaterial.subclassFeature.artificer.armorer.arcane-armor.name",
+    "descriptionKey": "callingMaterial.subclassFeature.artificer.armorer.arcane-armor.description"
+  },
+  {
+    "classId": "artificer",
+    "subclass": "Armorer",
+    "name": "Armor Model",
+    "nameKey": "callingMaterial.subclassFeature.artificer.armorer.armor-model.name",
+    "descriptionKey": "callingMaterial.subclassFeature.artificer.armorer.armor-model.description"
+  },
+  {
+    "classId": "artificer",
+    "subclass": "Armorer",
+    "name": "Extra Attack",
+    "nameKey": "callingMaterial.subclassFeature.artificer.armorer.extra-attack.name",
+    "descriptionKey": "callingMaterial.subclassFeature.artificer.armorer.extra-attack.description"
+  },
+  {
+    "classId": "artificer",
+    "subclass": "Armorer",
+    "name": "Armor Modifications",
+    "nameKey": "callingMaterial.subclassFeature.artificer.armorer.armor-modifications.name",
+    "descriptionKey": "callingMaterial.subclassFeature.artificer.armorer.armor-modifications.description"
+  },
+  {
+    "classId": "artificer",
+    "subclass": "Armorer",
+    "name": "Perfected Armor",
+    "nameKey": "callingMaterial.subclassFeature.artificer.armorer.perfected-armor.name",
+    "descriptionKey": "callingMaterial.subclassFeature.artificer.armorer.perfected-armor.description"
+  },
+  {
+    "classId": "artificer",
+    "subclass": "Artillerist",
+    "name": "Tool Proficiency (Artillerist)",
+    "nameKey": "callingMaterial.subclassFeature.artificer.artillerist.tool-proficiency-artillerist.name",
+    "descriptionKey": "callingMaterial.subclassFeature.artificer.artillerist.tool-proficiency-artillerist.description"
+  },
+  {
+    "classId": "artificer",
+    "subclass": "Artillerist",
+    "name": "Eldritch Cannon",
+    "nameKey": "callingMaterial.subclassFeature.artificer.artillerist.eldritch-cannon.name",
+    "descriptionKey": "callingMaterial.subclassFeature.artificer.artillerist.eldritch-cannon.description"
+  },
+  {
+    "classId": "artificer",
+    "subclass": "Artillerist",
+    "name": "Arcane Firearm",
+    "nameKey": "callingMaterial.subclassFeature.artificer.artillerist.arcane-firearm.name",
+    "descriptionKey": "callingMaterial.subclassFeature.artificer.artillerist.arcane-firearm.description"
+  },
+  {
+    "classId": "artificer",
+    "subclass": "Artillerist",
+    "name": "Explosive Cannon",
+    "nameKey": "callingMaterial.subclassFeature.artificer.artillerist.explosive-cannon.name",
+    "descriptionKey": "callingMaterial.subclassFeature.artificer.artillerist.explosive-cannon.description"
+  },
+  {
+    "classId": "artificer",
+    "subclass": "Artillerist",
+    "name": "Fortified Position",
+    "nameKey": "callingMaterial.subclassFeature.artificer.artillerist.fortified-position.name",
+    "descriptionKey": "callingMaterial.subclassFeature.artificer.artillerist.fortified-position.description"
+  },
+  {
+    "classId": "artificer",
+    "subclass": "Battle Smith",
+    "name": "Tool Proficiency (Battle Smith)",
+    "nameKey": "callingMaterial.subclassFeature.artificer.battle-smith.tool-proficiency-battle-smith.name",
+    "descriptionKey": "callingMaterial.subclassFeature.artificer.battle-smith.tool-proficiency-battle-smith.description"
+  },
+  {
+    "classId": "artificer",
+    "subclass": "Battle Smith",
+    "name": "Battle Ready",
+    "nameKey": "callingMaterial.subclassFeature.artificer.battle-smith.battle-ready.name",
+    "descriptionKey": "callingMaterial.subclassFeature.artificer.battle-smith.battle-ready.description"
+  },
+  {
+    "classId": "artificer",
+    "subclass": "Battle Smith",
+    "name": "Steel Defender",
+    "nameKey": "callingMaterial.subclassFeature.artificer.battle-smith.steel-defender.name",
+    "descriptionKey": "callingMaterial.subclassFeature.artificer.battle-smith.steel-defender.description"
+  },
+  {
+    "classId": "artificer",
+    "subclass": "Battle Smith",
+    "name": "Extra Attack",
+    "nameKey": "callingMaterial.subclassFeature.artificer.battle-smith.extra-attack.name",
+    "descriptionKey": "callingMaterial.subclassFeature.artificer.battle-smith.extra-attack.description"
+  },
+  {
+    "classId": "artificer",
+    "subclass": "Battle Smith",
+    "name": "Arcane Jolt",
+    "nameKey": "callingMaterial.subclassFeature.artificer.battle-smith.arcane-jolt.name",
+    "descriptionKey": "callingMaterial.subclassFeature.artificer.battle-smith.arcane-jolt.description"
+  },
+  {
+    "classId": "artificer",
+    "subclass": "Battle Smith",
+    "name": "Improved Defender",
+    "nameKey": "callingMaterial.subclassFeature.artificer.battle-smith.improved-defender.name",
+    "descriptionKey": "callingMaterial.subclassFeature.artificer.battle-smith.improved-defender.description"
   }
 ] as const;

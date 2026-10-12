@@ -15,6 +15,12 @@ const {featGrantSpec} = await import('../src/lib/srd/feat-grant-text.ts');
 // Verify this material batch against the actual authored source/resolver, not
 // a copied English golden. Unknown or changed prose must remain untouched.
 const authoredSubclasses = JSON.parse(fs.readFileSync(new URL('../src/lib/srd/subclasses.json', import.meta.url), 'utf8')).classes;
+const materialId = row => [row.classId, row.subclass, row.name].join('::');
+const expectedMaterial = Object.entries(authoredSubclasses).flatMap(([classId, subclasses]) =>
+  subclasses.flatMap(subclass => Object.values(subclass.levels).flat().map(feature =>
+    materialId({classId, subclass: subclass.name, name: feature.n}))));
+assert.deepEqual(SUBCLASS_FEATURE_MATERIAL.map(materialId).sort(), expectedMaterial.sort(),
+  'Every authored subclass feature must have a localized source binding.');
 for (const row of SUBCLASS_FEATURE_MATERIAL) {
   const subclass = authoredSubclasses[row.classId].find(entry => entry.name === row.subclass);
   const feature = Object.values(subclass.levels).flat().find(entry => entry.n === row.name);
@@ -111,6 +117,10 @@ for (const [classId, featureName, chinese, subclass = ''] of [
   ['cleric', 'Divine Strike', '神圣打击', 'Tempest Domain'],
   ['druid', 'Combat Wild Shape', '战斗荒野形态', 'Circle of the Moon'],
   ['paladin', 'Channel Divinity: Guided Strike', '引导神力：引导打击', 'Oath of Conquest'],
+  ['bard', 'Psychic Blades', '心灵之刃', 'College of Whispers'],
+  ['monk', 'Hand of Healing', '治疗之手', 'Way of Mercy'],
+  ['ranger', 'Planar Warrior', '位面战士', 'Horizon Walker'],
+  ['artificer', 'Alchemical Savant', '炼金学者', 'Alchemist'],
 ]) {
   const feature = {name: featureName, source: 'class', level: 1};
   const klass = srdClassOptions().find(row => row.id === classId);
