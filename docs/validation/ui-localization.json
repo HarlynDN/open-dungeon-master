@@ -1511,7 +1511,8 @@
     },
     {
       "path": "src/app/workshop/bestiary/BlockActionFields.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Final shared monster-editor fields: recharge/legendary costs, special actions, regeneration, multiattack routines, spellcasting/slots/daily uses, scores/skills/senses, fictional languages/alignment/habitat and trait sections localized. Canonical enums, ability/skill/sense keys, spell names, routine references, slots/limits/numbers and English section prefixes stay native; authored names/trait prose preserve original text. Closed damage/conditions use existing typed-value adapters; language labels resolve only uniquely and spell aliases resolve against canonical source records with unknown/ambiguous text retained. Picks retain original language/spell/section/environment values; Chinese comma lists accepted. Imported children have independent scope, and printed/full-rulebook prose remains deferred."
     },
     {
       "path": "src/app/workshop/bestiary/BorrowParts.tsx",
@@ -1540,11 +1541,13 @@
     },
     {
       "path": "src/app/workshop/bestiary/SpellcastingFields.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Final shared monster-editor fields: recharge/legendary costs, special actions, regeneration, multiattack routines, spellcasting/slots/daily uses, scores/skills/senses, fictional languages/alignment/habitat and trait sections localized. Canonical enums, ability/skill/sense keys, spell names, routine references, slots/limits/numbers and English section prefixes stay native; authored names/trait prose preserve original text. Closed damage/conditions use existing typed-value adapters; language labels resolve only uniquely and spell aliases resolve against canonical source records with unknown/ambiguous text retained. Picks retain original language/spell/section/environment values; Chinese comma lists accepted. Imported children have independent scope, and printed/full-rulebook prose remains deferred."
     },
     {
       "path": "src/app/workshop/bestiary/StatBlockFields.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Final shared monster-editor fields: recharge/legendary costs, special actions, regeneration, multiattack routines, spellcasting/slots/daily uses, scores/skills/senses, fictional languages/alignment/habitat and trait sections localized. Canonical enums, ability/skill/sense keys, spell names, routine references, slots/limits/numbers and English section prefixes stay native; authored names/trait prose preserve original text. Closed damage/conditions use existing typed-value adapters; language labels resolve only uniquely and spell aliases resolve against canonical source records with unknown/ambiguous text retained. Picks retain original language/spell/section/environment values; Chinese comma lists accepted. Imported children have independent scope, and printed/full-rulebook prose remains deferred."
     },
     {
       "path": "src/app/workshop/bestiary/types.ts",

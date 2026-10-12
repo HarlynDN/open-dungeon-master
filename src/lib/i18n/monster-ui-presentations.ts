@@ -5,6 +5,10 @@ import { referenceBadgeText } from "./reference-ui-presentations.ts";
 import { dmCatalogText } from "./dm-field-presentations.ts";
 import { dmToolsText } from "./dm-tools-presentations.ts";
 import { encounterPrepError } from "./encounter-prep-presentations.ts";
+import { resolveReference, translatedReferenceNames } from "./references.ts";
+import { SPELL_NAMES } from "./spell-name-messages.ts";
+import { trainingLabel } from "./training-presentations.ts";
+import { LANGUAGES } from "../workshop/pickers.ts";
 import { conditionLabel } from "./condition-presentations.ts";
 import { abilityLabel } from "./character-presentations.ts";
 import { DAMAGE_TYPES, CONDITIONS } from "../bestiary/kit.ts";
@@ -87,4 +91,34 @@ export function monsterUiError(raw: string, locale: AppLocale): string {
 export const MONSTER_PANEL_NOTICES = { built: "That could not be built.", saved: "That could not be saved.", deleted: "That could not be deleted." } as const;
 export function monsterMissingCopyNotice(name: string): string {
   return `${name} is not in the content pack on this server, so there is no block to copy.`;
+}
+
+// These helpers are for editable rule vocabularies, never campaign history.
+// Unique locale labels resolve to the existing rule name; unknown authored
+// names stay literal and ambiguous aliases are not guessed.
+export function monsterTypedSpell(value: string, locale: AppLocale): string {
+  if (locale === "en") return value;
+  if (!translatedReferenceNames("spell", value, locale).length) return value;
+  const resolved = resolveReference("spell", value, SPELL_NAMES.map(row => ({ id: row.key, name: row.name, aliases: row.aliases })), locale);
+  return resolved.kind === "matched" ? resolved.entry.name : value;
+}
+export function monsterLanguageName(value: string, locale: AppLocale): string {
+  if (locale === "en") return value;
+  return value === "telepathy 60 ft" ? monsterUiFrame("telepathy", {}, locale) : trainingLabel("language", value, locale);
+}
+export function monsterLanguagesView(value: string, locale: AppLocale): string {
+  return locale === "en" ? value : value.split(",").map(term => monsterLanguageName(term.trim(), locale)).join(", ");
+}
+export function monsterLanguagesInput(value: string, locale: AppLocale): string {
+  if (locale === "en") return value;
+  return value.split(/[,，]/).map(term => {
+    const name = term.trim();
+    const candidates = LANGUAGES.filter(source => monsterLanguageName(source, locale) === name);
+    return candidates.length === 1 ? candidates[0] : name;
+  }).join(", ");
+}
+export function monsterAlignmentName(value: string, locale: AppLocale): string {
+  if (locale === "en") return value;
+  const source = Object.entries(catalogFor("en", "builderPicker.alignment.")).find(([, text]) => text?.toLowerCase() === value.toLowerCase());
+  return source ? createTranslator(locale)(source[0] as MessageKey) : monsterUiText(value, locale);
 }

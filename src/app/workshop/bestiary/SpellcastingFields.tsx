@@ -1,5 +1,11 @@
 "use client";
 
+import type { AppLocale } from "@/lib/i18n/locales";
+import { abilityLabel } from "@/lib/i18n/character-presentations";
+import { referenceDisplayName } from "@/lib/i18n/references";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { monsterUiText, monsterUiFrame } from "@/lib/i18n/monster-ui-presentations";
+
 import { Trash2 } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { ui } from "@/lib/ui";
@@ -22,15 +28,15 @@ import { Field, OptionalStepper, rowIcon } from "@/app/workshop/kit";
 
 type Props = { draft: MonsterDraft; onChange: (draft: MonsterDraft) => void };
 
-const ABILITY_OPTIONS = [
-  { value: "", label: "Unstated" },
-  ...SAVE_ABILITY_IDS.map((ability) => ({ value: ability as string, label: ability.toUpperCase() })),
+const abilityOptions = (locale: AppLocale) => [
+  { value: "", label: monsterUiText("Unstated", locale) },
+  ...SAVE_ABILITY_IDS.map((ability) => ({ value: ability as string, label: locale === "en" ? ability.toUpperCase() : abilityLabel(ability, locale) })),
 ];
 
-const USE_OPTIONS = [
-  { value: "slot", label: "From a slot" },
-  { value: "atwill", label: "At will" },
-  ...[1, 2, 3].map((count) => ({ value: `day${count}`, label: `${count}/day` })),
+const useOptions = (locale: AppLocale) => [
+  { value: "slot", label: monsterUiText("From a slot", locale) },
+  { value: "atwill", label: monsterUiText("At will", locale) },
+  ...[1, 2, 3].map((count) => ({ value: `day${count}`, label: monsterUiFrame("usesDay", { count }, locale) })),
 ];
 
 function castWay(spell: MonsterSpell): string {
@@ -41,6 +47,7 @@ function castWay(spell: MonsterSpell): string {
 const LEVELS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 export function SpellcastingEditor({ draft, onChange }: Props) {
+  const { locale } = useLocale();
   const casting = draft.stats.spellcasting;
   const set = (next: MonsterSpellcasting | undefined) =>
     onChange({
@@ -56,12 +63,12 @@ export function SpellcastingEditor({ draft, onChange }: Props) {
   return (
     <div className="flex flex-col gap-2">
       <SectionHead
-        title="Spellcasting"
+        title={monsterUiText("Spellcasting", locale)}
         glyph="cue-arcane"
         className="mb-0"
         aside={
           <Switch
-            label="Casts spells"
+            label={monsterUiText("Casts spells", locale)}
             on={on}
             onChange={(next) =>
               set(
@@ -82,29 +89,29 @@ export function SpellcastingEditor({ draft, onChange }: Props) {
       {casting ? (
         <div className="reveal flex flex-col gap-2">
           <div className="flex flex-wrap items-end gap-3">
-            <Field label="Ability">
+            <Field label={monsterUiText("Ability", locale)}>
               <span className="block w-28">
-                <Select label="Spellcasting ability" size="sm" value={casting.ability ?? ""} onChange={(ability) => set({ ...casting, ability: (ability || undefined) as MonsterSpellcasting["ability"] })} options={ABILITY_OPTIONS} />
+                <Select label={monsterUiText("Spellcasting ability", locale)} size="sm" value={casting.ability ?? ""} onChange={(ability) => set({ ...casting, ability: (ability || undefined) as MonsterSpellcasting["ability"] })} options={abilityOptions(locale)} />
               </span>
             </Field>
-            <Field label="Save DC">
-              <OptionalStepper label="Spell save DC" min={1} max={30} fallback={13} value={casting.dc} onChange={(dc) => set({ ...casting, dc: dc === "" ? undefined : dc })} />
+            <Field label={monsterUiText("Save DC", locale)}>
+              <OptionalStepper label={monsterUiText("Spell save DC", locale)} min={1} max={30} fallback={13} value={casting.dc} onChange={(dc) => set({ ...casting, dc: dc === "" ? undefined : dc })} />
             </Field>
-            <Field label="Spell attack">
-              <OptionalStepper label="Spell attack bonus" min={-5} max={20} fallback={5} value={casting.attack} onChange={(attack) => set({ ...casting, attack: attack === "" ? undefined : attack })} />
+            <Field label={monsterUiText("Spell attack", locale)}>
+              <OptionalStepper label={monsterUiText("Spell attack bonus", locale)} min={-5} max={20} fallback={5} value={casting.attack} onChange={(attack) => set({ ...casting, attack: attack === "" ? undefined : attack })} />
             </Field>
-            <Field label="Caster level">
-              <OptionalStepper label="Caster level" min={1} max={20} fallback={5} value={casting.casterLevel} onChange={(casterLevel) => set({ ...casting, casterLevel: casterLevel === "" ? undefined : casterLevel })} />
+            <Field label={monsterUiText("Caster level", locale)}>
+              <OptionalStepper label={monsterUiText("Caster level", locale)} min={1} max={20} fallback={5} value={casting.casterLevel} onChange={(casterLevel) => set({ ...casting, casterLevel: casterLevel === "" ? undefined : casterLevel })} />
             </Field>
           </div>
-          <Field label="Slots by level">
+          <Field label={monsterUiText("Slots by level", locale)}>
             <div className="stagger-up grid grid-cols-[repeat(auto-fill,minmax(5.5rem,1fr))] gap-1.5">
               {LEVELS.map((level) => (
                 <span key={level} className="flex flex-col gap-0.5 text-[10px] uppercase text-stone-500">
-                  Level {level}
+                  {monsterUiFrame("slotLevel", { level }, locale)}
                   <NumberStepper
                     size="sm"
-                    label={`Level ${level} slots`}
+                    label={monsterUiFrame("slotsLevel", { level }, locale)}
                     min={0}
                     max={9}
                     value={casting.slots[String(level)] ?? 0}
@@ -122,10 +129,10 @@ export function SpellcastingEditor({ draft, onChange }: Props) {
           <div className="flex flex-col gap-1">
             {casting.spells.map((spell, index) => (
               <div key={spell.name} className="live-in flex flex-wrap items-center gap-1.5 text-xs">
-                <span className="min-w-36 flex-1 text-stone-200">{spell.name}</span>
+                <span className="min-w-36 flex-1 text-stone-200">{referenceDisplayName("spell", spell.name, locale)}</span>
                 <span className="block w-28">
                   <Select
-                    label={`How ${spell.name} is cast`}
+                    label={monsterUiFrame("castingWay", { name: referenceDisplayName("spell", spell.name, locale) }, locale)}
                     size="sm"
                     value={castWay(spell)}
                     onChange={(use) => {
@@ -137,13 +144,13 @@ export function SpellcastingEditor({ draft, onChange }: Props) {
                             : { name: spell.name, level: null, perDay: Number(use.slice(3)) };
                       set({ ...casting, spells: casting.spells.map((row, at) => (at === index ? next : row)) });
                     }}
-                    options={USE_OPTIONS}
+                    options={useOptions(locale)}
                   />
                 </span>
                 {castWay(spell) === "slot" ? (
-                  <NumberStepper size="sm" label={`${spell.name} level`} min={1} max={9} value={spell.level ?? 1} onChange={(level) => set({ ...casting, spells: casting.spells.map((row, at) => (at === index ? { ...row, level } : row)) })} />
+                  <NumberStepper size="sm" label={monsterUiFrame("spellLevel", { name: referenceDisplayName("spell", spell.name, locale) }, locale)} min={1} max={9} value={spell.level ?? 1} onChange={(level) => set({ ...casting, spells: casting.spells.map((row, at) => (at === index ? { ...row, level } : row)) })} />
                 ) : null}
-                <button type="button" aria-label={`Remove ${spell.name}`} onClick={() => set({ ...casting, spells: casting.spells.filter((_, at) => at !== index) })} className={cn(ui.iconAction, rowIcon, "hover:text-red-300")}>
+                <button type="button" aria-label={monsterUiFrame("removeSpell", { name: referenceDisplayName("spell", spell.name, locale) }, locale)} onClick={() => set({ ...casting, spells: casting.spells.filter((_, at) => at !== index) })} className={cn(ui.iconAction, rowIcon, "hover:text-red-300")}>
                   <Trash2 className="size-3.5" />
                 </button>
               </div>
@@ -151,8 +158,8 @@ export function SpellcastingEditor({ draft, onChange }: Props) {
             {casting.spells.length < BLOCK_LIMITS.spells ? (
               <ContentPick
                 kind="spells"
-                label="Find a spell in the catalogue to add"
-                placeholder="Add a spell from the books..."
+                label={monsterUiText("Find a spell in the catalogue to add", locale)}
+                placeholder={monsterUiText("Add a spell from the books...", locale)}
                 onPick={(entry) => {
                   if (casting.spells.some((known) => known.name.toLowerCase() === entry.name.toLowerCase())) return;
                   const level = typeof entry.level === "number" ? entry.level : null;
@@ -162,8 +169,7 @@ export function SpellcastingEditor({ draft, onChange }: Props) {
             ) : null}
           </div>
           <span className="text-[11px] text-stone-500">
-            The DM casts these for the monster; the server spends the slot or the use, and uses this DC for the save.
-          </span>
+            {monsterUiText("The DM casts these for the monster; the server spends the slot or the use, and uses this DC for the save.", locale)}</span>
         </div>
       ) : null}
     </div>

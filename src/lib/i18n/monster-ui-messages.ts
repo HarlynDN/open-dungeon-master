@@ -884,5 +884,421 @@ export const MONSTER_UI_MESSAGES = /*#__PURE__*/ defineMessages({
   "monsterUi.frame.traitCap": {
     "en": "The block is full at {count} lines.",
     "zh-CN": "特性已达到 {count} 行上限。"
+  },
+  "monsterUi.copy.tail000": {
+    "en": "No recharge",
+    "zh-CN": "无需充能"
+  },
+  "monsterUi.copy.tail001": {
+    "en": "Recharge 6",
+    "zh-CN": "充能 6"
+  },
+  "monsterUi.copy.tail002": {
+    "en": "Recharge 5-6",
+    "zh-CN": "充能 5–6"
+  },
+  "monsterUi.copy.tail003": {
+    "en": "Recharge 4-6",
+    "zh-CN": "充能 4–6"
+  },
+  "monsterUi.copy.tail005": {
+    "en": "Not legendary",
+    "zh-CN": "非传奇动作"
+  },
+  "monsterUi.copy.tail006": {
+    "en": "Legendary, 1 action",
+    "zh-CN": "传奇动作，消耗 1 次动作"
+  },
+  "monsterUi.copy.tail007": {
+    "en": "Legendary, 2 actions",
+    "zh-CN": "传奇动作，消耗 2 次动作"
+  },
+  "monsterUi.copy.tail008": {
+    "en": "Legendary, 3 actions",
+    "zh-CN": "传奇动作，消耗 3 次动作"
+  },
+  "monsterUi.copy.tail010": {
+    "en": "Fire Breath",
+    "zh-CN": "火焰吐息"
+  },
+  "monsterUi.copy.tail011": {
+    "en": "Recharge",
+    "zh-CN": "充能"
+  },
+  "monsterUi.copy.tail012": {
+    "en": "Per day",
+    "zh-CN": "每日次数"
+  },
+  "monsterUi.copy.tail013": {
+    "en": "Uses a day",
+    "zh-CN": "每天可用次数"
+  },
+  "monsterUi.copy.tail014": {
+    "en": "Legendary",
+    "zh-CN": "传奇动作"
+  },
+  "monsterUi.copy.tail015": {
+    "en": "Legendary action cost",
+    "zh-CN": "传奇动作消耗"
+  },
+  "monsterUi.copy.tail019": {
+    "en": "Damage",
+    "zh-CN": "伤害"
+  },
+  "monsterUi.copy.tail020": {
+    "en": "6d6",
+    "zh-CN": "6d6"
+  },
+  "monsterUi.copy.tail026": {
+    "en": "frightened",
+    "zh-CN": "恐慌"
+  },
+  "monsterUi.copy.tail030": {
+    "en": "Magical",
+    "zh-CN": "魔法效果"
+  },
+  "monsterUi.copy.tail031": {
+    "en": "Magic Resistance applies",
+    "zh-CN": "适用魔法抗性"
+  },
+  "monsterUi.copy.tail032": {
+    "en": "Actions the engine runs",
+    "zh-CN": "自动结算的动作"
+  },
+  "monsterUi.copy.tail033": {
+    "en": "Breath, gaze or other action",
+    "zh-CN": "吐息、凝视或其他动作"
+  },
+  "monsterUi.copy.tail034": {
+    "en": "The DM spends these through the monster's turn: the server rolls the save, the dice and the recharge, and a legendary one costs its actions.",
+    "zh-CN": "DM 在怪物回合中使用这些动作；豁免、伤害和充能会自动掷骰，传奇动作会消耗相应次数。"
+  },
+  "monsterUi.copy.tail036": {
+    "en": "Regenerates",
+    "zh-CN": "具有再生能力"
+  },
+  "monsterUi.copy.tail037": {
+    "en": "Regains",
+    "zh-CN": "恢复"
+  },
+  "monsterUi.copy.tail038": {
+    "en": "Hit points regained each turn",
+    "zh-CN": "每回合恢复的生命值"
+  },
+  "monsterUi.copy.tail039": {
+    "en": "hit points at the start of its turn, unless it took",
+    "zh-CN": "点生命值（每回合开始时），但受到以下类型伤害时不恢复"
+  },
+  "monsterUi.copy.tail040": {
+    "en": "Dies only if it starts its turn at 0 hit points",
+    "zh-CN": "仅在回合开始时生命值为 0 才死亡"
+  },
+  "monsterUi.copy.tail041": {
+    "en": "Multiattack routine",
+    "zh-CN": "多重攻击流程"
+  },
+  "monsterUi.copy.tail042": {
+    "en": "Or",
+    "zh-CN": "或"
+  },
+  "monsterUi.copy.tail043": {
+    "en": "How many",
+    "zh-CN": "数量"
+  },
+  "monsterUi.copy.tail045": {
+    "en": "Remove this step",
+    "zh-CN": "移除此步骤"
+  },
+  "monsterUi.copy.tail046": {
+    "en": "Step",
+    "zh-CN": "步骤"
+  },
+  "monsterUi.copy.tail047": {
+    "en": "Alternative routine",
+    "zh-CN": "备选流程"
+  },
+  "monsterUi.copy.tail048": {
+    "en": "Routine",
+    "zh-CN": "流程"
+  },
+  "monsterUi.copy.tail049": {
+    "en": "\"One with its bite and two with its claws\": the enemy turn swings exactly this. Without a routine it swings its best attack as many times as Swings says.",
+    "zh-CN": "“啮咬一次，爪击两次”：怪物会严格按此流程攻击。未设置时，按每回合攻击次数使用最佳攻击。"
+  },
+  "monsterUi.copy.tail051": {
+    "en": "From a slot",
+    "zh-CN": "使用法术位"
+  },
+  "monsterUi.copy.tail052": {
+    "en": "At will",
+    "zh-CN": "随意施放"
+  },
+  "monsterUi.copy.tail053": {
+    "en": "Spellcasting",
+    "zh-CN": "施法"
+  },
+  "monsterUi.copy.tail054": {
+    "en": "Casts spells",
+    "zh-CN": "能够施法"
+  },
+  "monsterUi.copy.tail055": {
+    "en": "Ability",
+    "zh-CN": "属性"
+  },
+  "monsterUi.copy.tail056": {
+    "en": "Spellcasting ability",
+    "zh-CN": "施法属性"
+  },
+  "monsterUi.copy.tail057": {
+    "en": "Spell save DC",
+    "zh-CN": "法术豁免 DC"
+  },
+  "monsterUi.copy.tail059": {
+    "en": "Spell attack bonus",
+    "zh-CN": "法术攻击加值"
+  },
+  "monsterUi.copy.tail060": {
+    "en": "Caster level",
+    "zh-CN": "施法者等级"
+  },
+  "monsterUi.copy.tail061": {
+    "en": "Slots by level",
+    "zh-CN": "各环法术位"
+  },
+  "monsterUi.copy.tail062": {
+    "en": "Find a spell in the catalogue to add",
+    "zh-CN": "查找要添加的内置法术"
+  },
+  "monsterUi.copy.tail063": {
+    "en": "Add a spell from the books...",
+    "zh-CN": "从资料中添加法术……"
+  },
+  "monsterUi.copy.tail064": {
+    "en": "The DM casts these for the monster; the server spends the slot or the use, and uses this DC for the save.",
+    "zh-CN": "DM 为怪物施放这些法术；自动消耗法术位或使用次数，并按此 DC 进行豁免。"
+  },
+  "monsterUi.copy.tail065": {
+    "en": "Ability scores",
+    "zh-CN": "属性值"
+  },
+  "monsterUi.copy.tail066": {
+    "en": "Set the DEX modifier and the saving throws from these scores",
+    "zh-CN": "根据这些属性值设置敏捷调整值和豁免加值"
+  },
+  "monsterUi.copy.tail067": {
+    "en": "Saves from scores",
+    "zh-CN": "按属性设置豁免"
+  },
+  "monsterUi.copy.tail068": {
+    "en": "Skills and senses",
+    "zh-CN": "技能与感官"
+  },
+  "monsterUi.copy.tail069": {
+    "en": "Skills (tap to add, type the bonus)",
+    "zh-CN": "技能（点击添加，并填写加值）"
+  },
+  "monsterUi.copy.tail070": {
+    "en": "Skills",
+    "zh-CN": "技能"
+  },
+  "monsterUi.copy.tail072": {
+    "en": "Passive Perception",
+    "zh-CN": "被动察觉"
+  },
+  "monsterUi.copy.tail073": {
+    "en": "A hiding character has to beat the passive Perception; the printed number wins, then the skill, then Wisdom.",
+    "zh-CN": "隐藏的角色需超过被动察觉值；优先使用填写的数值，其次采用技能，最后采用感知属性。"
+  },
+  "monsterUi.copy.tail074": {
+    "en": "Tongue, creed and habitat",
+    "zh-CN": "语言、阵营与栖息地"
+  },
+  "monsterUi.copy.tail075": {
+    "en": "Languages",
+    "zh-CN": "游戏内语言"
+  },
+  "monsterUi.copy.tail076": {
+    "en": "Common, Goblin",
+    "zh-CN": "通用语、哥布林语"
+  },
+  "monsterUi.copy.tail077": {
+    "en": "Alignment",
+    "zh-CN": "阵营"
+  },
+  "monsterUi.copy.tail078": {
+    "en": "Alignments",
+    "zh-CN": "阵营"
+  },
+  "monsterUi.copy.tail079": {
+    "en": "Spells known (by name, comma separated)",
+    "zh-CN": "已知法术（按名称填写，用逗号分隔）"
+  },
+  "monsterUi.copy.tail080": {
+    "en": "Spells known",
+    "zh-CN": "已知法术"
+  },
+  "monsterUi.copy.tail081": {
+    "en": "Fire Bolt, Shield, Misty Step",
+    "zh-CN": "火焰箭、护盾术、迷雾步"
+  },
+  "monsterUi.copy.tail082": {
+    "en": "Find a spell to add...",
+    "zh-CN": "查找要添加的法术……"
+  },
+  "monsterUi.copy.tail083": {
+    "en": "The DM running it sees the list. Put a round of casting into extra damage so the rating counts it.",
+    "zh-CN": "操作怪物的 DM 会看到这份列表。请将一轮施法的平均伤害计入额外伤害，纳入挑战等级估算。"
+  },
+  "monsterUi.copy.tail084": {
+    "en": "Found in",
+    "zh-CN": "栖息环境"
+  },
+  "monsterUi.copy.tail085": {
+    "en": "Traits and actions",
+    "zh-CN": "特性与动作"
+  },
+  "monsterUi.copy.tail086": {
+    "en": "Section",
+    "zh-CN": "分类"
+  },
+  "monsterUi.copy.tailTerm0": {
+    "en": "ability",
+    "zh-CN": "能力"
+  },
+  "monsterUi.copy.tailTerm1": {
+    "en": "Add",
+    "zh-CN": "添加"
+  },
+  "monsterUi.copy.tailTerm2": {
+    "en": "unaligned",
+    "zh-CN": "无阵营"
+  },
+  "monsterUi.copy.tailTerm3": {
+    "en": "any alignment",
+    "zh-CN": "任意阵营"
+  },
+  "monsterUi.copy.tailTerm4": {
+    "en": "Bonus action",
+    "zh-CN": "附赠动作"
+  },
+  "monsterUi.copy.tailTerm5": {
+    "en": "Reaction",
+    "zh-CN": "反应"
+  },
+  "monsterUi.copy.tailTerm6": {
+    "en": "Legendary action",
+    "zh-CN": "传奇动作"
+  },
+  "monsterUi.copy.tailTerm7": {
+    "en": "Lair action",
+    "zh-CN": "巢穴动作"
+  },
+  "monsterUi.copy.tailTerm8": {
+    "en": "darkvision",
+    "zh-CN": "黑暗视觉"
+  },
+  "monsterUi.copy.tailTerm9": {
+    "en": "blindsight",
+    "zh-CN": "盲视"
+  },
+  "monsterUi.copy.tailTerm10": {
+    "en": "tremorsense",
+    "zh-CN": "震颤感知"
+  },
+  "monsterUi.copy.tailTerm11": {
+    "en": "truesight",
+    "zh-CN": "真视"
+  },
+  "monsterUi.copy.tailTerm12": {
+    "en": "arctic",
+    "zh-CN": "极地"
+  },
+  "monsterUi.copy.tailTerm13": {
+    "en": "coastal",
+    "zh-CN": "海岸"
+  },
+  "monsterUi.copy.tailTerm14": {
+    "en": "desert",
+    "zh-CN": "沙漠"
+  },
+  "monsterUi.copy.tailTerm15": {
+    "en": "forest",
+    "zh-CN": "森林"
+  },
+  "monsterUi.copy.tailTerm16": {
+    "en": "grassland",
+    "zh-CN": "草原"
+  },
+  "monsterUi.copy.tailTerm17": {
+    "en": "hill",
+    "zh-CN": "丘陵"
+  },
+  "monsterUi.copy.tailTerm18": {
+    "en": "mountain",
+    "zh-CN": "山地"
+  },
+  "monsterUi.copy.tailTerm19": {
+    "en": "swamp",
+    "zh-CN": "沼泽"
+  },
+  "monsterUi.copy.tailTerm20": {
+    "en": "underdark",
+    "zh-CN": "幽暗地域"
+  },
+  "monsterUi.copy.tailTerm21": {
+    "en": "underwater",
+    "zh-CN": "水下"
+  },
+  "monsterUi.copy.tailTerm22": {
+    "en": "urban",
+    "zh-CN": "城镇"
+  },
+  "monsterUi.frame.removeAbility": {
+    "en": "Remove {name}",
+    "zh-CN": "移除{name}"
+  },
+  "monsterUi.frame.usesDay": {
+    "en": "{count}/day",
+    "zh-CN": "每天 {count} 次"
+  },
+  "monsterUi.frame.slotLevel": {
+    "en": "Level {level}",
+    "zh-CN": "{level}环"
+  },
+  "monsterUi.frame.slotsLevel": {
+    "en": "Level {level} slots",
+    "zh-CN": "{level}环法术位"
+  },
+  "monsterUi.frame.castingWay": {
+    "en": "How {name} is cast",
+    "zh-CN": "{name}的施放方式"
+  },
+  "monsterUi.frame.spellLevel": {
+    "en": "{name} level",
+    "zh-CN": "{name}的环阶"
+  },
+  "monsterUi.frame.removeSpell": {
+    "en": "Remove {name}",
+    "zh-CN": "移除{name}"
+  },
+  "monsterUi.frame.abilityScore": {
+    "en": "{ability} score",
+    "zh-CN": "{ability}属性值"
+  },
+  "monsterUi.frame.skillBonus": {
+    "en": "{skill} bonus",
+    "zh-CN": "{skill}加值"
+  },
+  "monsterUi.frame.senseFeet": {
+    "en": "{sense} in feet",
+    "zh-CN": "{sense}范围（英尺）"
+  },
+  "monsterUi.frame.passiveDefault": {
+    "en": "Unset, so it reads as {value}.",
+    "zh-CN": "尚未设置，当前使用 {value}。"
+  },
+  "monsterUi.frame.telepathy": {
+    "en": "telepathy 60 ft",
+    "zh-CN": "心灵感应 60 英尺"
   }
 });

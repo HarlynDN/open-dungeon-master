@@ -1,5 +1,10 @@
 "use client";
 
+import type { AppLocale } from "@/lib/i18n/locales";
+import { abilityLabel, skillLabel } from "@/lib/i18n/character-presentations";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { monsterUiText, monsterUiFrame, monsterTypedSpell, monsterLanguageName, monsterLanguagesInput, monsterLanguagesView, monsterAlignmentName } from "@/lib/i18n/monster-ui-presentations";
+
 import { Plus, Trash2 } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { MAX_TRAITS, TRAIT_MAX, type MonsterDraft } from "@/lib/bestiary/monster-draft";
@@ -58,8 +63,8 @@ function signed(value: number): string {
 type Setter = (patch: Partial<EnemyStats>) => void;
 
 const capital = (text: string) => text.replace(/(^|\s)\S/g, (letter) => letter.toUpperCase());
-const ALIGNMENT_OPTIONS = ALIGNMENTS.map((alignment) => ({ value: alignment as string, label: alignment ? capital(alignment) : "Unstated" }));
-const SECTION_OPTIONS = TRAIT_SECTIONS.map((section) => ({ value: section, label: SECTION_LABELS[section] }));
+const alignmentOptions = (locale: AppLocale) => ALIGNMENTS.map((alignment) => ({ value: alignment as string, label: alignment ? (locale === "en" ? capital(alignment) : monsterAlignmentName(alignment, locale)) : monsterUiText("Unstated", locale) }));
+const sectionOptions = (locale: AppLocale) => TRAIT_SECTIONS.map((section) => ({ value: section, label: monsterUiText(SECTION_LABELS[section], locale) }));
 // The painted glyph for a sense; the names are the engine's keys.
 const SENSE_GLYPHS: Record<string, string> = {
   blindsight: "sense-blindsight",
@@ -81,6 +86,7 @@ const ALIGNMENT_GLOSSARY: GlossaryEntry[] = Object.values(ALIGNMENT_LABELS).map(
 }));
 
 export function AbilityScores({ draft, onChange }: { draft: MonsterDraft; onChange: (draft: MonsterDraft) => void }) {
+  const { locale } = useLocale();
   const stats = draft.stats;
   const set: Setter = (patch) => onChange({ ...draft, stats: { ...stats, ...patch } });
   const scores = stats.abilities ?? {};
@@ -108,7 +114,7 @@ export function AbilityScores({ draft, onChange }: { draft: MonsterDraft; onChan
   return (
     <div className="space-y-1">
       <SectionHead
-        title="Ability scores"
+        title={monsterUiText("Ability scores", locale)}
         glyph="ability-str"
         className="mb-1"
         aside={
@@ -117,10 +123,9 @@ export function AbilityScores({ draft, onChange }: { draft: MonsterDraft; onChan
             onClick={derive}
             disabled={!Object.keys(scores).length}
             className={cn(ui.btnSmall, addChip)}
-            title="Set the DEX modifier and the saving throws from these scores"
+            title={monsterUiText("Set the DEX modifier and the saving throws from these scores", locale)}
           >
-            Saves from scores
-          </button>
+            {monsterUiText("Saves from scores", locale)}</button>
         }
       />
       <div className="stagger-up grid grid-cols-2 gap-2 sm:grid-cols-3">
@@ -128,13 +133,13 @@ export function AbilityScores({ draft, onChange }: { draft: MonsterDraft; onChan
           <div key={ability} className="flex flex-col gap-1">
             <span className="flex items-center gap-1">
               <GameIcon icon={{ kind: "glyph", key: `ability-${ability}` }} size="size-5" />
-              <FieldLabel className="uppercase">{ability}</FieldLabel>
+              <FieldLabel className="uppercase">{locale === "en" ? ability : abilityLabel(ability, locale)}</FieldLabel>
               {typeof scores[ability] === "number" ? (
                 <span className="text-[11px] text-stone-400">{signed(abilityMod(scores[ability] as number))}</span>
               ) : null}
             </span>
             <OptionalStepper
-              label={`${ability.toUpperCase()} score`}
+              label={monsterUiFrame("abilityScore", { ability: locale === "en" ? ability.toUpperCase() : abilityLabel(ability, locale) }, locale)}
               min={1}
               max={50}
               fallback={10}
@@ -149,6 +154,7 @@ export function AbilityScores({ draft, onChange }: { draft: MonsterDraft; onChan
 }
 
 export function SkillsAndSenses({ draft, onChange }: { draft: MonsterDraft; onChange: (draft: MonsterDraft) => void }) {
+  const { locale } = useLocale();
   const stats = draft.stats;
   const set: Setter = (patch) => onChange({ ...draft, stats: { ...stats, ...patch } });
   const skills = stats.skills ?? {};
@@ -166,10 +172,10 @@ export function SkillsAndSenses({ draft, onChange }: { draft: MonsterDraft; onCh
   return (
     <div className="space-y-2">
       <div className="space-y-1">
-        <SectionHead title="Skills and senses" glyph="skill-perception" className="mb-1" />
+        <SectionHead title={monsterUiText("Skills and senses", locale)} glyph="skill-perception" className="mb-1" />
         <span className="flex items-center gap-1">
-          <FieldLabel>Skills (tap to add, type the bonus)</FieldLabel>
-          <OptionGlossary title="Skills" entries={SKILL_GLOSSARY} />
+          <FieldLabel>{monsterUiText("Skills (tap to add, type the bonus)", locale)}</FieldLabel>
+          <OptionGlossary title={monsterUiText("Skills", locale)} entries={SKILL_GLOSSARY} />
         </span>
         <div className={cn("stagger-pop", chipRow)}>
           {SKILL_NAMES.map((name) => {
@@ -192,12 +198,12 @@ export function SkillsAndSenses({ draft, onChange }: { draft: MonsterDraft; onCh
                   className={cn(ui.btnSmall, chip, on && chipOn)}
                 >
                   <GameIcon icon={{ kind: "glyph", key: `skill-${name.toLowerCase().replace(/\s+/g, "-")}` }} size="size-4" />
-                  {name}
+                  {locale === "en" ? name : skillLabel(name.replace(/ /g, "_"), locale)}
                 </button>
                 {on ? (
                   <NumberStepper
                     size="sm"
-                    label={`${name} bonus`}
+                    label={monsterUiFrame("skillBonus", { skill: locale === "en" ? name : skillLabel(name.replace(/ /g, "_"), locale) }, locale)}
                     min={-5}
                     max={20}
                     value={bonus}
@@ -214,14 +220,14 @@ export function SkillsAndSenses({ draft, onChange }: { draft: MonsterDraft; onCh
           <div key={name} className="flex flex-col gap-1">
             <span className="flex items-center gap-1">
               {SENSE_GLYPHS[name] ? <GameIcon icon={{ kind: "glyph", key: SENSE_GLYPHS[name] }} size="size-5" /> : null}
-              <FieldLabel className="capitalize">{name}</FieldLabel>
+              <FieldLabel className="capitalize">{monsterUiText(name, locale)}</FieldLabel>
             </span>
             <OptionalStepper
-              label={`${name} in feet`}
+              label={monsterUiFrame("senseFeet", { sense: monsterUiText(name, locale) }, locale)}
               min={0}
               max={600}
               step={5}
-              suffix="ft"
+              suffix={monsterUiText("ft", locale)}
               fallback={0}
               value={senses[name]}
               onChange={(next) => setSense(name, next)}
@@ -231,10 +237,10 @@ export function SkillsAndSenses({ draft, onChange }: { draft: MonsterDraft; onCh
         <div className="flex flex-col gap-1">
           <span className="flex items-center gap-1">
             <GameIcon icon={{ kind: "glyph", key: "sense-passive-perception" }} size="size-5" />
-            <FieldLabel>Passive Perception</FieldLabel>
+            <FieldLabel>{monsterUiText("Passive Perception", locale)}</FieldLabel>
           </span>
           <OptionalStepper
-            label="Passive Perception"
+            label={monsterUiText("Passive Perception", locale)}
             min={1}
             max={40}
             fallback={passiveDefault}
@@ -242,63 +248,63 @@ export function SkillsAndSenses({ draft, onChange }: { draft: MonsterDraft; onCh
             onChange={(next) => setSense("passivePerception", next)}
           />
           {typeof senses.passivePerception === "number" ? null : (
-            <span className="text-[11px] text-stone-500">Unset, so it reads as {passiveDefault}.</span>
+            <span className="text-[11px] text-stone-500">{monsterUiFrame("passiveDefault", { value: passiveDefault }, locale)}</span>
           )}
         </div>
       </div>
       <p className="text-[11px] text-stone-500">
-        A hiding character has to beat the passive Perception; the printed number wins, then the skill, then Wisdom.
-      </p>
+        {monsterUiText("A hiding character has to beat the passive Perception; the printed number wins, then the skill, then Wisdom.", locale)}</p>
     </div>
   );
 }
 
 export function LanguagesAndHabitat({ draft, onChange }: { draft: MonsterDraft; onChange: (draft: MonsterDraft) => void }) {
+  const { locale } = useLocale();
   const stats = draft.stats;
   const set: Setter = (patch) => onChange({ ...draft, stats: { ...stats, ...patch } });
   const environment = stats.environment ?? [];
   const spells = stats.spells ?? [];
   return (
     <div className="space-y-2">
-      <SectionHead title="Tongue, creed and habitat" glyph="system-lore" className="mb-1" />
+      <SectionHead title={monsterUiText("Tongue, creed and habitat", locale)} glyph="system-lore" className="mb-1" />
       <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-        <Field as="label" label="Languages">
+        <Field as="label" label={monsterUiText("Languages", locale)}>
           <div className="flex flex-wrap items-center gap-1.5">
             <input
-              value={stats.languages ?? ""}
+              value={monsterLanguagesView(stats.languages ?? "", locale)}
               maxLength={200}
-              placeholder="Common, Goblin"
-              onChange={(event) => set({ languages: event.target.value || undefined })}
+              placeholder={monsterUiText("Common, Goblin", locale)}
+              onChange={(event) => set({ languages: monsterLanguagesInput(event.target.value, locale) || undefined })}
               className={cn(ui.input, "min-w-32 flex-1")}
             />
             <AddFromList
-              prompt="Add"
-              options={LANGUAGES}
+              prompt={monsterUiText("Add", locale)}
+              options={LANGUAGES.map(value => ({ value, label: monsterLanguageName(value, locale) }))}
               onPick={(term) => set({ languages: appendTerm(stats.languages ?? "", term) })}
             />
           </div>
         </Field>
-        <Field label="Alignment" aside={<OptionGlossary title="Alignments" entries={ALIGNMENT_GLOSSARY} />}>
+        <Field label={monsterUiText("Alignment", locale)} aside={<OptionGlossary title={monsterUiText("Alignments", locale)} entries={ALIGNMENT_GLOSSARY} />}>
           <Select
-            label="Alignment"
+            label={monsterUiText("Alignment", locale)}
             value={stats.alignment ?? ""}
             onChange={(next) => set({ alignment: next || undefined })}
-            options={ALIGNMENT_OPTIONS}
+            options={alignmentOptions(locale)}
           />
         </Field>
       </div>
       {/* With a Spellcasting block the list is the block's own (SpellcastingFields). */}
       {stats.spellcasting ? null : (
       <div className="flex flex-col gap-1">
-        <FieldLabel>Spells known (by name, comma separated)</FieldLabel>
+        <FieldLabel>{monsterUiText("Spells known (by name, comma separated)", locale)}</FieldLabel>
         <input
           defaultValue={spells.join(", ")}
           key={spells.join("|")}
           maxLength={800}
-          aria-label="Spells known"
-          placeholder="Fire Bolt, Shield, Misty Step"
+          aria-label={monsterUiText("Spells known", locale)}
+          placeholder={monsterUiText("Fire Bolt, Shield, Misty Step", locale)}
           onBlur={(event) => {
-            const next = event.target.value.split(",").map((name) => name.trim()).filter(Boolean);
+            const next = event.target.value.split(/[,，]/).map((name) => monsterTypedSpell(name.trim(), locale)).filter(Boolean);
             if (next.join("|") !== spells.join("|")) {
               set({ spells: next.length ? next : undefined });
             }
@@ -307,8 +313,8 @@ export function LanguagesAndHabitat({ draft, onChange }: { draft: MonsterDraft; 
         />
         <ContentPick
           kind="spells"
-          label="Find a spell in the catalogue to add"
-          placeholder="Find a spell to add..."
+          label={monsterUiText("Find a spell in the catalogue to add", locale)}
+          placeholder={monsterUiText("Find a spell to add...", locale)}
           onPick={(entry) => {
             if (!spells.some((known) => known.toLowerCase() === entry.name.toLowerCase())) {
               set({ spells: [...spells, entry.name] });
@@ -316,12 +322,11 @@ export function LanguagesAndHabitat({ draft, onChange }: { draft: MonsterDraft; 
           }}
         />
         <span className="text-[11px] text-stone-500">
-          The DM running it sees the list. Put a round of casting into extra damage so the rating counts it.
-        </span>
+          {monsterUiText("The DM running it sees the list. Put a round of casting into extra damage so the rating counts it.", locale)}</span>
       </div>
       )}
       <div className="space-y-1">
-        <FieldLabel>Found in</FieldLabel>
+        <FieldLabel>{monsterUiText("Found in", locale)}</FieldLabel>
         <div className={cn("stagger-pop", chipRow)}>
           {ENVIRONMENTS.map((place) => {
             const on = environment.includes(place);
@@ -336,7 +341,7 @@ export function LanguagesAndHabitat({ draft, onChange }: { draft: MonsterDraft; 
                 }}
                 className={cn(ui.btnSmall, chip, on && chipOn)}
               >
-                {place}
+                {monsterUiText(place, locale)}
               </button>
             );
           })}
@@ -349,21 +354,22 @@ export function LanguagesAndHabitat({ draft, onChange }: { draft: MonsterDraft; 
 // The trait list with a section on every line. The line stored is the one
 // the DM prompt prints, prefix and all (src/lib/bestiary/block-sections.ts).
 export function SectionedTraitEditor({ draft, onChange }: { draft: MonsterDraft; onChange: (draft: MonsterDraft) => void }) {
+  const { locale } = useLocale();
   const traits = draft.stats.traits;
   const setTraits = (next: string[]) => onChange({ ...draft, stats: { ...draft.stats, traits: next } });
   return (
     <div className="flex flex-col gap-1.5">
-      <SectionHead title="Traits and actions" glyph="tab-notes" className="mb-0" />
+      <SectionHead title={monsterUiText("Traits and actions", locale)} glyph="tab-notes" className="mb-0" />
       {traits.map((trait, index) => {
         const { section, text } = sectionOfLine(trait);
         return (
           <div key={index} className="flex flex-wrap items-center gap-1.5 sm:flex-nowrap">
             <span className="w-40 shrink-0">
               <Select
-                label="Section"
+                label={monsterUiText("Section", locale)}
                 value={section}
                 onChange={(next) => setTraits(traits.map((row, at) => (at === index ? withSection(row, next) : row)))}
-                options={SECTION_OPTIONS}
+                options={sectionOptions(locale)}
               />
             </span>
             <input
@@ -372,14 +378,14 @@ export function SectionedTraitEditor({ draft, onChange }: { draft: MonsterDraft;
               onChange={(event) =>
                 setTraits(traits.map((row, at) => (at === index ? withSection(event.target.value, section) : row)))
               }
-              placeholder="Fire Breath (Recharge 5-6): DC 15 Dex save, 6d6 fire, half on a success"
+              placeholder={monsterUiText("Fire Breath (Recharge 5-6): DC 15 Dex save, 6d6 fire, half on a success", locale)}
               className={cn(ui.input, "min-w-40 flex-1")}
             />
             <button
               type="button"
               onClick={() => setTraits(traits.filter((_, at) => at !== index))}
               className={cn(ui.iconAction, rowIcon, "hover:text-red-300")}
-              aria-label="Remove trait"
+              aria-label={monsterUiText("Remove trait", locale)}
             >
               <Trash2 className="size-3.5" />
             </button>
@@ -395,12 +401,12 @@ export function SectionedTraitEditor({ draft, onChange }: { draft: MonsterDraft;
               onClick={() => setTraits([...traits, withSection("", section)])}
               className={cn(ui.btnSmall, addChip)}
             >
-              <Plus className="size-3" /> {SECTION_LABELS[section]}
+              <Plus className="size-3" /> {monsterUiText(SECTION_LABELS[section], locale)}
             </button>
           ))}
         </div>
       ) : (
-        <p className="text-[11px] text-stone-500">The block is full at {MAX_TRAITS} lines.</p>
+        <p className="text-[11px] text-stone-500">{monsterUiFrame("traitCap", { count: MAX_TRAITS }, locale)}</p>
       )}
     </div>
   );
