@@ -130,11 +130,13 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/BoardDelivery.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Reviewed delivery/impact SVG: numeric geometry only; miss caption already localized by caller BoardFx. Shared width estimate now allows full-width glyphs without changing the old Latin estimate or delivery mechanics."
     },
     {
       "path": "src/app/campaigns/[campaignId]/BoardFlipbook.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Reviewed decorative sheet-loader and frame SVG. No player-visible prose; asset IDs, dimensions and animation values stay native. Loading fallback remains graphical, not a translated protocol."
     },
     {
       "path": "src/app/campaigns/[campaignId]/BoardFx.tsx",
@@ -154,7 +156,7 @@
     {
       "path": "src/app/campaigns/[campaignId]/BoardMoveNotes.tsx",
       "state": "pending",
-      "review": "Native notice text/tone/timers/stack/IDs unchanged. Whole movement outcomes, zero damage, fall/reversion and quake compounds render with viewer uiLocale; attached unknown outcomes preserve the whole source. Opportunity notices distinguish raw damage roll from HP deduction and translate known damage/mitigation details. Ephemeral copied name/kind context captured at enqueue survives token removal/rename and UI locale switching; authored names, unknown types/notes and raw server body stay literal."
+      "review": "Native notice text/tone/timers/stack/IDs unchanged. Whole movement outcomes, zero damage, fall/reversion and quake compounds render with viewer uiLocale; attached unknown outcomes preserve the whole source. Opportunity notices distinguish raw damage roll from HP deduction and translate known damage/mitigation details. Ephemeral copied name/kind context captured at enqueue survives token removal/rename and UI locale switching; authored names, unknown types/notes and raw server body stay literal. Current table-flow batch: Reviewed board-toast state/queue and captured name roles; existing whole-native-frame adapter rerenders in viewer locale while source movement notes, authored diagnostics and role snapshots remain unchanged. General persisted backend logs remain a separate open gate. Remaining known material/native-output gaps above still prevent full-owner completion."
     },
     {
       "path": "src/app/campaigns/[campaignId]/BoardPanelParts.tsx",
@@ -168,11 +170,13 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/BoardStageLayers.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Reviewed stage spotlight/motes/range/reticles. Only text is caller-provided aim.labels; BattleMapPanel already prepares viewer-locale distance labels. Role/token IDs, glyphs and geometry stay native."
     },
     {
       "path": "src/app/campaigns/[campaignId]/BoardZoneLayer.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Reviewed live/ended zone SVG and labels. All 35 complete bundled source summary frames and native spell/effect names now project into viewer locale, including hover titles. Full-width names receive wider label backgrounds. Unknown paragraph overrides remain literal; server DTOs/cells/clocks/sections unchanged."
     },
     {
       "path": "src/app/campaigns/[campaignId]/BondsPanel.tsx",
@@ -202,7 +206,7 @@
     {
       "path": "src/app/campaigns/[campaignId]/CharacterSheetDialog.tsx",
       "state": "pending",
-      "review": "Owned identity/vitals/derived/load/wild-shape/slot/resource/equipment/owed-choice/notes/export chrome and native usage refusals localized; all 415 static registered resource explanations and names reviewed (including 140 authored subclass/lineage counters and six native themes). Dynamic free-cast resources, magic-item names, feature/feat material and Chinese PDF output keep the full dialog pending."
+      "review": "Owned identity/vitals/derived/load/wild-shape/slot/resource/equipment/owed-choice/notes/export chrome and native usage refusals localized; all 415 static registered resource explanations and names reviewed (including 140 authored subclass/lineage counters and six native themes). Dynamic free-cast resources, magic-item names, feature/feat material and Chinese PDF output keep the full dialog pending. Current table-flow batch: Reviewed sheet dialog compositions and usage refusal/time state. Identity, derived explanations, vitals, condition details, slots, resource/gear help and owed choices use existing adapters; usage sends native IDs/counters, campaign action locale passes to feature choices. Authored names/backstory/notes stay literal; child material coverage remains independent. Remaining known material/native-output gaps above still prevent full-owner completion."
     },
     {
       "path": "src/app/campaigns/[campaignId]/CharacterVoices.tsx",
@@ -236,7 +240,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/DiceOverlay.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Reviewed decorative tray: no text/accessibility captions, only native dice notation, asset/config IDs, queue and lifecycle. Durable localized roll explanation belongs to RollCard; tray behavior unchanged."
     },
     {
       "path": "src/app/campaigns/[campaignId]/DiceSourcesDialog.tsx",
@@ -421,22 +426,22 @@
     {
       "path": "src/app/campaigns/[campaignId]/Hand.tsx",
       "state": "pending",
-      "review": "Owned labels, campaign-locale sentences and common network/casting/attack/bonus/pool/material/ritual refusals reviewed. Native inventory examples stay verbatim for copyable engine matching; unknown authored restrictions retained. Verified visible enemy/current-actor names and anonymous concealed-actor labels reviewed; filtered order positions are not used as full-order indexes. Proper/ambiguous names retain their source. Remaining dynamic frames keep this pending."
+      "review": "Owned labels, campaign-locale sentences and common network/casting/attack/bonus/pool/material/ritual refusals reviewed. Native inventory examples stay verbatim for copyable engine matching; unknown authored restrictions retained. Verified visible enemy/current-actor names and anonymous concealed-actor labels reviewed; filtered order positions are not used as full-order indexes. Proper/ambiguous names retain their source. Remaining dynamic frames keep this pending. Current table-flow batch: Reviewed complete hand flow: viewer-locale labels/material/refusals, campaign-locale action prose, native intents and source-preserved notices. Board-generated sentences resolve registered locale display names to unique native IDs, including a composer surviving a UI switch; ambiguous names do not auto-pick. Child material owners remain independently tracked. Remaining known material/native-output gaps above still prevent full-owner completion."
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandAimBar.tsx",
       "state": "pending",
-      "review": "Owned aim/area/target/send/rider controls, previews, health notes, attack option/refusal rules and core spell/technique selectors reviewed; callbacks preserve native IDs/values including Telekinetic Adept thrust/leap. All 103 active technique and 23 maneuver names localize. Remaining dynamic and material/ritual refusal text stays pending."
+      "review": "Owned aim/area/target/send/rider controls, previews, health notes, attack option/refusal rules and core spell/technique selectors reviewed; callbacks preserve native IDs/values including Telekinetic Adept thrust/leap. All 103 active technique and 23 maneuver names localize. Remaining dynamic and material/ritual refusal text stays pending. Current table-flow batch: Reviewed native option/choice/area/trigger/rider/target compositions and confirm/edit callbacks. Existing adapters localize display only, option values and target IDs remain native, sentence follows campaign locale, IME guard preserves trigger composition. Remaining known material/native-output gaps above still prevent full-owner completion."
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandCardFace.tsx",
       "state": "pending",
-      "review": "Owned labels, native facts/previews/rules, 113 spell notes, 103 active technique and 23 maneuver names, 95 material descriptions and common casting/attack/bonus/pool/material/ritual refusals reviewed. Form rule text and all 22 built-in form attacks localize using verified provenance, shared with campaign action sentences; authored weapons/forms and stale metadata retain their names. Current-turn refusals use public identity context. Remaining dynamic names keep this pending. Native parameters/examples remain untouched."
+      "review": "Owned labels, native facts/previews/rules, 113 spell notes, 103 active technique and 23 maneuver names, 95 material descriptions and common casting/attack/bonus/pool/material/ritual refusals reviewed. Form rule text and all 22 built-in form attacks localize using verified provenance, shared with campaign action sentences; authored weapons/forms and stale metadata retain their names. Current-turn refusals use public identity context. Remaining dynamic names keep this pending. Native parameters/examples remain untouched. Current table-flow batch: Reviewed fan, played card, hover and accessible labels. Name/type/cost/material and preview facts project through existing adapters; native card identity, callbacks and preview numbers are preserved. Remaining known material/native-output gaps above still prevent full-owner completion."
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandMoreSheet.tsx",
       "state": "pending",
-      "review": "Owned labels, previews/rules/spell notes, active technique/maneuver names and common casting/attack/bonus/pool/material/ritual refusals reviewed. Canonical inventory examples and authored content stay literal. Built-in form attacks and verified current-actor waiting notes/refusals reviewed with canonical attack parameters preserved. Remaining dynamic labels keep this pending."
+      "review": "Owned labels, previews/rules/spell notes, active technique/maneuver names and common casting/attack/bonus/pool/material/ritual refusals reviewed. Canonical inventory examples and authored content stay literal. Built-in form attacks and verified current-actor waiting notes/refusals reviewed with canonical attack parameters preserved. Remaining dynamic labels keep this pending. Current table-flow batch: Reviewed overflow-card workflow: localized material, costs, target previews and whole native waiting/refusal frames; selection callbacks retain source cards. No independent snapshot cycle for unchanged captions. Remaining known material/native-output gaps above still prevent full-owner completion."
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandPips.tsx",
@@ -446,7 +451,7 @@
     {
       "path": "src/app/campaigns/[campaignId]/HandReactPrompt.tsx",
       "state": "pending",
-      "review": "Owned reaction strip, current-record prompts, active technique names, counters/rules and common casting/material refusals reviewed; callbacks and canonical examples preserved. Remaining current-attacker/action display names keep this pending."
+      "review": "Owned reaction strip, current-record prompts, active technique names, counters/rules and common casting/material refusals reviewed; callbacks and canonical examples preserved. Remaining current-attacker/action display names keep this pending. Current table-flow batch: Reviewed reaction chips and typed last-hit context passed by Hand. Prompt names use explicit viewer/party/enemy roles; translated labels/material are separate from selected source card and reaction intent. Remaining known material/native-output gaps above still prevent full-owner completion."
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandSpells.tsx",
@@ -466,7 +471,7 @@
     {
       "path": "src/app/campaigns/[campaignId]/ItemProposalBar.tsx",
       "state": "pending",
-      "review": "Owned approval/withdrawal/waiting controls and eight native summary kinds localized using source-bound public metadata. Trade summaries/refusals bind to native offers; six frozen English renders and canonical callbacks reviewed. Authored reasons/names and unknown, stale or truncated source frames retain original text. Full magic-item and complex-condition names remain pending."
+      "review": "Owned approval/withdrawal/waiting controls and eight native summary kinds localized using source-bound public metadata. Trade summaries/refusals bind to native offers; six frozen English renders and canonical callbacks reviewed. Authored reasons/names and unknown, stale or truncated source frames retain original text. Full magic-item and complex-condition names remain pending. Current table-flow batch: Reviewed approve/decline/withdraw and passive proposal display. Typed native offer/summary/error adapters already project complete owned frames. Character names and authored reason stay literal; requests carry action/proposal IDs unchanged. Remaining known material/native-output gaps above still prevent full-owner completion."
     },
     {
       "path": "src/app/campaigns/[campaignId]/LabelSheet.tsx",
@@ -580,7 +585,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/MapToolbox.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Reviewed hotkey hook: no player prose; localized visible controls are in covered mapToolState callers. IME and editable-target guards already present; mode/brush/key identifiers remain native."
     },
     {
       "path": "src/app/campaigns/[campaignId]/MapTools.tsx",
@@ -625,7 +631,7 @@
     {
       "path": "src/app/campaigns/[campaignId]/Moments.tsx",
       "state": "pending",
-      "review": "Owned upgrade/rest/loot/travel text reviewed with original timers, queueing, audit inputs, icon keys and proper/authored names unchanged. Chinese long-rest label confirms completion rather than falsely asserting complete recovery. Registered equipment display names are localized; full magic-item names remain pending. Existing in-fiction audit reasons stay original."
+      "review": "Owned upgrade/rest/loot/travel text reviewed with original timers, queueing, audit inputs, icon keys and proper/authored names unchanged. Chinese long-rest label confirms completion rather than falsely asserting complete recovery. Registered equipment display names are localized; full magic-item names remain pending. Existing in-fiction audit reasons stay original. Current table-flow batch: Reviewed level/rest/loot/travel composition: existing translated captions and typed numerical audit facts; known equipment display labels. Character/pet/place names, generated/authored reason text and audit history stay literal. Timers/gain calculations are unchanged. Remaining known material/native-output gaps above still prevent full-owner completion."
     },
     {
       "path": "src/app/campaigns/[campaignId]/MonsterFields.tsx",
@@ -699,8 +705,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/PartyPanel.tsx",
-      "state": "pending",
-      "review": "Owned party chrome, native identity and condition notes, 34 core resource names, typed visible enemy references and controls localized. Additional native/subclass resource names and related dialog flows still need review."
+      "state": "covered",
+      "review": "Reviewed party roster, death/save/shape/condition/resource stats, torch time and character/library/companion controls. Display uses existing character/reference/condition/resource adapters; authored pet names/notes, native stats, IDs and asset lookups stay literal. Child material/help owners remain independently tracked."
     },
     {
       "path": "src/app/campaigns/[campaignId]/PendingRollCard.tsx",
@@ -750,7 +756,7 @@
     {
       "path": "src/app/campaigns/[campaignId]/RollCard.tsx",
       "state": "pending",
-      "review": "Owned labels and structured attack/area/death/stable/check/save/special/initiative/ambush/social/shop captions localize with frozen English parity and original rule inputs. Physical submissions preserve metadata; custom proper/NPC/Workshop names and visibility filters remain intact. Still pending: native feature/reaction/attack suffixes, authored paired-damage frames, level-up HP-die captions and missing native material names. Unknown authored text and legacy rows retain original detail."
+      "review": "Owned labels and structured attack/area/death/stable/check/save/special/initiative/ambush/social/shop captions localize with frozen English parity and original rule inputs. Physical submissions preserve metadata; custom proper/NPC/Workshop names and visibility filters remain intact. Still pending: native feature/reaction/attack suffixes, authored paired-damage frames, level-up HP-die captions and missing native material names. Unknown authored text and legacy rows retain original detail. Current table-flow batch: Reviewed durable and hidden roll display: existing typed presentation/legacy-safe label adapter, localized verdict/DC/critical terms; expressions, faces, totals and hidden-roll semantics remain unchanged. Custom detail and proper character names remain literal. Remaining known material/native-output gaps above still prevent full-owner completion."
     },
     {
       "path": "src/app/campaigns/[campaignId]/RulesPanel.tsx",
@@ -926,7 +932,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/handTargets.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Reviewed structured enemy/party target producer with canonical IDs/names, native health/cover/conditions and HP note. HandAimBar projects complete known facts through handTargetNote; intent targets are not translated in this producer."
     },
     {
       "path": "src/app/campaigns/[campaignId]/headerButton.ts",
@@ -1014,7 +1021,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/useHandChoices.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Reviewed choice/area/pending hook and typed board events: IDs/options/picks/triggers stay native. Pending source sentence now has a reviewed whole-frame translation at the display boundary, including stock resource label; unknown names preserved."
     },
     {
       "path": "src/app/campaigns/[campaignId]/useLingeringEncounter.ts",
@@ -1953,8 +1961,8 @@
     },
     {
       "path": "src/components/sheet/SheetCounters.tsx",
-      "state": "pending",
-      "review": "Own slot/resource control and counter copy localized; caller-provided native resource names/help, unlimited-use guidance and disabled-action notes remain pending."
+      "state": "covered",
+      "review": "Reviewed slot/resource counters: caller-localized label/help, native numerical counterView and whole native help adapter, translated spend/correction tooltips. Buttons call existing native callbacks; passive/dead/busy/permission behavior unchanged. Content help descendants remain independently tracked."
     },
     {
       "path": "src/components/sheet/SheetGearRow.tsx",

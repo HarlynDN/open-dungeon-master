@@ -3,6 +3,7 @@ import { defineMessages } from "./catalog.ts";
 // Source frames from hand-play/core/react/class and can-act/action-budget.
 // Numeric placeholders stay numeric; names are presentation parameters only.
 export const HAND_MATERIAL_MESSAGES = defineMessages({
+  "handMaterial.error.pending": { en: "Sent. Waiting for the DM to resolve {feature}.", "zh-CN": "已发送，正在等待 DM 处理{feature}。" },
   "handMaterial.join.or": { en: " or ", "zh-CN": "或" },
   "handMaterial.join.and": { en: " and ", "zh-CN": "、" },
   "handMaterial.join.facts": { en: ", ", "zh-CN": "，" },

@@ -1,17 +1,30 @@
 import { monsterCardName } from "./monster-hand-presentations.ts";
 import { catalogFor, createTranslator, type MessageKey } from "./translator.ts";
-import type { AppLocale } from "./locales.ts";
+import { APP_LOCALES, type AppLocale } from "./locales.ts";
 import { referenceDisplayName } from "./references.ts";
 import { sessionSourceText } from "./session-presentations.ts";
 import { conditionLabel } from "./condition-presentations.ts";
 import { combatTermLabel } from "./combat-ui-presentations.ts";
 import { sheetChoiceOption } from "./sheet-dialog-presentations.ts";
-import { chosenValue, composeSentence, costLabel, type HandAim, type HandChoices } from "../battlemap/hand-play.ts";
+import { chosenValue, composeSentence, costLabel, targetFromComposedText, type HandAim, type HandChoices } from "../battlemap/hand-play.ts";
 import { describePick, hasPick, type HandArea, type AreaPick } from "../battlemap/hand-area.ts";
 import type { HandAttackOptionId, HandCard, HandCost } from "../battlemap/hand-core.ts";
 import type { PublicEncounter } from "../db/encounter-view.ts";
 
 export type HandTurnContext = Pick<PublicEncounter, "acting" | "order" | "enemies" | "orderReady">;
+
+// Board-created sentences are display text; resolve them back to a unique
+// native target ID. Include registered locales so switching UI language while
+// a sentence is in the composer does not lose the pick. Never rewrite input.
+export function handBoardTargetId(text: string, targets: readonly HandAim[]): string | null {
+  const legacy = targetFromComposedText(text, targets.map(target => target.name));
+  const input = text.trim();
+  const matches = targets.filter(target => (legacy !== null && target.name.trim().toLowerCase() === legacy.trim().toLowerCase()) || APP_LOCALES.some(locale => {
+    const t = createTranslator(locale), name = handAimName(target, locale);
+    return input === t("boardUi.sent.attack", { name }) || input === t("boardUi.sent.cast", { name });
+  }));
+  return matches.length === 1 ? matches[0].id : null;
+}
 
 // The public order is filtered: turnIndex indexes the server's full order,
 // not this list. Require an unambiguous visible identity instead.

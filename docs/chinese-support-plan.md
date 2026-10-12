@@ -32,7 +32,7 @@ flow remains incomplete; the review-repair checkpoint is a separate scoped task.
 | Locale foundation | Registry, persistence, browser fallback, typed complete catalogs, model locale policy, classified token proxy, chapter budget, CJK retrieval, IME protection | Real prompt-usage calibration; keep legacy campaign/history regressions |
 | DM safety | Per-event engine conclusions with English/Chinese renderers; AI prose separated; one text-only correction and safe fallback; shared localized enemy names and held-resource names/IDs; scoped resource aliases and ambiguity retries; real Codex combat/resource acceptance | Untracked feature/reaction options and broader spell/condition/pack coverage; conservative regex coverage is not full language understanding |
 | Embeddings | Original English deployment default retained; explicit multilingual opt-in; fixed bilingual calibration/holdout and hard-negative policy | Broader pack quality; opt-in affects English campaigns and rebuilds indexes |
-| UI | **367/440** covered files, **0** pending literal sites, **15361** message keys; scoped AST gate; earlier play/session surfaces plus hand labels/targets/area selection, campaign-locale action sentences, native previews, basic/reaction rules, common casting refusals, spell selectors, all 113 owned mechanic notes, 103 native technique and 23 maneuver labels, attack/bonus-route and material/ritual refusals, built-in form attack names and verified current-actor labels, correction/multi-picker chrome, native downtime facts and inventory/vitals approval/player-trade controls, guided progression chrome, rest/loot/travel moments and all native option summaries, owned generic feature/feat summaries, feat choice controls, campaign/map entry notices the complete app help walkthrough story/chronicle/arc controls, NPC roster review, campaign model controls market/shelf/trade, party-lead, quest-log/faction controls plus facts, pinned memories, context-trace presentation and passage edit/reroll/action controls and character/companion entry and private-chat/media presentation and audit/timeline controls and dice tray/source controls and board movement/camera/order/area/target/drawing and DM placement/measurement controls | 73 zero-literal owners still require dynamic composition/source-ownership review; locale-sensitive selection thresholds and backend/native messages remain audit items; file fraction is not overall completion or an effort estimate |
+| UI | **377/440** covered files, **0** pending literal sites, **15400** message keys; scoped AST gate; earlier play/session surfaces plus hand labels/targets/area selection, campaign-locale action sentences, native previews, basic/reaction rules, common casting refusals, spell selectors, all 113 owned mechanic notes, 103 native technique and 23 maneuver labels, attack/bonus-route and material/ritual refusals, built-in form attack names and verified current-actor labels, correction/multi-picker chrome, native downtime facts and inventory/vitals approval/player-trade controls, guided progression chrome, rest/loot/travel moments and all native option summaries, owned generic feature/feat summaries, feat choice controls, campaign/map entry notices the complete app help walkthrough story/chronicle/arc controls, NPC roster review, campaign model controls market/shelf/trade, party-lead, quest-log/faction controls plus facts, pinned memories, context-trace presentation and passage edit/reroll/action controls and character/companion entry and private-chat/media presentation and audit/timeline controls and dice tray/source controls and board movement/camera/order/area/target/drawing and DM placement/measurement controls | 63 zero-literal owners still require dynamic composition/source-ownership review; locale-sensitive selection thresholds and backend/native messages remain audit items; file fraction is not overall completion or an effort estimate |
 | Character creation/material | Identity, ancestry, class introductions, ability allocation, gear, spell book/preparation and finish preview; 517 spell and 228 equipment names; 257-entry contextual terminology policy and lint gate; 415/415 static registered resource names and guidance shared with DM references; 135/135 bundled option names/descriptions plus all 20 nonempty requirement frames; 146 shared/class-specific feature summaries, 54 native feat summaries and owned feat choice controls; four native pregen card summaries and backstories; original-source review records | Remaining specific/themed feature and magic-item material; dynamic free-cast resources and user-authored/pack text remain outside the static resource review |
 | Player system logs | Structured rule diagnostics, engine-generated combat conclusions and structured audit/timeline presentation retain English protocol semantics with localized display | Typed party-item/coin/banked-XP logs now persist campaign-locale text and original facts; other player-visible log templates remain pending; model-facing English tool results remain independent |
 | Resource delivery | UI/content/help scopes; selected-locale help loads independently on open, with retry; character/campaign boundaries; generated resources checked by lint; production Turbopack build and anonymous bilingual browser switch/reload succeed; home/character/campaign SSR and initial-script payloads measured | Hydrated/lazy network totals, authenticated campaign switching and active-play browser acceptance; route-level JS payload remains large |
@@ -107,6 +107,40 @@ Message (传讯术); those are different contexts. Current default Turbopack bui
 attempts were blocked at its internal port binding by the execution environment,
 including the escalated attempt; this batch does not claim a passing production
 build. Keep that gate for the next phase boundary rather than retrying per batch.
+
+The table-flow checkpoint fixes the concrete Chinese board-to-hand integration:
+the old target parser only recognized English composer sentences. The hand now
+resolves board-generated sentences in every registered locale to a unique native
+target ID, including a sentence retained across a UI language switch. Legacy
+English matching stays available; ambiguous display/native names do not auto-pick.
+Confirm still sends canonical target/weapon fields and campaign-locale action
+text. The native pending-action refusal now displays a translated complete frame.
+
+The live board now displays all 35 bundled spell-zone summaries and known spell
+or derived effect names in viewer locale, including hover titles. Projection
+requires the complete original label/summary; unknown replacement paragraphs stay
+literal. SVG labels reserve an em for full-width script glyphs, while keeping the
+old Latin width estimate. Cells, sections, clocks, DTOs, effects and mechanics are
+unchanged. 39 locale-complete keys were added.
+
+Twenty owners were reviewed as one workflow, closing ten previously pending
+owners (zone/delivery/flipbook/stage graphics, dice overlay, map hotkeys, target
+and choice producers, party roster and sheet counters). The hand/sheet/roll,
+proposal/moment and movement-notice parents remain pending where their earlier
+material or native-output gaps persist; reviewing their chrome does not close
+those gaps. UI is now 377/440, zero pending literals and 15400 message keys.
+Remaining owned feature/magic-item/native-roll content must still be delivered.
+
+Validation: types, catalog/coverage/terminology and changed-file lint passed.
+One grouped check (`scripts/test-table-localization.mjs`, with output in
+`/tmp/odm-table-workflow-test.log`) covers attack/cast picks,
+locale-switch and ambiguity cases, real aim-bar callbacks and canonical intents,
+pending-action text, all 35 summary source bindings, real bilingual zone SVG and
+unknown-label fallback without changing source DTOs. Changed-file lint caught a
+React Compiler dependency omission in the hand callback; its stable setter was
+added and that lint check rerun. No real model/audio/whole-build/name acceptance
+was repeated. This checkpoint is display/mock-interaction evidence, not final
+browser or complete journey acceptance.
 
 The opportunity-log checkpoint extends the existing typed system events to
 both enemy and character reactions triggered by movement. New messages persist

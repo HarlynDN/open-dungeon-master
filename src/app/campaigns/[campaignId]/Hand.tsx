@@ -2,7 +2,7 @@
 
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import type { AppLocale } from "@/lib/i18n/locales";
-import { handSentence, handCardName, handCurrentActorName } from "@/lib/i18n/hand-presentations";
+import { handSentence, handCardName, handCurrentActorName, handBoardTargetId } from "@/lib/i18n/hand-presentations";
 import { handRefusalText, HAND_SEND_FAILURE, HAND_NETWORK_FAILURE } from "@/lib/i18n/hand-material-presentations";
 import { ChevronDown, CircleHelp } from "lucide-react";
 import { isComposingInput } from "@/lib/input-composition";
@@ -24,7 +24,6 @@ import {
   HAND_TARGET_EVENT,
   intentBody,
   previewRows,
-  targetFromComposedText,
   type HandTargetDetail,
 } from "@/lib/battlemap/hand-play";
 import { reactionAim, reactionCards, withReactions } from "@/lib/battlemap/hand-react";
@@ -180,7 +179,7 @@ function HandInner({
   // A tap on the board while a card is raised arrives as the HUD's own
   // sentence in the message box; it is read here rather than stored, so the
   // board needs to know nothing about the Hand.
-  const boardName = picked?.target === "enemy" ? targetFromComposedText(input, enemyTargets.map((target) => target.name)) : null;
+  const boardTargetId = picked?.target === "enemy" ? handBoardTargetId(input, enemyTargets) : null;
   // A reaction answers one recorded attack: its target is fixed by it (the
   // attacker for Hellish Rebuke, the ally for Cutting Words), not picked.
   const fixed = picked?.intent.card === "reaction" && sheet ? reactionAim(picked, hits ?? [], sheet.id, sheets) : null;
@@ -197,7 +196,7 @@ function HandInner({
     picked?.target === "self"
       ? self
       : fixedChip ??
-        (boardName ? offered.find((target) => target.name === boardName) : null) ??
+        (boardTargetId ? offered.find((target) => target.id === boardTargetId) : null) ??
         offered.find((target) => target.id === targetId) ??
         null;
   // What the hover previews are worked against until something is aimed at.
@@ -251,7 +250,7 @@ function HandInner({
       resetChoices();
       setPickedId((current) => (current === card.id ? null : card.id));
     },
-    [say, resetChoices],
+    [say, resetChoices, setMoreOpen],
   );
 
   const toComposer = useCallback(
@@ -311,7 +310,7 @@ function HandInner({
       setPlayed((current) => ({ card: picked, seq: (current?.seq ?? 0) + 1 }));
       setRiderIds([]);
       // The board's sentence has done its work as the pick; it is not sent twice.
-      if (boardName) setInput("");
+      if (boardTargetId) setInput("");
       window.setTimeout(clearAim, LEFT_MS);
       // A second card played inside the first one's beat takes the stage over.
       window.clearTimeout(playedTimer.current);
@@ -321,7 +320,7 @@ function HandInner({
     } finally {
       setSending(false);
     }
-  }, [picked, sheet, sending, sentence, campaignId, aim, attachedRiders, choices, signature, setPending, boardName, setInput, clearAim, say, toComposer]);
+  }, [picked, sheet, sending, sentence, campaignId, aim, attachedRiders, choices, signature, setPending, boardTargetId, setInput, clearAim, say, toComposer]);
 
   if (!sheet || !turn) return null;
 
@@ -486,7 +485,7 @@ function HandInner({
                 setTargetId(target.id);
                 // A chip outranks a tap made on the board earlier, whose
                 // sentence is still in the box; it goes so the chip can win.
-                if (boardName) setInput("");
+                if (boardTargetId) setInput("");
               }}
               riders={attachedRiders}
               onDropRider={(rider) => setRiderIds((current) => current.filter((id) => id !== rider.id))}

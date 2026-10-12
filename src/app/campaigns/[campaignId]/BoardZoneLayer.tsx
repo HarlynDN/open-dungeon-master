@@ -1,6 +1,8 @@
 "use client";
 
 import { memo, useEffect, useMemo, useRef, useState } from "react";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { boardZoneLabel, boardZoneSpellName, boardTextWidth } from "@/lib/i18n/board-zone-presentations";
 import { TILE } from "@/app/campaigns/[campaignId]/battleMapCells";
 import type { ViewZone } from "@/lib/dm/zone-view";
 
@@ -98,15 +100,16 @@ function useLeaving(zones: ViewZone[]): Array<ViewZone & { leaving?: boolean }> 
 // so a click on it is still a click on that square (BattleMapGrid's
 // delegated handler reads data-tile-x/y).
 function ZoneTag({ zone, width, color }: { zone: ViewZone; width: number; color: string }) {
+  const { locale } = useLocale();
   const at = Math.min(...zone.cells);
   const x = (at % width) * TILE;
   const y = Math.floor(at / width) * TILE;
   const size = TILE * 0.26;
-  const text = zone.spell;
-  const tagWidth = Math.min(TILE * 4, text.length * size * 0.56 + size);
+  const text = boardZoneSpellName(zone.spell, locale);
+  const tagWidth = Math.min(TILE * 4, boardTextWidth(text, size, 0.56, size));
   return (
     <g className="zone-section" pointerEvents="auto" data-tile-x={at % width} data-tile-y={Math.floor(at / width)}>
-      <title>{zone.label}</title>
+      <title>{boardZoneLabel(zone, locale)}</title>
       <rect
         x={x + 2}
         y={y + 2}
@@ -138,6 +141,7 @@ function ZoneTag({ zone, width, color }: { zone: ViewZone; width: number; color:
 }
 
 export const ZoneLayer = memo(function ZoneLayer({ zones, width }: { zones: ViewZone[] | undefined; width: number }) {
+  const { locale } = useLocale();
   const shown = useLeaving(zones ?? []);
   if (!shown.length) {
     return null;
@@ -163,7 +167,7 @@ export const ZoneLayer = memo(function ZoneLayer({ zones, width }: { zones: View
             data-look={zone.look}
             style={{ color, transformOrigin: `${mid.x}px ${mid.y}px` }}
           >
-            <title>{zone.label}</title>
+            <title>{boardZoneLabel(zone, locale)}</title>
             {zone.look === "cloud" ? (
               <path d={shape} fill={color} fillOpacity={0.55} filter="url(#zone-soft)" className="zone-drift" />
             ) : zone.look === "dark" ? (

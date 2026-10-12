@@ -1,6 +1,7 @@
 "use client";
 
 import { TILE } from "@/app/campaigns/[campaignId]/battleMapCells";
+import { boardTextWidth } from "@/lib/i18n/board-zone-presentations";
 import { boltPoints, ringSpecs, type Presentation } from "@/lib/battlemap/delivery";
 import type { XY } from "@/lib/battlemap/types";
 
@@ -181,7 +182,7 @@ export function deliveryImpact({ plan, to }: { plan: Presentation; to: Point }):
 // The miss chip: the word pops on the target at a tilt and stays for the
 // effect's hold, so a whiff reads as clearly as a hit.
 export function MissChip({ at, text, delay }: { at: Point; text: string; delay: number }) {
-  const width = text.length * 5.4 + 10;
+  const width = boardTextWidth(text, 8, 5.4 / 8, 10);
   return (
     <g className="board-miss" style={late(delay)}>
       <rect
