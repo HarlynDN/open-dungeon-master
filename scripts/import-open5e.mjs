@@ -8,6 +8,7 @@ import Database from "better-sqlite3-multiple-ciphers";
 import { mkdirSync, existsSync, readFileSync, writeFileSync, rmSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { authoredArchetypeDescription } from "../src/lib/content/authored-archetype.ts";
 import {
   normalizeArmor,
   normalizeBackground,
@@ -238,22 +239,7 @@ function insertAuthoredContent(db) {
   const archetypeRows = [];
   for (const [classId, entries] of Object.entries(subclasses)) {
     for (const entry of entries) {
-      const levelText = Object.entries(entry.levels)
-        .sort((a, b) => Number(a[0]) - Number(b[0]))
-        .map(
-          ([level, features]) =>
-            `**Level ${level}.** ` +
-            features.map((feature) => `*${feature.n}.* ${feature.d}`).join(" "),
-        )
-        .join("\n\n");
-      const spellText = entry.spells
-        ? "\n\n**Always-prepared spells.** " +
-          Object.entries(entry.spells)
-            .sort((a, b) => Number(a[0]) - Number(b[0]))
-            .map(([level, spells]) => `Level ${level}: ${spells.join(", ")}.`)
-            .join(" ")
-        : "";
-      const desc = `${entry.desc}\n\n${levelText}${spellText}`;
+      const desc = authoredArchetypeDescription(entry);
       archetypeRows.push({
         slug: `${classId}-${slugify(entry.name)}`,
         name: entry.name,

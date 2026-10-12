@@ -3,6 +3,22 @@ import { defineMessages } from "./catalog.ts";
 // Original Chinese translations of the bundled brief class/subclass introductions.
 // Mechanism/model source data and content-pack prose remain unchanged.
 export const CALLING_MATERIAL_MESSAGES = /*#__PURE__*/ defineMessages({
+  "callingMaterial.archetype.level": {
+    "en": "**Level {level}.** {features}",
+    "zh-CN": "**{level} 级。** {features}"
+  },
+  "callingMaterial.archetype.feature": {
+    "en": "*{name}.* {description}",
+    "zh-CN": "*{name}。* {description}"
+  },
+  "callingMaterial.archetype.spells": {
+    "en": "**Always-prepared spells.** {levels}",
+    "zh-CN": "**始终准备的法术。** {levels}"
+  },
+  "callingMaterial.archetype.spellLevel": {
+    "en": "Level {level}: {spells}.",
+    "zh-CN": "{level} 级：{spells}。"
+  },
   "callingMaterial.class.artificer.blurb": {
     "en": "An inventor who casts through gadgets and infuses gear with magic, part tinkerer, part battlefield support.",
     "zh-CN": "通过奇巧装置施法、为装备注入魔法的发明家，兼具工匠本领与战场支援能力。"

@@ -8,6 +8,9 @@ import {NATIVE_FEATURE_MATERIAL, NATIVE_FEAT_MATERIAL} from '../src/lib/i18n/fea
 import {SUBCLASS_FEATURE_MATERIAL} from '../src/lib/i18n/subclass-feature-metadata.ts';
 const {nativeFeatureName, nativeFeatureHelp, nativeFeatHelp, nativeFeatPrerequisite} = await import('../src/lib/i18n/feature-material-presentations.ts');
 import {normalizeRulesText} from '../src/lib/help/rules-text.ts';
+const {authoredArchetypeDescription} = await import('../src/lib/content/authored-archetype.ts');
+const {nativeArchetypeHelp, subclassHelpText} = await import('../src/lib/i18n/calling-material-presentations.ts');
+const {referenceDisplayName} = await import('../src/lib/i18n/references.ts');
 const {describeFeature} = await import('../src/lib/help/index.ts');
 const {authoredFeatDesc, featAbilityIncrease} = await import('../src/lib/srd/feat-effects.ts');
 const {featGrantSpec} = await import('../src/lib/srd/feat-grant-text.ts');
@@ -33,6 +36,44 @@ for (const row of SUBCLASS_FEATURE_MATERIAL) {
   assert.equal(nativeFeatureHelp(row.classId, row.name, feature.d + ' Authored extension.', 'zh-CN'), feature.d + ' Authored extension.');
   assert.equal(nativeFeatureHelp('authored-class', row.name, feature.d, 'zh-CN'), feature.d);
 }
+
+// Full authored content, not just the already-reviewed one-line fallback.
+let archetypeCount = 0;
+for (const [classId, entries] of Object.entries(authoredSubclasses)) for (const entry of entries) {
+  archetypeCount++;
+  const before = JSON.stringify(entry);
+  const oldLevels = Object.entries(entry.levels).sort((a,b)=>+a[0]-b[0])
+    .map(([level, features])=>`**Level ${level}.** `+features.map(f=>`*${f.n}.* ${f.d}`).join(' ')).join('\n\n');
+  const oldSpells = entry.spells ? '\n\n**Always-prepared spells.** '+Object.entries(entry.spells)
+    .sort((a,b)=>+a[0]-b[0]).map(([level,names])=>`Level ${level}: ${names.join(', ')}.`).join(' ') : '';
+  const source = authoredArchetypeDescription(entry);
+  assert.equal(source, `${entry.desc}\n\n${oldLevels}${oldSpells}`); // exact pre-edit importer contract
+  const provenance = {documentSlug:'odm-expanded',source:'open5e'};
+  assert.equal(subclassHelpText(classId,entry.name,'en',source,provenance),source);
+  const chinese = subclassHelpText(classId,entry.name,'zh-CN',source,provenance);
+  assert.notEqual(chinese,source);
+  assert.equal(nativeArchetypeHelp(classId,entry.name,normalizeRulesText(source),'zh-CN',provenance),chinese);
+  for (const [level,features] of Object.entries(entry.levels)) {
+    assert(chinese.includes(`**${level} 级。**`));
+    for (const feature of features) {
+      const row = SUBCLASS_FEATURE_MATERIAL.find(row=>row.classId===classId&&row.subclass===entry.name&&row.name===feature.n);
+      assert(chinese.includes(MESSAGE_CATALOGS['zh-CN'][row.nameKey]));
+      assert(chinese.includes(MESSAGE_CATALOGS['zh-CN'][row.descriptionKey]));
+    }
+  }
+  for (const names of Object.values(entry.spells??{})) for (const name of names) {
+    const label=referenceDisplayName('spell',name,'zh-CN');
+    assert.notEqual(label,name, `missing spell label: ${classId}/${entry.name}/${name}`);
+    assert(chinese.includes(label));
+  }
+  for (const metadata of [{source:'homebrew'}, {documentSlug:'third-party-book'}])
+    assert.equal(subclassHelpText(classId,entry.name,'zh-CN',source,metadata),source);
+  for (const changed of [source+' Authored addition.', source.replace(entry.desc,'Authored introduction.')])
+    assert.equal(nativeArchetypeHelp(classId,entry.name,changed,'zh-CN',provenance),changed);
+  assert.equal(nativeArchetypeHelp('unrelated-class',entry.name,source,'zh-CN',provenance),source);
+  assert.equal(JSON.stringify(entry),before);
+}
+assert.equal(archetypeCount,105);
 
 for (const row of NATIVE_FEATURE_MATERIAL) {
   const source = MESSAGE_CATALOGS.en[row.descriptionKey];
@@ -177,6 +218,30 @@ for (const [classId, featureName, chinese, subclass = ''] of [
   assert.equal(nativeFeatureHelp(classId, featureName, 'Authored replacement.', 'zh-CN'), 'Authored replacement.');
   assert.equal(JSON.stringify(feature), before);
 }
+
+// One real creator and lazy help path, with the same raw state in both locales.
+const archetypeEntry=authoredSubclasses.artificer.find(row=>row.name==='Alchemist');
+const archetype={id:'artificer-alchemist',name:archetypeEntry.name,desc:authoredArchetypeDescription(archetypeEntry),source:'open5e',documentSlug:'odm-expanded'};
+const archetypeProps={state:{subclass:archetype.name,gender:'',chosenSkills:[],racialSkills:[],backgroundSkills:[]},
+ derived:{effectiveLevel:3,grantedFeatures:[]},actions:{},klass:srdClassOptions().find(row=>row.id==='artificer'),pack:null,
+ classes:[],classGroups:[],subclassGroups:[],offersSubclass:true,subclassLockedAt:null,chosenArchetype:archetype};
+const archetypeInfo={open:true,onOpenChange:()=>{},title:archetype.name,reference:{kind:'archetypes',name:archetype.name,slug:archetype.id}};
+for(const locale of ['zh-CN','en']){
+ const expected=nativeArchetypeHelp('artificer',archetype.name,archetype.desc,locale,archetype);
+ calling.render('CallingStep',archetypeProps,locale);
+ const tooltip=calling.elements().find(e=>e.props.reference?.kind==='archetypes');
+ assert(tooltip);assert.equal(tooltip.props.text,expected);assert.equal(tooltip.props.reference.slug,archetype.id);
+ const rawState={text:normalizeRulesText(archetype.desc),loading:false,name:archetype.name,classId:'artificer',source:archetype.source,documentSlug:archetype.documentSlug,
+  for:JSON.stringify(['archetypes',archetype.id,archetype.name,null,0])};
+ const stateBefore=JSON.stringify(rawState);
+ const html=info.render('InfoDialog',archetypeInfo,locale,{queues:{[infoFile]:[rawState]}});
+ assert(html.includes(locale==='en'?'Always-prepared spells':'始终准备的法术'));
+ assert(html.includes(locale==='en'?'Experimental Elixir':'实验灵药'));
+ assert.equal(JSON.stringify(rawState),stateBefore);
+ const custom=info.render('InfoDialog',archetypeInfo,locale,{queues:{[infoFile]:[{...rawState,source:'homebrew'}]}});
+ assert(custom.includes('Always-prepared spells'));assert(custom.includes('Experimental Elixir'));
+}
+console.log('PASS: all 105 authored full archetype documents, importer byte parity, level/feature/spell display, actual creator and lazy help, English switching and source provenance preserved.');
 console.log('PASS: 146 native feature and 54 feat summaries, class overrides, source-bound display, unchanged parser inputs, canonical chip/reference identities, lazy feat help and English render parity.');
 console.log('PASS: bilingual core features across actual creation and sheet components; localized tooltip props, canonical identities and explicit pack names/help preserved.');
 console.log(`PASS: ${SUBCLASS_FEATURE_MATERIAL.length} authored subclass source bindings and actual creation/sheet projections for the registered classes; subclass-specific help, changed and unrelated-class prose preserved.`);

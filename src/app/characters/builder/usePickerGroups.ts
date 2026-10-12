@@ -393,7 +393,7 @@ export function usePickerGroups({
             name: subclassLabel(klass?.id ?? "", subclassName, locale),
             // The pack's full write-up when it has the row, else the
             // bundled line, so no subclass is a bare name.
-            infoText: subclassHelpText(klass?.id ?? "", subclassName, locale, match?.desc) || undefined,
+            infoText: subclassHelpText(klass?.id ?? "", subclassName, locale, match?.desc, match) || undefined,
             reference: match
               ? { kind: "archetypes", slug: match.id, name: subclassName }
               : undefined,

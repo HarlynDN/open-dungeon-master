@@ -37,7 +37,7 @@ export {
 // with its rules text, built by insertAuthoredContent in
 // scripts/import-open5e.mjs, so a new player can read what a circle or an
 // oath actually does before committing to it.
-export type ArchetypeOption = { id: string; name: string; desc: string };
+export type ArchetypeOption = { id: string; name: string; desc: string; source?: string; documentSlug?: string };
 
 // Loads race/class/background options from the Open5e content pack with the
 // bundled SRD data as fallback (and as the shape contract). `keepRaceId` is
@@ -181,6 +181,8 @@ export function useArchetypes(classId: string) {
               id: row.slug,
               name: row.name,
               desc: String(row.data?.desc ?? ""),
+              source: row.source,
+              documentSlug: row.documentSlug,
             })),
           );
         }

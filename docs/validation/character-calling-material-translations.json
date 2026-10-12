@@ -24,13 +24,13 @@
     "src/lib/srd/features.ts": "1251dbd9e5a05fbf052ef5cafb0ef458ffa6a48e914d1f6b86bb444d8ebac84f",
     "src/lib/srd/subclasses.json": "94f65f85c8e39d4b2c15979a74ec835967d620dff69013284f14fe64764230cb",
     "src/lib/help/index.ts": "56503b4dba185a71c14e60cff2017a2b4ce0d0b0e947bca3a09a4bcb5c6156a2",
-    "src/lib/i18n/calling-material-presentations.ts": "346c94a1985437e9bcf4c296ac229dd8579ee6e31d77afc87c8e24754f4f2750",
-    "src/app/characters/builder/usePickerGroups.ts": "d271803b233c0f3fd4add709fb4b4247c0c622a9dfd9e63f543c59ebc987a5f1",
-    "src/app/characters/builder/steps/CallingStep.tsx": "dddfac30b09eef862b1c05da0f2ec8b07dd9062c71f6f37c0483260f87c3aaa7",
-    "src/app/campaigns/[campaignId]/LevelUpDialog.tsx": "1804e1a2653dd71483f1151cd55a3a0af4d28396951a7a4f95ac04a59607e17d"
+    "src/lib/i18n/calling-material-presentations.ts": "2fbd450ead476eab375f980b1e119789393bde1fcffa923ddb85d9835e9ccc93",
+    "src/app/characters/builder/usePickerGroups.ts": "649ed670bb4cf630809f26ab83d0e0f26283d53d69a7876205af9bf9709667eb",
+    "src/app/characters/builder/steps/CallingStep.tsx": "095ea3c0052ff7cd0ef810e1f3d1cd6bd0eda071a244479c2dcecd81ca9f9455",
+    "src/app/campaigns/[campaignId]/LevelUpDialog.tsx": "943360ce5d65e9a6cfdc7bca0786cc2462da3a42848d6ab93d1ec4ae5f8bf73f"
   },
   "catalogs": {
-    "src/lib/i18n/calling-material-messages.ts": "6387a3295a5426eca343f1fe331857d5381d98476cd15a38f9c3085ba3add814"
+    "src/lib/i18n/calling-material-messages.ts": "972ae94c032471ccbbf5000c5d1011952181de1b1d13a69895d4fca635000b29"
   },
   "abilityCatalogIntegration": "Shared catalog fingerprint refreshed for a separate ability UI corpus; the original review scope is unchanged.",
   "catalogMaintenance": "Shared messages.ts only gains independent equipment UI/name/help catalogs; original calling catalog values and the reviewed calling scope are unchanged. Fingerprint refreshed for these additions, not an expanded review.",
@@ -88,5 +88,20 @@
     "files": {
       "src/lib/i18n/messages.ts": "97e5f9c8b717474524fb4c752d1d22a33f869063623f4493ff0ee7225ec3e31d"
     }
+  },
+  "authoredFullDocumentIntegration": {
+    "scope": "105 whole ODM-authored archetype documents, including 533 feature summaries and 42 prepared-spell tables; creation, upgrade and lazy help share the display projection.",
+    "priorHashes": {
+      "src/lib/i18n/calling-material-presentations.ts": "346c94a1985437e9bcf4c296ac229dd8579ee6e31d77afc87c8e24754f4f2750",
+      "src/app/characters/builder/usePickerGroups.ts": "d271803b233c0f3fd4add709fb4b4247c0c622a9dfd9e63f543c59ebc987a5f1",
+      "src/app/characters/builder/steps/CallingStep.tsx": "dddfac30b09eef862b1c05da0f2ec8b07dd9062c71f6f37c0483260f87c3aaa7",
+      "src/app/campaigns/[campaignId]/LevelUpDialog.tsx": "1804e1a2653dd71483f1151cd55a3a0af4d28396951a7a4f95ac04a59607e17d",
+      "src/lib/i18n/calling-material-messages.ts": "6387a3295a5426eca343f1fe331857d5381d98476cd15a38f9c3085ba3add814"
+    },
+    "review": "Whole original importer assembly retained byte-for-byte. Existing one-line introductions, English values, mechanism sources and frozen English renders remain unchanged. Added four composition templates reuse reviewed feature/intro/spell resources. Whole-source matching and source/document provenance preserve changed, third-party and homebrew documents. Three caller fingerprints were already stale before this batch; their current changes pass the actual creator/lazy workflow and the existing calling-material regression. This is implementation-agent review, not human approval.",
+    "checks": [
+      "scripts/test-feature-material-locales.mjs",
+      "scripts/test-chinese-calling-material.mjs"
+    ]
   }
 }

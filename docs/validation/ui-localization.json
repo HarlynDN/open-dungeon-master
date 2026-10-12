@@ -1229,7 +1229,7 @@
     {
       "path": "src/app/characters/builder/steps/CallingStep.tsx",
       "state": "pending",
-      "review": "Static class/subclass/skill chrome and base/SRD dynamic feature names/help reviewed. Shared source-bound display localizes titles and help without changing canonical granted features. Explicit world-pack feature names/blurbs remain authored, including an unchanged English display override. Grouped actual creation/sheet bilingual check passed. Expanded subclass/themed feature material remains pending; no premature full-owner closure. All 533 authored expanded feature rows across 13 classes/105 subclasses project through class/name/full-source bindings. Whole-table identity/source assertions and bilingual creation/sheet cases cover every class, subclass-specific distinctions, canonical IDs and explicit authored overlays. Moon Combat Wild Shape follows the shared 荒野形态 terminology. Themed/other dynamic material and whole-owner audit remain open."
+      "review": "Owned class/subclass chrome, source-bound feature help and explicit world overlays reviewed. Full unchanged ODM-authored archetype help now localizes through the shared display adapter with source provenance; component-level bilingual creator check passes. Other imported class/themed material and whole-owner review remain pending."
     },
     {
       "path": "src/app/characters/builder/steps/ClassChoices.tsx",
@@ -1287,7 +1287,7 @@
     {
       "path": "src/app/characters/builder/usePickerGroups.ts",
       "state": "pending",
-      "review": "Native alignment/source/genre/reskin grouping and locale memo dependencies inspected. Background option help now receives locale and exact source-bound translations for all 49 native backgrounds. Grouped actual background output preserves canonical IDs/refs. Class/subclass imported long descriptions and remaining material/source-ownership review stay open; this owner is not prematurely complete."
+      "review": "Full unchanged ODM-authored archetype documents now reuse the reviewed intro/feature/spell translations. Archetype source/document metadata survives loading and is passed to the shared display adapter; native selection IDs and raw descriptions remain unchanged. Class imported full descriptions and remaining source ownership keep this owner pending."
     },
     {
       "path": "src/app/characters/builder/useTableRules.ts",
@@ -2116,7 +2116,7 @@
     {
       "path": "src/components/ui/InfoDialog.tsx",
       "state": "pending",
-      "review": "Picker-flow checkpoint: viewer-language alias queries, registered spell fact/metadata summaries, canonical help name/slug, per-native-filter/scope catalog cache and distinct retryable read failures reviewed. Lazy content holds matched name/source/request key, suppresses stale references and preserves homebrew text. This owner stays pending for remaining owned long descriptions/help body audit; no full material translation or real browser acceptance claim."
+      "review": "Owned help/loading/retry chrome and lazy identity guards reviewed. Native feat help and all 105 unchanged ODM-authored archetype documents project in viewer locale without translating cached source text. Lazy lookup retains class/source/document metadata; homebrew, third-party and changed documents stay literal. Other owned long help and real browser acceptance keep this owner pending."
     },
     {
       "path": "src/components/ui/ListControls.tsx",

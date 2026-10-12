@@ -12,6 +12,7 @@ import type { ItemSheet } from "@/lib/help/item-sheet";
 import { firstSentence, parseRulesBlocks } from "@/lib/help/rules-text";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { nativeFeatHelp } from "@/lib/i18n/feature-material-presentations";
+import { nativeArchetypeHelp } from "@/lib/i18n/calling-material-presentations";
 import { itemSheetView } from "@/lib/i18n/equipment-help-presentations";
 
 // The "what does this do?" affordance, used everywhere a game term appears.
@@ -106,7 +107,7 @@ function ContentBody({ reference }: { reference: ContentRef }) {
   const { locale, t } = useLocale();
   // The table the dialog opened at reads its DMs' homebrew.
   const campaignId = useContentCampaign();
-  const [state, setState] = useState<{ text: string | null; loading: boolean; name?: string; source?: string; for?: string; failed?: boolean }>({
+  const [state, setState] = useState<{ text: string | null; loading: boolean; name?: string; source?: string; documentSlug?: string; classId?: string; for?: string; failed?: boolean }>({
     text: null,
     loading: true,
   });
@@ -127,7 +128,9 @@ function ContentBody({ reference }: { reference: ContentRef }) {
           const text = describeContentEntry(data?.entry?.data);
           if (text) {
             if (!cancelled) {
-              setState({ for: requestKey, text, name: data?.entry?.name, source: data?.entry?.source, loading: false });
+              setState({ for: requestKey, text, name: data?.entry?.name, source: data?.entry?.source,
+                documentSlug: data?.entry?.documentSlug,
+                classId: typeof data?.entry?.data?.class === "string" ? data.entry.data.class : undefined, loading: false });
             }
             return;
           }
@@ -144,10 +147,12 @@ function ContentBody({ reference }: { reference: ContentRef }) {
         }
         const results = (await search.json()).results ?? [];
         const hit = results.find(
-          (entry: { name: string; source?: string; data?: Record<string, unknown> }) => entry.name.trim().toLowerCase() === wanted,
+          (entry: { name: string; source?: string; documentSlug?: string; data?: Record<string, unknown> }) => entry.name.trim().toLowerCase() === wanted,
         );
         if (!cancelled) {
-          setState({ for: requestKey, text: describeContentEntry(hit?.data), name: hit?.name, source: hit?.source, loading: false });
+          setState({ for: requestKey, text: describeContentEntry(hit?.data), name: hit?.name, source: hit?.source,
+            documentSlug: hit?.documentSlug,
+            classId: typeof hit?.data?.class === "string" ? hit.data.class : undefined, loading: false });
         }
       } catch {
         if (!cancelled) {
@@ -176,7 +181,10 @@ function ContentBody({ reference }: { reference: ContentRef }) {
       </p>
     );
   }
-  return <>{renderRules(reference.kind === "feats" && state.source !== "homebrew" ? nativeFeatHelp(state.name ?? reference.name, state.text, locale) ?? state.text : state.text)}</>;
+  let text = state.text;
+  if (reference.kind === "feats" && state.source !== "homebrew") text = nativeFeatHelp(state.name ?? reference.name, text, locale) ?? text;
+  else if (reference.kind === "archetypes" && state.classId) text = nativeArchetypeHelp(state.classId, state.name ?? reference.name ?? "", text, locale, state);
+  return <>{renderRules(text)}</>;
 }
 
 function StatTile({ label, value, note }: { label: string; value: string | null; note?: string | null }) {

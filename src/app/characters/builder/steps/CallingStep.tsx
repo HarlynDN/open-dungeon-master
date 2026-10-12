@@ -170,12 +170,12 @@ export function CallingStep({
               {subclass ? (
                 <>
                   <span className="grow">
-                    {firstSentence(subclassHelpText(klass?.id ?? "", subclass, locale, chosenArchetype?.desc)) ??
+                    {firstSentence(subclassHelpText(klass?.id ?? "", subclass, locale, chosenArchetype?.desc, chosenArchetype ?? undefined)) ??
                       t("callingUi.subclassGeneric")}
                   </span>
                   <InfoButton
                     label={subclassLabel(klass?.id ?? "", subclass, locale)}
-                    text={subclassHelpText(klass?.id ?? "", subclass, locale, chosenArchetype?.desc) || undefined}
+                    text={subclassHelpText(klass?.id ?? "", subclass, locale, chosenArchetype?.desc, chosenArchetype ?? undefined) || undefined}
                     reference={
                       chosenArchetype ? { kind: "archetypes", slug: chosenArchetype.id } : undefined
                     }

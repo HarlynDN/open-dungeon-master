@@ -1125,7 +1125,7 @@ export function LevelUpDialog({
                           </button>
                           <InfoButton
                             label={subclassLabel(classChoice, name, locale)}
-                            text={subclassHelpText(classChoice, name, locale, archetype?.desc) || undefined}
+                            text={subclassHelpText(classChoice, name, locale, archetype?.desc, archetype) || undefined}
                             reference={
                               archetype ? { kind: "archetypes", slug: archetype.id, name } : undefined
                             }
