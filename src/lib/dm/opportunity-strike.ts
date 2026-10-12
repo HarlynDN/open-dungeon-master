@@ -1,3 +1,4 @@
+import type { OpportunityEventData } from "@/lib/system-events";
 // The attack itself of an opportunity attack, for both sides, once
 // opportunity.ts has found that one is provoked and spent the reaction. An
 // opportunity attack is an attack like any other (SRD 5.1): the enemy's
@@ -94,7 +95,7 @@ export function pcOpportunitySwing(input: {
   // The target's conditions as the swing meets them (a Dodge lost with its
   // speed already left out, opportunity.ts withLiveDodge).
   targetConditions: string[];
-}): { note: string; dropped: boolean } {
+}): { note: string; dropped: boolean; event: OpportunityEventData } {
   const { campaign, encounter, sheet, enemy, resolved } = input;
   const derived = computeSheetDerived(sheet);
   const riders = combatRiders(sheet);
@@ -190,10 +191,8 @@ export function pcOpportunitySwing(input: {
     }
   }
   if (!adjudicated.hit) {
-    return {
-      note: `${sheet.name} swings at ${enemy.displayName} as it breaks away and misses (${hitOutcome.total} vs AC ${targetAc}${parry ? `; ${parry.note}` : ""}).`,
-      dropped: false,
-    };
+    const note = `${sheet.name} swings at ${enemy.displayName} as it breaks away and misses (${hitOutcome.total} vs AC ${targetAc}${parry ? `; ${parry.note}` : ""}).`;
+    return { note, dropped: false, event: { kind: "opportunity", mode: "pcMiss", actor: sheet.name, target: enemy.displayName, total: hitOutcome.total, ac: targetAc, ...(parry ? { parryBonus: parry.bonus } : {}), english: note } };
   }
   const crit = adjudicated.crit || context.autoCrit;
   // A natural 20's magic weapon dice (a Vicious Weapon's 2d6).
@@ -247,16 +246,14 @@ export function pcOpportunitySwing(input: {
     const after = getEnemy(enemy.id);
     const dropped = Boolean(applied.dead) || after?.status === "dead";
     const landed = typeof applied.damageApplied === "number" ? applied.damageApplied : dealt;
-    return {
-      note: `${sheet.name} catches ${enemy.displayName} with an opportunity attack as it breaks away: ${
+    const note = `${sheet.name} catches ${enemy.displayName} with an opportunity attack as it breaks away: ${
         crit ? "a critical hit, " : ""
       }${landed} damage${notes.length ? ` (${notes.join("; ")})` : ""}. ${
         dropped
           ? `${enemy.displayName} drops.`
           : `It is now ${healthState(after?.currentHp ?? enemy.currentHp, enemy.maxHp)}.`
-      }`,
-      dropped,
-    };
+      }`;
+    return { note, dropped, event: { kind: "opportunity", mode: "pcHit", actor: sheet.name, target: enemy.displayName, total: hitOutcome.total, ac: targetAc, damage: landed, critical: crit, details: notes, dropped, health: healthState(after?.currentHp ?? enemy.currentHp, enemy.maxHp), english: note } };
   });
 }
 

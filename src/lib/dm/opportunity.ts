@@ -1,3 +1,6 @@
+import { normalizeLocale } from "@/lib/i18n/locales";
+import { systemEventText } from "@/lib/i18n/system-event-presentations";
+import type { OpportunityEventData } from "@/lib/system-events";
 import { evadesOpportunityAttacksAfterMelee, MOBILE_ATTACKED, polearmReachOpportunity } from "@/lib/srd/feat-combat";
 import { budgetFor } from "@/lib/dm/turn-budget";
 import { allocateSeq, type Campaign } from "@/lib/db/campaigns";
@@ -60,13 +63,16 @@ import { enfeebledBlow, spellRetort } from "@/lib/dm/spell-retort";
 
 type XY = { x: number; y: number };
 
-function tableNote(campaign: Campaign, content: string) {
+function tableNote(campaign: Campaign, content: string, data?: OpportunityEventData) {
+  const systemEvent = data ? { ...data, locale: normalizeLocale(campaign.gameSettings.locale) } : undefined;
+  const displayed = systemEvent ? systemEventText(systemEvent) : content;
   const seq = allocateSeq(campaign.id);
   const message = insertCampaignMessage({
     campaignId: campaign.id,
     seq,
     authorType: "system",
-    content,
+    content: displayed,
+    systemEvent,
   });
   publishWithSeq(campaign.id, seq, "message_added", { message });
 }
@@ -152,6 +158,7 @@ export function resolveOpportunityAttacks(
   }
   const steps = [from, ...(path?.length ? path : [to])];
   const notes: string[] = [];
+  const logEvents = new Map<number, OpportunityEventData>();
   let downed = false;
   let downedAt: XY | undefined;
 
@@ -196,6 +203,7 @@ export function resolveOpportunityAttacks(
     const moverBudget = budgetFor(encounter, characterId, 1);
     if (moverBudget?.oncePerTurn.includes(`${MOBILE_ATTACKED}${enemy.id}`)) {
       notes.push(`${enemy.displayName} gets no opportunity attack on ${sheet.name}: ${evadesOpportunityAttacksAfterMelee(sheet) ?? "Mobile"} (attacked in melee this turn).`);
+      logEvents.set(notes.length - 1, { kind: "opportunity", mode: "evaded", actor: enemy.displayName, target: sheet.name, feature: evadesOpportunityAttacksAfterMelee(sheet) ?? "Mobile", english: notes.at(-1)! });
       continue;
     }
     // Only a creature it can see provokes it: in the dark, with no
@@ -246,6 +254,7 @@ export function resolveOpportunityAttacks(
       notes.push(
         `${enemy.displayName} takes an opportunity attack as ${sheet.name} pulls away and misses (${hitOutcome.total} vs AC ${targetAc}).`,
       );
+      logEvents.set(notes.length - 1, { kind: "opportunity", mode: "enemyMiss", actor: enemy.displayName, target: sheet.name, total: hitOutcome.total, ac: targetAc, english: notes.at(-1)! });
       continue;
     }
     const crit = adjudicated.crit || context.autoCrit;
@@ -315,14 +324,13 @@ export function resolveOpportunityAttacks(
         crit ? "a critical hit for " : "hit for "
       }${rolled} damage${byType}.${riderNote}`,
     );
+    logEvents.set(notes.length - 1, { kind: "opportunity", mode: "enemyHit", actor: enemy.displayName, target: sheet.name, total: hitOutcome.total, ac: targetAc, damage: rolled, critical: crit, details: blow.byType ?? (typeof landed.resistance === "string" ? [landed.resistance] : []), conditions: Array.isArray(onHit?.riderCondition) ? onHit.riderCondition as string[] : [], english: notes.at(-1)! });
     if (downed) {
       break;
     }
   }
 
-  for (const note of notes) {
-    tableNote(campaign, note);
-  }
+  notes.forEach((note, index) => tableNote(campaign, note, logEvents.get(index)));
   return { notes, downed, ...(downedAt ? { downedAt } : {}) };
 }
 
@@ -376,6 +384,7 @@ export function resolvePcOpportunityAttacks(
   }
   const steps = [from, ...(path?.length ? path : [to])];
   const notes: string[] = [];
+  const logEvents = new Map<number, OpportunityEventData>();
 
   for (const stale of listSheets(campaign.id)) {
     const sheet = getSheetById(stale.id) ?? stale;
@@ -438,7 +447,7 @@ export function resolvePcOpportunityAttacks(
 
     // The swing itself, with everything their attack carries
     // (src/lib/dm/opportunity-strike.ts).
-    const { note, dropped } = pcOpportunitySwing({
+    const { note, dropped, event } = pcOpportunitySwing({
       campaign,
       encounter,
       sheet,
@@ -448,13 +457,12 @@ export function resolvePcOpportunityAttacks(
       targetConditions: withLiveDodge(enemy.conditions),
     });
     notes.push(note);
+    logEvents.set(notes.length - 1, event);
     if (dropped) {
       break;
     }
   }
 
-  for (const note of notes) {
-    tableNote(campaign, note);
-  }
+  notes.forEach((note, index) => tableNote(campaign, note, logEvents.get(index)));
   return notes;
 }

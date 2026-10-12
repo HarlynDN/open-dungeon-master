@@ -1,3 +1,4 @@
+import { opportunityEventText } from "../dm/opportunity-event.ts";
 import type { SystemEvent } from "../system-events.ts";
 import { SYSTEM_LOG_MESSAGES } from "./system-log-messages.ts";
 import { createTranslator, registerMessages } from "./translator.ts";
@@ -12,6 +13,7 @@ registerMessages(SYSTEM_LOG_MESSAGES);
 export function systemEventText(event: SystemEvent): string {
   const t = createTranslator(event.locale);
   switch (event.kind) {
+    case "opportunity": return opportunityEventText(event);
     case "partyItem": return t(`playerLog.item.${event.direction}`, {
       actor: event.actor, item: referenceDisplayName("equipment", event.item, event.locale),
       quantity: event.qty > 1 ? t("playerLog.quantity", { count: event.qty }) : "",
