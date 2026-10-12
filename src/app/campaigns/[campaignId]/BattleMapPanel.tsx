@@ -361,7 +361,7 @@ export function BattleMapPanel({
       setHover(null);
       landed(start ? { x: start.x, y: start.y } : null, { x, y });
       // What the walk met: opportunity attacks, a spell area's spikes or hold.
-      moveNotes.push(moveNotesFrom(moved));
+      moveNotes.push(moveNotesFrom(moved), view.tokens);
     }
     await refreshBattleMap();
   }

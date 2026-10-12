@@ -1,3 +1,4 @@
+import { BOARD_MOVE_EFFECT_MESSAGES } from "./board-move-effect-messages.ts";
 import { BOARD_OPERATION_MESSAGES } from "./board-operation-messages.ts";
 import { MAP_SURFACE_MESSAGES } from "./map-surface-messages.ts";
 import { MAP_FORGE_MESSAGES } from "./map-forge-messages.ts";
@@ -114,6 +115,7 @@ const en = {
     ...REGION_MESSAGES.en,
     ...MAP_SCENE_MESSAGES.en,
     ...MAP_EDITOR_MESSAGES.en,
+    ...BOARD_MOVE_EFFECT_MESSAGES.en,
     ...BOARD_OPERATION_MESSAGES.en,
     ...MAP_SURFACE_MESSAGES.en,
     ...MAP_FORGE_MESSAGES.en,
@@ -232,6 +234,7 @@ const zhCN: Messages = {
     ...REGION_MESSAGES["zh-CN"],
     ...MAP_SCENE_MESSAGES["zh-CN"],
     ...MAP_EDITOR_MESSAGES["zh-CN"],
+    ...BOARD_MOVE_EFFECT_MESSAGES["zh-CN"],
     ...BOARD_OPERATION_MESSAGES["zh-CN"],
     ...MAP_SURFACE_MESSAGES["zh-CN"],
     ...MAP_FORGE_MESSAGES["zh-CN"],

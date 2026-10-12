@@ -105,7 +105,7 @@
     {
       "path": "src/app/campaigns/[campaignId]/BattleMapPanel.tsx",
       "state": "pending",
-      "review": "Main board chrome uses viewer uiLocale. Known native move/jump/drag/draw/placement refusals now display through complete source frames with typed token-name context; raw diagnostics/protocol fields remain unchanged. Exact Chinese condition labels resolve to native names; ambiguous labels block invocation and authored/English names stay literal. Failed HTTP invoke without error text now refuses; erase/measure network failures show feedback and release busy without retry. Main owner remains pending for full special move-effect notes and broader native engine diagnostic closure; no blanket fallback or final acceptance claim."
+      "review": "Main board chrome uses viewer uiLocale. Known native move/jump/drag/draw/placement refusals now display through complete source frames with typed token-name context; raw diagnostics/protocol fields remain unchanged. Exact Chinese condition labels resolve to native names; ambiguous labels block invocation and authored/English names stay literal. Failed HTTP invoke without error text now refuses; erase/measure network failures show feedback and release busy without retry. Main owner remains pending for full special move-effect notes and broader native engine diagnostic closure; no blanket fallback or final acceptance claim. Movement notices now capture the pre-refresh token-name/kind projection; new whole special-effect adapters cover fall, form return, damage mitigation and quake notices. Broader diagnostic/remaining-owner closure still pending; no full-play acceptance claim."
     },
     {
       "path": "src/app/campaigns/[campaignId]/BoardAreaAim.tsx",
@@ -142,7 +142,7 @@
     {
       "path": "src/app/campaigns/[campaignId]/BoardMoveNotes.tsx",
       "state": "pending",
-      "review": "Known jump/landing, opportunity hit/miss, save/evasion, condition, push/hold, damage and concentration frames localized at display only. Original lines/tone/expiry remain raw and unchanged. Mixed damage modifier details, quake/fissure, drift and other special native notes still need migration; this owner remains pending."
+      "review": "Native notice text/tone/timers/stack/IDs unchanged. Whole movement outcomes, zero damage, fall/reversion and quake compounds render with viewer uiLocale; attached unknown outcomes preserve the whole source. Opportunity notices distinguish raw damage roll from HP deduction and translate known damage/mitigation details. Ephemeral copied name/kind context captured at enqueue survives token removal/rename and UI locale switching; authored names, unknown types/notes and raw server body stay literal."
     },
     {
       "path": "src/app/campaigns/[campaignId]/BoardPanelParts.tsx",

@@ -386,15 +386,15 @@ export const BOARD_CONTROL_MESSAGES = /*#__PURE__*/ defineMessages({
   },
   "boardUi.note.opHit": {
     "en": "{enemy} takes an opportunity attack as {name} pulls away: {hit}{amount} damage{types}.{rider}",
-    "zh-CN": "{name}离开时，{enemy}发动借机攻击，{hit}造成 {amount} 点伤害{types}。{rider}"
+    "zh-CN": "{name}离开时，{enemy}发动借机攻击并{hit}，伤害掷骰为 {amount} 点{types}。{rider}"
   },
   "boardUi.note.hit": {
     "en": "hit for ",
-    "zh-CN": "命中并"
+    "zh-CN": "命中"
   },
   "boardUi.note.crit": {
     "en": "a critical hit for ",
-    "zh-CN": "重击并"
+    "zh-CN": "重击"
   },
   "boardUi.note.types": {
     "en": " ({types})",

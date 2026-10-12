@@ -17,7 +17,7 @@ import type { MoveNote } from "@/lib/battlemap/board-move";
 const HOLD_MS = 5600;
 const STACK = 4;
 
-type Shown = MoveNote & { id: number };
+type Shown = MoveNote & { id: number; namesSnapshot?: readonly BoardDisplayName[] };
 
 export function useMoveNotes() {
   const [notes, setNotes] = useState<Shown[]>([]);
@@ -32,9 +32,10 @@ export function useMoveNotes() {
     };
   }, []);
 
-  const push = useCallback((incoming: MoveNote[]) => {
+  const push = useCallback((incoming: MoveNote[], names?: readonly BoardDisplayName[]) => {
     if (!incoming.length) return;
-    const fresh = incoming.map((note) => ({ ...note, id: nextId.current++ }));
+    const namesSnapshot = names?.map(({ name, kind }) => ({ name, kind }));
+    const fresh = incoming.map((note) => ({ ...note, id: nextId.current++, namesSnapshot }));
     setNotes((current) => [...current, ...fresh].slice(-STACK));
     const timer = setTimeout(() => {
       timers.current.delete(timer);
@@ -76,7 +77,7 @@ export function BoardMoveNotes({ notes, names = [] }: { notes: Shown[]; names?: 
           ) : (
             <Flame className="mt-0.5 size-3.5 shrink-0" />
           )}
-          {boardMoveNoteText(note.text, locale, names)}
+          {boardMoveNoteText(note.text, locale, note.namesSnapshot ?? names)}
         </p>
       ))}
     </div>
