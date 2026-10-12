@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { timelineKindLabel, timelineRowView, feedText } from "@/lib/i18n/feed-presentations";
+import type { CalendarDefinition } from "@/lib/dm/calendar";
 import { readLoad, useLoadStatus } from "@/lib/load-state";
 import { EmptyState } from "@/components/EmptyState";
 import { useEffect, useState } from "react";
@@ -13,16 +16,6 @@ import type { TimelineKind, TimelineRow } from "@/lib/dm/timeline-logic";
 // chapters, facts, sessions and the world's arcs in story order with the
 // party marker at now. A list below lg; two columns about a gold rule
 // above it. Filters by kind; read-only.
-
-const KIND_LABEL: Record<TimelineKind, string> = {
-  chapter: "Chapters",
-  act: "Acts",
-  fact: "Facts",
-  session: "Sessions",
-  arc: "World arcs",
-  event: "Calendar",
-  now: "Now",
-};
 
 const KIND_GLYPH: Record<TimelineKind, string> = {
   chapter: "tab-story",
@@ -45,6 +38,7 @@ const KIND_TONE: Record<TimelineKind, string> = {
 };
 
 export function TimelinePanel({ campaignId, refreshKey }: { campaignId: string; refreshKey: number }) {
+  const { locale, t } = useLocale();
   const [rows, setRows] = useState<TimelineRow[] | null>(null);
   // A refused or failed read is shown in the server's words with a way to
   // ask again, never as "nothing here yet" (issue 140).
@@ -52,15 +46,18 @@ export function TimelinePanel({ campaignId, refreshKey }: { campaignId: string; 
   const [reloads, setReloads] = useState(0);
   const [hidden, setHidden] = useState<Set<TimelineKind>>(new Set());
 
+  const [calendar, setCalendar] = useState<CalendarDefinition | null>(null);
+
   useEffect(() => {
     let cancelled = false;
-    readLoad<{ rows?: TimelineRow[] }>(fetch(`/api/campaigns/${campaignId}/timeline`), "The timeline").then((outcome) => {
+    readLoad<{ rows?: TimelineRow[]; calendar?: CalendarDefinition }>(fetch(`/api/campaigns/${campaignId}/timeline`), "The timeline").then((outcome) => {
       if (cancelled) {
         return;
       }
       settle(outcome);
       if (outcome.payload) {
         setRows(outcome.payload.rows ?? []);
+        setCalendar(outcome.payload.calendar ?? null);
       }
     });
     return () => {
@@ -69,21 +66,20 @@ export function TimelinePanel({ campaignId, refreshKey }: { campaignId: string; 
   }, [campaignId, refreshKey, reloads, settle]);
 
   if (rows === null && loadError) {
-
-    return <LoadFailed error={loadError} onRetry={() => setReloads((current) => current + 1)} />;
-
+    return <LoadFailed error={feedText(loadError, locale)} onRetry={() => setReloads((current) => current + 1)} />;
   }
 
   if (rows === null) {
-    return <PanelLoading label="Laying out the years..." />;
+    return <PanelLoading label={t("feedUi.timeline.loading")} />;
   }
-  const kinds = (Object.keys(KIND_LABEL) as TimelineKind[]).filter((kind) => kind !== "now" && rows.some((row) => row.kind === kind));
+  const kinds = (Object.keys(KIND_GLYPH) as TimelineKind[]).filter((kind) => kind !== "now" && rows.some((row) => row.kind === kind));
   const shown = rows.filter((row) => !hidden.has(row.kind));
   return (
     <div className="space-y-3">
-      <SectionHead title="Timeline" glyph="tab-timeline" aside={shown.length > 1 ? shown.length - 1 : null} />
+      {shown.length > 1 && loaded && loadError ? <LoadFailed error={feedText(loadError, locale)} onRetry={() => setReloads((current) => current + 1)} /> : null}
+      <SectionHead title={t("feedUi.timeline.title")} glyph="tab-timeline" aside={shown.length > 1 ? shown.length - 1 : null} />
       {kinds.length ? (
-        <div role="group" aria-label="Show on the line" className="reveal flex flex-wrap items-center gap-1">
+        <div role="group" aria-label={t("feedUi.timeline.filters")} className="reveal flex flex-wrap items-center gap-1">
           {kinds.map((kind) => {
             const on = !hidden.has(kind);
             return (
@@ -106,17 +102,18 @@ export function TimelinePanel({ campaignId, refreshKey }: { campaignId: string; 
                 className="pk-pill pk-tap motion-press"
               >
                 <GameIcon icon={{ kind: "glyph", key: KIND_GLYPH[kind] }} size="size-4" />
-                {KIND_LABEL[kind]}
+                {timelineKindLabel(kind, locale)}
               </button>
             );
           })}
         </div>
       ) : null}
       {shown.length <= 1 ? (
-        (loadError ? <LoadFailed error={loadError} onRetry={() => setReloads((current) => current + 1)} /> : loaded ? <EmptyState size="sm" art="scrolls" title="Nothing has happened yet. The first closed chapter starts the line." /> : null)
+        (loadError ? <LoadFailed error={feedText(loadError, locale)} onRetry={() => setReloads((current) => current + 1)} /> : loaded ? <EmptyState size="sm" art="scrolls" title={t("feedUi.timeline.empty")} /> : null)
       ) : null}
       <ol className="stagger relative space-y-2 lg:before:absolute lg:before:bottom-0 lg:before:left-1/2 lg:before:top-0 lg:before:w-px lg:before:bg-gradient-to-b lg:before:from-amber-700/0 lg:before:via-amber-600/70 lg:before:to-amber-700/0">
         {shown.map((row, index) => {
+          const view = timelineRowView(row, locale, calendar);
           const left = index % 2 === 0;
           return (
             <li key={row.id} className={cn("lg:flex", left ? "lg:justify-start lg:pr-[52%]" : "lg:justify-end lg:pl-[52%]")}>
@@ -129,11 +126,11 @@ export function TimelinePanel({ campaignId, refreshKey }: { campaignId: string; 
               >
                 <p className="flex items-center gap-1.5 text-xs font-medium">
                   <GameIcon icon={{ kind: "glyph", key: KIND_GLYPH[row.kind] }} size="size-5" className="shrink-0" />
-                  <span className="min-w-0 flex-1 truncate">{row.title}</span>
-                  {row.when ? <span className="text-[11px] font-normal text-stone-500">{row.when}</span> : null}
-                  {row.secret ? <span className="text-[11px] font-normal text-violet-300">DM</span> : null}
+                  <span className="min-w-0 flex-1 truncate">{view.title}</span>
+                  {row.when ? <span className="text-[11px] font-normal text-stone-500">{view.when}</span> : null}
+                  {row.secret ? <span className="text-[11px] font-normal text-violet-300">{t("feedUi.timeline.dm")}</span> : null}
                 </p>
-                {row.detail ? <p className="reveal mt-0.5 text-xs leading-5 text-stone-400">{row.detail}</p> : null}
+                {row.detail ? <p className="reveal mt-0.5 text-xs leading-5 text-stone-400">{view.detail}</p> : null}
               </article>
             </li>
           );

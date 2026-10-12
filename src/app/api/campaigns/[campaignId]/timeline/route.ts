@@ -53,13 +53,14 @@ export async function GET(
         title: event.title,
         body: event.body,
         when: formatDate(campaign.clock.calendar, event.atInstant),
+        atInstant: event.atInstant,
         firedSeq: event.firedSeq,
         fired: event.firedAt >= 0,
         visibility: event.visibility,
       })),
-      now: { seq: latestSeq(campaignId), clockLabel: describeInstant(campaign.clock.calendar, campaign.clock.instant) },
+      now: { seq: latestSeq(campaignId), clockLabel: describeInstant(campaign.clock.calendar, campaign.clock.instant), instant: campaign.clock.instant },
     },
     dm,
   );
-  return Response.json({ rows });
+  return Response.json({ rows, calendar: campaign.clock.calendar });
 }

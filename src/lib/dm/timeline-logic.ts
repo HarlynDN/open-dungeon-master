@@ -7,6 +7,12 @@ import { romanNumeral } from "@/lib/dm/arc-logic";
 
 export type TimelineKind = "chapter" | "act" | "fact" | "session" | "arc" | "event" | "now";
 
+export type TimelinePresentation = {
+  title?: { kind: "chapter"; index: number } | { kind: "act"; numeral: string; name: string } | { kind: "session" | "now" };
+  sessionDate?: string;
+  instant?: number;
+};
+
 export type TimelineRow = {
   id: string;
   kind: TimelineKind;
@@ -17,6 +23,8 @@ export type TimelineRow = {
   // What the rows sort on: a chapter's closing sequence, a fact's source
   // sequence, a session's start time as a number, an arc's rung.
   order: number;
+  // Optional display metadata distinguishes generated headers from authored text.
+  presentation?: TimelinePresentation;
   // Rows only the DM seat may read.
   secret?: boolean;
 };
@@ -31,8 +39,8 @@ export type TimelineSources = {
   arcs: Array<{ id: string; name: string; rung: number; rungs: string[]; status: string }>;
   // Calendar events (7.2): the fired ones sit where they fired, the ones
   // still to come after now.
-  events?: Array<{ id: string; title: string; body: string; when: string; firedSeq: number; fired: boolean; visibility: string }>;
-  now: { seq: number; clockLabel: string };
+  events?: Array<{ id: string; title: string; body: string; when: string; atInstant?: number; firedSeq: number; fired: boolean; visibility: string }>;
+  now: { seq: number; clockLabel: string; instant?: number };
 };
 
 const FACT_CAP = 40;
@@ -47,6 +55,7 @@ export function buildTimeline(sources: TimelineSources, steersStory: boolean): T
       id: `chapter-${chapter.id}`,
       kind: "chapter",
       title: chapter.title || `Chapter ${chapter.index}`,
+      ...(!chapter.title ? { presentation: { title: { kind: "chapter" as const, index: chapter.index } } } : {}),
       detail: firstSentence(chapter.summary),
       when: chapter.clockLabel,
       order: chapter.seqEnd ?? 0,
@@ -57,6 +66,7 @@ export function buildTimeline(sources: TimelineSources, steersStory: boolean): T
       id: `act-${act.sagaIndex}-${act.act}`,
       kind: "act",
       title: `End of Act ${romanNumeral(act.act)}${act.title ? `: ${act.title}` : ""}`,
+      presentation: { title: { kind: "act", numeral: romanNumeral(act.act), name: act.title } },
       detail: firstSentence(act.recap),
       when: act.clockLabel,
       order: act.endedSeq,
@@ -81,6 +91,7 @@ export function buildTimeline(sources: TimelineSources, steersStory: boolean): T
       id: `session-${session.id}`,
       kind: "session",
       title: session.title || "Session",
+      presentation: { ...(!session.title ? { title: { kind: "session" as const } } : {}), ...(Number.isFinite(at) ? { sessionDate: session.startsAt } : {}) },
       detail: Number.isFinite(at) ? new Date(at).toLocaleString() : session.startsAt,
       when: "",
       // Sessions sit on the real calendar: the ones already played sort
@@ -114,6 +125,7 @@ export function buildTimeline(sources: TimelineSources, steersStory: boolean): T
       title: event.title,
       detail: event.body,
       when: event.when,
+      ...(Number.isFinite(event.atInstant) ? { presentation: { instant: event.atInstant } } : {}),
       order: event.fired ? event.firedSeq : sources.now.seq + 1,
       ...(event.visibility === "dm" ? { secret: true } : {}),
     });
@@ -122,6 +134,7 @@ export function buildTimeline(sources: TimelineSources, steersStory: boolean): T
     id: "now",
     kind: "now",
     title: "Now",
+    presentation: { title: { kind: "now" }, ...(Number.isFinite(sources.now.instant) ? { instant: sources.now.instant } : {}) },
     detail: sources.now.clockLabel,
     when: sources.now.clockLabel,
     order: sources.now.seq,
@@ -135,6 +148,6 @@ function rank(kind: TimelineKind): number {
 }
 
 function firstSentence(text: string): string {
-  const match = /^[^.!?]*[.!?]/.exec(text.trim());
+  const match = /^[^.!?。！？]*(?:[.!?]|[。！？][”」』]?)/.exec(text.trim());
   return (match ? match[0] : text.trim()).slice(0, 200);
 }

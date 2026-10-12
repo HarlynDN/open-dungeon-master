@@ -1,3 +1,4 @@
+import { FEED_MESSAGES } from "./feed-messages.ts";
 import { CHAT_MESSAGES } from "./chat-messages.ts";
 import { ENTRY_CHARACTER_MESSAGES } from "./entry-character-messages.ts";
 import { PASSAGE_MESSAGES } from "./passage-messages.ts";
@@ -95,6 +96,7 @@ const en = {
   ...PASSAGE_MESSAGES.en,
   ...ENTRY_CHARACTER_MESSAGES.en,
   ...CHAT_MESSAGES.en,
+  ...FEED_MESSAGES.en,
   ...PLAY_EDIT_MESSAGES.en,
   ...HAND_CASTING_MESSAGES.en,
   ...HAND_FEATURE_MESSAGES.en,
@@ -201,6 +203,7 @@ const zhCN: Messages = {
   ...PASSAGE_MESSAGES["zh-CN"],
   ...ENTRY_CHARACTER_MESSAGES["zh-CN"],
   ...CHAT_MESSAGES["zh-CN"],
+  ...FEED_MESSAGES["zh-CN"],
   ...PLAY_EDIT_MESSAGES["zh-CN"],
   ...HAND_CASTING_MESSAGES["zh-CN"],
   ...HAND_FEATURE_MESSAGES["zh-CN"],

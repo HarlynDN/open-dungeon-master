@@ -1,5 +1,8 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { createTranslator } from "@/lib/i18n/translator";
+import { describeAuditEntry, feedText } from "@/lib/i18n/feed-presentations";
 import { EmptyState } from "@/components/EmptyState";
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import { Loader2, RotateCcw, ScrollText, Star } from "lucide-react";
@@ -9,72 +12,6 @@ import { ui } from "@/lib/ui";
 import type { CharacterEvent } from "@/lib/db/character-events";
 import type { AuditEntry } from "@/app/campaigns/[campaignId]/useCampaignStream";
 import type { CharacterSheet } from "@/lib/schemas/sheet";
-
-function describeEntry(entry: AuditEntry, name: string): string {
-  const delta = entry.delta;
-  switch (entry.kind) {
-    case "apply_damage":
-      // Wild Shape: the blow landed on the beast form, not the druid.
-      if (delta.form) {
-        return delta.reverted
-          ? `${name}'s ${delta.form} form breaks${Number(delta.carryover) > 0 ? `, ${delta.carryover} damage carrying through` : ""}`
-          : `${name}'s ${delta.form} form takes ${delta.amount} damage (${delta.beastHp} beast HP)`;
-      }
-      if (delta.relentlessEndurance) {
-        return `${name} holds on at 1 HP (Relentless Endurance)`;
-      }
-      return `${name} takes ${delta.amount} damage${delta.type ? ` (${delta.type})` : ""} (${delta.currentHp} HP)`;
-    case "heal":
-      return `${name} heals ${delta.amount} (${delta.newHp} HP)`;
-    case "award_xp":
-      return `${name} gains ${delta.amount} XP (${delta.newXp} total)`;
-    case "modify_gold":
-      return `${name} ${Number(delta.delta) >= 0 ? "gains" : "loses"} ${Math.abs(Number(delta.delta))} gold (${delta.gold} gp)`;
-    case "grant_item":
-      return `${name} receives ${delta.name}${Number(delta.qty) > 1 ? ` x${delta.qty}` : ""}`;
-    case "remove_item":
-      return `${name} loses ${delta.name}${Number(delta.removed) > 1 ? ` x${delta.removed}` : ""}`;
-    case "set_condition":
-      return `${name} is ${delta.condition}`;
-    case "clear_condition":
-      return `${name} is no longer ${delta.condition}`;
-    case "use_spell_slot":
-      return `${name} expends a level ${delta.level} spell slot`;
-    case "use_item":
-      return `${name} uses ${delta.item}`;
-    case "purchase":
-      return delta.action === "sell"
-        ? `${name} sells ${delta.item}${Number(delta.qty) > 1 ? ` x${delta.qty}` : ""} for ${Number(delta.price) * Number(delta.qty ?? 1)} gold`
-        : `${name} buys ${delta.item}${Number(delta.qty) > 1 ? ` x${delta.qty}` : ""} for ${Number(delta.price) * Number(delta.qty ?? 1)} gold`;
-    case "use_resource":
-      // The recipient side of a feature aimed at someone else.
-      return delta.from
-        ? `${name} receives ${delta.resource} from ${delta.from}`
-        : `${name} spends ${Number(delta.spent) > 1 ? `${delta.spent} uses of ` : ""}${delta.resource}`;
-    case "grant_temp_hp":
-      return `${name} gains ${delta.tempHp} temporary HP`;
-    case "learn_spell":
-      return delta.action === "remove"
-        ? `${name} loses the spell ${delta.spell}`
-        : `${name} learns the spell ${delta.spell}`;
-    case "update_sheet": {
-      const changed = Object.keys(delta);
-      return `The DM rewrites ${name}'s sheet${changed.length ? ` (${changed.join(", ")})` : ""}`;
-    }
-    case "undo":
-      return `Party lead undid a change to ${name}`;
-    case "lead_edit": {
-      const changed = Object.keys(delta).filter((key) => key !== "reason");
-      return `Party lead corrected ${name}${changed.length ? ` (${changed.join(", ")})` : ""}`;
-    }
-    case "player_adjust": {
-      const changed = Object.keys(delta);
-      return `${name}'s player adjusted their counters${changed.length ? ` (${changed.join(", ")})` : ""}`;
-    }
-    default:
-      return `${name}: ${entry.kind}`;
-  }
-}
 
 // Confirmation for undos that would clobber newer changes to the same
 // fields (the server answered 409 with warnings).
@@ -89,8 +26,9 @@ function ConfirmUndoDialog({
   onConfirm: () => void;
   onCancel: () => void;
 }) {
+  const { locale, t } = useLocale();
   return (
-    <AlertDialog.Root open onOpenChange={(open) => !open && onCancel()}>
+    <AlertDialog.Root open onOpenChange={(open) => !open && !busy && onCancel()}>
       <AlertDialog.Portal>
         <AlertDialog.Overlay className="dialog-overlay fixed inset-0 z-50 bg-[#05030d]/70 backdrop-blur-sm" />
         <AlertDialog.Content
@@ -100,22 +38,22 @@ function ConfirmUndoDialog({
           )}
         >
           <AlertDialog.Title className="font-display text-lg tracking-wide text-amber-50">
-            Undo anyway?
+            {t("feedUi.undo.title")}
           </AlertDialog.Title>
           <AlertDialog.Description className="mt-2 text-xs text-stone-400">
-            Newer changes touched the same fields; undoing will overwrite them.
+            {t("feedUi.undo.description")}
           </AlertDialog.Description>
           <ul className="mt-2 space-y-1">
             {warnings.slice(0, 5).map((warning, index) => (
               <li key={index} className="text-[11px] leading-4 text-amber-300/80">
-                {warning}
+                {feedText(warning, locale)}
               </li>
             ))}
           </ul>
           <div className="mt-4 flex justify-end gap-2">
-            <AlertDialog.Cancel className={ui.btnSmall}>Cancel</AlertDialog.Cancel>
+            <AlertDialog.Cancel className={ui.btnSmall} disabled={busy}>{t("feedUi.cancel")}</AlertDialog.Cancel>
             <button type="button" onClick={onConfirm} disabled={busy} aria-busy={busy} className={ui.btnPrimary}>
-              {busy ? <Loader2 className="size-4 animate-spin" /> : null} Undo anyway
+              {busy ? <Loader2 className="size-4 animate-spin" /> : null}{t("feedUi.undo.confirm")}
             </button>
           </div>
         </AlertDialog.Content>
@@ -144,6 +82,7 @@ export function EventLog({
   characterEvents?: CharacterEvent[];
   steersStory?: boolean;
 }) {
+  const { locale, t } = useLocale();
   const [busyId, setBusyId] = useState("");
   // The server's sentence for an undo it refused, under the row it was for
   // (U:UC10). Before, anything but a 409 was dropped and the row just sat
@@ -154,8 +93,10 @@ export function EventLog({
     run: () => Promise<void>;
   } | null>(null);
 
+  const [confirmBusy, setConfirmBusy] = useState(false);
+
   const nameForCharacter = (characterId: string) =>
-    sheets.find((sheet) => sheet.id === characterId)?.name ?? "Someone";
+    sheets.find((sheet) => sheet.id === characterId)?.name ?? t("feedUi.someone");
   const nameFor = (entry: AuditEntry) =>
     entry.characterName ?? nameForCharacter(entry.characterId);
 
@@ -183,10 +124,10 @@ export function EventLog({
 
   const refusal = (response: Response | null, data: Record<string, unknown>) =>
     !response
-      ? "Could not reach the server."
+      ? createTranslator("en")("feedUi.error.network")
       : typeof data.error === "string" && data.error
         ? data.error
-        : "That change could not be undone.";
+        : createTranslator("en")("feedUi.error.undo");
 
   async function post(url: string, body: Record<string, unknown>, busyKey: string) {
     setBusyId(busyKey);
@@ -197,7 +138,7 @@ export function EventLog({
       // stacked on this one). A 409 without them is a refusal like any other.
       if (response?.status === 409 && Array.isArray(data.warnings) && data.warnings.length) {
         setConfirming({
-          warnings: data.warnings as string[],
+          warnings: data.warnings.filter((value): value is string => typeof value === "string"),
           run: async () => {
             const retry = await send(url, { ...body, confirm: true });
             setConfirming(null);
@@ -228,7 +169,7 @@ export function EventLog({
 
   if (!feed.length) {
     return (
-      <EmptyState size="sm" art="scrolls" title="No stat changes yet. Damage, loot, XP, conditions, and milestones the DM applies will show here." />
+      <EmptyState size="sm" art="scrolls" title={t("feedUi.empty")} />
     );
   }
 
@@ -277,7 +218,7 @@ export function EventLog({
                   type="button"
                   disabled={busyId === `turn:${turnId}`}
                   onClick={() => revertTurn(turnId)}
-                  title="Undo every sheet change from this DM turn (stats only)"
+                  title={t("feedUi.undo.turnTip")}
                   className="flex w-full items-center justify-center gap-1 rounded border border-dashed border-stone-700 py-0.5 text-[10px] text-stone-500 hover:bg-stone-900 hover:text-amber-300"
                 >
                   {busyId === `turn:${turnId}` ? (
@@ -285,11 +226,11 @@ export function EventLog({
                   ) : (
                     <RotateCcw className="size-3" />
                   )}
-                  Revert this turn ({liveByTurn.get(turnId)})
+                  {t("feedUi.undo.turn", { count: liveByTurn.get(turnId) ?? 0 })}
                 </button>
               ) : null}
               {showRevertTurn && errors[`turn:${turnId}`] ? (
-                <p role="alert" className="motion-shake text-[11px] text-red-300">{errors[`turn:${turnId}`]}</p>
+                <p role="alert" className="motion-shake text-[11px] text-red-300">{feedText(errors[`turn:${turnId}`], locale)}</p>
               ) : null}
               <div
                 className={cn(
@@ -300,11 +241,11 @@ export function EventLog({
                 <div className="flex items-start gap-1.5">
                   <span className={cn("min-w-0 flex-1", reverted && "line-through text-stone-500")}>
                     <ScrollText className="mr-1.5 inline size-3 text-amber-600" />
-                    {describeEntry(entry, nameFor(entry))}
+                    {describeAuditEntry(entry, nameFor(entry), locale)}
                   </span>
                   {reverted ? (
                     <span className="shrink-0 rounded-full border border-stone-800 px-1.5 text-[9px] uppercase tracking-wide text-stone-600">
-                      undone
+                      {t("feedUi.undo.undone")}
                     </span>
                   ) : null}
                   {canUndo ? (
@@ -312,8 +253,8 @@ export function EventLog({
                       type="button"
                       disabled={busyId === entry.id}
                       onClick={() => undoEntry(entry)}
-                      title="Undo this change (restores the sheet fields it touched)"
-                      aria-label="Undo this change"
+                      title={t("feedUi.undo.tip")}
+                      aria-label={t("feedUi.undo.label")}
                       className="-my-1.5 -mr-1.5 inline-flex size-8 shrink-0 items-center justify-center rounded-md text-stone-600 hover:text-amber-300 motion-nudge"
                     >
                       {busyId === entry.id ? (
@@ -328,7 +269,7 @@ export function EventLog({
                   <span className="block pl-4.5 text-[11px] text-stone-500">{entry.reason}</span>
                 ) : null}
                 {errors[entry.id] ? (
-                  <span role="alert" className="motion-shake block pl-4.5 text-[11px] text-red-300">{errors[entry.id]}</span>
+                  <span role="alert" className="motion-shake block pl-4.5 text-[11px] text-red-300">{feedText(errors[entry.id], locale)}</span>
                 ) : null}
               </div>
             </li>
@@ -338,9 +279,13 @@ export function EventLog({
       {confirming ? (
         <ConfirmUndoDialog
           warnings={confirming.warnings}
-          busy={false}
-          onConfirm={() => void confirming.run()}
-          onCancel={() => setConfirming(null)}
+          busy={confirmBusy}
+          onConfirm={async () => {
+            if (confirmBusy) return;
+            setConfirmBusy(true);
+            try { await confirming.run(); } finally { setConfirmBusy(false); }
+          }}
+          onCancel={() => { if (!confirmBusy) setConfirming(null); }}
         />
       ) : null}
     </>

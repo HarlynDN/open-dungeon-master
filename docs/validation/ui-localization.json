@@ -334,7 +334,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/EventLog.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned structured audit descriptions, field/kind labels, undo errors/warnings/confirmation and timeline filters/native titles/calendar projections localized. Authored reasons, milestone summaries, chapter/act names and historical clock labels preserved; IDs/deltas/sorting/visibility and undo protocols unchanged. Optional native display metadata distinguishes fallback titles from authored lookalikes. Protection-only damage entries no longer show undefined damage. Failed reads retain rows; confirmation busy state prevents cancellation while retry is active. Focused tests use mocked undo transport only."
     },
     {
       "path": "src/app/campaigns/[campaignId]/ExportMenu.tsx",
@@ -787,7 +788,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/TimelinePanel.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Owned structured audit descriptions, field/kind labels, undo errors/warnings/confirmation and timeline filters/native titles/calendar projections localized. Authored reasons, milestone summaries, chapter/act names and historical clock labels preserved; IDs/deltas/sorting/visibility and undo protocols unchanged. Optional native display metadata distinguishes fallback titles from authored lookalikes. Protection-only damage entries no longer show undefined damage. Failed reads retain rows; confirmation busy state prevents cancellation while retry is active. Focused tests use mocked undo transport only."
     },
     {
       "path": "src/app/campaigns/[campaignId]/TokenHud.tsx",
