@@ -3065,6 +3065,11 @@
       "sourceHash": "fdc90bda289cadb66ac8c96da75187ee435530ad6f8ee7066681952323785cd1"
     },
     {
+      "id": "aboleth",
+      "kind": "monster",
+      "sourceHash": "fe48d646470b30538ea233288dc2922c505a17f29dfdac61b1a5160e80f38e79"
+    },
+    {
       "id": "adult-black-dragon-chromatic",
       "kind": "monster",
       "sourceHash": "b29f0cf1c2dd4e969851a59f3e857dbd9151003740a7271ce462586cf62ccef2"
