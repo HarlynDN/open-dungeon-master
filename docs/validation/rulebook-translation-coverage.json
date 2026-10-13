@@ -3740,6 +3740,16 @@
       "sourceHash": "f8361a32d04b2cecc91c33e4ba2245ef13f29bd0ee746d903c86534c1f10f8af"
     },
     {
+      "id": "wight",
+      "kind": "monster",
+      "sourceHash": "4183ca0b6816f2e11e011fa86a5a32b07b3c660e5803c3c276c178e4b490227f"
+    },
+    {
+      "id": "will-o-wisp",
+      "kind": "monster",
+      "sourceHash": "f407c38173dc3e59875e27dde0193af15c3554d2db7e1b97b4d836696de0f90f"
+    },
+    {
       "id": "wraith",
       "kind": "monster",
       "sourceHash": "d86292693d25f2546d955d1f97efb6e1b320631fbadd5b0d39138b37194643e9"
