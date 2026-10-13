@@ -65,6 +65,16 @@
       "sourceHash": "53591b9f2e578754cfa76f01e83c736764556496fbaf3b26bc88849c7a36f049"
     },
     {
+      "id": "barbarian",
+      "kind": "class",
+      "sourceHash": "5fc1164dde46fb0e7175b45d4e2f997c593a6911293617bc5036bf43d1a7da7e"
+    },
+    {
+      "id": "fighter",
+      "kind": "class",
+      "sourceHash": "4b204b18050ff800e7cbf69963ee3925e9acc62cc67dc4d26a7ac4896379d4cb"
+    },
+    {
       "id": "beyond-1st-level",
       "kind": "rules",
       "sourceHash": "e38f0468e4ae1916a6083c5faf3cd5fa4034af55905d8415aa9dda34ab4a85f3"
