@@ -32,4 +32,4 @@ for (const entry of SPELL_HELP) {
 }
 const missile = rows.find(row => row.name === 'Magic Missile');
 assert.match(nativeSpellHelp(missile, describeContentEntry(missile.data, { includeHigherLevels: true }), 'zh-CN'), /额外产生一枚飞弹/);
-console.log('Native spell help: 8 complete source-bound bilingual descriptions; higher-level clauses and variant preservation passed.');
+console.log(`Native spell help: ${SPELL_HELP.length} complete source-bound bilingual descriptions; higher-level clauses and variant preservation passed.`);
