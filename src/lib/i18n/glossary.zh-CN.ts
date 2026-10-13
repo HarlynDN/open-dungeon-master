@@ -453,6 +453,7 @@ export const ZH_CN_GLOSSARY = [
   {"id":"monster.drider","source":"Drider","preferred":"蛛化卓尔","scope":"monster"},
   {"id":"monster.duergar","source":"Duergar","preferred":"灰矮人","scope":"monster"},
   {"id":"monster.deep_gnome","source":"Gnome, Deep","preferred":"地底侏儒","scope":"monster","aliases":["斯涅布力"]},
+  {"id":"monster.rakshasa","source":"Rakshasa","preferred":"罗刹","scope":"monster"},
   {"id":"monster.goblin","source":"Goblin","preferred":"哥布林","scope":"monster","aliases":["地精"]},
   {"id":"monster.bugbear","source":"Bugbear","preferred":"熊地精","scope":"monster"},
   {"id":"monster.hobgoblin","source":"Hobgoblin","preferred":"大地精","scope":"monster"},

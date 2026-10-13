@@ -3695,6 +3695,11 @@
       "sourceHash": "e24363625a824e146fe6550980a4d95e25233d31c5ac7bbc5432991f15e152a2"
     },
     {
+      "id": "rakshasa",
+      "kind": "monster",
+      "sourceHash": "fcc9962498bacdb00c2b80653fac39ac054c0f7c2cf98536ca6c406736bdeae5"
+    },
+    {
       "id": "red-dragon-wyrmling-chromatic",
       "kind": "monster",
       "sourceHash": "2f4f619e1c26422f751739516a58d11f13d73bc12cf6d0e02b510df8f9f1abbc"
