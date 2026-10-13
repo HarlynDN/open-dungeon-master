@@ -66,7 +66,7 @@ report or release gate and does not include a SRD 5.2 rules migration.
 | Player system logs | Localized structured combat/audit display, party item/coin/XP logs, account facts and kickoff notices; English model/tool semantics stay separate | Other native player-log templates and final history/save/resume audit |
 | Resource delivery | UI/content/help scopes and independent retryable lazy help; anonymous bilingual switch/reload, authenticated character/campaign entry and viewer-English/story-Chinese separation observed | Complete authenticated journey and lazy/cache timing; hydrated/network totals and large route JS payload remain unverified |
 | Local Chinese TTS | Implementation and bounded CPU delivery/outage evidence retained in [the runtime record](validation/chinese-tts-runtime.json) | Chinese voice quality rejected by user; further voice work is deferred, not passed, and is not a text-milestone gate |
-| Full native rulebook | Reader chrome localized; **625/933 complete Chinese pages** now render via a server-generated display projection, including all 319 cantrip through ninth-level spell pages, all 239 magic-item pages, all thirty-six rules pages, all nine race pages and all twelve class pages and ten dragon-wyrmling pages, with complete headers and reused bodies; original English corpus retained; 319 spell and 239 magic-item bodies are available for further reuse | Remaining 308 monster pages; complete Chinese corpus coverage, authenticated browser search/navigation and English reading regression |
+| Full native rulebook | Reader chrome localized; **655/933 complete Chinese pages** now render via a server-generated display projection, including all 319 cantrip through ninth-level spell pages, all 239 magic-item pages, all thirty-six rules pages, all nine race pages and all twelve class pages and all forty chromatic/metallic dragon pages, with complete headers and reused bodies; original English corpus retained; 319 spell and 239 magic-item bodies are available for further reuse | Remaining 278 monster pages; complete Chinese corpus coverage, authenticated browser search/navigation and English reading regression |
 | Final text flow | Recorded Chinese exploration/social/utility and combat/slot/correction acceptance on Codex | Complete Chinese text journey, rulebook reading/search and English regression; full tests/lint/build, then pause |
 
 ## Execution adjustment (2026-10-13)
@@ -86,24 +86,24 @@ real interaction has passed. Do not restart a static translation campaign.
 
 ## Next delivery unit and interruption checkpoint
 
-- Added all ten chromatic/metallic dragon wyrmlings as complete source-bound
-  Chinese stat blocks, now 625/933 pages (10/318 monsters). The English ability
-  tables, HP, attack bonuses, dice, DCs, recharge ranges, distances and durations
-  remain intact. Added these source identities to the shared glossary so display,
-  search and scoped reference resolution share their Chinese names.
-- Used 5etools creature-name candidates (黑/蓝/黄铜/青铜/赤铜/金/绿/红/银/白龙雏龙)
-  only as terminology assistance, matched against the repository's 2014/SRD 5.1
-  creature identities. Candidate rows have words-sync provenance, not independently
-  verified edition/review status; no external prose was copied.
-- Fixed Chinese ability-table styling detection. Monster checks now verify numeric
-  sequences outside tables too, Chinese/English rendering and cached locale switch,
-  source changes refusing stale translations, and display/tool alias identities.
-  Page checks, glossary/guard regression, AST/catalog/resources and scoped lint
-  passed (267 terminology entries, 0 errors, 389 context warnings).
-- Next: remaining dragon age groups, then other monster families. Rulebook monster
-  prose is currently separate from game-card prose; game-card/help reuse and its
-  native source ownership remain a required delivery item, not an inferred pass.
-  Final full-suite/build and real bilingual journey remain unproven.
+- Added all thirty young/adult/ancient chromatic and metallic dragons, completing
+  all forty dragon age/color entries: 655/933 pages, 40/318 monsters. Matched
+  repeated English paragraphs before reusing reviewed translations, substituted
+  only their numbers, and rejected unknown prose. Reviewed new legendary,
+  frightful-presence, shapechange and ice-walk clauses. Preserved the young red
+  dragon's absent metadata and source numbers without canonical-source edits.
+- Added thirty source identities to the shared monster glossary. 5etools age-name
+  and ability-name candidates agree with 青年/成年/远古, 骇人威仪 and 传奇抗性;
+  source rows still do not independently establish reviewed 2014 provenance.
+  No external prose was imported.
+- All forty monster pages pass numeric-sequence/table checks, actual component
+  rendering in Chinese and English, cached locale switching, stale-source refusal
+  and glossary/reference identity checks. AST/catalog/resources and terminology
+  regressions passed (297 entries, 0 errors, 389 context warnings).
+- Next: remaining monster families (278 pages), with game-card/help prose reuse
+  and native source ownership still required. Rulebook coverage does not prove
+  game-card coverage. Final full-suite/build and real bilingual journey remain
+  unproven.
 - Native dynamic UI/material/log ownership remains pending in the UI manifest;
   audit helpers with their actual consumers before the final bilingual journey.
 

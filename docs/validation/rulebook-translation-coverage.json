@@ -3065,6 +3065,106 @@
       "sourceHash": "fdc90bda289cadb66ac8c96da75187ee435530ad6f8ee7066681952323785cd1"
     },
     {
+      "id": "adult-black-dragon-chromatic",
+      "kind": "monster",
+      "sourceHash": "b29f0cf1c2dd4e969851a59f3e857dbd9151003740a7271ce462586cf62ccef2"
+    },
+    {
+      "id": "adult-blue-dragon-chromatic",
+      "kind": "monster",
+      "sourceHash": "5df94284f1efed258e4876267fc55397aebe923c75d7909893d98f00fbc5e329"
+    },
+    {
+      "id": "adult-brass-dragon-metallic",
+      "kind": "monster",
+      "sourceHash": "abe394e78cd5e062cc90c2ae65a16fc87a5c77aeebedcd469f6ed9706a40ca73"
+    },
+    {
+      "id": "adult-bronze-dragon-metallic",
+      "kind": "monster",
+      "sourceHash": "6455bc5654993868c80c30de7f18b934afd79c3a8f87b2edb4417db88be34392"
+    },
+    {
+      "id": "adult-copper-dragon-metallic",
+      "kind": "monster",
+      "sourceHash": "f8112233eb2fceac0419bc142ee919ffe8a677c1818094be9167328ca12f875e"
+    },
+    {
+      "id": "adult-gold-dragon-metallic",
+      "kind": "monster",
+      "sourceHash": "bd34ba9fc6fa0ace8bd6b61f634b0fe6ae9766f0d0b1ac95bdfaa2970fafafe1"
+    },
+    {
+      "id": "adult-green-dragon-chromatic",
+      "kind": "monster",
+      "sourceHash": "c55cac75ef0f0761813526316e3bff71ee67a18d200999d4b83dacc9600cba84"
+    },
+    {
+      "id": "adult-red-dragon-chromatic",
+      "kind": "monster",
+      "sourceHash": "fad942d2a0babbf6b6288c6e47644bb6c433490550cbeeacc9aa533563eadc4c"
+    },
+    {
+      "id": "adult-silver-dragon-metallic",
+      "kind": "monster",
+      "sourceHash": "fc31438ce09e41a497aa446e56a71624d3b59aba9961347acb50237ea8196878"
+    },
+    {
+      "id": "adult-white-dragon-chromatic",
+      "kind": "monster",
+      "sourceHash": "39013f9f4eb67987fc2c8ff0aea438b71d87c5d3faea17a43676d1b14dd0e4f4"
+    },
+    {
+      "id": "ancient-black-dragon-chromatic",
+      "kind": "monster",
+      "sourceHash": "2ecb8c590df25f9fa3189a1e5f34e77978ebde6c4226a1037b72924e699a44c8"
+    },
+    {
+      "id": "ancient-blue-dragon-chromatic",
+      "kind": "monster",
+      "sourceHash": "b816935c14500a4586fa8be52ca19715e263d31cffdd1ebd7ced39b3da962777"
+    },
+    {
+      "id": "ancient-brass-dragon-metallic",
+      "kind": "monster",
+      "sourceHash": "47a473d71cf3ad72aa5e55f43e6e58554c21bf73977a149f1658278db238f3f2"
+    },
+    {
+      "id": "ancient-bronze-dragon-metallic",
+      "kind": "monster",
+      "sourceHash": "48af86c7918f7cd3fb26f9f31a6e89c780a1019be1ff6a4dc38609dd78ebb4a5"
+    },
+    {
+      "id": "ancient-copper-dragon-metallic",
+      "kind": "monster",
+      "sourceHash": "1448650f72ae74ddfc97e62310181acf45791b69d6da8c778707cc6d9b9b9d4a"
+    },
+    {
+      "id": "ancient-gold-dragon-metallic",
+      "kind": "monster",
+      "sourceHash": "77fc0d357e399917382113ad5005e7f86fcc83739d34d183bd304146d9f8ed3a"
+    },
+    {
+      "id": "ancient-green-dragon-chromatic",
+      "kind": "monster",
+      "sourceHash": "73e7320828e789bbd466f36634c061617523f85e8990f8b00298e64c34f94bd5"
+    },
+    {
+      "id": "ancient-red-dragon-chromatic",
+      "kind": "monster",
+      "sourceHash": "117b7ad46a6f5cec401c8fac3984d3e3c94d33ed4df660646b0ebfc93bf08e05"
+    },
+    {
+      "id": "ancient-silver-dragon-metallic",
+      "kind": "monster",
+      "sourceHash": "e92bcad00b74fa24c94fe6109f94ce76c3c2fa10fec5c0300df269ea81fe0de2"
+    },
+    {
+      "id": "ancient-white-dragon-chromatic",
+      "kind": "monster",
+      "sourceHash": "f5363d2e56c731887a834307e587af8bd53c409774c79211d669f83ac9a059e6"
+    },
+    {
       "id": "black-dragon-wyrmling-chromatic",
       "kind": "monster",
       "sourceHash": "dbe64296f8f1b327afb1fe238c140609a137694f3c25fa064d57efd049d72778"
@@ -3113,6 +3213,56 @@
       "id": "white-dragon-wyrmling-chromatic",
       "kind": "monster",
       "sourceHash": "f8361a32d04b2cecc91c33e4ba2245ef13f29bd0ee746d903c86534c1f10f8af"
+    },
+    {
+      "id": "young-black-dragon-chromatic",
+      "kind": "monster",
+      "sourceHash": "fb404e3c3879af1e3230f8acd5278716ca8f54bd02f1b65f43f1f971c8512d66"
+    },
+    {
+      "id": "young-blue-dragon-chromatic",
+      "kind": "monster",
+      "sourceHash": "20772bb7fec95aedb4b0a1462d73dfc742504ccdbeb7178455806ee5f93ebf65"
+    },
+    {
+      "id": "young-brass-dragon-metallic",
+      "kind": "monster",
+      "sourceHash": "e2cb07b55c9ad0e1b81d7e21bbfb52a191851d174e3f1e6a83cfcb424e676a75"
+    },
+    {
+      "id": "young-bronze-dragon-metallic",
+      "kind": "monster",
+      "sourceHash": "97427dc5429ebd62c7cc2f51833dba63862d262f71f30bb27241f056bc3553b7"
+    },
+    {
+      "id": "young-copper-dragon-metallic",
+      "kind": "monster",
+      "sourceHash": "5e574ffdc732add71da918a354446f3137d6f7ae2fc1b4816711c9e7f5811f08"
+    },
+    {
+      "id": "young-gold-dragon-metallic",
+      "kind": "monster",
+      "sourceHash": "51d33a4ab70c40372d9f09a6a4ace42d8824000b10ed05da3aef09af1cd11bdc"
+    },
+    {
+      "id": "young-green-dragon-chromatic",
+      "kind": "monster",
+      "sourceHash": "c79913f8c56b2be97266f800beacbee3a1383b747fc0f4b66dea83a945142fe8"
+    },
+    {
+      "id": "young-red-dragon-chromatic",
+      "kind": "monster",
+      "sourceHash": "d64b91158e3ee435e0bbf034fcaa74fe9ae2bf279cd4db0e8290f9a5040a24a0"
+    },
+    {
+      "id": "young-silver-dragon-metallic",
+      "kind": "monster",
+      "sourceHash": "eef2055b33fdc744e1fc940454ac95e0fa36f68b094510579f54fc37fe2b5a0f"
+    },
+    {
+      "id": "young-white-dragon-chromatic",
+      "kind": "monster",
+      "sourceHash": "c371033393e12ac9957b29c774da101d20582fc74e40fe92e26da3046633592b"
     },
     {
       "id": "nonplayer-characters",
