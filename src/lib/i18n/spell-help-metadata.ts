@@ -227,5 +227,69 @@ export const SPELL_HELP = [
   {
     "name": "Hellish Rebuke",
     "key": "spellHelp.native.hellish-rebuke"
+  },
+  {
+    "name": "Animal Friendship",
+    "key": "spellHelp.native.animal-friendship"
+  },
+  {
+    "name": "Find Familiar",
+    "key": "spellHelp.native.find-familiar"
+  },
+  {
+    "name": "Heroism",
+    "key": "spellHelp.native.heroism"
+  },
+  {
+    "name": "Hideous Laughter",
+    "key": "spellHelp.native.hideous-laughter"
+  },
+  {
+    "name": "Hunter's Mark",
+    "key": "spellHelp.native.hunter's-mark"
+  },
+  {
+    "name": "Identify",
+    "key": "spellHelp.native.identify"
+  },
+  {
+    "name": "Illusory Script",
+    "key": "spellHelp.native.illusory-script"
+  },
+  {
+    "name": "Inflict Wounds",
+    "key": "spellHelp.native.inflict-wounds"
+  },
+  {
+    "name": "Jump",
+    "key": "spellHelp.native.jump"
+  },
+  {
+    "name": "Longstrider",
+    "key": "spellHelp.native.longstrider"
+  },
+  {
+    "name": "Protection from Evil and Good",
+    "key": "spellHelp.native.protection-from-evil-and-good"
+  },
+  {
+    "name": "Purify Food and Drink",
+    "key": "spellHelp.native.purify-food-and-drink"
+  },
+  {
+    "name": "Sanctuary",
+    "key": "spellHelp.native.sanctuary"
+  },
+  {
+    "name": "Shield of Faith",
+    "key": "spellHelp.native.shield-of-faith"
+  },
+  {
+    "name": "Speak with Animals",
+    "key": "spellHelp.native.speak-with-animals"
+  },
+  {
+    "name": "Unseen Servant",
+    "key": "spellHelp.native.unseen-servant"
   }
 ] as const;

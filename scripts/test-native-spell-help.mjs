@@ -30,6 +30,12 @@ for (const entry of SPELL_HELP) {
   }
   assert.equal(JSON.stringify(native), before, 'Display must not alter canonical mechanics');
 }
+// The first playable tier must not quietly lose a source as the catalog evolves.
+for (const row of rows.filter(row => Number(row.data.level_int ?? row.level) <= 1)) {
+  assert.ok(SPELL_HELP.some(entry => entry.name === row.name), 'Missing cantrip/first-level body: ' + row.name);
+}
+const friendship = rows.find(row => row.name === 'Animal Friendship');
+assert.match(nativeSpellHelp(friendship, describeContentEntry(friendship.data, { includeHigherLevels: true }), 'zh-CN'), /每比一环高一环，就能额外影响一个野兽/);
 const missile = rows.find(row => row.name === 'Magic Missile');
 assert.match(nativeSpellHelp(missile, describeContentEntry(missile.data, { includeHigherLevels: true }), 'zh-CN'), /额外产生一枚飞弹/);
 console.log(`Native spell help: ${SPELL_HELP.length} complete source-bound bilingual descriptions; higher-level clauses and variant preservation passed.`);

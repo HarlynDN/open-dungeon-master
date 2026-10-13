@@ -229,5 +229,69 @@ export const SPELL_HELP_MESSAGES = defineMessages({
   "spellHelp.native.hellish-rebuke": {
     "en": "You point your finger, and the creature that damaged you is momentarily surrounded by hellish flames. The creature must make a Dexterity saving throw. It takes 2d10 fire damage on a failed save, or half as much damage on a successful one.\n\n**At Higher Levels.** When you cast this spell using a spell slot of 2nd level or higher, the damage increases by 1d10 for each slot level above 1st.",
     "zh-CN": "你伸出手指，伤害你的生物瞬间被地狱烈焰包围。该生物必须进行敏捷豁免。豁免失败时受到 2d10 点火焰伤害；豁免成功则受到一半伤害。\n\n**升环施法。** 当你使用二环或更高环阶的法术位施放此法术时，法术位每比一环高一环，伤害便增加 1d10。"
+  },
+  "spellHelp.native.animal-friendship": {
+    "en": "This spell lets you convince a beast that you mean it no harm. Choose a beast that you can see within range. It must see and hear you. If the beast's Intelligence is 4 or higher, the spell fails. Otherwise, the beast must succeed on a Wisdom saving throw or be charmed by you for the spell's duration. If you or one of your companions harms the target, the spells ends.\n\n**At Higher Levels.** When you cast this spell using a spell slot of 2nd level or higher, you can affect one additional beast t level above 1st.",
+    "zh-CN": "此法术让你向一个野兽表明自己没有恶意。选择施法距离内一个能看见的野兽；它必须能看见并听见你。如果它的智力为 4 或更高，法术失败。否则，它必须成功通过一次感知豁免，或在法术持续时间内被你魅惑。如果你或你的任何同伴伤害目标，法术结束。\n\n**升环施法。** 当你使用二环或更高环阶的法术位施放此法术时，法术位每比一环高一环，就能额外影响一个野兽。"
+  },
+  "spellHelp.native.find-familiar": {
+    "en": "You gain the service of a familiar, a spirit that takes an animal form you choose: bat, cat, crab, frog (toad), hawk, lizard, octopus, owl, poisonous snake, fish (quipper), rat, raven, sea horse, spider, or weasel. Appearing in an unoccupied space within range, the familiar has the statistics of the chosen form, though it is a celestial, fey, or fiend (your choice) instead of a beast.\n\nYour familiar acts independently of you, but it always obeys your commands. In combat, it rolls its own initiative and acts on its own turn. A familiar can't attack, but it can take other actions as normal.\n\nWhen the familiar drops to 0 hit points, it disappears, leaving behind no physical form. It reappears after you cast this spell again.\n\nWhile your familiar is within 100 feet of you, you can communicate with it telepathically. Additionally, as an action, you can see through your familiar's eyes and hear what it hears until the start of your next turn, gaining the benefits of any special senses that the familiar has. During this time, you are deaf and blind with regard to your own senses.\n\nAs an action, you can temporarily dismiss your familiar. It disappears into a pocket dimension where it awaits your summons. Alternatively, you can dismiss it forever. As an action while it is temporarily dismissed, you can cause it to reappear in any unoccupied space within 30 feet of you.\n\nYou can't have more than one familiar at a time. If you cast this spell while you already have a familiar, you instead cause it to adopt a new form. Choose one of the forms from the above list. Your familiar transforms into the chosen creature.\n\nFinally, when you cast a spell with a range of touch, your familiar can deliver the spell as if it had cast the spell. Your familiar must be within 100 feet of you, and it must use its reaction to deliver the spell when you cast it. If the spell requires an attack roll, you use your attack modifier for the roll.",
+    "zh-CN": "你获得一个魔宠的服侍。它是一个精魂，采用你选定的动物形态：蝙蝠、猫、蟹、蛙（蟾蜍）、鹰、蜥蜴、章鱼、猫头鹰、毒蛇、鱼（食人鱼）、鼠、渡鸦、海马、蜘蛛或鼬。魔宠出现在施法距离内一个未被占据的位置，使用所选形态的数据，但其生物类型是天界生物、精类或邪魔，由你选择，而不是野兽。\n\n魔宠独立行动，但始终服从你的命令。在战斗中，它单独掷先攻，并在自己的回合行动。魔宠不能攻击，但可以正常执行其他动作。\n\n魔宠的生命值降至 0 时便会消失，不留下实体。你再次施放此法术后，它会重新出现。\n\n魔宠位于你周围 100 英尺内时，你可以与它心灵交流。此外，你可以用一个动作，透过它的眼睛观察，并听见它听到的声音，直到你的下一回合开始；期间你获得魔宠拥有的任何特殊感官带来的好处，但你自身的感官处于耳聋和目盲状态。\n\n你可以用一个动作暂时遣散魔宠，使其进入一个袖珍位面，等待你的召唤；也可以永久遣散它。魔宠被暂时遣散期间，你可以用一个动作，使其重新出现在你周围 30 英尺内任意一个未被占据的位置。\n\n你不能同时拥有多个魔宠。如果已有魔宠时再次施放此法术，你会让它从上述列表中采用一个新形态，变为选定的生物。\n\n最后，施放施法距离为触碰的法术时，魔宠可以替你传递法术，视同由它施放。魔宠必须位于你周围 100 英尺内，并在你施法时使用它的反应来传递法术。如果法术需要攻击检定，使用你的攻击调整值进行检定。"
+  },
+  "spellHelp.native.heroism": {
+    "en": "A willing creature you touch is imbued with bravery. Until the spell ends, the creature is immune to being frightened and gains temporary hit points equal to your spellcasting ability modifier at the start of each of its turns. When the spell ends, the target loses any remaining temporary hit points from this spell.\n\n**At Higher Levels.** When you cast this spell using a spell slot of 2nd level or higher, you can target one additional creature for each slot level above 1st.",
+    "zh-CN": "你触碰的一个自愿接受法术的生物被注入勇气。法术结束前，它免疫恐慌，并在自己的每个回合开始时获得临时生命值，数值等于你的施法属性调整值。法术结束时，目标失去由此法术获得且尚未耗尽的临时生命值。\n\n**升环施法。** 当你使用二环或更高环阶的法术位施放此法术时，法术位每比一环高一环，就能额外指定一个目标。"
+  },
+  "spellHelp.native.hideous-laughter": {
+    "en": "A creature of your choice that you can see within range perceives everything as hilariously funny and falls into fits of laughter if this spell affects it. The target must succeed on a Wisdom saving throw or fall prone, becoming incapacitated and unable to stand up for the duration. A creature with an Intelligence score of 4 or less isn't affected.\n\nAt the end of each of its turns, and each time it takes damage, the target can make another Wisdom saving throw. The target has advantage on the saving throw if it's triggered by damage. On a success, the spell ends.",
+    "zh-CN": "施法距离内一个你选定且能看见的生物，会觉得一切都滑稽可笑；如果受到法术影响，它就会狂笑不止。目标必须成功通过一次感知豁免，否则倒地、陷入失能，并在法术持续时间内无法站起。智力为 4 或更低的生物不受影响。\n\n目标在自己的每个回合结束时，以及每次受到伤害时，都可以再次进行感知豁免。如果豁免由伤害触发，该次豁免具有优势。豁免成功时，法术结束。"
+  },
+  "spellHelp.native.hunter's-mark": {
+    "en": "You choose a creature you can see within range and mystically mark it as your quarry. Until the spell ends, you deal an extra 1d6 damage to the target whenever you hit it with a weapon attack, and you have advantage on any Wisdom (Perception) or Wisdom (Survival) check you make to find it. If the target drops to 0 hit points before this spell ends, you can use a bonus action on a subsequent turn of yours to mark a new creature.\n\n**At Higher Levels.** When you cast this spell using a spell slot of 3rd or 4th level, you can maintain your concentration on the spell for up to 8 hours. When you use a spell slot of 5th level or higher, you can maintain your concentration on the spell for up to 24 hours.",
+    "zh-CN": "你选择施法距离内一个能看见的生物，用魔法将它标记为猎物。法术结束前，你每次用武器攻击命中目标，都会额外造成 1d6 点伤害；为寻找目标而进行的感知（察觉）或感知（求生）检定也具有优势。如果目标在法术结束前生命值降至 0，你可以在之后自己的某个回合用一个附赠动作，标记一个新的生物。\n\n**升环施法。** 使用三环或四环法术位施放此法术时，你可以维持专注至多 8 小时。使用五环或更高环阶的法术位时，你可以维持专注至多 24 小时。"
+  },
+  "spellHelp.native.identify": {
+    "en": "You choose one object that you must touch throughout the casting of the spell. If it is a magic item or some other magic-imbued object, you learn its properties and how to use them, whether it requires attunement to use, and how many charges it has, if any. You learn whether any spells are affecting the item and what they are. If the item was created by a spell, you learn which spell created it.\n\nIf you instead touch a creature throughout the casting, you learn what spells, if any, are currently affecting it.",
+    "zh-CN": "你选择一个物体，并在整个施法过程中保持触碰它。如果它是魔法物品或其他蕴含魔法的物体，你会得知它的属性和使用方式、使用时是否需要同调，以及它拥有多少充能（如果有）。你会得知它是否正受到任何法术影响，以及这些法术是什么。如果物体由法术创造，你也会得知创造它的法术。\n\n如果你在整个施法过程中触碰的是一个生物，则会得知它当前受到哪些法术影响（如果有）。"
+  },
+  "spellHelp.native.illusory-script": {
+    "en": "You write on parchment, paper, or some other suitable writing material and imbue it with a potent illusion that lasts for the duration.\n\nTo you and any creatures you designate when you cast the spell, the writing appears normal, written in your hand, and conveys whatever meaning you intended when you wrote the text. To all others, the writing appears as if it were written in an unknown or magical script that is unintelligible. Alternatively, you can cause the writing to appear to be an entirely different message, written in a different hand and language, though the language must be one you know.\n\nShould the spell be dispelled, the original script and the illusion both disappear.\n\nA creature with truesight can read the hidden message.",
+    "zh-CN": "你在羊皮纸、纸张或其他适合书写的材料上写下文字，并为其注入强大的幻象，在法术持续时间内有效。\n\n对你以及施法时指定的生物而言，文字呈现正常，是你的笔迹，并表达你书写时想要传达的意思。对其他生物而言，文字看起来像是无法理解的未知文字或魔法文字。你也可以让它呈现为完全不同的讯息，采用不同的笔迹和语言，但该语言必须是你掌握的。\n\n如果法术被解除，原本的文字和幻象都会消失。\n\n拥有真实视觉的生物可以阅读隐藏的讯息。"
+  },
+  "spellHelp.native.inflict-wounds": {
+    "en": "Make a melee spell attack against a creature you can reach. On a hit, the target takes 3d10 necrotic damage.\n\n**At Higher Levels.** When you cast this spell using a spell slot of 2nd level or higher, the damage increases by 1d10 for each slot level above 1st.",
+    "zh-CN": "对一个你能触及的生物进行一次近战法术攻击。命中时，目标受到 3d10 点黯蚀伤害。\n\n**升环施法。** 当你使用二环或更高环阶的法术位施放此法术时，法术位每比一环高一环，伤害便增加 1d10。"
+  },
+  "spellHelp.native.jump": {
+    "en": "You touch a creature. The creature's jump distance is tripled until the spell ends.",
+    "zh-CN": "你触碰一个生物。法术结束前，该生物的跳跃距离变为原来的 3 倍。"
+  },
+  "spellHelp.native.longstrider": {
+    "en": "You touch a creature. The target's speed increases by 10 feet until the spell ends.\n\n**At Higher Levels.** When you cast this spell using a spell slot of 2nd level or higher, you can target one additional creature for each slot level above 1st.",
+    "zh-CN": "你触碰一个生物。法术结束前，目标的速度增加 10 英尺。\n\n**升环施法。** 当你使用二环或更高环阶的法术位施放此法术时，法术位每比一环高一环，就能额外指定一个目标。"
+  },
+  "spellHelp.native.protection-from-evil-and-good": {
+    "en": "Until the spell ends, one willing creature you touch is protected against certain types of creatures: aberrations, celestials, elementals, fey, fiends, and undead.\n\nThe protection grants several benefits. Creatures of those types have disadvantage on attack rolls against the target. The target also can't be charmed, frightened, or possessed by them. If the target is already charmed, frightened, or possessed by such a creature, the target has advantage on any new saving throw against the relevant effect.",
+    "zh-CN": "法术结束前，你触碰的一个自愿接受法术的生物，会获得针对以下生物类型的防护：异怪、天界生物、元素生物、精类、邪魔和不死生物。\n\n防护带来多项好处。这些类型的生物对目标进行攻击检定时具有劣势。目标也不能被它们魅惑、恐慌或附身。如果目标已经被这类生物魅惑、恐慌或附身，针对相关效果进行新的豁免时具有优势。"
+  },
+  "spellHelp.native.purify-food-and-drink": {
+    "en": "All nonmagical food and drink within a 5-foot radius sphere centered on a point of your choice within range is purified and rendered free of poison and disease.",
+    "zh-CN": "以施法距离内你选定的一点为中心，半径 5 英尺球形区域内的所有非魔法食物和饮料都会被净化，去除其中的毒素和疾病。"
+  },
+  "spellHelp.native.sanctuary": {
+    "en": "You ward a creature within range against attack. Until the spell ends, any creature who targets the warded creature with an attack or a harmful spell must first make a Wisdom saving throw. On a failed save, the creature must choose a new target or lose the attack or spell. This spell doesn't protect the warded creature from area effects, such as the explosion of a fireball.\n\nIf the warded creature makes an attack, casts a spell that affects an enemy, or deals damage to another creature, this spell ends.",
+    "zh-CN": "你保护施法距离内的一个生物，使其免受攻击。法术结束前，任何生物若想以攻击或有害法术指定受保护生物为目标，都必须先进行一次感知豁免。豁免失败时，攻击者必须选择一个新目标，否则失去此次攻击或法术。此法术不能保护目标免受区域效果影响，例如火球爆炸。\n\n如果受保护生物进行攻击、施放影响敌人的法术，或对其他生物造成伤害，此法术结束。"
+  },
+  "spellHelp.native.shield-of-faith": {
+    "en": "A shimmering field appears and surrounds a creature of your choice within range, granting it a +2 bonus to AC for the duration.",
+    "zh-CN": "一片闪烁的力场出现在施法距离内，环绕你选定的一个生物。法术持续时间内，该生物的护甲等级获得 +2 加值。"
+  },
+  "spellHelp.native.speak-with-animals": {
+    "en": "You gain the ability to comprehend and verbally communicate with beasts for the duration. The knowledge and awareness of many beasts is limited by their intelligence, but at minimum, beasts can give you information about nearby locations and monsters, including whatever they can perceive or have perceived within the past day. You might be able to persuade a beast to perform a small favor for you, at the GM's discretion.",
+    "zh-CN": "在法术持续时间内，你能理解野兽，并与它们进行口头交流。许多野兽的知识和认知受智力限制，但它们至少能告诉你附近地点和怪物的信息，包括当前能够感知或过去一天内曾感知到的事物。你可能说服野兽帮你一个小忙，具体由 DM 裁定。"
+  },
+  "spellHelp.native.unseen-servant": {
+    "en": "This spell creates an invisible, mindless, shapeless, Medium force that performs simple tasks at your command until the spell ends. The servant springs into existence in an unoccupied space on the ground within range. It has AC 10, 1 hit point, and a Strength of 2, and it can't attack. If it drops to 0 hit points, the spell ends.\n\nOnce on each of your turns as a bonus action, you can mentally command the servant to move up to 15 feet and interact with an object. The servant can perform simple tasks that a human servant could do, such as fetching things, cleaning, mending, folding clothes, lighting fires, serving food, and pouring wine. Once you give the command, the servant performs the task to the best of its ability until it completes the task, then waits for your next command.\n\nIf you command the servant to perform a task that would move it more than 60 feet away from you, the spell ends.",
+    "zh-CN": "此法术创造一股隐形、无心智、无形状的中型力量，直到法术结束前，都能按你的命令执行简单任务。仆役出现在施法距离内地面上一个未被占据的位置。它的护甲等级为 10、生命值为 1、力量为 2，且不能攻击。生命值降至 0 时，法术结束。\n\n在你的每个回合，你可以用一个附赠动作，以心灵命令仆役移动至多 15 英尺并操作一个物体，每回合限一次。仆役可以执行人类仆役能做的简单任务，例如取物、清洁、修补、叠衣、点火、端上食物和倒酒。收到命令后，仆役会尽力完成任务，然后等待下一条命令。\n\n如果你命令仆役执行的任务会使其离你超过 60 英尺，法术结束。"
   }
 });
