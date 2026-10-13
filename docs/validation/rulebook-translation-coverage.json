@@ -3240,6 +3240,11 @@
       "sourceHash": "f3a1d9b13ecb3e87552db78e97f5ce171ed96d849f84710d2647aa5d965f53aa"
     },
     {
+      "id": "dryad",
+      "kind": "monster",
+      "sourceHash": "41df0bf53c661dbbf5865e94cc89102c61906db8c5664bb03f8d17eff2e5d36e"
+    },
+    {
       "id": "dust-mephit",
       "kind": "monster",
       "sourceHash": "ba635c197bbac2a1a4a7de2a1f4e652a1cc025a756eef87bda1829223ec1d649"

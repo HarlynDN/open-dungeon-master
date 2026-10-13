@@ -66,7 +66,7 @@ report or release gate and does not include a SRD 5.2 rules migration.
 | Player system logs | Localized structured combat/audit display, party item/coin/XP logs, account facts and kickoff notices; English model/tool semantics stay separate | Other native player-log templates and final history/save/resume audit |
 | Resource delivery | UI/content/help scopes and independent retryable lazy help; anonymous bilingual switch/reload, authenticated character/campaign entry and viewer-English/story-Chinese separation observed | Complete authenticated journey and lazy/cache timing; hydrated/network totals and large route JS payload remain unverified |
 | Local Chinese TTS | Implementation and bounded CPU delivery/outage evidence retained in [the runtime record](validation/chinese-tts-runtime.json) | Chinese voice quality rejected by user; further voice work is deferred, not passed, and is not a text-milestone gate |
-| Full native rulebook | Reader chrome localized; **843/933 complete Chinese pages** render via a server-generated display projection: all 319 spells, 239 magic items, 36 rules, 9 races, 12 classes and 228 monsters. Exact page IDs and source hashes are maintained in the coverage manifest; original English corpus retained | Remaining 90 monster pages; game-card/help prose reuse, authenticated browser search/navigation and English reading regression |
+| Full native rulebook | Reader chrome localized; **844/933 complete Chinese pages** render via a server-generated display projection: all 319 spells, 239 magic items, 36 rules, 9 races, 12 classes and 229 monsters. Exact page IDs and source hashes are maintained in the coverage manifest; original English corpus retained | Remaining 89 monster pages; game-card/help prose reuse, authenticated browser search/navigation and English reading regression |
 | Final text flow | Recorded Chinese exploration/social/utility and combat/slot/correction acceptance on Codex | Complete Chinese text journey, rulebook reading/search and English regression; full tests/lint/build, then pause |
 
 ## Execution adjustment (2026-10-13)
@@ -86,16 +86,16 @@ real interaction has passed. Do not restart a static translation campaign.
 
 ## Next delivery unit and interruption checkpoint
 
-- Added Satyr and Sprite: 843/933 pages, 228/318 monster-kind pages. Reviewed
-  magic resistance, Sprite absolute save-result sleep threshold, waking conditions,
-  Heart Sight emotion/alignment distinction and automatic failures, and invisibility
-  concentration/equipment. Satyr source Sense markup normalized only in Chinese.
-- Added shared names 半羊人 and 小仙灵 aligned with cached 5etools candidates;
-  edition/review provenance remains unverified. No external prose imported.
+- Added Dryad: 844/933 pages, 229/318 monster-kind pages. Reviewed innate
+  spell frequencies, living-tree size/range/exit limits, charm visibility and target
+  types, harmful-action repeats, plane/death termination, immunity and target caps.
+  Spell names reuse shared display terminology; source unchanged.
+- Added 树精 aligned with cached 5etools candidates; edition/review provenance
+  remains unverified. No external prose imported.
 - Numeric/table, bilingual rendering, English switch, source refusal, identity,
-  terminology/guard and AST/catalog/resources checks passed: 467 terminology entries,
+  terminology/guard and AST/catalog/resources checks passed: 468 terminology entries,
   0 errors, 389 context warnings; UI remains 401/440.
-- Next: remaining 90 monster pages, game-card/help prose reuse and native source
+- Next: remaining 89 monster pages, game-card/help prose reuse and native source
   ownership. Final full-suite/build and real bilingual journey remain unproven.
 - Native dynamic UI/material/log ownership remains pending in the UI manifest;
   audit helpers with their actual consumers before the final bilingual journey.
