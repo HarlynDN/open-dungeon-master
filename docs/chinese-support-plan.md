@@ -45,7 +45,7 @@ Before pausing, finish the native dynamic text audit and one bilingual text jour
 | Player system logs | Localized structured combat/audit display, party item/coin/XP logs, account facts and kickoff notices; English model/tool semantics stay separate | Other native player-log templates and final history/save/resume audit |
 | Resource delivery | UI/content/help scopes and independent retryable lazy help; anonymous bilingual switch/reload, authenticated character/campaign entry and viewer-English/story-Chinese separation observed | Complete authenticated journey and lazy/cache timing; hydrated/network totals and large route JS payload remain unverified |
 | Local Chinese TTS | Implementation and bounded CPU delivery/outage evidence retained in [the runtime record](validation/chinese-tts-runtime.json) | Chinese voice quality rejected by user; further voice work is deferred, not passed, and is not a text-milestone gate |
-| Full native rulebook | Reader chrome localized; **417/933 complete Chinese pages** now render via a server-generated display projection, including all 127 cantrip/first-/second-level spell pages, all 239 magic-item pages, all thirty-six rules pages, all nine race pages and six class pages, with complete headers and reused bodies; original English corpus retained; 127 spell and 239 magic-item bodies are available for further reuse | Remaining six class pages, 192 high-level spell pages and 318 monster pages; complete Chinese corpus coverage, authenticated browser search/navigation and English reading regression |
+| Full native rulebook | Reader chrome localized; **423/933 complete Chinese pages** now render via a server-generated display projection, including all 127 cantrip/first-/second-level spell pages, all 239 magic-item pages, all thirty-six rules pages, all nine race pages and all twelve class pages, with complete headers and reused bodies; original English corpus retained; 127 spell and 239 magic-item bodies are available for further reuse | Remaining 192 high-level spell pages and 318 monster pages; complete Chinese corpus coverage, authenticated browser search/navigation and English reading regression |
 | Final text flow | Recorded Chinese exploration/social/utility and combat/slot/correction acceptance on Codex | Complete Chinese text journey, rulebook reading/search and English regression; full tests/lint/build, then pause |
 
 ## Execution adjustment (2026-10-13)
@@ -65,13 +65,13 @@ real interaction has passed. Do not restart a static translation campaign.
 
 ## Next delivery unit and interruption checkpoint
 
-- Last completed commit: `59167688`, full Paladin/Ranger source comparison and
-  focused bilingual page/manifest/table checks passed. No tracked changes were
-  pending when this execution adjustment was made.
-- Next: batch the remaining caster pages through the existing catalog/importer;
-  then high-level spells and monster families. Drafting chunks do not each need
-  a separate report, test run or commit. Apply the batch rules below.
-- Native dynamic UI/material/log ownership is still pending in the UI manifest;
+- Completed the remaining six caster pages in one source-reviewed batch,
+  including all 19 tables, invocations and sidebars. The existing focused page
+  check passed at 423/933; all twelve class pages are translated. English source
+  and mechanics stayed unchanged.
+- Next: high-level spell batches, sharing full bodies with in-game help through
+  the existing source-bound delivery path; then monster families.
+- Native dynamic UI/material/log ownership remains pending in the UI manifest;
   audit helpers with their actual consumers before the final bilingual journey.
 
 ## Batches and review boundaries (2026-10-13)
@@ -86,7 +86,6 @@ as independently reviewable units.
 
 | Remaining work | Batch rule |
 | --- | --- |
-| Six caster classes | Prepare remaining pages together as capacity permits; share one catalog import, review and focused check boundary. Do not automatically open another cycle for each class pair. |
 | 192 high-level spells | Group by level/theme and source volume; reuse names, headers and matching game-help bodies. A book-only body does not close the corresponding in-game help gap. |
 | 318 monsters | Group families with shared stat-block shapes; review each creature's exceptional actions, quantities and conditions against its full source. |
 | Dynamic UI/material/logs | Group producers/helpers with their consumer flow. Mark already-correct owners reviewed without inventing code changes or duplicate tests. |
@@ -309,7 +308,8 @@ have actual evidence.
   Runtime challenge/XP and spell mechanics were not changed.
 - Several class sources name additional PHB archetypes as if all were detailed
   on the same page; the bundled SRD pages contain only their included branches
-  (currently Berserker, Champion, Thief, Open Hand, Devotion and Hunter).
+  (Berserker, Lore, Life, Land, Champion, Open Hand, Devotion, Hunter, Thief,
+  Draconic Bloodline, Fiend and Evocation).
   Chinese notes retain the choices and clarify the available chapter coverage,
   without adding third-party archetype prose. Fighter's source skill-list typo
   `Animal, Handling` is rendered as the single existing skill 驯兽; canonical

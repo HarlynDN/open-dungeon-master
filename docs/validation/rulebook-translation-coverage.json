@@ -70,6 +70,21 @@
       "sourceHash": "5fc1164dde46fb0e7175b45d4e2f997c593a6911293617bc5036bf43d1a7da7e"
     },
     {
+      "id": "bard",
+      "kind": "class",
+      "sourceHash": "df2f4afe888559b9f39a7b1627693fcb3595cf811c5b506c482ee8eb8bbe155d"
+    },
+    {
+      "id": "cleric",
+      "kind": "class",
+      "sourceHash": "87794aba27fe9631fcb91e5d7d2bc53a1c40b818314ebd7841a87518854f8cbb"
+    },
+    {
+      "id": "druid",
+      "kind": "class",
+      "sourceHash": "9bc302277f2034aa04cde8d7302599d1dbd18f1c78aab8fc26c4b059add98b28"
+    },
+    {
       "id": "fighter",
       "kind": "class",
       "sourceHash": "4b204b18050ff800e7cbf69963ee3925e9acc62cc67dc4d26a7ac4896379d4cb"
@@ -93,6 +108,21 @@
       "id": "rogue",
       "kind": "class",
       "sourceHash": "4e3d11559e2fe28bede3e580582d5af632ac7ffd097df532eb6af3f9fbcf94f0"
+    },
+    {
+      "id": "sorcerer",
+      "kind": "class",
+      "sourceHash": "e82c129ca946ac4b5d8830e6471da431749573146258c5de960450d6983aa057"
+    },
+    {
+      "id": "warlock",
+      "kind": "class",
+      "sourceHash": "cf0c8055f53b21990e190ed27d2424cfc319d402aa8ff8eea715a2a3f76fa706"
+    },
+    {
+      "id": "wizard",
+      "kind": "class",
+      "sourceHash": "4fcfe03c384a2ab51eafb8745fdb44ab2ae5dab9e5b675dd9c9bbd714f4ea648"
     },
     {
       "id": "beyond-1st-level",
