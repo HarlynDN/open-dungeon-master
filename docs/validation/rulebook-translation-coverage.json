@@ -3535,6 +3535,11 @@
       "sourceHash": "31f0deca92a2cd8144e15b24b5037c4a2f1d00dff9cb8248211e3b28ebaae6cc"
     },
     {
+      "id": "roper",
+      "kind": "monster",
+      "sourceHash": "e8666c7158b45c2304364315a2daf1b04f5deaa12159c021947e64cbbb78e92d"
+    },
+    {
       "id": "rug-of-smothering-animated-object-animated-object",
       "kind": "monster",
       "sourceHash": "988a90102edcf163fea969c64b7f5c4a89784653f133cafc9062ecdc27275043"
