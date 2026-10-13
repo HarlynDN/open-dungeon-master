@@ -20,6 +20,51 @@
       "sourceHash": "24738ad9d8aea30c20697a75274d862e62887f5116a5bc02a7147c991bffd571"
     },
     {
+      "id": "dwarf",
+      "kind": "race",
+      "sourceHash": "aabaddc737a36f9dd1712ecb1170671ae70d1d7faa2f244bd948ba033bd93699"
+    },
+    {
+      "id": "elf",
+      "kind": "race",
+      "sourceHash": "242f5168177a61ac8fd25cccee54167949f4732bfe0b5b86d6d724b70d1b47e0"
+    },
+    {
+      "id": "halfling",
+      "kind": "race",
+      "sourceHash": "51d205fadeb752558a16a21ce813dd75f2bd87498119d2dbe0f42ccdd530e850"
+    },
+    {
+      "id": "human",
+      "kind": "race",
+      "sourceHash": "0d1034b01d7eac9768bd0dd14eae6f39998814899ad0c656da0857150e0bbb08"
+    },
+    {
+      "id": "dragonborn",
+      "kind": "race",
+      "sourceHash": "a8c6775fa341d263ee31f64f4dc925555ac6fab5cc9f3b4cd070b4d43f98f1f0"
+    },
+    {
+      "id": "gnome",
+      "kind": "race",
+      "sourceHash": "af473f07bf01568c87f61ec1ea9c372e15effb20dac74d29250e30f0bcb5879b"
+    },
+    {
+      "id": "half-elf",
+      "kind": "race",
+      "sourceHash": "ac9839349f9f7a42692f69bd83462c67b0ab5a53d4eed3c3921ccd64c1f985fd"
+    },
+    {
+      "id": "half-orc",
+      "kind": "race",
+      "sourceHash": "2e7dee697ab1b4eaf3ed1132880597b58333645b8f1e7cadc1774dd60087e8df"
+    },
+    {
+      "id": "tiefling",
+      "kind": "race",
+      "sourceHash": "53591b9f2e578754cfa76f01e83c736764556496fbaf3b26bc88849c7a36f049"
+    },
+    {
       "id": "beyond-1st-level",
       "kind": "rules",
       "sourceHash": "e38f0468e4ae1916a6083c5faf3cd5fa4034af55905d8415aa9dda34ab4a85f3"
@@ -108,6 +153,11 @@
       "id": "spellcasting",
       "kind": "rules",
       "sourceHash": "d0d3139cbff271c3c0e3d35abb934ebb92a8467ae5b0864e786edc10465481a9"
+    },
+    {
+      "id": "spell-lists",
+      "kind": "rules",
+      "sourceHash": "982b120529bae0e1d6612f071966bca562a9e39ddfbad942d9c7ecd70e625ecc"
     },
     {
       "id": "acid-splash",
