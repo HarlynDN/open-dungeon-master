@@ -66,7 +66,7 @@ report or release gate and does not include a SRD 5.2 rules migration.
 | Player system logs | Localized structured combat/audit display, party item/coin/XP logs, account facts and kickoff notices; English model/tool semantics stay separate | Other native player-log templates and final history/save/resume audit |
 | Resource delivery | UI/content/help scopes and independent retryable lazy help; anonymous bilingual switch/reload, authenticated character/campaign entry and viewer-English/story-Chinese separation observed | Complete authenticated journey and lazy/cache timing; hydrated/network totals and large route JS payload remain unverified |
 | Local Chinese TTS | Implementation and bounded CPU delivery/outage evidence retained in [the runtime record](validation/chinese-tts-runtime.json) | Chinese voice quality rejected by user; further voice work is deferred, not passed, and is not a text-milestone gate |
-| Full native rulebook | Reader chrome localized; **873/933 complete Chinese pages** render via a server-generated display projection: all 319 spells, 239 magic items, 36 rules, 9 races, 12 classes and 258 monsters. Exact page IDs and source hashes are maintained in the coverage manifest; original English corpus retained | Remaining 60 monster pages; game-card/help prose reuse, authenticated browser search/navigation and English reading regression |
+| Full native rulebook | Reader chrome localized; **877/933 complete Chinese pages** render via a server-generated display projection: all 319 spells, 239 magic items, 36 rules, 9 races, 12 classes and 262 monsters. Exact page IDs and source hashes are maintained in the coverage manifest; original English corpus retained | Remaining 56 monster pages; game-card/help prose reuse, authenticated browser search/navigation and English reading regression |
 | Final text flow | Recorded Chinese exploration/social/utility and combat/slot/correction acceptance on Codex | Complete Chinese text journey, rulebook reading/search and English regression; full tests/lint/build, then pause |
 
 ## Execution adjustment (2026-10-13)
@@ -86,16 +86,15 @@ real interaction has passed. Do not restart a static translation campaign.
 
 ## Next delivery unit and interruption checkpoint
 
-- Added Gibbering Mouther and Otyugh together: 873/933 pages, 258/318
-  monster-kind pages. Reviewed gibbering roll outcomes and reaction timing,
-  disease/max-HP recovery, independent tentacle grapples and slam saving throws.
-- Added 呓语之口、食腐兽 from cached 5etools candidates; distinguished Otyugh
-  creature and language senses. Source edition/review provenance remains unverified.
-  No external prose imported.
+- Added Clay, Flesh, Iron and Stone Golems together: 877/933 pages, 262/318
+  monster-kind pages. Reviewed adamantine exception, absorption, berserk recovery
+  and calming, max-HP reduction, haste timing and slow action/attack restrictions.
+- Added 粘土魔像、血肉魔像、铁魔像、石魔像 from cached 5etools candidates;
+  source edition/review provenance remains unverified. No external prose imported.
 - Numeric/table, bilingual rendering, English switch, source refusal, identity,
-  terminology/guard and AST/catalog/resources checks passed: 497 terminology entries,
+  terminology/guard and AST/catalog/resources checks passed: 501 terminology entries,
   0 errors, 389 context warnings; UI remains 401/440.
-- Next: remaining 60 monster pages, game-card/help prose reuse and native source
+- Next: remaining 56 monster pages, game-card/help prose reuse and native source
   ownership. Final full-suite/build and real bilingual journey remain unproven.
 - Native dynamic UI/material/log ownership remains pending in the UI manifest;
   audit helpers with their actual consumers before the final bilingual journey.

@@ -3245,6 +3245,11 @@
       "sourceHash": "09ad99788b0f5d79d6b9c8e118143b3f3b082cf2936694a4d6b5ebe67e48578c"
     },
     {
+      "id": "clay-golem",
+      "kind": "monster",
+      "sourceHash": "2e0aaea7dfd90883a9a37a05b1036ec2195ab96c8537c8cee6a554c002ca143e"
+    },
+    {
       "id": "cloud-giant-giant",
       "kind": "monster",
       "sourceHash": "9dd078f4b26cef169b0ba5307fa59877df5195c689ee797b97f0f7f5d5c040f5"
@@ -3313,6 +3318,11 @@
       "id": "fire-giant-giant",
       "kind": "monster",
       "sourceHash": "ab00dbaf6e179e4b85176aa826e42bbb22f1b65560a796434f369aca1669ec03"
+    },
+    {
+      "id": "flesh-golem",
+      "kind": "monster",
+      "sourceHash": "a6ea99605ea8413c321bb3b08c14019873e6d97c2157bc666a9e52136fa57fd0"
     },
     {
       "id": "flying-sword-animated-object-animated-object",
@@ -3448,6 +3458,11 @@
       "id": "invisible-stalker",
       "kind": "monster",
       "sourceHash": "f462369688028087842c92481ac2eb2fe18a1b16c0546f91741f4ab02a270d02"
+    },
+    {
+      "id": "iron-golem",
+      "kind": "monster",
+      "sourceHash": "684a73f45e3d5f2ba3a9af6000abb4fa195b857b8eb8ae7852e16934a119938d"
     },
     {
       "id": "kobold",
@@ -3653,6 +3668,11 @@
       "id": "stone-giant-giant",
       "kind": "monster",
       "sourceHash": "114df535acbe14a7be4d02e1dab43d083d9807ae30390f5aeda720833ec0a08d"
+    },
+    {
+      "id": "stone-golem",
+      "kind": "monster",
+      "sourceHash": "6725979b090205420bdc202a51e069023c370b202004e37fa05d71141fed5588"
     },
     {
       "id": "storm-giant-giant",
