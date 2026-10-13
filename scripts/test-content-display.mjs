@@ -43,3 +43,25 @@ for (const [kind, rows] of [['spells', bundledSpellRows()], ['items', bundledIte
   }
 }
 console.log(`content-display: ${spellCount} complete spells and ${itemCount} items, Chinese/English and changed-source refusal passed`);
+
+const fixtures = JSON.parse(readFileSync(new URL('./fixtures/srd-monster-rows.json', import.meta.url))).rows;
+let translatedMonsters = 0;
+for (const fixture of fixtures) {
+  const native = { ...fixture, source: 'open5e', documentSlug: 'wotc-srd' };
+  const source = describeContentEntry(native.data, { includeMonsterActions: true });
+  assert.ok(source?.includes('Actions'), native.name);
+  const shown = contentDisplay('monsters', native, 'zh-CN');
+  assert.equal(shown.data, native.data);
+  assert.equal(referenceRowDescription('monsters', shown, 'en'), source);
+  if (shown.display) {
+    translatedMonsters++;
+    assert.equal(referenceRowDescription('monsters', shown, 'zh-CN'), shown.display.text);
+    assert.deepEqual(shown.display.text.match(/\d+/g), source.match(/\d+/g), native.name);
+  }
+  const altered = structuredClone(native);
+  altered.data.actions[0].desc = 'Custom ability causes 999 damage.';
+  const changed = contentDisplay('monsters', altered, 'zh-CN');
+  assert.ok((changed.display?.text ?? describeContentEntry(altered.data, { includeMonsterActions: true })).includes('Custom ability causes 999 damage.'));
+}
+assert.ok(translatedMonsters > 0);
+console.log(`structured monster prose: ${fixtures.length} source rows checked, ${translatedMonsters} have matching translated paragraphs; unmatched paragraphs retained`);

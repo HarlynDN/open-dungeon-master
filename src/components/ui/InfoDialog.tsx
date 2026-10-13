@@ -128,7 +128,7 @@ function ContentBody({ reference }: { reference: ContentRef }) {
         );
         if (response.ok) {
           const data = await response.json();
-          const text = describeContentEntry(data?.entry?.data, { includeHigherLevels: reference.kind === "spells" });
+          const text = describeContentEntry(data?.entry?.data, { includeHigherLevels: reference.kind === "spells", includeMonsterActions: reference.kind === "monsters" });
           if (text) {
             if (!cancelled) {
               setState({ for: requestKey, text, display: data?.entry?.display, name: data?.entry?.name, source: data?.entry?.source,
@@ -153,7 +153,7 @@ function ContentBody({ reference }: { reference: ContentRef }) {
           (entry: { name: string; source?: string; documentSlug?: string; data?: Record<string, unknown> }) => entry.name.trim().toLowerCase() === wanted,
         );
         if (!cancelled) {
-          setState({ for: requestKey, text: describeContentEntry(hit?.data, { includeHigherLevels: reference.kind === "spells" }), display: hit?.display, name: hit?.name, source: hit?.source,
+          setState({ for: requestKey, text: describeContentEntry(hit?.data, { includeHigherLevels: reference.kind === "spells", includeMonsterActions: reference.kind === "monsters" }), display: hit?.display, name: hit?.name, source: hit?.source,
             documentSlug: hit?.documentSlug,
             classId: typeof hit?.data?.class === "string" ? hit.data.class : undefined, loading: false });
         }

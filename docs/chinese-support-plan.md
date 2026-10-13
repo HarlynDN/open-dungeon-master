@@ -105,9 +105,13 @@ real interaction has passed. Do not restart a static translation campaign.
   projection and reference display include higher-level spell text, English switching
   preserves full source, and changed descriptions refuse replacement. Fixed the
   prior omission of higher-level paragraphs from the server matching input.
-- Remaining: structured content-pack monster fields are not whole book prose and
-  still need matching/rendering. Direct detail and lazy InfoDialog now consume
-  the same display projection, with locale-aware requests and stale-response guards. MonsterHand engine notes must not be replaced with full book pages.
+- Structured monster help now includes traits, actions, bonus actions, reactions
+  and legendary descriptions/actions on reference and lazy-help consumers. For
+  native rows without authored description, exact source paragraphs can reuse
+  reviewed book translations; changed/unmatched paragraphs stay original.
+  Fourteen fixture monsters pass source/numeric/English/custom-change checks;
+  twelve have matching display paragraphs. This is partial prose coverage, not
+  complete monster localization. Direct detail/lazy help use locale-aware guards.
 - Next: complete those help paths and inspect real content data, then remaining
   dynamic UI/material/log owners. Full-suite/build and real bilingual journey
   remain unproven; no owner was newly marked covered.

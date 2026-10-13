@@ -1,3 +1,4 @@
+import { monsterProse } from "./monster-text.ts";
 // "What does this actually do?" for every game term a player meets.
 //
 // The app already held rules text in four places, all of it written for the
@@ -155,7 +156,7 @@ function textOf(value: unknown): string {
 // layer, so every spelling is tried, and the pieces some sources keep apart
 // (a feat's benefits, a background's feature, a 2024 species' trait list)
 // are put back together. Null when there is nothing to show.
-export function describeContentEntry(data: Record<string, unknown> | undefined, options: { includeHigherLevels?: boolean } = {}): string | null {
+export function describeContentEntry(data: Record<string, unknown> | undefined, options: { includeHigherLevels?: boolean; includeMonsterActions?: boolean } = {}): string | null {
   if (!data) {
     return null;
   }
@@ -192,6 +193,10 @@ export function describeContentEntry(data: Record<string, unknown> | undefined, 
     parts.push(`**Feature: ${feature}.** ${featureText}`);
   } else if (feature) {
     parts.push(`**Feature: ${feature}.**`);
+  }
+  if (options.includeMonsterActions) {
+    const monster = monsterProse(data);
+    if (monster) parts.push(monster);
   }
   const joined = normalizeRulesText(parts.join("\n\n"));
   return joined ? joined : null;
