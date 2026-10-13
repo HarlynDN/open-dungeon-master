@@ -66,7 +66,7 @@ report or release gate and does not include a SRD 5.2 rules migration.
 | Player system logs | Localized structured combat/audit display, party item/coin/XP logs, account facts and kickoff notices; English model/tool semantics stay separate | Other native player-log templates and final history/save/resume audit |
 | Resource delivery | UI/content/help scopes and independent retryable lazy help; anonymous bilingual switch/reload, authenticated character/campaign entry and viewer-English/story-Chinese separation observed | Complete authenticated journey and lazy/cache timing; hydrated/network totals and large route JS payload remain unverified |
 | Local Chinese TTS | Implementation and bounded CPU delivery/outage evidence retained in [the runtime record](validation/chinese-tts-runtime.json) | Chinese voice quality rejected by user; further voice work is deferred, not passed, and is not a text-milestone gate |
-| Full native rulebook | Reader chrome localized; **913/933 complete Chinese pages** render via a server-generated display projection: all 319 spells, 239 magic items, 36 rules, 9 races, 12 classes and 298 monsters. Exact page IDs and source hashes are maintained in the coverage manifest; original English corpus retained | Remaining 20 monster pages; game-card/help prose reuse, authenticated browser search/navigation and English reading regression |
+| Full native rulebook | Reader chrome localized; **914/933 complete Chinese pages** render via a server-generated display projection: all 319 spells, 239 magic items, 36 rules, 9 races, 12 classes and 299 monsters. Exact page IDs and source hashes are maintained in the coverage manifest; original English corpus retained | Remaining 19 monster pages; game-card/help prose reuse, authenticated browser search/navigation and English reading regression |
 | Final text flow | Recorded Chinese exploration/social/utility and combat/slot/correction acceptance on Codex | Complete Chinese text journey, rulebook reading/search and English regression; full tests/lint/build, then pause |
 
 ## Execution adjustment (2026-10-13)
@@ -86,15 +86,16 @@ real interaction has passed. Do not restart a static translation campaign.
 
 ## Next delivery unit and interruption checkpoint
 
-- Added Spirit Naga: 913/933 pages, 298/318 monster-kind pages. Reviewed
-  wish-only rejuvenation prevention, verbal-only wizard casting/slots, poison
-  saving throw and preserved native Nightmare cross-reference.
-- Added 阴魂纳迦 from cached 5etools candidates; source edition/review provenance
+- Added Guardian Naga: 914/933 pages, 299/318 monster-kind pages. Reviewed
+  rejuvenation, verbal-only cleric casting/slots and bite/spit poison saves.
+  Preserved both conflicting Saving Throws lines from the English source;
+  correcting this source anomaly requires a separate source review.
+- Added 守秘纳迦 from cached 5etools candidates; source edition/review provenance
   remains unverified. Spell names use local catalog; no external prose imported.
 - Numeric/table, bilingual rendering, English switch, source refusal, identity,
-  terminology/guard and AST/catalog/resources checks passed: 537 terminology entries,
+  terminology/guard and AST/catalog/resources checks passed: 538 terminology entries,
   0 errors, 389 context warnings; UI remains 401/440.
-- Next: remaining 20 monster pages, game-card/help prose reuse and native source
+- Next: remaining 19 monster pages, game-card/help prose reuse and native source
   ownership. Final full-suite/build and real bilingual journey remain unproven.
 - Native dynamic UI/material/log ownership remains pending in the UI manifest;
   audit helpers with their actual consumers before the final bilingual journey.

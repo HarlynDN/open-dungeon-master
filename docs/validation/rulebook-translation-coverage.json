@@ -3485,6 +3485,11 @@
       "sourceHash": "72347ee2d90028b81c5f77ee6afc967f003d3510a4c5d3a727d0668f387ab070"
     },
     {
+      "id": "guardian-naga",
+      "kind": "monster",
+      "sourceHash": "c997df38312830fc8be4d84e0a73742e476944dda1bf76456a1ff58e2cf9ff7b"
+    },
+    {
       "id": "harpy",
       "kind": "monster",
       "sourceHash": "d9efc6bc14b744b129baead420f0dec4504f3756ebca7c2f17a5fdaa05ff8f50"
