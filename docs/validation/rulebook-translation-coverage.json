@@ -3210,6 +3210,11 @@
       "sourceHash": "480315ccff24b56f2c80786e2324c539a36213e42f7bd2c4fcd98cc378143a1d"
     },
     {
+      "id": "centaur",
+      "kind": "monster",
+      "sourceHash": "fe619df6f9ab95578914f138d7f8f48e81de44219827700f0330beeb65fa0462"
+    },
+    {
       "id": "chimera",
       "kind": "monster",
       "sourceHash": "0345a10380cab90bf3ebc690ad386bb4a46efd206e31f7bc63f907e1331605fd"
@@ -3228,6 +3233,11 @@
       "id": "copper-dragon-wyrmling-metallic",
       "kind": "monster",
       "sourceHash": "f3a1d9b13ecb3e87552db78e97f5ce171ed96d849f84710d2647aa5d965f53aa"
+    },
+    {
+      "id": "ettin",
+      "kind": "monster",
+      "sourceHash": "9e67b23a6cf7790250fe3ec586ea8a99aab996ac8816bdb1247a5658514ae3c3"
     },
     {
       "id": "fire-giant-giant",
@@ -3278,6 +3288,11 @@
       "id": "hobgoblin",
       "kind": "monster",
       "sourceHash": "010aacdf3a3e0fcae54948af0db859b2aad0529578145b0c350655657c35ceb5"
+    },
+    {
+      "id": "minotaur",
+      "kind": "monster",
+      "sourceHash": "bd10263fe7729b70a827d273f9330adf4877e0e6eb5bde704caba5a2ff5ff419"
     },
     {
       "id": "minotaur-skeleton",

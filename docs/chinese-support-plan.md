@@ -66,7 +66,7 @@ report or release gate and does not include a SRD 5.2 rules migration.
 | Player system logs | Localized structured combat/audit display, party item/coin/XP logs, account facts and kickoff notices; English model/tool semantics stay separate | Other native player-log templates and final history/save/resume audit |
 | Resource delivery | UI/content/help scopes and independent retryable lazy help; anonymous bilingual switch/reload, authenticated character/campaign entry and viewer-English/story-Chinese separation observed | Complete authenticated journey and lazy/cache timing; hydrated/network totals and large route JS payload remain unverified |
 | Local Chinese TTS | Implementation and bounded CPU delivery/outage evidence retained in [the runtime record](validation/chinese-tts-runtime.json) | Chinese voice quality rejected by user; further voice work is deferred, not passed, and is not a text-milestone gate |
-| Full native rulebook | Reader chrome localized; **693/933 complete Chinese pages** now render via a server-generated display projection, including all 319 cantrip through ninth-level spell pages, all 239 magic-item pages, all thirty-six rules pages, all nine race pages and all twelve class pages and all forty chromatic/metallic dragon pages and all six giant pages and three animated-object pages and five canine pages and six common humanoid/giant enemies and five petrifying/flying monstrosities and five skeleton/zombie entries and four additional monstrosities and four plant/fungus entries, with complete headers and reused bodies; original English corpus retained; 319 spell and 239 magic-item bodies are available for further reuse | Remaining 240 monster pages; complete Chinese corpus coverage, authenticated browser search/navigation and English reading regression |
+| Full native rulebook | Reader chrome localized; **696/933 complete Chinese pages** now render via a server-generated display projection, including all 319 cantrip through ninth-level spell pages, all 239 magic-item pages, all thirty-six rules pages, all nine race pages and all twelve class pages and all forty chromatic/metallic dragon pages and all six giant pages and three animated-object pages and five canine pages and six common humanoid/giant enemies and five petrifying/flying monstrosities and five skeleton/zombie entries and four additional monstrosities and four plant/fungus entries plus centaur, ettin and minotaur, with complete headers and reused bodies; original English corpus retained; 319 spell and 239 magic-item bodies are available for further reuse | Remaining 237 monster pages; complete Chinese corpus coverage, authenticated browser search/navigation and English reading regression |
 | Final text flow | Recorded Chinese exploration/social/utility and combat/slot/correction acceptance on Codex | Complete Chinese text journey, rulebook reading/search and English regression; full tests/lint/build, then pause |
 
 ## Execution adjustment (2026-10-13)
@@ -86,17 +86,16 @@ real interaction has passed. Do not restart a static translation campaign.
 
 ## Next delivery unit and interruption checkpoint
 
-- Added Shrieker, Violet Fungus, Awakened Shrub and Awakened Tree: 693/933 pages,
-  78/318 monsters. Preserved bright-light/creature shriek triggers and persistence,
-  random attack counts, blind-radius limits, damage resistances/vulnerabilities,
-  and original Awaken lore with the existing 启智术 cross-reference name.
-- Added 尖叫菌/紫腐菌/启蒙灌木/启蒙树木 to the shared glossary, using matched
-  5etools English-name candidates as terminology assistance only; edition/review
-  provenance is not independently established.
-- Numeric/table, bilingual rendering, English switch, source refusal, alias and
-  terminology/guard checks passed. AST/catalog/resources passed (326 terminology
+- Added Centaur, Ettin and Minotaur: 696/933 pages, 81/318 monsters. Preserved
+  charge distances and same-turn requirements, alternative multiattack routines,
+  two-head/wakeful conditions and Reckless's reciprocal advantage duration.
+- Shared names 人马/双头巨人/牛头人 match 5etools creature candidates. The
+  separate Minotaur-language candidate was not used as a creature label; source
+  Abyssal remains 深渊语. Candidate edition/review provenance remains unverified.
+- Numeric/table, bilingual rendering, English switching, source refusal, alias and
+  terminology/guard checks passed. AST/catalog/resources passed (329 terminology
   entries, 0 errors, 389 context warnings).
-- Next: remaining monster families (240 pages), game-card/help prose reuse and
+- Next: remaining monster families (237 pages), game-card/help prose reuse and
   native source ownership. Final full-suite/build and real bilingual journey
   remain unproven.
 - Native dynamic UI/material/log ownership remains pending in the UI manifest;
