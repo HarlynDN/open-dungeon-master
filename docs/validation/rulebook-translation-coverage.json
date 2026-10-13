@@ -3250,6 +3250,11 @@
       "sourceHash": "f3a1d9b13ecb3e87552db78e97f5ce171ed96d849f84710d2647aa5d965f53aa"
     },
     {
+      "id": "dretch-demon",
+      "kind": "monster",
+      "sourceHash": "6dde30ed5b0ccd526ce90b456cafc54e7681f3c18bb4e3011c37adb1a7666f71"
+    },
+    {
       "id": "dryad",
       "kind": "monster",
       "sourceHash": "41df0bf53c661dbbf5865e94cc89102c61906db8c5664bb03f8d17eff2e5d36e"
@@ -3388,6 +3393,11 @@
       "id": "kobold",
       "kind": "monster",
       "sourceHash": "972839016ec53a6fef2f8e541b57ffef82fa57249971fcc62f8f5dcb74efaec2"
+    },
+    {
+      "id": "lemure-devil",
+      "kind": "monster",
+      "sourceHash": "146def09ab990a7678bb8934e296befa65ef87e21a433abd44831147039b7bac"
     },
     {
       "id": "lizardfolk",
