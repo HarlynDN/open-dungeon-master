@@ -1,4 +1,4 @@
-import { createTranslator, messageTemplate, type MessageKey } from "./translator.ts";
+import { createTranslator, registeredMessageTemplate, type MessageKey } from "./translator.ts";
 import type { AppLocale } from "./locales.ts";
 import { referenceDisplayName } from "./references.ts";
 import { spellGearTermLabel } from "./spell-gear-presentations.ts";
@@ -83,26 +83,28 @@ export function spellSummaryView(data: Record<string, unknown> | undefined, loca
 }
 
 const preparationKeys = ["doneNote", "serverOld", "changeHttp", "networkError", "noCharacter", "characterMissing", "doesNotCast", "noCasterClass", "nameSpell", "knownPolicy", "cantripPolicy", "notPending", "wontPrepare", "subclassPolicy", "notPrepared", "unprepared", "alreadyPrepared", "alreadyPending", "notInBook", "bookLevelPolicy", "notOnClassList", "preparationCap", "prepareAfterRest"] as const;
-const preparationPatterns = preparationKeys.map(suffix => {
-  const key = `spellUi.${suffix}` as const;
-  const escaped = messageTemplate("en", key).replace(/[.*+?^$()|[\]\\]/g, "\\$&");
-  return { key, suffix, pattern: new RegExp(`^${escaped.replace(/\{(\w+)\}/g, (_, name: string) => `(?<${name}>[\\s\\S]+?)`)}$`) };
-});
 
 // Compatibility projection of the existing preparation protocol. The original
 // response/audit stays English; only exact full templates are recognized.
 // Unknown diagnostics remain visible in full, and actor names are not spells.
 export function spellPreparationText(english: string, locale: AppLocale, spell?: Parameters<typeof spellTileName>[0]): string {
   if (locale === "en") return english;
-  for (const row of preparationPatterns) {
-    const match = row.pattern.exec(english);
+  // This shared module can be imported by app chrome before the content scope
+  // is loaded. Recognize templates at use time, never during module evaluation.
+  for (const suffix of preparationKeys) {
+    const key = `spellUi.${suffix}` as const;
+    const template = registeredMessageTemplate("en", key);
+    if (!template || registeredMessageTemplate(locale, key) === undefined) continue;
+    const escaped = template.replace(/[.*+?^$()|[\]\\]/g, "\\$&");
+    const pattern = new RegExp(`^${escaped.replace(/\{(\w+)\}/g, (_, name: string) => `(?<${name}>[\\s\\S]+?)`)}$`);
+    const match = pattern.exec(english);
     if (!match) continue;
     const args = { ...match.groups };
-    if (args.name && !["doesNotCast", "noCasterClass"].includes(row.suffix)) {
+    if (args.name && !["doesNotCast", "noCasterClass"].includes(suffix)) {
       args.name = spellTileName(spell && spell.name === args.name ? spell : { name: args.name }, locale);
     }
     if (args.label) args.label = spellCountLabel(args.label, locale);
-    return createTranslator(locale)(row.key, args);
+    return createTranslator(locale)(key, args);
   }
   return english;
 }

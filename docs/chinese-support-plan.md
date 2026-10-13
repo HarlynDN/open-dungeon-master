@@ -127,6 +127,16 @@ changed-file lint passed once; no model/audio/build rerun. The affected dialog
 fingerprint was source-reviewed, not the original rule helpers or goldens.
 Real browser cancellation/timing and authenticated acceptance remain open.
 
+Anonymous browser acceptance used an isolated local test database on port 3005.
+It exposed a cold-import failure: spell preparation recognized content templates
+at module evaluation before the resource boundary registered them. Recognition
+now happens at use time, retaining original text until resources arrive. The
+existing spell workflow passes isolated cold import/late resource loading and
+38 unchanged English projections. Catalog/types/changed-file lint pass. Actual
+homepage English and Chinese switch and refresh both succeed; authenticated
+character/campaign/play and voice acceptance are still open. Screenshot evidence
+is outside Git at `/tmp/odm-home-locale-proof.png`.
+
 Pure state, audio plumbing and glyph helpers can be audited within the session
 batch; their file count must not displace player-visible work.
 Shared Workshop types remain in the manifest's import closure; deep editors
@@ -140,6 +150,14 @@ If an owner is already correctly localized, record the source/consumer audit and
 move on without writing redundant tests or changing behavior to raise coverage.
 
 ## Lightweight verification and progress reporting
+
+Delivery follows complete player flows: character creation and sheet → campaign
+creation and entry → active play and logs → local single-narrator speech.
+Finish one flow's concrete gaps before starting another. Source investigation
+and settled-name review are not standalone delivery batches. Use one focused
+check per flow batch, not a new acceptance cycle for every component. Report
+player-visible outcomes and the next flow; remaining owner counts are only an
+audit aid. External TTS setup must not hold up independently available UI work.
 
 - At batch end, run the catalog/AST/terminology gate once. Run TypeScript and
   changed-file lint for code batches; documentation-only updates do not need

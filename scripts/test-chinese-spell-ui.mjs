@@ -2,6 +2,7 @@ import { readValidationJson } from "./lib/validation-json.mjs";
 import "../src/lib/i18n/messages.ts";
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import {execFileSync} from 'node:child_process';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
 import {suite} from './lib/enforce-harness.mjs';
@@ -28,6 +29,23 @@ const setters=props=>{
  for(const key of Object.keys(stored))props.state['set'+key[0].toUpperCase()+key.slice(1)]=next=>stored[key]=typeof next==='function'?next(stored[key]):next;
  return stored;
 };
+
+await test('app chrome imports before content resources and preparation resumes after lazy loading',()=>{
+ execFileSync(process.execPath,['--input-type=module','--eval',`
+   import assert from 'node:assert/strict';
+   import fs from 'node:fs';
+   import {register} from 'node:module';
+   register('./scripts/lib/register-alias.mjs',new URL('./',import.meta.url));
+   await import('./src/lib/i18n/import-flow-presentations.ts');
+   const {spellPreparationText}=await import('./src/lib/i18n/spell-ui-presentations.ts');
+   const raw='Shield does not cast spells.';
+   assert.equal(spellPreparationText(raw,'zh-CN'),raw);
+   const {registerMessages}=await import('./src/lib/i18n/translator.ts');
+   registerMessages(Object.fromEntries(['en','zh-CN'].map(locale=>[locale,JSON.parse(fs.readFileSync('src/lib/i18n/resources/'+locale+'.content.json','utf8'))])));
+   assert.equal(spellPreparationText(raw,'zh-CN'),'Shield无法施法。');
+   assert.equal(spellPreparationText(raw,'en'),raw);
+ `],{cwd:root,stdio:'pipe'});
+});
 
 await test('38 original English picker/book/finish/sheet projections remain exact and canonical controls retain their values',()=>{
  const before=read('docs/validation/character-spell-ui-goldens.json');assert.equal(before.rows.length,38);assert.deepEqual(en,before.rows);
