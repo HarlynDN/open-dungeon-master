@@ -371,5 +371,69 @@ export const SPELL_HELP = [
   {
     "name": "Spiritual Weapon",
     "key": "spellHelp.native.spiritual-weapon"
+  },
+  {
+    "name": "Acid Arrow",
+    "key": "spellHelp.native.acid-arrow"
+  },
+  {
+    "name": "Alter Self",
+    "key": "spellHelp.native.alter-self"
+  },
+  {
+    "name": "Animal Messenger",
+    "key": "spellHelp.native.animal-messenger"
+  },
+  {
+    "name": "Arcane Lock",
+    "key": "spellHelp.native.arcane-lock"
+  },
+  {
+    "name": "Arcanist's Magic Aura",
+    "key": "spellHelp.native.arcanist's-magic-aura"
+  },
+  {
+    "name": "Augury",
+    "key": "spellHelp.native.augury"
+  },
+  {
+    "name": "Blindness/Deafness",
+    "key": "spellHelp.native.blindness/deafness"
+  },
+  {
+    "name": "Branding Smite",
+    "key": "spellHelp.native.branding-smite"
+  },
+  {
+    "name": "Calm Emotions",
+    "key": "spellHelp.native.calm-emotions"
+  },
+  {
+    "name": "Continual Flame",
+    "key": "spellHelp.native.continual-flame"
+  },
+  {
+    "name": "Darkness",
+    "key": "spellHelp.native.darkness"
+  },
+  {
+    "name": "Find Traps",
+    "key": "spellHelp.native.find-traps"
+  },
+  {
+    "name": "Gentle Repose",
+    "key": "spellHelp.native.gentle-repose"
+  },
+  {
+    "name": "Locate Animals or Plants",
+    "key": "spellHelp.native.locate-animals-or-plants"
+  },
+  {
+    "name": "Locate Object",
+    "key": "spellHelp.native.locate-object"
+  },
+  {
+    "name": "Ray of Enfeeblement",
+    "key": "spellHelp.native.ray-of-enfeeblement"
   }
 ] as const;
