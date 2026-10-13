@@ -3345,6 +3345,11 @@
       "sourceHash": "4c08349f179e178a4f63c434904dbe5f40d28da3b92239358cb2277e128f94f4"
     },
     {
+      "id": "gibbering-mouther",
+      "kind": "monster",
+      "sourceHash": "c39d5b58f38d22485d08c8e6642cbbe242f8fcd027da997d8dc419aa5527d4b1"
+    },
+    {
       "id": "gnoll",
       "kind": "monster",
       "sourceHash": "9bd8eaf2f9f3e02422cd2f665445feb73102f55111c5ca0bb40cecd6b15290d1"
@@ -3528,6 +3533,11 @@
       "id": "orc",
       "kind": "monster",
       "sourceHash": "c8275c424de830c9adea76ec0e716ec64900a1084fb1986cdf3cb86f15ac8179"
+    },
+    {
+      "id": "otyugh",
+      "kind": "monster",
+      "sourceHash": "c4a3e7670a0d3f5146d054947cbe68de01dc0118b4e3f8540438ade433d8277e"
     },
     {
       "id": "owlbear",
