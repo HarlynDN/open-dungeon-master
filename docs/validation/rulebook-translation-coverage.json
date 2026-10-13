@@ -3325,6 +3325,11 @@
       "sourceHash": "41df0bf53c661dbbf5865e94cc89102c61906db8c5664bb03f8d17eff2e5d36e"
     },
     {
+      "id": "duergar",
+      "kind": "monster",
+      "sourceHash": "cfbb5364fff5d5b6ab01e07246f142909a362d7d98294379581d593f34286c8d"
+    },
+    {
       "id": "dust-mephit",
       "kind": "monster",
       "sourceHash": "ba635c197bbac2a1a4a7de2a1f4e652a1cc025a756eef87bda1829223ec1d649"
