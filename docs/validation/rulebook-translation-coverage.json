@@ -3815,6 +3815,11 @@
       "sourceHash": "e042840ccf430d84e320c3a2fcf9a52548c108c785810bacbceabf88c0e69031"
     },
     {
+      "id": "solar-angel",
+      "kind": "monster",
+      "sourceHash": "08b0d57db2cf8b889959d0066e3e770a451da5963237222708b068c2cbd06bac"
+    },
+    {
       "id": "specter",
       "kind": "monster",
       "sourceHash": "3a3cd37c2bdb343a286e176e4ff5262d12404d0d3435e225d290af70f674c6f2"
