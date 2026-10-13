@@ -471,6 +471,7 @@ export const ZH_CN_GLOSSARY = [
   {"id":"monster.planetar","source":"Planetar","preferred":"异界神侍","scope":"monster"},
   {"id":"monster.solar","source":"Solar","preferred":"炽天神侍","scope":"monster"},
   {"id":"monster.aboleth","source":"Aboleth","preferred":"底栖魔鱼","scope":"monster"},
+  {"id":"monster.gynosphinx","source":"Gynosphinx","preferred":"女面斯芬克斯","scope":"monster"},
   {"id":"monster.goblin","source":"Goblin","preferred":"哥布林","scope":"monster","aliases":["地精"]},
   {"id":"monster.bugbear","source":"Bugbear","preferred":"熊地精","scope":"monster"},
   {"id":"monster.hobgoblin","source":"Hobgoblin","preferred":"大地精","scope":"monster"},

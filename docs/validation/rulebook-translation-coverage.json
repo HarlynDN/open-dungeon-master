@@ -3505,6 +3505,11 @@
       "sourceHash": "c997df38312830fc8be4d84e0a73742e476944dda1bf76456a1ff58e2cf9ff7b"
     },
     {
+      "id": "gynosphinx-sphinx",
+      "kind": "monster",
+      "sourceHash": "b41bff5da4e20178ea18d1f61a0f683523f504646f11920a13df688f6704f863"
+    },
+    {
       "id": "harpy",
       "kind": "monster",
       "sourceHash": "d9efc6bc14b744b129baead420f0dec4504f3756ebca7c2f17a5fdaa05ff8f50"
