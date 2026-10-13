@@ -7,11 +7,12 @@
   "sources": {
     "src/components/sheet/SpellBook.tsx": "60e9b309292c4314ce2c4ad57ead5c2e50dcca9e4ad9d0b8fe5f0789c0c3a93a",
     "src/components/sheet/SheetSpells.tsx": "cc2fce11dad14ebc37d4e8daef0750b2210f9f9b4833a480ac74278d4deb1f18",
-    "src/app/characters/builder/steps/SpellsGearStep.tsx": "c0b08ea47e76e8fc46924efcf21b04850d9fcc23e37a7ccb3ca62bf487a3a768",
+    "src/app/characters/builder/steps/SpellsGearStep.tsx": "846cd847b44c626a5c4a8cb84ee99d3eb43d1d3ad5943b999ef5cccbede3ded7",
     "src/app/characters/builder/steps/FinishStep.tsx": "c21709faab972c02f4a3233114d8eb867ce3118802a664a48448fbab9431245a",
     "src/lib/i18n/spell-ui-presentations.ts": "5898823a42c78f685b418376f71a7b780369b6e313eb735165371228a3949c19",
     "src/lib/i18n/finish-ui-presentations.ts": "98d109c684bdd35fd25929c3de3c161250cd3f7fb1f55fba65a535f6a368d9df",
-    "src/lib/i18n/reference-names.ts": "52c28086be58640c59cba14af9e9d25a5d6b7dda161bd55315e56b7fdf2fb5d6"
+    "src/lib/i18n/reference-names.ts": "52c28086be58640c59cba14af9e9d25a5d6b7dda161bd55315e56b7fdf2fb5d6",
+    "src/components/sheet/useSpellPool.ts": "9ec6dbcf393842be1c4293d20f2a9312a61c4347474ef7273ad4b5373d1dadc0"
   },
   "catalogs": {
     "src/lib/i18n/spell-ui-messages.ts": "1594352f4ed3790eab70100b83163a34075ad25e3ba249179f401d1a2bf9f6b7",
@@ -49,5 +50,19 @@
       "commit": "2c0d55547b9a0f73cb231ad01f0deda518548647",
       "reason": "Previously committed addition of native magic-item name aliases only; reviewed diff does not alter spell aliases or original mechanics."
     }
+  },
+  "browserCreationRepair": {
+    "sourceReview": [
+      {
+        "file": "src/app/characters/builder/steps/SpellsGearStep.tsx",
+        "priorSourceSha256": "c0b08ea47e76e8fc46924efcf21b04850d9fcc23e37a7ccb3ca62bf487a3a768"
+      },
+      {
+        "file": "src/components/sheet/useSpellPool.ts",
+        "priorSourceSha256": null
+      }
+    ],
+    "reason": "Actual no-pack artificer creation failed: recommendation-only spells absent from the accepted class list were injected into choices and submitted. Recommendations now use the available pool or shared canonical checklist; fallback pool uses the same supplemented lists as legality. Existing authored/pack selections and server verdicts remain unchanged.",
+    "validation": "Existing actual picker workflow covers no-pack recommendation filtering and manual valid selection in both locales. Immutable English fixtures retained."
   }
 }

@@ -96,7 +96,7 @@ await test('actual picker handlers select canonical names and enforce cantrip/kn
 await test('actual suggested fill and school refusal preserve original lists, prepare counts and rule verdicts',()=>{
  const source=read('src/lib/help/starter-spells.json').classes.wizard;
  for(const locale of ['en','zh-CN']){
-  const p=spellStepProps({state:{spells:['Shield'],bookPrepared:['Shield']},derived:{spellStyle:'spellbook',spellbookAdvice:6,spellAdvice:{count:2,label:'spells prepared'},chosenSpells:['Shield'],chosenPrepared:['Shield'],starters:source}});const stored=setters(p);
+  const p=spellStepProps({state:{spells:['Shield'],bookPrepared:['Shield']},derived:{spellSearchClass:'wizard',spellStyle:'spellbook',spellbookAdvice:6,spellAdvice:{count:2,label:'spells prepared'},chosenSpells:['Shield'],chosenPrepared:['Shield'],starters:source}});const stored=setters(p);
   renderer.render(renderer.step.SpellsSection,p,locale,{pool:spellPool});
   const button=renderer.state.nodes.find(n=>n.type==='button'&&n.props.children===createTranslator(locale)('spellUi.fillSuggested'));assert.ok(button);button.props.onClick();
   assert.deepEqual(stored.spells,['Shield','Magic Missile','Sleep','Detect Magic','Mage Armor']);assert.deepEqual(stored.bookPrepared,['Shield','Magic Missile']);assert.deepEqual(stored.cantrips,['Fire Bolt','Mage Hand']);
@@ -105,6 +105,19 @@ await test('actual suggested fill and school refusal preserve original lists, pr
   const tile=book().tiles.find(r=>r.name==='Charm Person');assert.equal(tile.blocked,createTranslator(locale)('spellUi.outsideSchools'));book().onTile(tile);
   assert.deepEqual(unchanged.spells,['Sleep']);const notice=renderer.state.updates[1];const original=thirdCasterSchoolProblem({classId:'fighter',subclass:'Eldritch Knight',level:3,spells:[{name:'Sleep',school:'enchantment'},{name:'Charm Person',school:'enchantment'}]});assert.equal(notice.english,original);
   assert.match(view.spellChoiceNoticeText(notice,'zh-CN'),/防护.*塑能.*2/);assert.equal(view.spellChoiceNoticeText(notice,'en'),original);
+ }
+});
+
+await test('no-pack recommendations only select spells accepted by the available class catalog',()=>{
+ const source=read('src/lib/help/starter-spells.json').classes.artificer;
+ const pool=[{name:'Absorb Elements',level:1},{name:'Snare',level:1},{name:'Thorn Whip',level:0}];
+ for(const locale of ['en','zh-CN']){
+  const p=spellStepProps({klass:{id:'artificer'},derived:{spellStyle:'prepared',spellSearchClass:'artificer',starters:source}});
+  const stored=setters(p);renderer.render(renderer.step.SpellsSection,p,locale,{pool});
+  assert.ok(!book().tiles.some(r=>['Guidance','Mending','Cure Wounds','Faerie Fire'].includes(r.name)));
+  const button=renderer.state.nodes.find(n=>n.type==='button'&&n.props.children===createTranslator(locale)('spellUi.fillSuggested'));
+  button.props.onClick();assert.deepEqual(stored.spells,['Absorb Elements']);assert.deepEqual(stored.cantrips,[]);
+  book().onTile(book().tiles.find(r=>r.name==='Thorn Whip'));assert.deepEqual(stored.cantrips,['Thorn Whip']);
  }
 });
 

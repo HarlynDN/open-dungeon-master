@@ -2,8 +2,7 @@
 
 import { scopedParams, useContentCampaign } from "@/lib/content-scope";
 import { useEffect, useRef, useState } from "react";
-import spellManifest from "@/lib/srd/manifest/spells.json";
-import { spellLevelOf } from "@/lib/srd/spell-lists";
+import { checklistSpellsOn, spellLevelOf } from "@/lib/srd/spell-lists";
 
 // Every spell a class can take up to a spell level, for the spell book's
 // "available" tiles: the content pack (homebrew included) when installed,
@@ -24,17 +23,9 @@ export type PoolSpell = {
 const PAGE = 200;
 const cache = new Map<string, PoolSpell[]>();
 
-type ManifestSpell = { n: string; l: number; c?: string };
-
 function checklistPool(classSlug: string, maxLevel: number): PoolSpell[] {
-  const wanted = classSlug.toLowerCase();
-  return (spellManifest as { spells: ManifestSpell[] }).spells
-    .filter(
-      (spell) =>
-        spell.l <= maxLevel &&
-        (spell.c ?? "").split(",").some((entry) => entry.trim().toLowerCase() === wanted),
-    )
-    .map((spell) => ({ name: spell.n, level: spell.l }))
+  return checklistSpellsOn(classSlug)
+    .filter((spell) => spell.level <= maxLevel)
     .sort((a, b) => a.level - b.level || a.name.localeCompare(b.name));
 }
 

@@ -137,6 +137,24 @@ homepage English and Chinese switch and refresh both succeed; authenticated
 character/campaign/play and voice acceptance are still open. Screenshot evidence
 is outside Git at `/tmp/odm-home-locale-proof.png`.
 
+Authenticated browser character creation used an isolated existing test account
+and local database (no real user data or signup agreement). The six-step Chinese
+hill-dwarf artificer flow covered background languages/tools, skills, standard
+array, spell selection, loaded studded-leather help and final preview. It found
+that off-list starter recommendations could be submitted and rejected at save.
+Suggestions now require the available class pool or canonical checklist; the
+no-pack pool also uses the shared supplemented class lists. The focused spell
+workflow passes 11 checks, including the new no-pack case and all 38 unchanged
+English fixtures. Catalog/types/changed-file lint pass once after the repair.
+The same browser flow then saved and reopened the character successfully.
+Evidence: `/tmp/odm-character-save-proof.png` outside Git. This proves one actual
+creation/save/reopen path, not full character acceptance: reopened TrainingLines
+still prints raw language/tool/armor/weapon values, and racial feature chips
+still show raw dwarf traits. These are the next concrete gaps in this flow;
+fix them using existing presentation metadata before campaign acceptance. No
+model or voice requests were made; the test server's unavailable default model
+is not the approved Codex CLI backend.
+
 Pure state, audio plumbing and glyph helpers can be audited within the session
 batch; their file count must not displace player-visible work.
 Shared Workshop types remain in the manifest's import closure; deep editors

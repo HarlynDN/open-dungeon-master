@@ -12,7 +12,7 @@ import { SpellBook, type SpellTile } from "@/components/sheet/SpellBook";
 import { useSpellLookups, useSpellPool } from "@/components/sheet/useSpellPool";
 import { GameTerm } from "@/components/ui/GameTerm";
 import { cn } from "@/lib/cn";
-import { spellLevelOf } from "@/lib/srd/spell-lists";
+import { checklistSpell, spellLevelOf } from "@/lib/srd/spell-lists";
 import { bundledSpellSchool } from "@/lib/srd/spell-facts";
 import { thirdCasterSchoolProblem } from "@/lib/srd/third-caster";
 import { displayName } from "@/lib/worlds/reskin-logic";
@@ -163,6 +163,10 @@ function SpellsSection({
   // on top of the class's count too.
   const isFeat = (name: string) => has([...featSpells.cantrips, ...featSpells.spells], name);
   const poolByName = new Map(pool.map((row) => [lower(row.name), row]));
+  // Suggestions describe a class broadly, but the installed catalog decides
+  // which choices this server can accept. Never inject off-list suggestions.
+  const onClassList = (name: string) => poolByName.has(lower(name)) ||
+    Boolean(checklistSpell(name)?.classes.includes(spellSearchClass.toLowerCase()));
   // An Eldritch Knight's or Arcane Trickster's two schools, as the server
   // judges the sheet (src/lib/srd/third-caster.ts). Null when the spell is
   // fine or the class has no school rule.
@@ -250,13 +254,13 @@ function SpellsSection({
     const cantripRoom = cantripCap === null ? Infinity : cantripCap - chosenCantrips.length;
     const newCantrips = starters.cantrips
       .map((entry) => entry.n)
-      .filter((name) => !has(cantrips, name) && !isRacial(name))
+      .filter((name) => onClassList(name) && !has(cantrips, name) && !isRacial(name))
       .slice(0, Math.max(0, cantripRoom));
     const cap = wizard ? bookCap : spellCap;
     const spellRoom = cap === null ? Infinity : cap - chosenSpells.length;
     const newSpells = starters.spells
       .map((entry) => entry.n)
-      .filter((name) => !has(spells, name) && !isGranted(name))
+      .filter((name) => onClassList(name) && !has(spells, name) && !isGranted(name))
       .slice(0, Math.max(0, spellRoom));
     setLimitNote(null);
     setCantrips((current) => [...current, ...newCantrips]);
@@ -305,8 +309,8 @@ function SpellsSection({
     ...racialCantrips,
     ...featSpells.cantrips,
     ...featSpells.spells,
-    ...(starters?.cantrips ?? []).map((entry) => entry.n),
-    ...(starters?.spells ?? []).map((entry) => entry.n),
+    ...(starters?.cantrips ?? []).filter((entry) => onClassList(entry.n)).map((entry) => entry.n),
+    ...(starters?.spells ?? []).filter((entry) => onClassList(entry.n)).map((entry) => entry.n),
   ].filter((name, index, all) => all.findIndex((other) => lower(other) === lower(name)) === index);
   const tiles: SpellTile[] = names.flatMap((name): SpellTile[] => {
     const row = poolByName.get(lower(name)) ?? lookups.get(lower(name));
