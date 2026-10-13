@@ -3570,6 +3570,11 @@
       "sourceHash": "e26c7a18bd1fe227b998ca80776fb5b9bed51b9fc086c1b47c67f95363c06190"
     },
     {
+      "id": "oni",
+      "kind": "monster",
+      "sourceHash": "c37a59b2b728e0b1be0fbf0a8f51819c997888693d8db1e8bcc27f27fbe47e19"
+    },
+    {
       "id": "orc",
       "kind": "monster",
       "sourceHash": "c8275c424de830c9adea76ec0e716ec64900a1084fb1986cdf3cb86f15ac8179"
