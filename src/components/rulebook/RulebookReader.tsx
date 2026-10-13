@@ -113,16 +113,20 @@ export function RulebookReader({
     [],
   );
 
-  const loadContents = useCallback(async () => {
-    setContentsFailed(false);
+  const requestContents = useCallback(async (): Promise<Contents | null> => {
     try {
-      const response = await fetch("/api/rulebook");
-      if (!response.ok) throw new Error(String(response.status));
-      setContents(await response.json());
+      const response = await fetch(`/api/rulebook?locale=${encodeURIComponent(locale)}`);
+      return response.ok ? await response.json() : null;
     } catch {
-      setContentsFailed(true);
+      return null;
     }
-  }, []);
+  }, [locale]);
+  const settleContents = useCallback((data: Contents | null) => {
+    if (readingLocale.current !== locale) return;
+    if (data) setContents(data);
+    setContentsFailed(!data);
+  }, [locale]);
+  const loadContents = useCallback(() => requestContents().then(settleContents), [requestContents, settleContents]);
 
   const fetchPage = useCallback(async (id: string): Promise<RulebookPageResponse | null> => {
     const cacheKey = `${locale}:${id}`;
@@ -142,6 +146,7 @@ export function RulebookReader({
   useEffect(() => {
     readingLocale.current = locale;
     let cancelled = false;
+    void requestContents().then(data => { if (!cancelled) settleContents(data); });
     const current = shownRef.current;
     if (current && current.data.display?.locale !== locale) {
       void fetchPage(current.data.page.id).then(data => {
@@ -151,7 +156,7 @@ export function RulebookReader({
       });
     }
     return () => { cancelled = true; };
-  }, [locale, fetchPage]);
+  }, [locale, fetchPage, requestContents, settleContents]);
 
   // Turns a leaf. Forward, the right-hand page itself lifts away (the leaf
   // carries its words) and the next page is already lying beneath it. Back,
@@ -245,7 +250,6 @@ export function RulebookReader({
   // device left off. Neither turns a leaf; the book simply opens there.
   useEffect(() => {
     const timer = window.setTimeout(() => {
-      void loadContents();
       let first = startAt;
       if (!first) {
         try {
@@ -375,7 +379,7 @@ export function RulebookReader({
 
         <section
           className="rb-leaf rb-right"
-          aria-label={shown ? shown.data.page.title : bookText("The Rulebook", locale)}
+          aria-label={shown ? (shown.data.display?.locale === locale ? shown.data.display.title : shown.data.page.title) : bookText("The Rulebook", locale)}
           onTouchStart={(event) => {
             const point = event.touches[0];
             touch.current = point ? { x: point.clientX, y: point.clientY } : null;

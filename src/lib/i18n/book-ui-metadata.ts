@@ -120,7 +120,7 @@ export const BOOK_TEXT_KEYS = {
   "spells": "bookUi.copy.m108",
   "effects": "bookUi.copy.m109",
   "Search failed. Please try again.": "bookUi.copy.m110",
-  "The rulebook text is in English. Chinese searches match registered names and terms.": "bookUi.copy.m111"
+  "Read in English or Simplified Chinese. Search rule text, names, and terms.": "bookUi.copy.m111"
 } as const;
 export const BOOK_HEADERS = {
   "part:players": {

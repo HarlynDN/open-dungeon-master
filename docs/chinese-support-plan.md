@@ -142,7 +142,19 @@ this section records current delivery state and acceptance gaps only.
   remain preserved pending source review. Earlier external terminology candidates
   without verified edition/review provenance remain unverified; no external prose
   was imported.
-- Next: finish diagnosing full-suite failures, complete remaining dynamic
+- Browser checkpoint: isolated Next 16.3.8 webpack production instance on
+  127.0.0.1:3018 with a disposable account/database. Verified Chinese directory
+  spell names/meta, Magic Missile body and higher-level text, reader aria-label,
+  corrected bilingual notice, and both adjacent-page Chinese names. Switched
+  the account to English and reopened the same page: English body, metadata,
+  controls and neighbor names returned. Prior 3017 observations used cached API
+  responses and do not override this fresh-origin evidence. Screenshot:
+  /tmp/odm-rulebook-en-navigation.png. The directory webpack build passed;
+  subsequent edits only remove an unintended optional type field and extend
+  tests/review records. All 24 rulebook checks and 933-page/directory checks pass.
+  No actual DM/utility generation was accepted on this instance; its homepage
+  reported qwen3.6-35b unavailable. No model configuration was changed.
+- Next: rebuild and verify the browser fixes, complete remaining dynamic
   UI/material/log owners and real content-data review, then run one complete
   Chinese/English create/play/combat/rest/save/resume/book-search journey. Real
   model/runtime acceptance remains unproven; deferred voice/third-party scope

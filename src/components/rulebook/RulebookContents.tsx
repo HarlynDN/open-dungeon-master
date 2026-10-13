@@ -52,11 +52,13 @@ function aside(entry: ContentsEntry): string | null {
 }
 
 function EntryRow({ entry, current, onOpen }: { entry: ContentsEntry; current: boolean; onOpen: (id: string) => void }) {
-  const note = aside(entry);
+  const { locale } = useLocale();
+  const display = entry.display?.locale === locale ? entry.display : undefined;
+  const note = aside(display ? { ...entry, ...display } : entry);
   return (
     <button type="button" className="rb-entry" data-on={current || undefined} aria-current={current ? "page" : undefined} onClick={() => onOpen(entry.id)}>
       <span className="rb-entry-title">
-        <Digits text={entry.title} />
+        <Digits text={display?.title ?? entry.title} />
         {note ? <span className="rb-entry-note">{note}</span> : null}
       </span>
       <span className="rb-leader" aria-hidden="true" />
@@ -202,7 +204,7 @@ export function RulebookContents({
         <p className="rb-running">Open Dungeon Master</p>
         <h2 className="rb-book-title">{bookText("The Rulebook", locale)}</h2>
         <p className="rb-book-sub">{bookText("Fifth Edition · System Reference Document 5.1", locale)}</p>
-        <p className="rb-book-sub">{bookText("The rulebook text is in English. Chinese searches match registered names and terms.", locale)}</p>
+        <p className="rb-book-sub">{bookText("Read in English or Simplified Chinese. Search rule text, names, and terms.", locale)}</p>
       </header>
 
       <label className="rb-search">

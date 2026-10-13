@@ -55,7 +55,7 @@ export type RulebookData = {
 
 // A page as the contents lists it: no text. The folio is its page number in
 // the whole book, counted from 1.
-export type ContentsEntry = Omit<RulebookPage, "md" | "chapter"> & { folio: number };
+export type ContentsEntry = Omit<RulebookPage, "md" | "chapter"> & { folio: number; display?: { locale: import("../i18n/locales").AppLocale; title: string; meta?: string } };
 
 export type ContentsChapter = Omit<RulebookChapter, "pages"> & { entries: ContentsEntry[] };
 
@@ -75,7 +75,7 @@ export type PageLink = { id: string; title: string };
 export type RulebookPageResponse = {
   // Display is separate from canonical text so workshop copies retain source
   // mechanics and older clients/servers keep their existing contract.
-  display?: { locale: import("../i18n/locales").AppLocale; translated: boolean; title: string; meta?: string; md: string; anchors?: string[] };
+  display?: { locale: import("../i18n/locales").AppLocale; translated: boolean; title: string; prevTitle?: string; nextTitle?: string; meta?: string; md: string; anchors?: string[] };
   page: Omit<RulebookPage, "chapter"> & { folio: number };
   chapter: { id: string; numeral: string; title: string };
   prev: PageLink | null;

@@ -456,8 +456,8 @@ export const BOOK_UI_MESSAGES = /*#__PURE__*/ defineMessages({
     "zh-CN": "搜索失败，请重试。"
   },
   "bookUi.copy.m111": {
-    "en": "The rulebook text is in English. Chinese searches match registered names and terms.",
-    "zh-CN": "规则书正文为英文。中文搜索可匹配已收录的名称和术语。"
+    "en": "Read in English or Simplified Chinese. Search rule text, names, and terms.",
+    "zh-CN": "规则书支持英文和简体中文，可搜索正文、名称和术语。"
   },
   "bookUi.frame.book": {
     "en": "Book {numeral}",

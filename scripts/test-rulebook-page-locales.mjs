@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { register } from 'node:module';
 register('./lib/register-alias.mjs', import.meta.url);
-const { rulebookPage, rulebookPages } = await import('../src/lib/rulebook/book.ts');
+const { rulebookPage, rulebookPages, rulebookContents } = await import('../src/lib/rulebook/book.ts');
 const { rulebookPageDisplay, nativeBookSourceHash } = await import('../src/lib/rulebook/localized-pages.ts');
 const { default: coverageManifest } = await import('../docs/validation/rulebook-translation-coverage.json', { with: { type: 'json' } });
 const { verifyRulebookCoverage } = await import('./lib/rulebook-coverage.mjs');
@@ -41,6 +41,39 @@ const renderer = await openCombatRenderer({ files: ['src/components/rulebook/Rul
   './PagePrep': stub('export const PagePrep=()=>null;'),
 }});
 const xrefs = new Map([['magic missile', 'magic-missile'], ['魔法飞弹', 'magic-missile']]);
+
+// Browser-found navigation leak: display labels follow locale without changing
+// canonical links or copying Chinese labels into an English render.
+const originalContents = rulebookContents();
+const chineseContents = rulebookContents('zh-CN');
+for (const chapter of chineseContents.chapters) {
+  for (const entry of chapter.entries) {
+    const { display, ...canonical } = entry;
+    const original = originalContents.chapters.flatMap(chapter => chapter.entries).find(row => row.id === entry.id);
+    assert.deepEqual(canonical, original, entry.id + ': canonical directory identity');
+    assert.equal(display.locale, 'zh-CN');
+    assert.equal(display.title, rulebookPageDisplay(rulebookPage(entry.id).page, 'zh-CN').title);
+  }
+}
+assert.equal(rulebookContents('en'), originalContents);
+
+const navigationSource = rulebookPage('magic-missile');
+const navigationChinese = rulebookPage('magic-missile', 'zh-CN');
+assert.deepEqual(navigationChinese.prev, navigationSource.prev);
+assert.deepEqual(navigationChinese.next, navigationSource.next);
+assert.deepEqual(navigationChinese.page, navigationSource.page);
+assert.equal(navigationChinese.display.prevTitle, '法师护甲');
+assert.equal(navigationChinese.display.nextTitle, '防护邪恶与善良');
+const navigationProps = { data: navigationChinese, terms: [], xrefs, onOpen: () => {} };
+const navigationHtml = renderer.render('RulebookPage', navigationProps, 'zh-CN');
+assert.match(navigationHtml, /rb-turn-prev[\s\S]*?法师护甲/);
+assert.match(navigationHtml, /rb-turn-next[\s\S]*?防护邪恶与善良/);
+const navigationEnglish = renderer.render('RulebookPage', navigationProps, 'en');
+assert.match(navigationEnglish, /Mage Armor/);
+assert.match(navigationEnglish, /Protection from Evil and Good/);
+assert.ok(!navigationEnglish.includes('法师护甲'));
+assert.equal(rulebookPage('magic-missile', 'en').display.prevTitle, navigationSource.prev.title);
+
 const { referenceDisplayName, resolveReference } = await import('../src/lib/i18n/references.ts');
 for (const row of coverageManifest.requiredPages.filter(row => row.kind === 'monster')) {
   const data = rulebookPage(row.id);

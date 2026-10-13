@@ -1967,7 +1967,7 @@
     {
       "path": "src/components/rulebook/RulebookContents.tsx",
       "state": "covered",
-      "review": "Rulebook/book reading workflow chrome, navigation headers, quick links, counters, known native crosswalk/support/family explanations, loading/search/retry/bookmarks/copy controls localized. SRD Markdown/entry titles/meta/snippets, authored story entries and unknown overrides remain original under full-rulebook-text deferral. Page/anchor IDs, original xrefs, folios, book storage keys and editor URLs preserved. Chinese opt-in searches expand registered names/terms; legacy English search stays native. Failed search is distinct from no results, failed navigation retains current page with retry, workshop read refusal is distinct from an empty account."
+      "review": "Directory entries now consume server source-bound title/meta projections with matching viewer locale; canonical entry IDs, titles, grouping and folios remain unchanged. Browser on isolated production port 3018 verified Chinese spell names and metadata. Search, chapter headers and controls retain existing localization. English display fallback is preserved. Whole rulebook completion still requires the wider final acceptance gates."
     },
     {
       "path": "src/components/rulebook/RulebookDialog.tsx",
@@ -1977,12 +1977,12 @@
     {
       "path": "src/components/rulebook/RulebookPage.tsx",
       "state": "covered",
-      "review": "Rulebook/book reading workflow chrome, navigation headers, quick links, counters, known native crosswalk/support/family explanations, loading/search/retry/bookmarks/copy controls localized. SRD Markdown/entry titles/meta/snippets, authored story entries and unknown overrides remain original under full-rulebook-text deferral. Page/anchor IDs, original xrefs, folios, book storage keys and editor URLs preserved. Chinese opt-in searches expand registered names/terms; legacy English search stays native. Failed search is distinct from no results, failed navigation retains current page with retry, workshop read refusal is distinct from an empty account."
+      "review": "Source-bound Chinese body, title, meta and original anchor mapping preserve canonical workshop-copy inputs. Adjacent-page display names use the matching response locale; English render rejects Chinese display fields. Browser verified Chinese Magic Missile body, upcasting and both neighbor labels, followed by English body/navigation. 933-page regression and new navigation assertions pass."
     },
     {
       "path": "src/components/rulebook/RulebookReader.tsx",
       "state": "covered",
-      "review": "Rulebook/book reading workflow chrome, navigation headers, quick links, counters, known native crosswalk/support/family explanations, loading/search/retry/bookmarks/copy controls localized. SRD Markdown/entry titles/meta/snippets, authored story entries and unknown overrides remain original under full-rulebook-text deferral. Page/anchor IDs, original xrefs, folios, book storage keys and editor URLs preserved. Chinese opt-in searches expand registered names/terms; legacy English search stays native. Failed search is distinct from no results, failed navigation retains current page with retry, workshop read refusal is distinct from an empty account."
+      "review": "Page and directory requests include viewer locale. Async directory completion rejects stale locales and cancelled effect responses; page cache remains locale keyed. Current region aria-label uses matching localized title. Browser verified Chinese directory/page and English switch on isolated production instance; canonical URLs and saved page IDs remain unchanged."
     },
     {
       "path": "src/components/sheet/SheetBetween.tsx",

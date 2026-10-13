@@ -2,7 +2,6 @@ import { currentUser, unauthorized } from "@/lib/auth";
 import { rulebookPage } from "@/lib/rulebook/book";
 import { crosswalkById } from "@/lib/rulebook/crosswalk";
 import { normalizeLocale } from "@/lib/i18n/locales";
-import { rulebookPageDisplay } from "@/lib/rulebook/localized-pages";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -17,14 +16,13 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
     return unauthorized();
   }
   const { id } = await params;
-  const found = PAGE_ID.test(id) ? rulebookPage(id) : null;
+  const found = PAGE_ID.test(id) ? rulebookPage(id, normalizeLocale(new URL(request.url).searchParams.get("locale"))) : null;
   if (!found) {
     return Response.json({ error: "No such page in the rulebook." }, { status: 404 });
   }
   const crosswalk = crosswalkById(id);
-  const display = rulebookPageDisplay(found.page, normalizeLocale(new URL(request.url).searchParams.get("locale")));
   return Response.json(
-    crosswalk ? { ...found, display, crosswalk: { editor: crosswalk.editor, ...(crosswalk.catalogName ? { catalogName: crosswalk.catalogName } : {}), ...(crosswalk.classId ? { classId: crosswalk.classId } : {}), ...(crosswalk.template ? { template: crosswalk.template } : {}), support: crosswalk.support, where: crosswalk.where } } : { ...found, display },
+    crosswalk ? { ...found, crosswalk: { editor: crosswalk.editor, ...(crosswalk.catalogName ? { catalogName: crosswalk.catalogName } : {}), ...(crosswalk.classId ? { classId: crosswalk.classId } : {}), ...(crosswalk.template ? { template: crosswalk.template } : {}), support: crosswalk.support, where: crosswalk.where } } : found,
     { headers: { "Cache-Control": "private, max-age=300" } },
   );
 }

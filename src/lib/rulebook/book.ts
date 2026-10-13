@@ -46,7 +46,17 @@ let contents: RulebookContents | null = null;
 let index: RulebookIndex | null = null;
 const localizedIndexes = new Map<AppLocale, RulebookIndex>();
 
-export function rulebookContents(): RulebookContents {
+export function rulebookContents(locale: AppLocale = "en"): RulebookContents {
+  if (locale !== "en") {
+    const original = rulebookContents();
+    return { ...original, chapters: original.chapters.map(chapter => ({ ...chapter,
+      entries: chapter.entries.map(entry => {
+        const page = byId.get(entry.id)!.page;
+        const display = rulebookPageDisplay(page, locale);
+        return { ...entry, display: { locale, title: display.title, meta: display.meta } };
+      }),
+    })) };
+  }
   if (contents) return contents;
   const chapters: ContentsChapter[] = book.chapters.map((chapter) => ({
     id: chapter.id,
@@ -70,7 +80,7 @@ export function rulebookContents(): RulebookContents {
   return contents;
 }
 
-export function rulebookPage(id: string): RulebookPageResponse | null {
+export function rulebookPage(id: string, locale?: AppLocale): RulebookPageResponse | null {
   const found = byId.get(id);
   if (!found) return null;
   const { chapter: chapterId, ...page } = found.page;
@@ -80,6 +90,11 @@ export function rulebookPage(id: string): RulebookPageResponse | null {
     return neighbour ? { id: neighbour.id, title: neighbour.title } : null;
   };
   return {
+    ...(locale ? { display: {
+      ...rulebookPageDisplay(found.page, locale),
+      prevTitle: book.pages[found.index - 1] ? rulebookPageDisplay(book.pages[found.index - 1], locale).title : undefined,
+      nextTitle: book.pages[found.index + 1] ? rulebookPageDisplay(book.pages[found.index + 1], locale).title : undefined,
+    } } : {}),
     page: { ...page, folio: found.index + 1 },
     chapter: { id: chapter.id, numeral: chapter.numeral, title: chapter.title },
     prev: link(found.index - 1),

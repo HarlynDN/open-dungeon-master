@@ -308,7 +308,7 @@ export function RulebookPage({
       <footer className="rb-foot">
         {prev ? (
           <button type="button" className="rb-turn-link rb-turn-prev" onClick={() => onOpen(prev.id)}>
-            <span aria-hidden="true">&lsaquo;</span> {prev.title}
+            <span aria-hidden="true">&lsaquo;</span> {display?.prevTitle ?? prev.title}
           </button>
         ) : (
           <span />
@@ -318,7 +318,7 @@ export function RulebookPage({
         </span>
         {next ? (
           <button type="button" className="rb-turn-link rb-turn-next" onClick={() => onOpen(next.id)}>
-            {next.title} <span aria-hidden="true">&rsaquo;</span>
+            {display?.nextTitle ?? next.title} <span aria-hidden="true">&rsaquo;</span>
           </button>
         ) : (
           <span />

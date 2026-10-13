@@ -302,7 +302,7 @@ try {
 
   await test("the routes are closed to a caller who is not signed in", async () => {
     globalThis.__odmTestToken = "";
-    assert.equal((await contentsRoute.GET()).status, 401);
+    assert.equal((await contentsRoute.GET(new Request("http://x/api/rulebook"))).status, 401);
     assert.equal((await pageRoute.GET(new Request("http://x/api/rulebook/pages/combat"), params("combat"))).status, 401);
     assert.equal((await searchRoute.GET(new Request("http://x/api/rulebook/search?q=cover"))).status, 401);
   });
@@ -310,8 +310,16 @@ try {
   await test("a signed-in reader gets contents, pages and search", async () => {
     const user = createUser(`reader-${randomBytes(3).toString("hex")}`, "x");
     globalThis.__odmTestToken = mintSession(user.id).token;
-    const contents = await (await contentsRoute.GET()).json();
+    const contents = await (await contentsRoute.GET(new Request("http://x/api/rulebook"))).json();
     assert.equal(contents.chapters.length, 17);
+    const chinese = await (await contentsRoute.GET(new Request("http://x/api/rulebook?locale=zh-CN"))).json();
+    const missile = chinese.chapters.flatMap(chapter => chapter.entries).find(entry => entry.id === "magic-missile");
+    assert.equal(missile.title, "Magic Missile");
+    assert.equal(missile.display.title, "魔法飞弹");
+    assert.equal(missile.display.locale, "zh-CN");
+    const localizedPage = await (await pageRoute.GET(new Request("http://x/api/rulebook/pages/magic-missile?locale=zh-CN"), params("magic-missile"))).json();
+    assert.equal(localizedPage.display.prevTitle, "法师护甲");
+    assert.equal(localizedPage.prev.title, "Mage Armor");
     assert.equal(contents.chapters[0].entries[0].md, undefined, "the contents carry no page text");
     const combat = await pageRoute.GET(new Request("http://x/api/rulebook/pages/combat"), params("combat"));
     assert.equal(combat.status, 200);
