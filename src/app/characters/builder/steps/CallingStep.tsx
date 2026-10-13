@@ -214,7 +214,7 @@ export function CallingStep({
           <div className="flex flex-wrap gap-x-3 gap-y-1">
             {grantedFeatures.map((feature) => {
               const reskin = pack?.features.find(entry => entry.from.trim().toLowerCase() === feature.name.trim().toLowerCase());
-              const name = reskin ? reskin.name : nativeFeatureName(feature.name, locale);
+              const name = reskin ? reskin.name : nativeFeatureName(feature.name, locale, klass?.id);
               return (
                 <span
                   key={`${feature.name}-${feature.level ?? 0}`}

@@ -330,7 +330,7 @@ export function FeatureChips({
         const background = feature.source === "background" ? backgroundGrantView(feature.name, help, locale) : null;
         return {
           id: feature.name,
-          name: background?.name ?? (story ? feature.name : nativeFeatureName(feature.name, locale)),
+          name: background?.name ?? (story ? feature.name : nativeFeatureName(feature.name, locale, owner)),
           icon: { kind: "feature" as const, key: feature.name, family: `class-${owner.toLowerCase()}` },
           note: story ? t("sheet.storySource") : undefined,
           meta: feature.level ? t("library.level", { level: feature.level }) : undefined,

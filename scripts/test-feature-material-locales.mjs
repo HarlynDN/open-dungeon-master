@@ -5,6 +5,7 @@ import {createHash} from 'node:crypto';
 import {openCombatRenderer} from './lib/combat-ui-fixtures.mjs';
 import {MESSAGE_CATALOGS} from '../src/lib/i18n/messages.ts';
 import {NATIVE_FEATURE_MATERIAL, NATIVE_FEAT_MATERIAL} from '../src/lib/i18n/feature-material-metadata.ts';
+import {THEMED_FEATURE_MATERIAL} from '../src/lib/i18n/themed-feature-metadata.ts';
 import {SUBCLASS_FEATURE_MATERIAL} from '../src/lib/i18n/subclass-feature-metadata.ts';
 const {nativeFeatureName, nativeFeatureHelp, nativeFeatHelp, nativeFeatPrerequisite} = await import('../src/lib/i18n/feature-material-presentations.ts');
 import {normalizeRulesText} from '../src/lib/help/rules-text.ts';
@@ -36,6 +37,36 @@ for (const row of SUBCLASS_FEATURE_MATERIAL) {
   assert.equal(nativeFeatureHelp(row.classId, row.name, feature.d + ' Authored extension.', 'zh-CN'), feature.d + ' Authored extension.');
   assert.equal(nativeFeatureHelp('authored-class', row.name, feature.d, 'zh-CN'), feature.d);
 }
+
+// Reviewed bindings must match actual theme tables, not a name-only lookup.
+const themedSource=[];
+for(const file of fs.readdirSync(new URL('../src/lib/classes/',import.meta.url)).filter(file=>file.endsWith('-features.json'))){
+ const data=JSON.parse(fs.readFileSync(new URL('../src/lib/classes/'+file,import.meta.url),'utf8'));
+ for(const [classId,table] of Object.entries(data.classes)) for(const feature of [...Object.values(table.levels).flat(),...Object.values(table.subclass.levels).flat()])
+  themedSource.push({classId,subclass:table.subclass.name,...feature,theme:file.replace('-features.json','')});
+}
+const themeSourceBefore=JSON.stringify(themedSource);
+const cyberSource=themedSource.filter(row=>row.theme==='cyberpunk');
+const cyberClassIds=new Set(cyberSource.map(row=>row.classId));
+assert.equal(cyberClassIds.size,6);assert.equal(cyberSource.length,119);
+assert.deepEqual(THEMED_FEATURE_MATERIAL.filter(row=>cyberClassIds.has(row.classId)).map(row=>row.classId+'::'+row.name).sort(),cyberSource.map(row=>row.classId+'::'+row.n).sort());
+for(const row of THEMED_FEATURE_MATERIAL){
+ const original=themedSource.find(entry=>entry.classId===row.classId&&entry.n===row.name);assert(original);
+ assert.equal(MESSAGE_CATALOGS.en[row.nameKey],original.n);
+ assert.equal(MESSAGE_CATALOGS.en[row.descriptionKey],original.d);
+ const source=describeFeature(row.classId,original.subclass,row.name);
+ assert.equal(nativeFeatureName(row.name,'en',row.classId),row.name);
+ assert.equal(nativeFeatureName(row.name,'zh-CN',row.classId),MESSAGE_CATALOGS['zh-CN'][row.nameKey]);
+ assert.equal(nativeFeatureHelp(row.classId,row.name,source,'en'),source);
+ assert.equal(nativeFeatureHelp(row.classId,row.name,source,'zh-CN'),MESSAGE_CATALOGS['zh-CN'][row.descriptionKey]);
+ assert.equal(nativeFeatureHelp(row.classId,row.name,source+' Authored expansion.','zh-CN'),source+' Authored expansion.');
+ assert.equal(nativeFeatureHelp('authored-class',row.name,source,'zh-CN'),source);
+ const numeric=text=>new Set((text.replace(/(\d)[–-](?=\d)/g,'$1 ').match(/[+-]?\d+(?:\.\d+)?/g)??[]).map(Number));
+ if(row.descriptionKey.startsWith('callingMaterial.themedFeature.')) for(const number of numeric(original.d)) assert(numeric(MESSAGE_CATALOGS['zh-CN'][row.descriptionKey]).has(number),row.descriptionKey+':'+number);
+ const dice=text=>(text.match(/\b\d+d\d+\b/g)??[]);
+ assert.deepEqual(dice(MESSAGE_CATALOGS['zh-CN'][row.descriptionKey]),dice(original.d),row.descriptionKey);
+}
+assert.equal(JSON.stringify(themedSource),themeSourceBefore);
 
 // Full authored content, not just the already-reviewed one-line fallback.
 let archetypeCount = 0;
@@ -241,6 +272,30 @@ for(const locale of ['zh-CN','en']){
  const custom=info.render('InfoDialog',archetypeInfo,locale,{queues:{[infoFile]:[{...rawState,source:'homebrew'}]}});
  assert(custom.includes('Always-prepared spells'));assert(custom.includes('Experimental Elixir'));
 }
+// The same six complete native classes reach actual creation and sheet views.
+for(const classId of cyberClassIds){
+ const klass=srdClassOptions().find(row=>row.id===classId);assert(klass);
+ const source=cyberSource.filter(row=>row.classId===classId);
+ const features=source.map(row=>({name:row.n,source:'class',classId,level:1}));
+ const props={state:{subclass:source[0].subclass,gender:'',chosenSkills:[],racialSkills:[],backgroundSkills:[]},
+  derived:{effectiveLevel:20,grantedFeatures:features},actions:{},klass,pack:null,
+  classes:[],classGroups:[],subclassGroups:[],offersSubclass:false,subclassLockedAt:null,chosenArchetype:null};
+ for(const locale of ['zh-CN','en']){
+  calling.render('CallingStep',props,locale);
+  const tooltips=calling.elements().filter(row=>row.props.meta&&typeof row.props.text==='string');
+  chips.render('FeatureChips',{features,classId,subclass:source[0].subclass},locale);
+  const sheetRows=chips.elements().find(e=>e.props.items).props.items;
+  assert.deepEqual(sheetRows.map(row=>row.id),features.map(row=>row.name));
+  for(const original of source){
+   const name=nativeFeatureName(original.n,locale,classId),help=nativeFeatureHelp(classId,original.n,describeFeature(classId,original.subclass,original.n),locale);
+   assert(tooltips.some(row=>row.props.label===name&&row.props.text===help),classId+':'+original.n+':'+locale);
+   assert(sheetRows.some(row=>row.name===name&&row.text===help),classId+':'+original.n+':'+locale);
+  }
+ }
+ chips.render('FeatureChips',{features:[{name:source[0].n,source:'story'}],classId},'zh-CN');
+ assert.equal(chips.elements().find(e=>e.props.items).props.items[0].name,source[0].n);
+}
+console.log(`PASS: ${THEMED_FEATURE_MATERIAL.length} source-bound theme feature projections, exact English source/dice/numbers, all 119 cyberpunk features across six actual creator/sheet flows, class ownership and authored overrides.`);
 console.log('PASS: all 105 authored full archetype documents, importer byte parity, level/feature/spell display, actual creator and lazy help, English switching and source provenance preserved.');
 console.log('PASS: 146 native feature and 54 feat summaries, class overrides, source-bound display, unchanged parser inputs, canonical chip/reference identities, lazy feat help and English render parity.');
 console.log('PASS: bilingual core features across actual creation and sheet components; localized tooltip props, canonical identities and explicit pack names/help preserved.');

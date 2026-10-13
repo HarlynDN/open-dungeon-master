@@ -108,6 +108,7 @@ import { CINEMATIC_MESSAGES } from "./cinematic-messages.ts";
 import { SHEET_PLAY_MESSAGES } from "./sheet-play-messages.ts";
 import { SHEET_DIALOG_MESSAGES } from "./sheet-dialog-messages.ts";
 import { SHEET_RESOURCE_HELP_MESSAGES } from "./sheet-resource-help-messages.ts";
+import { THEMED_FEATURE_MESSAGES } from "./themed-feature-messages.ts";
 import { AUTHORED_RESOURCE_MESSAGES } from "./authored-resource-messages.ts";
 import { ADDITIONAL_RESOURCE_MESSAGES } from "./additional-resource-messages.ts";
 import { TURN_CONTROL_MESSAGES } from "./turn-control-messages.ts";
@@ -196,6 +197,7 @@ const en = {
   ...ADDITIONAL_RESOURCE_MESSAGES.en,
   ...AUTHORED_RESOURCE_MESSAGES.en,
   ...SHEET_RESOURCE_HELP_MESSAGES.en,
+  ...THEMED_FEATURE_MESSAGES.en,
   ...SHEET_DIALOG_MESSAGES.en,
   ...SHEET_PLAY_MESSAGES.en,
   ...AUTH_MESSAGES.en,
@@ -346,6 +348,7 @@ const zhCN: Messages = {
   ...ADDITIONAL_RESOURCE_MESSAGES["zh-CN"],
   ...AUTHORED_RESOURCE_MESSAGES["zh-CN"],
   ...SHEET_RESOURCE_HELP_MESSAGES["zh-CN"],
+  ...THEMED_FEATURE_MESSAGES["zh-CN"],
   ...SHEET_DIALOG_MESSAGES["zh-CN"],
   ...SHEET_PLAY_MESSAGES["zh-CN"],
   ...AUTH_MESSAGES["zh-CN"],

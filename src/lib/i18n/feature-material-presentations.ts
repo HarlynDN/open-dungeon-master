@@ -1,6 +1,7 @@
 import { NATIVE_FEATURE_MATERIAL, NATIVE_FEAT_MATERIAL } from "./feature-material-metadata.ts";
 import { CORE_FEATURE_NAMES, CORE_FEATURE_HELP } from "./core-feature-metadata.ts";
 import { SUBCLASS_FEATURE_MATERIAL } from "./subclass-feature-metadata.ts";
+import { THEMED_FEATURE_MATERIAL } from "./themed-feature-metadata.ts";
 import { classOptionFeatureName, classOptionHelp } from "./class-option-presentations.ts";
 import { catalogFor, createTranslator, registeredMessageTemplate } from "./translator.ts";
 import { normalizeRulesText } from "../help/rules-text.ts";
@@ -12,12 +13,16 @@ import { sheetResourceHelp } from "./sheet-dialog-presentations.ts";
 
 // Display adapters only: rule parsers and saved sheets retain English source.
 // Translate a known whole summary, never a name-based replacement of homebrew.
-export function nativeFeatureName(name: string, locale: AppLocale): string {
+export function nativeFeatureName(name: string, locale: AppLocale, classId?: string): string {
   if (locale === "en") return name;
   const free = freeCastOf(name);
   if (free) return createTranslator(locale)("callingMaterial.freeCast.name", {
     spell: referenceDisplayName("spell", free.spell, locale), feat: featTermLabel("feat", free.feat, locale),
   });
+  if (classId) {
+    const themed = THEMED_FEATURE_MATERIAL.find(entry => entry.name === name && entry.classId === classId.trim().toLowerCase());
+    if (themed) return createTranslator(locale)(themed.nameKey);
+  }
   const option = classOptionFeatureName(name, locale);
   if (option !== name) return option;
   const core = CORE_FEATURE_NAMES.find(entry => entry.name === name);
@@ -25,7 +30,9 @@ export function nativeFeatureName(name: string, locale: AppLocale): string {
   const subclass = SUBCLASS_FEATURE_MATERIAL.find(entry => entry.name === name);
   if (subclass) return createTranslator(locale)(subclass.nameKey);
   const row = NATIVE_FEATURE_MATERIAL.find(entry => entry.name === name);
-  return row ? createTranslator(locale)(row.nameKey) : name;
+  if (row) return createTranslator(locale)(row.nameKey);
+  const themed = THEMED_FEATURE_MATERIAL.find(entry => entry.name === name && (!classId || entry.classId === classId.trim().toLowerCase()));
+  return themed ? createTranslator(locale)(themed.nameKey) : name;
 }
 
 export function nativeFeatureHelp(classId: string, name: string, source: string | null | undefined, locale: AppLocale): string | null | undefined {
@@ -43,6 +50,14 @@ export function nativeFeatureHelp(classId: string, name: string, source: string 
   const subclass = SUBCLASS_FEATURE_MATERIAL.find(entry => entry.classId === classId.trim().toLowerCase()
     && entry.name === name && registeredMessageTemplate("en", entry.descriptionKey) === source);
   if (subclass) return createTranslator(locale)(subclass.descriptionKey);
+  const themed = THEMED_FEATURE_MATERIAL.find(entry => {
+    if (entry.classId !== classId.trim().toLowerCase() || entry.name !== name) return false;
+    const original = registeredMessageTemplate("en", entry.descriptionKey);
+    const prefix = `${name}:`;
+    const help = original?.trim().toLowerCase().startsWith(prefix.toLowerCase()) ? original.trim().slice(prefix.length).trim() : original;
+    return source === help;
+  });
+  if (themed) return createTranslator(locale)(themed.descriptionKey);
   const en = { ...catalogFor("en", "callingMaterial.nativeFeature."), ...catalogFor("en", "callingMaterial.featureOverride.") };
   const row = NATIVE_FEATURE_MATERIAL.find(entry => {
     if (entry.name !== name || ("classId" in entry && entry.classId !== classId.trim().toLowerCase())) return false;
