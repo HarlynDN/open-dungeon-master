@@ -280,6 +280,15 @@ this section records current delivery state and acceptance gaps only.
   remain preserved pending source review. Earlier external terminology candidates
   without verified edition/review provenance remain unverified; no external prose
   was imported.
+- Current-build browser checkpoint (2026-10-14): fresh temporary database and
+  Next 16.3.8 production server at 127.0.0.1:3021, session 63462, browser 3/tab 3.
+  Login and personal Chinese locale switch passed. Rulebook Chinese search
+  for 魔法飞弹 returned the spell first; opening it showed complete Chinese
+  text, 120-foot range, 1d4+1 damage and higher-level paragraph. Screenshot:
+  /tmp/odm-final-rulebook-zh.png. No DM service is configured in this disposable
+  instance; this is UI/book evidence only. Continue existing browser tab for
+  English switching, character/PDF and remaining flow checks. Full tests remain
+  live at session 20324; no final test result yet.
 - Browser checkpoint: isolated Next 16.3.8 webpack production instance on
   127.0.0.1:3018 with a disposable account/database. Verified Chinese directory
   spell names/meta, Magic Missile body and higher-level text, reader aria-label,
