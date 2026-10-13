@@ -3725,6 +3725,11 @@
       "sourceHash": "89d294baf3708ed12136a6c1557d8d5210609a41ec904a46e522d5ff3375c586"
     },
     {
+      "id": "vampire-spawn",
+      "kind": "monster",
+      "sourceHash": "638defd1bad7a809607bfb8a4d93246849553562eb2a4ed5f2ff57743b7ee7f7"
+    },
+    {
       "id": "violet-fungus-fungi",
       "kind": "monster",
       "sourceHash": "2c5bb83323d65a1804be2b2398b2dc35e6a0d1c0172de7b6144af9bd2c911170"
