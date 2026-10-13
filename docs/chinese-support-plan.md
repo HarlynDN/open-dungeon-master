@@ -247,8 +247,11 @@ this section records current delivery state and acceptance gaps only.
   lint retry passes (0 terminology errors, 389 context warnings), and webpack
   production build passes compilation, TypeScript and page generation.
   Logs: /tmp/odm-text-final-lint-retry.log and /tmp/odm-text-final-build.log.
-  Full tests session 20324 remains confirmed live; resume it before any rerun
-  (/tmp/odm-text-final-tests.log). Generated catalog sync occurred during this
+  Full tests session 20324 was terminated after diagnosing sandbox EPERM
+  at the bare-JSON test mock HTTP listener (worker open SQLite path and standalone
+  reproduction: /tmp/odm-final-bare-json-diagnostic.log). Original log retained.
+  Replacement full run with localhost-listen permission is session 27630,
+  /tmp/odm-text-final-tests-unrestricted.log; resume this handle before rerunning. Generated catalog sync occurred during this
   run and is independently verified by the full lint drift check.
 - Fixed bilingual retrieval calibration rerun passed from cached vectors after
   verifying both fixture hashes, both models' config/tokenizer/ONNX hashes and
@@ -287,8 +290,10 @@ this section records current delivery state and acceptance gaps only.
   text, 120-foot range, 1d4+1 damage and higher-level paragraph. Screenshot:
   /tmp/odm-final-rulebook-zh.png. No DM service is configured in this disposable
   instance; this is UI/book evidence only. Continue existing browser tab for
-  English switching, character/PDF and remaining flow checks. Full tests remain
-  live at session 20324; no final test result yet.
+  English switching, character/PDF and remaining flow checks. Full tests now run at session 27630 after the diagnosed sandbox failure;
+  no final result yet. English switch was then verified in the same browser:
+  account/settings chrome and Magic Missile original body, 120 feet, 1d4+1
+  and higher-level paragraph restored. Screenshot: /tmp/odm-final-rulebook-en.png.
 - Browser checkpoint: isolated Next 16.3.8 webpack production instance on
   127.0.0.1:3018 with a disposable account/database. Verified Chinese directory
   spell names/meta, Magic Missile body and higher-level text, reader aria-label,
