@@ -3935,6 +3935,36 @@
       "sourceHash": "b4df9b212fe13836bacf4744377b36371e38ff7f0a1bb1d62393445b7f4a9e8e"
     },
     {
+      "id": "swarm-of-bats",
+      "kind": "monster",
+      "sourceHash": "799bba76d1d9c2d57c99b5f50f74d98a5ee9dd287edfdfa741051b122465d619"
+    },
+    {
+      "id": "swarm-of-insects",
+      "kind": "monster",
+      "sourceHash": "2409747d39fe30c91f1cb4bab1fbab70c4a67e8cc8f9db6f011f44214febdd46"
+    },
+    {
+      "id": "swarm-of-poisonous-snakes",
+      "kind": "monster",
+      "sourceHash": "09fcd334a42eaa753c84fa283ce5692c99a02be0c14c25ab9782809133281a3e"
+    },
+    {
+      "id": "swarm-of-quippers",
+      "kind": "monster",
+      "sourceHash": "9060ae633877b301aca22e7579f90317ca1b328a4d53a340edfe1a572eade5f8"
+    },
+    {
+      "id": "swarm-of-rats",
+      "kind": "monster",
+      "sourceHash": "ff7b2bcacb6b37d49bbc5683b4f442d9457bfb84ea2d5c5e302123e777c3bd8a"
+    },
+    {
+      "id": "swarm-of-ravens",
+      "kind": "monster",
+      "sourceHash": "b5cb68b7908ea4e9c761f63adac1e6b6cc7b15fddb1bf0c507a81b622d66b7a9"
+    },
+    {
       "id": "tiger",
       "kind": "monster",
       "sourceHash": "93b2e5053da15644549cbee43cbc711693062a84de39a4be3d3c8538db3fb55b"
