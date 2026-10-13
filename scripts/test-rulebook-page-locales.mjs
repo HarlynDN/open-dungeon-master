@@ -61,6 +61,36 @@ for (const page of rulebookPages().filter(page => page.kind === 'spell' && /(?:c
   assert.ok(LOCALIZED_SPELL_PAGES.some(row => row.id === page.id), 'Missing complete low-level book page: ' + page.id);
 }
 
+const { bookAnchorIds, parseBook, preserveBookAnchors } = await import('../src/lib/rulebook/markdown.ts');
+const nativeRules = ['conditions', 'inspiration', 'coinage', 'selling-treasure'];
+for (const id of nativeRules) {
+  const data = rulebookPage(id);
+  const before = JSON.stringify(data);
+  const display = rulebookPageDisplay(data.page, 'zh-CN');
+  assert.equal(display.translated, true, id);
+  const blocks = preserveBookAnchors(parseBook(display.md), display.anchors);
+  assert.ok(blocks);
+  assert.deepEqual(bookAnchorIds(blocks), bookAnchorIds(parseBook(data.page.md)));
+  const html = renderer.render('RulebookPage', { data: { ...data, display }, terms: [], at: id === 'conditions' ? 'exhaustion' : undefined, xrefs, onOpen: () => {} }, 'zh-CN');
+  assert.ok(html.includes(display.title), id);
+  for (const anchor of display.anchors) assert.ok(html.includes('data-anchor="' + anchor + '"'), id + ': ' + anchor);
+  const sourceTables = parseBook(data.page.md).filter(block => block.kind === 'table');
+  const translatedTables = blocks.filter(block => block.kind === 'table');
+  assert.equal(translatedTables.length, sourceTables.length);
+  for (let i = 0; i < sourceTables.length; i++) {
+    const numbers = table => table.rows.flatMap(row => row.flatMap(cell => cell.match(/\d[\d,/]*\b/g) ?? []));
+    assert.deepEqual(numbers(translatedTables[i]), numbers(sourceTables[i]), id + ': table values');
+  }
+  assert.equal(rulebookPageDisplay(data.page, 'en').md, data.page.md);
+  assert.equal(rulebookPageDisplay({ ...data.page, md: data.page.md + '\nNew authored rule.' }, 'zh-CN').translated, false);
+  assert.equal(rulebookPageDisplay({ ...data.page, title: data.page.title + ' variant' }, 'zh-CN').translated, false);
+  assert.equal(JSON.stringify(data), before);
+}
+assert.equal(preserveBookAnchors(parseBook('## 中文标题'), []), null);
+const conditions = rulebookPageDisplay(rulebookPage('conditions').page, 'zh-CN');
+assert.match(conditions.md, /体内已经存在的毒素或疾病只是暂时停止作用/);
+assert.match(conditions.md, /从死亡中复活也会使生物的力竭等级降低 1/);
+
 const untouched = rulebookPages().find(page => page.kind === 'spell' && !LOCALIZED_SPELL_PAGES.some(row => row.id === page.id));
 assert.equal(rulebookPageDisplay(untouched, 'zh-CN').md, untouched.md);
-console.log(`Rulebook: ${LOCALIZED_SPELL_PAGES.length} complete Chinese spell pages and ${items.length} full item pages; bilingual rendering, source/canonical preservation and translated cross-reference passed.`);
+console.log(`Rulebook: ${LOCALIZED_SPELL_PAGES.length} complete Chinese spell pages and ${items.length} full item pages and 4 full rules pages; bilingual rendering, source/canonical preservation and translated cross-reference passed.`);

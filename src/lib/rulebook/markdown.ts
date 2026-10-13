@@ -22,6 +22,27 @@ export type InlineNode =
   | string
   | { bold?: boolean; italic?: boolean; page?: string; children: InlineNode[] };
 
+// Translated headings keep the native deep-link identities, including sidebar
+// anchors. Order is structural, so repeated Chinese headings remain distinct.
+export function bookAnchorIds(blocks: BookBlock[]): string[] {
+  return blocks.flatMap(block => block.kind === "heading" ? [block.anchor]
+    : block.kind === "sidebar" ? [...(block.anchor ? [block.anchor] : []), ...bookAnchorIds(block.blocks)] : []);
+}
+
+export function preserveBookAnchors(blocks: BookBlock[], native: readonly string[]): BookBlock[] | null {
+  if (bookAnchorIds(blocks).length !== native.length) return null;
+  let index = 0;
+  const walk = (items: BookBlock[]): BookBlock[] => items.map(block => {
+    if (block.kind === "heading") return { ...block, anchor: native[index++] };
+    if (block.kind === "sidebar") {
+      const anchor = block.anchor ? native[index++] : undefined;
+      return { ...block, anchor, blocks: walk(block.blocks) };
+    }
+    return block;
+  });
+  return walk(blocks);
+}
+
 export function anchorSlug(text: string): string {
   return (
     stripInline(text)

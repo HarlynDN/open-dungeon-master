@@ -1,5 +1,8 @@
 // Server-only projection: book prose never enters the reader's client bundle.
 import "../i18n/messages.ts";
+import { createHash } from "node:crypto";
+import nativeChinesePages from "./locales/zh-CN.json";
+import { bookAnchorIds, parseBook } from "./markdown.ts";
 import type { AppLocale } from "../i18n/locales.ts";
 import { registeredMessageTemplate } from "../i18n/translator.ts";
 import { referenceDisplayName } from "../i18n/references.ts";
@@ -12,9 +15,24 @@ import { spellFieldsFromPage } from "./catalog-rows.ts";
 import { LOCALIZED_SPELL_PAGES } from "./localized-page-metadata.ts";
 import type { RulebookPage, RulebookPageResponse } from "./types.ts";
 
+type NativePage = RulebookPageResponse["page"] | RulebookPage;
+const nativePages: Partial<Record<AppLocale, Record<string, { sourceHash: string; title: string; md: string; meta?: string }>>> = {
+  "zh-CN": nativeChinesePages,
+};
+
+export function nativeBookSourceHash(page: NativePage): string {
+  return createHash("sha256").update(JSON.stringify([page.id, page.title, page.kind, page.meta ?? "", page.md])).digest("hex");
+}
+
 export function rulebookPageDisplay(page: RulebookPageResponse["page"] | RulebookPage, locale: AppLocale): NonNullable<RulebookPageResponse["display"]> {
   const original = { locale, translated: false, title: page.title, meta: page.meta, md: page.md };
   if (locale === "en") return original;
+  const native = nativePages[locale]?.[page.id];
+  if (native && native.sourceHash === nativeBookSourceHash(page)) {
+    const anchors = bookAnchorIds(parseBook(page.md));
+    if (anchors.length !== bookAnchorIds(parseBook(native.md)).length) return original;
+    return { locale, translated: true, title: native.title, meta: native.meta, md: native.md, anchors };
+  }
   if (page.kind === "item") {
     const row = MAGIC_ITEM_MATERIAL.find(row => row.id === page.id && row.name === page.title);
     const nameRow = MAGIC_ITEM_NAMES.find(row => row.id === page.id && row.name === page.title);

@@ -75,7 +75,7 @@ export type PageLink = { id: string; title: string };
 export type RulebookPageResponse = {
   // Display is separate from canonical text so workshop copies retain source
   // mechanics and older clients/servers keep their existing contract.
-  display?: { locale: import("../i18n/locales").AppLocale; translated: boolean; title: string; meta?: string; md: string };
+  display?: { locale: import("../i18n/locales").AppLocale; translated: boolean; title: string; meta?: string; md: string; anchors?: string[] };
   page: Omit<RulebookPage, "chapter"> & { folio: number };
   chapter: { id: string; numeral: string; title: string };
   prev: PageLink | null;

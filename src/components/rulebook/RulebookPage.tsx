@@ -6,7 +6,7 @@ import { bookFrame, bookHeader } from "@/lib/i18n/book-ui-presentations";
 import { PagePrep } from "./PagePrep";
 import { Fragment, useMemo, type ReactNode } from "react";
 import { cn } from "@/lib/cn";
-import { inlineText, parseBook, parseInline, type BookBlock, type InlineNode } from "@/lib/rulebook/markdown";
+import { inlineText, parseBook, preserveBookAnchors, parseInline, type BookBlock, type InlineNode } from "@/lib/rulebook/markdown";
 import { stem } from "@/lib/rulebook/search";
 import type { RulebookPageResponse } from "@/lib/rulebook/types";
 
@@ -244,16 +244,18 @@ export function RulebookPage({
 }) {
   const { locale } = useLocale();
   const { chapter, prev, next } = data;
-  const page = data.display?.locale === locale ? { ...data.page, ...data.display } : data.page;
+  const display = data.display?.locale === locale ? data.display : undefined;
+  const page = display ? { ...data.page, ...display } : data.page;
   const blocks = useMemo(() => {
-    const all = parseBook(page.md);
+    const parsed = parseBook(page.md);
+    const all = display?.anchors ? preserveBookAnchors(parsed, display.anchors) ?? parseBook(data.page.md) : parsed;
     // The entry's italic first line is lettered under the title already.
     const first = all[0];
     if (page.meta && first?.kind === "paragraph" && inlineText(parseInline(first.text)).trim() === page.meta) {
       return all.slice(1);
     }
     return all;
-  }, [page.md, page.meta]);
+  }, [page.md, page.meta, data.page.md, display]);
   const ctx: Ctx = { terms, xrefs, onOpen };
   const plain: Ctx = { terms: [], xrefs, onOpen };
   const [from, to] = terms.length ? passageRange(blocks, at) : [0, 0];
