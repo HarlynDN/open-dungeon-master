@@ -3250,6 +3250,11 @@
       "sourceHash": "fe619df6f9ab95578914f138d7f8f48e81de44219827700f0330beeb65fa0462"
     },
     {
+      "id": "chain-devil-devil",
+      "kind": "monster",
+      "sourceHash": "7e004950e4b6453093da7de78c550f44e101a2d705a08e0850f02de8d66466b1"
+    },
+    {
       "id": "chimera",
       "kind": "monster",
       "sourceHash": "0345a10380cab90bf3ebc690ad386bb4a46efd206e31f7bc63f907e1331605fd"
