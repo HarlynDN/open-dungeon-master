@@ -45,7 +45,7 @@ Before pausing, finish the native dynamic text audit and one bilingual text jour
 | Player system logs | Localized structured combat/audit display, party item/coin/XP logs, account facts and kickoff notices; English model/tool semantics stay separate | Other native player-log templates and final history/save/resume audit |
 | Resource delivery | UI/content/help scopes and independent retryable lazy help; anonymous bilingual switch/reload, authenticated character/campaign entry and viewer-English/story-Chinese separation observed | Complete authenticated journey and lazy/cache timing; hydrated/network totals and large route JS payload remain unverified |
 | Local Chinese TTS | Locale-driven voice prefixes/defaults, Chinese single narrator, Unicode sentence/hard limits, campaign-language voice discovery and previews, cache isolation and Chinese failure UI implemented; mock transport/queue and English compatibility checks pass | Isolated real CPU service configured; Chinese sample decode and actual DM audio delivery succeed; Arabic numbers/dice/mixed-name and English samples also decode; real preview outage/retry succeeds; Chinese voice quality rejected by user; all further Chinese voice work deferred by latest instruction, not a text-milestone gate |
-| Full native rulebook | Reader chrome localized; **391/933 complete Chinese pages** now render via a server-generated display projection, including all 127 cantrip/first-/second-level spell pages, all 239 magic-item pages and twenty-five foundational rule pages, with complete headers and reused bodies; original English corpus retained; 127 spell and 239 magic-item bodies are available for further reuse | Remaining full-page rules/monster/high-level spell prose and tables; complete Chinese corpus coverage, authenticated browser search/navigation and English reading regression |
+| Full native rulebook | Reader chrome localized; **395/933 complete Chinese pages** now render via a server-generated display projection, including all 127 cantrip/first-/second-level spell pages, all 239 magic-item pages and twenty-nine foundational rule pages, with complete headers and reused bodies; original English corpus retained; 127 spell and 239 magic-item bodies are available for further reuse | Remaining full-page rules/monster/high-level spell prose and tables; complete Chinese corpus coverage, authenticated browser search/navigation and English reading regression |
 | Final text flow | Recorded Chinese exploration/social/utility and combat/slot/correction acceptance on Codex | Complete Chinese text journey, rulebook reading/search and English regression; full tests/lint/build, then pause |
 
 The concrete UI scope and deferred areas are in
@@ -70,13 +70,13 @@ or real interaction has passed. Do not restart a static translation campaign.
 
 ## Next delivery unit and interruption checkpoint
 
-- Recovered the interrupted `fa342a50` unit: Diseases, Objects, Artifacts,
-  Nonplayer Characters and Legal Information are source-reviewed and included
-  with the independent coverage manifest. Focused bilingual/source checks,
-  TypeScript and changed-file lint passed. These are not final release acceptance.
-- Next unit: group Madness, Poisons, Magic Items and Sentient Magic Items through
-  the existing server page catalog, then continue remaining rules/race/class
-  pages, spells and monsters. Update delivery data without modifying test logic.
+- Completed grouped Madness, Poisons, Magic Items and Sentient Magic Items
+  prose, including all eight tables and source-bound terminology. The focused
+  bilingual/source check, importer refusal cases, TypeScript and changed-file
+  lint passed. Complete book coverage remains partial; see the manifest output.
+- Next unit: reuse registered spell names in the full Spell Lists page; continue
+  remaining rules/race/class pages, spells and monsters in grouped batches.
+  Update delivery data without modifying test logic.
 - Native dynamic UI/material/log ownership remains open. Complete its audit
   before the final bilingual journey; combine pure helpers with their consumers.
   Deep Workshop editors, native-shell-only UI, third-party expansion prose,
@@ -127,9 +127,10 @@ Continue applying this contract to routine prose batches:
   (rules, race, class, spell, item, monster), not just the delivered subset.
   Until that gate passes, report partial coverage explicitly.
 
-Any import helper should reuse the production source-fingerprint function and
-existing catalog format. Add it only if repeated source-binding work warrants
-it; no new translation framework or reporting service is required.
+`node scripts/import-rulebook-translations.mjs <reviewed-drafts.json>` reuses
+production source fingerprints, validates the existing coverage/source bindings
+and heading/sidebar shape, and updates both the server page catalog and delivery
+manifest. Run the focused bilingual page check before committing its output.
 
 ## Lightweight verification and progress reporting
 

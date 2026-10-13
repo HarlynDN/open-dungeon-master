@@ -75,6 +75,15 @@ for (const page of rulebookPages().filter(page => page.kind === 'spell' && /(?:c
 
 const { bookAnchorIds, parseBook, preserveBookAnchors } = await import('../src/lib/rulebook/markdown.ts');
 const { default: nativeCatalog } = await import('../src/lib/rulebook/locales/zh-CN.json', { with: { type: 'json' } });
+const { prepareRulebookTranslations } = await import('./import-rulebook-translations.mjs');
+const anchors = md => bookAnchorIds(parseBook(md));
+const prepare = drafts => prepareRulebookTranslations(drafts, nativeCatalog, coverageManifest, pages, nativeBookSourceHash, anchors);
+const samePage = prepare({ conditions: { title: nativeCatalog.conditions.title, md: nativeCatalog.conditions.md } });
+assert.deepEqual(samePage.catalog, nativeCatalog);
+assert.deepEqual(samePage.manifest, coverageManifest);
+assert.throws(() => prepare({ 'unknown-page': { title: '不存在', md: '不存在' } }), /Unknown canonical page/);
+assert.throws(() => prepare({ conditions: { title: '状态', md: '遗漏所有段落标题' } }), /heading\/sidebars/);
+assert.throws(() => prepare({}), /No translation drafts/);
 const nativeRules = Object.keys(nativeCatalog);
 for (const id of nativeRules) {
   const data = rulebookPage(id);

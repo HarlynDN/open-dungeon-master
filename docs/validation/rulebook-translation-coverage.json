@@ -750,9 +750,29 @@
       "sourceHash": "10529d0c56f55fc731129a9136f16860c549c7d3a28f8e522c8288e28f33fe10"
     },
     {
+      "id": "madness",
+      "kind": "rules",
+      "sourceHash": "1fb50753e07049b96d3519528b53a5fc334bf57a96c2f9a6c89e89abbb9f25d5"
+    },
+    {
       "id": "objects",
       "kind": "rules",
       "sourceHash": "dae2c60320e3b71d940b1a6771d3df45eb3241b205019149cdaccdd5ad3603fb"
+    },
+    {
+      "id": "poisons",
+      "kind": "rules",
+      "sourceHash": "7d6ef9ef65729e0b4bd6e04d83a9bb846ba617daec0b4e03765143b3494ed80d"
+    },
+    {
+      "id": "magic-items",
+      "kind": "rules",
+      "sourceHash": "5e4083a4a64b77f213f95fa4a892371086f98f44c9bc5aa5956f6c2a1150d1fa"
+    },
+    {
+      "id": "sentient-magic-items",
+      "kind": "rules",
+      "sourceHash": "22e9cf101222925fcc92d76cf878566a102b60d2c2c66a52c54228529a754035"
     },
     {
       "id": "artifacts",
