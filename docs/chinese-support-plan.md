@@ -96,10 +96,14 @@ real interaction has passed. Do not restart a static translation campaign.
   0 errors, 389 context warnings; UI remains 401/440.
 - Source anomaly still open: Guardian Naga has two conflicting Saving Throws
   lines, preserved in both languages pending separate source review.
-- Next: game-card/help prose reuse and native source
-  ownership. Final full-suite/build and real bilingual journey remain unproven.
-- Native dynamic UI/material/log ownership remains pending in the UI manifest;
-  audit helpers with their actual consumers before the final bilingual journey.
+- Consumer audit: MonsterHand cards contain structured engine notes, not native
+  stat-block prose. Do not replace those with full book pages. InfoDialog ContentBody
+  lacks a monster prose adapter; direct content detail and exact-name search fallback
+  both need a server-side source-verified display projection. Preserve original
+  entry data and custom/pack variants; include locale in display request/cache identity.
+- Next: implement and test that help consumer path, then audit remaining dynamic
+  UI/material/log owners. Final full-suite/build and real bilingual journey remain
+  unproven. The InfoDialog owner remains pending in the data manifest.
 
 ## Batches and review boundaries (2026-10-13)
 

@@ -2116,7 +2116,7 @@
     {
       "path": "src/components/ui/InfoDialog.tsx",
       "state": "pending",
-      "review": "Owned help/loading/retry chrome and lazy identity guards reviewed. Native feat help and all 105 unchanged ODM-authored archetype documents project in viewer locale without translating cached source text. Lazy lookup retains class/source/document metadata; homebrew, third-party and changed documents stay literal. Other owned long help and real browser acceptance keep this owner pending."
+      "review": "Owned help/loading/retry chrome and lazy identity guards reviewed. Native feat help and all 105 unchanged ODM-authored archetype documents project in viewer locale without translating cached source text. Lazy lookup retains class/source/document metadata; homebrew, third-party and changed documents stay literal. Other owned long help and real browser acceptance keep this owner pending. Post-rulebook audit: ContentBody has no monster prose projection; direct /api/content/[kind]/[slug] and exact-name search fallback retain source data only. Add a server-side source-verified display projection and consume it on both paths, with locale-aware request/cache identity. Keep changed/homebrew/third-party text untouched and avoid importing the full book into the client."
     },
     {
       "path": "src/components/ui/ListControls.tsx",
