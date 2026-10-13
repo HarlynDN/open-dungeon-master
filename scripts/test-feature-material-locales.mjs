@@ -188,7 +188,7 @@ const info = await openCombatRenderer({files: [infoFile], stubs: {
   '@/lib/content-scope': url('export const useContentCampaign=()=>null;export const scopeQuery=()=>"";'),
 }});
 const infoProps = {open: true, onOpenChange: () => {}, title: 'Tough', reference: {kind: 'feats', name: 'Tough', slug: 'tough'}};
-const loaded = (text, locale = "en") => ({queues: {[infoFile]: [{text, loading: false,
+const loaded = (text, locale = "en", provenance = {source:'open5e',documentSlug:'odm-expanded'}) => ({queues: {[infoFile]: [{text, loading: false, ...provenance,
   for: JSON.stringify([infoProps.reference.kind, infoProps.reference.slug, infoProps.reference.name, null, 0, locale])}]}});
 const source = authoredFeatDesc('Tough');
 assert.equal(hash(info.render('InfoDialog', infoProps, 'en', loaded(source))), golden.dialog);
@@ -196,6 +196,10 @@ assert(info.render('InfoDialog', infoProps, 'zh-CN', loaded(source, 'zh-CN')).in
 // The same raw loaded text rerenders in English; it was not translated in state.
 assert.equal(hash(info.render('InfoDialog', infoProps, 'en', loaded(source))), golden.dialog);
 assert(info.render('InfoDialog', infoProps, 'zh-CN', loaded('Authored Tough replacement.', 'zh-CN')).includes('Authored Tough replacement.'));
+for(const provenance of [{}, {source:'open5e',documentSlug:'external-book'}, {source:'homebrew',documentSlug:'odm-expanded'}]) {
+ assert.equal(hash(info.render('InfoDialog',infoProps,'zh-CN',loaded(source,'zh-CN',provenance))),golden.dialog,'unowned feat source must stay original');
+ assert.equal(hash(info.render('InfoDialog',infoProps,'en',loaded(source,'en',provenance))),golden.dialog);
+}
 
 // One grouped creation -> sheet check for the newly shared core projection.
 const {srdClassOptions} = await import('../src/lib/characters/options.ts');

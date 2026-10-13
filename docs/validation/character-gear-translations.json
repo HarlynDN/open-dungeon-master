@@ -11,7 +11,7 @@
     "src/app/characters/builder/ContentPicker.tsx": "ea37571c252a342314c1387a985c7aa26e70e3594e70320e77b063a6c9cff6e7",
     "src/app/characters/builder/CatalogBrowser.tsx": "3f530c4e3cc475240fe88955d77fcd53d9f7ca77e04adb95e93908a10859d805",
     "src/app/characters/builder/steps/SpellsGearStep.tsx": "846cd847b44c626a5c4a8cb84ee99d3eb43d1d3ad5943b999ef5cccbede3ded7",
-    "src/components/ui/InfoDialog.tsx": "dfbbfa75f6ecbfdf59cd1b014819c1fa7ec2017d3e677065f2e1ac4a17abae22",
+    "src/components/ui/InfoDialog.tsx": "77fba215a432062247ffcbbb0cff3f548466fe09783c91a4ed1c40224f9478fb",
     "src/lib/i18n/equipment-presentations.ts": "408168dbf3391492056686bbbe5f50a4329b9bfbae93f08481c3473228127178",
     "src/lib/i18n/gear-ui-presentations.ts": "7f5e42e0c8d41b35948beefea931bff76257146f50bd2b722638b24ee182ca80",
     "src/lib/i18n/equipment-help-presentations.ts": "66e3d2a0cbb0695955ca50962f628be75ef3e70a3d5df1b155126505a221a532",
@@ -76,5 +76,13 @@
       "src/app/characters/builder/CatalogBrowser.tsx": "3809b6cd9863ce3bd2e458ad864add93e73ac9f4e1865217545d69029f89b054"
     },
     "review": "Removed duplicated nativeFeatHelp branches in search and catalog; all three feat pickers now use referenceRowDescription, requiring an owned document and exact full source. Third-party/homebrew/changed prose remains original; English and item paths are unchanged. The real component regression exercises both locales and four provenance variants. This records implementation source review, not deployed catalog acceptance."
+  },
+  "lazyFeatSourceReview": {
+    "date": "2026-10-14",
+    "baseCommit": "20df850ede60b4e796d3e6606f366e6675bdc43a",
+    "previousHashes": {
+      "src/components/ui/InfoDialog.tsx": "dfbbfa75f6ecbfdf59cd1b014819c1fa7ec2017d3e677065f2e1ac4a17abae22"
+    },
+    "review": "Reviewed complete shared help renderer. Lazy feat fallback now requires owned document provenance, matching picker behavior; missing, external and homebrew provenance preserves raw text. Exact full-source help guard and frozen English dialog remain unchanged. Component regression explicitly checks all provenance variants in both locales; no item rules or stored source changed."
   }
 }

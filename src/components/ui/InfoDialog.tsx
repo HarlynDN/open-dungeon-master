@@ -186,7 +186,7 @@ function ContentBody({ reference }: { reference: ContentRef }) {
   }
   let text = state.text;
   if (state.display?.locale === locale && state.display.source === text) return <>{renderRules(state.display.text)}</>;
-  if (reference.kind === "feats" && state.source !== "homebrew") text = nativeFeatHelp(state.name ?? reference.name, text, locale) ?? text;
+  if (reference.kind === "feats" && state.source !== "homebrew" && ["wotc-srd", "odm-expanded"].includes(state.documentSlug ?? "")) text = nativeFeatHelp(state.name ?? reference.name, text, locale) ?? text;
   else if (reference.kind === "archetypes" && state.classId) text = nativeArchetypeHelp(state.classId, state.name ?? reference.name ?? "", text, locale, state);
   else if (reference.kind === "spells") text = nativeSpellHelp({ ...state, name: state.name ?? reference.name }, text, locale) ?? text;
   else if (reference.kind === "items") text = nativeItemHelp({ ...state, name: state.name ?? reference.name }, text, locale) ?? text;

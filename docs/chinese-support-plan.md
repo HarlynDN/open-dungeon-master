@@ -178,8 +178,13 @@ this section records current delivery state and acceptance gaps only.
   Calling, background, feature-material and real-hook armor regressions pass.
   Shared ContentPick feat help now uses the same owned-document/source guard
   as the three builder pickers, preserving third-party and changed prose.
-- UI source coverage: 432/438 in-scope owners, two explicitly deferred voice
-  owners, zero pending literal sites, 19323 keys. Six text owners still
+- Shared sheet/help review: SheetParts and InfoDialog reviewed through all
+  display branches. Lazy feat fallback now requires owned-document provenance;
+  missing, external and homebrew provenance keeps the original source. Added
+  bilingual regressions retain frozen English output; source-review hash records
+  the previous version and base commit. No item rules or stored history changed.
+- UI source coverage: 434/438 in-scope owners, two explicitly deferred voice
+  owners, zero pending literal sites, 19323 keys. Four text owners still
   require review; the final coverage gate must continue to fail until closed.
   Completed pure-helper/consumer reviews are recorded in
   docs/validation/ui-localization.json. Whole-owner dynamic output and browser
