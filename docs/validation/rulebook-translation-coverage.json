@@ -3340,6 +3340,11 @@
       "sourceHash": "3506a90438699f79aa1387600eb1122bfd2498c686463f16ee29fd9f7d03da5e"
     },
     {
+      "id": "efreeti-genie",
+      "kind": "monster",
+      "sourceHash": "92170524d8d944c91f5fd1cc716970a5faedde55a8ec9dbcd86841a0181f46ec"
+    },
+    {
       "id": "elf-drow",
       "kind": "monster",
       "sourceHash": "d98dbe48e4ff2acf4d10add8b2785852eed60b51425e1d4db93c38480d3cd858"

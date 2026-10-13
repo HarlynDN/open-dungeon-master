@@ -456,6 +456,7 @@ export const ZH_CN_GLOSSARY = [
   {"id":"monster.rakshasa","source":"Rakshasa","preferred":"罗刹","scope":"monster"},
   {"id":"monster.night_hag","source":"Night Hag","preferred":"夜鬼婆","scope":"monster"},
   {"id":"monster.succubus_incubus","source":"Succubus/Incubus","preferred":"魅魔／梦魔","scope":"monster","aliases":["魅魔","梦魔"]},
+  {"id":"monster.efreeti","source":"Efreeti","preferred":"火巨灵","scope":"monster"},
   {"id":"monster.goblin","source":"Goblin","preferred":"哥布林","scope":"monster","aliases":["地精"]},
   {"id":"monster.bugbear","source":"Bugbear","preferred":"熊地精","scope":"monster"},
   {"id":"monster.hobgoblin","source":"Hobgoblin","preferred":"大地精","scope":"monster"},
