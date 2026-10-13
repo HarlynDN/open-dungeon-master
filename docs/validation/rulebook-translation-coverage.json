@@ -3900,6 +3900,21 @@
       "sourceHash": "b3a638c7dad44a723f3c729926584377f63d0842e7a96f110cca997c1faf0297"
     },
     {
+      "id": "wererat-lycanthrope",
+      "kind": "monster",
+      "sourceHash": "e298428a66db4f1c40f60e4ce739cd785d4a7e924aecf45532e53ddfab902299"
+    },
+    {
+      "id": "weretiger-lycanthrope",
+      "kind": "monster",
+      "sourceHash": "ec887f21f9a4d8fc4dca4f92beb2bf3593d71fe256d52669285b2c4cd7e1db85"
+    },
+    {
+      "id": "werewolf-lycanthrope",
+      "kind": "monster",
+      "sourceHash": "9be36fa9144c85a6b69112d0330e495cc1ca4df0608b1a83e992858aa74cf6f8"
+    },
+    {
       "id": "white-dragon-wyrmling-chromatic",
       "kind": "monster",
       "sourceHash": "f8361a32d04b2cecc91c33e4ba2245ef13f29bd0ee746d903c86534c1f10f8af"
