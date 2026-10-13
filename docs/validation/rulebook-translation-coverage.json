@@ -1750,6 +1750,81 @@
       "sourceHash": "c8e7244dc9d51d9c26a4e829a8e84837871af0215b4181c703c0910fbcc911b6"
     },
     {
+      "id": "astral-projection",
+      "kind": "spell",
+      "sourceHash": "6d34ce15b79f7c0be6bcf6e51012a2c55d7ff303823ff3421fc107b6f756f93b"
+    },
+    {
+      "id": "foresight",
+      "kind": "spell",
+      "sourceHash": "a39778a335a34fce2d4f0d8358f198de1c2e7180ddb2eafac83cbbdd54dc7df6"
+    },
+    {
+      "id": "gate",
+      "kind": "spell",
+      "sourceHash": "063c355595e0c04121791bdd4a5f667cebf29561e4a82c46fc84622fb6aeacc1"
+    },
+    {
+      "id": "imprisonment",
+      "kind": "spell",
+      "sourceHash": "37eb3398915a33454b1e74703c456b4f7944d88c1672b32e8deb41cd53363e12"
+    },
+    {
+      "id": "mass-heal",
+      "kind": "spell",
+      "sourceHash": "11f2f249963c523cef9720237f605d34d8fe4d1dc6b919e0df35f3a974b62354"
+    },
+    {
+      "id": "meteor-swarm",
+      "kind": "spell",
+      "sourceHash": "762970041c37faecfd7ed9297da4d23f86eaade946fe7a991e6409739e6deb88"
+    },
+    {
+      "id": "power-word-kill",
+      "kind": "spell",
+      "sourceHash": "4ca3a74a4cb20a6cbd4bfa8b695ffe9f729a7d3ac8654eda20fe289ed6131bd3"
+    },
+    {
+      "id": "prismatic-wall",
+      "kind": "spell",
+      "sourceHash": "48fcfe60d715f763c9167b2409ab3d9066b266f10e4989b7104fb6cdaeb770f7"
+    },
+    {
+      "id": "shapechange",
+      "kind": "spell",
+      "sourceHash": "e0311db546b00a721bfb797d4bd34fc0a41fa36f5550c3b108a9fbd79f7a55db"
+    },
+    {
+      "id": "storm-of-vengeance",
+      "kind": "spell",
+      "sourceHash": "3c6e3d255a73ddb8c3d3012e0211a90ab94f9ace272653dce451a4b73058a285"
+    },
+    {
+      "id": "time-stop",
+      "kind": "spell",
+      "sourceHash": "8c6b83c8642f80e8fbad246c05e19443c26169211785644935d1383e8d93ad5f"
+    },
+    {
+      "id": "true-polymorph",
+      "kind": "spell",
+      "sourceHash": "5e894a5a54caeb2b4e8fb1588ca6e959cdbd6c0807a2cefc65727d9a85ab834d"
+    },
+    {
+      "id": "true-resurrection",
+      "kind": "spell",
+      "sourceHash": "1d7031eeeb83bf06036757411b19efcd0b7543b41916e0861e8cea1ecccb4182"
+    },
+    {
+      "id": "weird",
+      "kind": "spell",
+      "sourceHash": "47015e16df9bb4a3eefb5f0d8f69f96d6ecde952cc27113b9b02b6fda41cae7b"
+    },
+    {
+      "id": "wish",
+      "kind": "spell",
+      "sourceHash": "4daa2dd6437f70bf8bb6ac37771819740530361eb57db59a8aa95f78a222a934"
+    },
+    {
       "id": "traps",
       "kind": "rules",
       "sourceHash": "3235d098b37944d2d0ae80928d91db3b9809dbbf319538e845817de93d512cd6"

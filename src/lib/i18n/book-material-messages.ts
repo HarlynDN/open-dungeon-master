@@ -2433,5 +2433,125 @@ export const BOOK_MATERIAL_MESSAGES = defineMessages({
   "bookMaterial.spell.sunburst.meta": {
     "en": "8th-level evocation",
     "zh-CN": "八环塑能"
+  },
+  "bookMaterial.spell.astral-projection.header": {
+    "en": "*9th-level necromancy*\n\n**Casting Time:** 1 hour\n\n**Range:** 10 feet\n\n**Components:** V, S, M (for each creature you affect with this spell, you must provide one jacinth worth at least 1,000 gp and one ornately carved bar of silver worth at least 100 gp, all of which the spell consumes)\n\n**Duration:** Special",
+    "zh-CN": "*九环死灵*\n\n**施法时间：** 1 小时\n\n**施法距离：** 10 英尺\n\n**法术成分：** 言语、姿势、材料（每个受此法术影响的生物各需一颗价值至少 1,000 gp 的风信子石，以及一根价值至少 100 gp、雕刻精美的银条，全部在施法时消耗）\n\n**持续时间：** 特殊"
+  },
+  "bookMaterial.spell.astral-projection.meta": {
+    "en": "9th-level necromancy",
+    "zh-CN": "九环死灵"
+  },
+  "bookMaterial.spell.foresight.header": {
+    "en": "*9th-level divination*\n\n**Casting Time:** 1 minute\n\n**Range:** Touch\n\n**Components:** V, S, M (a hummingbird feather)\n\n**Duration:** 8 hours",
+    "zh-CN": "*九环预言*\n\n**施法时间：** 1 分钟\n\n**施法距离：** 接触\n\n**法术成分：** 言语、姿势、材料（一根蜂鸟羽毛）\n\n**持续时间：** 8 小时"
+  },
+  "bookMaterial.spell.foresight.meta": {
+    "en": "9th-level divination",
+    "zh-CN": "九环预言"
+  },
+  "bookMaterial.spell.gate.header": {
+    "en": "*9th-level conjuration*\n\n**Casting Time:** 1 action\n\n**Range:** 60 feet\n\n**Components:** V, S, M (a diamond worth at least 5,000 gp)\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*九环咒法*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 60 英尺\n\n**法术成分：** 言语、姿势、材料（价值至少 5,000 gp 的钻石）\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.gate.meta": {
+    "en": "9th-level conjuration",
+    "zh-CN": "九环咒法"
+  },
+  "bookMaterial.spell.imprisonment.header": {
+    "en": "*9th-level abjuration*\n\n**Casting Time:** 1 minute\n\n**Range:** 30 feet\n\n**Components:** V, S, M (a vellum depiction or a carved statuette in the likeness of the target, and a special component that varies according to the version of the spell you choose, worth at least 500 gp per Hit Die of the target)\n\n**Duration:** Until dispelled",
+    "zh-CN": "*九环防护*\n\n**施法时间：** 1 分钟\n\n**施法距离：** 30 英尺\n\n**法术成分：** 言语、姿势、材料（绘有目标形象的犊皮纸画像或仿照目标雕刻的小雕像，以及一种随所选法术形式而异的特殊材料；特殊材料的价值须至少为目标每颗生命骰 500 gp）\n\n**持续时间：** 直到被解除"
+  },
+  "bookMaterial.spell.imprisonment.meta": {
+    "en": "9th-level abjuration",
+    "zh-CN": "九环防护"
+  },
+  "bookMaterial.spell.mass-heal.header": {
+    "en": "*9th-level evocation*\n\n**Casting Time:** 1 action\n\n**Range:** 60 feet\n\n**Components:** V, S\n\n**Duration:** Instantaneous",
+    "zh-CN": "*九环塑能*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 60 英尺\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.mass-heal.meta": {
+    "en": "9th-level evocation",
+    "zh-CN": "九环塑能"
+  },
+  "bookMaterial.spell.meteor-swarm.header": {
+    "en": "*9th-level evocation*\n\n**Casting Time:** 1 action\n\n**Range:** 1 mile\n\n**Components:** V, S\n\n**Duration:** Instantaneous",
+    "zh-CN": "*九环塑能*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 1 英里\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.meteor-swarm.meta": {
+    "en": "9th-level evocation",
+    "zh-CN": "九环塑能"
+  },
+  "bookMaterial.spell.power-word-kill.header": {
+    "en": "*9th-level enchantment*\n\n**Casting Time:** 1 action\n\n**Range:** 60 feet\n\n**Components:** V\n\n**Duration:** Instantaneous",
+    "zh-CN": "*九环惑控*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 60 英尺\n\n**法术成分：** 言语\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.power-word-kill.meta": {
+    "en": "9th-level enchantment",
+    "zh-CN": "九环惑控"
+  },
+  "bookMaterial.spell.prismatic-wall.header": {
+    "en": "*9th-level abjuration*\n\n**Casting Time:** 1 action\n\n**Range:** 60 feet\n\n**Components:** V, S\n\n**Duration:** 10 minutes",
+    "zh-CN": "*九环防护*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 60 英尺\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 10 分钟"
+  },
+  "bookMaterial.spell.prismatic-wall.meta": {
+    "en": "9th-level abjuration",
+    "zh-CN": "九环防护"
+  },
+  "bookMaterial.spell.shapechange.header": {
+    "en": "*9th-level transmutation*\n\n**Casting Time:** 1 action\n\n**Range:** Self\n\n**Components:** V, S, M (a jade circlet worth at least 1,500 gp, which you must place on your head before you cast the spell)\n\n**Duration:** Concentration, up to 1 hour",
+    "zh-CN": "*九环变化*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 自身\n\n**法术成分：** 言语、姿势、材料（价值至少 1,500 gp 的玉石头环，施法前必须戴在头上）\n\n**持续时间：** 专注，至多 1 小时"
+  },
+  "bookMaterial.spell.shapechange.meta": {
+    "en": "9th-level transmutation",
+    "zh-CN": "九环变化"
+  },
+  "bookMaterial.spell.storm-of-vengeance.header": {
+    "en": "*9th-level conjuration*\n\n**Casting Time:** 1 action\n\n**Range:** Sight\n\n**Components:** V, S\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*九环咒法*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 视野内\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.storm-of-vengeance.meta": {
+    "en": "9th-level conjuration",
+    "zh-CN": "九环咒法"
+  },
+  "bookMaterial.spell.time-stop.header": {
+    "en": "*9th-level transmutation*\n\n**Casting Time:** 1 action\n\n**Range:** Self\n\n**Components:** V\n\n**Duration:** Instantaneous",
+    "zh-CN": "*九环变化*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 自身\n\n**法术成分：** 言语\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.time-stop.meta": {
+    "en": "9th-level transmutation",
+    "zh-CN": "九环变化"
+  },
+  "bookMaterial.spell.true-polymorph.header": {
+    "en": "*9th-level transmutation*\n\n**Casting Time:** 1 action\n\n**Range:** 30 feet\n\n**Components:** V, S, M (a drop of mercury, a dollop of gum arabic, and a wisp of smoke)\n\n**Duration:** Concentration, up to 1 hour",
+    "zh-CN": "*九环变化*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 30 英尺\n\n**法术成分：** 言语、姿势、材料（一滴水银、一团阿拉伯胶和一缕烟）\n\n**持续时间：** 专注，至多 1 小时"
+  },
+  "bookMaterial.spell.true-polymorph.meta": {
+    "en": "9th-level transmutation",
+    "zh-CN": "九环变化"
+  },
+  "bookMaterial.spell.true-resurrection.header": {
+    "en": "*9th-level necromancy*\n\n**Casting Time:** 1 hour\n\n**Range:** Touch\n\n**Components:** V, S, M (a sprinkle of holy water and diamonds worth at least 25,000 gp, which the spell consumes)\n\n**Duration:** Instantaneous",
+    "zh-CN": "*九环死灵*\n\n**施法时间：** 1 小时\n\n**施法距离：** 接触\n\n**法术成分：** 言语、姿势、材料（少量圣水和价值至少 25,000 gp 的钻石，施法时消耗）\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.true-resurrection.meta": {
+    "en": "9th-level necromancy",
+    "zh-CN": "九环死灵"
+  },
+  "bookMaterial.spell.weird.header": {
+    "en": "*9th-level illusion*\n\n**Casting Time:** 1 action\n\n**Range:** 120 feet\n\n**Components:** V, S\n\n**Duration:** Concentration, up to one minute",
+    "zh-CN": "*九环幻术*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 120 英尺\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.weird.meta": {
+    "en": "9th-level illusion",
+    "zh-CN": "九环幻术"
+  },
+  "bookMaterial.spell.wish.header": {
+    "en": "*9th-level conjuration*\n\n**Casting Time:** 1 action\n\n**Range:** Self\n\n**Components:** V\n\n**Duration:** Instantaneous",
+    "zh-CN": "*九环咒法*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 自身\n\n**法术成分：** 言语\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.wish.meta": {
+    "en": "9th-level conjuration",
+    "zh-CN": "九环咒法"
   }
 });

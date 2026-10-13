@@ -1215,5 +1215,65 @@ export const SPELL_HELP = [
   {
     "name": "Sunburst",
     "key": "spellHelp.native.sunburst"
+  },
+  {
+    "name": "Astral Projection",
+    "key": "spellHelp.native.astral-projection"
+  },
+  {
+    "name": "Foresight",
+    "key": "spellHelp.native.foresight"
+  },
+  {
+    "name": "Gate",
+    "key": "spellHelp.native.gate"
+  },
+  {
+    "name": "Imprisonment",
+    "key": "spellHelp.native.imprisonment"
+  },
+  {
+    "name": "Mass Heal",
+    "key": "spellHelp.native.mass-heal"
+  },
+  {
+    "name": "Meteor Swarm",
+    "key": "spellHelp.native.meteor-swarm"
+  },
+  {
+    "name": "Power Word Kill",
+    "key": "spellHelp.native.power-word-kill"
+  },
+  {
+    "name": "Prismatic Wall",
+    "key": "spellHelp.native.prismatic-wall"
+  },
+  {
+    "name": "Shapechange",
+    "key": "spellHelp.native.shapechange"
+  },
+  {
+    "name": "Storm of Vengeance",
+    "key": "spellHelp.native.storm-of-vengeance"
+  },
+  {
+    "name": "Time Stop",
+    "key": "spellHelp.native.time-stop"
+  },
+  {
+    "name": "True Polymorph",
+    "key": "spellHelp.native.true-polymorph"
+  },
+  {
+    "name": "True Resurrection",
+    "key": "spellHelp.native.true-resurrection"
+  },
+  {
+    "name": "Weird",
+    "key": "spellHelp.native.weird"
+  },
+  {
+    "name": "Wish",
+    "key": "spellHelp.native.wish"
   }
 ] as const;

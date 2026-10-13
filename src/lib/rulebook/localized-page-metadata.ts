@@ -1823,5 +1823,95 @@ export const LOCALIZED_SPELL_PAGES = [
     "name": "Sunburst",
     "headerKey": "bookMaterial.spell.sunburst.header",
     "metaKey": "bookMaterial.spell.sunburst.meta"
+  },
+  {
+    "id": "astral-projection",
+    "name": "Astral Projection",
+    "headerKey": "bookMaterial.spell.astral-projection.header",
+    "metaKey": "bookMaterial.spell.astral-projection.meta"
+  },
+  {
+    "id": "foresight",
+    "name": "Foresight",
+    "headerKey": "bookMaterial.spell.foresight.header",
+    "metaKey": "bookMaterial.spell.foresight.meta"
+  },
+  {
+    "id": "gate",
+    "name": "Gate",
+    "headerKey": "bookMaterial.spell.gate.header",
+    "metaKey": "bookMaterial.spell.gate.meta"
+  },
+  {
+    "id": "imprisonment",
+    "name": "Imprisonment",
+    "headerKey": "bookMaterial.spell.imprisonment.header",
+    "metaKey": "bookMaterial.spell.imprisonment.meta"
+  },
+  {
+    "id": "mass-heal",
+    "name": "Mass Heal",
+    "headerKey": "bookMaterial.spell.mass-heal.header",
+    "metaKey": "bookMaterial.spell.mass-heal.meta"
+  },
+  {
+    "id": "meteor-swarm",
+    "name": "Meteor Swarm",
+    "headerKey": "bookMaterial.spell.meteor-swarm.header",
+    "metaKey": "bookMaterial.spell.meteor-swarm.meta"
+  },
+  {
+    "id": "power-word-kill",
+    "name": "Power Word Kill",
+    "headerKey": "bookMaterial.spell.power-word-kill.header",
+    "metaKey": "bookMaterial.spell.power-word-kill.meta"
+  },
+  {
+    "id": "prismatic-wall",
+    "name": "Prismatic Wall",
+    "headerKey": "bookMaterial.spell.prismatic-wall.header",
+    "metaKey": "bookMaterial.spell.prismatic-wall.meta"
+  },
+  {
+    "id": "shapechange",
+    "name": "Shapechange",
+    "headerKey": "bookMaterial.spell.shapechange.header",
+    "metaKey": "bookMaterial.spell.shapechange.meta"
+  },
+  {
+    "id": "storm-of-vengeance",
+    "name": "Storm of Vengeance",
+    "headerKey": "bookMaterial.spell.storm-of-vengeance.header",
+    "metaKey": "bookMaterial.spell.storm-of-vengeance.meta"
+  },
+  {
+    "id": "time-stop",
+    "name": "Time Stop",
+    "headerKey": "bookMaterial.spell.time-stop.header",
+    "metaKey": "bookMaterial.spell.time-stop.meta"
+  },
+  {
+    "id": "true-polymorph",
+    "name": "True Polymorph",
+    "headerKey": "bookMaterial.spell.true-polymorph.header",
+    "metaKey": "bookMaterial.spell.true-polymorph.meta"
+  },
+  {
+    "id": "true-resurrection",
+    "name": "True Resurrection",
+    "headerKey": "bookMaterial.spell.true-resurrection.header",
+    "metaKey": "bookMaterial.spell.true-resurrection.meta"
+  },
+  {
+    "id": "weird",
+    "name": "Weird",
+    "headerKey": "bookMaterial.spell.weird.header",
+    "metaKey": "bookMaterial.spell.weird.meta"
+  },
+  {
+    "id": "wish",
+    "name": "Wish",
+    "headerKey": "bookMaterial.spell.wish.header",
+    "metaKey": "bookMaterial.spell.wish.meta"
   }
 ] as const;
