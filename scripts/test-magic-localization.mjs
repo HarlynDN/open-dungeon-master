@@ -18,6 +18,7 @@ const {bundledItemRows}=await import('../src/lib/rulebook/catalog-rows.ts');
 const {buildItemSheet}=await import('../src/lib/help/item-sheet.ts');
 const {describeContentEntry}=await import('../src/lib/help/index.ts');
 const {itemSheetView}=await import('../src/lib/i18n/equipment-help-presentations.ts');
+const {loadItemHelp}=await import('../src/lib/help/load-item-help.ts');
 const {normalizeRulesText,stripMarkdown,firstSentence}=await import('../src/lib/help/rules-text.ts');
 assert.equal(firstSentence('饮用后，你获得*动物友谊*。下一句。'),'饮用后，你获得动物友谊。');
 assert.equal(firstSentence('他说：“*剑*发光了！”随后离开。'),'他说：“剑发光了！”');
@@ -68,12 +69,49 @@ for(const locale of ['en','zh-CN']){
 assert.equal(JSON.stringify(sheet),baseline);assert.deepEqual(magicItemRiders(sheet.equipment,sheet),riders);
 const bodies=bundledItemRows(),infoFile='src/components/ui/InfoDialog.tsx';
 const url=source=>'data:text/javascript;base64,'+Buffer.from(source).toString('base64');
-const scopeStub=url('export const useContentCampaign=()=>null;export const scopeQuery=()=>"";export const scopedParams=p=>p;');
-const info=await openCombatRenderer({files:[infoFile],stubs:{
+const scopeStub=url('export const useContentCampaign=()=>globalThis.__odmItemHelpTestCampaign??null;export const scopeQuery=()=>"";export const scopedParams=p=>p;');
+const info=await openCombatRenderer({files:[infoFile],sourceOf:file=>readFileSync(new URL('../'+file,import.meta.url),'utf8')+(file===infoFile?'\nexport {ItemBody};':''),stubs:{
  '@/components/ui/Dialog':url('export const Dialog=({children})=>children;'),
  '@/components/ui/Tooltip':url('export const Tooltip=({children})=>children;'),
  '@/lib/content-scope':scopeStub,
 }});
+const helpEntry=bodies.find(row=>row.name==='Potion of Healing'),requested=[];
+const answer=(payload,status=200)=>new Response(JSON.stringify(payload),{status,headers:{'Content-Type':'application/json'}});
+const fake=async(input,options)=>{
+ requested.push({url:String(input),signal:options.signal});
+ return String(input).includes('?q=')?answer({results:[helpEntry]}):answer({},404);
+};
+const controller=new AbortController();
+const recovered=await loadItemHelp({slug:'missing-guess',name:helpEntry.name},'scope/a&b',controller.signal,fake);
+assert.equal(recovered.failed,false);assert.equal(recovered.descriptionOwner.name,helpEntry.name);
+assert(requested.every(row=>row.url.includes('campaign=scope%2Fa%26b')&&row.signal===controller.signal));
+const absent=await loadItemHelp({slug:'unknown',name:'Unknown authored item'},null,undefined,async()=>answer({},404));
+assert.equal(absent.failed,false);assert.equal(absent.sheet,null);
+const rejected=await loadItemHelp({slug:'unknown',name:'Unknown authored item'},null,undefined,async()=>answer({},503));
+assert.equal(rejected.failed,true);assert.equal(rejected.sheet,null);
+const broken=await loadItemHelp({slug:'unknown',name:'Unknown authored item'},null,undefined,async()=>new Response('invalid json'));
+assert.equal(broken.failed,true);
+const fallback=await loadItemHelp({slug:'longsword',name:'Longsword'},null,undefined,async()=>{throw new Error('offline');});
+assert.equal(fallback.failed,true);assert(fallback.sheet.weapon);
+const partial=await loadItemHelp({slug:helpEntry.slug,name:helpEntry.name},null,undefined,async input=>String(input).includes('?q=')?answer({results:[helpEntry]}):answer({},500));
+assert.equal(partial.failed,true);assert.equal(partial.descriptionOwner.source,helpEntry.source);
+const success=await loadItemHelp({slug:helpEntry.slug,name:helpEntry.name},null,undefined,async()=>answer({entry:helpEntry,results:[]}));
+assert.equal(success.failed,false);assert.equal(success.sheet.description,describeContentEntry(helpEntry.data));
+const identity=reference=>info.components.ItemBody({reference}).key;
+const helpRef={kind:'items',slug:helpEntry.slug,name:helpEntry.name};
+const initialKey=identity(helpRef);assert.equal(identity({...helpRef}),initialKey);
+assert.notEqual(identity({...helpRef,slug:'other-item'}),initialKey);
+try{globalThis.__odmItemHelpTestCampaign='other-campaign';assert.notEqual(identity(helpRef),initialKey);}finally{delete globalThis.__odmItemHelpTestCampaign;}
+for(const locale of ['en','zh-CN']) for(const result of [rejected,partial]){
+ const props={open:true,onOpenChange:()=>{},title:helpEntry.name,reference:helpRef};
+ const html=info.render('InfoDialog',props,locale,{queues:{[infoFile]:[{...result,loading:false},0]}});
+ assert(html.includes('role="alert"'));assert(html.includes(MESSAGE_CATALOGS[locale]['pickerFlow.retry']));
+ const retry=info.elements().find(row=>row.type==='button'&&row.props.children===MESSAGE_CATALOGS[locale]['pickerFlow.retry']);assert(retry);retry.props.onClick();
+ const changes=info.updates().filter(row=>row.file===infoFile);
+ assert.deepEqual(changes[0].value,{sheet:null,loading:true});assert.equal(changes[1].value(0),1);
+ const loading=info.render('InfoDialog',props,locale,{queues:{[infoFile]:[changes[0].value,1]}});
+ assert(loading.includes(MESSAGE_CATALOGS[locale]['itemHelp.loading']));assert(!loading.includes('role="alert"'));
+}
 const reviewedNative=native;
 assert.deepEqual(MAGIC_ITEM_MATERIAL.map(row=>row.id).sort(),reviewedNative.map(row=>row.id).sort());
 const visibleText=html=>html.replace(/<[^>]+>/g,' ').replace(/&#x27;/g,"'").replace(/&quot;/g,'"').replace(/&amp;/g,'&');
@@ -134,4 +172,5 @@ for(const row of frozen.fixtures){
 }
 console.log(`PASS: all ${MAGIC_ITEM_MATERIAL.length} SRD item bodies and headers, full tables, exact source/signed numbers/dice, actual bilingual item dialogs and four picker flows, English switching, canonical picks and authored/other-book/changed-text overrides.`);
 console.log('PASS: all 185 original frozen English item cards unchanged.');
+console.log('PASS: item-help missing-slug recovery, scoped canonical requests, offline/HTTP/JSON failures, usable partial facts, bilingual retry controls, identity/scope remount keys and stable locale-independent cache.');
 console.log('Magic-item localization passed: all 239 SRD source titles and 291 registered names; shared display/search/alias projections; exact +N identities and scoped ambiguity; actual gear/loot/proposal UI in both locales; native callbacks, proper names, tool summaries, inventory and mechanics unchanged.');

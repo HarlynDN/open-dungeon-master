@@ -8,13 +8,14 @@ import type { IconRef } from "@/lib/icons";
 import { useEffect, useState, type ReactNode } from "react";
 import { cn } from "@/lib/cn";
 import { Dialog } from "@/components/ui/Dialog";
+import type { ItemHelpResult } from "@/lib/help/load-item-help";
 import type { ItemSheet } from "@/lib/help/item-sheet";
 import { firstSentence, parseRulesBlocks } from "@/lib/help/rules-text";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { nativeFeatHelp } from "@/lib/i18n/feature-material-presentations";
 import { nativeArchetypeHelp } from "@/lib/i18n/calling-material-presentations";
 import { itemSheetView } from "@/lib/i18n/equipment-help-presentations";
-import { nativeItemHelp, type ItemMaterialIdentity } from "@/lib/i18n/magic-item-material-presentations";
+import { nativeItemHelp } from "@/lib/i18n/magic-item-material-presentations";
 
 // The "what does this do?" affordance, used everywhere a game term appears.
 //
@@ -229,49 +230,38 @@ function RuleList({ rows }: { rows: Array<{ label: string; text: string | null }
 // (src/lib/help/item-sheet.ts), so a v1 table row with no prose, a v2 gear
 // row with no stats and a genre item the pack lacks all get a full card.
 function ItemBody({ reference }: { reference: ContentRef }) {
-  const { locale, t } = useLocale();
   const campaignId = useContentCampaign();
-  const [state, setState] = useState<{ sheet: ItemSheet | null; loading: boolean; descriptionOwner?: ItemMaterialIdentity }>({
+  // Remount on identity/scope changes before effects run; locale changes retain
+  // the same key and project already-loaded original text.
+  return <ItemDetails key={JSON.stringify([reference.slug, reference.name, campaignId])} reference={reference} campaignId={campaignId} />;
+}
+
+function ItemDetails({ reference, campaignId }: { reference: ContentRef; campaignId: string | null }) {
+  const { locale, t } = useLocale();
+  const [state, setState] = useState<Partial<ItemHelpResult> & { sheet: ItemSheet | null; loading: boolean }>({
     sheet: null,
     loading: true,
   });
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
+    const controller = new AbortController();
     async function load() {
-      const name = (reference.name ?? reference.slug).trim();
-      const wanted = name.toLowerCase();
-      const readJson = async (response: Response) => (response.ok ? response.json() : null);
       try {
-        const [{ buildItemSheet }, { describeContentEntry }, direct, search] = await Promise.all([
-          import("@/lib/help/item-sheet"),
-          import("@/lib/help"),
-          fetch(`/api/content/items/${encodeURIComponent(reference.slug)}${scopeQuery(campaignId)}`).then(readJson).catch(() => null),
-          fetch(`/api/content/items?q=${encodeURIComponent(wanted)}&limit=20&native=1${scopeQuery(campaignId, "&")}`).then(readJson).catch(() => null),
-        ]);
-        const hits = ((search?.results ?? []) as Array<ItemMaterialIdentity & { name: string; data?: Record<string, unknown> }>)
-          .filter((entry) => entry.name.trim().toLowerCase() === wanted);
-        const entries = [direct?.entry, ...hits];
-        const sheet = buildItemSheet(name, entries.map(entry => entry?.data));
-        // Keep the provenance of the row that actually supplied the text, not
-        // a different search hit whose name happens to match the inventory.
-        const descriptionOwner = entries.find(entry => describeContentEntry(entry?.data));
-        if (!cancelled) {
-          setState({ sheet, loading: false, descriptionOwner: descriptionOwner ? {
-            name: descriptionOwner.name, source: descriptionOwner.source, documentSlug: descriptionOwner.documentSlug,
-          } : undefined });
-        }
+        const { loadItemHelp } = await import("@/lib/help/load-item-help");
+        const result = await loadItemHelp({ slug: reference.slug, name: reference.name }, campaignId, controller.signal);
+        if (!cancelled) setState({ ...result, loading: false });
       } catch {
-        if (!cancelled) {
-          setState({ sheet: null, loading: false });
-        }
+        if (!cancelled) setState({ sheet: null, loading: false, failed: true });
       }
     }
     load();
     return () => {
       cancelled = true;
+      controller.abort();
     };
-  }, [reference.slug, reference.name, campaignId]);
+  }, [reference.slug, reference.name, campaignId, attempt]);
 
   if (state.loading) {
     return (
@@ -280,8 +270,13 @@ function ItemBody({ reference }: { reference: ContentRef }) {
       </p>
     );
   }
+  const failure = state.failed ? <p role="alert" className="text-sm text-amber-200">{t("pickerFlow.helpFailed")} <button type="button" onClick={() => {
+    setState({ sheet: null, loading: true });
+    setAttempt(value => value + 1);
+  }} className="underline">{t("pickerFlow.retry")}</button></p> : null;
   const sheet = state.sheet ? itemSheetView(state.sheet, locale, state.descriptionOwner ?? { name: reference.name }) : null;
   if (!sheet) {
+    if (failure) return failure;
     return (
       <p className="text-sm text-stone-500">
         {t("itemHelp.noDetails")}
@@ -351,6 +346,7 @@ function ItemBody({ reference }: { reference: ContentRef }) {
 
   return (
     <div className="space-y-4">
+      {failure}
       {sheet.type || tags.length ? (
         <div className="flex flex-wrap items-center gap-1.5">
           {sheet.type ? <span className="text-sm font-medium text-stone-200">{sheet.type}</span> : null}

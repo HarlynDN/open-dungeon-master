@@ -112,7 +112,20 @@ parser or production build was repeated. Only the affected equipment-help catalo
 fingerprint was updated; immutable goldens were preserved. Earlier Unicode
 preview/parser evidence remains valid; the legacy parser script needed a temporary
 TypeScript TSX loader, not a verified permanent runner. Imported variant-specific
-prose, item-help failure/retry and authenticated browser/audio gates remain open.
+prose and authenticated browser/audio gates remain open.
+
+Item-help loading now resets by canonical slug/name/campaign identity before
+new effects run, retaining cached original text when only the viewer locale
+changes. In-flight reads cancel on disposal. Manual retry clears prior results
+and starts a fresh scoped direct/search attempt; ordinary 404 misses remain
+separate from transport/server/JSON failures. Usable bundled fallback facts stay
+visible with a retry notice when some reads fail. The existing focused magic-item
+script passes scoped requests, miss/search recovery, failure/recovery, partial
+facts, actual bilingual retry callbacks and identity/scope keys, alongside all
+239 material projections and 185 immutable English cards. Catalog/types and
+changed-file lint passed once; no model/audio/build rerun. The affected dialog
+fingerprint was source-reviewed, not the original rule helpers or goldens.
+Real browser cancellation/timing and authenticated acceptance remain open.
 
 Pure state, audio plumbing and glyph helpers can be audited within the session
 batch; their file count must not displace player-visible work.

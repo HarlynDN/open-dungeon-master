@@ -11,7 +11,7 @@
     "src/app/characters/builder/ContentPicker.tsx": "52607ba0276305747bae748d00c5dd7d105aac48ad23f3d980a4e483ea4d0c86",
     "src/app/characters/builder/CatalogBrowser.tsx": "14330809cf826563ba51f34f283299efe6526a17ffbfa29db79b00a285dbe0fc",
     "src/app/characters/builder/steps/SpellsGearStep.tsx": "c0b08ea47e76e8fc46924efcf21b04850d9fcc23e37a7ccb3ca62bf487a3a768",
-    "src/components/ui/InfoDialog.tsx": "ef241a0a9f4fa27eb48124a20bebb329321a251519c1f64dcfd3922287953dc6",
+    "src/components/ui/InfoDialog.tsx": "d63c98b71efcd92fde50ee74d1f959b2d252751dd16db63c50fbbb80245e3251",
     "src/lib/i18n/equipment-presentations.ts": "7b5cc62cf0d7348b25f0baf693af129e7ce8e911b94255c932553b392a9645d6",
     "src/lib/i18n/gear-ui-presentations.ts": "7f5e42e0c8d41b35948beefea931bff76257146f50bd2b722638b24ee182ca80",
     "src/lib/i18n/equipment-help-presentations.ts": "66e3d2a0cbb0695955ca50962f628be75ef3e70a3d5df1b155126505a221a532",
@@ -42,6 +42,16 @@
     },
     "priorCommitHashes": {
       "src/lib/i18n/equipment-help-messages.ts": "ec9a81f2ee1217aebe0ce13c33fc4e98f77e66d5a88fa8a261e8d7d19412b0cd"
+    }
+  },
+  "itemHelpLoadingRepair": {
+    "date": "2026-10-13",
+    "review": "Actual item dialog now remounts by canonical slug/name/campaign scope, retaining raw-source cache on locale changes. Reads cancel on disposal; manual retry clears prior content and increments an attempt. A pure loader retains direct/search ordering and description provenance, distinguishes 404 from HTTP/network/JSON failures and returns partial bundled facts with a visible retry notice. Existing focused script verifies scoped canonical requests, direct miss/search recovery, failure/recovery, partial facts, bilingual retry callbacks, actual identity/scope keys and unchanged 239 material/185 English card results. This is bounded transport/component evidence, not a real browser lifecycle or authenticated flow. Original native item rules/inventory helpers and English goldens unchanged.",
+    "previousReviewHashes": {
+      "src/components/ui/InfoDialog.tsx": "ef241a0a9f4fa27eb48124a20bebb329321a251519c1f64dcfd3922287953dc6"
+    },
+    "priorCommitHashes": {
+      "src/components/ui/InfoDialog.tsx": "ef241a0a9f4fa27eb48124a20bebb329321a251519c1f64dcfd3922287953dc6"
     }
   }
 }
