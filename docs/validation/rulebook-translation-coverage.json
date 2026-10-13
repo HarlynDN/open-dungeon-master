@@ -3375,6 +3375,11 @@
       "sourceHash": "3c0059f285047cadfb1f1f27c614f0c1a40f50ac0477ece58f275377b3a43d0d"
     },
     {
+      "id": "plesiosaurus-dinosaur",
+      "kind": "monster",
+      "sourceHash": "cc4eef3a9d57993d98997d73ebbb2ea53cfd806107000dd852278c4a5545cfae"
+    },
+    {
       "id": "red-dragon-wyrmling-chromatic",
       "kind": "monster",
       "sourceHash": "2f4f619e1c26422f751739516a58d11f13d73bc12cf6d0e02b510df8f9f1abbc"
@@ -3595,6 +3600,11 @@
       "sourceHash": "8f3ecd9332d543d43edfcc9e597efa82f6bf8ba2560b2490252d9ad8b546cd0e"
     },
     {
+      "id": "crocodile",
+      "kind": "monster",
+      "sourceHash": "6f584cc8013afb09430c767b968b1c659032e88c5b1c221dfd9a14f7dc367a64"
+    },
+    {
       "id": "death-dog",
       "kind": "monster",
       "sourceHash": "142338b47c6c63042c6f34968b40fb33a1ff84eee1017aafe3360a107f2342f8"
@@ -3660,6 +3670,11 @@
       "sourceHash": "ec039375d46bc177f596328e86d51d5e7d63b03d4dd1bb366b52396db15c2223"
     },
     {
+      "id": "giant-crocodile",
+      "kind": "monster",
+      "sourceHash": "49f4ba5959fc125e57d83228500dc61285d47a7d121a638bd78f667e5deb8c9a"
+    },
+    {
       "id": "giant-eagle",
       "kind": "monster",
       "sourceHash": "84579f7e7d7f3c54347f0d2e348e4ae1ab3b37e5dc4fcf8754b44fd552ce4fe4"
@@ -3700,6 +3715,16 @@
       "sourceHash": "7d590d8cc8c33f8812b697f47fbd617c7a773f3fd8fa67f1257e0cd784c03651"
     },
     {
+      "id": "giant-sea-horse",
+      "kind": "monster",
+      "sourceHash": "76f786a37f7755dd24f89401c81006fa15c5beb36a951416a6e194a9126bf059"
+    },
+    {
+      "id": "giant-shark",
+      "kind": "monster",
+      "sourceHash": "85ca5a7dd127636d6fb27f9e3bfceb25db19875d31126be42f296380b8309e2c"
+    },
+    {
       "id": "giant-vulture",
       "kind": "monster",
       "sourceHash": "4a9e4ea9c228a28a5a6821d849e791b60316d099acc53c20a61582d19f650f6c"
@@ -3720,6 +3745,11 @@
       "sourceHash": "f153b57f671b71b2089771b58175d999537946556a0da380fd6b8c2ff1198b19"
     },
     {
+      "id": "hunter-shark",
+      "kind": "monster",
+      "sourceHash": "7a78d0ff54394e9c60bea0e30135b76e55a8d85c6bd873af4dd75fff10927c9a"
+    },
+    {
       "id": "hyena",
       "kind": "monster",
       "sourceHash": "3b6fbe35a9966cba13ff4704a08b58aff99beb2f47c9a8f249187ffda4ff395b"
@@ -3728,6 +3758,11 @@
       "id": "jackal",
       "kind": "monster",
       "sourceHash": "433651541cba1dcf26ece352a732dd0dac85c73acd50a12629d04a5ceb61bd01"
+    },
+    {
+      "id": "killer-whale",
+      "kind": "monster",
+      "sourceHash": "177cac9a5b7bb470872ef75522c2dfbe95cb2db94e8a502deb1b37a119123b26"
     },
     {
       "id": "lion",
@@ -3793,6 +3828,11 @@
       "id": "raven",
       "kind": "monster",
       "sourceHash": "4925e6ad88cc42a105541b8c3c52602e9b8864b0c03e7824de227fb327f9219a"
+    },
+    {
+      "id": "reef-shark",
+      "kind": "monster",
+      "sourceHash": "8d0d90dc1877f2eb01a194684be7d8adee8d0b59a7202d420ad2b2be633901b4"
     },
     {
       "id": "rhinoceros",
