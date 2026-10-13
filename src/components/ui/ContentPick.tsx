@@ -7,7 +7,6 @@ import { nativeItemHelp } from "@/lib/i18n/magic-item-material-presentations";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { catalogFor } from "@/lib/i18n/translator";
 import { pickerName, gearRarity, gearKind } from "@/lib/i18n/gear-ui-presentations";
-import { nativeFeatHelp } from "@/lib/i18n/feature-material-presentations";
 import { useEffect, useRef } from "react";
 import { Loader2, Search } from "lucide-react";
 import { InfoButton } from "@/components/ui/InfoDialog";
@@ -109,7 +108,7 @@ export function ContentPick({
               <InfoButton
                 label={displayName(entry)}
                 meta={kind === "spells" ? spellSummaryView(entry.data, locale, entry.source === "homebrew") : undefined}
-                text={kind === "feats" && hasNames && entry.source !== "homebrew" ? nativeFeatHelp(entry.name, describeContentEntry(entry.data), locale) : kind === "items" ? nativeItemHelp(entry, describeContentEntry(entry.data), locale) : referenceRowDescription(kind, entry, locale)}
+                text={kind === "items" ? nativeItemHelp(entry, describeContentEntry(entry.data), locale) : referenceRowDescription(kind, entry, locale)}
                 reference={
                   entry.source === "homebrew" ? undefined : { kind, slug: entry.slug, name: entry.name }
                 }

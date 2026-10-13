@@ -304,17 +304,19 @@ console.log('PASS: multiclass feature help/icon ownership, legacy primary fallba
 
 // Search, multi-select and catalog must enforce the same full-source/book gate.
 const pickerFiles=['ContentPicker','MultiContentPicker','CatalogBrowser'].map(name=>`src/app/characters/builder/${name}.tsx`);
+const sharedPicker='src/components/ui/ContentPick.tsx';
 const feat=NATIVE_FEAT_MATERIAL[0],native={name:feat.name,slug:'native-feat',source:'open5e',documentSlug:'odm-expanded',data:{desc:MESSAGE_CATALOGS.en[feat.descriptionKey]}};
 const variants=[native,{...native,slug:'other-book',documentSlug:'external-book'},{...native,slug:'homebrew',source:'homebrew'},{...native,slug:'changed',data:{desc:'Authored replacement.'}}];
 const dataUrl=source=>'data:text/javascript;base64,'+Buffer.from(source).toString('base64');
-const pickerRenderer=await openCombatRenderer({files:pickerFiles,sourceOf:file=>fs.readFileSync(file,'utf8')+(pickerFiles.includes(file)?`\nexport {${file.split('/').at(-1).replace('.tsx','')}};`:''),stubs:{
+const pickerRenderer=await openCombatRenderer({files:[...pickerFiles,sharedPicker],sourceOf:file=>fs.readFileSync(file,'utf8')+(pickerFiles.includes(file)?`\nexport {${file.split('/').at(-1).replace('.tsx','')}};`:''),stubs:{
+ '@/app/characters/builder/useContentSearch':dataUrl('export const useContentSearch=()=>({query:"",results:'+JSON.stringify(variants)+',open:true,loading:false,unavailable:false,setQuery:()=>{},setOpen:()=>{}});'),
  './useContentSearch':dataUrl('export const useContentSearch=()=>({query:"",results:'+JSON.stringify(variants)+',open:true,loading:false,unavailable:false,unadmitted:[],setQuery:()=>{},setResults:()=>{},setOpen:()=>{}});'),
  '@/components/ui/InfoDialog':dataUrl('export const InfoButton=()=>null;'),
  '@/lib/content-scope':dataUrl('export const useContentCampaign=()=>null; export const scopedParams=x=>x;'),
 }});
 const {describeContentEntry}=await import('../src/lib/help/index.ts');
 const {pickerQueryParams,pickerSectionKey}=await import('../src/lib/i18n/picker-requests.ts');
-for(const locale of ['en','zh-CN'])for(const component of ['ContentPicker','MultiContentPicker','CatalogBrowser']){
+for(const locale of ['en','zh-CN'])for(const component of ['ContentPicker','MultiContentPicker','CatalogBrowser','ContentPick']){
  const key=pickerSectionKey('feats',null,'feats',pickerQueryParams(new URLSearchParams(),locale));
  pickerRenderer.render(component,{kind:'feats',placeholder:'Search',selectedNames:[],onPick:()=>{},onAdd:()=>{},buttonLabel:'Browse',sections:[{key:'feats',label:'Feats'}]},locale,component==='CatalogBrowser'?{queues:{[pickerFiles[2]]:[true,['feats'],{[key]:{rows:variants,truncated:false}},[],'']}}:{});
  const tips=pickerRenderer.elements().filter(e=>typeof e.props.text==='string'&&typeof e.props.label==='string');
@@ -324,4 +326,4 @@ for(const locale of ['en','zh-CN'])for(const component of ['ContentPicker','Mult
   assert.equal(tip.props.text,locale==='zh-CN'&&i===0?nativeFeatHelp(row.name,source,locale):source,component+':'+locale+':'+row.slug);
  }
 }
-console.log('PASS: three real feat pickers agree on owned source translations, third-party/homebrew/changed prose preservation and unchanged English.');
+console.log('PASS: four real feat pickers agree on owned source translations, third-party/homebrew/changed prose preservation and unchanged English.');

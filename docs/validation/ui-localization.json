@@ -1239,8 +1239,8 @@
     },
     {
       "path": "src/app/characters/builder/steps/CallingStep.tsx",
-      "state": "pending",
-      "review": "Owned class/subclass chrome, source-bound feature help and explicit world overlays reviewed. Full unchanged ODM-authored archetype help now localizes through the shared display adapter with source provenance; component-level bilingual creator check passes. Other imported class/themed material and whole-owner review remain pending. Theme feature projection now carries class ownership. 733/733 exact class/name/source bindings cover all six themes and 36 classes; scripts/test-feature-material-locales.mjs asserts source coverage, English preservation and creator/sheet projections. Reused resource guidance retains its source keys; original English, authored overlays, modified prose, native feature IDs and story labels are preserved. The themed source bindings are implemented; whole-owner dynamic-output review and the complete browser journey remain open."
+      "state": "covered",
+      "review": "Full owner review: class cards, casting/save facts, subclass gates/help, feature gains and skill grant explanations use shared locale projections. All 733 theme bindings, 533 subclass feature bindings, 105 full archetype documents and core class help are covered by feature/calling tests. Explicit world names/help, source identities, selection callbacks and numerical mechanics remain canonical. Browser journey acceptance is separate."
     },
     {
       "path": "src/app/characters/builder/steps/ClassChoices.tsx",
@@ -1274,7 +1274,8 @@
     },
     {
       "path": "src/app/characters/builder/useBuilderDerived.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Full owner review: locale-neutral rule/selection data, no owned rendered text. Equipment names/AC notes are projected by EquipmentSection, rule problems by typed detail consumers, and castingLabel by submit builderGate presentation. Ability/HP/proficiency/spell/wealth derivation and canonical action helpers remain untranslated. Real-hook armor regression verifies Defense and baseline AC in both locales; gear/background regressions cover localized consumers and canonical selections."
     },
     {
       "path": "src/app/characters/builder/useBuilderOptions.ts",
@@ -1298,8 +1299,8 @@
     },
     {
       "path": "src/app/characters/builder/usePickerGroups.ts",
-      "state": "pending",
-      "review": "Full unchanged ODM-authored archetype documents now reuse the reviewed intro/feature/spell translations. Archetype source/document metadata survives loading and is passed to the shared display adapter; native selection IDs and raw descriptions remain unchanged. Class imported full descriptions and remaining source ownership keep this owner pending."
+      "state": "covered",
+      "review": "Full owner review: alignment, race/class/background tiers, genre labels, native subclass and class documents use locale adapters. Book/provenance and authored pack-only names/prose remain source text. Calling/background regressions preserve frozen English group projections, canonical IDs/references and source-bound document help; explicit pack overlays retain precedence."
     },
     {
       "path": "src/app/characters/builder/useTableRules.ts",
@@ -2057,8 +2058,8 @@
     },
     {
       "path": "src/components/ui/ContentPick.tsx",
-      "state": "pending",
-      "review": "Whole source reviewed: five supported kinds use existing native name/help adapters; supplied labels/placeholders remain caller-owned. Viewer locale enters the shared request identity; picker callback returns the original entry. Market regression verifies item display and callbacks. Synthetic monster/condition rows verify server-projected help with exact source/locale guards, English fallback, homebrew name preservation and unchanged callback objects. Magic-item regression passed (239 bodies, four picker flows and 185 frozen English cards); deployed catalog and browser help acceptance remain distinct and open."
+      "state": "covered",
+      "review": "Full owner review: five supported kinds use shared name/help projections; labels/placeholders remain caller-owned. Feat help now enforces the shared exact-source and owned-document gate, with four-picker bilingual native/external/homebrew/changed-prose regression. Locale enters search identity; callbacks retain original entries. Market and existing magic/reference regressions cover item/monster/condition display. Deployed catalog/browser acceptance remains separate."
     },
     {
       "path": "src/components/ui/ContextMenu.tsx",

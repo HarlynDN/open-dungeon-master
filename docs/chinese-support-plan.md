@@ -173,8 +173,13 @@ this section records current delivery state and acceptance gaps only.
   authored reasons, original audit data and English output. Focused sheet,
   proposal, level/moment, condition, gear and magic regressions verify this unit;
   final full-suite/build and deployed acceptance remain separate gates.
-- UI source coverage: 428/438 in-scope owners, two explicitly deferred voice
-  owners, zero pending literal sites, 19323 keys. Ten text owners still
+- Builder owner review: CallingStep, usePickerGroups and useBuilderDerived
+  reviewed end to end; canonical computation/selection data stays untranslated.
+  Calling, background, feature-material and real-hook armor regressions pass.
+  Shared ContentPick feat help now uses the same owned-document/source guard
+  as the three builder pickers, preserving third-party and changed prose.
+- UI source coverage: 432/438 in-scope owners, two explicitly deferred voice
+  owners, zero pending literal sites, 19323 keys. Six text owners still
   require review; the final coverage gate must continue to fail until closed.
   Completed pure-helper/consumer reviews are recorded in
   docs/validation/ui-localization.json. Whole-owner dynamic output and browser
