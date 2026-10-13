@@ -3640,9 +3640,29 @@
       "sourceHash": "8e0d86a2233599ec2c5e20dc8f361f4b9e0aeb0b36c58e590e009150b60d2d32"
     },
     {
+      "id": "giant-badger",
+      "kind": "monster",
+      "sourceHash": "c71e66ffcdf7051cf88bac48721f04bc7136d9c4a6cc26636bedd89e09765e6f"
+    },
+    {
+      "id": "giant-bat",
+      "kind": "monster",
+      "sourceHash": "802c076133ee6d7060ad79cc3fabd1192161d83a479ca0989311ee9e94cfe3ad"
+    },
+    {
       "id": "giant-boar",
       "kind": "monster",
       "sourceHash": "13d7ce09490dc4969b67cd1448ac0cd806a2a9ea03d06ad905cca4022c2cf962"
+    },
+    {
+      "id": "giant-crab",
+      "kind": "monster",
+      "sourceHash": "ec039375d46bc177f596328e86d51d5e7d63b03d4dd1bb366b52396db15c2223"
+    },
+    {
+      "id": "giant-eagle",
+      "kind": "monster",
+      "sourceHash": "84579f7e7d7f3c54347f0d2e348e4ae1ab3b37e5dc4fcf8754b44fd552ce4fe4"
     },
     {
       "id": "giant-elk",
@@ -3650,9 +3670,44 @@
       "sourceHash": "435a2edb689a0b7f89af9f42146d17b6ca2230d52b8e2349d8e20361a032c797"
     },
     {
+      "id": "giant-fire-beetle",
+      "kind": "monster",
+      "sourceHash": "5afcb2a1114b5be4b7757f57208478034b3062962941a61da57abefe844f8b2a"
+    },
+    {
       "id": "giant-goat",
       "kind": "monster",
       "sourceHash": "79e0d55240a6608a13850cb9223b59019bf5b2dd2e09f0659af2259340004951"
+    },
+    {
+      "id": "giant-hyena",
+      "kind": "monster",
+      "sourceHash": "80402c86590587cf216e739746a7852573f1364ab2b28bcae4b890979d4679f1"
+    },
+    {
+      "id": "giant-lizard",
+      "kind": "monster",
+      "sourceHash": "a8719912cc100354a4658090754fae2d18275defe1425995508180e245e0ee10"
+    },
+    {
+      "id": "giant-owl",
+      "kind": "monster",
+      "sourceHash": "9c811f60d669fdbd22e2487eb542268e46b8165b18576e43083390cf94304073"
+    },
+    {
+      "id": "giant-rat",
+      "kind": "monster",
+      "sourceHash": "7d590d8cc8c33f8812b697f47fbd617c7a773f3fd8fa67f1257e0cd784c03651"
+    },
+    {
+      "id": "giant-vulture",
+      "kind": "monster",
+      "sourceHash": "4a9e4ea9c228a28a5a6821d849e791b60316d099acc53c20a61582d19f650f6c"
+    },
+    {
+      "id": "giant-weasel",
+      "kind": "monster",
+      "sourceHash": "6bc4f7879e95866a510463520cebe41c9cfb42b1595a6afa4c274d4433eb0df8"
     },
     {
       "id": "goat",

@@ -66,7 +66,7 @@ report or release gate and does not include a SRD 5.2 rules migration.
 | Player system logs | Localized structured combat/audit display, party item/coin/XP logs, account facts and kickoff notices; English model/tool semantics stay separate | Other native player-log templates and final history/save/resume audit |
 | Resource delivery | UI/content/help scopes and independent retryable lazy help; anonymous bilingual switch/reload, authenticated character/campaign entry and viewer-English/story-Chinese separation observed | Complete authenticated journey and lazy/cache timing; hydrated/network totals and large route JS payload remain unverified |
 | Local Chinese TTS | Implementation and bounded CPU delivery/outage evidence retained in [the runtime record](validation/chinese-tts-runtime.json) | Chinese voice quality rejected by user; further voice work is deferred, not passed, and is not a text-milestone gate |
-| Full native rulebook | Reader chrome localized; **763/933 complete Chinese pages** render via a server-generated display projection: all 319 spells, 239 magic items, 36 rules, 9 races, 12 classes and 148 monsters. Exact page IDs and source hashes are maintained in the coverage manifest; original English corpus retained | Remaining 170 monster pages; game-card/help prose reuse, authenticated browser search/navigation and English reading regression |
+| Full native rulebook | Reader chrome localized; **774/933 complete Chinese pages** render via a server-generated display projection: all 319 spells, 239 magic items, 36 rules, 9 races, 12 classes and 159 monsters. Exact page IDs and source hashes are maintained in the coverage manifest; original English corpus retained | Remaining 159 monster pages; game-card/help prose reuse, authenticated browser search/navigation and English reading regression |
 | Final text flow | Recorded Chinese exploration/social/utility and combat/slot/correction acceptance on Codex | Complete Chinese text journey, rulebook reading/search and English regression; full tests/lint/build, then pause |
 
 ## Execution adjustment (2026-10-13)
@@ -86,18 +86,16 @@ real interaction has passed. Do not restart a static translation campaign.
 
 ## Next delivery unit and interruption checkpoint
 
-- Added 13 ape, bear, feline, canine and bird pages (exact IDs in coverage manifest):
-  763/933 pages, 148/318 monsters. Source-matched templates preserve ranged attack
-  distances, multiattack counts, pounce prerequisites, prone saves and pack tactics;
-  lore was translated directly from native English. Saber-toothed Tiger damage
-  modifiers remain exactly as supplied by the source.
-- Added 12 monster names, reused the existing Wolf entry and added 老虎 as a Tiger
-  alias. Cached 5etools candidates inform names only; Panther candidates are marked
-  XMM and do not establish 2014 provenance. No external mechanics/prose imported.
+- Added 11 giant beasts (exact IDs in coverage manifest): 774/933 pages,
+  159/318 monsters. Reviewed diseased-rat recovery restrictions and recurring HP
+  maximum loss, crab claw capacity, rampage, illumination, flyby and language
+  comprehension versus speech against native English source.
+- Added 11 shared monster names aligned with cached 5etools candidates; their
+  edition/review provenance remains unverified. No external prose imported.
 - Numeric/table, bilingual rendering, English switch, source refusal, identity,
-  terminology/guard and AST/catalog/resources checks passed: 388 terminology entries,
+  terminology/guard and AST/catalog/resources checks passed: 399 terminology entries,
   0 errors, 389 context warnings; UI remains 401/440.
-- Next: remaining 170 monster pages, game-card/help prose reuse and native source
+- Next: remaining 159 monster pages, game-card/help prose reuse and native source
   ownership. Final full-suite/build and real bilingual journey remain unproven.
 - Native dynamic UI/material/log ownership remains pending in the UI manifest;
   audit helpers with their actual consumers before the final bilingual journey.
