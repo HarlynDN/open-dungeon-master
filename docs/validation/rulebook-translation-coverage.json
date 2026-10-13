@@ -3320,6 +3320,11 @@
       "sourceHash": "3506a90438699f79aa1387600eb1122bfd2498c686463f16ee29fd9f7d03da5e"
     },
     {
+      "id": "erinyes-devil",
+      "kind": "monster",
+      "sourceHash": "b40c1f94515ca4a9a36c0e2303eea9244dc8126f8ee0fce0eab41def47b5b60e"
+    },
+    {
       "id": "ettercap",
       "kind": "monster",
       "sourceHash": "cd9363af60be6119eb3e8993dc042fe7c7e82413b2fb5d67faf3f112154a0501"

@@ -440,6 +440,7 @@ export const ZH_CN_GLOSSARY = [
   {"id":"monster.bone_devil","source":"Bone Devil","preferred":"骨魔","scope":"monster"},
   {"id":"monster.bearded_devil","source":"Bearded Devil","preferred":"须魔","scope":"monster"},
   {"id":"monster.barbed_devil","source":"Barbed Devil","preferred":"猬魔","scope":"monster"},
+  {"id":"monster.erinyes","source":"Erinyes","preferred":"罪魔","scope":"monster"},
   {"id":"monster.goblin","source":"Goblin","preferred":"哥布林","scope":"monster","aliases":["地精"]},
   {"id":"monster.bugbear","source":"Bugbear","preferred":"熊地精","scope":"monster"},
   {"id":"monster.hobgoblin","source":"Hobgoblin","preferred":"大地精","scope":"monster"},
