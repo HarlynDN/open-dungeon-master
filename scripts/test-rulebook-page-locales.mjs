@@ -64,7 +64,7 @@ for (const page of rulebookPages().filter(page => page.kind === 'spell' && /(?:c
 const { bookAnchorIds, parseBook, preserveBookAnchors } = await import('../src/lib/rulebook/markdown.ts');
 const { default: nativeCatalog } = await import('../src/lib/rulebook/locales/zh-CN.json', { with: { type: 'json' } });
 const nativeRules = Object.keys(nativeCatalog);
-for (const id of ['conditions', 'inspiration', 'coinage', 'selling-treasure', 'racial-traits', 'beyond-1st-level', 'alignment', 'languages', 'trade-goods', 'feats', 'armor', 'tools', 'mounts-and-vehicles', 'weapons', 'expenses']) assert.ok(nativeRules.includes(id), id);
+for (const id of ['conditions', 'inspiration', 'coinage', 'selling-treasure', 'racial-traits', 'beyond-1st-level', 'alignment', 'languages', 'trade-goods', 'feats', 'armor', 'tools', 'mounts-and-vehicles', 'weapons', 'expenses', 'spellcasting']) assert.ok(nativeRules.includes(id), id);
 for (const id of nativeRules) {
   const data = rulebookPage(id);
   const before = JSON.stringify(data);

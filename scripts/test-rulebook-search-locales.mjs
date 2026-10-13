@@ -5,7 +5,7 @@ const { rulebookSearch, rulebookPage } = await import('../src/lib/rulebook/book.
 const { rulebookPageDisplay } = await import('../src/lib/rulebook/localized-pages.ts');
 const { queryTerms, snippetFor, cjkHighlightRuns } = await import('../src/lib/rulebook/search.ts');
 for (const [query, page, at] of [
-  ['中毒', 'conditions', 'poisoned'], ['力竭', 'conditions', 'exhaustion'],
+  ['中毒', 'conditions', 'poisoned'], ['法术专注', 'spellcasting', 'concentration'], ['如何维持专注', 'spellcasting', 'concentration'], ['力竭', 'conditions', 'exhaustion'],
   ['魔法飞弹', 'magic-missile', undefined], ['体质调整值每提高1', 'beyond-1st-level', undefined],
 ]) {
   const result = rulebookSearch(query, undefined, 'zh-CN');

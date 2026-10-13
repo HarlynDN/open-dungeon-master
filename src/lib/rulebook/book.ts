@@ -113,7 +113,13 @@ export function rulebookSearch(query: string, limit?: number, locale: AppLocale 
       if ((byPassage.get(key)?.score ?? -Infinity) < hit.score) byPassage.set(key, localizedSearchHit(localized, hit, terms));
     }
   }
-  return { hits: [...byPassage.values()].sort((a, b) => b.score - a.score || a.title.localeCompare(b.title)).slice(0, limit ?? 40), terms };
+  const requestedTitle = query.trim().normalize("NFKC").toLowerCase();
+  const exactTitle = (hit: SearchResponse["hits"][number]) => [hit.title, byId.get(hit.page)?.page.title]
+    .some(title => title?.normalize("NFKC").toLowerCase() === requestedTitle);
+  // Scores from aliases with different word counts are not directly comparable.
+  // A literal native/canonical title takes priority over related expanded names.
+  return { hits: [...byPassage.values()].sort((a, b) => Number(exactTitle(b)) - Number(exactTitle(a))
+    || b.score - a.score || a.title.localeCompare(b.title)).slice(0, limit ?? 40), terms };
 }
 
 export function rulebookPages(): RulebookPage[] {

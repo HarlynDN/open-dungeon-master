@@ -11,6 +11,8 @@ import { blockText, parseBook, preserveBookAnchors, stripInline, type BookBlock 
 import type { RulebookKind, RulebookPage, SearchHit } from "./types";
 
 const STOP = new Set(["a", "an", "and", "the", "of", "to", "in", "on", "or", "for", "is", "it", "at", "by", "be", "as", "with", "do", "does", "how", "what", "when", "can", "i", "you", "my"]);
+const CJK_STOP = new Set(["的", "了", "在", "是", "和", "与", "及", "如何", "什么", "怎么"]);
+const segmenter = typeof Intl.Segmenter === "function" ? new Intl.Segmenter(undefined, { granularity: "word" }) : null;
 
 export function stem(word: string): string {
   let w = word.toLowerCase().replace(/['’]s$/, "").replace(/['’]/g, "");
@@ -24,20 +26,25 @@ export function stem(word: string): string {
   return w;
 }
 
-export function words(text: string): string[] {
+export function words(text: string, mode: "index" | "query" = "index"): string[] {
   const tokens = text.toLowerCase().match(/[a-z0-9]+(?:['’][a-z]+)?|[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]+/gu) ?? [];
   return tokens.flatMap(token => {
     const chars = [...token];
-    return /^[a-z0-9]/.test(token) || chars.length === 1 ? [token]
-      : chars.slice(0, -1).map((char, index) => char + chars[index + 1]);
+    if (/^[a-z0-9]/.test(token) || chars.length === 1) return [token];
+    const grams = chars.slice(0, -1).map((char, index) => char + chars[index + 1]);
+    const segmented = segmenter ? [...segmenter.segment(token)].filter(part => part.isWordLike).map(part => part.segment) : [];
+    // Queries use words; crossing a word boundary must not add a mandatory
+    // bigram (法术专注 must match 法术…专注). Indexes keep bigrams for names
+    // and partial typing, even when ICU's dictionary splits them differently.
+    return mode === "query" && segmented.length ? segmented : [...new Set([...segmented, ...grams])];
   });
 }
 
 // The query as the stems it will be matched by, stop words dropped unless
 // they are all there is.
 export function queryTerms(query: string): string[] {
-  const all = words(query);
-  const kept = all.filter((word) => !STOP.has(word));
+  const all = words(query, "query");
+  const kept = all.filter((word) => !STOP.has(word) && !CJK_STOP.has(word));
   return [...new Set((kept.length ? kept : all).map(stem))];
 }
 
