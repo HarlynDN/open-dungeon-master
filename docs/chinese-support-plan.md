@@ -66,7 +66,7 @@ report or release gate and does not include a SRD 5.2 rules migration.
 | Player system logs | Localized structured combat/audit display, party item/coin/XP logs, account facts and kickoff notices; English model/tool semantics stay separate | Other native player-log templates and final history/save/resume audit |
 | Resource delivery | UI/content/help scopes and independent retryable lazy help; anonymous bilingual switch/reload, authenticated character/campaign entry and viewer-English/story-Chinese separation observed | Complete authenticated journey and lazy/cache timing; hydrated/network totals and large route JS payload remain unverified |
 | Local Chinese TTS | Implementation and bounded CPU delivery/outage evidence retained in [the runtime record](validation/chinese-tts-runtime.json) | Chinese voice quality rejected by user; further voice work is deferred, not passed, and is not a text-milestone gate |
-| Full native rulebook | Reader chrome localized; **700/933 complete Chinese pages** now render via a server-generated display projection, including all 319 cantrip through ninth-level spell pages, all 239 magic-item pages, all thirty-six rules pages, all nine race pages and all twelve class pages and all forty chromatic/metallic dragon pages and all six giant pages and three animated-object pages and five canine pages and six common humanoid/giant enemies and five petrifying/flying monstrosities and five skeleton/zombie entries and four additional monstrosities and four plant/fungus entries plus centaur, ettin, minotaur, gargoyle, harpy, manticore and merrow, with complete headers and reused bodies; original English corpus retained; 319 spell and 239 magic-item bodies are available for further reuse | Remaining 233 monster pages; complete Chinese corpus coverage, authenticated browser search/navigation and English reading regression |
+| Full native rulebook | Reader chrome localized; **705/933 complete Chinese pages** now render via a server-generated display projection, including all 319 cantrip through ninth-level spell pages, all 239 magic-item pages, all thirty-six rules pages, all nine race pages and all twelve class pages and all forty chromatic/metallic dragon pages and all six giant pages and three animated-object pages and five canine pages and six common humanoid/giant enemies and five petrifying/flying monstrosities and five skeleton/zombie entries and four additional monstrosities and four plant/fungus entries plus centaur, ettin, minotaur, gargoyle, harpy, manticore and merrow, with complete headers and reused bodies; original English corpus retained; 319 spell and 239 magic-item bodies are available for further reuse | Remaining 228 monster pages; complete Chinese corpus coverage, authenticated browser search/navigation and English reading regression |
 | Final text flow | Recorded Chinese exploration/social/utility and combat/slot/correction acceptance on Codex | Complete Chinese text journey, rulebook reading/search and English regression; full tests/lint/build, then pause |
 
 ## Execution adjustment (2026-10-13)
@@ -86,17 +86,16 @@ real interaction has passed. Do not restart a static translation campaign.
 
 ## Next delivery unit and interruption checkpoint
 
-- Added Gargoyle, Harpy, Manticore and Merrow: 700/933 pages, 85/318 monsters.
-  Preserved adamantine bypass, song target types/hearing/bonus-action upkeep,
-  damage-source save exceptions and individual immunity, twenty-four tail spikes
-  with long-rest recovery, and harpoon Strength contest/size/pull restrictions.
-- Added 石像鬼/鸟妖/刺尾狮/迈罗人鱼 to the shared glossary using matched
-  5etools terminology candidates; source prose and mechanics remain repository
-  English, without a verified edition/review claim for the candidates.
-- Numeric/table, bilingual rendering, English switching, source refusal, alias and
-  terminology/guard checks passed. AST/catalog/resources passed (333 terminology
-  entries, 0 errors, 389 context warnings).
-- Next: remaining monster families (233 pages), game-card/help prose reuse and
+- Added Gnoll, Kobold, Lizardfolk, Merfolk and Sahuagin: 705/933 pages,
+  90/318 monsters. Preserved Rampage timing, sunlight/pack tactics, different-weapon
+  melee multiattack, two-handed melee spear damage and limited amphibiousness.
+- Added scoped monster names and 鲨华 alias from matched 5etools candidates,
+  distinguishing language labels. The first page check caught Lizardfolk existing
+  only in race scope; added its monster identity and reran the failing check.
+- Numeric/table, bilingual rendering, English switch, source refusal, alias and
+  terminology/guard checks pass after repair. AST/catalog/resources passed before
+  the final scope-only glossary addition; no catalog messages or UI code changed.
+- Next: remaining monster families (228 pages), game-card/help prose reuse and
   native source ownership. Final full-suite/build and real bilingual journey
   remain unproven.
 - Native dynamic UI/material/log ownership remains pending in the UI manifest;

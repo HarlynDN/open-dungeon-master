@@ -3260,6 +3260,11 @@
       "sourceHash": "61c27bfdeda099c413a4782afa0ec63cc3f26d32864d476bac0fc90aeb4f7df4"
     },
     {
+      "id": "gnoll",
+      "kind": "monster",
+      "sourceHash": "9bd8eaf2f9f3e02422cd2f665445feb73102f55111c5ca0bb40cecd6b15290d1"
+    },
+    {
       "id": "goblin",
       "kind": "monster",
       "sourceHash": "9adfb12d62ea0fb31bfe58c40136088692c823fa260f58f2546582e6d8aaa526"
@@ -3300,9 +3305,24 @@
       "sourceHash": "010aacdf3a3e0fcae54948af0db859b2aad0529578145b0c350655657c35ceb5"
     },
     {
+      "id": "kobold",
+      "kind": "monster",
+      "sourceHash": "972839016ec53a6fef2f8e541b57ffef82fa57249971fcc62f8f5dcb74efaec2"
+    },
+    {
+      "id": "lizardfolk",
+      "kind": "monster",
+      "sourceHash": "3da88d78f73ebd94d2d64ce601561417a166ff046760a55196dd73a556e62a34"
+    },
+    {
       "id": "manticore",
       "kind": "monster",
       "sourceHash": "69ed0ab55c9148a28731186c7daccdd72886ec153089f7b04566ec77b8a4f59a"
+    },
+    {
+      "id": "merfolk",
+      "kind": "monster",
+      "sourceHash": "cd0ca4dcf743f6f9d2d2af2e862bfd839c99ed91a6528766a3d9000bd7a89cd7"
     },
     {
       "id": "merrow",
@@ -3353,6 +3373,11 @@
       "id": "rust-monster",
       "kind": "monster",
       "sourceHash": "1bf45421eab65332b16f4cc868549184cc4084b9d46a204e861baebeea048490"
+    },
+    {
+      "id": "sahuagin",
+      "kind": "monster",
+      "sourceHash": "de18d85387e023b2d34a7b4a619cb3690222daaf7642f716f3fccee59a939059"
     },
     {
       "id": "shrieker-fungi",
