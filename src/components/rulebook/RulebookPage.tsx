@@ -243,7 +243,8 @@ export function RulebookPage({
   canStart?: boolean;
 }) {
   const { locale } = useLocale();
-  const { page, chapter, prev, next } = data;
+  const { chapter, prev, next } = data;
+  const page = data.display?.locale === locale ? { ...data.page, ...data.display } : data.page;
   const blocks = useMemo(() => {
     const all = parseBook(page.md);
     // The entry's italic first line is lettered under the title already.

@@ -1,6 +1,8 @@
 import { currentUser, unauthorized } from "@/lib/auth";
 import { rulebookPage } from "@/lib/rulebook/book";
 import { crosswalkById } from "@/lib/rulebook/crosswalk";
+import { normalizeLocale } from "@/lib/i18n/locales";
+import { rulebookPageDisplay } from "@/lib/rulebook/localized-pages";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -9,7 +11,7 @@ const PAGE_ID = /^[a-z0-9-]{1,96}$/;
 
 // GET /api/rulebook/pages/combat: one page's text, its chapter, and the
 // pages either side of it.
-export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const user = await currentUser();
   if (!user) {
     return unauthorized();
@@ -20,8 +22,9 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
     return Response.json({ error: "No such page in the rulebook." }, { status: 404 });
   }
   const crosswalk = crosswalkById(id);
+  const display = rulebookPageDisplay(found.page, normalizeLocale(new URL(request.url).searchParams.get("locale")));
   return Response.json(
-    crosswalk ? { ...found, crosswalk: { editor: crosswalk.editor, ...(crosswalk.catalogName ? { catalogName: crosswalk.catalogName } : {}), ...(crosswalk.classId ? { classId: crosswalk.classId } : {}), ...(crosswalk.template ? { template: crosswalk.template } : {}), support: crosswalk.support, where: crosswalk.where } } : found,
+    crosswalk ? { ...found, display, crosswalk: { editor: crosswalk.editor, ...(crosswalk.catalogName ? { catalogName: crosswalk.catalogName } : {}), ...(crosswalk.classId ? { classId: crosswalk.classId } : {}), ...(crosswalk.template ? { template: crosswalk.template } : {}), support: crosswalk.support, where: crosswalk.where } } : { ...found, display },
     { headers: { "Cache-Control": "private, max-age=300" } },
   );
 }

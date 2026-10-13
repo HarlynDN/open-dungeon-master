@@ -1,6 +1,7 @@
 "use client";
 
 import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { referenceDisplayName } from "@/lib/i18n/references";
 import { bookText } from "@/lib/i18n/book-ui-presentations";
 
 import { Bookmark, ChevronLeft, ChevronRight, List } from "lucide-react";
@@ -69,6 +70,7 @@ export function RulebookReader({
   onPageChange?: (id: string, at?: string) => void;
 }) {
   const { locale } = useLocale();
+  const readingLocale = useRef(locale);
   const [contents, setContents] = useState<Contents | null>(null);
   const [contentsFailed, setContentsFailed] = useState(false);
   const [shown, setShown] = useState<Shown | null>(null);
@@ -123,18 +125,33 @@ export function RulebookReader({
   }, []);
 
   const fetchPage = useCallback(async (id: string): Promise<RulebookPageResponse | null> => {
-    const cached = cache.current.get(id);
+    const cacheKey = `${locale}:${id}`;
+    const cached = cache.current.get(cacheKey);
     if (cached) return cached;
     try {
-      const response = await fetch(`/api/rulebook/pages/${encodeURIComponent(id)}`);
+      const response = await fetch(`/api/rulebook/pages/${encodeURIComponent(id)}?locale=${encodeURIComponent(locale)}`);
       if (!response.ok) return null;
       const data: RulebookPageResponse = await response.json();
-      cache.current.set(id, data);
+      cache.current.set(cacheKey, data);
       return data;
     } catch {
       return null;
     }
-  }, []);
+  }, [locale]);
+
+  useEffect(() => {
+    readingLocale.current = locale;
+    let cancelled = false;
+    const current = shownRef.current;
+    if (current && current.data.display?.locale !== locale) {
+      void fetchPage(current.data.page.id).then(data => {
+        if (!cancelled && data && shownRef.current?.data.page.id === current.data.page.id) {
+          setShown({ ...current, data });
+        }
+      });
+    }
+    return () => { cancelled = true; };
+  }, [locale, fetchPage]);
 
   // Turns a leaf. Forward, the right-hand page itself lifts away (the leaf
   // carries its words) and the next page is already lying beneath it. Back,
@@ -181,7 +198,7 @@ export function RulebookReader({
     async (id: string, at?: string, terms: string[] = [], { animate = true, reveal = true, quiet = false } = {}) => {
       const current = shownRef.current;
       const onPage = !narrow() || viewRef.current === "page";
-      if (current && current.data.page.id === id) {
+      if (current && current.data.page.id === id && (current.data.display?.locale === locale || (!current.data.display && locale === "en"))) {
         setShown({ data: current.data, terms, at });
         if (onPage) {
           setArrive({ at, nonce: Date.now() });
@@ -194,6 +211,7 @@ export function RulebookReader({
         return;
       }
       const data = await fetchPage(id);
+      if (readingLocale.current !== locale) return;
       if (!data) {
         if (!quiet) { failedPage.current = id; setPageFailed(true); }
         return;
@@ -220,7 +238,7 @@ export function RulebookReader({
       if (data.next) void fetchPage(data.next.id);
       if (data.prev) void fetchPage(data.prev.id);
     },
-    [fetchPage, turn],
+    [fetchPage, turn, locale],
   );
 
   // The contents, then the page to open on: a deep link, else where this
@@ -317,11 +335,14 @@ export function RulebookReader({
     const map = new Map<string, string>();
     for (const chapter of contents?.chapters ?? []) {
       for (const entry of chapter.entries) {
-        if (entry.kind === "spell" || entry.kind === "item") map.set(entry.title.toLowerCase(), entry.id);
+        if (entry.kind === "spell" || entry.kind === "item") {
+          map.set(entry.title.toLowerCase(), entry.id);
+          map.set(referenceDisplayName(entry.kind === "spell" ? "spell" : "equipment", entry.title, locale).toLowerCase(), entry.id);
+        }
       }
     }
     return map;
-  }, [contents]);
+  }, [contents, locale]);
 
   const openFromContents: OpenFromContents = useCallback((id, at, terms) => void open(id, at, terms), [open]);
   const openFromPage = useCallback((id: string, at?: string) => void open(id, at), [open]);

@@ -3,7 +3,7 @@
 const CONTENT_PREFIXES = new Set([
   "monsterHandUi", "storyboardUi", "dmConsoleUi", "monsterUi", "encounterPrep", "dmField", "dmResult", "npcEditor", "dmAction", "dmToolsUi", "referenceMetrics", "referenceUi", "lineageUi", "lineageMaterial", "racialUi", "gameHelp", "closedHelp", "combatUi", "combatDetail", "combatRoll", "combatCheck", "combatSpecial", "cinematic", "sheetPlay", "sheetDialog",
   "boardUi", "boardOpsUi", "boardEffectsUi", "boardTools", "regionUi", "mapSceneUi", "mapEditorUi", "mapInspectUi", "mapLibraryUi", "mapForgeUi", "mapSurfaceUi", "diceTrayUi", "feedUi", "chatUi", "entryCharacter", "passageUi", "memoryUi", "recordUi", "leadUi", "marketUi", "storyControl", "storyUi", "callingUi", "callingMaterial", "abilityUi", "spellUi", "finishUi", "turnUi", "journalUi", "composeUi", "sessionUi", "handUi", "handMaterial",
-  "spellName", "spellMaterial", "spellHelp", "gearUi", "equipmentName", "magicItemName", "itemHelp", "builderPicker",
+  "bookMaterial", "spellName", "spellMaterial", "spellHelp", "gearUi", "equipmentName", "magicItemName", "itemHelp", "builderPicker",
 ]);
 export const MESSAGE_SCOPES = ["ui", "content", "help"] as const;
 export type MessageScope = typeof MESSAGE_SCOPES[number];
