@@ -63,6 +63,7 @@ import { SPELL_NAME_MESSAGES } from "./spell-name-messages.ts";
 import { SPELL_MATERIAL_MESSAGES } from "./spell-material-messages.ts";
 import { GEAR_UI_MESSAGES } from "./gear-ui-messages.ts";
 import { EQUIPMENT_NAME_MESSAGES } from "./equipment-name-messages.ts";
+import { SPELL_HELP_MESSAGES } from "./spell-help-messages.ts";
 import { MAGIC_ITEM_MATERIAL_MESSAGES } from "./magic-item-material-messages.ts";
 import { EQUIPMENT_HELP_MESSAGES } from "./equipment-help-messages.ts";
 import { BUILDER_IDENTITY_MESSAGES } from "./builder-identity-messages.ts";
@@ -236,6 +237,7 @@ const en = {
   ...EQUIPMENT_NAME_MESSAGES.en,
   ...EQUIPMENT_HELP_MESSAGES.en,
   ...MAGIC_ITEM_MATERIAL_MESSAGES.en,
+  ...SPELL_HELP_MESSAGES.en,
   ...BUILDER_PICKER_MESSAGES.en,
   ...CHARACTER_RULE_MESSAGES.en,
   ...CHARACTER_TRAINING_NAME_MESSAGES.en,
@@ -388,6 +390,7 @@ const zhCN: Messages = {
   ...EQUIPMENT_NAME_MESSAGES["zh-CN"],
   ...EQUIPMENT_HELP_MESSAGES["zh-CN"],
   ...MAGIC_ITEM_MATERIAL_MESSAGES["zh-CN"],
+  ...SPELL_HELP_MESSAGES["zh-CN"],
   ...BUILDER_PICKER_MESSAGES["zh-CN"],
   ...CHARACTER_RULE_MESSAGES["zh-CN"],
   ...CHARACTER_TRAINING_NAME_MESSAGES["zh-CN"],

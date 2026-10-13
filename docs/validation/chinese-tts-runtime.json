@@ -61,7 +61,7 @@
     }
   },
   "remaining": [
-    "listen review of numbers/dice/mixed names and overall quality",
+    "acceptable Chinese narrator voice and user listening acceptance",
     "English campaign/browser real speech regression",
     "complete chunk playback/first-play/replay/mute interruption and narration failure retry acceptance",
     "native playback",
@@ -96,8 +96,10 @@
     }
   ],
   "pronunciationReview": {
-    "state": "user-feedback-pending",
+    "state": "rejected",
     "scope": "Arabic numbers, 1d6+3, units and mixed Brom/Chinese proper names",
-    "questionPresented": true
+    "questionPresented": true,
+    "userFeedback": "这个中文声音太难听了",
+    "boundary": "Synthesis succeeded, but Chinese voice quality did not pass user acceptance. Do not count TTS as delivered."
   }
 }

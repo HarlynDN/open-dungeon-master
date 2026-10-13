@@ -155,7 +155,7 @@ function textOf(value: unknown): string {
 // layer, so every spelling is tried, and the pieces some sources keep apart
 // (a feat's benefits, a background's feature, a 2024 species' trait list)
 // are put back together. Null when there is nothing to show.
-export function describeContentEntry(data: Record<string, unknown> | undefined): string | null {
+export function describeContentEntry(data: Record<string, unknown> | undefined, options: { includeHigherLevels?: boolean } = {}): string | null {
   if (!data) {
     return null;
   }
@@ -166,6 +166,10 @@ export function describeContentEntry(data: Record<string, unknown> | undefined):
       parts.push(text);
       break;
     }
+  }
+  if (options.includeHigherLevels) {
+    const higher = textOf(data.higher_level).trim();
+    if (higher) parts.push(`**At Higher Levels.** ${higher}`);
   }
   // A Level Up feat keeps its flavor line in desc and its rules in
   // effects_desc, one benefit per entry.

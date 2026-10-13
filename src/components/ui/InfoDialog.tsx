@@ -15,6 +15,7 @@ import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { nativeFeatHelp } from "@/lib/i18n/feature-material-presentations";
 import { nativeArchetypeHelp } from "@/lib/i18n/calling-material-presentations";
 import { itemSheetView } from "@/lib/i18n/equipment-help-presentations";
+import { nativeSpellHelp } from "@/lib/i18n/spell-help-presentations";
 import { nativeItemHelp } from "@/lib/i18n/magic-item-material-presentations";
 
 // The "what does this do?" affordance, used everywhere a game term appears.
@@ -127,7 +128,7 @@ function ContentBody({ reference }: { reference: ContentRef }) {
         );
         if (response.ok) {
           const data = await response.json();
-          const text = describeContentEntry(data?.entry?.data);
+          const text = describeContentEntry(data?.entry?.data, { includeHigherLevels: reference.kind === "spells" });
           if (text) {
             if (!cancelled) {
               setState({ for: requestKey, text, name: data?.entry?.name, source: data?.entry?.source,
@@ -152,7 +153,7 @@ function ContentBody({ reference }: { reference: ContentRef }) {
           (entry: { name: string; source?: string; documentSlug?: string; data?: Record<string, unknown> }) => entry.name.trim().toLowerCase() === wanted,
         );
         if (!cancelled) {
-          setState({ for: requestKey, text: describeContentEntry(hit?.data), name: hit?.name, source: hit?.source,
+          setState({ for: requestKey, text: describeContentEntry(hit?.data, { includeHigherLevels: reference.kind === "spells" }), name: hit?.name, source: hit?.source,
             documentSlug: hit?.documentSlug,
             classId: typeof hit?.data?.class === "string" ? hit.data.class : undefined, loading: false });
         }
@@ -186,6 +187,7 @@ function ContentBody({ reference }: { reference: ContentRef }) {
   let text = state.text;
   if (reference.kind === "feats" && state.source !== "homebrew") text = nativeFeatHelp(state.name ?? reference.name, text, locale) ?? text;
   else if (reference.kind === "archetypes" && state.classId) text = nativeArchetypeHelp(state.classId, state.name ?? reference.name ?? "", text, locale, state);
+  else if (reference.kind === "spells") text = nativeSpellHelp({ ...state, name: state.name ?? reference.name }, text, locale) ?? text;
   else if (reference.kind === "items") text = nativeItemHelp({ ...state, name: state.name ?? reference.name }, text, locale) ?? text;
   return <>{renderRules(text)}</>;
 }
