@@ -3475,6 +3475,11 @@
       "sourceHash": "0e5c95449992e48210ce2506ff6fc025e097828e5d71eba665f9a41fbbed826f"
     },
     {
+      "id": "horned-devil",
+      "kind": "monster",
+      "sourceHash": "d661d2c585af94ad39153e07dd33428e54e75eb320d1b4725eb07e198720458e"
+    },
+    {
       "id": "hydra",
       "kind": "monster",
       "sourceHash": "1a578dd67b6793762e1c0401fa6951026b9dbdf0910be733c41246cd87e6a372"
