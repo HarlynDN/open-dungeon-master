@@ -3705,6 +3705,11 @@
       "sourceHash": "5afcb2a1114b5be4b7757f57208478034b3062962941a61da57abefe844f8b2a"
     },
     {
+      "id": "giant-frog",
+      "kind": "monster",
+      "sourceHash": "28bb50971d80d6f93ecfa10abd41739f2fdd2b4c5c8e651963b3c7bfe59668cd"
+    },
+    {
       "id": "giant-goat",
       "kind": "monster",
       "sourceHash": "79e0d55240a6608a13850cb9223b59019bf5b2dd2e09f0659af2259340004951"
@@ -3718,6 +3723,11 @@
       "id": "giant-lizard",
       "kind": "monster",
       "sourceHash": "a8719912cc100354a4658090754fae2d18275defe1425995508180e245e0ee10"
+    },
+    {
+      "id": "giant-octopus",
+      "kind": "monster",
+      "sourceHash": "fbae45cd41aa2fab87e3cfc17be6866d94a9f0c0a7e689a991b141b09eb606c8"
     },
     {
       "id": "giant-owl",
@@ -3743,6 +3753,11 @@
       "id": "giant-shark",
       "kind": "monster",
       "sourceHash": "85ca5a7dd127636d6fb27f9e3bfceb25db19875d31126be42f296380b8309e2c"
+    },
+    {
+      "id": "giant-toad",
+      "kind": "monster",
+      "sourceHash": "92b7fd40d974b8b4c0562769df186e6338438667cbe788bc7c848080fa24b56f"
     },
     {
       "id": "giant-vulture",
