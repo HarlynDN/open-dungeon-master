@@ -3270,9 +3270,19 @@
       "sourceHash": "010aacdf3a3e0fcae54948af0db859b2aad0529578145b0c350655657c35ceb5"
     },
     {
+      "id": "minotaur-skeleton",
+      "kind": "monster",
+      "sourceHash": "5aa76a53f64dc6572773799f525832b43c50290e7072b3e71d698c45086de5a2"
+    },
+    {
       "id": "ogre",
       "kind": "monster",
       "sourceHash": "b8c96abcfc3c28a7da56ef1e506a3e3d9892939199173fa1ebedcce0e0efd79d"
+    },
+    {
+      "id": "ogre-zombie",
+      "kind": "monster",
+      "sourceHash": "e26c7a18bd1fe227b998ca80776fb5b9bed51b9fc086c1b47c67f95363c06190"
     },
     {
       "id": "orc",
@@ -3295,6 +3305,11 @@
       "sourceHash": "90b5164ae5143e42547985b987fc1f808b123ee06bfc8908d6197e2db7febb27"
     },
     {
+      "id": "skeleton",
+      "kind": "monster",
+      "sourceHash": "e042840ccf430d84e320c3a2fcf9a52548c108c785810bacbceabf88c0e69031"
+    },
+    {
       "id": "stone-giant-giant",
       "kind": "monster",
       "sourceHash": "114df535acbe14a7be4d02e1dab43d083d9807ae30390f5aeda720833ec0a08d"
@@ -3308,6 +3323,11 @@
       "id": "troll",
       "kind": "monster",
       "sourceHash": "65b6fce36e5cbcd33ae08498cdc907ed41a478eb4b50fc4e4bf07989317c5f40"
+    },
+    {
+      "id": "warhorse-skeleton",
+      "kind": "monster",
+      "sourceHash": "5f07b93b4073cd7b0ba51fbe16878cb139f467c75904a1acec026799d49582d1"
     },
     {
       "id": "white-dragon-wyrmling-chromatic",
@@ -3363,6 +3383,11 @@
       "id": "young-white-dragon-chromatic",
       "kind": "monster",
       "sourceHash": "c371033393e12ac9957b29c774da101d20582fc74e40fe92e26da3046633592b"
+    },
+    {
+      "id": "zombie",
+      "kind": "monster",
+      "sourceHash": "e0b5d79db1b641a5955801f542c874a5d33b2251c10a4f916c228b5f22c32cd6"
     },
     {
       "id": "blink-dog",
