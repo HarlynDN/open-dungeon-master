@@ -3250,6 +3250,11 @@
       "sourceHash": "f3a1d9b13ecb3e87552db78e97f5ce171ed96d849f84710d2647aa5d965f53aa"
     },
     {
+      "id": "doppelganger",
+      "kind": "monster",
+      "sourceHash": "3f129d60c6994a332ebfb983d57a92ea25b94289c8ac42b27aa2dc662f2a67b8"
+    },
+    {
       "id": "dretch-demon",
       "kind": "monster",
       "sourceHash": "6dde30ed5b0ccd526ce90b456cafc54e7681f3c18bb4e3011c37adb1a7666f71"
