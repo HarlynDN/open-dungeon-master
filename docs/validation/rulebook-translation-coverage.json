@@ -3175,6 +3175,11 @@
       "sourceHash": "f5363d2e56c731887a834307e587af8bd53c409774c79211d669f83ac9a059e6"
     },
     {
+      "id": "androsphinx-sphinx",
+      "kind": "monster",
+      "sourceHash": "1ac422f81b88b09d02d4962f1acc111f9f101e5ea504e63be2f35224f82abeca"
+    },
+    {
       "id": "animated-armor-animated-object-animated-object",
       "kind": "monster",
       "sourceHash": "132bb310cba20859b059d4c8af07d02155390924c59f4bc6206269e32eb62b38"
