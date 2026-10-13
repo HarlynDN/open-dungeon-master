@@ -15,6 +15,14 @@ assert.equal(speechSpeakerLabel({kind:'npc',id:'n',name:'Narrator'},'zh-CN'),'Na
 assert.equal(chatText('Authored diagnostic {raw}.','zh-CN'),'Authored diagnostic {raw}.');
 let html=r.render('MediaPlaceholder',{label:'自定图片标签',fallbackStartedAt:'2020-01-01T00:00:00Z',status:{state:'queued'}},'zh-CN',q(contentFile,[Date.parse('2020-01-01T00:01:00Z')]));assert(html.includes('正在等待生成队列')&&html.includes('1:00'));
 html=r.render('MediaPlaceholder',{label:'Authored label',fallbackStartedAt:'2020-01-01T00:00:00Z',status:{state:'failed',reason:'Authored diagnostic'}},'zh-CN');assert(html.includes('插图生成失败')&&html.includes('Authored diagnostic'));
+const serviceFailure={state:'failed',reason:'Could not reach ComfyUI at http://127.0.0.1:8188. Start ComfyUI and check the URL.'};
+const originalFailure=JSON.stringify(serviceFailure);
+for(const locale of ['en','zh-CN']){
+ const display=r.render('MediaPlaceholder',{label:'label',fallbackStartedAt:'2020-01-01T00:00:00Z',status:serviceFailure},locale);
+ assert(display.includes(locale==='en'?serviceFailure.reason:'暂时无法连接图像服务，请稍后重试。'));
+ if(locale==='zh-CN')assert(!display.includes('Start ComfyUI'));
+}
+assert.equal(JSON.stringify(serviceFailure),originalFailure);
 html=r.render('MediaPlaceholder',{label:'label',fallbackStartedAt:'2020-01-01T00:00:00Z',status:{state:'failed',reason:'Not found.'}},'zh-CN');assert(!html.includes('找不到该聊天'),'media errors must not acquire side-chat semantics');
 const id='aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',roll={id,detail:'Canonical detail'};
 html=r.render('DmContent',{content:`阿明说：“**原文**不应被改写。” [roll:${id}] 后续。`,rollsById:new Map([[id,roll]]),sheetsById:new Map(),cast:[]},'zh-CN');assert(html.includes('<strong')&&html.includes('原文')&&html.includes(`data-roll-id="${id}"`)&&html.includes('后续。'));

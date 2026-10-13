@@ -1,7 +1,7 @@
 "use client";
 
 import { useLocale } from "@/lib/i18n/LocaleProvider";
-import { controlText } from "@/lib/i18n/story-control-presentations";
+import { imageFailureText } from "@/lib/i18n/image-presentations";
 import { ImageOff, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { stripToolText } from "@/lib/dm/tool-text";
@@ -53,7 +53,7 @@ export function MediaPlaceholder({
         <ImageOff className="mt-0.5 size-3.5 shrink-0" />
         <span>
           {t("chatUi.media.failed")}
-          {status?.reason ? <span className="block text-stone-500">{controlText(status.reason, locale)}</span> : null}
+          {status?.reason ? <span className="block text-stone-500">{imageFailureText(status.reason, locale)}</span> : null}
         </span>
       </p>
     );

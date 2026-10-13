@@ -201,6 +201,24 @@ is the next concrete play-flow gap. Image generation and local TTS were not
 accepted; authenticated English switch, further play/log/material ownership,
 local voice and final full checks remain open.
 
+Authenticated language separation now has browser evidence: the test account
+switched its interface to English in account settings, revisited the active
+campaign, and saw English controls with unchanged Chinese narration and
+spotlight text. The account was restored to Chinese. Screenshot outside Git:
+`/tmp/odm-english-ui-chinese-story.png`. No new model or combat run was needed.
+
+The complete observed ComfyUI transport failure now projects to a Chinese
+player-readable service-unavailable notice. Original diagnostics and English
+are preserved, and unknown errors retain their text. The existing chat-display
+workflow checks actual bilingual MediaPlaceholder output and immutable status,
+alongside its chat/private prose/callback checks. Catalog/types/changed-file
+lint pass once. After refresh, the failed image status was lost and the pending
+image request became a continuing render timer; this separate media lifecycle
+recovery gap remains open rather than being claimed fixed by translation.
+The repaired Chinese failure text has focused component evidence; the live
+failed state was no longer available after refresh. Voice and final full gates
+remain open.
+
 Pure state, audio plumbing and glyph helpers can be audited within the session
 batch; their file count must not displace player-visible work.
 Shared Workshop types remain in the manifest's import closure; deep editors
