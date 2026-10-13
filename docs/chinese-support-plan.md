@@ -45,7 +45,7 @@ Before pausing, finish the native dynamic text audit and one bilingual text jour
 | Player system logs | Localized structured combat/audit display, party item/coin/XP logs, account facts and kickoff notices; English model/tool semantics stay separate | Other native player-log templates and final history/save/resume audit |
 | Resource delivery | UI/content/help scopes and independent retryable lazy help; anonymous bilingual switch/reload, authenticated character/campaign entry and viewer-English/story-Chinese separation observed | Complete authenticated journey and lazy/cache timing; hydrated/network totals and large route JS payload remain unverified |
 | Local Chinese TTS | Locale-driven voice prefixes/defaults, Chinese single narrator, Unicode sentence/hard limits, campaign-language voice discovery and previews, cache isolation and Chinese failure UI implemented; mock transport/queue and English compatibility checks pass | Isolated real CPU service configured; Chinese sample decode and actual DM audio delivery succeed; Arabic numbers/dice/mixed-name and English samples also decode; real preview outage/retry succeeds; Chinese voice quality rejected by user; all further Chinese voice work deferred by latest instruction, not a text-milestone gate |
-| Full native rulebook | Reader chrome localized; **408/933 complete Chinese pages** now render via a server-generated display projection, including all 127 cantrip/first-/second-level spell pages, all 239 magic-item pages thirty-three rules pages and all nine race pages, with complete headers and reused bodies; original English corpus retained; 127 spell and 239 magic-item bodies are available for further reuse | Remaining full-page rules/monster/high-level spell prose and tables; complete Chinese corpus coverage, authenticated browser search/navigation and English reading regression |
+| Full native rulebook | Reader chrome localized; **411/933 complete Chinese pages** now render via a server-generated display projection, including all 127 cantrip/first-/second-level spell pages, all 239 magic-item pages all thirty-six rules pages and all nine race pages, with complete headers and reused bodies; original English corpus retained; 127 spell and 239 magic-item bodies are available for further reuse | Remaining full-page rules/monster/high-level spell prose and tables; complete Chinese corpus coverage, authenticated browser search/navigation and English reading regression |
 | Final text flow | Recorded Chinese exploration/social/utility and combat/slot/correction acceptance on Codex | Complete Chinese text journey, rulebook reading/search and English regression; full tests/lint/build, then pause |
 
 The concrete UI scope and deferred areas are in
@@ -70,14 +70,14 @@ or real interaction has passed. Do not restart a static translation campaign.
 
 ## Next delivery unit and interruption checkpoint
 
-- Completed Adventuring Gear and Traps, including full gear rules, seven packs,
-  container/price/weight tables, detection/disarming/severity and every sample
-  trap. Focused bilingual/source/manifest checks, all 23 English rulebook checks,
-  TypeScript and changed-file lint passed. Healing-potion conversion errata is
-  retained below; inventory/rule-engine behavior was not changed.
-- Next unit: complete Monster Statistics, Gods of the Multiverse and The Planes
-  of Existence; then proceed through full class, spell and monster pages.
-  Update delivery data without modifying test logic.
+- Completed Monster Statistics, Gods of the Multiverse and The Planes of
+  Existence. All 36 rules pages and nine race pages now have complete Chinese
+  projections. All 67 deity rows retain original names, alignment codes and
+  domain membership/order. Focused bilingual/source/table/manifest checks,
+  24 English rulebook checks, TypeScript and changed-file lint passed.
+- Next unit: group full Barbarian and Fighter pages, then other classes, spells
+  and monsters through the existing source-bound catalog. Update delivery data
+  without modifying test logic.
 - Native dynamic UI/material/log ownership remains open. Complete its audit
   before the final bilingual journey; combine pure helpers with their consumers.
   Deep Workshop editors, native-shell-only UI, third-party expansion prose,
@@ -311,6 +311,13 @@ have actual evidence.
   cells, import ERRATA and an independent expected-value check now retain that
   correction. Canonical corpus identity was reviewed for this specific change;
   existing required-page source bindings and English goldens were preserved.
+- Monster Statistics conversion omitted CR 9-13 and 26-30 XP rows and joined
+  a fifth-level spell-slot example to a truncated spell-substitution sentence.
+  The [official 2014 monster rules](https://www.dndbeyond.com/sources/dnd/basic-rules-2014/monsters)
+  supplied the missing values and meaning. Both book languages and import ERRATA
+  restore them; the English substitution clause is a source-faithful paraphrase.
+  A fixed 34-row CR/XP assertion and slot/class/level checks guard the repair.
+  Runtime challenge/XP and spell mechanics were not changed.
 - Rulebook display remains server-generated with complete-source fingerprints;
   canonical records and workshop-copy inputs stay source-owned. Preserve native
   heading/sidebar anchors, Chinese cross-reference links, locale/page cache

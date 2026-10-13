@@ -208,6 +208,11 @@ const PARTS = [
 // Slips in the conversion, put back to the SRD's own words: page id, the
 // text as converted, the text as printed.
 const ERRATA = [
+  // Official 2014 monster rules: restore conversion omissions (spell prose paraphrased).
+  // https://www.dndbeyond.com/sources/dnd/basic-rules-2014/monsters
+  ["monster-statistics","| 8         | 3,900   |\n| 14        | 11,500  |","| 8         | 3,900   |\n| 9         | 5,000   |\n| 10        | 5,900   |\n| 11        | 7,200   |\n| 12        | 8,400   |\n| 13        | 10,000  |\n| 14        | 11,500  |"],
+  ["monster-statistics","| 25        | 75,000  |\n|           |         |","| 25        | 75,000  |\n| 26        | 90,000  |\n| 27        | 105,000 |\n| 28        | 120,000 |\n| 29        | 135,000 |\n| 30        | 155,000 |\n|           |         |"],
+  ["monster-statistics","by using one of its 5th-level greater or lesser threat than suggested by its challenge rating.","by using one of its 5th-level spell slots.\n\nKnown or prepared spells may be replaced by other spells of the same level from the same class list. These substitutions can change the threat indicated by the monster's challenge rating."],
   // Official 2014 Travel Pace table: normal 24 miles/day, slow 18.
   // https://www.dndbeyond.com/sources/dnd/basic-rules-2014/adventuring
   ["adventuring", "| Normal | 300 feet | 3 miles | 18 miles | -                                                |", "| Normal | 300 feet | 3 miles | 24 miles | -                                                |"],

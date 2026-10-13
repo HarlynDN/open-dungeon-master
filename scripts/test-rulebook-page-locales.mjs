@@ -100,6 +100,9 @@ for (const id of nativeRules) {
   const translatedTables = blocks.filter(block => block.kind === 'table');
   assert.equal(translatedTables.length, sourceTables.length);
   for (let i = 0; i < sourceTables.length; i++) {
+    assert.equal(translatedTables[i].head.length, sourceTables[i].head.length, id + ': table columns');
+    assert.equal(translatedTables[i].rows.length, sourceTables[i].rows.length, id + ': complete table rows');
+    assert.deepEqual(translatedTables[i].rows.map(row => row.length), sourceTables[i].rows.map(row => row.length), id + ': complete table cells');
     const numbers = table => table.rows.flatMap(row => row.flatMap(cell => cell.match(/(?<![A-Za-z0-9])[+−×÷-]?\d+(?:d\d+|[\d,/]*(?:[½¼¾])?)/gi) ?? []));
     assert.deepEqual(numbers(translatedTables[i]), numbers(sourceTables[i]), id + ': table values');
   }

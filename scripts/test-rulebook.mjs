@@ -244,6 +244,16 @@ try {
     assert.deepEqual(table.rows.find(row => row[0] === "Potion of healing"), ["Potion of healing", "50 gp", "1/2 lb."]);
     assert.ok(!table.rows.some(row => row[0] === "Potion of healing 5"));
   });
+  await test("monster experience table includes every official 2014 challenge rating", () => {
+    const table = parseBook(rulebookPage("monster-statistics").page.md).find(block => block.kind === "table" && block.head[1] === "XP");
+    const expected = ["0 or 10", "25", "50", "100", "200", "450", "700", "1,100", "1,800", "2,300", "2,900", "3,900", "5,000", "5,900", "7,200", "8,400", "10,000", "11,500", "13,000", "15,000", "18,000", "20,000", "22,000", "25,000", "33,000", "41,000", "50,000", "62,000", "75,000", "90,000", "105,000", "120,000", "135,000", "155,000"];
+    const challenges = ["0", "1/8", "1/4", "1/2", ...Array.from({ length: 30 }, (_, i) => String(i + 1))];
+    assert.deepEqual(table.rows.filter(row => row[0]), challenges.map((cr, i) => [cr, expected[i]]));
+    const source = rulebookPage("monster-statistics").page.md;
+    assert.ok(source.includes("using one of its 5th-level spell slots."));
+    assert.ok(source.includes("same level from the same class list"));
+    assert.ok(!source.includes("5th-level greater or lesser threat"));
+  });
   await test("search puts the rule itself first", () => {
     assert.deepEqual([top("grapple").page, top("grapple").at], ["combat", "grappling"]);
     assert.deepEqual([top("opportunity attack").page, top("opportunity attack").at], ["combat", "opportunity-attacks"]);

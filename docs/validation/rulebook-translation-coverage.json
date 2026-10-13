@@ -11,7 +11,7 @@
       "item": 239,
       "monster": 318
     },
-    "sha256": "6bfe77ada2cf84a82bf18217b2832e68fdc1271f3e0e79951b48044ae061b3bd"
+    "sha256": "474ba5783fbf54c7afe337397e01673b5ea9017c11ed21aaec6e112dc755bda0"
   },
   "requiredPages": [
     {
@@ -2040,6 +2040,11 @@
       "sourceHash": "38c2f0226077bfc1d4d17ac791486825497294551e95386158105d8982b25eda"
     },
     {
+      "id": "monster-statistics",
+      "kind": "rules",
+      "sourceHash": "fdc90bda289cadb66ac8c96da75187ee435530ad6f8ee7066681952323785cd1"
+    },
+    {
       "id": "nonplayer-characters",
       "kind": "rules",
       "sourceHash": "4ec6b9a5ba3b0b2ac52fa5770480c59bfcf382d3bd9fba3b89299153deaba759"
@@ -2048,6 +2053,16 @@
       "id": "conditions",
       "kind": "rules",
       "sourceHash": "278eb06bd1a6c82fae5d27ed2ddb91b5c95f1115e917c39c1961c221a8bfbe4c"
+    },
+    {
+      "id": "gods-of-the-multiverse",
+      "kind": "rules",
+      "sourceHash": "67f7bb21a1cb32c8fb514459003b31f6bbc10c554775ccaba20c02e062607e42"
+    },
+    {
+      "id": "the-planes-of-existence",
+      "kind": "rules",
+      "sourceHash": "b7dedec101e075cc3c9f6f6df043d513500dfd3ef812b6ccb65f269f95a6ec05"
     },
     {
       "id": "legal-information",
