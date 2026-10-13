@@ -31,6 +31,15 @@ The latest text-scope instruction governs delivery and acceptance. Finish Chines
 
 Text delivery includes native interface/system/help text and repository-owned materials, plus all 933 bundled rulebook pages (319 spells and 239 magic items included), chapter/part navigation, tables and Chinese search/display. Existing material translations should be reused wherever the full source matches; the remaining rulebook chapters and monster text need original source-bound translations. Keep English available, preserve canonical mechanics/IDs and authored or third-party variants, and retain source/license attribution. Player and DM rulebook views must both use translated presentation; translation does not change model-facing machine protocols. User-authored campaign prose and imported third-party text retain their source.
 
+Scope reaffirmed 2026-10-14: the user requested text completion only and to
+leave voice work aside. Do not spend this milestone on speech services, preview,
+playback or acoustic acceptance. Voice-only pending owners and issues must be
+explicitly recorded as deferred in the final scope audit, not silently counted
+as text blockers or marked passed. The preview button's double-formatting of
+localized API errors was observed during source review but remains unfixed and
+deferred; no runtime voice change was made. Continue native game/rulebook text,
+English switching/regression and the bilingual text journey.
+
 Before pausing, finish the native dynamic text audit and one bilingual text journey, then run the required full tests/lint/build once at the final boundary. The former voice and third-party acceptance gaps must be recorded as deferred rather than falsely marked passed.
 
 ## Terminology alignment — approved 2026-10-13
@@ -158,7 +167,15 @@ this section records current delivery state and acceptance gaps only.
   SessionTabs localization and campaign locale reaches the relevant panels.
   These are component/source checks, not deployed combat acceptance.
   Logs: /tmp/odm-hand-owner-locales.log and /tmp/odm-hand-owner-actors.log.
-- UI source coverage: 425/440 owners, zero pending literal sites, 19323 keys.
+- Gear/proposal/moments owner review: existing source-bound item and complex
+  condition catalogs close the previously recorded naming gaps. Resource-only
+  short-rest notifications now translate the native fallback while preserving
+  authored reasons, original audit data and English output. Focused sheet,
+  proposal, level/moment, condition, gear and magic regressions verify this unit;
+  final full-suite/build and deployed acceptance remain separate gates.
+- UI source coverage: 428/438 in-scope owners, two explicitly deferred voice
+  owners, zero pending literal sites, 19323 keys. Ten text owners still
+  require review; the final coverage gate must continue to fail until closed.
   Completed pure-helper/consumer reviews are recorded in
   docs/validation/ui-localization.json. Whole-owner dynamic output and browser
   acceptance remain distinct; stale theme counts were corrected to 733/733.

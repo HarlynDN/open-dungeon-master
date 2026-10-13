@@ -56,6 +56,19 @@ for(const klass of ALL_CLASSES){const grant=multiclassGrantsFor(klass.id),before
 const school=thirdCasterSchoolProblem({classId:'fighter',subclass:'Eldritch Knight',level:3,spells:[{name:'A',school:'illusion'},{name:'B',school:'illusion'}]});assert(school);assert(levelUpNotice(school,'zh-CN').includes('塑能'));assert.equal(levelUpNotice('Authored restriction.','zh-CN'),'Authored restriction.');assert.equal(levelUpNotice('The level-up was refused.','zh-CN'),'未能完成升级。');
 const longZh=renderer.render('RestMoment',cases.find(row=>row[0]==='moment/rest/long')[2],'zh-CN',cases.find(row=>row[0]==='moment/rest/long')[3]);assert(longZh.includes('长休结束'));assert(!longZh.includes('完全恢复'));
 const originalFetch=globalThis.fetch;let request;
+// Resource-only short rests have no HP delta; preserve the engine's English
+// fallback and authored prose while localizing the fresh Chinese notification.
+for(const reason of ['short rest','Authored camping reason.','']) {
+ const entry={...rest,delta:{resources:{ki:2}},reason},before=structuredClone(entry);
+ const input={auditLog:[entry],sheets:[sheet]},options={queues:{[files[1]]:['']}};
+ const en=renderer.render('RestMoment',input,'en',options);
+ const zh=renderer.render('RestMoment',input,'zh-CN',options);
+ assert(en.includes(reason||'rested'));
+ if(reason==='short rest'){assert(!zh.includes('short rest'));assert(zh.includes('短休'));}
+ else assert(zh.includes(reason||'休息结束'));
+ assert.deepEqual(entry,before);
+ assert.equal(renderer.render('RestMoment',input,'zh-CN'),'','existing audit must not replay');
+}
 try{
  globalThis.fetch=async(path,init)=>{request={path,method:init.method,body:JSON.parse(init.body)};return {ok:true,json:async()=>({hpGained:8,rolled:{hp:6}})};};
  const p=props({}, {hpMethod:'rolled'});renderer.render('LevelUpDialog',p,'zh-CN');renderer.elements().find(e=>e.type==='button'&&e.props.children==='确认升级').props.onClick();await new Promise(resolve=>setImmediate(resolve));assert.deepEqual(request,{path:'/api/campaigns/c1/sheet',method:'PATCH',body:{level:2,levelUpClass:'fighter',hpChoice:'roll'}});assert(renderer.updates().some(row=>row.at===2&&row.value.hpGained===8));

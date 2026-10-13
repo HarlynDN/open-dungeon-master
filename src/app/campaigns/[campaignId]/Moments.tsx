@@ -80,6 +80,11 @@ function restLine(entry: AuditEntry, sheet: CharacterSheet | undefined, locale: 
   if (hp !== null && sheet) {
     return t("sessionUi.moment.hp", { hp, max: effectiveMaxHp(sheet) });
   }
+  // Resource-only short rests use this engine default when no prose was
+  // supplied. Project the label without rewriting the audit or authored prose.
+  if (locale !== "en" && entry.kind === "rest_short" && entry.reason === "short rest") {
+    return t("sessionUi.moment.short");
+  }
   return entry.reason || t("sessionUi.moment.rested");
 }
 

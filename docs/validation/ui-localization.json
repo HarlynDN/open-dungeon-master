@@ -470,8 +470,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/ItemProposalBar.tsx",
-      "state": "pending",
-      "review": "Owned approval/withdrawal/waiting controls and eight native summary kinds localized using source-bound public metadata. Trade summaries/refusals bind to native offers; six frozen English renders and canonical callbacks reviewed. Authored reasons/names and unknown, stale or truncated source frames retain original text. Full magic-item and complex-condition names remain pending. Current table-flow batch: Reviewed approve/decline/withdraw and passive proposal display. Typed native offer/summary/error adapters already project complete owned frames. Character names and authored reason stay literal; requests carry action/proposal IDs unchanged. Remaining known material/native-output gaps above still prevent full-owner completion. SRD magic naming batch: native grant/remove/purchase/trade summaries now display the 239 standard magic-item names and 52 exact variants via the shared adapter; grouped gear/loot/proposal check preserves original tool summaries and canonical callback fields. Additional native/pack names and remaining complex-condition material remain open."
+      "state": "covered",
+      "review": "Full owner review: all approval/trade roles, waiting/withdraw controls and structured native summaries/errors project at display time. Shared equipment catalog and conditionLabel cover native magic items and complex conditions. Authored reasons, stale/unknown source frames and original tool results remain unchanged. test-proposal-locales verifies 16 offer branches, six frozen English renders and canonical callbacks; condition and magic regressions verify shared catalogs."
     },
     {
       "path": "src/app/campaigns/[campaignId]/LabelSheet.tsx",
@@ -630,8 +630,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/Moments.tsx",
-      "state": "pending",
-      "review": "Owned upgrade/rest/loot/travel text reviewed with original timers, queueing, audit inputs, icon keys and proper/authored names unchanged. Chinese long-rest label confirms completion rather than falsely asserting complete recovery. Registered equipment display names are localized; full magic-item names remain pending. Existing in-fiction audit reasons stay original. Current table-flow batch: Reviewed level/rest/loot/travel composition: existing translated captions and typed numerical audit facts; known equipment display labels. Character/pet/place names, generated/authored reason text and audit history stay literal. Timers/gain calculations are unchanged. Remaining known material/native-output gaps above still prevent full-owner completion. SRD magic naming batch: the real loot component renders standard magic-item names through the new shared alias catalog. Additional native/pack item names remain open; authored reasons/place names and existing timing/gain data stay literal."
+      "state": "covered",
+      "review": "Full owner review: level/rest/loot/travel text, complete native equipment names and authored names/prose reviewed. Resource-only short-rest engine fallback now displays Chinese without mutating audit input; English fallback and no-replay baseline verified. test-level-ui-locales preserves 26 English states and adds resource-only/authored/empty reason checks; magic and gear regressions cover item naming. Timers, gains, queues and canonical icon IDs unchanged. Component/source coverage is not deployed acceptance."
     },
     {
       "path": "src/app/campaigns/[campaignId]/MonsterFields.tsx",
@@ -1054,7 +1054,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/useNarrationAudio.ts",
-      "state": "pending"
+      "state": "deferred",
+      "review": "Explicit user voice deferral. Hook carries playback state and message IDs; real playback is outside text milestone. No runtime/quality acceptance claimed."
     },
     {
       "path": "src/app/campaigns/[campaignId]/useOverworldView.ts",
@@ -1951,8 +1952,8 @@
     },
     {
       "path": "src/components/VoicePreviewButton.tsx",
-      "state": "pending",
-      "review": "Campaign speech locale is separate from viewer locale; the request URL, sample and cache now carry locale. Stops on voice/locale replacement, guards stale callbacks and scopes failure data to the source URL; stable preview codes and native speech failure frames localize. API/queue mock checks passed, but real browser/native playback and interruption/retry acceptance remain pending."
+      "state": "deferred",
+      "review": "Explicit user voice deferral. Existing implementation retained. VoicePreviewButton double-formatting of localized API errors remains a known uncorrected voice issue. No audio runtime/quality acceptance claimed."
     },
     {
       "path": "src/components/WorkshopHelpDialog.tsx",
@@ -2006,8 +2007,8 @@
     },
     {
       "path": "src/components/sheet/SheetGearRow.tsx",
-      "state": "pending",
-      "review": "Owned wear/attune/charge/timing/death/combat/curse UI and known native refusals localized with original callbacks retained. Magic item catalog names and source material beyond existing aliases remain pending. SRD magic naming batch: standard magic-item names and exact resistance/giant/dragon/+N variants use the shared display alias. Grouped real gear renderer verifies attunement callback and unchanged inventory/mechanics. Additional native/pack item names remain open."
+      "state": "covered",
+      "review": "Full owner review: wear, attunement, charges, curses, death/combat locks and clock costs use locale projections; native equipment and magic-item names use the shared catalog. Canonical callbacks, IDs and inventory remain unchanged. Verified by test-chinese-sheet-dialog, test-chinese-gear-ui and test-magic-localization; authored names remain literal."
     },
     {
       "path": "src/components/sheet/SheetParts.tsx",
@@ -2233,6 +2234,20 @@
       "path": "src/app/reference/layout.tsx",
       "state": "covered",
       "review": "Server route boundary supplies existing selected/English content resources to reference browsing; viewer uiLocale unchanged, no whole catalogs in root UI."
+    }
+  ],
+  "deferredOwners": [
+    {
+      "path": "src/components/VoicePreviewButton.tsx",
+      "scope": "voice",
+      "authorization": "2026-10-14 user: 把文字部分完成就行，语音先不管",
+      "reason": "Voice preview/playback work deferred from text milestone; not accepted or marked covered."
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/useNarrationAudio.ts",
+      "scope": "voice",
+      "authorization": "2026-10-14 user: 把文字部分完成就行，语音先不管",
+      "reason": "Voice preview/playback work deferred from text milestone; not accepted or marked covered."
     }
   ]
 }

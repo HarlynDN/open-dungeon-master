@@ -383,6 +383,14 @@ for (const [locale, catalog] of Object.entries(MESSAGE_CATALOGS)) {
     else if (placeholders(catalog[key]) !== placeholders(MESSAGE_CATALOGS.en[key])) problems.push(`${locale}: placeholder mismatch for ${key}`);
   }
 }
+// Exact owner exceptions are user-approved scope decisions, never inferred
+// from a directory or from a lack of literal text. Keep them visible in totals.
+const deferredOwners = new Map((manifest.deferredOwners ?? []).map(entry => [entry.path, entry]));
+for (const [file, decision] of deferredOwners) {
+  if (!decision.scope || !decision.authorization?.trim() || !decision.reason?.trim()) problems.push(`${file}: incomplete deferral decision.`);
+  if (!manifest.files.some(entry => entry.path === file && entry.state === "deferred")) problems.push(`${file}: declared deferral has no matching deferred owner.`);
+}
+let deferredCount = 0;
 let literalCount = 0;
 const inventory = [];
 for (const entry of manifest.files) {
@@ -392,6 +400,8 @@ for (const entry of manifest.files) {
   if (args.has("--inventory")) inventory.push({ ...entry, literals });
   if (entry.state === "covered") {
     problems.push(...literals.map(item => `${item.file}:${item.line}:${item.column}: ${item.kind}: ${item.text}`));
+  } else if (entry.state === "deferred" && deferredOwners.has(entry.path)) {
+    deferredCount++;
   } else if (args.has("--final")) problems.push(`${entry.path}: main-flow UI still pending.`);
   for (const key of translationKeys(entry.path, source)) if (!expectedKeys.has(key)) problems.push(`${entry.path}: unknown translation key ${key}`);
 }
@@ -399,5 +409,5 @@ if (args.has("--inventory")) {
   const output = path.join(root, "docs/validation/ui-localization-inventory.json");
   fs.writeFileSync(output, `${JSON.stringify({ note: "Syntax inventory only; dynamic server errors, content and accessibility need manual review before covered status.", files: inventory }, null, 2)}\n`);
 }
-console.log(`UI localization: ${manifest.files.filter(entry => entry.state === "covered").length}/${manifest.files.length} covered, ${literalCount} pending literal sites, ${expectedKeys.size} keys.`);
+console.log(`UI localization: ${manifest.files.filter(entry => entry.state === "covered").length}/${manifest.files.length - deferredCount} in-scope covered, ${deferredCount} explicitly deferred, ${literalCount} pending literal sites, ${expectedKeys.size} keys.`);
 if (problems.length) { console.error(problems.join("\n")); process.exitCode = 1; }
