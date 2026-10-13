@@ -3645,6 +3645,11 @@
       "sourceHash": "4d36403419f8d0ea321a5362b16c12d545b34bf93bc604ec796e483d2a650a23"
     },
     {
+      "id": "sea-hag",
+      "kind": "monster",
+      "sourceHash": "c8c64c0e59b9e0c095ed919ac107ef7068d2f13946a64106d852cfde2fad2671"
+    },
+    {
       "id": "shadow",
       "kind": "monster",
       "sourceHash": "46ec65f62ee71381d144dcd63c8241d99852784a06badff28226b11608aab8ae"
