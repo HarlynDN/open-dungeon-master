@@ -3550,6 +3550,11 @@
       "sourceHash": "69ed0ab55c9148a28731186c7daccdd72886ec153089f7b04566ec77b8a4f59a"
     },
     {
+      "id": "marilith-demon",
+      "kind": "monster",
+      "sourceHash": "72adcc72b2a74b9766c75241d42d327c83b604a615a8b02b519b7cb420e7b3b4"
+    },
+    {
       "id": "medusa",
       "kind": "monster",
       "sourceHash": "fcadd266cc374f1fe2c72c29522593fb1fa5c637683daa7e27c855f22c2ae533"
