@@ -45,7 +45,7 @@ Before pausing, finish the native dynamic text audit and one bilingual text jour
 | Player system logs | Localized structured combat/audit display, party item/coin/XP logs, account facts and kickoff notices; English model/tool semantics stay separate | Other native player-log templates and final history/save/resume audit |
 | Resource delivery | UI/content/help scopes and independent retryable lazy help; anonymous bilingual switch/reload, authenticated character/campaign entry and viewer-English/story-Chinese separation observed | Complete authenticated journey and lazy/cache timing; hydrated/network totals and large route JS payload remain unverified |
 | Local Chinese TTS | Locale-driven voice prefixes/defaults, Chinese single narrator, Unicode sentence/hard limits, campaign-language voice discovery and previews, cache isolation and Chinese failure UI implemented; mock transport/queue and English compatibility checks pass | Isolated real CPU service configured; Chinese sample decode and actual DM audio delivery succeed; Arabic numbers/dice/mixed-name and English samples also decode; real preview outage/retry succeeds; Chinese voice quality rejected by user; all further Chinese voice work deferred by latest instruction, not a text-milestone gate |
-| Full native rulebook | Reader chrome localized; **405/933 complete Chinese pages** now render via a server-generated display projection, including all 127 cantrip/first-/second-level spell pages, all 239 magic-item pages thirty rules pages and all nine race pages, with complete headers and reused bodies; original English corpus retained; 127 spell and 239 magic-item bodies are available for further reuse | Remaining full-page rules/monster/high-level spell prose and tables; complete Chinese corpus coverage, authenticated browser search/navigation and English reading regression |
+| Full native rulebook | Reader chrome localized; **406/933 complete Chinese pages** now render via a server-generated display projection, including all 127 cantrip/first-/second-level spell pages, all 239 magic-item pages thirty-one rules pages and all nine race pages, with complete headers and reused bodies; original English corpus retained; 127 spell and 239 magic-item bodies are available for further reuse | Remaining full-page rules/monster/high-level spell prose and tables; complete Chinese corpus coverage, authenticated browser search/navigation and English reading regression |
 | Final text flow | Recorded Chinese exploration/social/utility and combat/slot/correction acceptance on Codex | Complete Chinese text journey, rulebook reading/search and English regression; full tests/lint/build, then pause |
 
 The concrete UI scope and deferred areas are in
@@ -70,13 +70,13 @@ or real interaction has passed. Do not restart a static translation campaign.
 
 ## Next delivery unit and interruption checkpoint
 
-- Completed full Spell Lists and all nine SRD race pages in one catalog batch.
-  The spell lists reuse 319 reviewed names across all 778 source entries with
-  unchanged class/level membership and order. Full race traits, subraces and
-  dragonborn table retain mechanics and existing character terminology.
-  Focused bilingual/source/manifest checks passed; no runtime code changed.
-- Next unit: complete Combat as an independent long chapter, then group remaining
-  equipment/DM/world rules and proceed through classes, spells and monsters.
+- Completed the full Combat chapter with all native headings/sidebars, creature
+  size table and Conditions links. Action/reaction timing, attack/damage,
+  grappling/shoving, cover, death/stability, temporary HP, mounted and underwater
+  rules are source-reviewed. Focused bilingual/source/manifest checks passed;
+  English corpus and runtime mechanics were not changed.
+- Next unit: complete Adventuring Gear and Traps via the existing page catalog,
+  then the remaining monster/world rules, classes, spells and monsters.
   Update delivery data without modifying test logic.
 - Native dynamic UI/material/log ownership remains open. Complete its audit
   before the final bilingual journey; combine pure helpers with their consumers.

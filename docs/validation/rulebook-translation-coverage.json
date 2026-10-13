@@ -150,6 +150,11 @@
       "sourceHash": "c99b4ad712d625205a478f91940bc7dc9a88af8ae36a62125990795a6e28d35b"
     },
     {
+      "id": "combat",
+      "kind": "rules",
+      "sourceHash": "f09fc96ff9981933ef541956cadebf98e9cc7a30b5b24c6e74b98b52d53ef40a"
+    },
+    {
       "id": "spellcasting",
       "kind": "rules",
       "sourceHash": "d0d3139cbff271c3c0e3d35abb934ebb92a8467ae5b0864e786edc10465481a9"
