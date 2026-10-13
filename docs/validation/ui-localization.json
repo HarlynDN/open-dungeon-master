@@ -1023,7 +1023,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/useChatChime.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Reviewed complete hook and SessionView/SideChatPanel consumers: only unread counts, boolean preferences and oscillator timing/frequency; no prose emitted. SideChatPanel renders mute accessibility/title through chatUi.chime keys. Audio playback runtime acceptance remains separate."
     },
     {
       "path": "src/app/campaigns/[campaignId]/useHandChoices.ts",
@@ -1032,7 +1033,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/useLingeringEncounter.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Reviewed complete hook and Composer consumers: preserves encounter object for 420ms and emits only encounter/leaving state. Composer passes those to independently audited Hand/MonsterHand owners; no display prose or canonical name mutation occurs here."
     },
     {
       "path": "src/app/campaigns/[campaignId]/useMapPaint.ts",
@@ -1689,7 +1691,8 @@
     },
     {
       "path": "src/app/workshop/lore/types.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Reviewed draft conversion and actual LoreEditorForm consumers: authored title/body/tags preserved, category/style/visibility remain canonical. CATEGORY_LABELS has no runtime consumer; actual picker uses loreCategoryLabel(category, locale). Type/draft helper has no remaining owned display path."
     },
     {
       "path": "src/app/workshop/maps/ForgePreview.tsx",
@@ -1733,7 +1736,8 @@
     },
     {
       "path": "src/app/workshop/maps/types.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Reviewed types/constants and MapGallery consumer: authored map name/notes remain literal, theme is a canonical enum. THEME_LABELS has no runtime consumer; MapGallery uses mapInspectUi.theme translation and localized mapSkinName. No remaining owned display path."
     },
     {
       "path": "src/app/workshop/page.tsx",

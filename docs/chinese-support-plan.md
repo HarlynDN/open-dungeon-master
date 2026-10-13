@@ -129,6 +129,11 @@ real interaction has passed. Do not restart a static translation campaign.
 - Sample prose milestone: all 14 checked-in monsters have zero fully English
   blocks under the audit heuristic. This does not cover the deployed catalog or
   mixed-language rendering; keep those and browser acceptance open.
+- Closed four helper owners after full-source and consumer review: chat chime,
+  lingering encounter, lore types/drafts and map types. UI file coverage is
+  405/440; this closes no browser/runtime gate. Default data/content/open5e.sqlite
+  is absent and project .env/.env.local provide no alternative CONTENT_DB_PATH;
+  deployed full-catalog coverage remains unverified, not inferred from fixtures.
 - Next: complete those help paths and inspect real content data, then remaining
   dynamic UI/material/log owners. Full-suite/build and real bilingual journey
   remain unproven; no owner was newly marked covered.
