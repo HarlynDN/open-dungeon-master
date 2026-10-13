@@ -64,7 +64,7 @@ for (const page of rulebookPages().filter(page => page.kind === 'spell' && /(?:c
 const { bookAnchorIds, parseBook, preserveBookAnchors } = await import('../src/lib/rulebook/markdown.ts');
 const { default: nativeCatalog } = await import('../src/lib/rulebook/locales/zh-CN.json', { with: { type: 'json' } });
 const nativeRules = Object.keys(nativeCatalog);
-for (const id of ['conditions', 'inspiration', 'coinage', 'selling-treasure', 'racial-traits', 'beyond-1st-level', 'alignment', 'languages', 'trade-goods', 'feats']) assert.ok(nativeRules.includes(id), id);
+for (const id of ['conditions', 'inspiration', 'coinage', 'selling-treasure', 'racial-traits', 'beyond-1st-level', 'alignment', 'languages', 'trade-goods', 'feats', 'armor', 'tools', 'mounts-and-vehicles']) assert.ok(nativeRules.includes(id), id);
 for (const id of nativeRules) {
   const data = rulebookPage(id);
   const before = JSON.stringify(data);
@@ -80,7 +80,7 @@ for (const id of nativeRules) {
   const translatedTables = blocks.filter(block => block.kind === 'table');
   assert.equal(translatedTables.length, sourceTables.length);
   for (let i = 0; i < sourceTables.length; i++) {
-    const numbers = table => table.rows.flatMap(row => row.flatMap(cell => cell.match(/\d[\d,/]*\b/g) ?? []));
+    const numbers = table => table.rows.flatMap(row => row.flatMap(cell => cell.match(/[+−×÷-]?\d[\d,/]*(?:[½¼¾])?/g) ?? []));
     assert.deepEqual(numbers(translatedTables[i]), numbers(sourceTables[i]), id + ': table values');
   }
   assert.equal(rulebookPageDisplay(data.page, 'en').md, data.page.md);
