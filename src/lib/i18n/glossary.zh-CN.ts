@@ -401,6 +401,8 @@ export const ZH_CN_GLOSSARY = [
   {"id":"monster.lemure_devil","source":"Lemure","preferred":"劣魔","scope":"monster"},
   {"id":"monster.imp_devil","source":"Imp","preferred":"小魔鬼","scope":"monster"},
   {"id":"monster.quasit_demon","source":"Quasit","preferred":"小恶魔","scope":"monster"},
+  {"id":"monster.hezrou_demon","source":"Hezrou","preferred":"狂蟾魔","scope":"monster"},
+  {"id":"monster.vrock_demon","source":"Vrock","preferred":"鹫魔","scope":"monster"},
   {"id":"monster.goblin","source":"Goblin","preferred":"哥布林","scope":"monster","aliases":["地精"]},
   {"id":"monster.bugbear","source":"Bugbear","preferred":"熊地精","scope":"monster"},
   {"id":"monster.hobgoblin","source":"Hobgoblin","preferred":"大地精","scope":"monster"},

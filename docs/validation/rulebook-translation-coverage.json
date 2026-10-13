@@ -3360,6 +3360,11 @@
       "sourceHash": "d0cfd4077b3d0b183ed3fd5c75523436ad87d06880da82131a40f0bb75ac36f1"
     },
     {
+      "id": "hezrou-demon",
+      "kind": "monster",
+      "sourceHash": "5e5bcead07dc4761e02ce94740207dbafc6a53a5da53ef97fa584f3058cd5a26"
+    },
+    {
       "id": "hill-giant-giant",
       "kind": "monster",
       "sourceHash": "65b45cf16b8849797a120caed75bba32c95ebd5ea89cf2ae1ab5f9f8e3d757a2"
@@ -3598,6 +3603,11 @@
       "id": "violet-fungus-fungi",
       "kind": "monster",
       "sourceHash": "2c5bb83323d65a1804be2b2398b2dc35e6a0d1c0172de7b6144af9bd2c911170"
+    },
+    {
+      "id": "vrock-demon",
+      "kind": "monster",
+      "sourceHash": "8cb6a268ec4143d04330f59a127da17631381942ed1641048c0c72631f45d3ab"
     },
     {
       "id": "warhorse-skeleton",
