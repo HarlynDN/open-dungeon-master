@@ -224,19 +224,28 @@ this section records current delivery state and acceptance gaps only.
   authored engine 36, final engine 27, rolls 8, special 13, saves 10 and
   initiative/social 16 pass. Prior formatter fingerprint drift was reviewed
   against 388eb5fd/01be85f2 with old hashes retained. Logs: /tmp/odm-native-*.log.
-  RollCard remains pending until remaining producer review is complete.
+  RollCard producer review now closed: remaining literal-name branches are
+  authored disease/poison or fallback paths; native wrappers carry metadata.
 - Campaign stream review closed: raw history, structured roll/proposal metadata,
   audit reasons and diagnostics survive snapshot/events/reconnect; campaign
   locale updates do not rewrite history. Both page consumers translate known
   errors only at render time. Eleven reducer and six watchdog checks pass;
   /tmp/odm-stream-locale-review.log records the reducer result. Actual deployed
   SSE/play acceptance remains open.
-- UI source coverage: 436/438 in-scope owners, two explicitly deferred voice
-  owners, zero pending literal sites, 19325 keys. Two text owners still
-  require review; the final coverage gate must continue to fail until closed.
+- Character sheet owner review closed using the completed material, child UI
+  and PDF follow-ups. Removed stale earlier owner blockers from the inventory;
+  this does not claim browser download or deployed gameplay acceptance.
+- UI source coverage: 438/438 in-scope owners, two explicitly deferred voice
+  owners, zero pending literal sites, 19325 keys. All text owners have code-level review; actual browser/deployment acceptance
+  and the final full-suite/lint/build remain separate release gates.
   Completed pure-helper/consumer reviews are recorded in
   docs/validation/ui-localization.json. Whole-owner dynamic output and browser
   acceptance remain distinct; stale theme counts were corrected to 733/733.
+- Current final checks launched after code-owner closure: full tests session
+  20324 (/tmp/odm-text-final-tests.log), lint session 96939
+  (/tmp/odm-text-final-lint.log). Both confirmed live in this turn; results not
+  yet claimed. Final coverage passes 438/438 (log
+  /tmp/odm-text-final-coverage.log). Resume existing handles before any rerun.
 - Validation: full suite completed successfully: 585/585 files, 686.84 seconds
   (/tmp/odm-full-tests-navigation.log). This supersedes the earlier 570/585 run;
   all fifteen original failures have passing targeted follow-ups as well.
@@ -284,7 +293,7 @@ this section records current delivery state and acceptance gaps only.
   state is reviewed end to end: canonical selections and typed diagnostics are
   formatted by existing presentation consumers. Persistent
   logs, playback and real combat remain independent gates.
-  No full-suite process remains live.
+  The older run is terminal; see the current final-check entry above for active processes.
 - Class-help follow-up: source inspection found class options did not request
   localized full documents. The class request now carries viewer locale, retains
   server display metadata through packClassOptions, and classHelpText accepts
@@ -303,8 +312,8 @@ this section records current delivery state and acceptance gaps only.
   display-only changes.
   This does not certify differently formatted deployed class-pack documents.
   Full suite began before this follow-up; affected checks must be reconciled.
-- Next: complete remaining dynamic
-  UI/material/log owners and real content-data review, then run one complete
+- Next: finish current final full-suite/lint and production build, review real
+  content data, then run one complete
   Chinese/English create/play/combat/rest/save/resume/book-search journey. Real
   model/runtime acceptance remains unproven; deferred voice/third-party scope
   is unchanged.
