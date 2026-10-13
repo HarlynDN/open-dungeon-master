@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { isValidExpression } from "@/lib/dice";
+import { isValidExpression } from "@/lib/dice-core";
 import type { ArmorRiders, ChargeRule, GearDice, WeaponRiders } from "@/lib/srd/magic-gear";
 import type { ItemSpell } from "@/lib/srd/item-spells";
 import type { AttunementRule } from "@/lib/srd/magic-items";

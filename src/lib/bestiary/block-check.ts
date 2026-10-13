@@ -1,5 +1,5 @@
 import { ROUND_CEILING } from "@/lib/schemas/condition-meta";
-import { isValidExpression } from "@/lib/dice";
+import { isValidExpression } from "@/lib/dice-core";
 import type { OnHitRider, RoutineStep, TypedDice } from "@/lib/bestiary/attack-text";
 import type { EnemyAttack, SaveAbility } from "@/lib/bestiary/statblock";
 import type {

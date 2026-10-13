@@ -1,4 +1,4 @@
-import { expressionDice, rollExpressionWithDice, type Advantage } from "@/lib/dice";
+import { expressionDice, rollExpressionWithDice, type Advantage } from "@/lib/dice-core";
 import { critDamageExpression } from "@/lib/dm/encounter-logic";
 
 // Consequence preview: what a plan is actually likely to do, before anyone

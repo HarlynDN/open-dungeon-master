@@ -1,4 +1,4 @@
-import { isValidExpression } from "@/lib/dice";
+import { isValidExpression } from "@/lib/dice-core";
 import { averageOf, diceTermsOf, readAttackText, type AttackText } from "@/lib/bestiary/attack-text";
 import type { EnemyAttack } from "@/lib/bestiary/statblock";
 

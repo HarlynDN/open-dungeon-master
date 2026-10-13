@@ -1,4 +1,4 @@
-import { isValidExpression } from "@/lib/dice";
+import { isValidExpression } from "@/lib/dice-core";
 import { normalizeSentience, type Sentience } from "@/lib/homebrew/sentience";
 import type { SrdArmor } from "@/lib/srd/armor";
 import type { SrdWeapon } from "@/lib/srd/weapons";

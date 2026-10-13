@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { isValidExpression } from "@/lib/dice";
+import { isValidExpression } from "@/lib/dice-core";
 import { DISEASES } from "@/lib/srd/afflictions";
 import { ROUND_CEILING } from "@/lib/schemas/condition-meta";
 import type { Raw } from "@/lib/homebrew/coerce";

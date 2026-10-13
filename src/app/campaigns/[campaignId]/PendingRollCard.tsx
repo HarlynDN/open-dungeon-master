@@ -5,7 +5,7 @@ import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "reac
 import type { CampaignMember } from "@/lib/campaign-types";
 import { cn } from "@/lib/cn";
 import { OptionalStepper } from "@/app/workshop/kit";
-import { expressionDice } from "@/lib/dice";
+import { expressionDice } from "@/lib/dice-core";
 import { buzz, onShake, supportsShake, useShakeToRoll } from "@/lib/dice/shake-to-roll";
 import {
   resolveFaceSource,

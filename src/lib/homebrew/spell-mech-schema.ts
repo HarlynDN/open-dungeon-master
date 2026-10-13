@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { isValidExpression } from "@/lib/dice";
+import { isValidExpression } from "@/lib/dice-core";
 import type { SpellMech } from "@/lib/srd/spell-mech-types";
 import { ROUND_CEILING } from "@/lib/schemas/condition-meta";
 

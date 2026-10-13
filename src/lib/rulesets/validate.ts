@@ -1,4 +1,4 @@
-import { isValidExpression } from "@/lib/dice";
+import { isValidExpression } from "@/lib/dice-core";
 import type { VariantRules } from "@/lib/rulesets/logic";
 import { deriveCr, crLabel, crRowIndex } from "@/lib/bestiary/derive-cr";
 import type { MonsterDraft } from "@/lib/bestiary/monster-draft";

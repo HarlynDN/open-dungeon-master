@@ -1,4 +1,4 @@
-import { isValidExpression } from "@/lib/dice";
+import { isValidExpression } from "@/lib/dice-core";
 import { xpForCr } from "@/lib/srd/encounter-math";
 import { synthesizeStats } from "@/lib/bestiary/synthesize";
 import { crLabel, deriveCr, expectedFor, type DerivedCr } from "@/lib/bestiary/derive-cr";
