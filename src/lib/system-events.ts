@@ -23,6 +23,7 @@ export type RestEventData = {
   skipped: Array<{ actor: string; reason: "dead" | "zeroHp" | "tooSoon" }>;
 };
 export type SystemEventData =
+  | { kind: "kickoff"; humanDm: boolean }
   | DeathEventData | RestEventData
   | OpportunityEventData
   | { kind: "partyItem"; direction: "stow" | "take"; actor: string; item: string; qty: number }
@@ -33,6 +34,7 @@ export function parseSystemEvent(raw: unknown): SystemEvent | undefined {
   if (!raw || typeof raw !== "object" || Array.isArray(raw)) return undefined;
   const event = raw as Record<string, unknown>;
   if (!isAppLocale(event.locale)) return undefined;
+  if (event.kind === "kickoff" && typeof event.humanDm === "boolean") return { kind: "kickoff", humanDm: event.humanDm, locale: event.locale };
   const integer = (value: unknown) => typeof value === "number" && Number.isSafeInteger(value) && value >= 0;
   if (event.kind === "death" && ["massive", "wounds", "revive", "stable", "dead", "save", "wake"].includes(String(event.outcome)) && typeof event.actor === "string" && typeof event.english === "string") {
     const result: DeathEventData & { locale: AppLocale } = { kind: "death", outcome: event.outcome as DeathEventData["outcome"], actor: event.actor, english: event.english, locale: event.locale };
@@ -102,4 +104,11 @@ export function systemEventGlyph(event: SystemEvent | undefined): string | undef
     case "partyXp": return "rest-level-up";
     default: return undefined;
   }
+}
+
+// The model's original instruction is separate from the persisted table notice.
+export function kickoffInstruction(humanDm: boolean): string {
+  return humanDm
+    ? "The party is assembled and the adventure begins. The Dungeon Master opens the scene."
+    : "The party is assembled and the adventure begins. Introduce the opening scene, set the premise, and give the party their first decision.";
 }

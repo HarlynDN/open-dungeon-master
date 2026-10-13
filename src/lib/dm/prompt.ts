@@ -1,3 +1,4 @@
+import { kickoffInstruction } from "@/lib/system-events";
 import type { Campaign } from "@/lib/db/campaigns";
 import type { CampaignMessage } from "@/lib/db/messages";
 import type { StoredRoll } from "@/lib/db/rolls";
@@ -1305,7 +1306,7 @@ export function buildDmMessages(
         : message.authorType === "system"
           ? message.content.startsWith(LEAD_NOTE_PREFIX)
             ? `[Authoritative direction from the party lead; weave it into the story now] ${message.content.slice(LEAD_NOTE_PREFIX.length)}`
-            : `[Table note] ${message.content}`
+            : `[Table note] ${message.systemEvent?.kind === "kickoff" ? kickoffInstruction(message.systemEvent.humanDm) : message.content}`
           : message.content.startsWith('"') || message.content.startsWith("(ooc)")
             ? `[${name}] ${message.content}`
             : `[${name} | attempt] ${message.content}`;

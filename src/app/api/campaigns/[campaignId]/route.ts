@@ -1,3 +1,5 @@
+import { normalizeLocale } from "@/lib/i18n/locales";
+import { systemEventText } from "@/lib/i18n/system-event-presentations";
 import { currentScene } from "@/lib/dm/sky";
 import { z } from "zod";
 import { capsFor, isErrorResponse, isLead, requireMember } from "@/lib/campaign-api";
@@ -274,13 +276,13 @@ export async function PATCH(
     // the server invented.
     const humanDm = hasHumanDm(campaignSeats(campaign));
     const seq = allocateSeq(campaignId);
+    const systemEvent = { kind: "kickoff" as const, humanDm, locale: normalizeLocale(campaign.gameSettings.locale) };
     const message = insertCampaignMessage({
       campaignId,
       seq,
       authorType: "system",
-      content: humanDm
-        ? "The party is assembled and the adventure begins. The Dungeon Master opens the scene."
-        : "The party is assembled and the adventure begins. Introduce the opening scene, set the premise, and give the party their first decision.",
+      content: systemEventText(systemEvent),
+      systemEvent,
     });
     publishWithSeq(campaignId, seq, "message_added", { message });
     // An assisted table asked for this in the wizard ("the AI fills this in

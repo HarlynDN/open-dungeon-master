@@ -5,14 +5,29 @@ const {rollDeathSave}=await import('../src/lib/dm/death.ts');
 const {tickClockConditions}=await import('../src/lib/dm/condition-tick.ts');
 const {listAllMessages,insertCampaignMessage}=await import('../src/lib/db/messages.ts');
 const {systemEventText}=await import('../src/lib/i18n/system-event-presentations.ts');
-const {parseSystemEvent,systemEventGlyph}=await import('../src/lib/system-events.ts');
+const {parseSystemEvent,systemEventGlyph,kickoffInstruction}=await import('../src/lib/system-events.ts');
 const {handReactionPrompt}=await import('../src/lib/i18n/hand-material-presentations.ts');
 const {reactionHitText}=await import('../src/lib/battlemap/hand-react.ts');
+const {buildDmMessages}=await import("../src/lib/dm/prompt.ts");
+const {listMembers,allocateSeq}=await import("../src/lib/db/campaigns.ts");
 const worlds=[];
 try{
  for(const locale of ['en','zh-CN']){
   const w=await openWorld({gameSettings:{locale}});worlds.push(w);
   const hero=w.addHero({name:'米拉 {hours}',class:'fighter',level:5,abilities:{con:14}});
+  for(const humanDm of [false,true]){
+   const systemEvent={kind:'kickoff',humanDm,locale};
+   assert.deepEqual(parseSystemEvent(systemEvent),systemEvent);
+   const content=systemEventText(systemEvent);
+   assert.equal(content,locale==='en'?kickoffInstruction(humanDm):'队伍已集结，冒险开始。');
+   const message=insertCampaignMessage({campaignId:w.campaignId,seq:allocateSeq(w.campaignId),authorType:'system',content,systemEvent});
+   const persisted=listAllMessages(w.campaignId).find(row=>row.id===message.id);
+   assert.equal(persisted.content,content);assert.deepEqual(persisted.systemEvent,systemEvent);
+   const messages=buildDmMessages({campaign:w.campaign(),members:listMembers(w.campaignId),sheets:w.sheets(),encounter:null,recentRolls:[],storySummary:''},[persisted]);
+   assert(messages.some(row=>row.content.includes('[Table note] '+kickoffInstruction(humanDm))));
+  }
+  assert.equal(parseSystemEvent({kind:'kickoff',humanDm:'true',locale}),undefined);
+
   const track={successes:0,failures:0,stable:false,dead:false};
   const reset=(extra={})=>w.patch(hero.id,{currentHp:0,deathSaves:{...track},conditions:['unconscious','prone'],conditionMeta:{},exhaustion:0,...extra});
   const latest=kind=>listAllMessages(w.campaignId).findLast(m=>m.systemEvent?.kind===kind);

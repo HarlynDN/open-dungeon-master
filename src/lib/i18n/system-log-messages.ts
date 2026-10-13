@@ -1,5 +1,6 @@
 import { defineMessages } from "./catalog.ts";
 export const SYSTEM_LOG_MESSAGES = /*#__PURE__*/ defineMessages({
+  "playerLog.kickoff": { en: "The party is assembled and the adventure begins.", "zh-CN": "队伍已集结，冒险开始。" },
   "playerLog.death.massive": { en: "{actor} is killed outright by massive damage.", "zh-CN": "{actor}受到过量伤害，当场死亡。" },
   "playerLog.death.wounds": { en: "{actor} has died of their wounds.", "zh-CN": "{actor}因伤势恶化而死亡。" },
   "playerLog.death.wake": { en: "{actor} comes round with 1 hit point.", "zh-CN": "{actor}恢复了 1 点生命值，苏醒过来。" },

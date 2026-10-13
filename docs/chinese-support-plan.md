@@ -178,6 +178,29 @@ Active play awaits configuring this isolated server's approved Codex CLI
 harness backend; its unavailable default Qwen endpoint was not used for a DM
 request. Local TTS and final authenticated bilingual journey remain open.
 
+The isolated browser server now uses the Codex CLI subscription harness for
+story and utility, with model overrides blank (the user's current default).
+Codex CLI reports 0.162.1; a read-only app-server thread/start, without any
+additional generation, resolves that default to `gpt-6-sol`. This records the
+resolved runtime configuration, not a model field separately captured for
+every generation. Actual browser kickoff and a player action asking travellers
+about the temple completed as persisted DM turns (3 and 2 calls respectively),
+with Chinese narrative and next-action prompts. Screenshot remains outside Git
+at `/tmp/odm-chinese-play-codex.png`.
+
+That journey exposed an English kickoff instruction in the player log. New
+kickoffs now persist a locale-bound event notice; the model-history projector
+reconstructs the original instruction from the event. English text stays exact,
+and earlier unkeyed history is untouched, including this test campaign's old
+kickoff. The existing survival/localization script checks both human/AI modes,
+both locales, event validation/persistence and actual buildDmMessages input,
+alongside existing rest/death/reaction cases. Catalog/types/changed-file lint
+pass once. No combat reacceptance was repeated. The absent local image service
+also exposed a raw English ComfyUI failure diagnostic; its player presentation
+is the next concrete play-flow gap. Image generation and local TTS were not
+accepted; authenticated English switch, further play/log/material ownership,
+local voice and final full checks remain open.
+
 Pure state, audio plumbing and glyph helpers can be audited within the session
 batch; their file count must not displace player-visible work.
 Shared Workshop types remain in the manifest's import closure; deep editors

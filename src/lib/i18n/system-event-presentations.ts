@@ -1,5 +1,5 @@
 import { opportunityEventText } from "../dm/opportunity-event.ts";
-import type { SystemEvent } from "../system-events.ts";
+import { kickoffInstruction, type SystemEvent } from "../system-events.ts";
 import { SYSTEM_LOG_MESSAGES } from "./system-log-messages.ts";
 import { createTranslator, registerMessages } from "./translator.ts";
 import { referenceDisplayName } from "./references.ts";
@@ -13,6 +13,7 @@ registerMessages(SYSTEM_LOG_MESSAGES);
 export function systemEventText(event: SystemEvent): string {
   const t = createTranslator(event.locale);
   switch (event.kind) {
+    case "kickoff": return event.locale === "en" ? kickoffInstruction(event.humanDm) : t("playerLog.kickoff");
     case "death":
       if (event.locale === "en") return event.english;
       return t(`playerLog.death.${event.outcome}`, { actor: event.actor, hours: event.hours ?? 0, total: event.total ?? 0, result: t(event.success ? "playerLog.death.success" : "playerLog.death.failure"), successes: event.successes ?? 0, failures: event.failures ?? 0 });
