@@ -3190,6 +3190,11 @@
       "sourceHash": "36825263a2de7d3a6a34a88443f439781009e7d470203383611bfceddbd8d9a3"
     },
     {
+      "id": "bearded-devil-devil",
+      "kind": "monster",
+      "sourceHash": "fdc2075e1ea4b18656d1c21cdcfe892d4dd1aa5ea643dbdb470188409a3ac443"
+    },
+    {
       "id": "behir",
       "kind": "monster",
       "sourceHash": "72fe9448b975a3d63782db2e0530db6ae1cefc2aefe29daa9e56a4da648e0099"
