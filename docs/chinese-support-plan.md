@@ -225,8 +225,14 @@ this section records current delivery state and acceptance gaps only.
   initiative/social 16 pass. Prior formatter fingerprint drift was reviewed
   against 388eb5fd/01be85f2 with old hashes retained. Logs: /tmp/odm-native-*.log.
   RollCard remains pending until remaining producer review is complete.
-- UI source coverage: 435/438 in-scope owners, two explicitly deferred voice
-  owners, zero pending literal sites, 19325 keys. Three text owners still
+- Campaign stream review closed: raw history, structured roll/proposal metadata,
+  audit reasons and diagnostics survive snapshot/events/reconnect; campaign
+  locale updates do not rewrite history. Both page consumers translate known
+  errors only at render time. Eleven reducer and six watchdog checks pass;
+  /tmp/odm-stream-locale-review.log records the reducer result. Actual deployed
+  SSE/play acceptance remains open.
+- UI source coverage: 436/438 in-scope owners, two explicitly deferred voice
+  owners, zero pending literal sites, 19325 keys. Two text owners still
   require review; the final coverage gate must continue to fail until closed.
   Completed pure-helper/consumer reviews are recorded in
   docs/validation/ui-localization.json. Whole-owner dynamic output and browser

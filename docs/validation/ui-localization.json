@@ -1025,7 +1025,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/useCampaignStream.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Whole text-path review: snapshot, reducer, event registration and reconnect refresh preserve raw narrative, errors, audit reasons and structured roll/proposal metadata; campaign_updated carries locale without translating historical messages. No locale-bound prose is cached by the stream. Both campaign pages project known snapshot/network errors through campaignEntryError at render time, retaining unknown diagnostics and answeredBy origin. Eleven reducer checks include locale update, raw English/Chinese history, structured payload identity, replay idempotency and bilingual failure projection; six watchdog checks pass. Voice behavior and deployed SSE journey are separate acceptance scope."
     },
     {
       "path": "src/app/campaigns/[campaignId]/useChatChime.ts",

@@ -18,6 +18,8 @@ function test(name, fn) {
   console.log(`ok: ${name}`);
 }
 
+const { againstRoll } = await import("../src/lib/roll-labels.ts");
+
 const event = (eventType, payload = {}, seq = null) => ({ type: "event", eventType, seq, payload });
 const loaded = campaignReducer(INITIAL_CAMPAIGN_STATE, {
   type: "snapshot",
@@ -128,5 +130,39 @@ test("E2: the snapshot carries the scene, the active sheet, the handout, the pau
   passed += 1;
   console.log("ok: a narration failure is kept apart from the picture's status");
 }
+
+test("campaign language updates preserve historical prose and structured log metadata across replay", () => {
+  const message = { id: "old", seq: 1, authorType: "dm", content: "The gate is closed." };
+  let state = campaignReducer(INITIAL_CAMPAIGN_STATE, { type: "snapshot",
+    payload: { campaign: { id: "c", locale: "en" }, messages: [message], lastSeq: 1 } });
+  state = campaignReducer(state, event("campaign_updated", { locale: "zh-CN" }, 2));
+  assert.equal(state.campaign.locale, "zh-CN");
+  assert.equal(state.messages[0], message);
+  const narration = { id: "new", seq: 3, authorType: "dm", content: "你推开城门。" };
+  state = campaignReducer(state, event("message_added", { message: narration }, 3));
+  const roll = { id: "r", ...againstRoll("Longsword", "Goblin", "enemy") };
+  state = campaignReducer(state, event("roll_result", { roll }, 4));
+  const entry = { id: "a", reason: "Second Wind", delta: { currentHp: 6 } };
+  const audit = event("sheet_audit", { entry, characterName: "Goblin" }, 5);
+  state = campaignReducer(state, audit);
+  assert.equal(campaignReducer(state, audit), state, "replay must not duplicate an audit");
+  assert.deepEqual(state.messages.map(m => m.content), [message.content, narration.content]);
+  assert.equal(state.rolls[0], roll, "transport preserves the original roll and presentation");
+  assert.equal(state.auditLog[0].reason, "Second Wind");
+  assert.equal(state.auditLog[0].characterName, "Goblin");
+});
+
+await import("../src/lib/i18n/messages.ts");
+const { campaignEntryError } = await import("../src/lib/i18n/campaign-entry-presentations.ts");
+test("stored stream failures render in either UI locale without changing diagnostics", () => {
+  for (const error of ["Could not load the campaign.", "Could not reach the server."]) {
+    const state = campaignReducer(loaded, { type: "error", error, answeredBy: "https://example.test" });
+    assert.equal(campaignEntryError(state.error, "en"), error);
+    assert.match(campaignEntryError(state.error, "zh-CN"), /[\u3400-\u9fff]/);
+    assert.equal(state.error, error);
+    assert.equal(state.answeredBy, "https://example.test");
+  }
+  assert.equal(campaignEntryError("Custom diagnostic: abc", "zh-CN"), "Custom diagnostic: abc");
+});
 
 console.log(`\n${passed} campaign reducer tests passed.`);
