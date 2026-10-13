@@ -3,6 +3,7 @@ import path from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {register} from 'node:module';
 import ts from 'typescript';
+import {pickerQueryParams,pickerSectionKey} from '../../src/lib/i18n/picker-requests.ts';
 import {createElement as h} from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 register('./register-routes.mjs',import.meta.url);
@@ -55,6 +56,17 @@ export async function openGearRenderer() {
   components.ItemBody=info.ItemBody;components.ContentBody=info.ContentBody;
   const render=(component,props,locale='en',search={},catalogStates=[])=>{
     searchState.current={query:'',results:[],open:false,loading:false,unavailable:false,unadmitted:[],...search};catalogState.current=[...catalogStates];
+    // Seed the current locale-bound per-section cache from the fixture scenario.
+    if (catalogStates.length === 6) {
+      const [open, expanded, loaded, loading, unavailable, filter] = catalogStates;
+      const sectionKey = key => {
+        const raw = key.startsWith('items:') ? {kind:key.slice(6),native:'1',locale} : {};
+        return pickerSectionKey('items',null,key,pickerQueryParams(new URLSearchParams(raw),locale));
+      };
+      const cache = Object.fromEntries(Object.entries(loaded).map(([key,value])=>[sectionKey(key),value]));
+      if (unavailable) for (const key of expanded) cache[sectionKey(key)]={rows:[],truncated:false,unavailable:true};
+      catalogState.current=[open,expanded,cache,loading.map(sectionKey),filter];
+    }
     return renderToStaticMarkup(h(p.LocaleProvider,{initialLocale:locale},h(component,props))).replace(/[\t\n\r ]+/g,' ');
   };
   return {components,render};

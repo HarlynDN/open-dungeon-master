@@ -86,69 +86,52 @@ real interaction has passed. Do not restart a static translation campaign.
 
 ## Next delivery unit and interruption checkpoint
 
-- Acceptance checkpoint (2026-10-14): fixed both ESLint errors (NPC review async loading and a spellcasting option helper misidentified as a Hook); focused and full lint pass (0 errors, 22 ESLint warnings; terminology 0 errors, 389 context warnings). The sandboxed full test run was terminated after locating a local mock-server listen EPERM; its failing script passes with elevated execution, and the full suite is rerunning there. Default Turbopack production build failed twice on port binding (including elevated retry); a documented Webpack build is running as supplementary diagnosis, not a default-build pass. The complete bilingual runtime journey remains unverified. Feature-material regression passes after correcting two mock request keys missing locale; immutable English hashes were preserved. Reviewed the pure lead-edit helpers and their UI consumers; coverage is now 406/440, with browser acceptance still separate. Corrected stale 322/733 theme-coverage notes in the data manifest; this does not close whole-owner or browser acceptance.
+Current checkpoint: 2026-10-14. The data manifests remain the detailed inventory;
+this section records current delivery state and acceptance gaps only.
 
-- Added Vampire: 933/933 pages, 318/318 monster-kind pages. Reviewed bat/mist
-  forms, resting-place escape/recovery, weaknesses, bite/spawn creation, charm
-  termination and night summons. Native rulebook prose coverage is now complete.
-- Added 吸血鬼 as the source-derived name; no external prose imported.
-  External terminology provenance for earlier candidates remains unverified.
-- Numeric/table, bilingual rendering, English switch, source refusal, identity,
-  terminology/guard and AST/catalog/resources checks passed: 557 terminology entries,
-  0 errors, 389 context warnings; UI remains 401/440.
-- Source anomaly still open: Guardian Naga has two conflicting Saving Throws
-  lines, preserved in both languages pending separate source review.
-- Reference library search now attaches a separate source-bound display projection
-  for exact native spell/item prose and whole monster book text. Its actual
-  referenceRowDescription consumer checks locale and original text before use;
-  original row data stays unchanged. Focused source/custom/stale/English-switch
-  tests, changed-file lint and i18n checks passed; coverage stays 401/440.
-- Complete-prose regression now covers all 319 bundled spells and 239 items:
-  projection and reference display include higher-level spell text, English switching
-  preserves full source, and changed descriptions refuse replacement. Fixed the
-  prior omission of higher-level paragraphs from the server matching input.
-- Structured monster help now includes traits, actions, bonus actions, reactions
-  and legendary descriptions/actions on reference and lazy-help consumers. For
-  native rows without authored description, exact source paragraphs can reuse
-  reviewed book translations; changed/unmatched paragraphs stay original.
-  Fourteen fixture monsters pass source/numeric/English/custom-change checks;
-  all fourteen have matching display paragraphs. This is partial prose coverage, not
-  complete monster localization. Direct detail/lazy help use locale-aware guards.
-- Structured prose audit is reproducible via scripts/audit-monster-prose-locales.mjs
-  and docs/validation/monster-prose-localization.json. Current 14-fixture audit
-  retains 0 fully English blocks across the fourteen sample monsters (mixed text needs review).
-  Foot-unit spelling is normalized without changing quantities; a changed reach
-  regression remains English. Synthetic Traits heading is localized.
-- Native flavor descriptions now permit structured action projection only when
-  every description paragraph matches the book. Giant Spider no longer has fully
-  English blocks; changed flavor descriptions still refuse replacement. Full
-  content-display regression, focused lint and i18n checks passed.
-- Thirteen reviewed pack-specific paragraphs now have exact source/name-bound
-  translations, including Mage dagger 1d4+2 (book remains 1d4+1), reordered Lich
-  spells and combined weakness/swallow/enslave paragraphs. Troll limb and Marilith summon variants now have source-bound translations;
-  summon names follow the glossary. No fuzzy rule replacement.
-  Numeric/source/English regressions, focused lint and i18n checks passed.
-- Sample prose milestone: all 14 checked-in monsters have zero fully English
-  blocks under the audit heuristic. This does not cover the deployed catalog or
-  mixed-language rendering; keep those and browser acceptance open.
-- Closed four helper owners after full-source and consumer review: chat chime,
-  lingering encounter, lore types/drafts and map types. UI file coverage is
-  405/440; this closes no browser/runtime gate. Default data/content/open5e.sqlite
-  is absent and project .env/.env.local provide no alternative CONTENT_DB_PATH;
-  deployed full-catalog coverage remains unverified, not inferred from fixtures.
-- Builder ContentPicker, MultiContentPicker, CatalogBrowser and shared ContentPick
-  now route spell prose through the full native description adapter, including
-  higher-level text; shared ContentPick also localizes spell summary metadata.
-  All 319 bundled spells pass direct-client (no server display) regression;
-  starter-summary fallback remains. Browser interaction gates remain open.
-- Shared picker requests now ask for localized display in both browse/search,
-  always keying by viewer locale (including switching back to English). This fixes
-  the previously absent server prose projection in picker results. ContentPick
-  also renders native monster/condition names via source-aware name adapters.
-  Request isolation/source-preservation regressions, lint and i18n checks passed.
-- Next: complete those help paths and inspect real content data, then remaining
-  dynamic UI/material/log owners. Full-suite/build and real bilingual journey
-  remain unproven; no owner was newly marked covered.
+- Native book: 933/933 pages, including 318 monster-kind pages. All 319 bundled
+  spell and 239 item bodies use source-bound projections with unchanged English,
+  numeric/table checks and refusal of modified sources. Spell help includes
+  higher-level paragraphs in reference, lazy help and all four shared pickers.
+- Structured monster help: traits/actions/bonus actions/reactions/legendary text
+  reuse exact book paragraphs; 13 pack-specific variants have separate exact
+  name/source bindings. The 14 checked-in monster fixtures have zero wholly
+  English blocks under scripts/audit-monster-prose-locales.mjs. Mixed text and
+  the deployed catalog are not accepted by that heuristic. The default
+  data/content/open5e.sqlite is absent and .env/.env.local specify no alternative
+  CONTENT_DB_PATH; deployed full-catalog coverage remains unverified.
+- Requests/cache: browse/search/detail carry viewer locale and separate display
+  prose. Locale/source guards protect English switching, authored/third-party
+  variants and original model/tool data. Direct-client full-spell and server
+  content-display regressions pass. Feature-material regression passes with
+  corrected locale-aware mock keys and unchanged English hashes.
+- UI source coverage: 410/440 owners, zero pending literal sites, 19317 keys.
+  Completed pure-helper/consumer reviews are recorded in
+  docs/validation/ui-localization.json. Whole-owner dynamic output and browser
+  acceptance remain distinct; stale theme counts were corrected to 733/733.
+- Validation: full lint passed before the dice/cache follow-up (0 errors,
+  22 ESLint warnings); terminology reports 557 entries, 0 errors and 389 context
+  warnings. The sandboxed full test run was terminated after a local mock-server
+  listen EPERM. That script passes with elevated execution; the elevated full
+  suite is still running and failures await final diagnosis.
+- Build: default Turbopack failed twice on port binding, including elevated retry.
+  Webpack exposed Node crypto imported into browser dice validation. Pure
+  dice-core now serves browser validation/scoring; server wrappers retain the
+  original cryptographic RNG. All 24 dice tests and focused lint pass. Webpack
+  production build passed TypeScript and page generation. The subsequent catalog
+  count change still needs final validation; this is not a default-build pass.
+- Gear regression: old seeded cache state was updated to locale-bound section
+  keys without changing frozen English goldens. Diagnosed two intended English deltas: original reference.name enrichment and unfetched-section loading. Tests now assert those deltas explicitly while preserving all frozen files. Eight stale implementation review hashes were refreshed with prior values retained; canonical rule/content hashes are unchanged. The complete gear rerun passes all seven grouped checks; focused lint and the UI inventory check also pass. Unavailable
+  or failed catalogs no longer display a misleading confirmed zero-item count.
+- Source/terminology caveats: Guardian Naga's conflicting Saving Throws lines
+  remain preserved pending source review. Earlier external terminology candidates
+  without verified edition/review provenance remain unverified; no external prose
+  was imported.
+- Next: finish diagnosing full-suite failures, complete remaining dynamic
+  UI/material/log owners and real content-data review, then run one complete
+  Chinese/English create/play/combat/rest/save/resume/book-search journey. Real
+  model/runtime acceptance remains unproven; deferred voice/third-party scope
+  is unchanged.
 
 ## Batches and review boundaries (2026-10-13)
 

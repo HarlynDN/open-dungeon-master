@@ -312,7 +312,7 @@ export default function CatalogBrowser({
                   )}
                   <span className="grow">{section.label}</span>
                   {isLoading ? <Loader2 className="size-3.5 animate-spin text-stone-500" /> : null}
-                  {!isLoading && data ? (
+                  {!isLoading && data && !data.unavailable && !data.failed ? (
                     <span className="text-[11px] text-stone-500">{rows.length}</span>
                   ) : null}
                 </button>

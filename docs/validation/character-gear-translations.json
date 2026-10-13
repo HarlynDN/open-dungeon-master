@@ -8,16 +8,16 @@
     "src/app/characters/builder/EquipmentSection.tsx": "b681c5b497ab99c07071519d7f2146fb544ed3127b27933836b1f93abe291d24",
     "src/app/characters/builder/KitChoicesSection.tsx": "c220596a5df835cf5c4d051ee593ae972889e880ff49e856f081a06d06508578",
     "src/app/characters/builder/BackgroundKitSection.tsx": "91c51c6a7deb28339283bf9c29ffd587974b58a188f0cfd7cd0e8a169e650441",
-    "src/app/characters/builder/ContentPicker.tsx": "52607ba0276305747bae748d00c5dd7d105aac48ad23f3d980a4e483ea4d0c86",
-    "src/app/characters/builder/CatalogBrowser.tsx": "14330809cf826563ba51f34f283299efe6526a17ffbfa29db79b00a285dbe0fc",
-    "src/app/characters/builder/steps/SpellsGearStep.tsx": "c0b08ea47e76e8fc46924efcf21b04850d9fcc23e37a7ccb3ca62bf487a3a768",
-    "src/components/ui/InfoDialog.tsx": "d63c98b71efcd92fde50ee74d1f959b2d252751dd16db63c50fbbb80245e3251",
-    "src/lib/i18n/equipment-presentations.ts": "7b5cc62cf0d7348b25f0baf693af129e7ce8e911b94255c932553b392a9645d6",
+    "src/app/characters/builder/ContentPicker.tsx": "25a20a47f3b47192aa0a741f173427f5017c2e1a9c2235e2db9e8d296031de0a",
+    "src/app/characters/builder/CatalogBrowser.tsx": "3809b6cd9863ce3bd2e458ad864add93e73ac9f4e1865217545d69029f89b054",
+    "src/app/characters/builder/steps/SpellsGearStep.tsx": "846cd847b44c626a5c4a8cb84ee99d3eb43d1d3ad5943b999ef5cccbede3ded7",
+    "src/components/ui/InfoDialog.tsx": "dfbbfa75f6ecbfdf59cd1b014819c1fa7ec2017d3e677065f2e1ac4a17abae22",
+    "src/lib/i18n/equipment-presentations.ts": "408168dbf3391492056686bbbe5f50a4329b9bfbae93f08481c3473228127178",
     "src/lib/i18n/gear-ui-presentations.ts": "7f5e42e0c8d41b35948beefea931bff76257146f50bd2b722638b24ee182ca80",
     "src/lib/i18n/equipment-help-presentations.ts": "66e3d2a0cbb0695955ca50962f628be75ef3e70a3d5df1b155126505a221a532",
-    "src/lib/i18n/reference-names.ts": "8811aa04f8ddcf46bbba5853186751b3140e84b4c398fd19ff47e4fe03946c7e",
-    "src/lib/content/native-equipment-search.ts": "6ade2d40d22e64f6d1ac6e4e1bbd05e4d40e0d38991f06cbc14504bef1218d32",
-    "src/app/api/content/[kind]/route.ts": "e8990c888a6a6a04db0943709610be63fbcc59d70f0eef36cf975636c8201d89"
+    "src/lib/i18n/reference-names.ts": "52c28086be58640c59cba14af9e9d25a5d6b7dda161bd55315e56b7fdf2fb5d6",
+    "src/lib/content/native-equipment-search.ts": "f0e147029c3449d0a76dc0d3874bcb89b828f754ee56b2e8f14f6122c57b4eb6",
+    "src/app/api/content/[kind]/route.ts": "2c30403c07f6a3e292dda0debed2de78715b74fc925cf6e507984c3f5d2c6b5e"
   },
   "catalogs": {
     "src/lib/i18n/gear-ui-messages.ts": "9762d8ef614c012861d92d7cf92e11e8362ff7836dd96da528e557919b59ab6a",
@@ -53,5 +53,19 @@
     "priorCommitHashes": {
       "src/components/ui/InfoDialog.tsx": "ef241a0a9f4fa27eb48124a20bebb329321a251519c1f64dcfd3922287953dc6"
     }
+  },
+  "currentSourceReview": {
+    "date": "2026-10-14",
+    "previousReviewHashes": {
+      "src/app/characters/builder/ContentPicker.tsx": "52607ba0276305747bae748d00c5dd7d105aac48ad23f3d980a4e483ea4d0c86",
+      "src/app/characters/builder/CatalogBrowser.tsx": "14330809cf826563ba51f34f283299efe6526a17ffbfa29db79b00a285dbe0fc",
+      "src/app/characters/builder/steps/SpellsGearStep.tsx": "c0b08ea47e76e8fc46924efcf21b04850d9fcc23e37a7ccb3ca62bf487a3a768",
+      "src/components/ui/InfoDialog.tsx": "d63c98b71efcd92fde50ee74d1f959b2d252751dd16db63c50fbbb80245e3251",
+      "src/lib/i18n/equipment-presentations.ts": "7b5cc62cf0d7348b25f0baf693af129e7ce8e911b94255c932553b392a9645d6",
+      "src/lib/i18n/reference-names.ts": "8811aa04f8ddcf46bbba5853186751b3140e84b4c398fd19ff47e4fe03946c7e",
+      "src/lib/content/native-equipment-search.ts": "6ade2d40d22e64f6d1ac6e4e1bbd05e4d40e0d38991f06cbc14504bef1218d32",
+      "src/app/api/content/[kind]/route.ts": "e8990c888a6a6a04db0943709610be63fbcc59d70f0eef36cf975636c8201d89"
+    },
+    "review": "Refreshed eight stale implementation hashes after reviewing source-bound help/name projections, locale-bound request/cache identity, native equipment filed-row precedence and separate-homebrew paging, original selection identities and authored-source guards. Canonical rule/content source hashes and frozen English golden files are unchanged. English rendering permits only the explicitly asserted canonical reference.name enrichment and unfetched-section loading state. Catalog failure/unavailability no longer claims a confirmed zero count. Gear regression passes all seven grouped checks; these hashes record inspected source versions, not release or browser acceptance."
   }
 }

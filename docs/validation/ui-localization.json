@@ -785,7 +785,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/SessionGlyph.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Reviewed both exported renderers and SessionHeader/VoiceDock/SessionTabs consumers. Glyph keys, sizing and muted styling only; no player prose. Parent controls supply translated accessibility labels and titles; displayName is a React diagnostic identity, not rendered content."
     },
     {
       "path": "src/app/campaigns/[campaignId]/SessionHeader.tsx",
@@ -1072,7 +1073,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/useVoicePrefs.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Reviewed complete device preference store: microphone IDs, open/ptt enum, Backquote key, numeric volumes and mute/deafen flags only. No player-facing prose or generated error text; VoicePanel owns localized controls. Native DeviceSettings remains outside the text milestone, and live media acceptance is separate."
     },
     {
       "path": "src/app/campaigns/[campaignId]/useVoiceRoom.ts",
@@ -1747,7 +1749,8 @@
     },
     {
       "path": "src/app/workshop/plates.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Reviewed all image paths and deterministic plate selection. Both workshop shelf and home consumers use decorative empty alt text; no native prose is emitted and workshop titles remain authored."
     },
     {
       "path": "src/app/workshop/storyboard/BeatBoard.tsx",
@@ -1766,7 +1769,8 @@
     },
     {
       "path": "src/app/workshop/storyboard/beat-fields.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Reviewed every exported tone, glyph and link tuple. BeatEditor localizes all four full labels through storyboardText; BeatBoard localizes all four short labels through the same catalog. Matching bilingual entries exist; inventory names remain authored and link IDs/buckets stay canonical."
     },
     {
       "path": "src/app/workshop/tables/RefPicker.tsx",

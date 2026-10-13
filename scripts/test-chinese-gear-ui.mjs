@@ -27,8 +27,27 @@ const of=(rows,name)=>{const row=rows.find(row=>row.name===name);assert.ok(row,n
 const controls=html=>[...html.matchAll(/<(button|select|option|input|span)\b([^>]*)>/g)].map(row=>({tag:row[1],attrs:(row[2].match(/(?:type|disabled|aria-busy|aria-pressed|value|data-reference|data-section)="[^"]*"/g)??[]).sort()}));
 const text=html=>html.replace(/<[^>]*>/g,' ').replace(/&#x([0-9a-f]+);/gi,(_,n)=>String.fromCodePoint(parseInt(n,16))).replace(/&#(\d+);/g,(_,n)=>String.fromCodePoint(Number(n))).replace(/&(?:amp|lt|gt|quot);/g,' ');
 
-await test('113 frozen actual English equipment/kit/background/search/catalog projections remain exact',()=>{
-  assert.equal(before.fixtures.length,113);assert.deepEqual(en,before.fixtures);
+await test('113 frozen English gear projections preserve text with explicit loading and reference-identity deltas',()=>{
+  assert.equal(before.fixtures.length,113);
+  const comparable = en.map(row => {
+    if (row.name === 'catalog/empty') {
+      // An unfetched section now waits instead of claiming a loaded empty list.
+      assert.equal(row.html,of(before.fixtures,'catalog/loading'));
+      return {...row,html:of(before.fixtures,'catalog/empty')};
+    }
+    if (row.name !== 'search/rows') return row;
+    const expectedNames = new Map([['longsword','Longsword'],['homebrew:cloud','Authored {item}\n<script>']]);
+    const html=row.html.replace(/data-reference="([^"]*)"/g,(_all,encoded)=>{
+      const decoded=encoded.replace(/&quot;/g,'"').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&');
+      const reference=JSON.parse(decoded);
+      assert.equal(reference.name,expectedNames.get(reference.slug));
+      delete reference.name;
+      const legacy=JSON.stringify(reference).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      return 'data-reference="'+legacy+'"';
+    });
+    return {...row,html};
+  });
+  assert.deepEqual(comparable,before.fixtures);
   for(let i=0;i<en.length;i++){
     assert.equal(zh[i].name,en[i].name);if(/^(kit|equipment)\//.test(en[i].name))assert.match(text(zh[i].html),/\p{Script=Han}/u,en[i].name);
     assert.deepEqual(controls(zh[i].html),controls(en[i].html),en[i].name);
