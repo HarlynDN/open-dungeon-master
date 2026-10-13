@@ -3240,6 +3240,11 @@
       "sourceHash": "f3a1d9b13ecb3e87552db78e97f5ce171ed96d849f84710d2647aa5d965f53aa"
     },
     {
+      "id": "dust-mephit",
+      "kind": "monster",
+      "sourceHash": "ba635c197bbac2a1a4a7de2a1f4e652a1cc025a756eef87bda1829223ec1d649"
+    },
+    {
       "id": "ettin",
       "kind": "monster",
       "sourceHash": "9e67b23a6cf7790250fe3ec586ea8a99aab996ac8816bdb1247a5658514ae3c3"
@@ -3310,6 +3315,11 @@
       "sourceHash": "010aacdf3a3e0fcae54948af0db859b2aad0529578145b0c350655657c35ceb5"
     },
     {
+      "id": "ice-mephit",
+      "kind": "monster",
+      "sourceHash": "35dba07f0d14b79fc99e0a48302b687f672829c6717b047501b07d6f3d7538eb"
+    },
+    {
       "id": "kobold",
       "kind": "monster",
       "sourceHash": "972839016ec53a6fef2f8e541b57ffef82fa57249971fcc62f8f5dcb74efaec2"
@@ -3318,6 +3328,11 @@
       "id": "lizardfolk",
       "kind": "monster",
       "sourceHash": "3da88d78f73ebd94d2d64ce601561417a166ff046760a55196dd73a556e62a34"
+    },
+    {
+      "id": "magma-mephit",
+      "kind": "monster",
+      "sourceHash": "2a43efdc8be0476cc89f82e7074616a84be19da23ff4b09184a7b45f0f9ac529"
     },
     {
       "id": "magmin",
@@ -3423,6 +3438,11 @@
       "id": "skeleton",
       "kind": "monster",
       "sourceHash": "e042840ccf430d84e320c3a2fcf9a52548c108c785810bacbceabf88c0e69031"
+    },
+    {
+      "id": "steam-mephit",
+      "kind": "monster",
+      "sourceHash": "6a430b8de16f2cbfc1c679cb4de562a40536551c9d12aad1dd3ae6d1ef6bcd57"
     },
     {
       "id": "stirge",
