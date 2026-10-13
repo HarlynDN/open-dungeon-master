@@ -3300,9 +3300,19 @@
       "sourceHash": "6e52de373ce17565f806334c16d1d1cbe9819ad7ceb46b788c3e2bec42b4805c"
     },
     {
+      "id": "grick",
+      "kind": "monster",
+      "sourceHash": "1563ee4bfbc563ddb1eca1aedb0119a4a0ab1639f1f477f40e18c3666814c237"
+    },
+    {
       "id": "griffon",
       "kind": "monster",
       "sourceHash": "b8c849ddb833b64f7ed6f5025f95719a0e470ca61abfb5c4b1f70364e8239549"
+    },
+    {
+      "id": "grimlock",
+      "kind": "monster",
+      "sourceHash": "72347ee2d90028b81c5f77ee6afc967f003d3510a4c5d3a727d0668f387ab070"
     },
     {
       "id": "harpy",
@@ -3908,6 +3918,11 @@
       "id": "panther",
       "kind": "monster",
       "sourceHash": "33590145acdf5f75e13027f1760109a4fc0260a0fdfd12f2e6113cb394988ae0"
+    },
+    {
+      "id": "phase-spider",
+      "kind": "monster",
+      "sourceHash": "3c2efb37022d72289f9c753bf2ffa80f3f737e56f4b9c1b8cba2b49c982c1640"
     },
     {
       "id": "poisonous-snake",
