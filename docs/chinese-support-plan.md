@@ -44,130 +44,126 @@ Before pausing, finish the native dynamic text audit and one bilingual text jour
 | Character creation/material | Source-bound names/help: 517 spell names, 228 equipment names, 239 item bodies, 127/319 spell bodies; 415 registered resources, 135 bundled options, 533 expanded subclass features, 105 archetype documents, 49 backgrounds and 733 themed features; immutable English material baselines | Remaining dynamic material and help/loading paths; third-party, changed and authored variants retain their source |
 | Player system logs | Localized structured combat/audit display, party item/coin/XP logs, account facts and kickoff notices; English model/tool semantics stay separate | Other native player-log templates and final history/save/resume audit |
 | Resource delivery | UI/content/help scopes and independent retryable lazy help; anonymous bilingual switch/reload, authenticated character/campaign entry and viewer-English/story-Chinese separation observed | Complete authenticated journey and lazy/cache timing; hydrated/network totals and large route JS payload remain unverified |
-| Local Chinese TTS | Locale-driven voice prefixes/defaults, Chinese single narrator, Unicode sentence/hard limits, campaign-language voice discovery and previews, cache isolation and Chinese failure UI implemented; mock transport/queue and English compatibility checks pass | Isolated real CPU service configured; Chinese sample decode and actual DM audio delivery succeed; Arabic numbers/dice/mixed-name and English samples also decode; real preview outage/retry succeeds; Chinese voice quality rejected by user; all further Chinese voice work deferred by latest instruction, not a text-milestone gate |
-| Full native rulebook | Reader chrome localized; **417/933 complete Chinese pages** now render via a server-generated display projection, including all 127 cantrip/first-/second-level spell pages, all 239 magic-item pages all thirty-six rules pages, all nine race pages and six class pages, with complete headers and reused bodies; original English corpus retained; 127 spell and 239 magic-item bodies are available for further reuse | Remaining full-page rules/monster/high-level spell prose and tables; complete Chinese corpus coverage, authenticated browser search/navigation and English reading regression |
+| Local Chinese TTS | Implementation and bounded CPU delivery/outage evidence retained in [the runtime record](validation/chinese-tts-runtime.json) | Chinese voice quality rejected by user; further voice work is deferred, not passed, and is not a text-milestone gate |
+| Full native rulebook | Reader chrome localized; **417/933 complete Chinese pages** now render via a server-generated display projection, including all 127 cantrip/first-/second-level spell pages, all 239 magic-item pages, all thirty-six rules pages, all nine race pages and six class pages, with complete headers and reused bodies; original English corpus retained; 127 spell and 239 magic-item bodies are available for further reuse | Remaining six class pages, 192 high-level spell pages and 318 monster pages; complete Chinese corpus coverage, authenticated browser search/navigation and English reading regression |
 | Final text flow | Recorded Chinese exploration/social/utility and combat/slot/correction acceptance on Codex | Complete Chinese text journey, rulebook reading/search and English regression; full tests/lint/build, then pause |
-
-The concrete UI scope and deferred areas are in
-[ui-localization.json](validation/ui-localization.json). The checker rejects new
-literal sites in covered files. Run `npm run i18n:inventory` to refresh a local
-inventory; do not count deferred files as promised first-release delivery.
 
 ## Execution adjustment (2026-10-13)
 
 Keep the existing goal. Change the delivery method and priorities, not the release
 scope or acceptance requirements. Prioritize visible completion of whole player
-flows. The current manifest has 401 covered and 39 pending owners; zero literal
-sites means static caption extraction is complete, not that every dynamic value
-or real interaction has passed. Do not restart a static translation campaign.
+flows. Read exact owners and states from the UI manifest; zero literal sites
+means static caption extraction is complete, not that every dynamic value or
+real interaction has passed. Do not restart a static translation campaign.
 
-| Priority | Delivery unit and owners | Stopping point |
+| Priority | Delivery unit (exact owners in the UI manifest) | Stopping point |
 | --- | --- | --- |
-| 1 | Character creation and character sheet: CallingStep, builder state/derived/picker groups, CatalogBrowser/ContentPicker/MultiContentPicker, shared ContentPick/InfoDialog, SheetParts/SheetGearRow and CharacterSheetDialog | Owned names, descriptions, choices, resource/gear help and failures display in the selected UI locale; selection and grants preserve canonical IDs; custom/pack prose remains authored. Close only owners whose actual remaining gates are resolved. |
-| 2 | Battle table and session: Hand and its aim/card/more/reaction children, RollCard, Moments, BoardMoveNotes, ItemProposalBar, SidePanelRouter and stream/state helpers | Native dynamic captions and new player logs have complete localized display paths; campaign-locale actions and engine conclusions remain separate from viewer-locale controls; IDs, HP, rolls and resources retain engine semantics. Audit pure helpers together with consumers rather than opening individual delivery cycles. |
+| 1 | Character creation, pickers/shared help and character sheet | Owned names, descriptions, choices, resource/gear help and failures display in the selected UI locale; selection and grants preserve canonical IDs; custom/pack prose remains authored. Close only owners whose actual remaining gates are resolved. |
+| 2 | Battle table, session controls, player logs and their state helpers | Native dynamic captions and new player logs have complete localized display paths; campaign-locale actions and engine conclusions remain separate from viewer-locale controls; IDs, HP, rolls and resources retain engine semantics. Audit pure helpers together with consumers rather than opening individual delivery cycles. |
 | 3 | Full bundled rulebook text | All native book pages, navigation, tables and search display Chinese, with English switching and source attribution retained. Reuse matching material translations. |
 | 4 | One complete bilingual journey | Chinese create/play/combat/rest/save/resume and rulebook reading/search, plus English switching/regression pass; perform the remaining full-suite, full lint and production build at this release boundary. Record failures and genuinely untested gates explicitly. |
 
 ## Next delivery unit and interruption checkpoint
 
-- Completed full Paladin and Ranger pages, including Devotion/Hunter,
-  twenty-level spell-slot/known-spell tables and the ten Devotion spell entries.
-  Prepared/known spell distinction, resource/rest limits, aura requirements and
-  full Hunter options are source-reviewed. Focused bilingual/source/table/
-  manifest checks passed; English/canonical data and runtime code are unchanged.
-- Next unit: group full Bard and Cleric pages, then remaining casters, spells and
-  monsters through the source-bound catalog. Update delivery data without
-  modifying test logic.
-- Native dynamic UI/material/log ownership remains open. Complete its audit
-  before the final bilingual journey; combine pure helpers with their consumers.
-  Deep Workshop editors, native-shell-only UI, third-party expansion prose,
-  Chinese STT and Chinese voice work remain deferred.
+- Last completed commit: `59167688`, full Paladin/Ranger source comparison and
+  focused bilingual page/manifest/table checks passed. No tracked changes were
+  pending when this execution adjustment was made.
+- Next: batch the remaining caster pages through the existing catalog/importer;
+  then high-level spells and monster families. Drafting chunks do not each need
+  a separate report, test run or commit. Apply the batch rules below.
+- Native dynamic UI/material/log ownership is still pending in the UI manifest;
+  audit helpers with their actual consumers before the final bilingual journey.
 
-## Batch size and execution efficiency (2026-10-13)
+## Batches and review boundaries (2026-10-13)
 
-Group prose using the same source catalog, renderer and validation path into one
-reviewable batch. Combine short related pages; group spells by level/theme and
-monsters by family/shared stat-block shape. Choose size by source length,
-mechanical complexity and review/context capacity, not page count alone. A long
-or complex chapter can remain its own batch. Keep search, cache, persistence and
-component behavior changes independently reviewable; explain any adjacent fix
-that is necessary for the same Chinese flow.
+Combine prose with the same source catalog, renderer and checks into one
+reviewable delivery unit. Choose size by full source length, mechanical
+complexity and available review/context capacity, not a fixed two-page cadence.
+Split only for those limits, a different delivery path or an unresolved defect;
+record the reason in one line. Review every source page in full even when drafts
+are prepared in smaller chunks. Keep search/cache/persistence/component changes
+as independently reviewable units.
 
-Each batch has one short gap list, one combined review/check boundary and one
-commit. Source investigation and settled-name review are not separate delivery
-cycles. Reuse matching translations and existing terminology; inspect only new
-or conflicting source. Correctly localized owners need an audit note, not a new
-test or behavior change. Do not expand into unrelated refactors, speculative
-hardening or new reporting infrastructure.
+| Remaining work | Batch rule |
+| --- | --- |
+| Six caster classes | Prepare remaining pages together as capacity permits; share one catalog import, review and focused check boundary. Do not automatically open another cycle for each class pair. |
+| 192 high-level spells | Group by level/theme and source volume; reuse names, headers and matching game-help bodies. A book-only body does not close the corresponding in-game help gap. |
+| 318 monsters | Group families with shared stat-block shapes; review each creature's exceptional actions, quantities and conditions against its full source. |
+| Dynamic UI/material/logs | Group producers/helpers with their consumer flow. Mark already-correct owners reviewed without inventing code changes or duplicate tests. |
 
-## Data-driven coverage contract
+Each completed unit has one combined review/check boundary and one commit.
+Source investigation and settled terminology are part of that unit, not separate
+cycles. Reuse matching translations; inspect only new or conflicting source.
+Do not expand routine text work into unrelated refactors or new reporting tools.
 
-Implemented in [the coverage manifest](validation/rulebook-translation-coverage.json)
-and `scripts/lib/rulebook-coverage.mjs`, consumed by the existing page check.
-The focused check also proves duplicate/unknown IDs, stale bindings, missing
-translations and omitted manifest entries fail. `--final` refuses partial delivery.
-Continue applying this contract to routine prose batches:
+## Coverage data and regression contracts
 
-- Use a separate data manifest for the required canonical page IDs and source
-  identities in the delivered subset. Translation catalogs contain translations;
-  they must not define the expected set against which they themselves are tested.
-- The initial manifest binds twenty-five reviewed rules pages, all 127 delivered
-  low-level spells and all 239 items. Validate IDs against the canonical 933-page corpus;
-  reject duplicates, unknown IDs, missing translations and stale source bindings.
-- Existing tests read the manifest and iterate registered translations. Normal
-  additions update data, not a growing hard-coded ID list in test source.
-  Preserve current assertions for complete bodies/headers, tables, numeric/dice
-  values, links/anchors, modified-source rejection and canonical immutability.
-- Keep English source/render assertions and immutable goldens. A missing or
-  invalid translation must fail the check, not disappear from the expected set.
-  Do not regenerate the manifest from the available translations to hide a
-  regression or remove required IDs merely to make checks pass.
-- Derive coverage totals and missing IDs from corpus/manifest/catalog comparison.
-  Run `node scripts/test-rulebook-page-locales.mjs --final` at final acceptance
-  and require every canonical page in all six kinds
-  (rules, race, class, spell, item, monster), not just the delivered subset.
-  Until that gate passes, report partial coverage explicitly.
+Use the existing manifests as the detailed coverage records; the current-state
+table above is only their concise prose snapshot. Do not duplicate owner/page
+lists in the plan, test code or per-batch reports.
 
-`node scripts/import-rulebook-translations.mjs <reviewed-drafts.json>` reuses
-production source fingerprints, validates the existing coverage/source bindings
-and heading/sidebar shape, and updates both the server page catalog and delivery
-manifest. Run the focused bilingual page check before committing its output.
+| Coverage | Authoritative data and existing check |
+| --- | --- |
+| Main-flow UI | [ui-localization.json](validation/ui-localization.json): entrypoints/import closure, deferred reasons, per-file state and dynamic/source review. Existing AST check rejects new literals/unlisted owners; `npm run i18n:final` also rejects pending owners. Zero literals alone cannot close an owner. |
+| Entire native rulebook | [rulebook-translation-coverage.json](validation/rulebook-translation-coverage.json): canonical corpus identity and separately required delivered IDs/kinds/source hashes. `scripts/test-rulebook-page-locales.mjs` derives totals/missing IDs and verifies translations. `--final` requires all 933 canonical pages in all six kinds. |
+| Material/log regressions | Existing source comparison records and immutable English goldens in `docs/validation/`, consumed by the relevant workflow checks. Reuse them rather than creating another batch report or refreshing expectations. |
 
-## Lightweight verification and progress reporting
+Normal additions update translation/coverage data, not hard-coded test ID lists.
+Keep failures for duplicate/unknown IDs, stale source bindings, missing required
+translations and translations omitted from the manifest. Never derive the
+expected delivery set solely from available translations, remove required IDs
+to pass a check or regenerate English goldens to hide a regression. Canonical
+IDs, complete bodies/headers/tables, numeric/dice values, links/anchors, authored
+variants and English rendering remain protected.
 
-Use the following checks once at the final state of each batch. Independent
-checks may run together; dependent writes, reviews and commits remain sequential.
+Use `node scripts/import-rulebook-translations.mjs <reviewed-drafts.json>` for
+reviewed native page drafts. It reuses production source hashes and validates
+existing bindings and heading/sidebar shape before updating catalog/manifest.
+Update a UI owner to covered only after its dynamic/source paths are reviewed.
+Refresh an inventory only for a changed import closure or an actual audit need;
+progress questions use existing data. Partial coverage remains explicitly partial.
+
+## Verification and concise reporting
+
+Select checks by changed inputs and run them once on the completed batch state.
+Independent checks may run together; dependent writes, reviews and commits stay
+sequential. Before touching Next.js code, read the relevant installed local guide.
 
 | Change | Required batch verification |
 | --- | --- |
-| Documentation only | Inspect the diff and `git diff --check`; no application checks. |
-| Prose/coverage data only, existing delivery path | Reuse one focused material/page check for manifest completeness, source binding, bilingual rendering, numeric/dice/table parity, links/anchors, canonical and English preservation. Run the catalog/AST/terminology/generated-resource gate once if its inputs changed; regenerate resources only when needed. No TypeScript or code lint solely for unchanged code. |
-| TypeScript/JavaScript, test logic or runtime behavior | Relevant focused workflow check, TypeScript and changed-file lint; run catalog/AST/terminology/resource checks if their inputs changed. Cover changed interaction, persistence, dynamic display and English behavior. |
-| Shared runtime with a concrete broad-regression risk | Broaden tests/build only for the identified affected contracts; record the reason. |
-| Final text release | Complete the bilingual journey, then full tests, full lint and production build on the final source boundary. |
+| Documentation only | Review diff and `git diff --check`; no application checks. |
+| Prose/coverage data through an unchanged path | One existing focused material/page check covering source bindings, bilingual rendering, quantities/tables, links/anchors and English/canonical preservation; `git diff --check`. Catalog/AST/terminology/generated-resource checks only when their inputs changed; regenerate resources only when needed. No TypeScript/code lint solely for unchanged code. |
+| Code, test logic or runtime behavior | Relevant focused workflow check, TypeScript and changed-file lint; catalog/AST/terminology/resource checks if affected. Cover changed interactions, persistence, dynamic display and English behavior. |
+| Shared runtime with a concrete wider risk | Broaden checks/build for the affected contracts and state the reason once. |
+| Final text release | Complete the bilingual journey; require `npm run i18n:final`, `node scripts/test-rulebook-page-locales.mjs --final`, full tests, full lint and production build on the final source boundary. Full lint already contains AST/catalog-generation/terminology checks; reuse those results. |
 
-After passing, stop verification and commit. Repeat only failed checks or checks
-invalidated by later changes. Do not rerun passed naming, real-model, embedding,
-build or audio acceptance for ordinary prose/UI work. Preserve assertions and
-English goldens; fix failures rather than weakening them. Translation review
-still compares the complete source, conditions, quantities, dice, units and
-cross-references; a structural check is not independent human proofreading.
+After passing, stop verification and commit. Rerun only failed checks or checks
+invalidated by later changes. Reuse existing bounded real-model, naming,
+embedding and audio evidence when their relevant configuration/contracts are
+unchanged; runtime/policy/retrieval changes require affected acceptance again.
+No paid/model/audio calls or full build for routine prose. Final acceptance
+still includes Chinese create/play/combat/rest/save/resume, rulebook reading/
+search and English switching, legacy campaign/history behavior, actual journey
+prompt-usage/guard evidence, and honest actual model/service versions. Fixed
+bilingual retrieval calibration and English baselines remain required evidence;
+rerun calibration when its model/profile/index/retrieval contracts change.
 
-Keep the plan's current-state table as the single prose summary of progress.
-Use the manifest/check output for detailed coverage. Each batch
-updates only changed status, remaining gates and the next unit, with a commit or
-existing evidence link when needed. Keep exceptional defects, failed checks and
-new runtime evidence in the existing validation reports; do not append another
-full batch narrative or repeat unchanged invariants and deferred checks.
+Translation review compares the entire source, conditions, quantities, dice,
+units and cross-references; structural checks do not prove prose quality or
+independent human approval. Never weaken assertions to shorten verification.
 
-Progress questions reuse existing evidence without launching application checks.
-Reports state player-visible outcomes, unresolved gaps and the next unit; file
-and page fractions are audit aids, not overall completion or remaining effort.
-If interrupted, retain a short checkpoint here: last commit, uncommitted unit,
-passed/failed checks, remaining operation. Resume from that difference without
-reinvestigating settled paths or rerunning unchanged passed checks. Preserve real
-model/service versions and failures; local evidence does not imply current
-production acceptance.
+Update only changed state, remaining gates and next operation in this plan.
+Each user-facing batch update states outcome, verification and unresolved/next
+work in a few lines. Ordinary successful batches need no new report. Preserve
+exceptional defects, failed checks and new runtime evidence in existing reports
+with one link here; Git carries the implementation history. File/page fractions
+are audit aids, not completion or effort estimates.
+
+On interruption, retain only last commit, pending unit, passed/failed checks and
+next operation. Resume from that difference; do not reinvestigate settled paths
+or rerun unchanged checks. Local evidence does not imply production acceptance;
+missing deployment access remains an explicit unaccepted gate, not code-complete
+end-to-end delivery. Preserve the latest approved scope and deferred voice work.
 
 ## Compatibility contracts
 
@@ -268,20 +264,13 @@ full-page size and real audio acceptance are separate from TypeScript/unit check
 
 ## User involvement and final open gates
 
-Routine implementation, reversible setup and the checks above continue under
-existing authorization. Use the configured Codex CLI subscription; a local-model
-comparison is future compatibility work, not this user's release backend. Do not
-reopen settled terminology or add model/audio cost boundaries without a reason.
-User involvement is required only for inaccessible account/service access or a
-proposed change to the approved model/cost scope. Deferred voice work must not
-block or restart independently available text delivery.
+Routine implementation, reversible setup and required checks remain authorized.
+Ask only for inaccessible account/service access or a proposed model/cost scope
+change. Deferred voice work must not block independent text delivery.
 
-Remaining acceptance includes other native dynamic and item/feature material,
-other new player logs, complete rulebook translation/reading/search, authenticated
-switching and save/resume, prompt-usage and narration-guard evidence within the
-actual journey, and final full tests/lint/build. Real Chinese audio remains deferred.
-Existing bounded DM combat/resource evidence is reused; broader guard recall and
-all pack content are not implied by it. Engine-generated decisive combat facts,
+Remaining gates are in the current-state table and final verification boundary
+above. Bounded DM combat/resource evidence does not imply broader guard recall
+or all pack content. Engine-generated decisive combat facts,
 one text-only prose correction and safe fallback must never repeat an action,
 roll dice again, mutate HP twice or spend resources twice.
 
