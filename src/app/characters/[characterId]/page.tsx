@@ -84,7 +84,7 @@ function CharacterDetailInner({ characterId }: { characterId: string }) {
     try {
       // The PDF builder (pdf-lib) loads on demand; see lib/pdf/download.
       const { libraryToPdfCharacter } = await import("@/lib/pdf/character-sheet-pdf");
-      await downloadCharacterSheetPdf(libraryToPdfCharacter(character));
+      await downloadCharacterSheetPdf(libraryToPdfCharacter(character), locale);
     } catch (cause) { setActionError(characterRequestError(cause, "characterActions.pdfError")); } finally {
       setPdfBusy(false);
     }

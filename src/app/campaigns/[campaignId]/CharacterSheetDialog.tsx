@@ -154,14 +154,18 @@ export function CharacterSheetDialog({
   // The route's line after armor went on or off outside a fight: the minutes
   // it took, already on the clock.
   const [timeNote, setTimeNote] = useState<string | null>(null);
+  const [pdfFailed, setPdfFailed] = useState(false);
   const spends = mine || corrects;
   // The usage route's own refusal for a dead character's spend.
   const deadNote = dead && !corrects ? t("sheetDialog.error.deadNote", { name: sheet.name }) : null;
 
   async function handleDownloadPdf() {
     setPdfBusy(true);
+    setPdfFailed(false);
     try {
-      await downloadCharacterSheetPdf(sheet);
+      await downloadCharacterSheetPdf(sheet, locale);
+    } catch {
+      setPdfFailed(true);
     } finally {
       setPdfBusy(false);
     }
@@ -567,6 +571,7 @@ export function CharacterSheetDialog({
             </SheetBlock>
           ) : null}
 
+          {pdfFailed ? <p role="alert" className="mt-3 text-sm text-amber-300">{t("characterActions.pdfError")}</p> : null}
           <div className="mt-4 flex justify-end gap-2">
             <button
               type="button"

@@ -193,6 +193,19 @@ this section records current delivery state and acceptance gaps only.
   details remain unchanged. RollCard stays pending for the remaining producer
   audit. Logs: /tmp/odm-paired-test-enforce-final-engine.log and
   /tmp/odm-paired-test-chinese-roll-presentations.log.
+- PDF follow-up: local Noto SC regular TrueType (official variable source,
+  weight 400 via fontTools 4.57.0, OFL/source hashes in public/fonts/README.md)
+  and @pdf-lib/fontkit 1.1.1 preserve editable Chinese text. Viewer locale now
+  reaches library/session exports; owned labels, native rules/names and spell
+  lists project in Chinese, with English switching and authored text preserved.
+  Attack table height and single-line font sizing avoid prior clipping; ASCII
+  numeric fields retain Helvetica. Four PDF field/English checks and 18 sheet
+  dialog checks pass; fighter and two-page caster renders were inspected, with
+  zero Poppler warnings. Session download failures show a localized error.
+  Final type/lint and 12 sheet-party checks pass. Actual browser download, failed-font transport,
+  long Chinese field wrapping/overflow remain separate gates. No full PDF or
+  CharacterSheetDialog acceptance claimed yet. Logs: /tmp/odm-pdf-locales-final-test.log
+  and /tmp/odm-pdf-sheet-dialog-regression.log.
 - UI source coverage: 434/438 in-scope owners, two explicitly deferred voice
   owners, zero pending literal sites, 19325 keys. Four text owners still
   require review; the final coverage gate must continue to fail until closed.

@@ -2,7 +2,9 @@
 // with a fillable form. The portrait path is the browser's job (WebP is
 // transcoded there, see src/lib/pdf/download.ts); here the sheet has none,
 // which is the common case for a fresh character anyway.
+import "../src/lib/i18n/messages.ts";
 import assert from "node:assert/strict";
+import fs from "node:fs";
 import { register } from "node:module";
 import { PDFDocument } from "pdf-lib";
 
@@ -82,4 +84,32 @@ await test("pre-fetched portrait bytes are embedded without a fetch", async () =
   assert.equal(doc.getPageCount(), 1);
 });
 
+await test("Chinese authored names and notes survive in editable fields", async () => {
+  const character=libraryToPdfCharacter({name:'林河',race:sheet.race,class:sheet.class,subclass:'',background:'soldier',level:1,sheet:{...sheet,name:'林河',backstory:'在城门守候。',notes:'保留中文笔记。'}});
+  const bytes=await buildCharacterSheetPdf(character,{locale:'zh-CN',fontBytes:fs.readFileSync(new URL('../public/fonts/NotoSansSC-Regular.ttf',import.meta.url))});
+  const doc=await PDFDocument.load(bytes);
+  const fields=doc.getForm().getFields().filter(field=>typeof field.getText==='function');
+  assert(fields.some(field=>field.getText()==='林河'));
+  assert(fields.some(field=>field.getText()==='战士 1'));
+  assert(fields.some(field=>field.getText()?.includes('长剑')));
+  assert(fields.some(field=>field.getText()?.includes('所有护甲')));
+  assert(fields.some(field=>field.getText()?.includes('在城门守候。')));
+  assert(fields.some(field=>field.getText()?.includes('保留中文笔记。')));
+  assert(fields.every(field=>field.acroField.getWidgets().every(widget=>Boolean(widget.getNormalAppearance()))));
+  if(process.env.ODM_PDF_PREVIEW)fs.writeFileSync(process.env.ODM_PDF_PREVIEW,bytes);
+});
+await test("Chinese caster sheet preserves mechanics, native names and editable spell lists", async () => {
+  const character=libraryToPdfCharacter({name:'星澜',race:'human',class:'wizard',subclass:'',background:'sage',level:1,sheet:{...sheet,name:'星澜',class:'wizard',features:[],spellcasting:{ability:'int',slots:{1:{max:2,used:1}},prepared:['Magic Missile'],known:[],cantrips:['Fire Bolt'],spellbook:['Magic Missile','Shield']}}});
+  const snapshot=structuredClone(character);
+  const fontBytes=fs.readFileSync(new URL('../public/fonts/NotoSansSC-Regular.ttf',import.meta.url));
+  const bytes=await buildCharacterSheetPdf(character,{locale:'zh-CN',fontBytes});
+  const doc=await PDFDocument.load(bytes),values=doc.getForm().getFields().filter(f=>typeof f.getText==='function').map(f=>f.getText());
+  assert.equal(doc.getPageCount(),2);assert(values.some(v=>v==='法师 施法'));
+  assert(values.some(v=>v?.includes('魔法飞弹')&&v.includes('护盾术')&&v.includes('火焰箭')));
+  assert.deepEqual(character,snapshot);
+  const english=await PDFDocument.load(await buildCharacterSheetPdf(character,{locale:'en',fontBytes}));
+  const enValues=english.getForm().getFields().filter(f=>typeof f.getText==='function').map(f=>f.getText());
+  assert(enValues.includes('星澜'));assert(enValues.includes('Wizard Spellcasting'));assert(enValues.some(v=>v?.includes('Magic Missile')));
+  if(process.env.ODM_PDF_PREVIEW)fs.writeFileSync(process.env.ODM_PDF_PREVIEW.replace('.pdf','-caster.pdf'),bytes);
+});
 console.log(`test-character-pdf: ${passed} passed`);

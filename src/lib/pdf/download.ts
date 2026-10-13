@@ -4,6 +4,8 @@
 
 import { downloadBlob, filenameSlug } from "@/lib/download";
 import type { PdfCharacter } from "./character-sheet-pdf";
+import type { AppLocale } from "../i18n/locales.ts";
+import { loadLocaleMessages } from "../i18n/client-catalogs.ts";
 
 function isPng(bytes: Uint8Array): boolean {
   return bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4e && bytes[3] === 0x47;
@@ -63,11 +65,19 @@ async function portraitBytes(url: string | null | undefined): Promise<Uint8Array
   }
 }
 
-export async function downloadCharacterSheetPdf(character: PdfCharacter): Promise<void> {
+export async function downloadCharacterSheetPdf(character: PdfCharacter, locale: AppLocale = "en"): Promise<void> {
   // pdf-lib and its fonts only load when someone asks for the sheet, so
   // the table and the character page do not carry them up front.
   const { buildCharacterSheetPdf } = await import("./character-sheet-pdf");
+  await Promise.all([loadLocaleMessages(locale, "ui"), loadLocaleMessages(locale, "content"), loadLocaleMessages(locale, "help")]);
+  let fontBytes: Uint8Array | undefined;
+  if (locale !== "en" || /[^\u0000-\u00ff]/.test(JSON.stringify(character))) {
+    const response = await fetch("/fonts/NotoSansSC-Regular.ttf");
+    if (!response.ok) throw new Error("Character PDF font could not be loaded.");
+    fontBytes = new Uint8Array(await response.arrayBuffer());
+  }
   const bytes = await buildCharacterSheetPdf(character, {
+    fontBytes, locale,
     portraitBytes: await portraitBytes(character.portrait?.url),
   });
   // Copy into a fresh ArrayBuffer so the Blob never sees a SharedArrayBuffer-backed view.

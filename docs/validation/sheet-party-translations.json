@@ -17,7 +17,7 @@
     "scripts/lib/combat-ui-fixtures.mjs": "c30d098937f9b7b4abc82b696b792f46d23c13639c8faa76acbe6406467f7a7b",
     "scripts/lib/sheet-party-fixtures.mjs": "85ffb69a377fa633acbd680fd8c6bfc05c70c1b6719a1d07b5cbdeb2455e3bd8",
     "src/app/api/campaigns/[campaignId]/sheet/route.ts": "f38e06d5e7120fbe65521fdd8ca2dc8ebd4b37e09d0ee91f5641df6bf4e71c43",
-    "src/app/campaigns/[campaignId]/CharacterSheetDialog.tsx": "cbbc590c4e1ee5e0665856ae396019ad127d0ad93f4490aa0a277281d00d509e",
+    "src/app/campaigns/[campaignId]/CharacterSheetDialog.tsx": "bed59758b734b19478b91259d2c15e5bcfe1606a56d2fd75850498e253c5ff33",
     "src/app/campaigns/[campaignId]/PartyPanel.tsx": "2bb148a325e0661352856dbf50ec0972d422275f3bdaad0f3abe97c1b1abd726",
     "src/components/sheet/SheetChoices.tsx": "c69cbce9c5be6af8d7dc83146f908b342db38423fde595e852c847307c974568",
     "src/components/sheet/SheetCounters.tsx": "649bf1de0c499e00874d6edfdbf397db883eb913786bd58bf5f471978bab003d",
@@ -113,5 +113,13 @@
       "src/lib/i18n/roll-presentations.ts": "3999299af4647b88f15531dfeca1c5bae09350bbd2479b877eba0c8d7706d582"
     },
     "review": "Reviewed formatter additions for exact native feature/option names, repeated reaction frames and recognized feature/spell pairs. Original English early return, special level-up presentation, numbers, source roll state and golden renders unchanged. Local Reaper and rolled-level route regressions verify mechanics and persistence. This refresh records source review rather than independent approval."
+  },
+  "pdfLocaleReview": {
+    "date": "2026-10-14",
+    "baseCommit": "01be85f20a72b2951b0dc30eeb4c31d2d465caea",
+    "previousSha256": {
+      "src/app/campaigns/[campaignId]/CharacterSheetDialog.tsx": "cbbc590c4e1ee5e0665856ae396019ad127d0ad93f4490aa0a277281d00d509e"
+    },
+    "review": "PDF download receives viewer locale and reports a localized failure with busy-state recovery. The added error state follows existing state slots; ordinary dialog English output and mechanics callbacks remain unchanged. Local PDF rendering/field checks are separate from actual browser download acceptance."
   }
 }
