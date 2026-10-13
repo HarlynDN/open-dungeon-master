@@ -211,8 +211,13 @@ this section records current delivery state and acceptance gaps only.
   CharacterSheetDialog acceptance claimed yet. Logs: /tmp/odm-pdf-locales-final-test.log
   and /tmp/odm-pdf-sheet-dialog-regression.log; latest PDF checks:
   /tmp/odm-pdf-wrap-tests.log and /tmp/odm-pdf-wrap-types.log.
-- UI source coverage: 434/438 in-scope owners, two explicitly deferred voice
-  owners, zero pending literal sites, 19325 keys. Four text owners still
+- Hand parent review closed: all child material owners are covered; six existing
+  hand/feature/actor/casting/spell/table locale groups pass. Full source review
+  confirms viewer/campaign language separation, canonical intents and target
+  IDs, authored fallback, notice projection and IME guards. Logs:
+  /tmp/odm-final-test-hand-locales.log and corresponding five group logs.
+- UI source coverage: 435/438 in-scope owners, two explicitly deferred voice
+  owners, zero pending literal sites, 19325 keys. Three text owners still
   require review; the final coverage gate must continue to fail until closed.
   Completed pure-helper/consumer reviews are recorded in
   docs/validation/ui-localization.json. Whole-owner dynamic output and browser

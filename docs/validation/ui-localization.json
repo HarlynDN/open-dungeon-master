@@ -425,8 +425,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/Hand.tsx",
-      "state": "pending",
-      "review": "Owned labels, campaign-locale sentences and common network/casting/attack/bonus/pool/material/ritual refusals reviewed. Native inventory examples stay verbatim for copyable engine matching; unknown authored restrictions retained. Verified visible enemy/current-actor names and anonymous concealed-actor labels reviewed; filtered order positions are not used as full-order indexes. Proper/ambiguous names retain their source. Remaining dynamic frames keep this pending. Current table-flow batch: Reviewed complete hand flow: viewer-locale labels/material/refusals, campaign-locale action prose, native intents and source-preserved notices. Board-generated sentences resolve registered locale display names to unique native IDs, including a composer surviving a UI switch; ambiguous names do not auto-pick. Child material owners remain independently tracked. Remaining known material/native-output gaps above still prevent full-owner completion."
+      "state": "covered",
+      "review": "Whole-owner review: personal-locale controls/current actors/notices and campaign-locale action prose remain separate. Canonical card intents, target IDs, choices and pending-cost accounting are unchanged. Native refusals use the hand adapter; unknown authored restrictions and copyable inventory examples stay literal. Board-generated sentences resolve unique native IDs across UI switches, with ambiguous names rejected. All imported hand material owners are now reviewed separately. Six existing locale regression groups (hand, feature, actor, casting, spell, table) pass on 2026-10-14, including IME commit gates and English preservation. Live bilingual combat acceptance remains a release gate."
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandAimBar.tsx",
