@@ -414,5 +414,341 @@ export const MAGIC_ITEM_MATERIAL_MESSAGES = /*#__PURE__*/ defineMessages({
   "itemHelp.nativeMeta.wand-of-web": {
     "en": "Wand, uncommon (requires attunement by a spellcaster)",
     "zh-CN": "魔杖，非普通（须由施法者同调）"
+  },
+  "itemHelp.native.ammunition-1-2-or-3": {
+    "en": "You have a bonus to attack and damage rolls made with this piece of magic ammunition. The bonus is determined by the rarity of the ammunition. Once it hits a target, the ammunition is no longer magical.",
+    "zh-CN": "使用这枚魔法弹药进行攻击时，攻击检定和伤害掷骰获得加值，数值由弹药的稀有度决定。命中目标后，弹药便失去魔法。"
+  },
+  "itemHelp.nativeMeta.ammunition-1-2-or-3": {
+    "en": "Weapon (any ammunition), uncommon (+1), rare (+2), or very rare (+3)",
+    "zh-CN": "武器（任意弹药），非普通（+1）、珍稀（+2）或极珍稀（+3）"
+  },
+  "itemHelp.native.arrow-of-slaying": {
+    "en": "An *arrow of slaying* is a magic weapon meant to slay a particular kind of creature. Some are more focused than others; for example, there are both *arrows of dragon slaying* and *arrows of blue dragon slaying*. If a creature belonging to the type, race, or group associated with an *arrow of slaying* takes damage from the arrow, the creature must make a DC 17 Constitution saving throw, taking an extra 6d10 piercing damage on a failed save, or half as much extra damage on a successful one.\n\nOnce an *arrow of slaying* deals its extra damage to a creature, it becomes a nonmagical arrow.\n\nOther types of magic ammunition of this kind exist, such as *bolts of slaying* meant for a crossbow, though arrows are most common.",
+    "zh-CN": "*杀戮箭*是用于杀死特定生物的魔法武器。有些针对的范围更窄，例如既有*屠龙箭*，也有*蓝龙杀戮箭*。若属于杀戮箭所针对类型、种族或群体的生物受到该箭伤害，它须进行难度为 17 的体质豁免；失败额外受到 6d10 点穿刺伤害，成功则额外伤害减半。\n\n杀戮箭对生物造成额外伤害后，就变为非魔法箭。\n\n也存在同类的其他魔法弹药，例如供弩使用的杀戮弩矢，不过箭最为常见。"
+  },
+  "itemHelp.nativeMeta.arrow-of-slaying": {
+    "en": "Weapon (arrow), very rare",
+    "zh-CN": "武器（箭），极珍稀"
+  },
+  "itemHelp.native.berserker-axe": {
+    "en": "You gain a +1 bonus to attack and damage rolls made with this magic weapon. In addition, while you are attuned to this weapon, your hit point maximum increases by 1 for each level you have attained.\n\n***Curse***. This axe is cursed, and becoming attuned to it extends the curse to you. As long as you remain cursed, you are unwilling to part with the axe, keeping it within reach at all times. You also have disadvantage on attack rolls with weapons other than this one, unless no foe is within 60 feet of you that you can see or hear.\n\nWhenever a hostile creature damages you while the axe is in your possession, you must succeed on a DC 15 Wisdom saving throw or go berserk. While berserk, you must use your action each round to attack the creature nearest to you with the axe. If you can make extra attacks as part of the Attack action, you use those extra attacks, moving to attack the next nearest creature after you fell your current target. If you have multiple possible targets, you attack one at random. You are berserk until you start your turn with no creatures within 60 feet of you that you can see or hear.",
+    "zh-CN": "使用这件魔法武器进行攻击时，攻击检定和伤害掷骰获得 +1 加值。此外，与它同调期间，你每拥有一级，生命值上限便增加 1。\n\n**诅咒。**这把斧头受到诅咒，同调会将诅咒延伸到你身上。只要仍受诅咒，你就不愿与斧头分离，始终将其留在触及范围内。使用其他武器的攻击检定具有劣势，除非 60 英尺内没有你能看见或听见的敌人。\n\n持有斧头期间，每当敌对生物对你造成伤害，你须进行难度为 15 的感知豁免；失败则陷入狂暴。狂暴时，每轮须用动作以斧头攻击距离最近的生物。若攻击动作允许额外攻击，须使用这些攻击；击倒当前目标后，移动并攻击下一个最近的生物。若有多个可能目标，随机选择。狂暴持续至你的回合开始时，60 英尺内没有你能看见或听见的任何生物。"
+  },
+  "itemHelp.nativeMeta.berserker-axe": {
+    "en": "Weapon (any axe), rare (requires attunement)",
+    "zh-CN": "武器（任意斧），珍稀（需要同调）"
+  },
+  "itemHelp.native.dagger-of-venom": {
+    "en": "You gain a +1 bonus to attack and damage rolls made with this magic weapon.\n\nYou can use an action to cause thick, black poison to coat the blade. The poison remains for 1 minute or until an attack using this weapon hits a creature. That creature must succeed on a DC 15 Constitution saving throw or take 2d10 poison damage and become poisoned for 1 minute. The dagger can't be used this way again until the next dawn.",
+    "zh-CN": "使用这件魔法武器进行攻击时，攻击检定和伤害掷骰获得 +1 加值。\n\n可用一个动作使黏稠黑毒覆满刃面，持续 1 分钟，或直到这件武器的攻击命中生物。该生物须进行难度为 15 的体质豁免；失败受到 2d10 点毒素伤害，并中毒 1 分钟。此特性须等到下一个黎明才能再次使用。"
+  },
+  "itemHelp.nativeMeta.dagger-of-venom": {
+    "en": "Weapon (dagger), rare",
+    "zh-CN": "武器（匕首），珍稀"
+  },
+  "itemHelp.native.dancing-sword": {
+    "en": "You can use a bonus action to toss this magic sword into the air and speak the command word. When you do so, the sword begins to hover, flies up to 30 feet, and attacks one creature of your choice within 5 feet of it. The sword uses your attack roll and ability score modifier to damage rolls.\n\nWhile the sword hovers, you can use a bonus action to cause it to fly up to 30 feet to another spot within 30 feet of you. As part of the same bonus action, you can cause the sword to attack one creature within 5 feet of it.\n\nAfter the hovering sword attacks for the fourth time, it flies up to 30 feet and tries to return to your hand. If you have no hand free, it falls to the ground at your feet. If the sword has no unobstructed path to you, it moves as close to you as it can and then falls to the ground. It also ceases to hover if you grasp it or move more than 30 feet away from it.",
+    "zh-CN": "可用附赠动作将魔法剑抛入空中并说出命令词。剑开始悬浮，飞行至多 30 英尺，并攻击你选择的、距它 5 英尺内的一个生物。剑使用你的攻击检定，伤害掷骰使用你的属性调整值。\n\n剑悬浮时，可用附赠动作让它飞行至多 30 英尺，到达距你 30 英尺内的另一个位置；同一个附赠动作还可让它攻击距它 5 英尺内的一个生物。\n\n悬浮的剑完成第四次攻击后，会飞行至多 30 英尺，尝试回到你手中。若没有空闲的手，便落在你脚边；若返回路径被阻挡，它会尽量靠近你，再落地。若你抓住剑，或与它相距超过 30 英尺，剑也会停止悬浮。"
+  },
+  "itemHelp.nativeMeta.dancing-sword": {
+    "en": "Weapon (any sword), very rare (requires attunement)",
+    "zh-CN": "武器（任意剑），极珍稀（需要同调）"
+  },
+  "itemHelp.native.defender": {
+    "en": "You gain a +3 bonus to attack and damage rolls made with this magic weapon.\n\nThe first time you attack with the sword on each of your turns, you can transfer some or all of the sword's bonus to your Armor Class, instead of using the bonus on any attacks that turn. For example, you could reduce the bonus to your attack and damage rolls to +1 and gain a +2 bonus to AC. The adjusted bonuses remain in effect until the start of your next turn, although you must hold the sword to gain a bonus to AC from it.",
+    "zh-CN": "使用这件魔法武器进行攻击时，攻击检定和伤害掷骰获得 +3 加值。\n\n每个回合首次用剑攻击时，可将部分或全部武器加值转移到护甲等级，替代该回合攻击所获得的加值。例如，将攻击检定和伤害掷骰的加值降为 +1，换取 +2 护甲等级。调整持续至你的下一回合开始；但必须手持剑，才能获得它提供的护甲等级加值。"
+  },
+  "itemHelp.nativeMeta.defender": {
+    "en": "Weapon (any sword), legendary (requires attunement)",
+    "zh-CN": "武器（任意剑），传奇（需要同调）"
+  },
+  "itemHelp.native.dragon-slayer": {
+    "en": "You gain a +1 bonus to attack and damage rolls made with this magic weapon.\n\nWhen you hit a dragon with this weapon, the dragon takes an extra 3d6 damage of the weapon's type. For the purpose of this weapon, \"dragon\" refers to any creature with the dragon type, including dragon turtles and wyverns.",
+    "zh-CN": "使用这件魔法武器进行攻击时，攻击检定和伤害掷骰获得 +1 加值。\n\n命中龙时，额外造成 3d6 点武器同类型伤害。对此武器而言，“龙”包括所有龙类生物，例如龙龟和双足飞龙。"
+  },
+  "itemHelp.nativeMeta.dragon-slayer": {
+    "en": "Weapon (any sword), rare",
+    "zh-CN": "武器（任意剑），珍稀"
+  },
+  "itemHelp.native.dwarven-thrower": {
+    "en": "You gain a +3 bonus to attack and damage rolls made with this magic weapon. It has the thrown property with a normal range of 20 feet and a long range of 60 feet. When you hit with a ranged attack using this weapon, it deals an extra 1d8 damage or, if the target is a giant, 2d8 damage. Immediately after the attack, the weapon flies back to your hand.",
+    "zh-CN": "使用这件魔法武器进行攻击时，攻击检定和伤害掷骰获得 +3 加值。武器具有投掷属性，正常射程为 20 英尺，长射程为 60 英尺。以它进行远程攻击并命中时，额外造成 1d8 点伤害；若目标是巨人，则额外伤害为 2d8。攻击后，武器立即飞回你手中。"
+  },
+  "itemHelp.nativeMeta.dwarven-thrower": {
+    "en": "Weapon (warhammer), very rare (requires attunement by a dwarf)",
+    "zh-CN": "武器（战锤），极珍稀（须由矮人同调）"
+  },
+  "itemHelp.native.flame-tongue": {
+    "en": "You can use a bonus action to speak this magic sword's command word, causing flames to erupt from the blade. These flames shed bright light in a 40-foot radius and dim light for an additional 40 feet. While the sword is ablaze, it deals an extra 2d6 fire damage to any target it hits. The flames last until you use a bonus action to speak the command word again or until you drop or sheathe the sword.",
+    "zh-CN": "可用附赠动作说出魔法剑的命令词，使剑刃燃起火焰，照亮半径 40 英尺的明亮区域，以及其外再延伸 40 英尺的微光区域。燃烧时，每次命中目标都额外造成 2d6 点火焰伤害。火焰持续至你再次用附赠动作说出命令词、丢下剑或将剑入鞘。"
+  },
+  "itemHelp.nativeMeta.flame-tongue": {
+    "en": "Weapon (any sword), rare (requires attunement)",
+    "zh-CN": "武器（任意剑），珍稀（需要同调）"
+  },
+  "itemHelp.native.frost-brand": {
+    "en": "When you hit with an attack using this magic sword, the target takes an extra 1d6 cold damage. In addition, while you hold the sword, you have resistance to fire damage.\n\nIn freezing temperatures, the blade sheds bright light in a 10-foot radius and dim light for an additional 10 feet.\n\nWhen you draw this weapon, you can extinguish all nonmagical flames within 30 feet of you. This property can be used no more than once per hour.",
+    "zh-CN": "用这把魔法剑攻击并命中时，目标额外受到 1d6 点寒冷伤害。此外，手持剑时，你对火焰伤害具有抗性。\n\n气温达到冰点以下时，剑刃照亮半径 10 英尺的明亮区域，以及其外再延伸 10 英尺的微光区域。\n\n拔出武器时，可熄灭你 30 英尺内的所有非魔法火焰。此特性每小时至多使用一次。"
+  },
+  "itemHelp.native.giant-slayer": {
+    "en": "You gain a +1 bonus to attack and damage rolls made with this magic weapon.\n\nWhen you hit a giant with it, the giant takes an extra 2d6 damage of the weapon's type and must succeed on a DC 15 Strength saving throw or fall prone. For the purpose of this weapon, \"giant\" refers to any creature with the giant type, including ettins and trolls.",
+    "zh-CN": "使用这件魔法武器进行攻击时，攻击检定和伤害掷骰获得 +1 加值。\n\n命中巨人时，额外造成 2d6 点武器同类型伤害；巨人还须进行难度为 15 的力量豁免，失败则倒地。对此武器而言，“巨人”包括所有巨人类生物，例如双头巨人和巨魔。"
+  },
+  "itemHelp.nativeMeta.giant-slayer": {
+    "en": "Weapon (any axe or sword), rare",
+    "zh-CN": "武器（任意斧或剑），珍稀"
+  },
+  "itemHelp.native.hammer-of-thunderbolts": {
+    "en": "You gain a +1 bonus to attack and damage rolls made with this magic weapon.\n\n***Giant's Bane (Requires Attunement)***. You must be wearing a *belt of giant strength* (any variety) and *gauntlets of ogre power* to attune to this weapon. The attunement ends if you take off either of those items. While you are attuned to this weapon and holding it, your Strength score increases by 4 and can exceed 20, but not 30. When you roll a 20 on an attack roll made with this weapon against a giant, the giant must succeed on a DC 17 Constitution saving throw or die.\n\nThe hammer also has 5 charges. While attuned to it, you can expend 1 charge and make a ranged weapon attack with the hammer, hurling it as if it had the thrown property with a normal range of 20 feet and a long range of 60 feet. If the attack hits, the hammer unleashes a thunderclap audible out to 300 feet. The target and every creature within 30 feet of it must succeed on a DC 17 Constitution saving throw or be stunned until the end of your next turn. The hammer regains 1d4+1 expended charges daily at dawn.",
+    "zh-CN": "使用这件魔法武器进行攻击时，攻击检定和伤害掷骰获得 +1 加值。\n\n**巨人克星（需要同调）。**必须同时穿戴任意类型的*巨人力量腰带*和*食人魔力量手套*，才能与此武器同调；取下其中任一物品，同调即结束。同调并手持武器时，力量值增加 4，可超过 20，但不得超过 30。用此武器攻击巨人且攻击骰掷出 20 时，巨人须进行难度为 17 的体质豁免；失败则死亡。\n\n战锤还有 5 点充能。同调期间，可消耗 1 点充能并进行一次远程武器攻击，将战锤像具有投掷属性的武器一样掷出，正常射程为 20 英尺，长射程为 60 英尺。命中时，战锤释放可传至 300 英尺外的雷响。目标及距它 30 英尺内的每个生物须进行难度为 17 的体质豁免；失败则震慑，直到你的下一回合结束。每日黎明恢复已消耗的 1d4+1 点充能。"
+  },
+  "itemHelp.nativeMeta.hammer-of-thunderbolts": {
+    "en": "Weapon (maul), legendary",
+    "zh-CN": "武器（巨锤），传奇"
+  },
+  "itemHelp.native.holy-avenger": {
+    "en": "You gain a +3 bonus to attack and damage rolls made with this magic weapon. When you hit a fiend or an undead with it, that creature takes an extra 2d10 radiant damage.\n\nWhile you hold the drawn sword, it creates an aura in a 10-foot radius around you. You and all creatures friendly to you in the aura have advantage on saving throws against spells and other magical effects. If you have 17 or more levels in the paladin class, the radius of the aura increases to 30 feet.",
+    "zh-CN": "使用这件魔法武器进行攻击时，攻击检定和伤害掷骰获得 +3 加值。命中邪魔或亡灵时，目标额外受到 2d10 点光耀伤害。\n\n手持出鞘的剑时，它在你周围产生半径 10 英尺的灵光。你及灵光内所有对你友好的生物，抵抗法术和其他魔法效果时，豁免具有优势。若拥有至少 17 级圣武士职业等级，灵光半径扩大至 30 英尺。"
+  },
+  "itemHelp.nativeMeta.holy-avenger": {
+    "en": "Weapon (any sword), legendary (requires attunement by a paladin)",
+    "zh-CN": "武器（任意剑），传奇（须由圣武士同调）"
+  },
+  "itemHelp.native.immovable-rod": {
+    "en": "This flat iron rod has a button on one end. You can use an action to press the button, which causes the rod to become magically fixed in place. Until you or another creature uses an action to push the button again, the rod doesn't move, even if it is defying gravity. The rod can hold up to 8,000 pounds of weight. More weight causes the rod to deactivate and fall. A creature can use an action to make a DC 30 Strength check, moving the fixed rod up to 10 feet on a success.",
+    "zh-CN": "这根扁平铁棒的一端有一个按钮。可用一个动作按下，使铁棒以魔法固定在原处。直到你或其他生物再次用一个动作按下按钮，它都不会移动，即使违背重力。铁棒可承受至多 8,000 磅重量，超过则停用并坠落。生物可用一个动作进行难度为 30 的力量检定；成功时，可将固定的铁棒移动至多 10 英尺。"
+  },
+  "itemHelp.nativeMeta.immovable-rod": {
+    "en": "Rod, uncommon",
+    "zh-CN": "权杖，非普通"
+  },
+  "itemHelp.native.javelin-of-lightning": {
+    "en": "This javelin is a magic weapon. When you hurl it and speak its command word, it transforms into a bolt of lightning, forming a line 5 feet wide that extends out from you to a target within 120 feet. Each creature in the line excluding you and the target must make a DC 13 Dexterity saving throw, taking 4d6 lightning damage on a failed save, and half as much damage on a successful one. The lightning bolt turns back into a javelin when it reaches the target. Make a ranged weapon attack against the target. On a hit, the target takes damage from the javelin plus 4d6 lightning damage.\n\nThe javelin's property can't be used again until the next dawn. In the meantime, the javelin can still be used as a magic weapon.",
+    "zh-CN": "这支标枪是魔法武器。掷出并说出命令词时，它变为一道闪电，从你的位置延伸到 120 英尺内的目标，形成宽 5 英尺的线形区域。除你和目标外，区域内每个生物须进行难度为 13 的敏捷豁免；失败受到 4d6 点闪电伤害，成功则伤害减半。闪电抵达目标时变回标枪；对目标进行一次远程武器攻击，命中则造成标枪伤害，另加 4d6 点闪电伤害。\n\n此特性须等到下一个黎明才能再次使用；其间仍可将标枪当作魔法武器使用。"
+  },
+  "itemHelp.nativeMeta.javelin-of-lightning": {
+    "en": "Weapon (javelin), uncommon",
+    "zh-CN": "武器（标枪），非普通"
+  },
+  "itemHelp.native.luck-blade": {
+    "en": "You gain a +1 bonus to attack and damage rolls made with this magic weapon. While the sword is on your person, you also gain a +1 bonus to saving throws.\n\n***Luck***. If the sword is on your person, you can call on its luck (no action required) to reroll one attack roll, ability check, or saving throw you dislike. You must use the second roll. This property can't be used again until the next dawn.\n\n***Wish***. The sword has 1d4-1 charges. While holding it, you can use an action to expend 1 charge and cast the *wish* spell from it. This property can't be used again until the next dawn. The sword loses this property if it has no charges.",
+    "zh-CN": "使用这件魔法武器进行攻击时，攻击检定和伤害掷骰获得 +1 加值。将剑带在身上时，豁免也获得 +1 加值。\n\n**幸运。**将剑带在身上时，可借助它的幸运，重掷一次不满意的攻击检定、属性检定或豁免，无需动作；必须使用第二次结果。此特性须等到下一个黎明才能再次使用。\n\n**祈愿。**剑拥有 1d4-1 点充能。手持时，可用一个动作消耗 1 点充能，通过剑施放*祈愿术*。此特性须等到下一个黎明才能再次使用。充能耗尽后，剑失去此特性。"
+  },
+  "itemHelp.native.mace-of-disruption": {
+    "en": "When you hit a fiend or an undead with this magic weapon, that creature takes an extra 2d6 radiant damage. If the target has 25 hit points or fewer after taking this damage, it must succeed on a DC 15 Wisdom saving throw or be destroyed. On a successful save, the creature becomes frightened of you until the end of your next turn.\n\nWhile you hold this weapon, it sheds bright light in a 20-foot radius and dim light for an additional 20 feet.",
+    "zh-CN": "以这件魔法武器命中邪魔或亡灵时，目标额外受到 2d6 点光耀伤害。受到伤害后若剩余生命值不超过 25，它须进行难度为 15 的感知豁免；失败则被摧毁，成功则对你陷入恐慌，直到你的下一回合结束。\n\n手持时，武器照亮半径 20 英尺的明亮区域，以及其外再延伸 20 英尺的微光区域。"
+  },
+  "itemHelp.nativeMeta.mace-of-disruption": {
+    "en": "Weapon (mace), rare (requires attunement)",
+    "zh-CN": "武器（钉头锤），珍稀（需要同调）"
+  },
+  "itemHelp.native.mace-of-smiting": {
+    "en": "You gain a +1 bonus to attack and damage rolls made with this magic weapon. The bonus increases to +3 when you use the mace to attack a construct.\n\nWhen you roll a 20 on an attack roll made with this weapon, the target takes an extra 2d6 bludgeoning damage, or 4d6 bludgeoning damage if it's a construct. If a construct has 25 hit points or fewer after taking this damage, it is destroyed.",
+    "zh-CN": "使用这件魔法武器进行攻击时，攻击检定和伤害掷骰获得 +1 加值；攻击构装生物时，加值提高至 +3。\n\n用此武器攻击且攻击骰掷出 20 时，目标额外受到 2d6 点钝击伤害；若目标是构装生物，则为 4d6。构装生物受到伤害后若剩余生命值不超过 25，便被摧毁。"
+  },
+  "itemHelp.nativeMeta.mace-of-smiting": {
+    "en": "Weapon (mace), rare",
+    "zh-CN": "武器（钉头锤），珍稀"
+  },
+  "itemHelp.native.mace-of-terror": {
+    "en": "This magic weapon has 3 charges. While holding it, you can use an action and expend 1 charge to release a wave of terror. Each creature of your choice in a 30-foot radius extending from you must succeed on a DC 15 Wisdom saving throw or become frightened of you for 1 minute. While it is frightened in this way, a creature must spend its turns trying to move as far away from you as it can, and it can't willingly move to a space within 30 feet of you. It also can't take reactions. For its action, it can use only the Dash action or try to escape from an effect that prevents it from moving. If it has nowhere it can move, the creature can use the Dodge action. At the end of each of its turns, a creature can repeat the saving throw, ending the effect on itself on a success.\n\nThe mace regains 1d3 expended charges daily at dawn.",
+    "zh-CN": "这件魔法武器拥有 3 点充能。手持时，可用一个动作消耗 1 点充能，释放恐惧波动。以你为中心、半径 30 英尺内，你选择的每个生物须进行难度为 15 的感知豁免；失败则对你陷入恐慌，持续 1 分钟。以此方式恐慌的生物须在回合中尽力远离你，不能自愿移动到你 30 英尺内，也无法使用反应。它的动作只能用于疾走，或尝试挣脱阻止移动的效果；若无处可移，则可执行闪避动作。每个回合结束时可再次进行豁免，成功则结束自身效果。\n\n每日黎明，钉头锤恢复已消耗的 1d3 点充能。"
+  },
+  "itemHelp.native.nine-lives-stealer": {
+    "en": "You gain a +2 bonus to attack and damage rolls made with this magic weapon.\n\nThe sword has 1d8+1 charges. If you score a critical hit against a creature that has fewer than 100 hit points, it must succeed on a DC 15 Constitution saving throw or be slain instantly as the sword tears its life force from its body (a construct or an undead is immune). The sword loses 1 charge if the creature is slain. When the sword has no charges remaining, it loses this property.",
+    "zh-CN": "使用这件魔法武器进行攻击时，攻击检定和伤害掷骰获得 +2 加值。\n\n剑拥有 1d8+1 点充能。对生命值低于 100 的生物造成重击时，目标须进行难度为 15 的体质豁免；失败则被剑抽走生命力，立即死亡，构装生物和亡灵免疫此效果。若目标被杀死，剑消耗 1 点充能。充能耗尽后，剑失去此特性。"
+  },
+  "itemHelp.native.oathbow": {
+    "en": "When you nock an arrow on this bow, it whispers in Elvish, \"Swift defeat to my enemies.\" When you use this weapon to make a ranged attack, you can, as a command phrase, say, \"Swift death to you who have wronged me.\" The target of your attack becomes your sworn enemy until it dies or until dawn seven days later. You can have only one such sworn enemy at a time. When your sworn enemy dies, you can choose a new one after the next dawn.\n\nWhen you make a ranged attack roll with this weapon against your sworn enemy, you have advantage on the roll. In addition, your target gains no benefit from cover, other than total cover, and you suffer no disadvantage due to long range. If the attack hits, your sworn enemy takes an extra 3d6 piercing damage.\n\nWhile your sworn enemy lives, you have disadvantage on attack rolls with all other weapons.",
+    "zh-CN": "将箭搭上弓时，它会用精灵语低声说：“愿我的敌人迅速溃败。”用弓进行远程攻击时，可说出命令：“愿伤害我的你迅速死去。”攻击目标成为你的誓敌，直到死亡，或七天后的黎明。一次只能有一个誓敌；誓敌死亡后，须等到下一个黎明才能选择新的誓敌。\n\n用弓对誓敌进行远程攻击检定时，具有优势。目标无法从完全掩护以外的掩护获益，你也不会因长射程而具有劣势。命中时，誓敌额外受到 3d6 点穿刺伤害。\n\n只要誓敌仍活着，使用所有其他武器的攻击检定都具有劣势。"
+  },
+  "itemHelp.nativeMeta.oathbow": {
+    "en": "Weapon (longbow), very rare (requires attunement)",
+    "zh-CN": "武器（长弓），极珍稀（需要同调）"
+  },
+  "itemHelp.native.rod-of-absorption": {
+    "en": "While holding this rod, you can use your reaction to absorb a spell that is targeting only you and not with an area of effect. The absorbed spell's effect is canceled, and the spell's energy-not the spell itself-is stored in the rod. The energy has the same level as the spell when it was cast. The rod can absorb and store up to 50 levels of energy over the course of its existence. Once the rod absorbs 50 levels of energy, it can't absorb more. If you are targeted by a spell that the rod can't store, the rod has no effect on that spell.\n\nWhen you become attuned to the rod, you know how many levels of energy the rod has absorbed over the course of its existence, and how many levels of spell energy it currently has stored.\n\nIf you are a spellcaster holding the rod, you can convert energy stored in it into spell slots to cast spells you have prepared or know. You can create spell slots only of a level equal to or lower than your own spell slots, up to a maximum of 5th level. You use the stored levels in place of your slots, but otherwise cast the spell as normal. For example, you can use 3 levels stored in the rod as a 3rd-level spell slot.\n\nA newly found rod has 1d10 levels of spell energy stored in it already. A rod that can no longer absorb spell energy and has no energy remaining becomes nonmagical.",
+    "zh-CN": "手持时，可使用反应吸收只以你为目标、且非区域效果的法术。法术效果被取消；储存的是能量，而非法术本身。能量环阶与该次施放的法术相同。权杖在整个存在期间累计至多吸收并储存 50 环能量；累计吸收 50 环后，便无法继续吸收。无法储存的法术不受权杖影响。\n\n同调时，你会知道权杖累计吸收过多少环能量，以及当前储存着多少环法术能量。\n\n施法者手持权杖时，可将储存能量转化为法术位，用于施放已准备或已知法术。生成的法术位不得高于你自己的法术位，且最高为 5 环。以储存环数代替自己的法术位，其他方面按通常方式施法。例如，可消耗储存的 3 环能量，作为一个 3 环法术位。\n\n新发现的权杖已储存 1d10 环法术能量。无法继续吸收且能量耗尽时，权杖失去魔法。"
+  },
+  "itemHelp.nativeMeta.rod-of-absorption": {
+    "en": "Rod, very rare (requires attunement)",
+    "zh-CN": "权杖，极珍稀（需要同调）"
+  },
+  "itemHelp.native.rod-of-alertness": {
+    "en": "This rod has a flanged head and the following properties.\n\n***Alertness***. While holding the rod, you have advantage on Wisdom (Perception) checks and on rolls for initiative.\n\n***Spells***. While holding the rod, you can use an action to cast one of the following spells from it: *detect evil and good*, *detect magic*, *detect poison and disease*, or *see invisibility.*\n\n***Protective Aura***. As an action, you can plant the haft end of the rod in the ground, whereupon the rod's head sheds bright light in a 60-foot radius and dim light for an additional 60 feet. While in that bright light, you and any creature that is friendly to you gain a +1 bonus to AC and saving throws and can sense the location of any invisible hostile creature that is also in the bright light.\n\nThe rod's head stops glowing and the effect ends after 10 minutes, or when a creature uses an action to pull the rod from the ground. This property can't be used again until the next dawn.",
+    "zh-CN": "权杖有一个带翼缘的杖头，并具有以下特性。\n\n**警觉。**手持时，感知（察觉）检定和先攻检定具有优势。\n\n**法术。**手持时，可用一个动作通过权杖施放*侦测邪恶与善良*、*侦测魔法*、*侦测毒素与疾病*或*识破隐形*之一。\n\n**防护灵光。**可用一个动作将杖柄插入地面；杖头照亮半径 60 英尺的明亮区域，以及其外再延伸 60 英尺的微光区域。在明亮区域内，你及对你友好的生物，护甲等级和豁免获得 +1 加值，并能感知同在明亮区域内的隐形敌对生物的位置。\n\n10 分钟后，或有生物用一个动作将权杖拔出地面时，杖头停止发光，效果结束。此特性须等到下一个黎明才能再次使用。"
+  },
+  "itemHelp.native.rod-of-lordly-might": {
+    "en": "This rod has a flanged head, and it functions as a magic mace that grants a +3 bonus to attack and damage rolls made with it. The rod has properties associated with six different buttons that are set in a row along the haft. It has three other properties as well, detailed below.\n\n***Six Buttons***. You can press one of the rod's six buttons as a bonus action. A button's effect lasts until you push a different button or until you push the same button again, which causes the rod to revert to its normal form.\n\nIf you press **button 1**, the rod becomes a *flame tongue*, as a fiery blade sprouts from the end opposite the rod's flanged head (you choose the type of sword).\n\nIf you press **button 2**, the rod's flanged head folds down and two crescent-shaped blades spring out, transforming the rod into a magic battleaxe that grants a +3 bonus to attack and damage rolls made with it.\n\nIf you press **button 3**, the rod's flanged head folds down, a spear point springs from the rod's tip, and the rod's handle lengthens into a 6-foot haft, transforming the rod into a magic spear that grants a +3 bonus to attack and damage rolls made with it.\n\nIf you press **button 4**, the rod transforms into a climbing pole up to 50 feet long, as you specify. In surfaces as hard as granite, a spike at the bottom and three hooks at the top anchor the pole. Horizontal bars 3 inches long fold out from the sides, 1 foot apart, forming a ladder. The pole can bear up to 4,000 pounds. More weight or lack of solid anchoring causes the rod to revert to its normal form.\n\nIf you press **button 5**, the rod transforms into a handheld battering ram and grants its user a +10 bonus to Strength checks made to break through doors, barricades, and other barriers.\n\nIf you press **button 6**, the rod assumes or remains in its normal form and indicates magnetic north. (Nothing happens if this function of the rod is used in a location that has no magnetic north.) The rod also gives you knowledge of your approximate depth beneath the ground or your height above it.\n\n***Drain Life***. When you hit a creature with a melee attack using the rod, you can force the target to make a DC 17 Constitution saving throw. On a failure, the target takes an extra 4d6 necrotic damage, and you regain a number of hit points equal to half that necrotic damage. This property can't be used again until the next dawn.\n\n***Paralyze***. When you hit a creature with a melee attack using the rod, you can force the target to make a DC 17 Strength saving throw. On a failure, the target is paralyzed for 1 minute. The target can repeat the saving throw at the end of each of its turns, ending the effect on a success. This property can't be used again until the next dawn.\n\n***Terrify***. While holding the rod, you can use an action to force each creature you can see within 30 feet of you to make a DC 17 Wisdom saving throw. On a failure, a target is frightened of you for 1 minute. A frightened target can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success. This property can't be used again until the next dawn.",
+    "zh-CN": "权杖有一个带翼缘的杖头，可作为魔法钉头锤使用，攻击检定和伤害掷骰获得 +3 加值。杖柄上排列着六个按钮，对应不同特性；此外还有下述三种特性。\n\n**六个按钮。**可用附赠动作按下任一按钮。效果持续至按下另一个按钮，或再次按下同一按钮，使权杖恢复通常形态。\n\n按下**按钮 1**，权杖变为*焰舌剑*；火焰剑刃从杖头另一端伸出，剑的类型由你选择。\n\n按下**按钮 2**，杖头折起，两片新月形刃弹出，变为魔法战斧，攻击检定和伤害掷骰获得 +3 加值。\n\n按下**按钮 3**，杖头折起，杖尖伸出矛头，柄延长为 6 英尺，变为魔法矛，攻击检定和伤害掷骰获得 +3 加值。\n\n按下**按钮 4**，权杖变为你指定长度、至多 50 英尺的攀爬杆。底端尖刺和顶端三个挂钩可固定在坚硬如花岗岩的表面上。两侧伸出长 3 英寸的横杆，间隔 1 英尺，形成梯子。可承受至多 4,000 磅；超过重量或缺乏牢固固定点时，权杖恢复通常形态。\n\n按下**按钮 5**，权杖变为手持攻城槌，使使用者破开门、路障和其他屏障的力量检定获得 +10 加值。\n\n按下**按钮 6**，权杖变为或保持通常形态，并指向磁北；若所在地点没有磁北，此功能不产生效果。权杖还会让你知道地下的大致深度，或地上的大致高度。\n\n**汲取生命。**以权杖近战攻击命中生物时，可迫使目标进行难度为 17 的体质豁免；失败额外受到 4d6 点黯蚀伤害，你恢复等于该黯蚀伤害一半的生命值。此特性须等到下一个黎明才能再次使用。\n\n**麻痹。**以权杖近战攻击命中生物时，可迫使目标进行难度为 17 的力量豁免；失败则麻痹 1 分钟。目标每个回合结束时可再次进行豁免，成功则结束效果。此特性须等到下一个黎明才能再次使用。\n\n**威吓。**手持时，可用一个动作迫使你能看见的、30 英尺内的每个生物进行难度为 17 的感知豁免；失败则对你陷入恐慌，持续 1 分钟。恐慌目标每个回合结束时可再次进行豁免，成功则结束自身效果。此特性须等到下一个黎明才能再次使用。"
+  },
+  "itemHelp.nativeMeta.rod-of-lordly-might": {
+    "en": "Rod, legendary (requires attunement)",
+    "zh-CN": "权杖，传奇（需要同调）"
+  },
+  "itemHelp.native.rod-of-rulership": {
+    "en": "You can use an action to present the rod and command obedience from each creature of your choice that you can see within 120 feet of you. Each target must succeed on a DC 15 Wisdom saving throw or be charmed by you for 8 hours. While charmed in this way, the creature regards you as its trusted leader. If harmed by you or your companions, or commanded to do something contrary to its nature, a target ceases to be charmed in this way. The rod can't be used again until the next dawn.",
+    "zh-CN": "可用一个动作展示权杖，命令你选择的、能看见的、120 英尺内的生物服从。每个目标须进行难度为 15 的感知豁免；失败则被你魅惑 8 小时，并将你视为可信赖的领袖。若被你或同伴伤害，或被命令做违背天性的事，魅惑就会结束。权杖须等到下一个黎明才能再次使用。"
+  },
+  "itemHelp.nativeMeta.rod-of-rulership": {
+    "en": "Rod, rare (requires attunement)",
+    "zh-CN": "权杖，珍稀（需要同调）"
+  },
+  "itemHelp.native.rod-of-security": {
+    "en": "While holding this rod, you can use an action to activate it. The rod then instantly transports you and up to 199 other willing creatures you can see to a paradise that exists in an extraplanar space. You choose the form that the paradise takes. It could be a tranquil garden, lovely glade, cheery tavern, immense palace, tropical island, fantastic carnival, or whatever else you can imagine. Regardless of its nature, the paradise contains enough water and food to sustain its visitors. Everything else that can be interacted with inside the extraplanar space can exist only there. For example, a flower picked from a garden in the paradise disappears if it is taken outside the extraplanar space.\n\nFor each hour spent in the paradise, a visitor regains hit points as if it had spent 1 Hit Die. Also, creatures don't age while in the paradise, although time passes normally. Visitors can remain in the paradise for up to 200 days divided by the number of creatures present (round down).\n\nWhen the time runs out or you use an action to end it, all visitors reappear in the location they occupied when you activated the rod, or an unoccupied space nearest that location. The rod can't be used again until ten days have passed.",
+    "zh-CN": "手持时，可用一个动作启动权杖，将你及至多 199 个你能看见的、自愿同行的生物立即传送至异次元空间中的乐园。你决定乐园的形态，例如宁静花园、美丽林间空地、欢乐酒馆、宏伟宫殿、热带岛屿、奇妙嘉年华，或其他能想象的事物。无论形态如何，乐园都提供足够的食物和水；其他可互动的事物只能存在于其中，例如从花园摘下的花带离异次元空间就会消失。\n\n每在乐园中度过一小时，访客便恢复如同消耗 1 枚生命骰的生命值。生物在其中不会衰老，但时间正常流逝。可停留的天数为 200 除以在场生物数，向下取整。\n\n时间耗尽或你用一个动作结束效果时，所有访客返回启动权杖时所在的位置，或最近的未占据空间。权杖须在十天过去后才能再次使用。"
+  },
+  "itemHelp.nativeMeta.rod-of-security": {
+    "en": "Rod, very rare",
+    "zh-CN": "权杖，极珍稀"
+  },
+  "itemHelp.native.scimitar-of-speed": {
+    "en": "You gain a +2 bonus to attack and damage rolls made with this magic weapon. In addition, you can make one attack with it as a bonus action on each of your turns.",
+    "zh-CN": "使用这件魔法武器进行攻击时，攻击检定和伤害掷骰获得 +2 加值。此外，每个回合可用附赠动作以它攻击一次。"
+  },
+  "itemHelp.nativeMeta.scimitar-of-speed": {
+    "en": "Weapon (scimitar), very rare (requires attunement)",
+    "zh-CN": "武器（弯刀），极珍稀（需要同调）"
+  },
+  "itemHelp.native.staff-of-charming": {
+    "en": "While holding this staff, you can use an action to expend 1 of its 10 charges to cast *charm person*, *command*, *or comprehend languages* from it using your spell save DC. The staff can also be used as a magic quarterstaff.\n\nIf you are holding the staff and fail a saving throw against an enchantment spell that targets only you, you can turn your failed save into a successful one. You can't use this property of the staff again until the next dawn. If you succeed on a save against an enchantment spell that targets only you, with or without the staff's intervention, you can use your reaction to expend 1 charge from the staff and turn the spell back on its caster as if you had cast the spell.\n\nThe staff regains 1d8+2 expended charges daily at dawn. If you expend the last charge, roll a d20. On a 1, the staff becomes a nonmagical quarterstaff.",
+    "zh-CN": "手持时，可用一个动作消耗 10 点充能中的 1 点，通过法杖施放*魅惑人类*、*命令术*或*通晓语言*，使用你的法术豁免难度。法杖也可作为魔法长棍使用。\n\n手持时，若抵抗只以你为目标的惑控法术的豁免失败，可使其改为成功；此特性须等到下一个黎明才能再次使用。若抵抗只以你为目标的惑控法术时豁免成功，不论是否借助法杖，都可使用反应消耗 1 点充能，将法术反射回施法者，视为由你施放。\n\n每日黎明恢复已消耗的 1d8+2 点充能。若消耗最后一点，掷 d20；结果为 1 时，法杖变为非魔法长棍。"
+  },
+  "itemHelp.nativeMeta.staff-of-charming": {
+    "en": "Staff, rare (requires attunement by a bard, cleric, druid, sorcerer, warlock, or wizard)",
+    "zh-CN": "法杖，珍稀（须由吟游诗人、牧师、德鲁伊、术士、邪术师或法师同调）"
+  },
+  "itemHelp.native.staff-of-fire": {
+    "en": "You have resistance to fire damage while you hold this staff.\n\nThe staff has 10 charges. While holding it, you can use an action to expend 1 or more of its charges to cast one of the following spells from it, using your spell save DC: *burning hands* (1 charge), *fireball* (3 charges), or *wall of fire* (4 charges).\n\nThe staff regains 1d6+4 expended charges daily at dawn. If you expend the last charge, roll a d20. On a 1, the staff blackens, crumbles into cinders, and is destroyed.",
+    "zh-CN": "手持时，你对火焰伤害具有抗性。\n\n法杖拥有 10 点充能。手持时，可用一个动作消耗 1 点或更多充能，使用你的法术豁免难度，施放以下法术之一：*燃烧之手*，消耗 1 点；*火球术*，消耗 3 点；或*火墙术*，消耗 4 点。\n\n每日黎明恢复已消耗的 1d6+4 点充能。若消耗最后一点，掷 d20；结果为 1 时，法杖变黑、碎成余烬并被摧毁。"
+  },
+  "itemHelp.nativeMeta.staff-of-fire": {
+    "en": "Staff, very rare (requires attunement by a druid, sorcerer, warlock, or wizard)",
+    "zh-CN": "法杖，极珍稀（须由德鲁伊、术士、邪术师或法师同调）"
+  },
+  "itemHelp.native.staff-of-frost": {
+    "en": "You have resistance to cold damage while you hold this staff.\n\nThe staff has 10 charges. While holding it, you can use an action to expend 1 or more of its charges to cast one of the following spells from it, using your spell save DC: *cone of cold* (5 charges), *fog cloud* (1 charge), *ice storm* (4 charges), or *wall of ice* (4 charges).\n\nThe staff regains 1d6+4 expended charges daily at dawn. If you expend the last charge, roll a d20. On a 1, the staff turns to water and is destroyed.",
+    "zh-CN": "手持时，你对寒冷伤害具有抗性。\n\n法杖拥有 10 点充能。手持时，可用一个动作消耗 1 点或更多充能，使用你的法术豁免难度，施放以下法术之一：*寒冰锥*，消耗 5 点；*雾云术*，消耗 1 点；*冰风暴*，消耗 4 点；或*冰墙术*，消耗 4 点。\n\n每日黎明恢复已消耗的 1d6+4 点充能。若消耗最后一点，掷 d20；结果为 1 时，法杖化为水并被摧毁。"
+  },
+  "itemHelp.native.staff-of-healing": {
+    "en": "This staff has 10 charges. While holding it, you can use an action to expend 1 or more of its charges to cast one of the following spells from it, using your spell save DC and spellcasting ability modifier: *cure wounds* (1 charge per spell level, up to 4th), *lesser restoration* (2 charges), or *mass cure wounds* (5 charges).\n\nThe staff regains 1d6+4 expended charges daily at dawn. If you expend the last charge, roll a d20. On a 1, the staff vanishes in a flash of light, lost forever.",
+    "zh-CN": "法杖拥有 10 点充能。手持时，可用一个动作消耗 1 点或更多充能，使用你的法术豁免难度和施法属性调整值，施放以下法术之一：*治疗伤口*，每环消耗 1 点，最高 4 环；*次级复原术*，消耗 2 点；或*群体治疗伤口*，消耗 5 点。\n\n每日黎明恢复已消耗的 1d6+4 点充能。若消耗最后一点，掷 d20；结果为 1 时，法杖在闪光中消失，永久失去。"
+  },
+  "itemHelp.nativeMeta.staff-of-healing": {
+    "en": "Staff, rare (requires attunement by a bard, cleric, or druid)",
+    "zh-CN": "法杖，珍稀（须由吟游诗人、牧师或德鲁伊同调）"
+  },
+  "itemHelp.native.staff-of-power": {
+    "en": "This staff can be wielded as a magic quarterstaff that grants a +2 bonus to attack and damage rolls made with it. While holding it, you gain a +2 bonus to Armor Class, saving throws, and spell attack rolls.\n\nThe staff has 20 charges for the following properties. The staff regains 2d8+4 expended charges daily at dawn. If you expend the last charge, roll a d20. On a 1, the staff retains its +2 bonus to attack and damage rolls but loses all other properties. On a 20, the staff regains 1d8+2 charges.\n\n***Power Strike***. When you hit with a melee attack using the staff, you can expend 1 charge to deal an extra 1d6 force damage to the target.\n\n***Spells***. While holding this staff, you can use an action to expend 1 or more of its charges to cast one of the following spells from it, using your spell save DC and spell attack bonus: *cone of cold* (5 charges), *fireball* (5th-level version, 5 charges), *globe of invulnerability* (6 charges), *hold monster* (5 charges), *levitate* (2 charges), *lightning bolt* (5th-level version, 5 charges), *magic missile* (1 charge), *ray of enfeeblement* (1 charge), or *wall of force* (5 charges).\n\n***Retributive Strike***. You can use an action to break the staff over your knee or against a solid surface, performing a retributive strike. The staff is destroyed and releases its remaining magic in an explosion that expands to fill a 30-foot radius sphere centered on it.\n\nYou have a 50 percent chance to instantly travel to a random plane of existence, avoiding the explosion. If you fail to avoid the effect, you take force damage equal to 16 × the number of charges in the staff. Every other creature in the area must make a DC 17 Dexterity saving throw. On a failed save, a creature takes an amount of damage based on how far away it is from the point of origin, as shown in the following table. On a successful save, a creature takes half as much damage.\n\n**Table- Staff of Power**\n\n| Distance from Origin  | Damage                                 |\n|-----------------------|----------------------------------------|\n| 10 ft. away or closer | 8 × the number of charges in the staff |\n| 11 to 20 ft. away     | 6 × the number of charges in the staff |\n| 21 to 30 ft. away     | 4 × the number of charges in the staff |\n|                       |                                        |",
+    "zh-CN": "法杖可作为魔法长棍使用，攻击检定和伤害掷骰获得 +2 加值。手持时，护甲等级、豁免和法术攻击检定获得 +2 加值。\n\n法杖拥有 20 点充能，可用于以下特性，每日黎明恢复已消耗的 2d8+4 点。若消耗最后一点，掷 d20：结果为 1 时，保留攻击检定和伤害掷骰的 +2 加值，但失去所有其他特性；结果为 20 时，恢复 1d8+2 点充能。\n\n**强力打击。**以法杖近战攻击命中时，可消耗 1 点充能，对目标额外造成 1d6 点力场伤害。\n\n**法术。**手持时，可用一个动作消耗 1 点或更多充能，使用你的法术豁免难度和法术攻击加值，施放以下法术之一：*寒冰锥*，5 点；*火球术*的 5 环版本，5 点；*无敌法球*，6 点；*定身怪物*，5 点；*浮空术*，2 点；*闪电束*的 5 环版本，5 点；*魔法飞弹*，1 点；*衰弱射线*，1 点；或*力场墙*，5 点。\n\n**报复打击。**可用一个动作在膝盖或坚硬表面上折断法杖。法杖被摧毁，剩余魔法在以它为中心、半径 30 英尺的球形区域中爆炸。\n\n你有 50% 的几率立即前往随机位面，避开爆炸；若未避开，则受到等于法杖剩余充能数乘以 16 的力场伤害。区域内其他生物须进行难度为 17 的敏捷豁免；失败受到由距爆炸中心距离决定的伤害，见下表，成功则伤害减半。\n\n**威力法杖表**\n\n| 距中心距离 | 伤害 |\n|------------|------|\n| 不超过 10 英尺 | 剩余充能数 × 8 |\n| 11 至 20 英尺 | 剩余充能数 × 6 |\n| 21 至 30 英尺 | 剩余充能数 × 4 |"
+  },
+  "itemHelp.nativeMeta.staff-of-power": {
+    "en": "Staff, very rare (requires attunement by a sorcerer, warlock, or wizard)",
+    "zh-CN": "法杖，极珍稀（须由术士、邪术师或法师同调）"
+  },
+  "itemHelp.native.staff-of-striking": {
+    "en": "This staff can be wielded as a magic quarterstaff that grants a +3 bonus to attack and damage rolls made with it.\n\nThe staff has 10 charges. When you hit with a melee attack using it, you can expend up to 3 of its charges. For each charge you expend, the target takes an extra 1d6 force damage. The staff regains 1d6+4 expended charges daily at dawn. If you expend the last charge, roll a d20. On a 1, the staff becomes a nonmagical quarterstaff.",
+    "zh-CN": "法杖可作为魔法长棍使用，攻击检定和伤害掷骰获得 +3 加值。\n\n法杖拥有 10 点充能。以它近战攻击命中时，可消耗至多 3 点；每消耗一点，目标额外受到 1d6 点力场伤害。每日黎明恢复已消耗的 1d6+4 点充能。若消耗最后一点，掷 d20；结果为 1 时，法杖变为非魔法长棍。"
+  },
+  "itemHelp.nativeMeta.staff-of-striking": {
+    "en": "Staff, very rare (requires attunement)",
+    "zh-CN": "法杖，极珍稀（需要同调）"
+  },
+  "itemHelp.native.staff-of-swarming-insects": {
+    "en": "This staff has 10 charges and regains 1d6+4 expended charges daily at dawn. If you expend the last charge, roll a d20. On a 1, a swarm of insects consumes and destroys the staff, then disperses.\n\n***Spells***. While holding the staff, you can use an action to expend some of its charges to cast one of the following spells from it, using your spell save DC: *giant insect* (4 charges) or *insect plague* (5 charges).\n\n***Insect Cloud***. While holding the staff, you can use an action and expend 1 charge to cause a swarm of harmless flying insects to spread out in a 30-foot radius from you. The insects remain for 10 minutes, making the area heavily obscured for creatures other than you. The swarm moves with you, remaining centered on you. A wind of at least 10 miles per hour disperses the swarm and ends the effect.",
+    "zh-CN": "法杖拥有 10 点充能，每日黎明恢复已消耗的 1d6+4 点。若消耗最后一点，掷 d20；结果为 1 时，一群昆虫啃食并摧毁法杖，随后散去。\n\n**法术。**手持时，可用一个动作消耗充能，使用你的法术豁免难度，施放*巨型昆虫*，消耗 4 点；或*疫病虫群*，消耗 5 点。\n\n**虫云。**手持时，可用一个动作消耗 1 点充能，使一群无害的飞虫散布在以你为中心、半径 30 英尺的区域中，持续 10 分钟。对你以外的生物，该区域形成重度遮蔽。虫群以你为中心，随你移动；时速至少 10 英里的风会驱散虫群并结束效果。"
+  },
+  "itemHelp.native.staff-of-the-magi": {
+    "en": "This staff can be wielded as a magic quarterstaff that grants a +2 bonus to attack and damage rolls made with it. While you hold it, you gain a +2 bonus to spell attack rolls.\n\nThe staff has 50 charges for the following properties. It regains 4d6+2 expended charges daily at dawn. If you expend the last charge, roll a d20. On a 20, the staff regains 1d12+1 charges.\n\n***Spell Absorption***. While holding the staff, you have advantage on saving throws against spells. In addition, you can use your reaction when another creature casts a spell that targets only you. If you do, the staff absorbs the magic of the spell, canceling its effect and gaining a number of charges equal to the absorbed spell's level. However, if doing so brings the staff's total number of charges above 50, the staff explodes as if you activated its retributive strike (see below).\n\n***Spells***. While holding the staff, you can use an action to expend some of its charges to cast one of the following spells from it, using your spell save DC and spellcasting ability: *conjure elemental* (7 charges), *dispel magic* (3 charges), *fireball* (7th-level version, 7 charges), *flaming sphere* (2 charges), *ice storm* (4 charges), *invisibility* (2 charges), *knock* (2 charges), *lightning bolt* (7th-level version, 7 charges), *passwall* (5 charges), *plane shift* (7 charges), *telekinesis* (5 charges), *wall of fire* (4 charges), or *web* (2 charges).\n\nYou can also use an action to cast one of the following spells from the staff without using any charges: *arcane lock*, *detect magic*, *enlarge/reduce*, *light*, *mage hand*, or *protection from evil and good.*\n\n***Retributive Strike***. You can use an action to break the staff over your knee or against a solid surface, performing a retributive strike. The staff is destroyed and releases its remaining magic in an explosion that expands to fill a 30-foot radius sphere centered on it.\n\nYou have a 50 percent chance to instantly travel to a random plane of existence, avoiding the explosion. If you fail to avoid the effect, you take force damage equal to 16 × the number of charges in the staff. Every other creature in the area must make a DC 17 Dexterity saving throw. On a failed save, a creature takes an amount of damage based on how far away it is from the point of origin, as shown in the following table. On a successful save, a creature takes half as much damage.\n\n**Table- Staff of the Magi**\n\n| Distance from Origin  | Damage                                 |\n|-----------------------|----------------------------------------|\n| 10 ft. away or closer | 8 × the number of charges in the staff |\n| 11 to 20 ft. away     | 6 × the number of charges in the staff |\n| 21 to 30 ft. away     | 4 × the number of charges in the staff |\n|                       |                                        |",
+    "zh-CN": "法杖可作为魔法长棍使用，攻击检定和伤害掷骰获得 +2 加值。手持时，法术攻击检定获得 +2 加值。\n\n法杖拥有 50 点充能，可用于以下特性，每日黎明恢复已消耗的 4d6+2 点。若消耗最后一点，掷 d20；结果为 20 时，恢复 1d12+1 点充能。\n\n**法术吸收。**手持时，抵抗法术的豁免具有优势。此外，另一生物施放只以你为目标的法术时，可使用反应，使法杖吸收其魔法，取消法术效果，并获得等于该法术环阶的充能。若充能总数因此超过 50，法杖便如同启动报复打击般爆炸，见下文。\n\n**法术。**手持时，可用一个动作消耗充能，使用你的法术豁免难度和施法属性，施放以下法术之一：*咒唤元素生物*，7 点；*解除魔法*，3 点；*火球术*的 7 环版本，7 点；*炽焰法球*，2 点；*冰风暴*，4 点；*隐身术*，2 点；*敲击术*，2 点；*闪电束*的 7 环版本，7 点；*穿墙术*，5 点；*位面转移*，7 点；*心灵遥控*，5 点；*火墙术*，4 点；或*蛛网术*，2 点。\n\n还可用一个动作施放以下法术之一，无需充能：*奥术锁*、*侦测魔法*、*变大或缩小*、*光亮术*、*法师之手*或*防护邪恶与善良*。\n\n**报复打击。**可用一个动作在膝盖或坚硬表面上折断法杖。法杖被摧毁，剩余魔法在以它为中心、半径 30 英尺的球形区域中爆炸。\n\n你有 50% 的几率立即前往随机位面，避开爆炸；若未避开，则受到等于法杖剩余充能数乘以 16 的力场伤害。区域内其他生物须进行难度为 17 的敏捷豁免；失败受到由距爆炸中心距离决定的伤害，见下表，成功则伤害减半。\n\n**法师之杖表**\n\n| 距中心距离 | 伤害 |\n|------------|------|\n| 不超过 10 英尺 | 剩余充能数 × 8 |\n| 11 至 20 英尺 | 剩余充能数 × 6 |\n| 21 至 30 英尺 | 剩余充能数 × 4 |"
+  },
+  "itemHelp.nativeMeta.staff-of-the-magi": {
+    "en": "Staff, legendary (requires attunement by a sorcerer, warlock, or wizard)",
+    "zh-CN": "法杖，传奇（须由术士、邪术师或法师同调）"
+  },
+  "itemHelp.native.staff-of-the-python": {
+    "en": "You can use an action to speak this staff's command word and throw the staff on the ground within 10 feet of you. The staff becomes a giant constrictor snake under your control and acts on its own initiative count. By using a bonus action to speak the command word again, you return the staff to its normal form in a space formerly occupied by the snake.\n\nOn your turn, you can mentally command the snake if it is within 60 feet of you and you aren't incapacitated. You decide what action the snake takes and where it moves during its next turn, or you can issue it a general command, such as to attack your enemies or guard a location.\n\nIf the snake is reduced to 0 hit points, it dies and reverts to its staff form. The staff then shatters and is destroyed. If the snake reverts to staff form before losing all its hit points, it regains all of them.",
+    "zh-CN": "可用一个动作说出命令词，将法杖扔到 10 英尺内的地面上。法杖变为受你控制的巨型蟒蛇，按自己的先攻行动。再次用附赠动作说出命令词，可使它在原先被蟒蛇占据的空间内恢复法杖形态。\n\n你的回合中，只要未失能且蟒蛇位于 60 英尺内，就可用心念指挥它。你决定它下一回合采取的动作和移动位置，也可下达攻击敌人、守卫某地等一般命令。\n\n蟒蛇生命值降至 0 时死亡，变回法杖，随后法杖碎裂并被摧毁。若蟒蛇在生命值耗尽前变回法杖，则恢复全部生命值。"
+  },
+  "itemHelp.nativeMeta.staff-of-the-python": {
+    "en": "Staff, uncommon (requires attunement by a cleric, druid, or warlock)",
+    "zh-CN": "法杖，非普通（须由牧师、德鲁伊或邪术师同调）"
+  },
+  "itemHelp.native.staff-of-the-woodlands": {
+    "en": "This staff can be wielded as a magic quarterstaff that grants a +2 bonus to attack and damage rolls made with it. While holding it, you have a +2 bonus to spell attack rolls.\n\nThe staff has 10 charges for the following properties. It regains 1d6+4 expended charges daily at dawn. If you expend the last charge, roll a d20. On a 1, the staff loses its properties and becomes a nonmagical quarterstaff.\n\n***Spells***. You can use an action to expend 1 or more of the staff's charges to cast one of the following spells from it, using your spell save DC: *animal friendship* (1 charge), *awaken* (5 charges), *barkskin* (2 charges), *locate animals or plants* (2 charges), *speak with animals* (1 charge), *speak with plants* (3 charges), or *wall of thorns* (6 charges).\n\nYou can also use an action to cast the *pass without trace* spell from the staff without using any charges.\n\n***Tree Form***. You can use an action to plant one end of the staff in fertile earth and expend 1 charge to transform the staff into a healthy tree. The tree is 60 feet tall and has a 5-foot diameter trunk, and its branches at the top spread out in a 20-foot radius.\n\nThe tree appears ordinary but radiates a faint aura of transmutation magic if targeted by *detect magic*. While touching the tree and using another action to speak its command word, you return the staff to its normal form. Any creature in the tree falls when it reverts to a staff.",
+    "zh-CN": "法杖可作为魔法长棍使用，攻击检定和伤害掷骰获得 +2 加值；手持时，法术攻击检定也获得 +2 加值。\n\n法杖拥有 10 点充能，可用于以下特性，每日黎明恢复已消耗的 1d6+4 点。若消耗最后一点，掷 d20；结果为 1 时，失去所有特性，变为非魔法长棍。\n\n**法术。**可用一个动作消耗 1 点或更多充能，使用你的法术豁免难度，施放以下法术之一：*动物友谊*，1 点；*启智术*，5 点；*树皮术*，2 点；*定位动植物*，2 点；*动物交谈*，1 点；*植物交谈*，3 点；或*荆棘墙*，6 点。\n\n还可用一个动作通过法杖施放*无踪行走*，无需充能。\n\n**树木形态。**可用一个动作将法杖一端插入肥沃土壤，并消耗 1 点充能，使它变为健康树木。树高 60 英尺，树干直径 5 英尺，顶部树枝伸展至半径 20 英尺。\n\n树木看似普通，但*侦测魔法*会发现微弱的变化系魔法灵光。触碰树木，并再次用一个动作说出命令词，可恢复法杖形态；树上的生物会在变回法杖时坠落。"
+  },
+  "itemHelp.nativeMeta.staff-of-the-woodlands": {
+    "en": "Staff, rare (requires attunement by a druid)",
+    "zh-CN": "法杖，珍稀（须由德鲁伊同调）"
+  },
+  "itemHelp.native.staff-of-thunder-and-lightning": {
+    "en": "This staff can be wielded as a magic quarterstaff that grants a +2 bonus to attack and damage rolls made with it. It also has the following additional properties. When one of these properties is used, it can't be used again until the next dawn.\n\n***Lightning***. When you hit with a melee attack using the staff, you can cause the target to take an extra 2d6 lightning damage.\n\n***Thunder***. When you hit with a melee attack using the staff, you can cause the staff to emit a crack of thunder, audible out to 300 feet. The target you hit must succeed on a DC 17 Constitution saving throw or become stunned until the end of your next turn.\n\n***Lightning Strike***. You can use an action to cause a bolt of lightning to leap from the staff's tip in a line that is 5 feet wide and 120 feet long. Each creature in that line must make a DC 17 Dexterity saving throw, taking 9d6 lightning damage on a failed save, or half as much damage on a successful one.\n\n***Thunderclap***. You can use an action to cause the staff to issue a deafening thunderclap, audible out to 600 feet. Each creature within 60 feet of you (not including you) must make a DC 17 Constitution saving throw. On a failed save, a creature takes 2d6 thunder damage and becomes deafened for 1 minute. On a successful save, a creature takes half damage and isn't deafened.\n\n***Thunder and Lightning***. You can use an action to use the Lightning Strike and Thunderclap properties at the same time. Doing so doesn't expend the daily use of those properties, only the use of this one.",
+    "zh-CN": "法杖可作为魔法长棍使用，攻击检定和伤害掷骰获得 +2 加值。此外具有以下特性；每项使用后，都须等到下一个黎明才能再次使用该项。\n\n**闪电。**以法杖近战攻击命中时，可使目标额外受到 2d6 点闪电伤害。\n\n**雷鸣。**以法杖近战攻击命中时，可发出传至 300 英尺外的雷响。目标须进行难度为 17 的体质豁免；失败则震慑，直到你的下一回合结束。\n\n**闪电打击。**可用一个动作使杖尖射出宽 5 英尺、长 120 英尺的闪电线。线形区域内每个生物须进行难度为 17 的敏捷豁免；失败受到 9d6 点闪电伤害，成功则伤害减半。\n\n**雷响。**可用一个动作发出震耳雷声，可传至 600 英尺外。你以外的、60 英尺内的每个生物须进行难度为 17 的体质豁免；失败受到 2d6 点雷鸣伤害，并耳聋 1 分钟；成功则伤害减半，且不会耳聋。\n\n**雷电齐发。**可用一个动作同时使用闪电打击和雷响；这不会消耗那两项特性的每日使用次数，只消耗雷电齐发本身的次数。"
+  },
+  "itemHelp.native.staff-of-withering": {
+    "en": "This staff has 3 charges and regains 1d3 expended charges daily at dawn.\n\nThe staff can be wielded as a magic quarterstaff. On a hit, it deals damage as a normal quarterstaff, and you can expend 1 charge to deal an extra 2d10 necrotic damage to the target. In addition, the target must succeed on a DC 15 Constitution saving throw or have disadvantage for 1 hour on any ability check or saving throw that uses Strength or Constitution.",
+    "zh-CN": "法杖拥有 3 点充能，每日黎明恢复已消耗的 1d3 点。\n\n法杖可作为魔法长棍使用，命中时造成普通长棍伤害；可消耗 1 点充能，使目标额外受到 2d10 点黯蚀伤害。此外，目标须进行难度为 15 的体质豁免；失败则在 1 小时内，所有使用力量或体质的属性检定和豁免具有劣势。"
+  },
+  "itemHelp.nativeMeta.staff-of-withering": {
+    "en": "Staff, rare (requires attunement by a cleric, druid, or warlock)",
+    "zh-CN": "法杖，珍稀（须由牧师、德鲁伊或邪术师同调）"
+  },
+  "itemHelp.native.sun-blade": {
+    "en": "This item appears to be a longsword hilt. While grasping the hilt, you can use a bonus action to cause a blade of pure radiance to spring into existence, or make the blade disappear. While the blade exists, this magic longsword has the finesse property. If you are proficient with shortswords or longswords, you are proficient with the *sun blade*.\n\nYou gain a +2 bonus to attack and damage rolls made with this weapon, which deals radiant damage instead of slashing damage. When you hit an undead with it, that target takes an extra 1d8 radiant damage.\n\nThe sword's luminous blade emits bright light in a 15-foot radius and dim light for an additional 15 feet. The light is sunlight. While the blade persists, you can use an action to expand or reduce its radius of bright and dim light by 5 feet each, to a maximum of 30 feet each or a minimum of 10 feet each.",
+    "zh-CN": "物品看起来像一个长剑剑柄。握住时，可用附赠动作使纯粹光耀组成的剑刃出现或消失。剑刃存在期间，这把魔法长剑具有灵巧属性；熟练短剑或长剑的生物也熟练*阳炎剑*。\n\n用此武器攻击时，攻击检定和伤害掷骰获得 +2 加值；它造成光耀伤害，替代挥砍伤害。命中亡灵时，目标额外受到 1d8 点光耀伤害。\n\n剑刃照亮半径 15 英尺的明亮区域，以及其外再延伸 15 英尺的微光区域；这种光属于阳光。剑刃存在期间，可用一个动作分别将明亮和微光区域的半径增加或减少 5 英尺，各自最大为 30 英尺，最小为 10 英尺。"
+  },
+  "itemHelp.nativeMeta.sun-blade": {
+    "en": "Weapon (longsword), rare (requires attunement)",
+    "zh-CN": "武器（长剑），珍稀（需要同调）"
+  },
+  "itemHelp.native.sword-of-life-stealing": {
+    "en": "When you attack a creature with this magic weapon and roll a 20 on the attack roll, that target takes an extra 3d6 necrotic damage, provided that the target isn't a construct or an undead. You gain temporary hit points equal to the extra damage dealt.",
+    "zh-CN": "用此魔法武器攻击生物且攻击骰掷出 20 时，只要目标并非构装生物或亡灵，便额外受到 3d6 点黯蚀伤害。你获得等于这份额外伤害的临时生命值。"
+  },
+  "itemHelp.native.sword-of-sharpness": {
+    "en": "When you attack an object with this magic sword and hit, maximize your weapon damage dice against the target.\n\nWhen you attack a creature with this weapon and roll a 20 on the attack roll, that target takes an extra 4d6 slashing damage. Then roll another d20. If you roll a 20, you lop off one of the target's limbs, with the effect of such loss determined by the GM. If the creature has no limb to sever, you lop off a portion of its body instead.\n\nIn addition, you can speak the sword's command word to cause the blade to shed bright light in a 10-foot radius and dim light for an additional 10 feet. Speaking the command word again or sheathing the sword puts out the light.",
+    "zh-CN": "用此魔法剑攻击物体并命中时，对目标的武器伤害骰取最大值。\n\n攻击生物且攻击骰掷出 20 时，目标额外受到 4d6 点挥砍伤害。随后再掷 d20；若仍为 20，则斩断目标的一条肢体，后果由 DM 决定；若没有可斩断的肢体，则斩下身体的一部分。\n\n此外，可说出命令词，使剑刃照亮半径 10 英尺的明亮区域，以及其外再延伸 10 英尺的微光区域。再次说出命令词，或将剑入鞘，光便熄灭。"
+  },
+  "itemHelp.nativeMeta.sword-of-sharpness": {
+    "en": "Weapon (any sword that deals slashing damage), very rare (requires attunement)",
+    "zh-CN": "武器（任意造成挥砍伤害的剑），极珍稀（需要同调）"
+  },
+  "itemHelp.native.sword-of-wounding": {
+    "en": "Hit points lost to this weapon's damage can be regained only through a short or long rest, rather than by regeneration, magic, or any other means.\n\nOnce per turn, when you hit a creature with an attack using this magic weapon, you can wound the target. At the start of each of the wounded creature's turns, it takes 1d4 necrotic damage for each time you've wounded it, and it can then make a DC 15 Constitution saving throw, ending the effect of all such wounds on itself on a success. Alternatively, the wounded creature, or a creature within 5 feet of it, can use an action to make a DC 15 Wisdom (Medicine) check, ending the effect of such wounds on it on a success.",
+    "zh-CN": "被此武器伤害而损失的生命值，只能通过短休或长休恢复；再生、魔法或其他手段均无法恢复。\n\n每回合一次，用此魔法武器攻击并命中生物时，可使其受创。目标每个回合开始时，每次你造成的创伤都会使其受到 1d4 点黯蚀伤害；随后可进行难度为 15 的体质豁免，成功则结束自身全部这类创伤效果。目标或其 5 英尺内的另一个生物也可用一个动作进行难度为 15 的感知（医药）检定，成功则结束创伤效果。"
+  },
+  "itemHelp.native.trident-of-fish-command": {
+    "en": "This trident is a magic weapon. It has 3 charges. While you carry it, you can use an action and expend 1 charge to cast *dominate beast* (save DC 15) from it on a beast that has an innate swimming speed. The trident regains 1d3 expended charges daily at dawn.",
+    "zh-CN": "三叉戟是魔法武器，拥有 3 点充能。携带时，可用一个动作消耗 1 点充能，对具有天生游泳速度的野兽施放*支配野兽*，豁免难度为 15。每日黎明恢复已消耗的 1d3 点充能。"
+  },
+  "itemHelp.nativeMeta.trident-of-fish-command": {
+    "en": "Weapon (trident), uncommon (requires attunement)",
+    "zh-CN": "武器（三叉戟），非普通（需要同调）"
+  },
+  "itemHelp.native.vicious-weapon": {
+    "en": "When you roll a 20 on your attack roll with this magic weapon, your critical hit deals an extra 2d6 damage of the weapon's type.",
+    "zh-CN": "用此魔法武器攻击且攻击骰掷出 20 时，重击额外造成 2d6 点武器同类型伤害。"
+  },
+  "itemHelp.nativeMeta.vicious-weapon": {
+    "en": "Weapon (any), rare",
+    "zh-CN": "武器（任意），珍稀"
+  },
+  "itemHelp.native.vorpal-sword": {
+    "en": "You gain a +3 bonus to attack and damage rolls made with this magic weapon. In addition, the weapon ignores resistance to slashing damage.\n\nWhen you attack a creature that has at least one head with this weapon and roll a 20 on the attack roll, you cut off one of the creature's heads. The creature dies if it can't survive without the lost head. A creature is immune to this effect if it is immune to slashing damage, doesn't have or need a head, has legendary actions, or the GM decides that the creature is too big for its head to be cut off with this weapon. Such a creature instead takes an extra 6d8 slashing damage from the hit.",
+    "zh-CN": "使用这件魔法武器进行攻击时，攻击检定和伤害掷骰获得 +3 加值。此外，武器无视挥砍伤害抗性。\n\n攻击至少有一个头的生物且攻击骰掷出 20 时，斩下其中一个头；若无法在失去该头后生存，目标死亡。若生物免疫挥砍伤害、没有头或不需要头、拥有传奇动作，或 DM 判断其体型太大，无法用此武器斩首，则免疫此效果，改为在该次命中中额外受到 6d8 点挥砍伤害。"
+  },
+  "itemHelp.nativeMeta.vorpal-sword": {
+    "en": "Weapon (any sword that deals slashing damage), legendary (requires attunement)",
+    "zh-CN": "武器（任意造成挥砍伤害的剑），传奇（需要同调）"
+  },
+  "itemHelp.native.weapon-1-2-or-3": {
+    "en": "You have a bonus to attack and damage rolls made with this magic weapon. The bonus is determined by the weapon's rarity.",
+    "zh-CN": "使用这件魔法武器进行攻击时，攻击检定和伤害掷骰获得加值，数值由武器的稀有度决定。"
+  },
+  "itemHelp.nativeMeta.weapon-1-2-or-3": {
+    "en": "Weapon (any), uncommon (+1), rare (+2), or very rare (+3)",
+    "zh-CN": "武器（任意），非普通（+1）、珍稀（+2）或极珍稀（+3）"
   }
 });

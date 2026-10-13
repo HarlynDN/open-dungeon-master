@@ -425,5 +425,287 @@ export const MAGIC_ITEM_MATERIAL = [
     "name": "Wand of Wonder",
     "key": "itemHelp.native.wand-of-wonder",
     "metaKey": "itemHelp.nativeMeta.wand-of-binding"
+  },
+  {
+    "id": "ammunition-1-2-or-3",
+    "name": "Ammunition, +1, +2, or +3",
+    "key": "itemHelp.native.ammunition-1-2-or-3",
+    "metaKey": "itemHelp.nativeMeta.ammunition-1-2-or-3"
+  },
+  {
+    "id": "arrow-of-slaying",
+    "name": "Arrow of Slaying",
+    "key": "itemHelp.native.arrow-of-slaying",
+    "metaKey": "itemHelp.nativeMeta.arrow-of-slaying"
+  },
+  {
+    "id": "berserker-axe",
+    "name": "Berserker Axe",
+    "key": "itemHelp.native.berserker-axe",
+    "metaKey": "itemHelp.nativeMeta.berserker-axe"
+  },
+  {
+    "id": "dagger-of-venom",
+    "name": "Dagger of Venom",
+    "key": "itemHelp.native.dagger-of-venom",
+    "metaKey": "itemHelp.nativeMeta.dagger-of-venom"
+  },
+  {
+    "id": "dancing-sword",
+    "name": "Dancing Sword",
+    "key": "itemHelp.native.dancing-sword",
+    "metaKey": "itemHelp.nativeMeta.dancing-sword"
+  },
+  {
+    "id": "defender",
+    "name": "Defender",
+    "key": "itemHelp.native.defender",
+    "metaKey": "itemHelp.nativeMeta.defender"
+  },
+  {
+    "id": "dragon-slayer",
+    "name": "Dragon Slayer",
+    "key": "itemHelp.native.dragon-slayer",
+    "metaKey": "itemHelp.nativeMeta.dragon-slayer"
+  },
+  {
+    "id": "dwarven-thrower",
+    "name": "Dwarven Thrower",
+    "key": "itemHelp.native.dwarven-thrower",
+    "metaKey": "itemHelp.nativeMeta.dwarven-thrower"
+  },
+  {
+    "id": "flame-tongue",
+    "name": "Flame Tongue",
+    "key": "itemHelp.native.flame-tongue",
+    "metaKey": "itemHelp.nativeMeta.flame-tongue"
+  },
+  {
+    "id": "frost-brand",
+    "name": "Frost Brand",
+    "key": "itemHelp.native.frost-brand",
+    "metaKey": "itemHelp.nativeMeta.dancing-sword"
+  },
+  {
+    "id": "giant-slayer",
+    "name": "Giant Slayer",
+    "key": "itemHelp.native.giant-slayer",
+    "metaKey": "itemHelp.nativeMeta.giant-slayer"
+  },
+  {
+    "id": "hammer-of-thunderbolts",
+    "name": "Hammer of Thunderbolts",
+    "key": "itemHelp.native.hammer-of-thunderbolts",
+    "metaKey": "itemHelp.nativeMeta.hammer-of-thunderbolts"
+  },
+  {
+    "id": "holy-avenger",
+    "name": "Holy Avenger",
+    "key": "itemHelp.native.holy-avenger",
+    "metaKey": "itemHelp.nativeMeta.holy-avenger"
+  },
+  {
+    "id": "immovable-rod",
+    "name": "Immovable Rod",
+    "key": "itemHelp.native.immovable-rod",
+    "metaKey": "itemHelp.nativeMeta.immovable-rod"
+  },
+  {
+    "id": "javelin-of-lightning",
+    "name": "Javelin of Lightning",
+    "key": "itemHelp.native.javelin-of-lightning",
+    "metaKey": "itemHelp.nativeMeta.javelin-of-lightning"
+  },
+  {
+    "id": "luck-blade",
+    "name": "Luck Blade",
+    "key": "itemHelp.native.luck-blade",
+    "metaKey": "itemHelp.nativeMeta.defender"
+  },
+  {
+    "id": "mace-of-disruption",
+    "name": "Mace of Disruption",
+    "key": "itemHelp.native.mace-of-disruption",
+    "metaKey": "itemHelp.nativeMeta.mace-of-disruption"
+  },
+  {
+    "id": "mace-of-smiting",
+    "name": "Mace of Smiting",
+    "key": "itemHelp.native.mace-of-smiting",
+    "metaKey": "itemHelp.nativeMeta.mace-of-smiting"
+  },
+  {
+    "id": "mace-of-terror",
+    "name": "Mace of Terror",
+    "key": "itemHelp.native.mace-of-terror",
+    "metaKey": "itemHelp.nativeMeta.mace-of-disruption"
+  },
+  {
+    "id": "nine-lives-stealer",
+    "name": "Nine Lives Stealer",
+    "key": "itemHelp.native.nine-lives-stealer",
+    "metaKey": "itemHelp.nativeMeta.dancing-sword"
+  },
+  {
+    "id": "oathbow",
+    "name": "Oathbow",
+    "key": "itemHelp.native.oathbow",
+    "metaKey": "itemHelp.nativeMeta.oathbow"
+  },
+  {
+    "id": "rod-of-absorption",
+    "name": "Rod of Absorption",
+    "key": "itemHelp.native.rod-of-absorption",
+    "metaKey": "itemHelp.nativeMeta.rod-of-absorption"
+  },
+  {
+    "id": "rod-of-alertness",
+    "name": "Rod of Alertness",
+    "key": "itemHelp.native.rod-of-alertness",
+    "metaKey": "itemHelp.nativeMeta.rod-of-absorption"
+  },
+  {
+    "id": "rod-of-lordly-might",
+    "name": "Rod of Lordly Might",
+    "key": "itemHelp.native.rod-of-lordly-might",
+    "metaKey": "itemHelp.nativeMeta.rod-of-lordly-might"
+  },
+  {
+    "id": "rod-of-rulership",
+    "name": "Rod of Rulership",
+    "key": "itemHelp.native.rod-of-rulership",
+    "metaKey": "itemHelp.nativeMeta.rod-of-rulership"
+  },
+  {
+    "id": "rod-of-security",
+    "name": "Rod of Security",
+    "key": "itemHelp.native.rod-of-security",
+    "metaKey": "itemHelp.nativeMeta.rod-of-security"
+  },
+  {
+    "id": "scimitar-of-speed",
+    "name": "Scimitar of Speed",
+    "key": "itemHelp.native.scimitar-of-speed",
+    "metaKey": "itemHelp.nativeMeta.scimitar-of-speed"
+  },
+  {
+    "id": "staff-of-charming",
+    "name": "Staff of Charming",
+    "key": "itemHelp.native.staff-of-charming",
+    "metaKey": "itemHelp.nativeMeta.staff-of-charming"
+  },
+  {
+    "id": "staff-of-fire",
+    "name": "Staff of Fire",
+    "key": "itemHelp.native.staff-of-fire",
+    "metaKey": "itemHelp.nativeMeta.staff-of-fire"
+  },
+  {
+    "id": "staff-of-frost",
+    "name": "Staff of Frost",
+    "key": "itemHelp.native.staff-of-frost",
+    "metaKey": "itemHelp.nativeMeta.staff-of-fire"
+  },
+  {
+    "id": "staff-of-healing",
+    "name": "Staff of Healing",
+    "key": "itemHelp.native.staff-of-healing",
+    "metaKey": "itemHelp.nativeMeta.staff-of-healing"
+  },
+  {
+    "id": "staff-of-power",
+    "name": "Staff of Power",
+    "key": "itemHelp.native.staff-of-power",
+    "metaKey": "itemHelp.nativeMeta.staff-of-power"
+  },
+  {
+    "id": "staff-of-striking",
+    "name": "Staff of Striking",
+    "key": "itemHelp.native.staff-of-striking",
+    "metaKey": "itemHelp.nativeMeta.staff-of-striking"
+  },
+  {
+    "id": "staff-of-swarming-insects",
+    "name": "Staff of Swarming Insects",
+    "key": "itemHelp.native.staff-of-swarming-insects",
+    "metaKey": "itemHelp.nativeMeta.staff-of-charming"
+  },
+  {
+    "id": "staff-of-the-magi",
+    "name": "Staff of the Magi",
+    "key": "itemHelp.native.staff-of-the-magi",
+    "metaKey": "itemHelp.nativeMeta.staff-of-the-magi"
+  },
+  {
+    "id": "staff-of-the-python",
+    "name": "Staff of the Python",
+    "key": "itemHelp.native.staff-of-the-python",
+    "metaKey": "itemHelp.nativeMeta.staff-of-the-python"
+  },
+  {
+    "id": "staff-of-the-woodlands",
+    "name": "Staff of the Woodlands",
+    "key": "itemHelp.native.staff-of-the-woodlands",
+    "metaKey": "itemHelp.nativeMeta.staff-of-the-woodlands"
+  },
+  {
+    "id": "staff-of-thunder-and-lightning",
+    "name": "Staff of Thunder and Lightning",
+    "key": "itemHelp.native.staff-of-thunder-and-lightning",
+    "metaKey": "itemHelp.nativeMeta.staff-of-striking"
+  },
+  {
+    "id": "staff-of-withering",
+    "name": "Staff of Withering",
+    "key": "itemHelp.native.staff-of-withering",
+    "metaKey": "itemHelp.nativeMeta.staff-of-withering"
+  },
+  {
+    "id": "sun-blade",
+    "name": "Sun Blade",
+    "key": "itemHelp.native.sun-blade",
+    "metaKey": "itemHelp.nativeMeta.sun-blade"
+  },
+  {
+    "id": "sword-of-life-stealing",
+    "name": "Sword of Life Stealing",
+    "key": "itemHelp.native.sword-of-life-stealing",
+    "metaKey": "itemHelp.nativeMeta.flame-tongue"
+  },
+  {
+    "id": "sword-of-sharpness",
+    "name": "Sword of Sharpness",
+    "key": "itemHelp.native.sword-of-sharpness",
+    "metaKey": "itemHelp.nativeMeta.sword-of-sharpness"
+  },
+  {
+    "id": "sword-of-wounding",
+    "name": "Sword of Wounding",
+    "key": "itemHelp.native.sword-of-wounding",
+    "metaKey": "itemHelp.nativeMeta.flame-tongue"
+  },
+  {
+    "id": "trident-of-fish-command",
+    "name": "Trident of Fish Command",
+    "key": "itemHelp.native.trident-of-fish-command",
+    "metaKey": "itemHelp.nativeMeta.trident-of-fish-command"
+  },
+  {
+    "id": "vicious-weapon",
+    "name": "Vicious Weapon",
+    "key": "itemHelp.native.vicious-weapon",
+    "metaKey": "itemHelp.nativeMeta.vicious-weapon"
+  },
+  {
+    "id": "vorpal-sword",
+    "name": "Vorpal Sword",
+    "key": "itemHelp.native.vorpal-sword",
+    "metaKey": "itemHelp.nativeMeta.vorpal-sword"
+  },
+  {
+    "id": "weapon-1-2-or-3",
+    "name": "Weapon, +1, +2, or +3",
+    "key": "itemHelp.native.weapon-1-2-or-3",
+    "metaKey": "itemHelp.nativeMeta.weapon-1-2-or-3"
   }
 ] as const;

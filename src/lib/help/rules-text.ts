@@ -86,6 +86,10 @@ export function stripMarkdown(text: string): string {
     .replace(/^#{1,6}\s+/gm, "")
     .replace(/^\s*(?:[-*+]|\d+[.)])\s+/gm, "")
     .replace(/\*\*/g, "")
+    // Paired emphasis can touch text in any script. Keep underscore-delimited
+    // words (identifiers) intact, matching the dialog's inline renderer.
+    .replace(/\*([^*\s][^*\n]*)\*|(?<![\w])_([^_\n]+)_(?![\w])/g,
+      (_token, emphasis, underscored) => emphasis ?? underscored)
     .replace(/(^|\s)[*_]+(?=\S)/g, "$1")
     .replace(/(?<=\S)[*_]+(?=\s|[.,;:!?)]|$)/g, "")
     .replace(/\|/g, " ")
@@ -99,7 +103,7 @@ export function firstSentence(text: string | null | undefined, max = 160): strin
   if (!plain) {
     return null;
   }
-  const stop = plain.search(/[.!?](\s|$)/);
-  const line = stop > 0 ? plain.slice(0, stop + 1) : plain;
+  const stop = /[.!?](?=\s|$)|[。！？][」』”’"')）\]]*/.exec(plain);
+  const line = stop && stop.index > 0 ? plain.slice(0, stop.index + stop[0].length) : plain;
   return line.length > max ? `${line.slice(0, max - 3)}...` : line;
 }

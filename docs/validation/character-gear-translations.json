@@ -1,7 +1,7 @@
 {
   "version": 1,
   "status": "source-compared-by-implementation-agent",
-  "scope": "Equipment creator controls, all class/genre kit alternatives, native mundane equipment/background fragment names, picker/catalog chrome, purse/AC display and item detail chrome/closed weapon rules. Native potion/oil, ring, wand and armor body/header display is now covered; other magic-item and imported class/spell material and third-party descriptions remain outside this review. Expanded feat and FinishStep work is recorded in their separate reviews.",
+  "scope": "Equipment creator controls, all class/genre kit alternatives, native mundane equipment/background fragment names, picker/catalog chrome, purse/AC display and item detail chrome/closed weapon rules. Native potion/oil, ring, wand, armor, weapon, rod and staff body/header display is now covered; other magic-item and imported class/spell material and third-party descriptions remain outside this review. Expanded feat and FinishStep work is recorded in their separate reviews.",
   "provenance": "Original Chinese translations compared with repository equipment UI, native names and SRD 5.1-derived rules. Existing repository CC-BY attribution retained; no external Chinese PHB text used.",
   "review": "113 actual English gear/kit/browse/search projections and 185 actual English ItemBody cards frozen before migration. Compared quantities, native descriptions, strict armor caps, 10-foot speed penalty, weapon rules, prices, source-matched property/damage explanations, exact authored source, server-roll callback/dice and canonical selection references. Original rule/item helpers untouched. This is implementation-agent source comparison, not human or independent approval. Saved-item help now requests native catalog fallback, so kit entries with a guessed slug recover native cost/weight without a pack. Browser export preserved kit options [1,0,0,0], canonical names, AC 15, HP 13 and gold 5.",
   "sources": {
@@ -22,7 +22,7 @@
   "catalogs": {
     "src/lib/i18n/gear-ui-messages.ts": "9762d8ef614c012861d92d7cf92e11e8362ff7836dd96da528e557919b59ab6a",
     "src/lib/i18n/equipment-name-messages.ts": "babb7d54d96715a26d809cc1256a23a76a041578d62e61b1e57464113f0acb3a",
-    "src/lib/i18n/equipment-help-messages.ts": "a55a71b51d744322b3b2ebcfbc717548368e6c1bd741cc324a1b1f961a15060d"
+    "src/lib/i18n/equipment-help-messages.ts": "4d15417d04f4ab2faac29a3be22f5d463c81ca38bd0454fd308449e1636830a7"
   },
   "reviewRepair": "2026-10-11: browser imports now use scoped resource runtime; co-located catalog construction marked pure. All English/Chinese templates independently compared equal to the pre-repair archive; original golden bytes preserved. See localization-review-repairs.md.",
   "terminologyRepair": {
@@ -36,14 +36,12 @@
   },
   "materialProjectionRepair": {
     "date": "2026-10-13",
-    "review": "Affected source comparison: item-view English early return and native stats remain unchanged; exact closed type/rarity frames and complete native body/header projections are display only. Picker previews retain the body-first default. The 71 current source-bound bodies include original tables, signed values, timings, spell references and special attunement restrictions; 32 distinct headers reuse scoped keys. The focused magic-item check passes all 71 bilingual detail projections, picker/callback paths and all 185 immutable English item-card renders. Native engine/rulebook data and golden files are unchanged. This is implementation-agent source review, not independent human approval.",
+    "review": "Current source-bound corpus: 118 complete SRD bodies and 69 distinct headers. Added all 47 native weapon/rod/staff bodies, including charging, curses, command forms, spell lists and explosion tables. Existing spell/item/skill/school terms reused. Eighteen exact weapon/rod/staff type frames added; item-view English return, native data and callback identities unchanged. Focused magic-item check passes all 118 bilingual detail projections, source/numbers/dice, picker callbacks and all 185 immutable English item cards. Shared preview stripping now handles adjacent Unicode emphasis and sentence marks/closing quotes while preserving underscore identifiers; existing option-description checks pass with the installed TS compiler supplying a temporary TSX loader. Original engine/rulebook data and golden files unchanged. Implementation-agent comparison, not independent human approval.",
     "previousReviewHashes": {
-      "src/lib/i18n/equipment-help-presentations.ts": "e8a84d4656f25ba21a13c2ab97de40b7f2bbf06c403563298db8d75bce1bfc99",
-      "src/lib/i18n/equipment-help-messages.ts": "b22809be9fe3694114a09ffeac992e331ee1dce3533ce25c532e89cb7b55bb6c"
+      "src/lib/i18n/equipment-help-messages.ts": "a55a71b51d744322b3b2ebcfbc717548368e6c1bd741cc324a1b1f961a15060d"
     },
     "priorCommitHashes": {
-      "src/lib/i18n/equipment-help-presentations.ts": "e8a84d4656f25ba21a13c2ab97de40b7f2bbf06c403563298db8d75bce1bfc99",
-      "src/lib/i18n/equipment-help-messages.ts": "b22809be9fe3694114a09ffeac992e331ee1dce3533ce25c532e89cb7b55bb6c"
+      "src/lib/i18n/equipment-help-messages.ts": "a55a71b51d744322b3b2ebcfbc717548368e6c1bd741cc324a1b1f961a15060d"
     }
   }
 }

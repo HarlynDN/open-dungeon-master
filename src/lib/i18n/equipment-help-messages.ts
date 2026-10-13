@@ -1,6 +1,25 @@
 import { defineMessages } from "./catalog.ts";
 
 export const EQUIPMENT_HELP_MESSAGES = /*#__PURE__*/ defineMessages({
+  "itemHelp.type.ammunition": {"en": "Weapon (any ammunition)", "zh-CN": "武器（任意弹药）"},
+  "itemHelp.type.arrow": {"en": "Weapon (arrow)", "zh-CN": "武器（箭）"},
+  "itemHelp.type.axe": {"en": "Weapon (any axe)", "zh-CN": "武器（任意斧）"},
+  "itemHelp.type.dagger": {"en": "Weapon (dagger)", "zh-CN": "武器（匕首）"},
+  "itemHelp.type.sword": {"en": "Weapon (any sword)", "zh-CN": "武器（任意剑）"},
+  "itemHelp.type.warhammer": {"en": "Weapon (warhammer)", "zh-CN": "武器（战锤）"},
+  "itemHelp.type.axeSword": {"en": "Weapon (any axe or sword)", "zh-CN": "武器（任意斧或剑）"},
+  "itemHelp.type.maul": {"en": "Weapon (maul)", "zh-CN": "武器（巨锤）"},
+  "itemHelp.type.rod": {"en": "Rod", "zh-CN": "权杖"},
+  "itemHelp.type.javelin": {"en": "Weapon (javelin)", "zh-CN": "武器（标枪）"},
+  "itemHelp.type.mace": {"en": "Weapon (mace)", "zh-CN": "武器（钉头锤）"},
+  "itemHelp.type.longbow": {"en": "Weapon (longbow)", "zh-CN": "武器（长弓）"},
+  "itemHelp.type.scimitar": {"en": "Weapon (scimitar)", "zh-CN": "武器（弯刀）"},
+  "itemHelp.type.staff": {"en": "Staff", "zh-CN": "法杖"},
+  "itemHelp.type.longsword": {"en": "Weapon (longsword)", "zh-CN": "武器（长剑）"},
+  "itemHelp.type.slashingSword": {"en": "Weapon (any sword that deals slashing damage)", "zh-CN": "武器（任意造成挥砍伤害的剑）"},
+  "itemHelp.type.trident": {"en": "Weapon (trident)", "zh-CN": "武器（三叉戟）"},
+  "itemHelp.type.anyWeapon": {"en": "Weapon (any)", "zh-CN": "武器（任意）"},
+
   "itemHelp.type.potion": { "en": "Potion", "zh-CN": "药水" },
   "itemHelp.type.ring": { "en": "Ring", "zh-CN": "戒指" },
   "itemHelp.type.wand": { "en": "Wand", "zh-CN": "魔杖" },

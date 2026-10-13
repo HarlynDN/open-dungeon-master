@@ -18,7 +18,12 @@ const {bundledItemRows}=await import('../src/lib/rulebook/catalog-rows.ts');
 const {buildItemSheet}=await import('../src/lib/help/item-sheet.ts');
 const {describeContentEntry}=await import('../src/lib/help/index.ts');
 const {itemSheetView}=await import('../src/lib/i18n/equipment-help-presentations.ts');
-const {normalizeRulesText}=await import('../src/lib/help/rules-text.ts');
+const {normalizeRulesText,stripMarkdown,firstSentence}=await import('../src/lib/help/rules-text.ts');
+assert.equal(firstSentence('饮用后，你获得*动物友谊*。下一句。'),'饮用后，你获得动物友谊。');
+assert.equal(firstSentence('他说：“*剑*发光了！”随后离开。'),'他说：“剑发光了！”');
+assert.equal(firstSentence('You gain *advantage*. Other rules.'),'You gain advantage.');
+assert.equal(stripMarkdown('这把*剑*造成_光耀_伤害。'),'这把剑造成光耀伤害。');
+assert.equal(stripMarkdown('spell_attack_bonus'),'spell_attack_bonus');
 const book=JSON.parse(readFileSync(new URL('../src/lib/rulebook/srd-5.1.json',import.meta.url),'utf8'));
 const native=book.pages.filter(page=>page.chapter==='magic-items'&&page.kind==='item');
 assert.equal(native.length,239);
@@ -69,7 +74,7 @@ const info=await openCombatRenderer({files:[infoFile],stubs:{
  '@/components/ui/Tooltip':url('export const Tooltip=({children})=>children;'),
  '@/lib/content-scope':scopeStub,
 }});
-const reviewedNative=native.filter(row=>/^(Potion|Oil|Ring|Wand) of /.test(row.title)||row.meta.startsWith('Armor'));
+const reviewedNative=native.filter(row=>/^(Potion|Oil|Ring|Wand) of /.test(row.title)||/^(Armor|Weapon|Rod|Staff)/.test(row.meta));
 assert.deepEqual(MAGIC_ITEM_MATERIAL.map(row=>row.id).sort(),reviewedNative.map(row=>row.id).sort());
 const visibleText=html=>html.replace(/<[^>]+>/g,' ').replace(/&#x27;/g,"'").replace(/&quot;/g,'"').replace(/&amp;/g,'&');
 const numeric=text=>new Set((text.replace(/(\d)[–-](?=\d)/g,'$1 ').match(/[+-]?\d+(?:\.\d+)?/g)??[]).map(Number));
@@ -94,10 +99,10 @@ for(const row of MAGIC_ITEM_MATERIAL){
   assert(html.includes(locale==='en'?'Description':'说明'));
   if(locale!=='en') assert(html.includes(MESSAGE_CATALOGS[locale][row.metaKey]),row.id+':metadata');
   const text=visibleText(html);
-  assert(text.includes((locale==='en'?source:zh).split('\n')[0].split('*')[0].trim()));
+  assert(text.replace(/\s+/g,'').includes(stripMarkdown((locale==='en'?source:zh).split('\n\n')[0]).replace(/\s+/g,'').slice(0,64)),row.id+':body:'+locale);
  }
  const custom=info.render('InfoDialog',{open:true,onOpenChange:()=>{},title:entry.name,reference:{kind:'items',slug:entry.slug,name:entry.name}},'zh-CN',{queues:{[infoFile]:[{sheet:raw,loading:false,descriptionOwner:{...entry,source:'homebrew'}}]}});
- assert(visibleText(custom).includes(source.split('\n')[0].split('*')[0].trim()));assert.equal(JSON.stringify(entry),saved);
+ assert(visibleText(custom).replace(/\s+/g,'').includes(stripMarkdown(source.split('\n\n')[0]).replace(/\s+/g,'').slice(0,64)),row.id+':authored');assert.equal(JSON.stringify(entry),saved);
 }
 // The same cached canonical row feeds all four pickers. Check display props and
 // callbacks rather than snapshotting another catalog or issuing network calls.
@@ -127,6 +132,6 @@ for(const row of frozen.fixtures){
  const state=row.sheet!==undefined?{sheet:row.sheet,loading:false}:{sheet:null,loading:row.name==='loading'};
  assert.equal(gear.render(gear.components.ItemBody,{reference:{kind:'items',slug:row.slug??'authored',name:row.name}},'en',{},[state]),row.html,row.name);
 }
-console.log(`PASS: all ${MAGIC_ITEM_MATERIAL.length} native potion/oil, ring, wand and armor bodies and headers, full tables, exact source/signed numbers/dice, actual bilingual item dialogs and four picker flows, English switching, canonical picks and authored/other-book/changed-text overrides.`);
+console.log(`PASS: all ${MAGIC_ITEM_MATERIAL.length} native potion/oil, ring, wand, armor, weapon, rod and staff bodies and headers, full tables, exact source/signed numbers/dice, actual bilingual item dialogs and four picker flows, English switching, canonical picks and authored/other-book/changed-text overrides.`);
 console.log('PASS: all 185 original frozen English item cards unchanged.');
 console.log('Magic-item localization passed: all 239 SRD source titles and 291 registered names; shared display/search/alias projections; exact +N identities and scoped ambiguity; actual gear/loot/proposal UI in both locales; native callbacks, proper names, tool summaries, inventory and mechanics unchanged.');
