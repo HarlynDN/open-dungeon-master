@@ -2,6 +2,16 @@ import { defineMessages } from "./catalog.ts";
 
 export const EQUIPMENT_HELP_MESSAGES = /*#__PURE__*/ defineMessages({
   "itemHelp.type.potion": { "en": "Potion", "zh-CN": "药水" },
+  "itemHelp.type.ring": { "en": "Ring", "zh-CN": "戒指" },
+  "itemHelp.type.wand": { "en": "Wand", "zh-CN": "魔杖" },
+  "itemHelp.type.mediumHeavy": { "en": "Armor (medium or heavy, but not hide)", "zh-CN": "护甲（中甲或重甲，兽皮甲除外）" },
+  "itemHelp.type.plate": { "en": "Armor (plate)", "zh-CN": "护甲（板甲）" },
+  "itemHelp.type.anyArmor": { "en": "Armor (light, medium, or heavy)", "zh-CN": "护甲（轻甲、中甲或重甲）" },
+  "itemHelp.type.chainShirt": { "en": "Armor (chain shirt)", "zh-CN": "护甲（链甲衫）" },
+  "itemHelp.type.shieldArmor": { "en": "Armor (shield)", "zh-CN": "护甲（盾牌）" },
+  "itemHelp.rarity.variable": { "en": "Rarity varies", "zh-CN": "稀有度不一" },
+  "itemHelp.rarity.armorBonuses": { "en": "Rare (+1), very rare (+2), or legendary (+3)", "zh-CN": "珍稀（+1）、极珍稀（+2）或传奇（+3）" },
+  "itemHelp.rarity.gearBonuses": { "en": "Uncommon (+1), rare (+2), or very rare (+3)", "zh-CN": "非普通（+1）、珍稀（+2）或极珍稀（+3）" },
   "itemHelp.propertyRange": { "en": "range {value}", "zh-CN": "射程 {value}" },
   "itemHelp.loading": {
     "en": "Looking it up...",

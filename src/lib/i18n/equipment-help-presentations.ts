@@ -19,6 +19,7 @@ export function itemSheetView(sheet: ItemSheet, locale: AppLocale, identity?: It
     return match ? t(`itemHelp.${key}`, { value: match[1] }) : value;
   };
   const typeKey = Object.keys(EQUIPMENT_HELP_MESSAGES.en).find(key => key.startsWith('itemHelp.type.') && EQUIPMENT_HELP_MESSAGES.en[key as keyof typeof EQUIPMENT_HELP_MESSAGES.en] === sheet.type);
+  const rarityKey = Object.keys(EQUIPMENT_HELP_MESSAGES.en).find(key => key.startsWith('itemHelp.rarity.') && EQUIPMENT_HELP_MESSAGES.en[key as keyof typeof EQUIPMENT_HELP_MESSAGES.en] === sheet.rarity);
   const armor = sheet.armor ? { ...sheet.armor } : null;
   if (armor) {
     const capped = /^(\d+) \+ Dex \(max (\d+)\)$/.exec(armor.ac);
@@ -45,10 +46,10 @@ export function itemSheetView(sheet: ItemSheet, locale: AppLocale, identity?: It
     if (damage) weapon.damageType = featTermLabel('damage', damage, locale);
   }
   return { ...sheet, type: typeKey ? t(typeKey as keyof typeof EQUIPMENT_HELP_MESSAGES.en) : sheet.type,
-    rarity: sheet.rarity ? gearRarity(sheet.rarity, locale) : null,
+    rarity: rarityKey ? t(rarityKey as keyof typeof EQUIPMENT_HELP_MESSAGES.en) : sheet.rarity ? gearRarity(sheet.rarity, locale) : null,
     weight: unit(sheet.weight, /^(\d+(?:\.\d+)?) lb\.$/, 'weightValue'),
     cost: unit(unit(unit(sheet.cost, /^(\d+(?:\.\d+)?) gp$/, 'goldValue'), /^(\d+(?:\.\d+)?) sp$/, 'silverValue'), /^(\d+(?:\.\d+)?) cp$/, 'copperValue'),
-    description: identity ? nativeItemHelp(identity, sheet.description, locale) : sheet.description,
+    description: identity ? nativeItemHelp(identity, sheet.description, locale, { includeMetadata: true }) : sheet.description,
     armor, weapon };
 }
 

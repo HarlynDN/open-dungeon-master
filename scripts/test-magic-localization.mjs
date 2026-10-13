@@ -69,13 +69,17 @@ const info=await openCombatRenderer({files:[infoFile],stubs:{
  '@/components/ui/Tooltip':url('export const Tooltip=({children})=>children;'),
  '@/lib/content-scope':scopeStub,
 }});
-assert.deepEqual(MAGIC_ITEM_MATERIAL.map(row=>row.id).sort(),native.filter(row=>/^(Potion|Oil) of /.test(row.title)).map(row=>row.id).sort());
+const reviewedNative=native.filter(row=>/^(Potion|Oil|Ring|Wand) of /.test(row.title)||row.meta.startsWith('Armor'));
+assert.deepEqual(MAGIC_ITEM_MATERIAL.map(row=>row.id).sort(),reviewedNative.map(row=>row.id).sort());
 const visibleText=html=>html.replace(/<[^>]+>/g,' ').replace(/&#x27;/g,"'").replace(/&quot;/g,'"').replace(/&amp;/g,'&');
-const numeric=text=>new Set((text.match(/\d+(?:\.\d+)?/g)??[]).map(Number));
+const numeric=text=>new Set((text.replace(/(\d)[–-](?=\d)/g,'$1 ').match(/[+-]?\d+(?:\.\d+)?/g)??[]).map(Number));
 for(const row of MAGIC_ITEM_MATERIAL){
  const entry=bodies.find(entry=>entry.rulebook===row.id);assert(entry,row.id);
  const source=describeContentEntry(entry.data),saved=JSON.stringify(entry),raw=buildItemSheet(entry.name,[entry.data]);
  assert.equal(normalizeRulesText(MESSAGE_CATALOGS.en[row.key]),source);
+ const meta=reviewedNative.find(page=>page.id===row.id).meta;
+ assert.equal(MESSAGE_CATALOGS.en[row.metaKey],meta);
+ for(const number of numeric(meta)) assert(numeric(MESSAGE_CATALOGS['zh-CN'][row.metaKey]).has(number),row.id+':metadata:'+number);
  const zh=nativeItemHelp(entry,source,'zh-CN');assert.equal(zh,MESSAGE_CATALOGS['zh-CN'][row.key]);assert.match(zh,/\p{Script=Han}/u);
  assert.equal(nativeItemHelp(entry,source,'en'),source);
  for(const number of numeric(source)) assert(numeric(zh).has(number),row.id+':'+number);
@@ -83,10 +87,12 @@ for(const row of MAGIC_ITEM_MATERIAL){
  for(const replacement of [{...entry,source:'homebrew'},{...entry,documentSlug:'other-book'},{...entry,name:'Authored potion'}]) assert.equal(nativeItemHelp(replacement,source,'zh-CN'),source);
  assert.equal(nativeItemHelp(entry,source+' Authored addition.','zh-CN'),source+' Authored addition.');
  for(const locale of ['en','zh-CN']){
-  const projected=itemSheetView(raw,locale,entry);assert.equal(projected.description,locale==='en'?source:zh);
-  assert.deepEqual({...projected,description:raw.description,type:raw.type,rarity:raw.rarity},{...raw});
+  const projected=itemSheetView(raw,locale,entry);assert.equal(projected.description,locale==='en'?source:nativeItemHelp(entry,source,locale,{includeMetadata:true}));
+  assert.deepEqual(numeric(JSON.stringify({...projected,description:null})),numeric(JSON.stringify({...raw,description:null})),row.id+':stats');
+  assert.deepEqual({...projected,description:raw.description,type:raw.type,rarity:raw.rarity,armor:raw.armor,weapon:raw.weapon,weight:raw.weight,cost:raw.cost},{...raw});
   const html=info.render('InfoDialog',{open:true,onOpenChange:()=>{},title:equipmentName(entry.name,locale),reference:{kind:'items',slug:entry.slug,name:entry.name}},locale,{queues:{[infoFile]:[{sheet:raw,loading:false,descriptionOwner:entry}]}});
   assert(html.includes(locale==='en'?'Description':'说明'));
+  if(locale!=='en') assert(html.includes(MESSAGE_CATALOGS[locale][row.metaKey]),row.id+':metadata');
   const text=visibleText(html);
   assert(text.includes((locale==='en'?source:zh).split('\n')[0].split('*')[0].trim()));
  }
@@ -121,6 +127,6 @@ for(const row of frozen.fixtures){
  const state=row.sheet!==undefined?{sheet:row.sheet,loading:false}:{sheet:null,loading:row.name==='loading'};
  assert.equal(gear.render(gear.components.ItemBody,{reference:{kind:'items',slug:row.slug??'authored',name:row.name}},'en',{},[state]),row.html,row.name);
 }
-console.log('PASS: all 19 native potion/oil bodies and tables, exact source/numbers/dice, actual bilingual item dialogs and four picker flows, English switching, canonical picks and authored/other-book/changed-text overrides.');
+console.log(`PASS: all ${MAGIC_ITEM_MATERIAL.length} native potion/oil, ring, wand and armor bodies and headers, full tables, exact source/signed numbers/dice, actual bilingual item dialogs and four picker flows, English switching, canonical picks and authored/other-book/changed-text overrides.`);
 console.log('PASS: all 185 original frozen English item cards unchanged.');
 console.log('Magic-item localization passed: all 239 SRD source titles and 291 registered names; shared display/search/alias projections; exact +N identities and scoped ambiguity; actual gear/loot/proposal UI in both locales; native callbacks, proper names, tool summaries, inventory and mechanics unchanged.');
