@@ -41,13 +41,63 @@
     "serverSynthesisCompleted": true,
     "audioDeliveryHttpStatus": 206,
     "screenshot": "/tmp/odm-local-chinese-tts-browser.png",
-    "boundary": "Controls and real audio delivery observed; not proof of all playback controls or listened pronunciation quality."
+    "boundary": "Controls and real audio delivery observed; not proof of all playback controls or listened pronunciation quality.",
+    "replayAndMute": {
+      "replayRequested": true,
+      "muteToggleObserved": "取消旁白静音",
+      "boundary": "Actual control transition and replay request observed; audible interruption not independently measured."
+    },
+    "previewRecovery": {
+      "serviceStoppedIntentionally": true,
+      "offlineHttpStatus": 502,
+      "localizedAlert": "未能朗读这段叙事。",
+      "serviceRestartedSameConfiguration": true,
+      "retryAudioHttpStatus": 206,
+      "alertCleared": true,
+      "backendVoice": "zf_xiaobei",
+      "backendLangCode": "z",
+      "failureScreenshot": "/tmp/odm-tts-service-failure.png",
+      "restoredScreenshot": "/tmp/odm-tts-retry-restored.png"
+    }
   },
   "remaining": [
-    "spoken Arabic numbers/dice/mixed names and quality review",
-    "English real speech regression",
-    "continuous chunks/first play/replay/mute/retry full browser acceptance",
+    "listen review of numbers/dice/mixed names and overall quality",
+    "English campaign/browser real speech regression",
+    "complete chunk playback/first-play/replay/mute interruption and narration failure retry acceptance",
     "native playback",
     "final bilingual journey and full tests/lint/build"
-  ]
+  ],
+  "additionalSamples": [
+    {
+      "name": "numbers",
+      "voice": "zf_xiaobei",
+      "lang_code": "z",
+      "text": "米拉施放1环魔法飞弹，消耗1个法术位。哥布林受到7点伤害，生命值剩余12点。你掷出1d6+3，结果为8；目标距离30英尺。Brom说道：“现在出发！”阿明回答：“好，我们去神殿。”",
+      "file": "/tmp/odm-kokoro-numbers.wav",
+      "sampleRate": 24000,
+      "seconds": 18.2165,
+      "bytes": 874470,
+      "rms": 0.07149991008932392,
+      "mime": "audio/wav",
+      "listenReview": "pending"
+    },
+    {
+      "name": "english",
+      "voice": "af_heart",
+      "lang_code": "a",
+      "text": "Mira casts Magic Missile using a first-level spell slot. The goblin takes seven damage and has twelve hit points remaining. Brom says, \"Let us leave now.\"",
+      "file": "/tmp/odm-kokoro-english.wav",
+      "sampleRate": 24000,
+      "seconds": 10.147666666666666,
+      "bytes": 487166,
+      "rms": 0.05260891360822226,
+      "mime": "audio/wav",
+      "listenReview": "pending"
+    }
+  ],
+  "pronunciationReview": {
+    "state": "user-feedback-pending",
+    "scope": "Arabic numbers, 1d6+3, units and mixed Brom/Chinese proper names",
+    "questionPresented": true
+  }
 }
