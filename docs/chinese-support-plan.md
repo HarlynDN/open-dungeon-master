@@ -150,10 +150,17 @@ The same browser flow then saved and reopened the character successfully.
 Evidence: `/tmp/odm-character-save-proof.png` outside Git. This proves one actual
 creation/save/reopen path, not full character acceptance: reopened TrainingLines
 still prints raw language/tool/armor/weapon values, and racial feature chips
-still show raw dwarf traits. These are the next concrete gaps in this flow;
-fix them using existing presentation metadata before campaign acceptance. No
-model or voice requests were made; the test server's unavailable default model
-is not the approved Codex CLI backend.
+still show raw dwarf traits. These two observed gaps are now repaired in the shared sheet components:
+registered training labels use existing catalogs, and exact native race traits
+require the feature race source plus the owning race identity. Unknown/custom
+values and canonical records remain intact. The existing background-flow check
+covers actual bilingual training rows, all native race trait chips and story,
+wrong-race and custom preservation. Catalog/types/changed-file lint pass.
+The saved character page was refreshed and shows these rows and traits in
+Chinese; evidence is outside Git at `/tmp/odm-character-sheet-localized.png`.
+Campaign-dialog browser behavior, authenticated language switching and broader
+character variants remain open. No model or voice requests were made; the test
+server's unavailable default model is not the approved Codex CLI backend.
 
 Pure state, audio plumbing and glyph helpers can be audited within the session
 batch; their file count must not displace player-visible work.

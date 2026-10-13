@@ -17,11 +17,11 @@
     "scripts/lib/combat-ui-fixtures.mjs": "c30d098937f9b7b4abc82b696b792f46d23c13639c8faa76acbe6406467f7a7b",
     "scripts/lib/sheet-party-fixtures.mjs": "85ffb69a377fa633acbd680fd8c6bfc05c70c1b6719a1d07b5cbdeb2455e3bd8",
     "src/app/api/campaigns/[campaignId]/sheet/route.ts": "f38e06d5e7120fbe65521fdd8ca2dc8ebd4b37e09d0ee91f5641df6bf4e71c43",
-    "src/app/campaigns/[campaignId]/CharacterSheetDialog.tsx": "ec76a036a097d703d84a6083304c1b7cb6eea576c1959d9c5fe2bf54b5bf5203",
+    "src/app/campaigns/[campaignId]/CharacterSheetDialog.tsx": "cbbc590c4e1ee5e0665856ae396019ad127d0ad93f4490aa0a277281d00d509e",
     "src/app/campaigns/[campaignId]/PartyPanel.tsx": "2bb148a325e0661352856dbf50ec0972d422275f3bdaad0f3abe97c1b1abd726",
     "src/components/sheet/SheetChoices.tsx": "c69cbce9c5be6af8d7dc83146f908b342db38423fde595e852c847307c974568",
     "src/components/sheet/SheetCounters.tsx": "649bf1de0c499e00874d6edfdbf397db883eb913786bd58bf5f471978bab003d",
-    "src/components/sheet/SheetParts.tsx": "bdd9a6fec5085f8b047890cd4d6d7bc199815073d3850da3491d32162df72e4b",
+    "src/components/sheet/SheetParts.tsx": "27b34f19c33d4b42f6a0cd5f42fa3b4a2567950ca24becb08cc209da8c5dbfce",
     "src/components/sheet/SheetState.tsx": "d664ff1c154de748ef0605e2dc44a05ae5b534b4c071070d6cc6a3da2621906b",
     "src/components/sheet/sheet-state.ts": "690e43d5e6276af98c09d23745bf8f78f048e995ea5eb4450cd69568b57bbf23",
     "src/lib/i18n/roll-presentations.ts": "3999299af4647b88f15531dfeca1c5bae09350bbd2479b877eba0c8d7706d582",
@@ -90,5 +90,13 @@
       "src/components/sheet/SheetParts.tsx": "1ada4b01411481e0f49060f7d493765d20a263190acbf52df12dcae6e90decb2"
     },
     "review": "The caller now supplies its native class ID for feature display. Native source/grants and stored feature names are unchanged. One focused material script retains its original English render hashes and checks all 322 theme bindings plus actual six-class English/Chinese creator/sheet projections, unknown or modified prose and story names. Source comparison by the implementation agent; not human approval. Other theme material and broader browser acceptance remain open."
+  },
+  "nativeTrainingAndTraitIntegration": {
+    "priorSourceSha256": {
+      "src/components/sheet/SheetParts.tsx": "bdd9a6fec5085f8b047890cd4d6d7bc199815073d3850da3491d32162df72e4b",
+      "src/app/campaigns/[campaignId]/CharacterSheetDialog.tsx": "ec76a036a097d703d84a6083304c1b7cb6eea576c1959d9c5fe2bf54b5bf5203"
+    },
+    "review": "Shared TrainingLines now projects registered language/tool/armor/weapon labels without changing canonical values; FeatureChips receives race identity from character page and campaign dialog and translates only exact race-owned native traits. Custom/story/unknown values preserved; English returns original text.",
+    "validation": "One grouped existing background-flow script checks actual bilingual TrainingLines, native-race FeatureChips and source preservation. Actual saved character page refreshed successfully. Campaign-dialog end-to-end rendering remains in the campaign browser gate."
   }
 }

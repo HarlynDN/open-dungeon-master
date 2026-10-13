@@ -1,5 +1,7 @@
 "use client";
 
+import { sheetTrainingLabel } from "@/lib/i18n/training-presentations";
+import { lineageFeatureName } from "@/lib/i18n/lineage-presentations";
 import { nativeFeatureName, nativeFeatureHelp, nativeFeatHelp } from "@/lib/i18n/feature-material-presentations";
 import { freeCastOf, freeCastResourceId } from "@/lib/srd/feat-spells";
 import { backgroundGrantView } from "@/lib/i18n/background-material-presentations";
@@ -220,20 +222,19 @@ export function TrainingLines({
 }: {
   proficiencies: { languages: string[]; tools: string[]; armor: string[]; weapons: string[] };
 }) {
-  const { t } = useLocale();
-  const nice = (value: string) => value;
-  const rows: Array<[string, string[]]> = [
-    [t("sheet.languages"), proficiencies.languages],
-    [t("sheet.tools"), proficiencies.tools],
-    [t("sheet.armor"), proficiencies.armor],
-    [t("sheet.weapons"), proficiencies.weapons],
+  const { locale, t } = useLocale();
+  const rows: Array<[string, string[], "language" | "tool" | "armor" | "weapon"]> = [
+    [t("sheet.languages"), proficiencies.languages, "language"],
+    [t("sheet.tools"), proficiencies.tools, "tool"],
+    [t("sheet.armor"), proficiencies.armor, "armor"],
+    [t("sheet.weapons"), proficiencies.weapons, "weapon"],
   ];
   return (
     <dl className="stagger-up grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-xs">
-      {rows.map(([label, values]) => (
+      {rows.map(([label, values, kind]) => (
         <div key={label} className="contents">
           <dt className="text-stone-500">{label}</dt>
-          <dd className="text-stone-200">{values.length ? [...new Set(values.map(nice))].join(t("sheet.separator")) : <span className="text-stone-600">{t("sheet.none")}</span>}</dd>
+          <dd className="text-stone-200">{values.length ? [...new Set(values.map(value => sheetTrainingLabel(kind, value, locale)))].join(t("sheet.separator")) : <span className="text-stone-600">{t("sheet.none")}</span>}</dd>
         </div>
       ))}
     </dl>
@@ -300,12 +301,14 @@ export function EquipmentChips({
 
 export function FeatureChips({
   features,
+  raceId,
   classId,
   subclass,
   classes,
   resources,
 }: {
   features: Array<{ name: string; source?: string; level?: number; classId?: string }>;
+  raceId?: string;
   classId: string;
   subclass?: string | null;
   classes?: ReadonlyArray<{ id: string; subclass?: string | null }> | null;
@@ -330,7 +333,7 @@ export function FeatureChips({
         const background = feature.source === "background" ? backgroundGrantView(feature.name, help, locale) : null;
         return {
           id: feature.name,
-          name: background?.name ?? (story ? feature.name : nativeFeatureName(feature.name, locale, owner)),
+          name: background?.name ?? (story ? feature.name : feature.source === "race" ? lineageFeatureName(raceId, feature.name, locale) : nativeFeatureName(feature.name, locale, owner)),
           icon: { kind: "feature" as const, key: feature.name, family: `class-${owner.toLowerCase()}` },
           note: story ? t("sheet.storySource") : undefined,
           meta: feature.level ? t("library.level", { level: feature.level }) : undefined,

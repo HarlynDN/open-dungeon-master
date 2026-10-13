@@ -14,7 +14,7 @@
     "src/app/characters/builder/RacialChoicesSection.tsx": "bf2db286b025eed1b7b05758fd1c6f3f1c6aaa9edf08853e579286ac797a68a6",
     "src/lib/characters/options.ts": "e0294a844664240604091c945104e20adc08bcbf7d0fc32bafacfff70174c31c",
     "src/lib/help/index.ts": "56503b4dba185a71c14e60cff2017a2b4ce0d0b0e947bca3a09a4bcb5c6156a2",
-    "src/lib/i18n/lineage-presentations.ts": "14c6c88eb6200584eb6b8c7c5a46ba99de1cdc98838747f42528a40a95ed4a8b",
+    "src/lib/i18n/lineage-presentations.ts": "57e5eafa4ad8c16610026ffdb959b02eea50bb6c89ed6f4030d43b0489cbede9",
     "src/lib/i18n/racial-presentations.ts": "6dfcacdffbb4c3e35110b24ed972a12dd87092bbfa4ae51b22688440558c9b27",
     "src/lib/i18n/builder-picker-presentations.ts": "728ad42accc71a7f52efb7f8c38493ff357ff2c956a182edb6e0263af0a8b539"
   },
@@ -31,5 +31,10 @@
       "src/lib/i18n/lineage-material-messages.ts": "65ccba753fe3995347fa21606026ee46df0ee0143fccc4d8caaa86d7101205ea",
       "src/lib/i18n/racial-ui-messages.ts": "33870629adbf14cd14e51760a0b857cd04aa8fac4cbf5ca0b788cef86e14e3eb"
     }
+  },
+  "sheetTraitIntegration": {
+    "priorSourceSha256": "14c6c88eb6200584eb6b8c7c5a46ba99de1cdc98838747f42528a40a95ed4a8b",
+    "review": "Added exact native-race trait projection at sheet display, requiring race ownership and unchanged whole trait. Stored names, other races, story/custom traits and English remain unchanged.",
+    "validation": "Existing background-flow test covers native race trait chip IDs/names and custom/story/source preservation."
   }
 }

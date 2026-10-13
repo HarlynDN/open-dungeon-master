@@ -93,3 +93,13 @@ export function lineageLanguageHelp(race: RaceLanguages, background: BackgroundL
   if (background?.languages) parts.push(t("lineageUi.languageBackground", { count: background.languages, background: backgroundName }));
   return t("lineageUi.languageSentence", { parts: parts.join("") });
 }
+
+// Only an exact trait granted by this native race may use the race catalog.
+// A story feature or another race's/custom trait is never name-translated.
+export function lineageFeatureName(raceId: string | undefined, line: string, locale: AppLocale): string {
+  if (locale === "en" || !raceId) return line;
+  const race = srdRaceFor(raceId);
+  if (!race?.traits.includes(line)) return line;
+  const row = LINEAGE_TRAIT_DISPLAY.find(entry => entry.line === line);
+  return row ? createTranslator(locale)(row.lineKey) : line;
+}

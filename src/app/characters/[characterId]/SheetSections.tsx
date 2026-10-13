@@ -139,7 +139,7 @@ export function SheetSections({ sheet, level = 1 }: { sheet: CreateSheetInput; l
 
       {sheet.features?.length ? (
         <SheetPanel title={t("sheet.features")}>
-          <FeatureChips features={sheet.features} classId={sheet.class} subclass={sheet.subclass} classes={sheet.classes} resources={populateResources(sheet.features, level, derived.abilityMods, undefined, sheet.classes, sheet.feats)} />
+          <FeatureChips raceId={sheet.race} features={sheet.features} classId={sheet.class} subclass={sheet.subclass} classes={sheet.classes} resources={populateResources(sheet.features, level, derived.abilityMods, undefined, sheet.classes, sheet.feats)} />
         </SheetPanel>
       ) : null}
 
