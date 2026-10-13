@@ -435,5 +435,77 @@ export const SPELL_HELP = [
   {
     "name": "Ray of Enfeeblement",
     "key": "spellHelp.native.ray-of-enfeeblement"
+  },
+  {
+    "name": "Detect Thoughts",
+    "key": "spellHelp.native.detect-thoughts"
+  },
+  {
+    "name": "Enhance Ability",
+    "key": "spellHelp.native.enhance-ability"
+  },
+  {
+    "name": "Enlarge/Reduce",
+    "key": "spellHelp.native.enlarge/reduce"
+  },
+  {
+    "name": "Enthrall",
+    "key": "spellHelp.native.enthrall"
+  },
+  {
+    "name": "Find Steed",
+    "key": "spellHelp.native.find-steed"
+  },
+  {
+    "name": "Flame Blade",
+    "key": "spellHelp.native.flame-blade"
+  },
+  {
+    "name": "Flaming Sphere",
+    "key": "spellHelp.native.flaming-sphere"
+  },
+  {
+    "name": "Gust of Wind",
+    "key": "spellHelp.native.gust-of-wind"
+  },
+  {
+    "name": "Heat Metal",
+    "key": "spellHelp.native.heat-metal"
+  },
+  {
+    "name": "Levitate",
+    "key": "spellHelp.native.levitate"
+  },
+  {
+    "name": "Magic Mouth",
+    "key": "spellHelp.native.magic-mouth"
+  },
+  {
+    "name": "Moonbeam",
+    "key": "spellHelp.native.moonbeam"
+  },
+  {
+    "name": "Rope Trick",
+    "key": "spellHelp.native.rope-trick"
+  },
+  {
+    "name": "Spike Growth",
+    "key": "spellHelp.native.spike-growth"
+  },
+  {
+    "name": "Suggestion",
+    "key": "spellHelp.native.suggestion"
+  },
+  {
+    "name": "Warding Bond",
+    "key": "spellHelp.native.warding-bond"
+  },
+  {
+    "name": "Web",
+    "key": "spellHelp.native.web"
+  },
+  {
+    "name": "Zone of Truth",
+    "key": "spellHelp.native.zone-of-truth"
   }
 ] as const;
