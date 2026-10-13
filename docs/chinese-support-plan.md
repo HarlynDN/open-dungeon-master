@@ -33,6 +33,27 @@ Text delivery includes native interface/system/help text and repository-owned ma
 
 Before pausing, finish the native dynamic text audit and one bilingual text journey, then run the required full tests/lint/build once at the final boundary. The former voice and third-party acceptance gaps must be recorded as deferred rather than falsely marked passed.
 
+## Terminology alignment — approved 2026-10-13
+
+Use [5etools Chinese terminology lookup](https://5e.kiwee.top/terms.html)
+as a terminology reference, prioritizing 2014 / SRD 5.1 and reviewed entries.
+Match each candidate by English identity and source edition; do not infer rule
+compatibility from a matching Chinese name. The site mixes editions and marks
+unreviewed machine translations, so unverified entries remain candidates.
+
+Resolve conflicts in the existing `src/lib/i18n/glossary.zh-CN.ts` policy and
+its consumers within each prose delivery unit, with common search/tool-input
+aliases where useful. Preserve user-selected exceptions, especially Goblin
+“哥布林” with “地精” as an accepted alias. Align high-frequency core terms first;
+review remaining terms alongside their source batch. Revisit completed prose
+only for confirmed conflicts, not a blanket retranslation.
+
+English repository sources remain authoritative for prose meaning, quantities,
+conditions and mechanics. Do not import the site's prose or entire dictionary.
+Keep canonical IDs, English/model/tool text and English regression unchanged.
+Use existing terminology and focused workflow checks; this adds no separate
+report or release gate and does not include a SRD 5.2 rules migration.
+
 ## Current state and remaining work
 
 | Unit | Implemented checkpoint | Remaining gate |
@@ -45,7 +66,7 @@ Before pausing, finish the native dynamic text audit and one bilingual text jour
 | Player system logs | Localized structured combat/audit display, party item/coin/XP logs, account facts and kickoff notices; English model/tool semantics stay separate | Other native player-log templates and final history/save/resume audit |
 | Resource delivery | UI/content/help scopes and independent retryable lazy help; anonymous bilingual switch/reload, authenticated character/campaign entry and viewer-English/story-Chinese separation observed | Complete authenticated journey and lazy/cache timing; hydrated/network totals and large route JS payload remain unverified |
 | Local Chinese TTS | Implementation and bounded CPU delivery/outage evidence retained in [the runtime record](validation/chinese-tts-runtime.json) | Chinese voice quality rejected by user; further voice work is deferred, not passed, and is not a text-milestone gate |
-| Full native rulebook | Reader chrome localized; **496/933 complete Chinese pages** now render via a server-generated display projection, including all 200 cantrip through fourth-level spell pages, all 239 magic-item pages, all thirty-six rules pages, all nine race pages and all twelve class pages, with complete headers and reused bodies; original English corpus retained; 200 spell and 239 magic-item bodies are available for further reuse | Remaining 119 high-level spell pages and 318 monster pages; item-table semantic/source-layout audit; complete Chinese corpus coverage, authenticated browser search/navigation and English reading regression |
+| Full native rulebook | Reader chrome localized; **496/933 complete Chinese pages** now render via a server-generated display projection, including all 200 cantrip through fourth-level spell pages, all 239 magic-item pages, all thirty-six rules pages, all nine race pages and all twelve class pages, with complete headers and reused bodies; original English corpus retained; 200 spell and 239 magic-item bodies are available for further reuse | Remaining 119 high-level spell pages and 318 monster pages; complete Chinese corpus coverage, authenticated browser search/navigation and English reading regression |
 | Final text flow | Recorded Chinese exploration/social/utility and combat/slot/correction acceptance on Codex | Complete Chinese text journey, rulebook reading/search and English regression; full tests/lint/build, then pause |
 
 ## Execution adjustment (2026-10-13)
@@ -70,10 +91,10 @@ real interaction has passed. Do not restart a static translation campaign.
   structure and numeric/dice parity now also cover shared spell-help pages.
   Catalog/AST/resources, TypeScript and changed-file lint passed; terminology
   retained its context warnings with zero errors. English canonical data stayed
-  unchanged. The first broader table probe exposed item-layout differences;
-  those remain open below rather than forcing Chinese to match broken layouts.
-- Next: close the item-table source-layout/semantic comparison, then fifth-
-  through ninth-level spells and monster families. Final release checks have
+  unchanged. Item tables now pass cell-level numeric/card identity checks with
+  source-bound conversion repairs and mutation tests; see source exceptions.
+- Next: fifth- through ninth-level spells and monster families, applying the
+  approved terminology reference policy. Final release checks have
   not run for this state.
 - Native dynamic UI/material/log ownership remains pending in the UI manifest;
   audit helpers with their actual consumers before the final bilingual journey.
@@ -286,17 +307,26 @@ have actual evidence.
 
 ## Source exceptions and retained evidence
 
-- The fourth-level batch's broader table probe found source-layout differences
-  in existing item translations: Bag of Beans has 11 parsed source rows vs 12
-  Chinese rows, Robe of Useful Items 12 vs 13, and Wand of Wonder 20 vs 22.
-  Original conversion text joins separate roll intervals inside cells; Chinese
-  separates them. Deck tables also translate written card ranks to digits, and
-  Chinese can reorder quantities within a cell. Keep this failed probe as an
-  open semantic/source-layout audit, not a translation rollback or a passed
-  structural check. The generic row/value gate currently covers native chapters
-  and shared spells; item bilingual/ownership/golden/render checks are retained.
-  Resolve and record source exceptions before final acceptance without weakening
-  numeric/row checks or refreshing English baselines.
+- The item-table probe originally failed on merged conversion rows. Reviewed
+  against the official SRD PDF (printed pp. 209, 239, 250), Bag of Beans,
+  Robe of Useful Items and Wand of Wonder require comparison-only row splits.
+  `rulebook-translation-coverage.json:itemTableReviews` binds these to source
+  hashes. All 239 item pages now pass table count/shape and per-cell numeric
+  checks, with card rank/suit/joker identity preserved. The robe's shared
+  width/height quantity has an exact reviewed phrase mapping. Mutation checks
+  reject removed rows, altered ranges/dice/signs/dimensions/cards and stale
+  review bindings. Focused item regression passed, including 185 frozen English
+  item cards; TypeScript and changed-file lint passed. English corpus/goldens
+  are unchanged. This structural gate
+  does not replace prose meaning review.
+- 5etools terminology lookup was inspected through its published
+  `docs/terms-20260922-142718.json` data (version
+  `bb83b8e4ac003ad2bfda11df0525ec5bef6add68ffb0658fa86e9065c6c8eabe`).
+  Huge/Gargantuan agree on 巨型/超巨型; Restrained on 束缚; Goblin's 地精
+  remains an alias under the user-selected 哥布林 policy. Many rows have blank
+  edition sources: “已确定” alone does not prove 2014 provenance. Euryale has
+  both a name and a bestiary ability entry, illustrating why context matching
+  is required. No bulk dictionary or prose was imported.
 - Animal Friendship's bundled English higher-level clause is truncated. The
   Chinese clause was verified against the publisher's
   [2014 rules entry](https://www.dndbeyond.com/spells/1993-animal-friendship).

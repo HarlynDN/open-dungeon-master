@@ -2494,5 +2494,58 @@
       "kind": "rules",
       "sourceHash": "ff3f7349099b4de6530954a2be5b7a73e3b8da21de737dde62f5053f712976b3"
     }
-  ]
+  ],
+  "itemTableReviews": {
+    "bag-of-beans": {
+      "sourceHash": "62d52d4353d73d21401c66c5313af187ab917c6269cd674b860bb5e490984a85",
+      "reference": "https://media.dndbeyond.com/compendium-images/srd/5.1/SRD_CC_v5.1.pdf",
+      "printedPage": 209,
+      "splits": [
+        {
+          "table": 0,
+          "row": "61-70",
+          "nextRow": "71-80"
+        }
+      ]
+    },
+    "robe-of-useful-items": {
+      "sourceHash": "706b11086e1abea3589a655de4ff5fbe6bfab17cc1bcf34ffc24395114f60e43",
+      "reference": "https://media.dndbeyond.com/compendium-images/srd/5.1/SRD_CC_v5.1.pdf",
+      "printedPage": 239,
+      "splits": [
+        {
+          "table": 0,
+          "row": "31-44",
+          "nextRow": "45-51"
+        }
+      ],
+      "sharedQuantities": [
+        {
+          "table": 0,
+          "row": "16-22",
+          "cell": 1,
+          "en": "up to 10 feet wide and 10 feet high",
+          "zh": "宽、高各至多 10 英尺",
+          "canonical": "10 10"
+        }
+      ]
+    },
+    "wand-of-wonder": {
+      "sourceHash": "4dd9d3933a121534ac878b53c3a28a54d8c3fec460b18ae00b4eb0a77da8ef8d",
+      "reference": "https://media.dndbeyond.com/compendium-images/srd/5.1/SRD_CC_v5.1.pdf",
+      "printedPage": 250,
+      "splits": [
+        {
+          "table": 0,
+          "row": "01-05",
+          "nextRow": "06-10"
+        },
+        {
+          "table": 0,
+          "row": "11-15",
+          "nextRow": "16-20"
+        }
+      ]
+    }
+  }
 }

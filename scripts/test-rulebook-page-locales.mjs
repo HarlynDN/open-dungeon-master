@@ -11,8 +11,7 @@ const verify = (manifest = coverageManifest, display = rulebookPageDisplay, opti
 const coverage = verify(coverageManifest, rulebookPageDisplay, { full: process.argv.includes('--final') });
 
 // Native chapters and shared spell help preserve source table structure/values.
-// Item tables have previously repaired conversion rows and card-rank notation;
-// their semantic comparison remains a separately recorded acceptance task.
+// Item source-layout repairs and card identities use the cell-level audit below.
 for (const { id, kind } of coverageManifest.requiredPages) {
   if (kind === 'item') continue;
   const data = rulebookPage(id);
@@ -70,17 +69,47 @@ assert.ok(link, 'Translated spell reference remains clickable');
 link.props.onClick();
 assert.equal(opened, 'magic-missile');
 
+const { compareItemTables } = await import('./lib/item-table-review.mjs');
 const items = rulebookPages().filter(page => page.kind === 'item');
 assert.equal(items.length, 239);
 for (const page of items) {
   const before = JSON.stringify(page);
   const display = rulebookPageDisplay(page, 'zh-CN');
   assert.equal(display.translated, true, page.id);
+  compareItemTables(page, parseBook(page.md).filter(b => b.kind === 'table'), parseBook(display.md).filter(b => b.kind === 'table'), coverageManifest.itemTableReviews?.[page.id], nativeBookSourceHash(page));
   assert.match(display.title, /[\u4e00-\u9fff]/, page.id);
   assert.equal(rulebookPageDisplay(page, 'en').md, page.md);
   assert.equal(rulebookPageDisplay({ ...page, meta: page.meta + ' authored variant' }, 'zh-CN').translated, false);
   assert.equal(rulebookPageDisplay({ ...page, md: page.md + '\n\nExtra rule.' }, 'zh-CN').translated, false);
   assert.equal(JSON.stringify(page), before);
+}
+// Mutation checks prove that normalization cannot hide lost rows, moved
+// quantities, changed dice/roll ranges, card identities, or stale source review.
+for (const id of Object.keys(coverageManifest.itemTableReviews ?? {})) {
+  assert.ok(items.some(page => page.id === id), 'Unknown reviewed item: ' + id);
+}
+function rejectTableMutation(id, mutate) {
+  const page = items.find(page => page.id === id);
+  const source = parseBook(page.md).filter(b => b.kind === 'table');
+  const target = parseBook(rulebookPageDisplay(page, 'zh-CN').md).filter(b => b.kind === 'table');
+  mutate(target);
+  assert.throws(() => compareItemTables(page, source, target, coverageManifest.itemTableReviews?.[id], nativeBookSourceHash(page)));
+}
+rejectTableMutation('bag-of-beans', tables => tables[0].rows.splice(8, 1));
+rejectTableMutation('bag-of-beans', tables => { tables[0].rows[8][0] = '72–80'; });
+rejectTableMutation('bag-of-beans', tables => { tables[0].rows[0][1] = tables[0].rows[0][1].replace('5d6', '6d6'); });
+rejectTableMutation('robe-of-useful-items', tables => { tables[0].rows[2][1] = tables[0].rows[2][1].replace('10', '20'); });
+rejectTableMutation('deck-of-illusions', tables => { tables[0].rows[0][0] = '黑桃 A'; });
+rejectTableMutation('deck-of-illusions', tables => { tables[0].rows[4][0] = '红桃 9'; });
+rejectTableMutation('deck-of-many-things', tables => { tables[0].rows[20][0] = '无 TM 标记的王牌'; });
+rejectTableMutation('deck-of-many-things', tables => { tables[1].rows[0][0] = '16（-3）'; });
+{
+  const page = items.find(page => page.id === 'bag-of-beans');
+  const source = parseBook(page.md).filter(b => b.kind === 'table');
+  const target = parseBook(rulebookPageDisplay(page, 'zh-CN').md).filter(b => b.kind === 'table');
+  assert.throws(() => compareItemTables(page, source, target, { ...coverageManifest.itemTableReviews[page.id], sourceHash: 'stale' }, nativeBookSourceHash(page)), /stale table review/);
+  source[0].rows[7][1] = source[0].rows[7][1].replace('71-80', '72-80');
+  assert.throws(() => compareItemTables(page, source, target, coverageManifest.itemTableReviews[page.id], nativeBookSourceHash(page)), /reviewed split/);
 }
 // Exercise complete tables and embedded blocks in the real book renderer.
 for (const id of ['bag-of-tricks', 'deck-of-many-things', 'figurine-of-wondrous-power', 'staff-of-the-magi']) {
