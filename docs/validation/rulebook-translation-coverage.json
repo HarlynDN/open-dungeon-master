@@ -3175,6 +3175,11 @@
       "sourceHash": "5c7fc9be6ac85a0d346819712582b12903f0a675605a93b533f7d6e2e10ddcc5"
     },
     {
+      "id": "azer",
+      "kind": "monster",
+      "sourceHash": "2da71b46116d5294e331e58771b7042b2b2c4b2e7c117f4e90f249119e3356e5"
+    },
+    {
       "id": "basilisk",
       "kind": "monster",
       "sourceHash": "36825263a2de7d3a6a34a88443f439781009e7d470203383611bfceddbd8d9a3"
@@ -3315,6 +3320,11 @@
       "sourceHash": "3da88d78f73ebd94d2d64ce601561417a166ff046760a55196dd73a556e62a34"
     },
     {
+      "id": "magmin",
+      "kind": "monster",
+      "sourceHash": "50d825539477d6d6242c15b7b1e8eaddb1b69f4bde9d938ce93f8cb2a3069708"
+    },
+    {
       "id": "manticore",
       "kind": "monster",
       "sourceHash": "69ed0ab55c9148a28731186c7daccdd72886ec153089f7b04566ec77b8a4f59a"
@@ -3388,6 +3398,11 @@
       "id": "sahuagin",
       "kind": "monster",
       "sourceHash": "de18d85387e023b2d34a7b4a619cb3690222daaf7642f716f3fccee59a939059"
+    },
+    {
+      "id": "salamander",
+      "kind": "monster",
+      "sourceHash": "23517ffd1f7eb392af21081a19b4e2b557e1638898a583a793cf96a607d9fa2a"
     },
     {
       "id": "shrieker-fungi",
