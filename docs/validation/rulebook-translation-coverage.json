@@ -3315,6 +3315,11 @@
       "sourceHash": "6dde30ed5b0ccd526ce90b456cafc54e7681f3c18bb4e3011c37adb1a7666f71"
     },
     {
+      "id": "drider",
+      "kind": "monster",
+      "sourceHash": "6bd4f0b6c237802aca12c1862c30532970f41dacf2b090256da23703cff23802"
+    },
+    {
       "id": "dryad",
       "kind": "monster",
       "sourceHash": "41df0bf53c661dbbf5865e94cc89102c61906db8c5664bb03f8d17eff2e5d36e"
