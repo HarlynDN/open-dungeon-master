@@ -66,7 +66,7 @@ report or release gate and does not include a SRD 5.2 rules migration.
 | Player system logs | Localized structured combat/audit display, party item/coin/XP logs, account facts and kickoff notices; English model/tool semantics stay separate | Other native player-log templates and final history/save/resume audit |
 | Resource delivery | UI/content/help scopes and independent retryable lazy help; anonymous bilingual switch/reload, authenticated character/campaign entry and viewer-English/story-Chinese separation observed | Complete authenticated journey and lazy/cache timing; hydrated/network totals and large route JS payload remain unverified |
 | Local Chinese TTS | Implementation and bounded CPU delivery/outage evidence retained in [the runtime record](validation/chinese-tts-runtime.json) | Chinese voice quality rejected by user; further voice work is deferred, not passed, and is not a text-milestone gate |
-| Full native rulebook | Reader chrome localized; **906/933 complete Chinese pages** render via a server-generated display projection: all 319 spells, 239 magic items, 36 rules, 9 races, 12 classes and 291 monsters. Exact page IDs and source hashes are maintained in the coverage manifest; original English corpus retained | Remaining 27 monster pages; game-card/help prose reuse, authenticated browser search/navigation and English reading regression |
+| Full native rulebook | Reader chrome localized; **907/933 complete Chinese pages** render via a server-generated display projection: all 319 spells, 239 magic items, 36 rules, 9 races, 12 classes and 292 monsters. Exact page IDs and source hashes are maintained in the coverage manifest; original English corpus retained | Remaining 26 monster pages; game-card/help prose reuse, authenticated browser search/navigation and English reading regression |
 | Final text flow | Recorded Chinese exploration/social/utility and combat/slot/correction acceptance on Codex | Complete Chinese text journey, rulebook reading/search and English regression; full tests/lint/build, then pause |
 
 ## Execution adjustment (2026-10-13)
@@ -86,15 +86,15 @@ real interaction has passed. Do not restart a static translation campaign.
 
 ## Next delivery unit and interruption checkpoint
 
-- Added Duergar: 906/933 pages, 291/318 monster-kind pages. Reviewed
-  resilience save scopes, enlarged damage dice/space limits, weapon alternatives
-  and invisibility termination including Enlarge and concentration.
-- Added 灰矮人 from cached 5etools candidates; source edition/review provenance
-  remains unverified. No external prose imported.
+- Added Gnome, Deep: 907/933 pages, 292/318 monster-kind pages. Reviewed
+  rocky-terrain hiding, mental magic saves, self-only nondetection, spell
+  frequencies and poison duration/repeated saves.
+- Added 地底侏儒 with 斯涅布力 alias from cached candidates and native Svirfneblin
+  family identity. Edition/review provenance unverified; no external prose imported.
 - Numeric/table, bilingual rendering, English switch, source refusal, identity,
-  terminology/guard and AST/catalog/resources checks passed: 530 terminology entries,
+  terminology/guard and AST/catalog/resources checks passed: 531 terminology entries,
   0 errors, 389 context warnings; UI remains 401/440.
-- Next: remaining 27 monster pages, game-card/help prose reuse and native source
+- Next: remaining 26 monster pages, game-card/help prose reuse and native source
   ownership. Final full-suite/build and real bilingual journey remain unproven.
 - Native dynamic UI/material/log ownership remains pending in the UI manifest;
   audit helpers with their actual consumers before the final bilingual journey.

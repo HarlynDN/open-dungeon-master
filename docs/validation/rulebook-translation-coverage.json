@@ -3425,6 +3425,11 @@
       "sourceHash": "9bd8eaf2f9f3e02422cd2f665445feb73102f55111c5ca0bb40cecd6b15290d1"
     },
     {
+      "id": "gnome-deep-svirfneblin",
+      "kind": "monster",
+      "sourceHash": "ff2ce15170ef4642404bf208ddba92bacac5b7489174444ceba5349d14b307b6"
+    },
+    {
       "id": "goblin",
       "kind": "monster",
       "sourceHash": "9adfb12d62ea0fb31bfe58c40136088692c823fa260f58f2546582e6d8aaa526"
