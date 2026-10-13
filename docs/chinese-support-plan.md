@@ -114,7 +114,7 @@ real interaction has passed. Do not restart a static translation campaign.
   complete monster localization. Direct detail/lazy help use locale-aware guards.
 - Structured prose audit is reproducible via scripts/audit-monster-prose-locales.mjs
   and docs/validation/monster-prose-localization.json. Current 14-fixture audit
-  retains 26 fully English blocks across seven monsters (mixed text needs review).
+  retains 26 fully English blocks across eight monsters (mixed text needs review).
   Foot-unit spelling is normalized without changing quantities; a changed reach
   regression remains English. Synthetic Traits heading is localized.
 - Next: complete those help paths and inspect real content data, then remaining
