@@ -750,5 +750,233 @@ export const MAGIC_ITEM_MATERIAL_MESSAGES = /*#__PURE__*/ defineMessages({
   "itemHelp.nativeMeta.weapon-1-2-or-3": {
     "en": "Weapon (any), uncommon (+1), rare (+2), or very rare (+3)",
     "zh-CN": "武器（任意），非普通（+1）、珍稀（+2）或极珍稀（+3）"
+  },
+  "itemHelp.native.amulet-of-health": {
+    "en": "Your Constitution score is 19 while you wear this amulet. It has no effect on you if your Constitution is already 19 or higher.",
+    "zh-CN": "佩戴时，你的体质值为 19。若体质已为 19 或更高，护符对你无效。"
+  },
+  "itemHelp.nativeMeta.amulet-of-health": {
+    "en": "Wondrous item, rare (requires attunement)",
+    "zh-CN": "奇物，珍稀（需要同调）"
+  },
+  "itemHelp.native.amulet-of-proof-against-detection-and-location": {
+    "en": "While wearing this amulet, you are hidden from divination magic. You can't be targeted by such magic or perceived through magical scrying sensors.",
+    "zh-CN": "佩戴时，你不会被预言魔法发现；此类魔法无法以你为目标，也无法通过魔法探知感官感知你。"
+  },
+  "itemHelp.nativeMeta.amulet-of-proof-against-detection-and-location": {
+    "en": "Wondrous item, uncommon (requires attunement)",
+    "zh-CN": "奇物，非普通（需要同调）"
+  },
+  "itemHelp.native.amulet-of-the-planes": {
+    "en": "While wearing this amulet, you can use an action to name a location that you are familiar with on another plane of existence. Then make a DC 15 Intelligence check. On a successful check, you cast the *plane shift* spell. On a failure, you and each creature and object within 15 feet of you travel to a random destination. Roll a d100. On a 1-60, you travel to a random location on the plane you named. On a 61-100, you travel to a randomly determined plane of existence.",
+    "zh-CN": "佩戴时，可用一个动作说出另一位面上你熟悉的地点，并进行难度为 15 的智力检定。成功则施放*位面转移*；失败时，你及 15 英尺内的每个生物和物体前往随机目的地。掷 d100：1–60 前往你指定的位面中的随机地点；61–100 前往随机决定的位面。"
+  },
+  "itemHelp.nativeMeta.amulet-of-the-planes": {
+    "en": "Wondrous item, very rare (requires attunement)",
+    "zh-CN": "奇物，极珍稀（需要同调）"
+  },
+  "itemHelp.native.belt-of-dwarvenkind": {
+    "en": "While wearing this belt, you gain the following benefits:\n\n- Your Constitution score increases by 2, to a maximum of 20.\n- You have advantage on Charisma (Persuasion) checks made to interact with dwarves.\n\nIn addition, while attuned to the belt, you have a 50 percent chance each day at dawn of growing a full beard if you're capable of growing one, or a visibly thicker beard if you already have one.\n\nIf you aren't a dwarf, you gain the following additional benefits while wearing the belt:\n\n- You have advantage on saving throws against poison, and you have resistance against poison damage.\n- You have darkvision out to a range of 60 feet.\n- You can speak, read, and write Dwarvish.",
+    "zh-CN": "穿戴时，获得以下效果：\n\n- 体质值增加 2，最高为 20。\n- 与矮人互动的魅力（游说）检定具有优势。\n\n此外，同调期间，每日黎明有 50% 的几率长出浓密胡须，前提是你能够长胡须；若已有胡须，则明显变浓。\n\n若你不是矮人，穿戴时还获得以下效果：\n\n- 抵抗毒素的豁免具有优势，并对毒素伤害具有抗性。\n- 获得 60 英尺黑暗视觉。\n- 能说、读、写矮人语。"
+  },
+  "itemHelp.native.belt-of-giant-strength": {
+    "en": "While wearing this belt, your Strength score changes to a score granted by the belt. If your Strength is already equal to or greater than the belt's score, the item has no effect on you.\n\nSix varieties of this belt exist, corresponding with and having rarity according to the six kinds of true giants. The *belt of stone giant strength* and the *belt of frost giant strength* look different, but they have the same effect.\n\n**Table- Belt of Strength**\n\n| Type              | Strength | Rarity    |\n|-------------------|----------|-----------|\n| Hill giant        | 21       | Rare      |\n| Stone/frost giant | 23       | Very rare |\n| Fire giant        | 25       | Very rare |\n| Cloud giant       | 27       | Legendary |\n| Storm giant       | 29       | Legendary |\n|                   |          |           |",
+    "zh-CN": "穿戴时，力量值变为腰带提供的数值；若原力量已等于或高于该数值，腰带对你无效。\n\n腰带有六种，对应六类真正的巨人，稀有度也随巨人种类而定。*石巨人力量腰带*和*霜巨人力量腰带*外观不同，但效果相同。\n\n**巨人力量腰带表**\n\n| 类型 | 力量 | 稀有度 |\n|------|------|--------|\n| 山丘巨人 | 21 | 珍稀 |\n| 石巨人／霜巨人 | 23 | 极珍稀 |\n| 火巨人 | 25 | 极珍稀 |\n| 云巨人 | 27 | 传奇 |\n| 风暴巨人 | 29 | 传奇 |"
+  },
+  "itemHelp.nativeMeta.belt-of-giant-strength": {
+    "en": "Wondrous item, rarity varies (requires attunement)",
+    "zh-CN": "奇物，稀有度不一（需要同调）"
+  },
+  "itemHelp.native.boots-of-elvenkind": {
+    "en": "While you wear these boots, your steps make no sound, regardless of the surface you are moving across. You also have advantage on Dexterity (Stealth) checks that rely on moving silently.",
+    "zh-CN": "穿戴时，无论走过什么地面，脚步都不会发出声音。依靠无声移动的敏捷（隐匿）检定也具有优势。"
+  },
+  "itemHelp.nativeMeta.boots-of-elvenkind": {
+    "en": "Wondrous item, uncommon",
+    "zh-CN": "奇物，非普通"
+  },
+  "itemHelp.native.boots-of-levitation": {
+    "en": "While you wear these boots, you can use an action to cast the *levitate* spell on yourself at will.",
+    "zh-CN": "穿戴时，可随意用一个动作对自己施放*浮空术*。"
+  },
+  "itemHelp.native.boots-of-speed": {
+    "en": "While you wear these boots, you can use a bonus action and click the boots' heels together. If you do, the boots double your walking speed, and any creature that makes an opportunity attack against you has disadvantage on the attack roll. If you click your heels together again, you end the effect.\n\nWhen the boots' property has been used for a total of 10 minutes, the magic ceases to function until you finish a long rest.",
+    "zh-CN": "穿戴时，可用附赠动作碰合靴跟，使步行速度翻倍，针对你的借机攻击检定具有劣势；再次碰合靴跟即可结束效果。\n\n此特性累计使用 10 分钟后，魔法停止运作，直到完成长休。"
+  },
+  "itemHelp.native.boots-of-striding-and-springing": {
+    "en": "While you wear these boots, your walking speed becomes 30 feet, unless your walking speed is higher, and your speed isn't reduced if you are encumbered or wearing heavy armor. In addition, you can jump three times the normal distance, though you can't jump farther than your remaining movement would allow.",
+    "zh-CN": "穿戴时，步行速度变为 30 英尺，除非原速度更高；负重或穿重甲不会降低你的速度。此外，跳跃距离增至通常的三倍，但仍不得超过剩余移动力允许的距离。"
+  },
+  "itemHelp.native.boots-of-the-winterlands": {
+    "en": "These furred boots are snug and feel quite warm. While you wear them, you gain the following benefits:\n\n- You have resistance to cold damage.\n- You ignore difficult terrain created by ice or snow.\n- You can tolerate temperatures as low as -50 degrees Fahrenheit without any additional protection. If you wear heavy clothes, you can tolerate temperatures as low as -100 degrees Fahrenheit.",
+    "zh-CN": "这双毛靴贴脚而温暖。穿戴时，获得以下效果：\n\n- 对寒冷伤害具有抗性。\n- 忽略冰雪造成的困难地形。\n- 无需额外防护便能承受低至华氏 -50 度的气温；若穿厚衣，可承受低至华氏 -100 度的气温。"
+  },
+  "itemHelp.native.bracers-of-archery": {
+    "en": "While wearing these bracers, you have proficiency with the longbow and shortbow, and you gain a +2 bonus to damage rolls on ranged attacks made with such weapons.",
+    "zh-CN": "穿戴时，熟练长弓和短弓；以这些武器进行远程攻击时，伤害掷骰获得 +2 加值。"
+  },
+  "itemHelp.native.bracers-of-defense": {
+    "en": "While wearing these bracers, you gain a +2 bonus to AC if you are wearing no armor and using no shield.",
+    "zh-CN": "穿戴时，只要未着甲且未使用盾牌，护甲等级获得 +2 加值。"
+  },
+  "itemHelp.native.brooch-of-shielding": {
+    "en": "While wearing this brooch, you have resistance to force damage, and you have immunity to damage from the *magic missile* spell.",
+    "zh-CN": "佩戴时，对力场伤害具有抗性，并免疫*魔法飞弹*法术造成的伤害。"
+  },
+  "itemHelp.native.cape-of-the-mountebank": {
+    "en": "This cape smells faintly of brimstone. While wearing it, you can use it to cast the *dimension door* spell as an action. This property of the cape can't be used again until the next dawn.\n\nWhen you disappear, you leave behind a cloud of smoke, and you appear in a similar cloud of smoke at your destination. The smoke lightly obscures the space you left and the space you appear in, and it dissipates at the end of your next turn. A light or stronger wind disperses the smoke.",
+    "zh-CN": "披肩散发淡淡的硫黄气味。穿戴时，可用一个动作通过它施放*次元门*；此特性须等到下一个黎明才能再次使用。\n\n消失时，你留下烟雾，并在目的地的一团相似烟雾中出现。烟雾使离开和出现的空间形成轻度遮蔽，在你的下一回合结束时消散；微风或更强的风也能将其吹散。"
+  },
+  "itemHelp.nativeMeta.cape-of-the-mountebank": {
+    "en": "Wondrous item, rare",
+    "zh-CN": "奇物，珍稀"
+  },
+  "itemHelp.native.cloak-of-arachnida": {
+    "en": "This fine garment is made of black silk interwoven with faint silvery threads. While wearing it, you gain the following benefits:\n\n- You have resistance to poison damage.\n- You have a climbing speed equal to your walking speed.\n- You can move up, down, and across vertical surfaces and upside down along ceilings, while leaving your hands free.\n- You can't be caught in webs of any sort and can move through webs as if they were difficult terrain.\n- You can use an action to cast the *web* spell (save DC 13). The web created by the spell fills twice its normal area. Once used, this property of the cloak can't be used again until the next dawn.",
+    "zh-CN": "这件精致衣物由黑丝织成，夹着隐约的银线。穿戴时，获得以下效果：\n\n- 对毒素伤害具有抗性。\n- 获得等于步行速度的攀爬速度。\n- 可沿垂直表面上下或横向移动，也可倒挂在天花板上移动，同时保持双手空闲。\n- 不会被任何蛛网困住，并可将蛛网视为困难地形穿过。\n- 可用一个动作施放*蛛网术*，豁免难度为 13，生成的蛛网覆盖面积为通常的两倍。此特性须等到下一个黎明才能再次使用。"
+  },
+  "itemHelp.native.cloak-of-displacement": {
+    "en": "While you wear this cloak, it projects an illusion that makes you appear to be standing in a place near your actual location, causing any creature to have disadvantage on attack rolls against you. If you take damage, the property ceases to function until the start of your next turn. This property is suppressed while you are incapacitated, restrained, or otherwise unable to move.",
+    "zh-CN": "穿戴时，披风投射幻象，让你看似站在实际位置附近的另一个地方，针对你的攻击检定因此具有劣势。受到伤害时，此特性停止运作，直到你的下一回合开始；失能、束缚或以其他方式无法移动时，此特性也会被压制。"
+  },
+  "itemHelp.native.cloak-of-elvenkind": {
+    "en": "While you wear this cloak with its hood up, Wisdom (Perception) checks made to see you have disadvantage, and you have advantage on Dexterity (Stealth) checks made to hide, as the cloak's color shifts to camouflage you. Pulling the hood up or down requires an action.",
+    "zh-CN": "穿戴并戴上兜帽时，披风变色以伪装你；为看见你而进行的感知（察觉）检定具有劣势，你为躲藏而进行的敏捷（隐匿）检定具有优势。戴上或摘下兜帽需要一个动作。"
+  },
+  "itemHelp.native.cloak-of-protection": {
+    "en": "You gain a +1 bonus to AC and saving throws while you wear this cloak.",
+    "zh-CN": "穿戴时，护甲等级和豁免获得 +1 加值。"
+  },
+  "itemHelp.native.cloak-of-the-bat": {
+    "en": "While wearing this cloak, you have advantage on Dexterity (Stealth) checks. In an area of dim light or darkness, you can grip the edges of the cloak with both hands and use it to fly at a speed of 40 feet. If you ever fail to grip the cloak's edges while flying in this way, or if you are no longer in dim light or darkness, you lose this flying speed.\n\nWhile wearing the cloak in an area of dim light or darkness, you can use your action to cast *polymorph* on yourself, transforming into a bat. While you are in the form of the bat, you retain your Intelligence, Wisdom, and Charisma scores. The cloak can't be used this way again until the next dawn.",
+    "zh-CN": "穿戴时，敏捷（隐匿）检定具有优势。在微光或黑暗中，可用双手抓住披风边缘，以 40 英尺速度飞行；若松开边缘，或离开微光、黑暗环境，就失去此飞行速度。\n\n穿戴并处于微光或黑暗中时，可用一个动作对自己施放*变形术*，变为蝙蝠，同时保留智力、感知和魅力值。此特性须等到下一个黎明才能再次使用。"
+  },
+  "itemHelp.native.cloak-of-the-manta-ray": {
+    "en": "While wearing this cloak with its hood up, you can breathe underwater, and you have a swimming speed of 60 feet. Pulling the hood up or down requires an action.",
+    "zh-CN": "穿戴并戴上兜帽时，可在水下呼吸，并获得 60 英尺游泳速度。戴上或摘下兜帽需要一个动作。"
+  },
+  "itemHelp.native.eyes-of-charming": {
+    "en": "These crystal lenses fit over the eyes. They have 3 charges. While wearing them, you can expend 1 charge as an action to cast the *charm person* spell (save DC 13) on a humanoid within 30 feet of you, provided that you and the target can see each other. The lenses regain all expended charges daily at dawn.",
+    "zh-CN": "水晶镜片覆盖双眼，拥有 3 点充能。佩戴时，只要你和目标能互相看见，就可用一个动作消耗 1 点充能，对 30 英尺内的类人生物施放*魅惑人类*，豁免难度为 13。每日黎明恢复全部已消耗的充能。"
+  },
+  "itemHelp.native.eyes-of-minute-seeing": {
+    "en": "These crystal lenses fit over the eyes. While wearing them, you can see much better than normal out to a range of 1 foot. You have advantage on Intelligence (Investigation) checks that rely on sight while searching an area or studying an object within that range.",
+    "zh-CN": "水晶镜片覆盖双眼。佩戴时，在 1 英尺范围内能看得比通常清楚得多；在此范围内搜索区域或研究物体时，依靠视觉的智力（调查）检定具有优势。"
+  },
+  "itemHelp.native.eyes-of-the-eagle": {
+    "en": "These crystal lenses fit over the eyes. While wearing them, you have advantage on Wisdom (Perception) checks that rely on sight. In conditions of clear visibility, you can make out details of even extremely distant creatures and objects as small as 2 feet across.",
+    "zh-CN": "水晶镜片覆盖双眼。佩戴时，依靠视觉的感知（察觉）检定具有优势。视野清晰时，即使在极远处，也能分辨小至 2 英尺宽的生物和物体的细节。"
+  },
+  "itemHelp.native.gauntlets-of-ogre-power": {
+    "en": "Your Strength score is 19 while you wear these gauntlets. They have no effect on you if your Strength is already 19 or higher.",
+    "zh-CN": "穿戴时，你的力量值为 19。若力量已为 19 或更高，手套对你无效。"
+  },
+  "itemHelp.native.gloves-of-missile-snaring": {
+    "en": "These gloves seem to almost meld into your hands when you don them. When a ranged weapon attack hits you while you're wearing them, you can use your reaction to reduce the damage by 1d10+your Dexterity modifier, provided that you have a free hand. If you reduce the damage to 0, you can catch the missile if it is small enough for you to hold in that hand.",
+    "zh-CN": "戴上时，手套仿佛与双手融为一体。穿戴时若远程武器攻击命中你，只要有一只空闲的手，就可使用反应，使伤害减少 1d10 加敏捷调整值。若伤害降至 0，且弹射物足够小，能被那只手握住，就可将其接住。"
+  },
+  "itemHelp.native.gloves-of-swimming-and-climbing": {
+    "en": "While wearing these gloves, climbing and swimming don't cost you extra movement, and you gain a +5 bonus to Strength (Athletics) checks made to climb or swim.",
+    "zh-CN": "穿戴时，攀爬和游泳不消耗额外移动力；为攀爬或游泳而进行的力量（运动）检定获得 +5 加值。"
+  },
+  "itemHelp.native.goggles-of-night": {
+    "en": "While wearing these dark lenses, you have darkvision out to a range of 60 feet. If you already have darkvision, wearing the goggles increases its range by 60 feet.",
+    "zh-CN": "佩戴深色镜片时，获得 60 英尺黑暗视觉；若已有黑暗视觉，其范围增加 60 英尺。"
+  },
+  "itemHelp.native.hat-of-disguise": {
+    "en": "While wearing this hat, you can use an action to cast the *disguise self* spell from it at will. The spell ends if the hat is removed.",
+    "zh-CN": "佩戴时，可随意用一个动作通过帽子施放*自我伪装*。摘下帽子，法术便结束。"
+  },
+  "itemHelp.native.headband-of-intellect": {
+    "en": "Your Intelligence score is 19 while you wear this headband. It has no effect on you if your Intelligence is already 19 or higher.",
+    "zh-CN": "佩戴时，你的智力值为 19。若智力已为 19 或更高，头带对你无效。"
+  },
+  "itemHelp.native.helm-of-brilliance": {
+    "en": "This dazzling helm is set with 1d10 diamonds, 2d10 rubies, 3d10 fire opals, and 4d10 opals. Any gem pried from the helm crumbles to dust. When all the gems are removed or destroyed, the helm loses its magic.\n\nYou gain the following benefits while wearing it:\n\n- You can use an action to cast one of the following spells (save DC 18), using one of the helm's gems of the specified type as a component: *daylight* (opal), *fireball* (fire opal), *prismatic spray* (diamond), or *wall of fire* (ruby). The gem is destroyed when the spell is cast and disappears from the helm.\n- As long as it has at least one diamond, the helm emits dim light in a 30-foot radius when at least one undead is within that area. Any undead that starts its turn in that area takes 1d6 radiant damage.\n- As long as the helm has at least one ruby, you have resistance to fire damage.\n- As long as the helm has at least one fire opal, you can use an action and speak a command word to cause one weapon you are holding to burst into flames. The flames emit bright light in a 10-foot radius and dim light for an additional 10 feet. The flames are harmless to you and the weapon. When you hit with an attack using the blazing weapon, the target takes an extra 1d6 fire damage. The flames last until you use a bonus action to speak the command word again or until you drop or stow the weapon.\n\nRoll a d20 if you are wearing the helm and take fire damage as a result of failing a saving throw against a spell. On a roll of 1, the helm emits beams of light from its remaining gems. Each creature within 60 feet of the helm other than you must succeed on a DC 17 Dexterity saving throw or be struck by a beam, taking radiant damage equal to the number of gems in the helm. The helm and its gems are then destroyed.",
+    "zh-CN": "耀眼头盔镶有 1d10 颗钻石、2d10 颗红宝石、3d10 颗火欧泊和 4d10 颗欧泊。撬下的宝石会化为粉尘；全部宝石被移除或摧毁时，头盔失去魔法。\n\n穿戴时，获得以下效果：\n\n- 可用一个动作消耗对应宝石作为材料，施放豁免难度为 18 的法术：*日光术*使用欧泊，*火球术*使用火欧泊，*虹彩喷射*使用钻石，*火墙术*使用红宝石。施法时，宝石被摧毁并从头盔上消失。\n- 只要至少剩一颗钻石，当 30 英尺内至少有一个亡灵时，头盔便照亮半径 30 英尺的微光区域。在此区域内开始回合的亡灵受到 1d6 点光耀伤害。\n- 只要至少剩一颗红宝石，你就对火焰伤害具有抗性。\n- 只要至少剩一颗火欧泊，就可用一个动作说出命令词，使一件手持武器燃起火焰，照亮半径 10 英尺的明亮区域，以及其外再延伸 10 英尺的微光区域。火焰不会伤害你或武器；以燃烧武器攻击并命中时，目标额外受到 1d6 点火焰伤害。火焰持续至你再次用附赠动作说出命令词，或丢下、收起武器。\n\n穿戴时，若抵抗法术的豁免失败并因此受到火焰伤害，掷 d20；结果为 1 时，剩余宝石射出光束。你以外、距头盔 60 英尺内的每个生物须进行难度为 17 的敏捷豁免；失败则被光束击中，受到等于剩余宝石数量的光耀伤害。随后头盔和宝石全部被摧毁。"
+  },
+  "itemHelp.native.helm-of-comprehending-languages": {
+    "en": "While wearing this helm, you can use an action to cast the *comprehend languages* spell from it at will.",
+    "zh-CN": "佩戴时，可随意用一个动作通过头盔施放*通晓语言*。"
+  },
+  "itemHelp.native.helm-of-telepathy": {
+    "en": "While wearing this helm, you can use an action to cast the *detect thoughts* spell (save DC 13) from it. As long as you maintain concentration on the spell, you can use a bonus action to send a telepathic message to a creature you are focused on. It can reply-using a bonus action to do so-while your focus on it continues.\n\nWhile focusing on a creature with *detect thoughts*, you can use an action to cast the *suggestion* spell (save DC 13) from the helm on that creature. Once used, the *suggestion* property can't be used again until the next dawn.",
+    "zh-CN": "佩戴时，可用一个动作通过头盔施放*侦测思想*，豁免难度为 13。维持法术专注期间，可用附赠动作向你正在关注的生物发送心灵感应消息；只要仍关注它，它也可用附赠动作回复。\n\n以侦测思想关注某个生物时，可用一个动作通过头盔对它施放*暗示术*，豁免难度为 13。暗示术特性须等到下一个黎明才能再次使用。"
+  },
+  "itemHelp.native.helm-of-teleportation": {
+    "en": "This helm has 3 charges. While wearing it, you can use an action and expend 1 charge to cast the *teleport* spell from it. The helm regains 1d3 expended charges daily at dawn.",
+    "zh-CN": "头盔拥有 3 点充能。佩戴时，可用一个动作消耗 1 点充能，通过它施放*传送术*。每日黎明恢复已消耗的 1d3 点充能。"
+  },
+  "itemHelp.native.ioun-stone": {
+    "en": "An *Ioun stone* is named after Ioun, a god of knowledge and prophecy revered on some worlds. Many types of *Ioun stone* exist, each type a distinct combination of shape and color.\n\nWhen you use an action to toss one of these stones into the air, the stone orbits your head at a distance of 1d3 feet and confers a benefit to you. Thereafter, another creature must use an action to grasp or net the stone to separate it from you, either by making a successful attack roll against AC 24 or a successful DC 24 Dexterity (Acrobatics) check. You can use an action to seize and stow the stone, ending its effect.\n\nA stone has AC 24, 10 hit points, and resistance to all damage. It is considered to be an object that is being worn while it orbits your head.\n\n***Absorption (Very Rare)***. While this pale lavender ellipsoid orbits your head, you can use your reaction to cancel a spell of 4th level or lower cast by a creature you can see and targeting only you.\n\nOnce the stone has canceled 20 levels of spells, it burns out and turns dull gray, losing its magic. If you are targeted by a spell whose level is higher than the number of spell levels the stone has left, the stone can't cancel it.\n\n***Agility (Very Rare)***. Your Dexterity score increases by 2, to a maximum of 20, while this deep red sphere orbits your head.\n\n***Awareness (Rare)***. You can't be surprised while this dark blue rhomboid orbits your head.\n\n***Fortitude (Very Rare)***. Your Constitution score increases by 2, to a maximum of 20, while this pink rhomboid orbits your head.\n\n***Greater Absorption (Legendary)***. While this marbled lavender and green ellipsoid orbits your head, you can use your reaction to cancel a spell of 8th level or lower cast by a creature you can see and targeting only you.\n\nOnce the stone has canceled 50 levels of spells, it burns out and turns dull gray, losing its magic. If you are targeted by a spell whose level is higher than the number of spell levels the stone has left, the stone can't cancel it.\n\n***Insight (Very Rare)***. Your Wisdom score increases by 2, to a maximum of 20, while this incandescent blue sphere orbits your head.\n\n***Intellect (Very Rare)***. Your Intelligence score increases by 2, to a maximum of 20, while this marbled scarlet and blue sphere orbits your head.\n\n***Leadership (Very Rare)***. Your Charisma score increases by 2, to a maximum of 20, while this marbled pink and green sphere orbits your head.\n\n***Mastery (Legendary)***. Your proficiency bonus increases by 1 while this pale green prism orbits your head.\n\n***Protection (Rare)***. You gain a +1 bonus to AC while this dusty rose prism orbits your head.\n\n***Regeneration (Legendary)***. You regain 15 hit points at the end of each hour this pearly white spindle orbits your head, provided that you have at least 1 hit point.\n\n***Reserve (Rare)***. This vibrant purple prism stores spells cast into it, holding them until you use them. The stone can store up to 3 levels worth of spells at a time. When found, it contains 1d4-1 levels of stored spells chosen by the GM.\n\nAny creature can cast a spell of 1st through 3rd level into the stone by touching it as the spell is cast. The spell has no effect, other than to be stored in the stone. If the stone can't hold the spell, the spell is expended without effect. The level of the slot used to cast the spell determines how much space it uses.\n\nWhile this stone orbits your head, you can cast any spell stored in it. The spell uses the slot level, spell save DC, spell attack bonus, and spellcasting ability of the original caster, but is otherwise treated as if you cast the spell. The spell cast from the stone is no longer stored in it, freeing up space.\n\n***Strength (Very Rare)***. Your Strength score increases by 2, to a maximum of 20, while this pale blue rhomboid orbits your head.\n\n***Sustenance (Rare)***. You don't need to eat or drink while this clear spindle orbits your head.",
+    "zh-CN": "*艾恩石*得名于 Ioun，一位在部分世界受崇敬的知识与预言之神。艾恩石有许多类型，每种都有独特的形状和颜色组合。\n\n用一个动作将石头抛向空中后，它会在距你头部 1d3 英尺处环绕，并提供效果。此后，其他生物须用一个动作抓住或网住石头，才能使它与你分离；需要攻击检定命中护甲等级 24，或成功通过难度为 24 的敏捷（特技）检定。你也可用一个动作抓住并收起石头，结束效果。\n\n石头的护甲等级为 24，生命值为 10，对所有伤害具有抗性。环绕头部时，视为被穿戴的物体。\n\n**吸收（极珍稀）。**淡薰衣草色椭球体环绕时，可使用反应，取消你能看见的生物施放的、只以你为目标的 4 环或更低环阶法术。\n\n累计取消 20 环法术后，石头耗尽，变为暗灰色并失去魔法。若法术环阶超过剩余可取消的环数，石头无法取消它。\n\n**敏捷（极珍稀）。**深红球体环绕时，敏捷值增加 2，最高为 20。\n\n**警觉（珍稀）。**深蓝菱形体环绕时，你不会被突袭。\n\n**坚韧（极珍稀）。**粉红菱形体环绕时，体质值增加 2，最高为 20。\n\n**高等吸收（传奇）。**带薰衣草色和绿色纹理的椭球体环绕时，可使用反应，取消你能看见的生物施放的、只以你为目标的 8 环或更低环阶法术。\n\n累计取消 50 环法术后，石头耗尽，变为暗灰色并失去魔法。若法术环阶超过剩余可取消的环数，石头无法取消它。\n\n**洞悉（极珍稀）。**明亮蓝色球体环绕时，感知值增加 2，最高为 20。\n\n**智力（极珍稀）。**带猩红和蓝色纹理的球体环绕时，智力值增加 2，最高为 20。\n\n**领导（极珍稀）。**带粉红和绿色纹理的球体环绕时，魅力值增加 2，最高为 20。\n\n**精通（传奇）。**淡绿棱柱体环绕时，熟练加值增加 1。\n\n**防护（珍稀）。**灰玫瑰色棱柱体环绕时，护甲等级获得 +1 加值。\n\n**再生（传奇）。**珍珠白纺锤体每环绕一小时，你恢复 15 点生命值，前提是至少有 1 点生命值。\n\n**储存（珍稀）。**鲜紫棱柱体可储存施放进其中的法术，直到你使用。可同时储存总计至多 3 环的法术。发现时，其中已有总计 1d4-1 环、由 DM 选择的法术。\n\n任何生物都可在施法时触碰石头，将一个 1 至 3 环法术存入其中。除储存外，该次施法不产生效果；若容量不足，法术仍被消耗且不产生效果。施法所用法术位的环阶决定占用容量。\n\n石头环绕头部时，可施放其中任何储存的法术，使用原施法者的法术位环阶、法术豁免难度、法术攻击加值和施法关键属性，其他方面视为由你施放。施放后，法术不再储存在石头中，腾出对应容量。\n\n**力量（极珍稀）。**淡蓝菱形体环绕时，力量值增加 2，最高为 20。\n\n**维生（珍稀）。**透明纺锤体环绕时，你无需饮食。"
+  },
+  "itemHelp.native.mantle-of-spell-resistance": {
+    "en": "You have advantage on saving throws against spells while you wear this cloak.",
+    "zh-CN": "穿戴时，抵抗法术的豁免具有优势。"
+  },
+  "itemHelp.native.medallion-of-thoughts": {
+    "en": "The medallion has 3 charges. While wearing it, you can use an action and expend 1 charge to cast the *detect thoughts* spell (save DC 13) from it. The medallion regains 1d3 expended charges daily at dawn.",
+    "zh-CN": "徽章拥有 3 点充能。佩戴时，可用一个动作消耗 1 点充能，通过它施放*侦测思想*，豁免难度为 13。每日黎明恢复已消耗的 1d3 点充能。"
+  },
+  "itemHelp.native.necklace-of-adaptation": {
+    "en": "While wearing this necklace, you can breathe normally in any environment, and you have advantage on saving throws made against harmful gases and vapors (such as *cloudkill* and *stinking cloud* effects, inhaled poisons, and the breath weapons of some dragons).",
+    "zh-CN": "佩戴时，在任何环境中都能正常呼吸；抵抗有害气体和蒸气的豁免具有优势，例如*死云术*、*恶臭云*、吸入的毒药，以及部分龙的吐息武器。"
+  },
+  "itemHelp.native.necklace-of-fireballs": {
+    "en": "This necklace has 1d6+3 beads hanging from it. You can use an action to detach a bead and throw it up to 60 feet away. When it reaches the end of its trajectory, the bead detonates as a 3rd-level *fireball* spell (save DC 15).\n\nYou can hurl multiple beads, or even the whole necklace, as one action. When you do so, increase the level of the *fireball* by 1 for each bead beyond the first.",
+    "zh-CN": "项链上挂有 1d6+3 颗珠子。可用一个动作摘下一颗，投掷至多 60 英尺；到达终点时，珠子爆炸，产生 3 环*火球术*的效果，豁免难度为 15。\n\n也可用一个动作投掷多颗珠子，甚至整条项链；除第一颗外，每多一颗，火球术环阶便提高 1。"
+  },
+  "itemHelp.native.necklace-of-prayer-beads": {
+    "en": "This necklace has 1d4+2 magic beads made from aquamarine, black pearl, or topaz. It also has many nonmagical beads made from stones such as amber, bloodstone, citrine, coral, jade, pearl, or quartz. If a magic bead is removed from the necklace, that bead loses its magic.\n\nSix types of magic beads exist. The GM decides the type of each bead on the necklace or determines it randomly. A necklace can have more than one bead of the same type. To use one, you must be wearing the necklace. Each bead contains a spell that you can cast from it as a bonus action (using your spell save DC if a save is necessary). Once a magic bead's spell is cast, that bead can't be used again until the next dawn.\n\n**Table- Necklace of Prayer Beads**\n\n| d20   | Bead of ...  | Spell                                         |\n|-------|--------------|-----------------------------------------------|\n| 1-6   | Blessing     | Bless                                         |\n| 7-12  | Curing       | Cure wounds (2nd level) or lesser restoration |\n| 13-16 | Favor        | Greater restoration                           |\n| 17-18 | Smiting      | Branding smite                                |\n| 19    | Summons      | Planar ally                                   |\n| 20    | Wind walking | Wind walk                                     |\n|       |              |                                               |",
+    "zh-CN": "项链拥有 1d4+2 颗海蓝宝石、黑珍珠或黄玉制成的魔法珠，也有许多由琥珀、鸡血石、黄水晶、珊瑚、玉石、珍珠或石英等制成的非魔法珠。魔法珠一旦从项链上取下，就失去魔法。\n\n魔法珠共有六类，由 DM 为每颗选择或随机决定；同一项链可有多颗同类珠。必须佩戴项链才能使用。每颗珠都包含一个可用附赠动作施放的法术；若需要豁免，使用你的法术豁免难度。施法后，该珠须等到下一个黎明才能再次使用。\n\n**祈祷念珠项链表**\n\n| d20 | 珠子 | 法术 |\n|-----|------|------|\n| 1–6 | 祝福 | 祝福术 |\n| 7–12 | 治疗 | 治疗伤口（2 环）或次级复原术 |\n| 13–16 | 恩惠 | 高等复原术 |\n| 17–18 | 惩击 | 烙印斩 |\n| 19 | 召唤 | 异界盟友 |\n| 20 | 风行 | 风行术 |"
+  },
+  "itemHelp.nativeMeta.necklace-of-prayer-beads": {
+    "en": "Wondrous item, rare (requires attunement by a cleric, druid, or paladin)",
+    "zh-CN": "奇物，珍稀（须由牧师、德鲁伊或圣武士同调）"
+  },
+  "itemHelp.native.periapt-of-health": {
+    "en": "You are immune to contracting any disease while you wear this pendant. If you are already infected with a disease, the effects of the disease are suppressed you while you wear the pendant.",
+    "zh-CN": "佩戴时，免疫感染任何疾病；若已经感染，疾病的效果在佩戴期间被压制。"
+  },
+  "itemHelp.native.periapt-of-proof-against-poison": {
+    "en": "This delicate silver chain has a brilliant-cut black gem pendant. While you wear it, poisons have no effect on you. You are immune to the poisoned condition and have immunity to poison damage.",
+    "zh-CN": "精致银链上挂着一颗明亮切割的黑色宝石。佩戴时，毒药对你无效；你免疫中毒状态和毒素伤害。"
+  },
+  "itemHelp.native.periapt-of-wound-closure": {
+    "en": "While you wear this pendant, you stabilize whenever you are dying at the start of your turn. In addition, whenever you roll a Hit Die to regain hit points, double the number of hit points it restores.",
+    "zh-CN": "佩戴时，若在你的回合开始时濒死，会自动稳定。此外，每当掷生命骰恢复生命值时，其恢复量翻倍。"
+  },
+  "itemHelp.native.robe-of-eyes": {
+    "en": "This robe is adorned with eyelike patterns. While you wear the robe, you gain the following benefits:\n\n- The robe lets you see in all directions, and you have advantage on Wisdom (Perception) checks that rely on sight.\n- You have darkvision out to a range of 120 feet.\n- You can see invisible creatures and objects, as well as see into the Ethereal Plane, out to a range of 120 feet.\n\nThe eyes on the robe can't be closed or averted. Although you can close or avert your own eyes, you are never considered to be doing so while wearing this robe.\n\nA *light* spell cast on the robe or a *daylight* spell cast within 5 feet of the robe causes you to be blinded for 1 minute. At the end of each of your turns, you can make a Constitution saving throw (DC 11 for *light* or DC 15 for *daylight*), ending the blindness on a success.",
+    "zh-CN": "法袍装饰着眼睛般的图案。穿戴时，获得以下效果：\n\n- 能看见所有方向，依靠视觉的感知（察觉）检定具有优势。\n- 获得 120 英尺黑暗视觉。\n- 能看见 120 英尺内的隐形生物和物体，也能看见此范围内的以太位面。\n\n法袍上的眼睛无法闭上或移开视线；即使闭上或移开自己的眼睛，穿戴法袍时也不视为这样做。\n\n对法袍施放*光亮术*，或在法袍 5 英尺内施放*日光术*，会使你目盲 1 分钟。每个回合结束时可进行体质豁免；光亮术的难度为 11，日光术为 15，成功则结束目盲。"
+  },
+  "itemHelp.native.robe-of-scintillating-colors": {
+    "en": "This robe has 3 charges, and it regains 1d3 expended charges daily at dawn. While you wear it, you can use an action and expend 1 charge to cause the garment to display a shifting pattern of dazzling hues until the end of your next turn. During this time, the robe sheds bright light in a 30-foot radius and dim light for an additional 30 feet. Creatures that can see you have disadvantage on attack rolls against you. In addition, any creature in the bright light that can see you when the robe's power is activated must succeed on a DC 15 Wisdom saving throw or become stunned until the effect ends.",
+    "zh-CN": "法袍拥有 3 点充能，每日黎明恢复已消耗的 1d3 点。穿戴时，可用一个动作消耗 1 点充能，使其显现不断变换的耀眼色彩图案，直到你的下一回合结束。其间照亮半径 30 英尺的明亮区域，以及其外再延伸 30 英尺的微光区域；能看见你的生物，针对你的攻击检定具有劣势。此外，启动时明亮区域内能看见你的生物须进行难度为 15 的感知豁免；失败则震慑，直到效果结束。"
+  },
+  "itemHelp.native.robe-of-stars": {
+    "en": "This black or dark blue robe is embroidered with small white or silver stars. You gain a +1 bonus to saving throws while you wear it.\n\nSix stars, located on the robe's upper front portion, are particularly large. While wearing this robe, you can use an action to pull off one of the stars and use it to cast *magic missile* as a 5th-level spell. Daily at dusk, 1d6 removed stars reappear on the robe.\n\nWhile you wear the robe, you can use an action to enter the Astral Plane along with everything you are wearing and carrying. You remain there until you use an action to return to the plane you were on. You reappear in the last space you occupied, or if that space is occupied, the nearest unoccupied space.",
+    "zh-CN": "黑色或深蓝法袍上绣着白色、银色小星星。穿戴时，豁免获得 +1 加值。\n\n正面上方有六颗格外大的星星。穿戴时，可用一个动作摘下一颗，以它施放 5 环*魔法飞弹*。每日黄昏，1d6 颗被摘下的星星重新出现。\n\n穿戴时，可用一个动作连同穿戴、携带的所有物品进入星界，直到再次用一个动作返回原先所在位面。返回时出现在最后占据的空间；若被占据，则出现在最近的未占据空间。"
+  },
+  "itemHelp.native.robe-of-the-archmagi": {
+    "en": "This elegant garment is made from exquisite cloth of white, gray, or black and adorned with silvery runes. The robe's color corresponds to the alignment for which the item was created. A white robe was made for good, gray for neutral, and black for evil. You can't attune to a *robe of the archmagi* that doesn't correspond to your alignment.\n\nYou gain these benefits while wearing the robe:\n\n- If you aren't wearing armor, your base Armor Class is 15+your Dexterity modifier.\n- You have advantage on saving throws against spells and other magical effects.\n- Your spell save DC and spell attack bonus each increase by 2.",
+    "zh-CN": "优雅法袍由精美的白、灰或黑布料制成，饰有银色符文。颜色对应物品适用的阵营：白色适用于善良，灰色适用于中立，黑色适用于邪恶。无法与不符合自身阵营的*大法师法袍*同调。\n\n穿戴时，获得以下效果：\n\n- 若未着甲，基础护甲等级为 15 加敏捷调整值。\n- 抵抗法术及其他魔法效果的豁免具有优势。\n- 法术豁免难度和法术攻击加值各增加 2。"
+  },
+  "itemHelp.nativeMeta.robe-of-the-archmagi": {
+    "en": "Wondrous item, legendary (requires attunement by a sorcerer, warlock, or wizard)",
+    "zh-CN": "奇物，传奇（须由术士、邪术师或法师同调）"
+  },
+  "itemHelp.native.robe-of-useful-items": {
+    "en": "This robe has cloth patches of various shapes and colors covering it. While wearing the robe, you can use an action to detach one of the patches, causing it to become the object or creature it represents. Once the last patch is removed, the robe becomes an ordinary garment.\n\nThe robe has two of each of the following patches:\n\n- Dagger\n- Bullseye lantern (filled and lit)\n- Steel mirror\n- 10-foot pole\n- Hempen rope (50 feet, coiled)\n- Sack\n\nIn addition, the robe has 4d4 other patches. The GM chooses the patches or determines them randomly.\n\n**Table- Robe of Useful Items**\n\n| d100   | Patch                                                                                                                                                                                             |\n|--------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|\n| 01-08  | Bag of 100 gp                                                                                                                                                                                     |\n| 09-15  | Silver coffer (1 foot long, 6 inches wide and deep) worth 500 gp                                                                                                                                  |\n| 16-22  | Iron door (up to 10 feet wide and 10 feet high, barred on one side of your choice), which you can place in an opening you can reach; it conforms to fit the opening, attaching and hinging itself |\n| 23-30  | 10 gems worth 100 gp each                                                                                                                                                                         |\n| 31-44  | Wooden ladder (24 feet long) 45-51 A riding horse with saddle bags                                                                                                                                |\n| 52-59  | Pit (a cube 10 feet on a side), which you can place on the ground within 10 feet of you                                                                                                           |\n| 60-68  | 4 potions of healing                                                                                                                                                                              |\n| 69-75  | Rowboat (12 feet long)                                                                                                                                                                            |\n| 76-83  | Spell scroll containing one spell of 1st to 3rd level                                                                                                                                             |\n| 84-90  | 2 mastiffs                                                                                                                                                                                        |\n| 91-96  | Window (2 feet by 4 feet, up to 2 feet deep), which you can place on a vertical surface you can reach                                                                                             |\n| 97-100 | Portable ram                                                                                                                                                                                      |\n|        |                                                                                                                                                                                                   |",
+    "zh-CN": "法袍覆盖着不同形状和颜色的布片。穿戴时，可用一个动作摘下一片，使其变为所代表的物体或生物。最后一片被摘下后，法袍变为普通衣物。\n\n以下布片各有两片：\n\n- 匕首。\n- 已装满燃料并点亮的牛眼提灯。\n- 钢镜。\n- 10 英尺长杆。\n- 卷好的 50 英尺麻绳。\n- 麻袋。\n\n此外还有 4d4 片其他布片，由 DM 选择或随机决定。\n\n**实用物品法袍表**\n\n| d100 | 布片 |\n|------|------|\n| 01–08 | 装有 100 金币的袋子。 |\n| 09–15 | 价值 500 金币的银匣，长 1 英尺，宽和深各 6 英寸。 |\n| 16–22 | 宽、高各至多 10 英尺的铁门，一侧有门闩，由你选择。可放在触及范围内的开口中；铁门自动调整尺寸，安装并形成铰链。 |\n| 23–30 | 10 颗宝石，每颗价值 100 金币。 |\n| 31–44 | 长 24 英尺的木梯。 |\n| 45–51 | 配有鞍袋的骑乘马。 |\n| 52–59 | 边长 10 英尺的立方体坑洞，可放在你 10 英尺内的地面上。 |\n| 60–68 | 4 瓶治疗药水。 |\n| 69–75 | 长 12 英尺的划艇。 |\n| 76–83 | 包含一个 1 至 3 环法术的法术卷轴。 |\n| 84–90 | 2 只獒犬。 |\n| 91–96 | 宽 2 英尺、高 4 英尺、深度至多 2 英尺的窗户，可放在触及范围内的垂直表面上。 |\n| 97–100 | 便携攻城槌。 |"
+  },
+  "itemHelp.native.slippers-of-spider-climbing": {
+    "en": "While you wear these light shoes, you can move up, down, and across vertical surfaces and upside down along ceilings, while leaving your hands free. You have a climbing speed equal to your walking speed. However, the slippers don't allow you to move this way on a slippery surface, such as one covered by ice or oil.",
+    "zh-CN": "穿戴轻便鞋子时，可沿垂直表面上下或横向移动，也可倒挂在天花板上移动，同时保持双手空闲。攀爬速度等于步行速度。不过，鞋子无法让你以这种方式在覆冰、涂油等滑溜表面上移动。"
+  },
+  "itemHelp.native.winged-boots": {
+    "en": "While you wear these boots, you have a flying speed equal to your walking speed. You can use the boots to fly for up to 4 hours, all at once or in several shorter flights, each one using a minimum of 1 minute from the duration. If you are flying when the duration expires, you descend at a rate of 30 feet per round until you land.\n\nThe boots regain 2 hours of flying capability for every 12 hours they aren't in use.",
+    "zh-CN": "穿戴时，获得等于步行速度的飞行速度。总计可飞行 4 小时，可一次用完，也可拆成多次较短飞行；每次至少消耗 1 分钟。若飞行时持续时间耗尽，每轮下降 30 英尺，直到落地。\n\n每闲置 12 小时，靴子恢复 2 小时飞行时间。"
   }
 });

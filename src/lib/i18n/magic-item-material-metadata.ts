@@ -707,5 +707,299 @@ export const MAGIC_ITEM_MATERIAL = [
     "name": "Weapon, +1, +2, or +3",
     "key": "itemHelp.native.weapon-1-2-or-3",
     "metaKey": "itemHelp.nativeMeta.weapon-1-2-or-3"
+  },
+  {
+    "id": "amulet-of-health",
+    "name": "Amulet of Health",
+    "key": "itemHelp.native.amulet-of-health",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-health"
+  },
+  {
+    "id": "amulet-of-proof-against-detection-and-location",
+    "name": "Amulet of Proof Against Detection and Location",
+    "key": "itemHelp.native.amulet-of-proof-against-detection-and-location",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-proof-against-detection-and-location"
+  },
+  {
+    "id": "amulet-of-the-planes",
+    "name": "Amulet of the Planes",
+    "key": "itemHelp.native.amulet-of-the-planes",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-the-planes"
+  },
+  {
+    "id": "belt-of-dwarvenkind",
+    "name": "Belt of Dwarvenkind",
+    "key": "itemHelp.native.belt-of-dwarvenkind",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-health"
+  },
+  {
+    "id": "belt-of-giant-strength",
+    "name": "Belt of Giant Strength",
+    "key": "itemHelp.native.belt-of-giant-strength",
+    "metaKey": "itemHelp.nativeMeta.belt-of-giant-strength"
+  },
+  {
+    "id": "boots-of-elvenkind",
+    "name": "Boots of Elvenkind",
+    "key": "itemHelp.native.boots-of-elvenkind",
+    "metaKey": "itemHelp.nativeMeta.boots-of-elvenkind"
+  },
+  {
+    "id": "boots-of-levitation",
+    "name": "Boots of Levitation",
+    "key": "itemHelp.native.boots-of-levitation",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-health"
+  },
+  {
+    "id": "boots-of-speed",
+    "name": "Boots of Speed",
+    "key": "itemHelp.native.boots-of-speed",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-health"
+  },
+  {
+    "id": "boots-of-striding-and-springing",
+    "name": "Boots of Striding and Springing",
+    "key": "itemHelp.native.boots-of-striding-and-springing",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-proof-against-detection-and-location"
+  },
+  {
+    "id": "boots-of-the-winterlands",
+    "name": "Boots of the Winterlands",
+    "key": "itemHelp.native.boots-of-the-winterlands",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-proof-against-detection-and-location"
+  },
+  {
+    "id": "bracers-of-archery",
+    "name": "Bracers of Archery",
+    "key": "itemHelp.native.bracers-of-archery",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-proof-against-detection-and-location"
+  },
+  {
+    "id": "bracers-of-defense",
+    "name": "Bracers of Defense",
+    "key": "itemHelp.native.bracers-of-defense",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-health"
+  },
+  {
+    "id": "brooch-of-shielding",
+    "name": "Brooch of Shielding",
+    "key": "itemHelp.native.brooch-of-shielding",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-proof-against-detection-and-location"
+  },
+  {
+    "id": "cape-of-the-mountebank",
+    "name": "Cape of the Mountebank",
+    "key": "itemHelp.native.cape-of-the-mountebank",
+    "metaKey": "itemHelp.nativeMeta.cape-of-the-mountebank"
+  },
+  {
+    "id": "cloak-of-arachnida",
+    "name": "Cloak of Arachnida",
+    "key": "itemHelp.native.cloak-of-arachnida",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-the-planes"
+  },
+  {
+    "id": "cloak-of-displacement",
+    "name": "Cloak of Displacement",
+    "key": "itemHelp.native.cloak-of-displacement",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-health"
+  },
+  {
+    "id": "cloak-of-elvenkind",
+    "name": "Cloak of Elvenkind",
+    "key": "itemHelp.native.cloak-of-elvenkind",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-proof-against-detection-and-location"
+  },
+  {
+    "id": "cloak-of-protection",
+    "name": "Cloak of Protection",
+    "key": "itemHelp.native.cloak-of-protection",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-proof-against-detection-and-location"
+  },
+  {
+    "id": "cloak-of-the-bat",
+    "name": "Cloak of the Bat",
+    "key": "itemHelp.native.cloak-of-the-bat",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-health"
+  },
+  {
+    "id": "cloak-of-the-manta-ray",
+    "name": "Cloak of the Manta Ray",
+    "key": "itemHelp.native.cloak-of-the-manta-ray",
+    "metaKey": "itemHelp.nativeMeta.boots-of-elvenkind"
+  },
+  {
+    "id": "eyes-of-charming",
+    "name": "Eyes of Charming",
+    "key": "itemHelp.native.eyes-of-charming",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-proof-against-detection-and-location"
+  },
+  {
+    "id": "eyes-of-minute-seeing",
+    "name": "Eyes of Minute Seeing",
+    "key": "itemHelp.native.eyes-of-minute-seeing",
+    "metaKey": "itemHelp.nativeMeta.boots-of-elvenkind"
+  },
+  {
+    "id": "eyes-of-the-eagle",
+    "name": "Eyes of the Eagle",
+    "key": "itemHelp.native.eyes-of-the-eagle",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-proof-against-detection-and-location"
+  },
+  {
+    "id": "gauntlets-of-ogre-power",
+    "name": "Gauntlets of Ogre Power",
+    "key": "itemHelp.native.gauntlets-of-ogre-power",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-proof-against-detection-and-location"
+  },
+  {
+    "id": "gloves-of-missile-snaring",
+    "name": "Gloves of Missile Snaring",
+    "key": "itemHelp.native.gloves-of-missile-snaring",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-proof-against-detection-and-location"
+  },
+  {
+    "id": "gloves-of-swimming-and-climbing",
+    "name": "Gloves of Swimming and Climbing",
+    "key": "itemHelp.native.gloves-of-swimming-and-climbing",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-proof-against-detection-and-location"
+  },
+  {
+    "id": "goggles-of-night",
+    "name": "Goggles of Night",
+    "key": "itemHelp.native.goggles-of-night",
+    "metaKey": "itemHelp.nativeMeta.boots-of-elvenkind"
+  },
+  {
+    "id": "hat-of-disguise",
+    "name": "Hat of Disguise",
+    "key": "itemHelp.native.hat-of-disguise",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-proof-against-detection-and-location"
+  },
+  {
+    "id": "headband-of-intellect",
+    "name": "Headband of Intellect",
+    "key": "itemHelp.native.headband-of-intellect",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-proof-against-detection-and-location"
+  },
+  {
+    "id": "helm-of-brilliance",
+    "name": "Helm of Brilliance",
+    "key": "itemHelp.native.helm-of-brilliance",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-the-planes"
+  },
+  {
+    "id": "helm-of-comprehending-languages",
+    "name": "Helm of Comprehending Languages",
+    "key": "itemHelp.native.helm-of-comprehending-languages",
+    "metaKey": "itemHelp.nativeMeta.boots-of-elvenkind"
+  },
+  {
+    "id": "helm-of-telepathy",
+    "name": "Helm of Telepathy",
+    "key": "itemHelp.native.helm-of-telepathy",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-proof-against-detection-and-location"
+  },
+  {
+    "id": "helm-of-teleportation",
+    "name": "Helm of Teleportation",
+    "key": "itemHelp.native.helm-of-teleportation",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-health"
+  },
+  {
+    "id": "ioun-stone",
+    "name": "Ioun Stone",
+    "key": "itemHelp.native.ioun-stone",
+    "metaKey": "itemHelp.nativeMeta.belt-of-giant-strength"
+  },
+  {
+    "id": "mantle-of-spell-resistance",
+    "name": "Mantle of Spell Resistance",
+    "key": "itemHelp.native.mantle-of-spell-resistance",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-health"
+  },
+  {
+    "id": "medallion-of-thoughts",
+    "name": "Medallion of Thoughts",
+    "key": "itemHelp.native.medallion-of-thoughts",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-proof-against-detection-and-location"
+  },
+  {
+    "id": "necklace-of-adaptation",
+    "name": "Necklace of Adaptation",
+    "key": "itemHelp.native.necklace-of-adaptation",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-proof-against-detection-and-location"
+  },
+  {
+    "id": "necklace-of-fireballs",
+    "name": "Necklace of Fireballs",
+    "key": "itemHelp.native.necklace-of-fireballs",
+    "metaKey": "itemHelp.nativeMeta.cape-of-the-mountebank"
+  },
+  {
+    "id": "necklace-of-prayer-beads",
+    "name": "Necklace of Prayer Beads",
+    "key": "itemHelp.native.necklace-of-prayer-beads",
+    "metaKey": "itemHelp.nativeMeta.necklace-of-prayer-beads"
+  },
+  {
+    "id": "periapt-of-health",
+    "name": "Periapt of Health",
+    "key": "itemHelp.native.periapt-of-health",
+    "metaKey": "itemHelp.nativeMeta.boots-of-elvenkind"
+  },
+  {
+    "id": "periapt-of-proof-against-poison",
+    "name": "Periapt of Proof against Poison",
+    "key": "itemHelp.native.periapt-of-proof-against-poison",
+    "metaKey": "itemHelp.nativeMeta.cape-of-the-mountebank"
+  },
+  {
+    "id": "periapt-of-wound-closure",
+    "name": "Periapt of Wound Closure",
+    "key": "itemHelp.native.periapt-of-wound-closure",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-proof-against-detection-and-location"
+  },
+  {
+    "id": "robe-of-eyes",
+    "name": "Robe of Eyes",
+    "key": "itemHelp.native.robe-of-eyes",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-health"
+  },
+  {
+    "id": "robe-of-scintillating-colors",
+    "name": "Robe of Scintillating Colors",
+    "key": "itemHelp.native.robe-of-scintillating-colors",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-the-planes"
+  },
+  {
+    "id": "robe-of-stars",
+    "name": "Robe of Stars",
+    "key": "itemHelp.native.robe-of-stars",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-the-planes"
+  },
+  {
+    "id": "robe-of-the-archmagi",
+    "name": "Robe of the Archmagi",
+    "key": "itemHelp.native.robe-of-the-archmagi",
+    "metaKey": "itemHelp.nativeMeta.robe-of-the-archmagi"
+  },
+  {
+    "id": "robe-of-useful-items",
+    "name": "Robe of Useful Items",
+    "key": "itemHelp.native.robe-of-useful-items",
+    "metaKey": "itemHelp.nativeMeta.boots-of-elvenkind"
+  },
+  {
+    "id": "slippers-of-spider-climbing",
+    "name": "Slippers of Spider Climbing",
+    "key": "itemHelp.native.slippers-of-spider-climbing",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-proof-against-detection-and-location"
+  },
+  {
+    "id": "winged-boots",
+    "name": "Winged Boots",
+    "key": "itemHelp.native.winged-boots",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-proof-against-detection-and-location"
   }
 ] as const;
