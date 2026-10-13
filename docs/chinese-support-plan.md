@@ -241,11 +241,22 @@ this section records current delivery state and acceptance gaps only.
   Completed pure-helper/consumer reviews are recorded in
   docs/validation/ui-localization.json. Whole-owner dynamic output and browser
   acceptance remain distinct; stale theme counts were corrected to 733/733.
-- Current final checks launched after code-owner closure: full tests session
-  20324 (/tmp/odm-text-final-tests.log), lint session 96939
-  (/tmp/odm-text-final-lint.log). Both confirmed live in this turn; results not
-  yet claimed. Final coverage passes 438/438 (log
-  /tmp/odm-text-final-coverage.log). Resume existing handles before any rerun.
+- Current final validation: UI final gate passes 438/438. Full lint initially
+  failed because en/zh content chunks lacked combatRoll.repeat and
+  repeatDisadvantage; regenerated only those two keys in each locale. Full
+  lint retry passes (0 terminology errors, 389 context warnings), and webpack
+  production build passes compilation, TypeScript and page generation.
+  Logs: /tmp/odm-text-final-lint-retry.log and /tmp/odm-text-final-build.log.
+  Full tests session 20324 remains confirmed live; resume it before any rerun
+  (/tmp/odm-text-final-tests.log). Generated catalog sync occurred during this
+  run and is independently verified by the full lint drift check.
+- Fixed bilingual retrieval calibration rerun passed from cached vectors after
+  verifying both fixture hashes, both models' config/tokenizer/ONNX hashes and
+  Transformers 4.3.0. Current fusion/threshold results exactly match the prior
+  report except timestamp; English recall, Chinese recall and mutation false
+  positive gates pass. This is the fixed synthetic corpus, not deployed catalog
+  acceptance. Log: /tmp/odm-text-final-calibration.log; previous report retained
+  at /tmp/odm-bilingual-embeddings-before-final.json.
 - Validation: full suite completed successfully: 585/585 files, 686.84 seconds
   (/tmp/odm-full-tests-navigation.log). This supersedes the earlier 570/585 run;
   all fifteen original failures have passing targeted follow-ups as well.
