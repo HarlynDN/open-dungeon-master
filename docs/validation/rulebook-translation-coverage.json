@@ -3595,6 +3595,11 @@
       "sourceHash": "33ae75e6a66b68d3be6161c31508eee3ed298628b88a38d8b2d06f3aca0a0b01"
     },
     {
+      "id": "constrictor-snake",
+      "kind": "monster",
+      "sourceHash": "da8dc0cc3333b720140793d18975d5733b8ad8fa0eb5befc1b5e34164eb2f26d"
+    },
+    {
       "id": "crab",
       "kind": "monster",
       "sourceHash": "8f3ecd9332d543d43edfcc9e597efa82f6bf8ba2560b2490252d9ad8b546cd0e"
@@ -3640,6 +3645,11 @@
       "sourceHash": "3601fdd607804c5317566d9d35116b6c2a6123672fe89ea9fc331ab8349a96db"
     },
     {
+      "id": "flying-snake",
+      "kind": "monster",
+      "sourceHash": "70983059522319ea4790312a0466086ce40f1967b34ae487323eda69373cf8e7"
+    },
+    {
       "id": "frog",
       "kind": "monster",
       "sourceHash": "48a2664da1e9ebf1b31c682c2e2dcb43423bb32236fb6670e631daeb12ff0630"
@@ -3663,6 +3673,11 @@
       "id": "giant-boar",
       "kind": "monster",
       "sourceHash": "13d7ce09490dc4969b67cd1448ac0cd806a2a9ea03d06ad905cca4022c2cf962"
+    },
+    {
+      "id": "giant-constrictor-snake",
+      "kind": "monster",
+      "sourceHash": "df0c9c2018939083239d1598cf708efd552696fe43e687cd0628efa7a570ed1d"
     },
     {
       "id": "giant-crab",
@@ -3708,6 +3723,11 @@
       "id": "giant-owl",
       "kind": "monster",
       "sourceHash": "9c811f60d669fdbd22e2487eb542268e46b8165b18576e43083390cf94304073"
+    },
+    {
+      "id": "giant-poisonous-snake",
+      "kind": "monster",
+      "sourceHash": "d282ac61284d980d8a4c797fe8298d620e667a5a774811fdab6f88b39123e7e6"
     },
     {
       "id": "giant-rat",
@@ -3803,6 +3823,11 @@
       "id": "panther",
       "kind": "monster",
       "sourceHash": "33590145acdf5f75e13027f1760109a4fc0260a0fdfd12f2e6113cb394988ae0"
+    },
+    {
+      "id": "poisonous-snake",
+      "kind": "monster",
+      "sourceHash": "fc4e762bc6b92827c2794d635107725358c3f5af33ae030782f51303e262468f"
     },
     {
       "id": "polar-bear",
