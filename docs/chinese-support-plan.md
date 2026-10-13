@@ -129,7 +129,16 @@ this section records current delivery state and acceptance gaps only.
   A failed attempt to reuse the old encrypted temporary DB was abandoned after
   automatic approval rejected process-key extraction; 3020 uses a newly seeded
   disposable DB, not recovered credentials. Final release gates remain open.
-- UI source coverage: 416/440 owners, zero pending literal sites, 19323 keys.
+- Builder AC follow-up: traced the saved Defense discrepancy to
+  useBuilderDerived passing only automatic class features into acBreakdownFor;
+  submit.ts then copied that AC while saving selected styles separately. The
+  preview now passes canonical selected fighting-style features and invalidates
+  its memo when choices change. A real-hook regression verifies chain mail +
+  shield = 18, Defense = 19, Archery = 18, and unarmored Defense = 11 in both
+  locales. No rule values, stored labels or old saved sheets were rewritten.
+  Browser verification of this newer numeric fix remains open. The pure campaign
+  draft owner is now reviewed; its existing four option checks pass.
+- UI source coverage: 417/440 owners, zero pending literal sites, 19323 keys.
   Completed pure-helper/consumer reviews are recorded in
   docs/validation/ui-localization.json. Whole-owner dynamic output and browser
   acceptance remain distinct; stale theme counts were corrected to 733/733.
