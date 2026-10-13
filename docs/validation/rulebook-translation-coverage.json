@@ -3195,6 +3195,11 @@
       "sourceHash": "dbe64296f8f1b327afb1fe238c140609a137694f3c25fa064d57efd049d72778"
     },
     {
+      "id": "black-pudding-ooze",
+      "kind": "monster",
+      "sourceHash": "0627677be0c320980672fd383498acc4e4aa90e7ae854a2989b27a8f4500aa04"
+    },
+    {
       "id": "blue-dragon-wyrmling-chromatic",
       "kind": "monster",
       "sourceHash": "a4bd7f570998889810b36186dc03db4d33e8c81a1913d59d681a2de896b2b60b"
