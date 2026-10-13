@@ -1151,5 +1151,69 @@ export const SPELL_HELP = [
   {
     "name": "Teleport",
     "key": "spellHelp.native.teleport"
+  },
+  {
+    "name": "Animal Shapes",
+    "key": "spellHelp.native.animal-shapes"
+  },
+  {
+    "name": "Antimagic Field",
+    "key": "spellHelp.native.antimagic-field"
+  },
+  {
+    "name": "Antipathy/Sympathy",
+    "key": "spellHelp.native.antipathy-sympathy"
+  },
+  {
+    "name": "Clone",
+    "key": "spellHelp.native.clone"
+  },
+  {
+    "name": "Control Weather",
+    "key": "spellHelp.native.control-weather"
+  },
+  {
+    "name": "Demiplane",
+    "key": "spellHelp.native.demiplane"
+  },
+  {
+    "name": "Dominate Monster",
+    "key": "spellHelp.native.dominate-monster"
+  },
+  {
+    "name": "Earthquake",
+    "key": "spellHelp.native.earthquake"
+  },
+  {
+    "name": "Feeblemind",
+    "key": "spellHelp.native.feeblemind"
+  },
+  {
+    "name": "Glibness",
+    "key": "spellHelp.native.glibness"
+  },
+  {
+    "name": "Holy Aura",
+    "key": "spellHelp.native.holy-aura"
+  },
+  {
+    "name": "Incendiary Cloud",
+    "key": "spellHelp.native.incendiary-cloud"
+  },
+  {
+    "name": "Maze",
+    "key": "spellHelp.native.maze"
+  },
+  {
+    "name": "Mind Blank",
+    "key": "spellHelp.native.mind-blank"
+  },
+  {
+    "name": "Power Word Stun",
+    "key": "spellHelp.native.power-word-stun"
+  },
+  {
+    "name": "Sunburst",
+    "key": "spellHelp.native.sunburst"
   }
 ] as const;

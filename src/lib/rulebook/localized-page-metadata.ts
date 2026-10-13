@@ -1727,5 +1727,101 @@ export const LOCALIZED_SPELL_PAGES = [
     "name": "Teleport",
     "headerKey": "bookMaterial.spell.teleport.header",
     "metaKey": "bookMaterial.spell.teleport.meta"
+  },
+  {
+    "id": "animal-shapes",
+    "name": "Animal Shapes",
+    "headerKey": "bookMaterial.spell.animal-shapes.header",
+    "metaKey": "bookMaterial.spell.animal-shapes.meta"
+  },
+  {
+    "id": "antimagic-field",
+    "name": "Antimagic Field",
+    "headerKey": "bookMaterial.spell.antimagic-field.header",
+    "metaKey": "bookMaterial.spell.antimagic-field.meta"
+  },
+  {
+    "id": "antipathy-sympathy",
+    "name": "Antipathy/Sympathy",
+    "headerKey": "bookMaterial.spell.antipathy-sympathy.header",
+    "metaKey": "bookMaterial.spell.antipathy-sympathy.meta"
+  },
+  {
+    "id": "clone",
+    "name": "Clone",
+    "headerKey": "bookMaterial.spell.clone.header",
+    "metaKey": "bookMaterial.spell.clone.meta"
+  },
+  {
+    "id": "control-weather",
+    "name": "Control Weather",
+    "headerKey": "bookMaterial.spell.control-weather.header",
+    "metaKey": "bookMaterial.spell.control-weather.meta"
+  },
+  {
+    "id": "demiplane",
+    "name": "Demiplane",
+    "headerKey": "bookMaterial.spell.demiplane.header",
+    "metaKey": "bookMaterial.spell.demiplane.meta"
+  },
+  {
+    "id": "dominate-monster",
+    "name": "Dominate Monster",
+    "headerKey": "bookMaterial.spell.dominate-monster.header",
+    "metaKey": "bookMaterial.spell.dominate-monster.meta"
+  },
+  {
+    "id": "earthquake",
+    "name": "Earthquake",
+    "headerKey": "bookMaterial.spell.earthquake.header",
+    "metaKey": "bookMaterial.spell.earthquake.meta"
+  },
+  {
+    "id": "feeblemind",
+    "name": "Feeblemind",
+    "headerKey": "bookMaterial.spell.feeblemind.header",
+    "metaKey": "bookMaterial.spell.feeblemind.meta"
+  },
+  {
+    "id": "glibness",
+    "name": "Glibness",
+    "headerKey": "bookMaterial.spell.glibness.header",
+    "metaKey": "bookMaterial.spell.glibness.meta"
+  },
+  {
+    "id": "holy-aura",
+    "name": "Holy Aura",
+    "headerKey": "bookMaterial.spell.holy-aura.header",
+    "metaKey": "bookMaterial.spell.holy-aura.meta"
+  },
+  {
+    "id": "incendiary-cloud",
+    "name": "Incendiary Cloud",
+    "headerKey": "bookMaterial.spell.incendiary-cloud.header",
+    "metaKey": "bookMaterial.spell.incendiary-cloud.meta"
+  },
+  {
+    "id": "maze",
+    "name": "Maze",
+    "headerKey": "bookMaterial.spell.maze.header",
+    "metaKey": "bookMaterial.spell.maze.meta"
+  },
+  {
+    "id": "mind-blank",
+    "name": "Mind Blank",
+    "headerKey": "bookMaterial.spell.mind-blank.header",
+    "metaKey": "bookMaterial.spell.mind-blank.meta"
+  },
+  {
+    "id": "power-word-stun",
+    "name": "Power Word Stun",
+    "headerKey": "bookMaterial.spell.power-word-stun.header",
+    "metaKey": "bookMaterial.spell.power-word-stun.meta"
+  },
+  {
+    "id": "sunburst",
+    "name": "Sunburst",
+    "headerKey": "bookMaterial.spell.sunburst.header",
+    "metaKey": "bookMaterial.spell.sunburst.meta"
   }
 ] as const;

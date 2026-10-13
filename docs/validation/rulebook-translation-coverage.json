@@ -1670,6 +1670,86 @@
       "sourceHash": "f41056c4a0e8835a3609b09cef96e7b28b47bf46274c1f59023f53acc3c2be06"
     },
     {
+      "id": "animal-shapes",
+      "kind": "spell",
+      "sourceHash": "a0739fe1f01b08dcc0cf86d155d7fcce422ecaa7baba7fe38bca761472b159be"
+    },
+    {
+      "id": "antimagic-field",
+      "kind": "spell",
+      "sourceHash": "c9693dac9cd6bf118baa525c9d8a22f15209be70dd59b69debcab48f4ba8d807"
+    },
+    {
+      "id": "antipathy-sympathy",
+      "kind": "spell",
+      "sourceHash": "7fcc7dd78adc53aefbdca7e83c3c0a0246e89ce8197a93e515dde3db6af6baa3"
+    },
+    {
+      "id": "clone",
+      "kind": "spell",
+      "sourceHash": "76892b4dd17b5a0a9c5233ed30a2854d14373a131ba1cb63b836a7efcf2f19df"
+    },
+    {
+      "id": "control-weather",
+      "kind": "spell",
+      "sourceHash": "cf5c7560e3b76fdb91f0f31825ace7ba8590de52be13d8ee9530c6702a62b30b"
+    },
+    {
+      "id": "demiplane",
+      "kind": "spell",
+      "sourceHash": "de53ce023a72271522c6610f88bcc0195a3b327f66c21211a2e42d3fe5fd8f76"
+    },
+    {
+      "id": "dominate-monster",
+      "kind": "spell",
+      "sourceHash": "139d8535e3f0c0bd345c0cd02d13f5a04652e4f75345f771ec1cad667d8d8547"
+    },
+    {
+      "id": "earthquake",
+      "kind": "spell",
+      "sourceHash": "6619c46c65d5183ceed1121bec5df297b40a832312b5cd4b458f71d6a0a4655e"
+    },
+    {
+      "id": "feeblemind",
+      "kind": "spell",
+      "sourceHash": "9d86f07b007ec9bf4a6d888411346131ecbeae721a6070f8bbb425ee01b90989"
+    },
+    {
+      "id": "glibness",
+      "kind": "spell",
+      "sourceHash": "503eb533401cd41cffcf66b4180988269aefa4e74801cf5c4a5c6dd19c5c2612"
+    },
+    {
+      "id": "holy-aura",
+      "kind": "spell",
+      "sourceHash": "0718a7e7b824d4d64c02daf973c089561229022341fa3ca75924730e90850ffe"
+    },
+    {
+      "id": "incendiary-cloud",
+      "kind": "spell",
+      "sourceHash": "7fcd553857f2c0d3a2f9d8e5f01a8289a21cf8bbbb8aaedd921153a0b736f7b6"
+    },
+    {
+      "id": "maze",
+      "kind": "spell",
+      "sourceHash": "a9d193a42d8da64ebe47f5172c2ec2323cb1d3e7342c1c4f246f9df3ba29498d"
+    },
+    {
+      "id": "mind-blank",
+      "kind": "spell",
+      "sourceHash": "044ed720ea944e3bf739ab591e88a5c6f7d7551f51cf33f27586a01eb74959ad"
+    },
+    {
+      "id": "power-word-stun",
+      "kind": "spell",
+      "sourceHash": "67ed4f01f866e956a992d4b50f50862a7fbb29494ca2ba37a127957699ad29bd"
+    },
+    {
+      "id": "sunburst",
+      "kind": "spell",
+      "sourceHash": "c8e7244dc9d51d9c26a4e829a8e84837871af0215b4181c703c0910fbcc911b6"
+    },
+    {
       "id": "traps",
       "kind": "rules",
       "sourceHash": "3235d098b37944d2d0ae80928d91db3b9809dbbf319538e845817de93d512cd6"

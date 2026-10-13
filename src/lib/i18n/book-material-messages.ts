@@ -2305,5 +2305,133 @@ export const BOOK_MATERIAL_MESSAGES = defineMessages({
   "bookMaterial.spell.teleport.meta": {
     "en": "7th-level conjuration",
     "zh-CN": "七环咒法"
+  },
+  "bookMaterial.spell.animal-shapes.header": {
+    "en": "*8th-level transmutation*\n\n**Casting Time:** 1 action\n\n**Range:** 30 feet\n\n**Components:** V, S\n\n**Duration:** Concentration, up to 24 hours",
+    "zh-CN": "*八环变化*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 30 英尺\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 专注，至多 24 小时"
+  },
+  "bookMaterial.spell.animal-shapes.meta": {
+    "en": "8th-level transmutation",
+    "zh-CN": "八环变化"
+  },
+  "bookMaterial.spell.antimagic-field.header": {
+    "en": "*8th-level abjuration*\n\n**Casting Time:** 1 action\n\n**Range:** Self (10-foot radius sphere)\n\n**Components:** V, S, M (a pinch of powdered iron or iron filings)\n\n**Duration:** Concentration, up to 1 hour",
+    "zh-CN": "*八环防护*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 自身（半径 10 英尺球体）\n\n**法术成分：** 言语、姿势、材料（一撮铁粉或铁屑）\n\n**持续时间：** 专注，至多 1 小时"
+  },
+  "bookMaterial.spell.antimagic-field.meta": {
+    "en": "8th-level abjuration",
+    "zh-CN": "八环防护"
+  },
+  "bookMaterial.spell.antipathy-sympathy.header": {
+    "en": "*8th-level enchantment*\n\n**Casting Time:** 1 hour\n\n**Range:** 60 feet\n\n**Components:** V, S, M (either a lump of alum soaked in vinegar for the *antipathy* effect or a drop of honey for the *sympathy* effect)\n\n**Duration:** 10 days",
+    "zh-CN": "*八环惑控*\n\n**施法时间：** 1 小时\n\n**施法距离：** 60 英尺\n\n**法术成分：** 言语、姿势、材料（厌恶效果需要一块浸过醋的明矾；吸引效果需要一滴蜂蜜）\n\n**持续时间：** 10 天"
+  },
+  "bookMaterial.spell.antipathy-sympathy.meta": {
+    "en": "8th-level enchantment",
+    "zh-CN": "八环惑控"
+  },
+  "bookMaterial.spell.clone.header": {
+    "en": "*8th-level necromancy*\n\n**Casting Time:** 1 hour\n\n**Range:** Touch\n\n**Components:** V, S, M (a diamond worth at least 1,000 gp and at least 1 cubic inch of flesh of the creature that is to be cloned, which the spell consumes, and a vessel worth at least 2,000 gp that has a sealable lid and is large enough to hold a Medium creature, such as a huge urn, coffin, mud-filled cyst in the ground, or crystal container filled with salt water)\n\n**Duration:** Instantaneous",
+    "zh-CN": "*八环死灵*\n\n**施法时间：** 1 小时\n\n**施法距离：** 接触\n\n**法术成分：** 言语、姿势、材料（价值至少 1,000 gp 的钻石以及待克隆生物至少 1 立方英寸的血肉，这两项材料在施法时消耗；另需一个价值至少 2,000 gp、有可密封的盖子且足以容纳中型生物的容器，例如巨大的瓮、棺材、地面中充满泥浆的囊穴，或装满盐水的水晶容器）\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.clone.meta": {
+    "en": "8th-level necromancy",
+    "zh-CN": "八环死灵"
+  },
+  "bookMaterial.spell.control-weather.header": {
+    "en": "*8th-level transmutation*\n\n**Casting Time:** 10 minutes\n\n**Range:** Self (5-mile radius)\n\n**Components:** V, S, M (burning incense and bits of earth and wood mixed in water)\n\n**Duration:** Concentration, up to 8 hours",
+    "zh-CN": "*八环变化*\n\n**施法时间：** 10 分钟\n\n**施法距离：** 自身（半径 5 英里）\n\n**法术成分：** 言语、姿势、材料（燃烧的熏香，以及混在水中的少量泥土和木屑）\n\n**持续时间：** 专注，至多 8 小时"
+  },
+  "bookMaterial.spell.control-weather.meta": {
+    "en": "8th-level transmutation",
+    "zh-CN": "八环变化"
+  },
+  "bookMaterial.spell.demiplane.header": {
+    "en": "*8th-level conjuration*\n\n**Casting Time:** 1 action\n\n**Range:** 60 feet\n\n**Components:** S\n\n**Duration:** 1 hour",
+    "zh-CN": "*八环咒法*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 60 英尺\n\n**法术成分：** 姿势\n\n**持续时间：** 1 小时"
+  },
+  "bookMaterial.spell.demiplane.meta": {
+    "en": "8th-level conjuration",
+    "zh-CN": "八环咒法"
+  },
+  "bookMaterial.spell.dominate-monster.header": {
+    "en": "*8th-level enchantment*\n\n**Casting Time:** 1 action\n\n**Range:** 60 feet\n\n**Components:** V, S\n\n**Duration:** Concentration, up to 1 hour",
+    "zh-CN": "*八环惑控*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 60 英尺\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 专注，至多 1 小时"
+  },
+  "bookMaterial.spell.dominate-monster.meta": {
+    "en": "8th-level enchantment",
+    "zh-CN": "八环惑控"
+  },
+  "bookMaterial.spell.earthquake.header": {
+    "en": "*8th-level evocation*\n\n**Casting Time:** 1 action\n\n**Range:** 500 feet\n\n**Components:** V, S, M (a pinch of dirt, a piece of rock, and a lump of clay)\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*八环塑能*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 500 英尺\n\n**法术成分：** 言语、姿势、材料（一撮泥土、一块岩石和一团黏土）\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.earthquake.meta": {
+    "en": "8th-level evocation",
+    "zh-CN": "八环塑能"
+  },
+  "bookMaterial.spell.feeblemind.header": {
+    "en": "*8th-level enchantment*\n\n**Casting Time:** 1 action\n\n**Range:** 150 feet\n\n**Components:** V, S, M (a handful of clay, crystal, glass, or mineral spheres)\n\n**Duration:** Instantaneous",
+    "zh-CN": "*八环惑控*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 150 英尺\n\n**法术成分：** 言语、姿势、材料（一把黏土、水晶、玻璃或矿物制成的小球）\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.feeblemind.meta": {
+    "en": "8th-level enchantment",
+    "zh-CN": "八环惑控"
+  },
+  "bookMaterial.spell.glibness.header": {
+    "en": "*8th-level transmutation*\n\n**Casting Time:** 1 action\n\n**Range:** Self\n\n**Components:** V\n\n**Duration:** 1 hour",
+    "zh-CN": "*八环变化*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 自身\n\n**法术成分：** 言语\n\n**持续时间：** 1 小时"
+  },
+  "bookMaterial.spell.glibness.meta": {
+    "en": "8th-level transmutation",
+    "zh-CN": "八环变化"
+  },
+  "bookMaterial.spell.holy-aura.header": {
+    "en": "*8th-level abjuration*\n\n**Casting Time:** 1 action\n\n**Range:** Self\n\n**Components:** V, S, M (a tiny reliquary worth at least 1,000 gp containing a sacred relic, such as a scrap of cloth from a saint's robe or a piece of parchment from a religious text)\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*八环防护*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 自身\n\n**法术成分：** 言语、姿势、材料（一个价值至少 1,000 gp 的小型圣物匣，里面装有圣物，例如圣人长袍的一块碎布或宗教典籍的一片羊皮纸）\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.holy-aura.meta": {
+    "en": "8th-level abjuration",
+    "zh-CN": "八环防护"
+  },
+  "bookMaterial.spell.incendiary-cloud.header": {
+    "en": "*8th-level conjuration*\n\n**Casting Time:** 1 action\n\n**Range:** 150 feet\n\n**Components:** V, S\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*八环咒法*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 150 英尺\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.incendiary-cloud.meta": {
+    "en": "8th-level conjuration",
+    "zh-CN": "八环咒法"
+  },
+  "bookMaterial.spell.maze.header": {
+    "en": "*8th-level conjuration*\n\n**Casting Time:** 1 action\n\n**Range:** 60 feet\n\n**Components:** V, S\n\n**Duration:** Concentration, up to 10 minutes",
+    "zh-CN": "*八环咒法*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 60 英尺\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 专注，至多 10 分钟"
+  },
+  "bookMaterial.spell.maze.meta": {
+    "en": "8th-level conjuration",
+    "zh-CN": "八环咒法"
+  },
+  "bookMaterial.spell.mind-blank.header": {
+    "en": "*8th-level abjuration*\n\n**Casting Time:** 1 action\n\n**Range:** Touch\n\n**Components:** V, S\n\n**Duration:** 24 hours",
+    "zh-CN": "*八环防护*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 接触\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 24 小时"
+  },
+  "bookMaterial.spell.mind-blank.meta": {
+    "en": "8th-level abjuration",
+    "zh-CN": "八环防护"
+  },
+  "bookMaterial.spell.power-word-stun.header": {
+    "en": "*8th-level enchantment*\n\n**Casting Time:** 1 action\n\n**Range:** 60 feet\n\n**Components:** V\n\n**Duration:** Instantaneous",
+    "zh-CN": "*八环惑控*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 60 英尺\n\n**法术成分：** 言语\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.power-word-stun.meta": {
+    "en": "8th-level enchantment",
+    "zh-CN": "八环惑控"
+  },
+  "bookMaterial.spell.sunburst.header": {
+    "en": "*8th-level evocation*\n\n**Casting Time:** 1 action\n\n**Range:** 150 feet\n\n**Components:** V, S, M (fire and a piece of sunstone)\n\n**Duration:** Instantaneous",
+    "zh-CN": "*八环塑能*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 150 英尺\n\n**法术成分：** 言语、姿势、材料（火和一块日光石）\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.sunburst.meta": {
+    "en": "8th-level evocation",
+    "zh-CN": "八环塑能"
   }
 });

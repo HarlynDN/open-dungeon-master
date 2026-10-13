@@ -61,12 +61,12 @@ report or release gate and does not include a SRD 5.2 rules migration.
 | Locale foundation | Registry, persistence, browser fallback, typed complete catalogs, model locale policy, classified token proxy, chapter budget, CJK retrieval, IME protection | Real prompt-usage calibration; keep legacy campaign/history regressions |
 | DM safety | Per-event engine conclusions with English/Chinese renderers; AI prose separated; one text-only correction and safe fallback; shared localized enemy names and held-resource names/IDs; scoped resource aliases and ambiguity retries; real Codex combat/resource acceptance | Untracked feature/reaction options and broader spell/condition/pack coverage; conservative regex coverage is not full language understanding |
 | Embeddings | Original English deployment default retained; explicit multilingual opt-in; fixed bilingual calibration/holdout and hard-negative policy | Broader pack quality; opt-in affects English campaigns and rebuilds indexes |
-| UI | **401/440** covered files, **0** pending literal sites, **18960** message keys; scoped AST gate across entry, character, play, board, settings and help surfaces | 39 zero-literal owners need dynamic/source-ownership review; locale-sensitive thresholds and backend/native text remain audit items |
-| Character creation/material | Source-bound names/help: 517 spell names, 228 equipment names, 239 item bodies, 200/319 spell bodies; 415 registered resources, 135 bundled options, 533 expanded subclass features, 105 archetype documents, 49 backgrounds and 733 themed features; immutable English material baselines | Remaining dynamic material and help/loading paths; third-party, changed and authored variants retain their source |
+| UI | **401/440** covered files, **0** pending literal sites, **19272** message keys; scoped AST gate across entry, character, play, board, settings and help surfaces | 39 zero-literal owners need dynamic/source-ownership review; locale-sensitive thresholds and backend/native text remain audit items |
+| Character creation/material | Source-bound names/help: 517 spell names, 228 equipment names, 239 item bodies, 304/319 spell bodies; 415 registered resources, 135 bundled options, 533 expanded subclass features, 105 archetype documents, 49 backgrounds and 733 themed features; immutable English material baselines | Remaining dynamic material and help/loading paths; third-party, changed and authored variants retain their source |
 | Player system logs | Localized structured combat/audit display, party item/coin/XP logs, account facts and kickoff notices; English model/tool semantics stay separate | Other native player-log templates and final history/save/resume audit |
 | Resource delivery | UI/content/help scopes and independent retryable lazy help; anonymous bilingual switch/reload, authenticated character/campaign entry and viewer-English/story-Chinese separation observed | Complete authenticated journey and lazy/cache timing; hydrated/network totals and large route JS payload remain unverified |
 | Local Chinese TTS | Implementation and bounded CPU delivery/outage evidence retained in [the runtime record](validation/chinese-tts-runtime.json) | Chinese voice quality rejected by user; further voice work is deferred, not passed, and is not a text-milestone gate |
-| Full native rulebook | Reader chrome localized; **584/933 complete Chinese pages** now render via a server-generated display projection, including all 288 cantrip through seventh-level spell pages, all 239 magic-item pages, all thirty-six rules pages, all nine race pages and all twelve class pages, with complete headers and reused bodies; original English corpus retained; 288 spell and 239 magic-item bodies are available for further reuse | Remaining 31 high-level spell pages and 318 monster pages; complete Chinese corpus coverage, authenticated browser search/navigation and English reading regression |
+| Full native rulebook | Reader chrome localized; **600/933 complete Chinese pages** now render via a server-generated display projection, including all 304 cantrip through eighth-level spell pages, all 239 magic-item pages, all thirty-six rules pages, all nine race pages and all twelve class pages, with complete headers and reused bodies; original English corpus retained; 304 spell and 239 magic-item bodies are available for further reuse | Remaining 15 ninth-level spell pages and 318 monster pages; complete Chinese corpus coverage, authenticated browser search/navigation and English reading regression |
 | Final text flow | Recorded Chinese exploration/social/utility and combat/slot/correction acceptance on Codex | Complete Chinese text journey, rulebook reading/search and English regression; full tests/lint/build, then pause |
 
 ## Execution adjustment (2026-10-13)
@@ -86,19 +86,22 @@ real interaction has passed. Do not restart a static translation campaign.
 
 ## Next delivery unit and interruption checkpoint
 
-- Added all 20 seventh-level spells to shared game help/book presentation, now
-  584/933 pages and 288 complete native spell-help bodies. Reviewed English
-  clauses, teleport probabilities/familiarity, planar limits, material costs,
-  delayed damage and resurrection/simulacrum restrictions. Focused full-help,
-  bilingual page/variant/canonical and table checks passed. Catalog/AST/resources
-  passed; terminology has 0 errors and 389 retained context warnings. Final
-  full-suite/build and real bilingual journey remain unproven.
-- Consulted published 5etools terminology candidates by seventh-level English
-  spell identity. Edition provenance is still missing on many rows; no bulk
-  override or assertion of reviewed 2014 coverage. Existing names remain stable
-  while source-specific alias/conflict review is pending.
-- Next: eighth- and ninth-level spells (31 pages), then monster families.
-  Complete terminology conflict review alongside these source batches.
+- Added all 16 eighth-level spells to shared game help/book presentation, now
+  600/933 pages and 304 complete native spell-help bodies. Reviewed English
+  clauses, antimagic exceptions, control/escape saves versus checks, earthquake
+  start/end-of-turn triggers, clone costs and all three weather tables. Focused
+  full-help, bilingual page/variant/canonical and table checks passed. Catalog,
+  AST and generated resources passed; terminology has 0 errors and 389 retained
+  context warnings. Final full-suite/build and real bilingual journey remain
+  unproven.
+- Checked published 5etools candidates for this batch's linked terminology.
+  Rows have conflicting names and missing edition provenance (including Maze,
+  Control Weather and a Minotaur language/name collision). Kept existing spell
+  names, aligned body/header sublabels, and used the creature-context Goristro
+  candidate 巨牛魔. This is not a claim of reviewed 2014 provenance; source-specific
+  alias/conflict review remains pending.
+- Next: ninth-level spells (15 pages), then monster families. Complete terminology
+  conflict review alongside these source batches.
 - Native dynamic UI/material/log ownership remains pending in the UI manifest;
   audit helpers with their actual consumers before the final bilingual journey.
 
