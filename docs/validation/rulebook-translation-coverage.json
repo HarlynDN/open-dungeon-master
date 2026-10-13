@@ -4030,9 +4030,19 @@
       "sourceHash": "2a0700b7e7d3d77f6031ecb37c421abc36c24775e95851c405a7794824503ceb"
     },
     {
+      "id": "gladiator",
+      "kind": "monster",
+      "sourceHash": "2456c811d8a01af0de40debc2fb303577db1b05fb643d280869e2ea5d55c5f47"
+    },
+    {
       "id": "guard",
       "kind": "monster",
       "sourceHash": "f1d0057b405f5df63a55f2b21cd3bf63bce587c0a10eafc4d10bfdb1cc2adf4f"
+    },
+    {
+      "id": "knight",
+      "kind": "monster",
+      "sourceHash": "a45354554d32fbd5c0de3465f61b25b457a4fef9e70ebca701e5269e5d077fc9"
     },
     {
       "id": "noble",

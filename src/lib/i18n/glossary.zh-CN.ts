@@ -361,6 +361,8 @@ export const ZH_CN_GLOSSARY = [
   {"id":"monster.thug","source":"Thug","preferred":"暴徒","scope":"monster"},
   {"id":"monster.tribal_warrior","source":"Tribal Warrior","preferred":"部族武者","scope":"monster"},
   {"id":"monster.veteran","source":"Veteran","preferred":"老兵","scope":"monster"},
+  {"id":"monster.gladiator","source":"Gladiator","preferred":"角斗士","scope":"monster"},
+  {"id":"monster.knight","source":"Knight","preferred":"骑士","scope":"monster"},
   {"id":"monster.goblin","source":"Goblin","preferred":"哥布林","scope":"monster","aliases":["地精"]},
   {"id":"monster.bugbear","source":"Bugbear","preferred":"熊地精","scope":"monster"},
   {"id":"monster.hobgoblin","source":"Hobgoblin","preferred":"大地精","scope":"monster"},
