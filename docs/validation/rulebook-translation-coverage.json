@@ -3065,6 +3065,56 @@
       "sourceHash": "fdc90bda289cadb66ac8c96da75187ee435530ad6f8ee7066681952323785cd1"
     },
     {
+      "id": "black-dragon-wyrmling-chromatic",
+      "kind": "monster",
+      "sourceHash": "dbe64296f8f1b327afb1fe238c140609a137694f3c25fa064d57efd049d72778"
+    },
+    {
+      "id": "blue-dragon-wyrmling-chromatic",
+      "kind": "monster",
+      "sourceHash": "a4bd7f570998889810b36186dc03db4d33e8c81a1913d59d681a2de896b2b60b"
+    },
+    {
+      "id": "brass-dragon-wyrmling-metallic",
+      "kind": "monster",
+      "sourceHash": "17d40037b3c096b0984787b1cc78356f89d24cd84aff28d71ec33134f4c3d9e4"
+    },
+    {
+      "id": "bronze-dragon-wyrmling-metallic",
+      "kind": "monster",
+      "sourceHash": "ff8dbba6322fe7f21fc1f5172873f570d61e0f10f7bf9a5821e4d03b8da3015e"
+    },
+    {
+      "id": "copper-dragon-wyrmling-metallic",
+      "kind": "monster",
+      "sourceHash": "f3a1d9b13ecb3e87552db78e97f5ce171ed96d849f84710d2647aa5d965f53aa"
+    },
+    {
+      "id": "gold-dragon-wyrmling-metallic",
+      "kind": "monster",
+      "sourceHash": "6272c51cfc4a490003207bc6f98227a61b1d0edfd80cfb01a50ac6f5dbb7d7a9"
+    },
+    {
+      "id": "green-dragon-wyrmling-chromatic",
+      "kind": "monster",
+      "sourceHash": "6e52de373ce17565f806334c16d1d1cbe9819ad7ceb46b788c3e2bec42b4805c"
+    },
+    {
+      "id": "red-dragon-wyrmling-chromatic",
+      "kind": "monster",
+      "sourceHash": "2f4f619e1c26422f751739516a58d11f13d73bc12cf6d0e02b510df8f9f1abbc"
+    },
+    {
+      "id": "silver-dragon-wyrmling-metallic",
+      "kind": "monster",
+      "sourceHash": "90b5164ae5143e42547985b987fc1f808b123ee06bfc8908d6197e2db7febb27"
+    },
+    {
+      "id": "white-dragon-wyrmling-chromatic",
+      "kind": "monster",
+      "sourceHash": "f8361a32d04b2cecc91c33e4ba2245ef13f29bd0ee746d903c86534c1f10f8af"
+    },
+    {
       "id": "nonplayer-characters",
       "kind": "rules",
       "sourceHash": "4ec6b9a5ba3b0b2ac52fa5770480c59bfcf382d3bd9fba3b89299153deaba759"

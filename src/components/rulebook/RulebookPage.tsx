@@ -30,7 +30,7 @@ type Ctx = {
   onOpen: OpenPage;
 };
 
-const ABILITIES = "STR DEX CON INT WIS CHA";
+const ABILITIES = new Set(["STR DEX CON INT WIS CHA", "力量 敏捷 体质 智力 感知 魅力"]);
 
 // Digits in display lettering, set in the text face.
 export function Digits({ text }: { text: string }) {
@@ -163,7 +163,7 @@ function Block({ block, ctx, index, dropCap }: { block: BookBlock; ctx: Ctx; ind
       );
     }
     case "table": {
-      const abilities = block.head.join(" ").toUpperCase() === ABILITIES;
+      const abilities = ABILITIES.has(block.head.join(" ").toUpperCase());
       return (
         <div className={cn("rb-table-wrap", abilities && "rb-abilities")} style={style}>
           <table className="rb-table">

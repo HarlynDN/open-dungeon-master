@@ -41,6 +41,29 @@ const renderer = await openCombatRenderer({ files: ['src/components/rulebook/Rul
   './PagePrep': stub('export const PagePrep=()=>null;'),
 }});
 const xrefs = new Map([['magic missile', 'magic-missile'], ['魔法飞弹', 'magic-missile']]);
+const { referenceDisplayName, resolveReference } = await import('../src/lib/i18n/references.ts');
+for (const row of coverageManifest.requiredPages.filter(row => row.kind === 'monster')) {
+  const data = rulebookPage(row.id);
+  const before = JSON.stringify(data);
+  const display = rulebookPageDisplay(data.page, 'zh-CN');
+  // Quantities outside the ability table matter too: HP, attack bonuses,
+  // damage dice, DCs, recharge ranges, distances and durations.
+  assert.deepEqual(display.md.match(/\d+/g), data.page.md.match(/\d+/g), row.id + ': monster quantities');
+  const props = { data: { ...data, display }, terms: [], xrefs, onOpen: () => {} };
+  const chinese = renderer.render('RulebookPage', props, 'zh-CN');
+  assert.ok(chinese.includes(display.title) && chinese.includes('护甲等级'), row.id);
+  assert.ok(chinese.includes('rb-abilities'), row.id + ': localized ability table styling');
+  assert.ok(!chinese.includes('Armor Class') && !chinese.includes('Melee Weapon Attack'), row.id);
+  const english = renderer.render('RulebookPage', props, 'en');
+  assert.ok(english.includes('Armor Class') && english.includes('rb-abilities'), row.id);
+  assert.equal(rulebookPageDisplay(data.page, 'en').md, data.page.md);
+  assert.equal(rulebookPageDisplay({ ...data.page, md: data.page.md + '\n\nAuthored change.' }, 'zh-CN').translated, false);
+  assert.equal(referenceDisplayName('monster', data.page.title, 'zh-CN'), display.title);
+  const candidate = { id: row.id, name: data.page.title };
+  assert.equal(resolveReference('monster', display.title, [candidate], 'zh-CN').entry?.id, row.id);
+  assert.equal(referenceDisplayName('monster', data.page.title, 'en'), data.page.title);
+  assert.equal(JSON.stringify(data), before);
+}
 for (const row of LOCALIZED_SPELL_PAGES) {
   const data = rulebookPage(row.id);
   const original = JSON.stringify(data);
