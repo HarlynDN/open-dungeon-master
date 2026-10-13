@@ -1,3 +1,4 @@
+import { nativeSpellHelp } from "./spell-help-presentations.ts";
 import { catalogFor, createTranslator, type MessageKey } from "./translator.ts";
 import type { AppLocale } from "./locales.ts";
 import { referenceDisplayName } from "./references.ts";
@@ -33,7 +34,10 @@ export function referenceRowDescription(kind: string, row: ReferenceRow, locale:
   if (!source || !owned(row) || locale === "en") return source;
   if (row.display?.locale === locale && row.display.source === source) return row.display.text;
   if (kind === "feats") return nativeFeatHelp(row.name, source, locale) ?? source;
-  if (kind === "spells") return spellStarterText(source, locale);
+  if (kind === "spells") {
+    const full = nativeSpellHelp(row, source, locale);
+    return full && full !== source ? full : spellStarterText(source, locale);
+  }
   return source;
 }
 

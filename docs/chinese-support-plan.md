@@ -134,6 +134,11 @@ real interaction has passed. Do not restart a static translation campaign.
   405/440; this closes no browser/runtime gate. Default data/content/open5e.sqlite
   is absent and project .env/.env.local provide no alternative CONTENT_DB_PATH;
   deployed full-catalog coverage remains unverified, not inferred from fixtures.
+- Builder ContentPicker, MultiContentPicker, CatalogBrowser and shared ContentPick
+  now route spell prose through the full native description adapter, including
+  higher-level text; shared ContentPick also localizes spell summary metadata.
+  All 319 bundled spells pass direct-client (no server display) regression;
+  starter-summary fallback remains. Browser interaction gates remain open.
 - Next: complete those help paths and inspect real content data, then remaining
   dynamic UI/material/log owners. Full-suite/build and real bilingual journey
   remain unproven; no owner was newly marked covered.

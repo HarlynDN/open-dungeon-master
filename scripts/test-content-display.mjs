@@ -34,6 +34,7 @@ for (const [kind, rows] of [['spells', bundledSpellRows()], ['items', bundledIte
     const shown = contentDisplay(kind, native, 'zh-CN');
     assert.ok(shown.display, native.name + ': complete native projection');
     assert.equal(shown.display.source, original);
+    if (kind === 'spells') assert.equal(referenceRowDescription(kind, native, 'zh-CN'), shown.display.text);
     assert.equal(referenceRowDescription(kind, shown, 'zh-CN'), shown.display.text);
     assert.equal(referenceRowDescription(kind, shown, 'en'), original);
     assert.equal(shown.data, native.data);

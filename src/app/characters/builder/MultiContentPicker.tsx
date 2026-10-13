@@ -1,5 +1,7 @@
 "use client";
 
+import { referenceRowDescription } from "@/lib/i18n/reference-ui-presentations";
+
 import { nativeItemHelp } from "@/lib/i18n/magic-item-material-presentations";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { pickerName } from "@/lib/i18n/gear-ui-presentations";
@@ -152,7 +154,7 @@ export default function MultiContentPicker({
                 <InfoButton
                   label={displayName}
                   meta={kind === "spells" ? (locale === "en" ? spellSummary(entry.data) : spellSummaryView(entry.data, locale, entry.source === "homebrew")) : undefined}
-                  text={kind === "items" ? nativeItemHelp(entry, describeContentEntry(entry.data), locale) : describeContentEntry(entry.data)}
+                  text={kind === "items" ? nativeItemHelp(entry, describeContentEntry(entry.data), locale) : referenceRowDescription(kind, entry, locale)}
                   reference={entry.source === "homebrew" ? undefined : { kind, slug: entry.slug, name: entry.name }}
                 />
               </li>

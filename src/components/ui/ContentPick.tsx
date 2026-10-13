@@ -1,5 +1,8 @@
 "use client";
 
+import { referenceRowDescription } from "@/lib/i18n/reference-ui-presentations";
+
+import { spellSummaryView } from "@/lib/i18n/spell-ui-presentations";
 import { nativeItemHelp } from "@/lib/i18n/magic-item-material-presentations";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { catalogFor } from "@/lib/i18n/translator";
@@ -9,7 +12,7 @@ import { useEffect, useRef } from "react";
 import { Loader2, Search } from "lucide-react";
 import { InfoButton } from "@/components/ui/InfoDialog";
 import { cn } from "@/lib/cn";
-import { describeContentEntry, spellSummary } from "@/lib/help";
+import { describeContentEntry } from "@/lib/help";
 import { useContentSearch, type PickerEntry } from "@/app/characters/builder/useContentSearch";
 
 // Search-and-pick over the content pack (/api/content/<kind>): spells,
@@ -105,8 +108,8 @@ export function ContentPick({
               </button>
               <InfoButton
                 label={displayName(entry)}
-                meta={kind === "spells" ? spellSummary(entry.data) : undefined}
-                text={kind === "feats" && hasNames && entry.source !== "homebrew" ? nativeFeatHelp(entry.name, describeContentEntry(entry.data), locale) : kind === "items" ? nativeItemHelp(entry, describeContentEntry(entry.data), locale) : describeContentEntry(entry.data)}
+                meta={kind === "spells" ? spellSummaryView(entry.data, locale, entry.source === "homebrew") : undefined}
+                text={kind === "feats" && hasNames && entry.source !== "homebrew" ? nativeFeatHelp(entry.name, describeContentEntry(entry.data), locale) : kind === "items" ? nativeItemHelp(entry, describeContentEntry(entry.data), locale) : referenceRowDescription(kind, entry, locale)}
                 reference={
                   entry.source === "homebrew" ? undefined : { kind, slug: entry.slug, name: entry.name }
                 }

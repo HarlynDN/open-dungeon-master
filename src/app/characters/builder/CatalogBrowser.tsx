@@ -1,5 +1,7 @@
 "use client";
 
+import { referenceRowDescription } from "@/lib/i18n/reference-ui-presentations";
+
 import { pickerQueryParams, pickerSectionKey } from "@/lib/i18n/picker-requests";
 import { spellSummaryView } from "@/lib/i18n/spell-ui-presentations";
 import { nativeItemHelp } from "@/lib/i18n/magic-item-material-presentations";
@@ -378,7 +380,7 @@ export default function CatalogBrowser({
                                   <InfoButton
                                     label={pickerName(kind, entry, locale)}
                                     meta={kind === "spells" ? spellSummaryView(entry.data, locale, entry.source === "homebrew") : undefined}
-                                    text={kind === "feats" && entry.source !== "homebrew" ? nativeFeatHelp(entry.name, describeContentEntry(entry.data), locale) : kind === "items" ? nativeItemHelp(entry, describeContentEntry(entry.data), locale) : describeContentEntry(entry.data)}
+                                    text={kind === "feats" && entry.source !== "homebrew" ? nativeFeatHelp(entry.name, describeContentEntry(entry.data), locale) : kind === "items" ? nativeItemHelp(entry, describeContentEntry(entry.data), locale) : referenceRowDescription(kind, entry, locale)}
                                     reference={
                                       entry.source === "homebrew"
                                         ? undefined
