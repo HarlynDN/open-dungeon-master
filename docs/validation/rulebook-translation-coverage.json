@@ -75,6 +75,16 @@
       "sourceHash": "4b204b18050ff800e7cbf69963ee3925e9acc62cc67dc4d26a7ac4896379d4cb"
     },
     {
+      "id": "monk",
+      "kind": "class",
+      "sourceHash": "3f651925f35583c02baec9a3911f08d4e8d5b6cc7d1ea5a22133ba28d637f622"
+    },
+    {
+      "id": "rogue",
+      "kind": "class",
+      "sourceHash": "4e3d11559e2fe28bede3e580582d5af632ac7ffd097df532eb6af3f9fbcf94f0"
+    },
+    {
       "id": "beyond-1st-level",
       "kind": "rules",
       "sourceHash": "e38f0468e4ae1916a6083c5faf3cd5fa4034af55905d8415aa9dda34ab4a85f3"
