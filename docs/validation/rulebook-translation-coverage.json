@@ -3310,6 +3310,31 @@
       "sourceHash": "c371033393e12ac9957b29c774da101d20582fc74e40fe92e26da3046633592b"
     },
     {
+      "id": "blink-dog",
+      "kind": "monster",
+      "sourceHash": "b40c21a9656d17d1cd7c71d6014dab9a04d1b17743f24a14d0d2bffa2374fc4c"
+    },
+    {
+      "id": "death-dog",
+      "kind": "monster",
+      "sourceHash": "142338b47c6c63042c6f34968b40fb33a1ff84eee1017aafe3360a107f2342f8"
+    },
+    {
+      "id": "dire-wolf",
+      "kind": "monster",
+      "sourceHash": "3affafd7285842b2025d3b056a6133187109f53e5fa02e6aa7ea2b2b2071f0f8"
+    },
+    {
+      "id": "winter-wolf",
+      "kind": "monster",
+      "sourceHash": "ea19fe48d673a52ada3b7b4ac15aece70e0699f6d0d0b8d2b00feb8708c98dde"
+    },
+    {
+      "id": "worg",
+      "kind": "monster",
+      "sourceHash": "bbd88e4fabce1d93b0cd736e5770503748f51cd737128bdeef125073de0f09e9"
+    },
+    {
       "id": "nonplayer-characters",
       "kind": "rules",
       "sourceHash": "4ec6b9a5ba3b0b2ac52fa5770480c59bfcf382d3bd9fba3b89299153deaba759"
