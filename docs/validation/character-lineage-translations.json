@@ -12,7 +12,7 @@
     "src/app/characters/builder/LineageCarousel.tsx": "6ac6a4980e58da73573833bbca3797eccbd96d873ff8481c789672606dac897b",
     "src/app/characters/builder/OptionCardGrid.tsx": "e77b970222d0368ac74330bdcaaf26a64f4590893384ea6ff7abcddd259c2386",
     "src/app/characters/builder/RacialChoicesSection.tsx": "bf2db286b025eed1b7b05758fd1c6f3f1c6aaa9edf08853e579286ac797a68a6",
-    "src/lib/characters/options.ts": "e0294a844664240604091c945104e20adc08bcbf7d0fc32bafacfff70174c31c",
+    "src/lib/characters/options.ts": "63934438a1bba8f4d05c5c3271163772beade80e594337e416bc2e26a361e7cc",
     "src/lib/help/index.ts": "7ff4f4cd962f23f301d09902fcd8fba024f1f5956ddca7c5a99d9105ab4c7dbd",
     "src/lib/i18n/lineage-presentations.ts": "57e5eafa4ad8c16610026ffdb959b02eea50bb6c89ed6f4030d43b0489cbede9",
     "src/lib/i18n/racial-presentations.ts": "6dfcacdffbb4c3e35110b24ed972a12dd87092bbfa4ae51b22688440558c9b27",
@@ -50,5 +50,15 @@
       }
     },
     "review": "Compared full diffs against Git versions reproducing each prior hash. Changes add native source-bound feature/option/background/archetype display, homebrew name guards, opt-in spell/monster help sections, and a shared English free-cast label helper. Death messages now persist typed campaign-locale events while model-facing notes and engine outcomes remain English/unchanged; condition tick avoids duplicating the wake message. Original frozen output files are unchanged. Larger feat-choice/level-up diffs and glossary history remain separately open; this source review does not claim final acceptance."
+  },
+  "classDocumentProjectionReview": {
+    "baseCommit": "19f83274139b08c03baf386c515ddeac6801bc4d",
+    "reason": "Reviewed display-only class document transport and exact source/locale guarded help projection. Native mechanics, bundled English introductions and authored/third-party source fallback remain unchanged. No translation messages changed.",
+    "files": {
+      "src/lib/characters/options.ts": {
+        "previousSha256": "e0294a844664240604091c945104e20adc08bcbf7d0fc32bafacfff70174c31c",
+        "sha256": "63934438a1bba8f4d05c5c3271163772beade80e594337e416bc2e26a361e7cc"
+      }
+    }
   }
 }

@@ -5,7 +5,7 @@
   "provenance": "Original Chinese translations from the repository bundled classes/subclass brief descriptions. Original source licenses and attribution retained; no proprietary Chinese rulebook translations copied.",
   "review": "Implementation-agent comparison of every full original introduction, genre flavor, numeric mechanics (10-foot aura, 19 critical), rests, healing, armor, spell preparation, option order and canonical IDs. English projections and all 13 previous picker goldens stay exact. Complete pack/workshop descriptions retain precedence and verbatim braces/newlines; native summaries match both original name/ID and original full source before class translation. Native subclass alias normalization remains in the original resolver. Source comparison is not human or external approval.",
   "sources": {
-    "src/lib/characters/options.ts": "e0294a844664240604091c945104e20adc08bcbf7d0fc32bafacfff70174c31c",
+    "src/lib/characters/options.ts": "63934438a1bba8f4d05c5c3271163772beade80e594337e416bc2e26a361e7cc",
     "src/lib/classes/cyberpunk-features.json": "6a7362e5dbd22df1b421b334f343aed0389d4e3851a42bc062f73b5e132b5c82",
     "src/lib/classes/cyberpunk.json": "9918ef4bd03fd200506b3c26e3900f6454a35ff12004454e77802917e64647cd",
     "src/lib/classes/dark-fantasy-features.json": "fecb4e7cec4249835d65ab3b14e9c724c203f16f841eaebe9fb79e0c142575c3",
@@ -24,7 +24,7 @@
     "src/lib/srd/features.ts": "1251dbd9e5a05fbf052ef5cafb0ef458ffa6a48e914d1f6b86bb444d8ebac84f",
     "src/lib/srd/subclasses.json": "94f65f85c8e39d4b2c15979a74ec835967d620dff69013284f14fe64764230cb",
     "src/lib/help/index.ts": "7ff4f4cd962f23f301d09902fcd8fba024f1f5956ddca7c5a99d9105ab4c7dbd",
-    "src/lib/i18n/calling-material-presentations.ts": "2fbd450ead476eab375f980b1e119789393bde1fcffa923ddb85d9835e9ccc93",
+    "src/lib/i18n/calling-material-presentations.ts": "e2de53d82ef18d0c0ae00dee5af7ff65e059f58be3e6178abdbef26168edb604",
     "src/app/characters/builder/usePickerGroups.ts": "649ed670bb4cf630809f26ab83d0e0f26283d53d69a7876205af9bf9709667eb",
     "src/app/characters/builder/steps/CallingStep.tsx": "9f5b4431d56ecb3a9503afc5d0e87dcb1c1cf4be40245e97ead7bc5d0cea4476",
     "src/app/campaigns/[campaignId]/LevelUpDialog.tsx": "943360ce5d65e9a6cfdc7bca0786cc2462da3a42848d6ab93d1ec4ae5f8bf73f"
@@ -119,5 +119,19 @@
       }
     },
     "review": "Compared full diffs against Git versions reproducing each prior hash. Changes add native source-bound feature/option/background/archetype display, homebrew name guards, opt-in spell/monster help sections, and a shared English free-cast label helper. Death messages now persist typed campaign-locale events while model-facing notes and engine outcomes remain English/unchanged; condition tick avoids duplicating the wake message. Original frozen output files are unchanged. Larger feat-choice/level-up diffs and glossary history remain separately open; this source review does not claim final acceptance."
+  },
+  "classDocumentProjectionReview": {
+    "baseCommit": "19f83274139b08c03baf386c515ddeac6801bc4d",
+    "reason": "Reviewed display-only class document transport and exact source/locale guarded help projection. Native mechanics, bundled English introductions and authored/third-party source fallback remain unchanged. No translation messages changed.",
+    "files": {
+      "src/lib/characters/options.ts": {
+        "previousSha256": "e0294a844664240604091c945104e20adc08bcbf7d0fc32bafacfff70174c31c",
+        "sha256": "63934438a1bba8f4d05c5c3271163772beade80e594337e416bc2e26a361e7cc"
+      },
+      "src/lib/i18n/calling-material-presentations.ts": {
+        "previousSha256": "2fbd450ead476eab375f980b1e119789393bde1fcffa923ddb85d9835e9ccc93",
+        "sha256": "e2de53d82ef18d0c0ae00dee5af7ff65e059f58be3e6178abdbef26168edb604"
+      }
+    }
   }
 }

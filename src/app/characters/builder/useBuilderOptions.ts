@@ -1,5 +1,6 @@
 "use client";
 
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { registerBrowserSubclassExtras, subclassLevelFor } from "@/lib/srd/features";
 import { extraSubclassOf } from "@/lib/srd/subclass-tables";
 import { useEffect, useMemo, useState } from "react";
@@ -48,6 +49,7 @@ export type ArchetypeOption = { id: string; name: string; desc: string; source?:
 // backgrounds come with them. Without the content pack those still arrive,
 // beside the bundled SRD options; `packInstalled` says which it was.
 export function useBuilderOptions(keepRaceId?: string) {
+  const { locale } = useLocale();
   const campaignId = useContentCampaign();
   const [races, setRaces] = useState<RaceOption[]>(srdRaceOptions);
   const [classes, setClasses] = useState<ClassOption[]>(srdClassOptions);
@@ -60,7 +62,7 @@ export function useBuilderOptions(keepRaceId?: string) {
       try {
         const [racesResponse, classesResponse, backgroundsResponse] = await Promise.all([
           fetch(`/api/content/races?limit=200${scopeQuery(campaignId, "&")}`),
-          fetch(`/api/content/classes?limit=100${scopeQuery(campaignId, "&")}`),
+          fetch(`/api/content/classes?limit=100&localized=1&locale=${encodeURIComponent(locale)}${scopeQuery(campaignId, "&")}`),
           fetch(`/api/content/backgrounds?limit=200${scopeQuery(campaignId, "&")}`),
         ]);
         if (!racesResponse.ok || !classesResponse.ok || !backgroundsResponse.ok) {
@@ -107,7 +109,7 @@ export function useBuilderOptions(keepRaceId?: string) {
     return () => {
       cancelled = true;
     };
-  }, [keepRaceId, campaignId]);
+  }, [keepRaceId, campaignId, locale]);
 
   return useMemo(
     () => ({ races, classes, backgrounds, packInstalled }),

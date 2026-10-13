@@ -17,6 +17,13 @@ export function contentDisplay<T extends { name: string; source: string; documen
   let text = source;
   if (kind === "spells") text = nativeSpellHelp(entry, source, locale) ?? source;
   else if (kind === "items") text = nativeItemHelp(entry, source, locale) ?? source;
+  else if (kind === "classes") {
+    const page = book.pages.find(page => page.kind === "class" && page.title === entry.name) as RulebookPage | undefined;
+    if (page && normalizeRulesText(page.md) === source) {
+      const display = rulebookPageDisplay(page, locale);
+      if (display.translated) text = display.md;
+    }
+  }
   else if (kind === "monsters") {
     const id = rulebookPageIdFor("monster", entry.name);
     const page = book.pages.find(page => page.id === id) as RulebookPage | undefined;

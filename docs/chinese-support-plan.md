@@ -109,26 +109,16 @@ this section records current delivery state and acceptance gaps only.
   Completed pure-helper/consumer reviews are recorded in
   docs/validation/ui-localization.json. Whole-owner dynamic output and browser
   acceptance remain distinct; stale theme counts were corrected to 733/733.
-- Validation: full lint passed before the dice/cache follow-up (0 errors,
-  22 ESLint warnings); terminology reports 557 entries, 0 errors and 389 context
-  warnings. The sandboxed full test run was terminated after a local mock-server
-  listen EPERM. That script passes with elevated execution; the elevated full
-  suite completed: 570/585 passed, 15 failed (681 seconds). Gear subsequently
-  passed separately. Resource-scope and single-character book-search regressions
-  now pass after correcting outdated test assumptions; magic-item locale cache
-  fixtures also pass. Reviewed-message tests pass after a verified one-value
-  Wild Shape terminology update, with prior hashes retained. Builder background
-  help expectations and their source review were corrected; all 11 grouped
-  builder-feedback checks now pass. Historical Git versions reproducing old hashes were located and reviewed for
-  the smaller source changes (display adapters, opt-in help and typed death/wake
-  notices); their review records retain prior hashes and base commits. The larger feat-choice/level-up diffs are now reviewed. Glossary history
-  confirms 257 prior entries retained, two explicit term changes and 300 later
-  additions. Nine affected regression scripts completed with eight passing; game-help
-  then passed separately after replacing its duplicate old-byte lock with an
-  explicit audited before/after helper revision check. All 15 original failures
-  now have passing focused follow-ups, but the final full suite has not rerun. Picker background tests preserve third-party body
-  text while allowing the localized Feature label. Final failures still require
-  verification; final full-suite acceptance remains open.
+- Validation: full suite completed successfully: 585/585 files, 686.84 seconds
+  (/tmp/odm-full-tests-navigation.log). This supersedes the earlier 570/585 run;
+  all fifteen original failures have passing targeted follow-ups as well.
+  Frozen English goldens remain unchanged; intentional display differences have
+  explicit assertions and source reviews retain previous fingerprints. Full
+  lint passed with zero errors (22 ESLint warnings; terminology 557 entries,
+  zero errors and 389 context warnings). The class-document follow-up landed
+  during the run, so this is not a sealed final run for that patch. Its 12-class
+  pipeline checks, type check, focused lint and six original calling-material
+  groups pass separately. Final release checks remain open after all changes.
 - Build: default Turbopack failed twice on port binding, including elevated retry.
   Webpack exposed Node crypto imported into browser dice validation. Pure
   dice-core now serves browser validation/scoring; server wrappers retain the
@@ -155,8 +145,8 @@ this section records current delivery state and acceptance gaps only.
   No actual DM/utility generation was accepted on this instance; its homepage
   reported qwen3.6-35b unavailable. No model configuration was changed.
 - Current checks: full lint after 28e60318 passed (terminology 557 entries,
-  zero errors, 389 context warnings); type check passed. Full regression is
-  running in session 45004 with output /tmp/odm-full-tests-navigation.log.
+  zero errors, 389 context warnings); type check passed. Full regression passed
+  as detailed above.
   Market/picker and magic-item owner regressions passed. Additional synthetic monster/condition
   ContentPick rendering checks confirmed Chinese server projections, English
   fallback, source-mismatch refusal, unchanged selection objects and authored
@@ -166,7 +156,19 @@ this section records current delivery state and acceptance gaps only.
   state is reviewed end to end: canonical selections and typed diagnostics are
   formatted by existing presentation consumers. Persistent
   logs, playback and real combat remain independent gates.
-  Do not duplicate the live full-suite run.
+  No full-suite process remains live.
+- Class-help follow-up: source inspection found class options did not request
+  localized full documents. The class request now carries viewer locale, retains
+  server display metadata through packClassOptions, and classHelpText accepts
+  only matching locale/full-source projections. Server projection reuses the
+  complete translated class page only for wotc-srd exact normalized text.
+  Twelve native class documents pass the option/help pipeline test, including
+  English preservation and homebrew/other-book/changed-source refusal. Focused
+  lint and type check passed. All six original calling-material regression
+  groups passed. Source review records retain previous fingerprints for the
+  display-only changes.
+  This does not certify differently formatted deployed class-pack documents.
+  Full suite began before this follow-up; affected checks must be reconciled.
 - Next: complete remaining dynamic
   UI/material/log owners and real content-data review, then run one complete
   Chinese/English create/play/combat/rest/save/resume/book-search journey. Real

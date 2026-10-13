@@ -29,7 +29,10 @@ export type RaceOption = {
   documentSlug?: string;
   source?: string;
 } & RaceMechanics;
+type ContentDisplay = { locale: import("../i18n/locales").AppLocale; source: string; text: string };
+
 export type ClassOption = { id: string; name: string } & ClassMechanics & {
+    display?: ContentDisplay;
     documentSlug?: string;
     source?: string;
     // Catalog-only extras; absent on SRD and Open5e rows.
@@ -72,6 +75,7 @@ export type BackgroundOption = {
 };
 
 export type ContentRow = {
+  display?: ContentDisplay;
   slug: string;
   name: string;
   source: string;
@@ -190,6 +194,7 @@ export function packClassOptions(rows: ContentRow[]): ClassOption[] {
       id: row.slug,
       name: row.name,
       ...classMechanics(row.slug, row.data),
+      ...(row.source !== "homebrew" && row.documentSlug === "wotc-srd" && row.display ? { display: row.display } : {}),
       ...(bundled
         ? { armor: bundled.armor, weapons: bundled.weapons, tools: bundled.tools ?? [] }
         : {}),

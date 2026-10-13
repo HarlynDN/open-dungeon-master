@@ -105,3 +105,25 @@ for (const query of ['', 'goblin']) {
   assert.equal(chinese.get('campaign'), 'kept');
   assert.equal(raw.get('localized'), null);
 }
+
+// Class selection must carry a source-bound full document, not just its blurb.
+const { packClassOptions } = await import('../src/lib/characters/options.ts');
+const { classHelpText } = await import('../src/lib/i18n/calling-material-presentations.ts');
+let classCount = 0;
+for (const page of book.pages.filter(page => page.kind === 'class')) {
+  const source = { slug: page.id, name: page.title, source: 'open5e', documentSlug: 'wotc-srd', data: { desc: page.md } };
+  const projected = contentDisplay('classes', source, 'zh-CN');
+  assert.ok(projected.display, page.id);
+  const option = packClassOptions([projected]).find(option => option.id === page.id);
+  assert.ok(classHelpText(option, 'zh-CN').endsWith(projected.display.text), page.id);
+  assert.ok(classHelpText(option, 'en').endsWith(page.md), page.id + ': English source');
+  assert.deepEqual(projected.data, source.data);
+  for (const changed of [{...source, source:'homebrew'}, {...source, documentSlug:'other-book'}, {...source, data:{desc:page.md+'\nAuthored addition.'}}]) {
+    assert.equal(contentDisplay('classes',changed,'zh-CN'),changed);
+  }
+  assert.ok(classHelpText({...option,desc:'Changed after loading.'},'zh-CN').endsWith('Changed after loading.'));
+  assert.ok(classHelpText({...option,display:{...option.display,locale:'en'}},'zh-CN').endsWith(page.md));
+  classCount++;
+}
+assert.equal(classCount,12);
+console.log('content-display: 12 complete class documents through option/help projection, English and changed-source fallback passed; external pack variants not implied.');

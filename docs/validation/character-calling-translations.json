@@ -11,7 +11,7 @@
     "src/lib/i18n/LocalizedText.tsx": "fab7c8c6447d08ee06c7e3ff0f43e3c8a95af40d18e248eb0e038bdcbad9118f",
     "src/lib/i18n/message-parts.ts": "97ef99a7024c5e46f97c2091bb019ac76fa1e1234b0d176ba1c416116aad8938",
     "src/lib/srd/feature-effects.ts": "0a7f3b483608a2207bfd8af110edc36e8f4c96b7e0a5fc51e1e874e979a1b95e",
-    "src/lib/characters/options.ts": "e0294a844664240604091c945104e20adc08bcbf7d0fc32bafacfff70174c31c",
+    "src/lib/characters/options.ts": "63934438a1bba8f4d05c5c3271163772beade80e594337e416bc2e26a361e7cc",
     "src/lib/i18n/builder-picker-presentations.ts": "66939a0bff47a5e1c3ff8271bef1db90660c3c2267845067440ba70026796545"
   },
   "catalogs": {
@@ -91,5 +91,15 @@
       }
     },
     "review": "Compared full diffs against Git versions reproducing each prior hash. Changes add native source-bound feature/option/background/archetype display, homebrew name guards, opt-in spell/monster help sections, and a shared English free-cast label helper. Death messages now persist typed campaign-locale events while model-facing notes and engine outcomes remain English/unchanged; condition tick avoids duplicating the wake message. Original frozen output files are unchanged. Larger feat-choice/level-up diffs and glossary history remain separately open; this source review does not claim final acceptance."
+  },
+  "classDocumentProjectionReview": {
+    "baseCommit": "19f83274139b08c03baf386c515ddeac6801bc4d",
+    "reason": "Reviewed display-only class document transport and exact source/locale guarded help projection. Native mechanics, bundled English introductions and authored/third-party source fallback remain unchanged. No translation messages changed.",
+    "files": {
+      "src/lib/characters/options.ts": {
+        "previousSha256": "e0294a844664240604091c945104e20adc08bcbf7d0fc32bafacfff70174c31c",
+        "sha256": "63934438a1bba8f4d05c5c3271163772beade80e594337e416bc2e26a361e7cc"
+      }
+    }
   }
 }

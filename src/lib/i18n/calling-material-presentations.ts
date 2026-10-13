@@ -12,6 +12,7 @@ import type { AppLocale } from "./locales.ts";
 
 type ClassIntroduction = {
   id?: string; name?: string; packBlurb?: string; blurb?: string; desc?: string;
+  documentSlug?: string; display?: { locale: AppLocale; source: string; text: string };
 };
 
 // Translate only the unchanged bundled fragment. A pack's pitch and full
@@ -22,7 +23,9 @@ export function classHelpText(entry: ClassIntroduction, locale: AppLocale): stri
     const row = CALLING_CLASS_BLURBS.find(row => row.id === entry.id && row.name === entry.name);
     if (row && brief === CALLING_MATERIAL_MESSAGES.en[row.key]) brief = createTranslator(locale)(row.key);
   }
-  const parts = [brief, entry.desc].filter(Boolean);
+  const desc = locale !== "en" && entry.documentSlug === "wotc-srd" && entry.display?.locale === locale
+    && entry.display.source === normalizeRulesText(entry.desc ?? "") ? entry.display.text : entry.desc;
+  const parts = [brief, desc].filter(Boolean);
   return parts.length ? parts.join("\n\n") : undefined;
 }
 
