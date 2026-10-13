@@ -3475,6 +3475,11 @@
       "sourceHash": "23517ffd1f7eb392af21081a19b4e2b557e1638898a583a793cf96a607d9fa2a"
     },
     {
+      "id": "satyr",
+      "kind": "monster",
+      "sourceHash": "4d36403419f8d0ea321a5362b16c12d545b34bf93bc604ec796e483d2a650a23"
+    },
+    {
       "id": "shambling-mound",
       "kind": "monster",
       "sourceHash": "f0a3a92aed21b9233b338588e56ca2681cf73efe671f37f584719dfc7dcd43f6"
@@ -3493,6 +3498,11 @@
       "id": "skeleton",
       "kind": "monster",
       "sourceHash": "e042840ccf430d84e320c3a2fcf9a52548c108c785810bacbceabf88c0e69031"
+    },
+    {
+      "id": "sprite",
+      "kind": "monster",
+      "sourceHash": "9c9979cc0de1b3925a7805bfc12431a940d049c3762b6cff85f476412ef293f9"
     },
     {
       "id": "steam-mephit",

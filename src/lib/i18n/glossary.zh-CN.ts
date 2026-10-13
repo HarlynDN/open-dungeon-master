@@ -387,6 +387,8 @@ export const ZH_CN_GLOSSARY = [
   {"id":"monster.treant","source":"Treant","preferred":"树人","scope":"monster"},
   {"id":"monster.homunculus","source":"Homunculus","preferred":"人工生命体","scope":"monster"},
   {"id":"monster.pseudodragon","source":"Pseudodragon","preferred":"伪龙","scope":"monster"},
+  {"id":"monster.satyr","source":"Satyr","preferred":"半羊人","scope":"monster"},
+  {"id":"monster.sprite","source":"Sprite","preferred":"小仙灵","scope":"monster"},
   {"id":"monster.goblin","source":"Goblin","preferred":"哥布林","scope":"monster","aliases":["地精"]},
   {"id":"monster.bugbear","source":"Bugbear","preferred":"熊地精","scope":"monster"},
   {"id":"monster.hobgoblin","source":"Hobgoblin","preferred":"大地精","scope":"monster"},
