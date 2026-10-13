@@ -3800,6 +3800,11 @@
       "sourceHash": "3a3cd37c2bdb343a286e176e4ff5262d12404d0d3435e225d290af70f674c6f2"
     },
     {
+      "id": "spirit-naga",
+      "kind": "monster",
+      "sourceHash": "0aee86ff874b6215546be858445854fe144ecb437163f75336204cbe42862e73"
+    },
+    {
       "id": "sprite",
       "kind": "monster",
       "sourceHash": "9c9979cc0de1b3925a7805bfc12431a940d049c3762b6cff85f476412ef293f9"
