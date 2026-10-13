@@ -1,3 +1,4 @@
+// Roll names here come from the built-in AUTHORED_TABLE entries, not player prose.
 import { checkRoll, specialRoll } from "@/lib/roll-labels";
 // What an authored spend does once it is paid for (src/lib/dm/authored-spends.ts
 // has checked the gate, the pool and the turn). Each resolver refuses before
@@ -171,7 +172,7 @@ export function resolveSpendEffect(ctx: SpendContext, does: SpendDoes): Resoluti
     case "buff": {
       const condition = conditionName(ctx, does);
       const lines: string[] = [];
-      const tempHp = does.tempHp ? Math.max(0, Number(rollCard(ctx.campaign, ctx.turn, sheet.id, "custom", specialRoll(`${ctx.spend.name}: temporary hit points`, { kind: "temporary-hp", name: ctx.spend.name, literalName: true }), formula(ctx, does.tempHp), null).total)) : 0;
+      const tempHp = does.tempHp ? Math.max(0, Number(rollCard(ctx.campaign, ctx.turn, sheet.id, "custom", specialRoll(`${ctx.spend.name}: temporary hit points`, { kind: "temporary-hp", name: ctx.spend.name }), formula(ctx, does.tempHp), null).total)) : 0;
       if (does.target === "enemy") {
         const enemy = targetEnemy(ctx);
         if ("error" in enemy) {
@@ -238,7 +239,7 @@ export function resolveSpendEffect(ctx: SpendContext, does: SpendDoes): Resoluti
       const dc = saveDc(ctx, does.dcAbility);
       const save = rollEnemySave(campaign.id, enemy, does.save, dc, {
         resist: Boolean(does.condition) && bindsWorthResisting([does.condition ?? ""]),
-        record: { turn: ctx.turn ?? undefined, ...saveRoll(`${enemy.displayName}: ${does.save.toUpperCase()} save against ${ctx.spend.name}`, does.save, { kind: "save-against", name: ctx.spend.name, literalName: true }, { name: enemy.displayName, kind: "enemy" }) },
+        record: { turn: ctx.turn ?? undefined, ...saveRoll(`${enemy.displayName}: ${does.save.toUpperCase()} save against ${ctx.spend.name}`, does.save, { kind: "save-against", name: ctx.spend.name }, { name: enemy.displayName, kind: "enemy" }) },
       });
       const result: Record<string, unknown> = { target: enemy.displayName, save: save.total, dc, saved: save.success };
       const dice = does.perUnit ? addUnits(does.perUnit, does.perUnit, ctx.units - 1) : does.dice ? formula(ctx, does.dice) : null;
@@ -260,7 +261,7 @@ export function resolveSpendEffect(ctx: SpendContext, does: SpendDoes): Resoluti
     case "reroll_save":
       return rerollLastSave(ctx);
     case "temp_hp": {
-      const amount = Math.max(1, Number(rollCard(ctx.campaign, ctx.turn, sheet.id, "custom", specialRoll(`${ctx.spend.name}: temporary hit points`, { kind: "temporary-hp", name: ctx.spend.name, literalName: true }), formula(ctx, does.formula), null).total));
+      const amount = Math.max(1, Number(rollCard(ctx.campaign, ctx.turn, sheet.id, "custom", specialRoll(`${ctx.spend.name}: temporary hit points`, { kind: "temporary-hp", name: ctx.spend.name }), formula(ctx, does.formula), null).total));
       if (!does.allies) {
         return {
           patch: amount > sheet.tempHp ? { tempHp: amount } : {},
@@ -335,7 +336,7 @@ export function resolveSpendEffect(ctx: SpendContext, does: SpendDoes): Resoluti
     case "flames": {
       const wanted = lower(ctx.args.variant);
       if (/heal/.test(wanted)) {
-        const rolled = rollCard(ctx.campaign, ctx.turn, sheet.id, "custom", specialRoll(`${ctx.spend.name}: healing`, { kind: "healing", name: ctx.spend.name, literalName: true }), formula(ctx, does.formula), null).total;
+        const rolled = rollCard(ctx.campaign, ctx.turn, sheet.id, "custom", specialRoll(`${ctx.spend.name}: healing`, { kind: "healing", name: ctx.spend.name }), formula(ctx, does.formula), null).total;
         const ally = ctx.args.targetCharacterId ? getSheetById(ctx.args.targetCharacterId) : sheet;
         if (!ally || ally.deathSaves?.dead) {
           return { error: `${ctx.spend.name} heals a living creature at the table: pass targetCharacterId. Nothing was spent.` };
@@ -401,7 +402,7 @@ function burst(ctx: SpendContext, spec: NonNullable<Extract<SpendDoes, { kind: "
   for (const enemy of enemies) {
     const save = rollEnemySave(ctx.campaign.id, enemy, spec.save, dc, {
       resist: Boolean(spec.condition) && bindsWorthResisting([spec.condition ?? ""]),
-      record: { turn: ctx.turn ?? undefined, ...saveRoll(`${enemy.displayName}: ${spec.save.toUpperCase()} save against ${ctx.spend.name}`, spec.save, { kind: "save-against", name: ctx.spend.name, literalName: true }, { name: enemy.displayName, kind: "enemy" }) },
+      record: { turn: ctx.turn ?? undefined, ...saveRoll(`${enemy.displayName}: ${spec.save.toUpperCase()} save against ${ctx.spend.name}`, spec.save, { kind: "save-against", name: ctx.spend.name }, { name: enemy.displayName, kind: "enemy" }) },
     });
     if (save.success) {
       lines.push(`${enemy.displayName} resists (${spec.save.toUpperCase()} ${save.total} vs DC ${dc}).`);

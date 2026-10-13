@@ -33,6 +33,8 @@ import { combatKit, d20Faces, TRAINED } from "./lib/enforce-combat.mjs";
 const { test, finish } = suite("test-enforce-authored");
 const world = await openWorld({ campaign: { maxPlayers: 80 } });
 const kit = await combatKit(world);
+await import("../src/lib/i18n/messages.ts");
+const { rollPresentationLabel } = await import("../src/lib/i18n/roll-presentations.ts");
 
 const hero = (overrides) =>
   world.addHero({ maxHp: 60, proficiencies: TRAINED, portrait: { url: "/uploads/test.png" }, ...overrides });
@@ -481,6 +483,13 @@ await test("Spirit Shield: a raging Ancestral Guardian's reaction takes 2d6 off 
   world.clearDice();
   assert.equal(out.ok, true, out.error);
   assert.equal(hp(friend), 58);
+  const roll = rollOn("custom", warden.id, "Spirit Shield");
+  assert.ok(roll);
+  assert.equal(roll.total, 6);
+  assert.equal(roll.detail, `${warden.name}: Spirit Shield`);
+  assert.equal(rollPresentationLabel(roll.presentation, "en"), "Spirit Shield");
+  assert.match(rollPresentationLabel(roll.presentation, "zh-CN"), /[\u3400-\u9fff]/);
+  assert.ok(!rollPresentationLabel(roll.presentation, "zh-CN").includes("Spirit Shield"));
 });
 
 await test("Song of Defense: while bladesinging, a spell slot takes five times its level off the damage.", async () => {

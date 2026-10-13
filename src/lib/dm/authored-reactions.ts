@@ -1,3 +1,4 @@
+// Roll names here come from the built-in AUTHORED_TABLE entries, not player prose.
 import { specialRoll } from "@/lib/roll-labels";
 // use_reaction on an authored subclass feature (src/lib/srd/authored-effects-data*.ts,
 // `reactions`), resolved by the engine the way Uncanny Dodge and Cutting Words
@@ -223,7 +224,7 @@ function resolve(ctx: Ctx, found: Found): Record<string, unknown> | { error: str
         reduction = 5 * (ctx.args.level ?? 1);
       } else {
         const expression = does.amount === "psionic_int" ? `${psionicDie(held.level)}+${modsOf(holder).int}` : resolveFormula(does.amount, held.level, modsOf(holder));
-        reduction = Math.max(0, rollCard(ctx.campaign, ctx.turn, holder.id, "custom", specialRoll(`${holder.name}: ${reaction.name}`, { kind: "named", name: reaction.name, literalName: true }, { name: holder.name, kind: "proper" }), expression, null).total);
+        reduction = Math.max(0, rollCard(ctx.campaign, ctx.turn, holder.id, "custom", specialRoll(`${holder.name}: ${reaction.name}`, { kind: "named", name: reaction.name }, { name: holder.name, kind: "proper" }), expression, null).total);
         rolled = `${expression}: ${reduction}`;
       }
       const corrected = hit.record.swings.map((entry, at) => (at === hit.index ? { ...entry, raw: Math.max(0, entry.raw - reduction) } : entry));
@@ -239,7 +240,7 @@ function resolve(ctx: Ctx, found: Found): Record<string, unknown> | { error: str
           return { error: `${ctx.sheet.name} holds no Bardic Inspiration die to add to their AC. Nothing was spent.` };
         }
         const die = /\((d\d+)\)/i.exec(spentDie)![1];
-        bonus = rollCard(ctx.campaign, ctx.turn, ctx.sheet.id, "custom", specialRoll(`${ctx.sheet.name}: ${reaction.name}`, { kind: "named", name: reaction.name, literalName: true }, { name: ctx.sheet.name, kind: "proper" }), `1${die}`, null).total;
+        bonus = rollCard(ctx.campaign, ctx.turn, ctx.sheet.id, "custom", specialRoll(`${ctx.sheet.name}: ${reaction.name}`, { kind: "named", name: reaction.name }, { name: ctx.sheet.name, kind: "proper" }), `1${die}`, null).total;
       } else {
         bonus = does.amount;
       }
@@ -338,7 +339,7 @@ function resolve(ctx: Ctx, found: Found): Record<string, unknown> | { error: str
         const dc = saveDc(holder, does.save.dcAbility);
         const save = rollEnemySave(ctx.campaign.id, enemy, does.save.ability, dc, {
           magical: true,
-          record: { turn: ctx.turn, ...saveRoll(`${enemy.displayName}: ${does.save.ability.toUpperCase()} save against ${reaction.name}`, does.save.ability, { kind: "save-against", name: reaction.name, literalName: true }, { name: enemy.displayName, kind: "enemy" }) },
+          record: { turn: ctx.turn, ...saveRoll(`${enemy.displayName}: ${does.save.ability.toUpperCase()} save against ${reaction.name}`, does.save.ability, { kind: "save-against", name: reaction.name }, { name: enemy.displayName, kind: "enemy" }) },
         });
         out.save = `${save.total ?? "failed"} vs DC ${dc}`;
         if (save.success && !does.save.damageRegardless) {
@@ -395,7 +396,7 @@ function resolve(ctx: Ctx, found: Found): Record<string, unknown> | { error: str
       const save = rollEnemySave(ctx.campaign.id, enemy, does.save, dc, {
         magical: true,
         resist: bindsWorthResisting([condition]),
-        record: { turn: ctx.turn, ...saveRoll(`${enemy.displayName}: ${does.save.toUpperCase()} save against ${reaction.name}`, does.save, { kind: "save-against", name: reaction.name, literalName: true }, { name: enemy.displayName, kind: "enemy" }) },
+        record: { turn: ctx.turn, ...saveRoll(`${enemy.displayName}: ${does.save.toUpperCase()} save against ${reaction.name}`, does.save, { kind: "save-against", name: reaction.name }, { name: enemy.displayName, kind: "enemy" }) },
       });
       if (save.success) {
         return { applied: `${enemy.displayName} resists (${does.save.toUpperCase()} ${save.total} vs DC ${dc}).` };
@@ -415,7 +416,7 @@ function resolve(ctx: Ctx, found: Found): Record<string, unknown> | { error: str
       const target = allyOf(ctx) ?? ctx.sheet;
       const hit = lastHitOn(ctx, target, label);
       if ("error" in hit) return hit;
-      const die = rollCard(ctx.campaign, ctx.turn, ctx.sheet.id, "custom", specialRoll(`${ctx.sheet.name}: ${reaction.name}`, { kind: "named", name: reaction.name, literalName: true }, { name: ctx.sheet.name, kind: "proper" }), does.die, null).total;
+      const die = rollCard(ctx.campaign, ctx.turn, ctx.sheet.id, "custom", specialRoll(`${ctx.sheet.name}: ${reaction.name}`, { kind: "named", name: reaction.name }, { name: ctx.sheet.name, kind: "proper" }), does.die, null).total;
       const swing = hit.record.swings[hit.index];
       if (swing.natural === 20 || swing.total - die >= swing.vsAc) {
         return { rolled: die, applied: `The attack falls to ${swing.total - die} and still hits AC ${swing.vsAc}.` };

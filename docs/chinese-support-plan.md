@@ -216,6 +216,15 @@ this section records current delivery state and acceptance gaps only.
   confirms viewer/campaign language separation, canonical intents and target
   IDs, authored fallback, notice projection and IME guards. Logs:
   /tmp/odm-final-test-hand-locales.log and corresponding five group logs.
+- Native roll producer follow-up: traced canonical AUTHORED_TABLE provenance
+  through heldAuthored/spend/reaction lookups; removed literal-name suppression
+  from reaction, spend, swarm/reroll and turn-healing captions. Original English
+  details, proper actor names and mechanics remain unchanged. Actual Spirit
+  Shield asserts a 2d6 total of 6, HP refund and bilingual names. Regression:
+  authored engine 36, final engine 27, rolls 8, special 13, saves 10 and
+  initiative/social 16 pass. Prior formatter fingerprint drift was reviewed
+  against 388eb5fd/01be85f2 with old hashes retained. Logs: /tmp/odm-native-*.log.
+  RollCard remains pending until remaining producer review is complete.
 - UI source coverage: 435/438 in-scope owners, two explicitly deferred voice
   owners, zero pending literal sites, 19325 keys. Three text owners still
   require review; the final coverage gate must continue to fail until closed.

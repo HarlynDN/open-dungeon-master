@@ -1,3 +1,4 @@
+// Roll names here come from the built-in AUTHORED_TABLE entries, not player prose.
 import { specialRoll } from "@/lib/roll-labels";
 // The authored subclass features that act as a turn starts or ends and as
 // a rest ends (src/lib/srd/authored-effects.ts): Elder Champion's 10 hit
@@ -85,7 +86,7 @@ export function authoredTurnStart(campaign: Campaign, encounter: Encounter, comb
         if (effect.when !== "start") {
           continue;
         }
-        const amount = rollCard(campaign, null, sheet.id, "custom", specialRoll(`${held.feature}: hit points regained`, { kind: "healing", name: held.feature, literalName: true }), resolveFormula(effect.formula, held.level, modsOf(sheet)), null).total;
+        const amount = rollCard(campaign, null, sheet.id, "custom", specialRoll(`${held.feature}: hit points regained`, { kind: "healing", name: held.feature }), resolveFormula(effect.formula, held.level, modsOf(sheet)), null).total;
         const given = heal(campaign, getSheetById(id) ?? sheet, amount);
         if (given > 0) {
           lines.push(`${held.feature}: ${sheet.name} regains ${given} hit points.`);
@@ -138,7 +139,7 @@ export function authoredTurnEnd(campaign: Campaign, combatantIds: string[]): str
       if (effect.belowHalf && now.currentHp >= Math.ceil(effectiveMaxHp(now) / 2)) {
         continue;
       }
-      const amount = rollCard(campaign, null, now.id, "custom", specialRoll(`${held.feature}: hit points regained`, { kind: "healing", name: held.feature, literalName: true }), resolveFormula(effect.formula, held.level, modsOf(now)), null).total;
+      const amount = rollCard(campaign, null, now.id, "custom", specialRoll(`${held.feature}: hit points regained`, { kind: "healing", name: held.feature }), resolveFormula(effect.formula, held.level, modsOf(now)), null).total;
       const given = heal(campaign, now, amount);
       if (given > 0) {
         lines.push(`${held.feature}: ${now.name} regains ${given} hit points.`);
