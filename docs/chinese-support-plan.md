@@ -149,7 +149,16 @@ this section records current delivery state and acceptance gaps only.
   The two source-review hashes retain previous values and base commit; frozen
   English goldens remain untouched. Installed-catalog browser acceptance remains
   separate from component coverage.
-- UI source coverage: 420/440 owners, zero pending literal sites, 19323 keys.
+- Grouped hand review: AimBar, CardFace, MoreSheet and ReactPrompt source
+  reviews are closed, including dynamic facts, refusals, actor context and
+  unchanged canonical callbacks. Existing hand/actor regressions pass (10 action
+  refusals, 17 casting refusals and 22 form attacks). Added actual bilingual
+  trigger-input tests for composition/229 Enter, blocked/sending/empty-trigger
+  gates; all pass. SidePanelRouter review confirms its nine subtab labels use
+  SessionTabs localization and campaign locale reaches the relevant panels.
+  These are component/source checks, not deployed combat acceptance.
+  Logs: /tmp/odm-hand-owner-locales.log and /tmp/odm-hand-owner-actors.log.
+- UI source coverage: 425/440 owners, zero pending literal sites, 19323 keys.
   Completed pure-helper/consumer reviews are recorded in
   docs/validation/ui-localization.json. Whole-owner dynamic output and browser
   acceptance remain distinct; stale theme counts were corrected to 733/733.

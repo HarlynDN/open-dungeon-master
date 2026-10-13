@@ -430,18 +430,18 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandAimBar.tsx",
-      "state": "pending",
-      "review": "Owned aim/area/target/send/rider controls, previews, health notes, attack option/refusal rules and core spell/technique selectors reviewed; callbacks preserve native IDs/values including Telekinetic Adept thrust/leap. All 103 active technique and 23 maneuver names localize. Remaining dynamic and material/ritual refusal text stays pending. Current table-flow batch: Reviewed native option/choice/area/trigger/rider/target compositions and confirm/edit callbacks. Existing adapters localize display only, option values and target IDs remain native, sentence follows campaign locale, IME guard preserves trigger composition. Remaining known material/native-output gaps above still prevent full-owner completion."
+      "state": "covered",
+      "review": "Whole-owner review: localized target/area/options/choice/rider/preview and blocked/send controls; known rules/facts use source-aware adapters, authored sentence/trigger remain literal. Canonical choice/target/option callbacks are preserved. Actual component regression verifies composition and Safari 229 Enter never commit, plus sending/blocked/empty-trigger gates in both locales. Parent sentence production and deployed combat acceptance remain separate."
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandCardFace.tsx",
-      "state": "pending",
-      "review": "Owned labels, native facts/previews/rules, 113 spell notes, 103 active technique and 23 maneuver names, 95 material descriptions and common casting/attack/bonus/pool/material/ritual refusals reviewed. Form rule text and all 22 built-in form attacks localize using verified provenance, shared with campaign action sentences; authored weapons/forms and stale metadata retain their names. Current-turn refusals use public identity context. Remaining dynamic names keep this pending. Native parameters/examples remain untouched. Current table-flow batch: Reviewed fan, played card, hover and accessible labels. Name/type/cost/material and preview facts project through existing adapters; native card identity, callbacks and preview numbers are preserved. Remaining known material/native-output gaps above still prevent full-owner completion."
+      "state": "covered",
+      "review": "Whole-owner review: card type/cost, name, range/dice/roll/rules/resource/condition, aria disabled reason, played card and preview rows use locale adapters. Target and turn names use supplied encounter identity; raw keys/icons/intent and callbacks remain canonical. Hand locale and 22 form-attack/actor regressions pass, preserving English fields, hidden identities and custom names."
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandMoreSheet.tsx",
-      "state": "pending",
-      "review": "Owned labels, previews/rules/spell notes, active technique/maneuver names and common casting/attack/bonus/pool/material/ritual refusals reviewed. Canonical inventory examples and authored content stay literal. Built-in form attacks and verified current-actor waiting notes/refusals reviewed with canonical attack parameters preserved. Remaining dynamic labels keep this pending. Current table-flow batch: Reviewed overflow-card workflow: localized material, costs, target previews and whole native waiting/refusal frames; selection callbacks retain source cards. No independent snapshot cycle for unchanged captions. Remaining known material/native-output gaps above still prevent full-owner completion."
+      "state": "covered",
+      "review": "Whole-owner review: sheet title, waiting explanation, card names/types/costs/facts/rules/resources/conditions, preview and refusal all use localized consumers. Numeric preview and canonical card object callbacks retained; hidden/current-actor context is forwarded. Hand locale/actor regression passes; rendered source review does not assert live combat completion."
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandPips.tsx",
@@ -450,8 +450,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandReactPrompt.tsx",
-      "state": "pending",
-      "review": "Owned reaction strip, current-record prompts, active technique names, counters/rules and common casting/material refusals reviewed; callbacks and canonical examples preserved. Remaining current-attacker/action display names keep this pending. Current table-flow batch: Reviewed reaction chips and typed last-hit context passed by Hand. Prompt names use explicit viewer/party/enemy roles; translated labels/material are separate from selected source card and reaction intent. Remaining known material/native-output gaps above still prevent full-owner completion. Survival-log batch: typed current-hit prompts now reuse rollActionLabel for native natural attacks and opportunity suffixes, retaining the prior mechanic fallback and original English/card values. Broader native feature/reaction material remains pending; this does not certify all reaction options."
+      "state": "covered",
+      "review": "Whole-owner review: group label, prompt, card names/resources and disabled/rules tooltips are localized through source-aware card/attack context. Reaction IDs and card callback objects unchanged. Regression verifies recorded/stale/unidentified attack context, original English prompt and real callback; no generated history is retranslated."
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandSpells.tsx",
@@ -820,7 +820,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/SidePanelRouter.tsx",
-      "state": "pending"
+      "state": "covered",
+      "review": "Whole-owner routing review: nine canonical subtab tuples are projected by SessionTabs.sessionSubTabLabel; no other owned natural-language display. Delegated panels retain separate reviews. Campaign locale is forwarded to PartyPanel and LorePanel; historical DM messages/speakers/cast and logs pass through unchanged. Existing permission guards and canonical tab selections remain intact; no runtime/model acceptance inferred."
     },
     {
       "path": "src/app/campaigns/[campaignId]/SkillCheckCard.tsx",

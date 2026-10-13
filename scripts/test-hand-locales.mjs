@@ -128,3 +128,20 @@ renderer.elements().find(e=>e.type==='button').props.onClick();assert.equal(pick
 const html=renderer.render('HandCardFace',fixtures[0][1],'zh-CN');assert(!html.includes('slashing'));assert(html.includes('英尺'));
 console.log('PASS: native hand facts/preview numbers, '+refused+' action and '+castRefusals+' casting refusals, English card fields, native spell selectors and canonical choice/reaction callbacks.');
 
+
+// Exercise the actual trigger input: an IME confirmation must not spend a turn.
+for(const locale of ['en','zh-CN']){
+ let committed=0;
+ const props={...fixtures[1][1],trigger:'敌人靠近时',onTrigger:()=>{},onCommit:()=>committed++};
+ renderer.render('HandAimBar',props,locale);
+ const input=renderer.elements().find(e=>e.type==='input'&&e.props.onKeyDown);assert(input);
+ for(const event of [{key:'Enter',nativeEvent:{isComposing:true}},{key:'Enter',nativeEvent:{keyCode:229}}])input.props.onKeyDown({...event,preventDefault:()=>{throw new Error('IME must not be intercepted');}});
+ assert.equal(committed,0);
+ input.props.onKeyDown({key:'Enter',nativeEvent:{isComposing:false},preventDefault:()=>{}});assert.equal(committed,1);
+ for(const override of [{sending:true},{blocked:'Authored hold'},{trigger:''}]){
+  renderer.render('HandAimBar',{...props,...override},locale);
+  renderer.elements().find(e=>e.type==='input'&&e.props.onKeyDown).props.onKeyDown({key:'Enter',nativeEvent:{isComposing:false},preventDefault:()=>{}});
+  assert.equal(committed,1);
+ }
+}
+console.log('PASS: actual bilingual aim trigger ignores composition/229 Enter and prevents blocked, sending or empty-trigger commits.');
