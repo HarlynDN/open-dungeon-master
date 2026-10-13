@@ -55,14 +55,16 @@ for (const id of ['bag-of-tricks', 'deck-of-many-things', 'figurine-of-wondrous-
   const data = rulebookPage(id);
   const display = rulebookPageDisplay(data.page, 'zh-CN');
   const html = renderer.render('RulebookPage', { data: { ...data, display }, terms: [], xrefs, onOpen: () => {} }, 'zh-CN');
-  assert.ok(html.includes(display.title), id);
+  assert.ok(html.replace(/<[^>]+>/g, '').includes(display.title), id);
 }
 for (const page of rulebookPages().filter(page => page.kind === 'spell' && /(?:cantrip|[12]\w*-level)/.test(page.meta))) {
   assert.ok(LOCALIZED_SPELL_PAGES.some(row => row.id === page.id), 'Missing complete low-level book page: ' + page.id);
 }
 
 const { bookAnchorIds, parseBook, preserveBookAnchors } = await import('../src/lib/rulebook/markdown.ts');
-const nativeRules = ['conditions', 'inspiration', 'coinage', 'selling-treasure'];
+const { default: nativeCatalog } = await import('../src/lib/rulebook/locales/zh-CN.json', { with: { type: 'json' } });
+const nativeRules = Object.keys(nativeCatalog);
+for (const id of ['conditions', 'inspiration', 'coinage', 'selling-treasure', 'racial-traits', 'beyond-1st-level', 'alignment', 'languages', 'trade-goods', 'feats']) assert.ok(nativeRules.includes(id), id);
 for (const id of nativeRules) {
   const data = rulebookPage(id);
   const before = JSON.stringify(data);
@@ -72,7 +74,7 @@ for (const id of nativeRules) {
   assert.ok(blocks);
   assert.deepEqual(bookAnchorIds(blocks), bookAnchorIds(parseBook(data.page.md)));
   const html = renderer.render('RulebookPage', { data: { ...data, display }, terms: [], at: id === 'conditions' ? 'exhaustion' : undefined, xrefs, onOpen: () => {} }, 'zh-CN');
-  assert.ok(html.includes(display.title), id);
+  assert.ok(html.replace(/<[^>]+>/g, '').includes(display.title), id);
   for (const anchor of display.anchors) assert.ok(html.includes('data-anchor="' + anchor + '"'), id + ': ' + anchor);
   const sourceTables = parseBook(data.page.md).filter(block => block.kind === 'table');
   const translatedTables = blocks.filter(block => block.kind === 'table');
@@ -93,4 +95,4 @@ assert.match(conditions.md, /从死亡中复活也会使生物的力竭等级降
 
 const untouched = rulebookPages().find(page => page.kind === 'spell' && !LOCALIZED_SPELL_PAGES.some(row => row.id === page.id));
 assert.equal(rulebookPageDisplay(untouched, 'zh-CN').md, untouched.md);
-console.log(`Rulebook: ${LOCALIZED_SPELL_PAGES.length} complete Chinese spell pages and ${items.length} full item pages and 4 full rules pages; bilingual rendering, source/canonical preservation and translated cross-reference passed.`);
+console.log(`Rulebook: ${LOCALIZED_SPELL_PAGES.length} complete Chinese spell pages and ${items.length} full item pages and ${nativeRules.length} full rules pages; bilingual rendering, source/canonical preservation and translated cross-reference passed.`);
