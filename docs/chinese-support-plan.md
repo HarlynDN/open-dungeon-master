@@ -183,8 +183,15 @@ this section records current delivery state and acceptance gaps only.
   missing, external and homebrew provenance keeps the original source. Added
   bilingual regressions retain frozen English output; source-review hash records
   the previous version and base commit. No item rules or stored history changed.
+- Roll caption follow-up: native feature/option names and exact engine reaction
+  repeat/disadvantage frames now project through reviewed name catalogs. Unknown
+  authored frames stay original; ambiguous bare option names are not guessed.
+  Roll regression passes with all 25 frozen English cards unchanged. Initial
+  failed evidence remains in /tmp/odm-roll-action-review.log; successful retry
+  is /tmp/odm-roll-action-review-retry.log. RollCard stays pending until paired
+  damage and the remaining producer audit are complete.
 - UI source coverage: 434/438 in-scope owners, two explicitly deferred voice
-  owners, zero pending literal sites, 19323 keys. Four text owners still
+  owners, zero pending literal sites, 19325 keys. Four text owners still
   require review; the final coverage gate must continue to fail until closed.
   Completed pure-helper/consumer reviews are recorded in
   docs/validation/ui-localization.json. Whole-owner dynamic output and browser

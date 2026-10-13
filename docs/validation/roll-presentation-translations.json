@@ -13,7 +13,7 @@
     "src/lib/dm/condition-logic.ts": "cd14ca107d7c4acdb34b0105c5eaf45556a0713158cdf7c602e5720997a16771"
   },
   "catalogSha256": {
-    "src/lib/i18n/roll-presentation-messages.ts": "575cd6ae9702ff7627c2fcc40d8b10f64a801d6c45960da4ca7b78571a2960f6"
+    "src/lib/i18n/roll-presentation-messages.ts": "1e16a7c29fa63d3c6cb1e39287f27b50d82fc2c73f4f9c38895a4b51cf0dbc22"
   },
   "contextReview": "Red/green/blue are colors in this namespace, distinct from dragon ancestry names. Unseen actor stays 未现身者, without assuming it is a spellcaster. Spell/equipment and damage terminology reuse the existing catalogs; dice, signs, feet, AC and proper names remain intact.",
   "englishGolden": {
@@ -39,5 +39,13 @@
       }
     },
     "review": "Compared full diffs against Git versions reproducing each prior hash. Changes add native source-bound feature/option/background/archetype display, homebrew name guards, opt-in spell/monster help sections, and a shared English free-cast label helper. Death messages now persist typed campaign-locale events while model-facing notes and engine outcomes remain English/unchanged; condition tick avoids duplicating the wake message. Original frozen output files are unchanged. Larger feat-choice/level-up diffs and glossary history remain separately open; this source review does not claim final acceptance."
+  },
+  "reactionFrameReview": {
+    "date": "2026-10-14",
+    "baseCommit": "b6926e0543f1b5f902f1f845e63c90adbca2deb6",
+    "previousSha256": {
+      "src/lib/i18n/roll-presentation-messages.ts": "575cd6ae9702ff7627c2fcc40d8b10f64a801d6c45960da4ca7b78571a2960f6"
+    },
+    "review": "Added two display-only exact engine frames for repeated attacks and disadvantage rerolls. Native feature/option names reuse source-reviewed name catalogs; ambiguous option names and unknown authored frames remain original. English formatter, roll persistence, dice and engine outcomes unchanged; original 25 English goldens retained."
   }
 }

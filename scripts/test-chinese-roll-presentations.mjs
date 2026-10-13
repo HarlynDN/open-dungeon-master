@@ -44,6 +44,12 @@ await test('25 original English roll-card renders remain exact; Chinese captions
  assert.match(localizedRollCardLabel(old,'Aria','zh-CN'),/Goblin/);assert.doesNotMatch(localizedRollCardLabel(old,'Aria','zh-CN'),/哥布林/);
 });
 await test('stock death modifiers and hazard frames preserve mechanics, while unknown note prose stays literal',()=>{
+ for(const name of ["Order's Wrath",'Bite again (Stand Against the Tide)','Bite (Stand Against the Tide)','Longsword again, at disadvantage (Protection)']) {
+  assert.equal(rollActionLabel(name,'en'),name);
+  assert.doesNotMatch(rollActionLabel(name,'zh-CN'),/[A-Za-z]{3,}/,name);
+ }
+ assert.match(rollActionLabel('Authored strike again, at disadvantage (Protection)','zh-CN'),/Authored strike/);
+ for(const name of ['Authored strike','Authored strike again (Authored reaction)','Authored strike (Authored reaction)']) assert.equal(rollActionLabel(name,'zh-CN'),name);
  assert.match(html('death/notes'),/力竭 3 级.*豁免具有劣势/);
  assert.match(html('death/notes'),/祝福.*\+1d4/);assert.match(html('death/notes'),/灾祸.*-1d4/);
  assert.match(html('death/notes'),/Goblin的灵光.*10 英尺.*\+3/);

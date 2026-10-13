@@ -1,6 +1,8 @@
 import { defineMessages } from "./catalog.ts";
 
 export const ROLL_PRESENTATION_MESSAGES = /*#__PURE__*/ defineMessages({
+  "combatRoll.repeat": { en: "{attack} again ({reaction})", "zh-CN": "再次进行{attack}（{reaction}）" },
+  "combatRoll.repeatDisadvantage": { en: "{attack} again, at disadvantage ({reaction})", "zh-CN": "以劣势重新进行{attack}（{reaction}）" },
   "combatRoll.area": { en: "{what} on {targets}", "zh-CN": "{what}，目标：{targets}" },
   "combatRoll.areaEffect": { en: "area effect", "zh-CN": "范围效果" },
   "combatRoll.list": { en: ", ", "zh-CN": "、" },

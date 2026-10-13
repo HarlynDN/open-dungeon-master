@@ -2,13 +2,32 @@ import type { AppLocale } from "./locales.ts";
 import { catalogFor, createTranslator, type MessageKey } from "./translator.ts";
 import { referenceDisplayName } from "./references.ts";
 import { CONDITION_MATERIAL_INDEX } from "./condition-material-index.ts";
+import { nativeFeatureName } from "./feature-material-presentations.ts";
+import { builderTermLabel } from "./builder-name-presentations.ts";
+import { CLASS_OPTION_MATERIAL } from "./class-option-metadata.ts";
 import { parseRollPresentation, type RollPresentation } from "../roll-presentation.ts";
 
 // Translate catalog terms and recognized engine frames; names and arbitrary
 // prose never pass through substring replacement or comma-based splitting.
+function rollFeatureName(name: string, locale: AppLocale): string {
+  const native = nativeFeatureName(name, locale);
+  if (native !== name) return native;
+  // Engine reactions use bare option names, while saved features carry their
+  // category prefix. Only an unambiguous exact catalog name is projected here.
+  const labels = new Set(CLASS_OPTION_MATERIAL.filter(row => row.name === name)
+    .map(row => createTranslator(locale)(row.nameKey)));
+  return labels.size === 1 ? [...labels][0] : name;
+}
 export function rollActionLabel(what: string, locale: AppLocale): string {
   if (locale === "en") return what;
   const t = createTranslator(locale);
+  const repeat = /^(.*) again(, at disadvantage)? \(([^()]*)\)$/.exec(what);
+  if (repeat) {
+    const reaction = builderTermLabel("fightingStyle", rollFeatureName(repeat[3], locale), locale);
+    if (reaction !== repeat[3]) return t(repeat[2] ? "combatRoll.repeatDisadvantage" : "combatRoll.repeat", {
+      attack: rollActionLabel(repeat[1], locale), reaction,
+    });
+  }
   const suffix = /^(.*) \((opportunity attack|half on a miss|second burn|CRIT)\)$/.exec(what);
   if (suffix) {
     const keys = { "opportunity attack": "opportunity", "half on a miss": "halfMiss", "second burn": "secondBurn", CRIT: "crit" };
@@ -32,10 +51,12 @@ export function rollActionLabel(what: string, locale: AppLocale): string {
     const value = frame[2];
     const key = Object.keys(parameters).find(key => parameters[key as MessageKey] === value);
     if (key) return t("combatDetail.parameter", { name: rollActionLabel(frame[1], locale), value: t(key as MessageKey) });
+    const reaction = rollFeatureName(value, locale);
+    if (reaction !== value) return t("combatDetail.parameter", { name: rollActionLabel(frame[1], locale), value: reaction });
   }
   const source = catalogFor("en", "combatRoll.action.");
   const key = Object.keys(source).find(key => source[key as MessageKey]?.toLowerCase() === what.toLowerCase());
-  return key ? t(key as MessageKey) : referenceDisplayName("equipment", referenceDisplayName("spell", what, locale), locale);
+  return key ? t(key as MessageKey) : rollFeatureName(referenceDisplayName("equipment", referenceDisplayName("spell", what, locale), locale), locale);
 }
 
 function noteName(name: string, locale: AppLocale): string {
