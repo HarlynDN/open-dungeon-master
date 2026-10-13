@@ -3115,6 +3115,11 @@
       "sourceHash": "39013f9f4eb67987fc2c8ff0aea438b71d87c5d3faea17a43676d1b14dd0e4f4"
     },
     {
+      "id": "air-elemental",
+      "kind": "monster",
+      "sourceHash": "da251b0cafc44fa0614e61e48e1fa58389e5b151a16c2b6d2402f93a566c02a5"
+    },
+    {
       "id": "ancient-black-dragon-chromatic",
       "kind": "monster",
       "sourceHash": "2ecb8c590df25f9fa3189a1e5f34e77978ebde6c4226a1037b72924e699a44c8"
@@ -3263,6 +3268,11 @@
       "id": "ettin",
       "kind": "monster",
       "sourceHash": "9e67b23a6cf7790250fe3ec586ea8a99aab996ac8816bdb1247a5658514ae3c3"
+    },
+    {
+      "id": "fire-elemental",
+      "kind": "monster",
+      "sourceHash": "9837713ebc1376aa83fddc5ad6ebde5bad56130a854a44cf611f93135ab4871a"
     },
     {
       "id": "fire-giant-giant",
@@ -3568,6 +3578,11 @@
       "id": "warhorse-skeleton",
       "kind": "monster",
       "sourceHash": "5f07b93b4073cd7b0ba51fbe16878cb139f467c75904a1acec026799d49582d1"
+    },
+    {
+      "id": "water-elemental",
+      "kind": "monster",
+      "sourceHash": "06481260d7746530d66a7b4577cff52298a92cb2d3209b683318306525bb4568"
     },
     {
       "id": "white-dragon-wyrmling-chromatic",
