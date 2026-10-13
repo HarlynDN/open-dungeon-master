@@ -3170,6 +3170,11 @@
       "sourceHash": "132bb310cba20859b059d4c8af07d02155390924c59f4bc6206269e32eb62b38"
     },
     {
+      "id": "ankheg",
+      "kind": "monster",
+      "sourceHash": "5c7fc9be6ac85a0d346819712582b12903f0a675605a93b533f7d6e2e10ddcc5"
+    },
+    {
       "id": "basilisk",
       "kind": "monster",
       "sourceHash": "36825263a2de7d3a6a34a88443f439781009e7d470203383611bfceddbd8d9a3"
@@ -3198,6 +3203,11 @@
       "id": "bugbear",
       "kind": "monster",
       "sourceHash": "c353ba12f213282c41d71ebeda63278d85abeb448315943f611794f79c9fcd25"
+    },
+    {
+      "id": "bulette",
+      "kind": "monster",
+      "sourceHash": "480315ccff24b56f2c80786e2324c539a36213e42f7bd2c4fcd98cc378143a1d"
     },
     {
       "id": "chimera",
@@ -3290,6 +3300,11 @@
       "sourceHash": "c8275c424de830c9adea76ec0e716ec64900a1084fb1986cdf3cb86f15ac8179"
     },
     {
+      "id": "owlbear",
+      "kind": "monster",
+      "sourceHash": "87d37e3f6d4ac22759917964042a951c1dbb87004dee882ba28bec7b64f5d587"
+    },
+    {
       "id": "red-dragon-wyrmling-chromatic",
       "kind": "monster",
       "sourceHash": "2f4f619e1c26422f751739516a58d11f13d73bc12cf6d0e02b510df8f9f1abbc"
@@ -3298,6 +3313,11 @@
       "id": "rug-of-smothering-animated-object-animated-object",
       "kind": "monster",
       "sourceHash": "988a90102edcf163fea969c64b7f5c4a89784653f133cafc9062ecdc27275043"
+    },
+    {
+      "id": "rust-monster",
+      "kind": "monster",
+      "sourceHash": "1bf45421eab65332b16f4cc868549184cc4084b9d46a204e861baebeea048490"
     },
     {
       "id": "silver-dragon-wyrmling-metallic",
