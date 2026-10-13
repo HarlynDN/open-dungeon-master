@@ -53,6 +53,9 @@ export function rollActionLabel(what: string, locale: AppLocale): string {
     if (key) return t("combatDetail.parameter", { name: rollActionLabel(frame[1], locale), value: t(key as MessageKey) });
     const reaction = rollFeatureName(value, locale);
     if (reaction !== value) return t("combatDetail.parameter", { name: rollActionLabel(frame[1], locale), value: reaction });
+    const feature = rollFeatureName(frame[1], locale);
+    const spell = referenceDisplayName("spell", value, locale);
+    if (feature !== frame[1] && spell !== value) return t("combatDetail.parameter", { name: feature, value: spell });
   }
   const source = catalogFor("en", "combatRoll.action.");
   const key = Object.keys(source).find(key => source[key as MessageKey]?.toLowerCase() === what.toLowerCase());

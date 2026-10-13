@@ -24,7 +24,7 @@
     "src/components/sheet/SheetParts.tsx": "27b34f19c33d4b42f6a0cd5f42fa3b4a2567950ca24becb08cc209da8c5dbfce",
     "src/components/sheet/SheetState.tsx": "d664ff1c154de748ef0605e2dc44a05ae5b534b4c071070d6cc6a3da2621906b",
     "src/components/sheet/sheet-state.ts": "690e43d5e6276af98c09d23745bf8f78f048e995ea5eb4450cd69568b57bbf23",
-    "src/lib/i18n/roll-presentations.ts": "3999299af4647b88f15531dfeca1c5bae09350bbd2479b877eba0c8d7706d582",
+    "src/lib/i18n/roll-presentations.ts": "3052fed2e35a29c66676c24d1d0cfa8a4de3b2ab446870ee7e4a08bd3c00f101",
     "src/lib/i18n/sheet-play-messages.ts": "bb0d4fedc82ddce4fbd7bb8703182b085c97eb17532ac9251424cd01581056ff",
     "src/lib/i18n/sheet-play-presentations.ts": "ac25c60c3ae74bb3e66b46cf6b03e6d8210ee0190f98c029bedbca03b4016649",
     "src/lib/i18n/special-roll-messages.ts": "e189a82db30268fb8361bb726483fd530cb2e935c247f0c1b5f535c5c83c7a73",
@@ -105,5 +105,13 @@
       "sourceSha256": "2da4569d2861de7be61a703df37bccfa9d0317bd4c41d9f24b65df8c7a2a5833"
     },
     "review": "Only Combat Wild Shape Chinese display name changed from 战斗野性变形 to 战斗荒野形态. Git diff against bf87a494 confirms one line; reversing that one catalog value reproduces both prior semantic group hashes. English and mechanics unchanged."
+  },
+  "rollActionReview": {
+    "date": "2026-10-14",
+    "baseCommit": "388eb5fd25a02c7a2b430ce0a5f04f4a5206eb55",
+    "previousSha256": {
+      "src/lib/i18n/roll-presentations.ts": "3999299af4647b88f15531dfeca1c5bae09350bbd2479b877eba0c8d7706d582"
+    },
+    "review": "Reviewed formatter additions for exact native feature/option names, repeated reaction frames and recognized feature/spell pairs. Original English early return, special level-up presentation, numbers, source roll state and golden renders unchanged. Local Reaper and rolled-level route regressions verify mechanics and persistence. This refresh records source review rather than independent approval."
   }
 }

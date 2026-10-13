@@ -10,7 +10,8 @@
     "src/lib/dm/rolls.ts": "65de00926f0c77a90958ca16686d5c850aea5f1e5e833139eee8375ca4a06770",
     "src/lib/dm/aura.ts": "0545c1578e8455eff52d6a8499fbe60a1d3d07e3b17624202a693a27ddec61ab",
     "src/lib/srd/condition-effects.ts": "10ec0186225be52c36e64ead35454c160b3aca372955779c29487ecfac31a2ac",
-    "src/lib/dm/condition-logic.ts": "cd14ca107d7c4acdb34b0105c5eaf45556a0713158cdf7c602e5720997a16771"
+    "src/lib/dm/condition-logic.ts": "cd14ca107d7c4acdb34b0105c5eaf45556a0713158cdf7c602e5720997a16771",
+    "src/lib/dm/authored-reaper.ts": "83a50a04f5d8383a884a138ab212c355302dca287bfeb3657562112768f79e67"
   },
   "catalogSha256": {
     "src/lib/i18n/roll-presentation-messages.ts": "1e16a7c29fa63d3c6cb1e39287f27b50d82fc2c73f4f9c38895a4b51cf0dbc22"
@@ -47,5 +48,13 @@
       "src/lib/i18n/roll-presentation-messages.ts": "575cd6ae9702ff7627c2fcc40d8b10f64a801d6c45960da4ca7b78571a2960f6"
     },
     "review": "Added two display-only exact engine frames for repeated attacks and disadvantage rerolls. Native feature/option names reuse source-reviewed name catalogs; ambiguous option names and unknown authored frames remain original. English formatter, roll persistence, dice and engine outcomes unchanged; original 25 English goldens retained."
+  },
+  "pairedFeatureReview": {
+    "date": "2026-10-14",
+    "baseCommit": "388eb5fd25a02c7a2b430ce0a5f04f4a5206eb55",
+    "previousSha256": {
+      "src/lib/dm/authored-reaper.ts": "c7983ddee7895d371f16b0ef4861e8f2cd76f3af626d60d85bd50df1edc4cc81"
+    },
+    "review": "Reaper HP-cost roll adds named display metadata to its unchanged English detail. Exact native feature plus spell pairs project only when both names are recognized; unknown authored pairs remain unchanged. Existing real-engine test now asserts two targets share one slot, cost expression 2d8, total 6 and exact HP deduction, Chinese caption and original English formatter parity. This is local engine evidence, not deployed-model acceptance."
   }
 }

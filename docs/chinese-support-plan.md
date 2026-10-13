@@ -188,8 +188,11 @@ this section records current delivery state and acceptance gaps only.
   authored frames stay original; ambiguous bare option names are not guessed.
   Roll regression passes with all 25 frozen English cards unchanged. Initial
   failed evidence remains in /tmp/odm-roll-action-review.log; successful retry
-  is /tmp/odm-roll-action-review-retry.log. RollCard stays pending until paired
-  damage and the remaining producer audit are complete.
+  is /tmp/odm-roll-action-review-retry.log. Reaper paired feature/spell costs now carry display metadata: real-engine
+  regression confirms two targets share one slot, 2d8 costs 6 HP, and English
+  details remain unchanged. RollCard stays pending for the remaining producer
+  audit. Logs: /tmp/odm-paired-test-enforce-final-engine.log and
+  /tmp/odm-paired-test-chinese-roll-presentations.log.
 - UI source coverage: 434/438 in-scope owners, two explicitly deferred voice
   owners, zero pending literal sites, 19325 keys. Four text owners still
   require review; the final coverage gate must continue to fail until closed.

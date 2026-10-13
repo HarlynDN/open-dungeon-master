@@ -50,6 +50,9 @@ await test('stock death modifiers and hazard frames preserve mechanics, while un
  }
  assert.match(rollActionLabel('Authored strike again, at disadvantage (Protection)','zh-CN'),/Authored strike/);
  for(const name of ['Authored strike','Authored strike again (Authored reaction)','Authored strike (Authored reaction)']) assert.equal(rollActionLabel(name,'zh-CN'),name);
+ assert.doesNotMatch(rollActionLabel('Improved Reaper (Blindness/Deafness)','zh-CN'),/[A-Za-z]{3,}/);
+ assert.equal(rollActionLabel('Authored feature (Blindness/Deafness)','zh-CN'),'Authored feature (Blindness/Deafness)');
+ assert.equal(rollActionLabel('Improved Reaper (Authored spell)','zh-CN'),'Improved Reaper (Authored spell)');
  assert.match(html('death/notes'),/力竭 3 级.*豁免具有劣势/);
  assert.match(html('death/notes'),/祝福.*\+1d4/);assert.match(html('death/notes'),/灾祸.*-1d4/);
  assert.match(html('death/notes'),/Goblin的灵光.*10 英尺.*\+3/);

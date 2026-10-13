@@ -490,6 +490,16 @@ await test("Improved Reaper: a necromancy spell of 1st to 5th level that targets
   assert.ok(kit.enemy(second.id).conditions.includes("blinded"), "the second creature is struck too");
   assert.equal(world.sheet(reaper.id).spellcasting.slots["2"].used, slotsBefore + 1, "one slot for both");
   assert.ok(world.sheet(reaper.id).currentHp < hpBefore, "the cleric pays in hit points");
+  const cost = kit.lastRolls(20).find(row => row.detail === 'Improved Reaper (Blindness/Deafness)');
+  assert.ok(cost);
+  assert.equal(cost.expression, '2d8');
+  assert.equal(cost.total, 6);
+  assert.equal(world.sheet(reaper.id).currentHp, hpBefore - cost.total);
+  const {localizedRollCardLabel} = await import('../src/lib/i18n/combat-ui-presentations.ts');
+  const {rollCardLabel} = await import('../src/lib/roll-labels.ts');
+  assert.equal(localizedRollCardLabel(cost,reaper.name,'en'),rollCardLabel(cost,reaper.name));
+  assert.doesNotMatch(localizedRollCardLabel(cost,undefined,'zh-CN'),/Improved Reaper|Blindness/);
+  assert.match(localizedRollCardLabel(cost,undefined,'zh-CN'),/\p{Script=Han}/u);
 });
 
 const creation = hero({ class: "bard", subclass: "College of Creation", level: 3, abilities: { cha: 16 } });
