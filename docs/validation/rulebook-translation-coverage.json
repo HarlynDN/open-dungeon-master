@@ -3415,6 +3415,11 @@
       "sourceHash": "0e5c95449992e48210ce2506ff6fc025e097828e5d71eba665f9a41fbbed826f"
     },
     {
+      "id": "hydra",
+      "kind": "monster",
+      "sourceHash": "1a578dd67b6793762e1c0401fa6951026b9dbdf0910be733c41246cd87e6a372"
+    },
+    {
       "id": "ice-mephit",
       "kind": "monster",
       "sourceHash": "35dba07f0d14b79fc99e0a48302b687f672829c6717b047501b07d6f3d7538eb"
@@ -3535,6 +3540,11 @@
       "sourceHash": "59d7f1d40645987606faa7898945683a80c9c6e9a40237e39f68d692bd1e6a2d"
     },
     {
+      "id": "purple-worm",
+      "kind": "monster",
+      "sourceHash": "7476dbbb1b358b5efe389a4d34c979f0a8564d3c62910744fb50d31d9540eaf6"
+    },
+    {
       "id": "quasit-demon",
       "kind": "monster",
       "sourceHash": "e24363625a824e146fe6550980a4d95e25233d31c5ac7bbc5432991f15e152a2"
@@ -3543,6 +3553,11 @@
       "id": "red-dragon-wyrmling-chromatic",
       "kind": "monster",
       "sourceHash": "2f4f619e1c26422f751739516a58d11f13d73bc12cf6d0e02b510df8f9f1abbc"
+    },
+    {
+      "id": "remorhaz",
+      "kind": "monster",
+      "sourceHash": "83164e438a7e5a97a95d4f811c819adac07988d1fd76794c03f646ca2b5b57c3"
     },
     {
       "id": "roc",
