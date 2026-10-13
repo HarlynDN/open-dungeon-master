@@ -1607,5 +1607,125 @@ export const LOCALIZED_SPELL_PAGES = [
     "name": "Word of Recall",
     "headerKey": "bookMaterial.spell.word-of-recall.header",
     "metaKey": "bookMaterial.spell.word-of-recall.meta"
+  },
+  {
+    "id": "arcane-sword",
+    "name": "Arcane Sword",
+    "headerKey": "bookMaterial.spell.arcane-sword.header",
+    "metaKey": "bookMaterial.spell.arcane-sword.meta"
+  },
+  {
+    "id": "conjure-celestial",
+    "name": "Conjure Celestial",
+    "headerKey": "bookMaterial.spell.conjure-celestial.header",
+    "metaKey": "bookMaterial.spell.conjure-celestial.meta"
+  },
+  {
+    "id": "delayed-blast-fireball",
+    "name": "Delayed Blast Fireball",
+    "headerKey": "bookMaterial.spell.delayed-blast-fireball.header",
+    "metaKey": "bookMaterial.spell.delayed-blast-fireball.meta"
+  },
+  {
+    "id": "divine-word",
+    "name": "Divine Word",
+    "headerKey": "bookMaterial.spell.divine-word.header",
+    "metaKey": "bookMaterial.spell.divine-word.meta"
+  },
+  {
+    "id": "etherealness",
+    "name": "Etherealness",
+    "headerKey": "bookMaterial.spell.etherealness.header",
+    "metaKey": "bookMaterial.spell.etherealness.meta"
+  },
+  {
+    "id": "finger-of-death",
+    "name": "Finger of Death",
+    "headerKey": "bookMaterial.spell.finger-of-death.header",
+    "metaKey": "bookMaterial.spell.finger-of-death.meta"
+  },
+  {
+    "id": "fire-storm",
+    "name": "Fire Storm",
+    "headerKey": "bookMaterial.spell.fire-storm.header",
+    "metaKey": "bookMaterial.spell.fire-storm.meta"
+  },
+  {
+    "id": "forcecage",
+    "name": "Forcecage",
+    "headerKey": "bookMaterial.spell.forcecage.header",
+    "metaKey": "bookMaterial.spell.forcecage.meta"
+  },
+  {
+    "id": "magnificent-mansion",
+    "name": "Magnificent Mansion",
+    "headerKey": "bookMaterial.spell.magnificent-mansion.header",
+    "metaKey": "bookMaterial.spell.magnificent-mansion.meta"
+  },
+  {
+    "id": "mirage-arcane",
+    "name": "Mirage Arcane",
+    "headerKey": "bookMaterial.spell.mirage-arcane.header",
+    "metaKey": "bookMaterial.spell.mirage-arcane.meta"
+  },
+  {
+    "id": "plane-shift",
+    "name": "Plane Shift",
+    "headerKey": "bookMaterial.spell.plane-shift.header",
+    "metaKey": "bookMaterial.spell.plane-shift.meta"
+  },
+  {
+    "id": "prismatic-spray",
+    "name": "Prismatic Spray",
+    "headerKey": "bookMaterial.spell.prismatic-spray.header",
+    "metaKey": "bookMaterial.spell.prismatic-spray.meta"
+  },
+  {
+    "id": "project-image",
+    "name": "Project Image",
+    "headerKey": "bookMaterial.spell.project-image.header",
+    "metaKey": "bookMaterial.spell.project-image.meta"
+  },
+  {
+    "id": "regenerate",
+    "name": "Regenerate",
+    "headerKey": "bookMaterial.spell.regenerate.header",
+    "metaKey": "bookMaterial.spell.regenerate.meta"
+  },
+  {
+    "id": "resurrection",
+    "name": "Resurrection",
+    "headerKey": "bookMaterial.spell.resurrection.header",
+    "metaKey": "bookMaterial.spell.resurrection.meta"
+  },
+  {
+    "id": "reverse-gravity",
+    "name": "Reverse Gravity",
+    "headerKey": "bookMaterial.spell.reverse-gravity.header",
+    "metaKey": "bookMaterial.spell.reverse-gravity.meta"
+  },
+  {
+    "id": "sequester",
+    "name": "Sequester",
+    "headerKey": "bookMaterial.spell.sequester.header",
+    "metaKey": "bookMaterial.spell.sequester.meta"
+  },
+  {
+    "id": "simulacrum",
+    "name": "Simulacrum",
+    "headerKey": "bookMaterial.spell.simulacrum.header",
+    "metaKey": "bookMaterial.spell.simulacrum.meta"
+  },
+  {
+    "id": "symbol",
+    "name": "Symbol",
+    "headerKey": "bookMaterial.spell.symbol.header",
+    "metaKey": "bookMaterial.spell.symbol.meta"
+  },
+  {
+    "id": "teleport",
+    "name": "Teleport",
+    "headerKey": "bookMaterial.spell.teleport.header",
+    "metaKey": "bookMaterial.spell.teleport.meta"
   }
 ] as const;

@@ -1071,5 +1071,85 @@ export const SPELL_HELP = [
   {
     "name": "Word of Recall",
     "key": "spellHelp.native.word-of-recall"
+  },
+  {
+    "name": "Arcane Sword",
+    "key": "spellHelp.native.arcane-sword"
+  },
+  {
+    "name": "Conjure Celestial",
+    "key": "spellHelp.native.conjure-celestial"
+  },
+  {
+    "name": "Delayed Blast Fireball",
+    "key": "spellHelp.native.delayed-blast-fireball"
+  },
+  {
+    "name": "Divine Word",
+    "key": "spellHelp.native.divine-word"
+  },
+  {
+    "name": "Etherealness",
+    "key": "spellHelp.native.etherealness"
+  },
+  {
+    "name": "Finger of Death",
+    "key": "spellHelp.native.finger-of-death"
+  },
+  {
+    "name": "Fire Storm",
+    "key": "spellHelp.native.fire-storm"
+  },
+  {
+    "name": "Forcecage",
+    "key": "spellHelp.native.forcecage"
+  },
+  {
+    "name": "Magnificent Mansion",
+    "key": "spellHelp.native.magnificent-mansion"
+  },
+  {
+    "name": "Mirage Arcane",
+    "key": "spellHelp.native.mirage-arcane"
+  },
+  {
+    "name": "Plane Shift",
+    "key": "spellHelp.native.plane-shift"
+  },
+  {
+    "name": "Prismatic Spray",
+    "key": "spellHelp.native.prismatic-spray"
+  },
+  {
+    "name": "Project Image",
+    "key": "spellHelp.native.project-image"
+  },
+  {
+    "name": "Regenerate",
+    "key": "spellHelp.native.regenerate"
+  },
+  {
+    "name": "Resurrection",
+    "key": "spellHelp.native.resurrection"
+  },
+  {
+    "name": "Reverse Gravity",
+    "key": "spellHelp.native.reverse-gravity"
+  },
+  {
+    "name": "Sequester",
+    "key": "spellHelp.native.sequester"
+  },
+  {
+    "name": "Simulacrum",
+    "key": "spellHelp.native.simulacrum"
+  },
+  {
+    "name": "Symbol",
+    "key": "spellHelp.native.symbol"
+  },
+  {
+    "name": "Teleport",
+    "key": "spellHelp.native.teleport"
   }
 ] as const;

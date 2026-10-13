@@ -1570,6 +1570,106 @@
       "sourceHash": "bd0b6cc1d1331c395b47cc70003492900d751b3ef34cca5b7cfd60b6a82b890e"
     },
     {
+      "id": "arcane-sword",
+      "kind": "spell",
+      "sourceHash": "018e94d73a53fa5b99087d167f34ef581cde4f132508b91645a6634c07a58224"
+    },
+    {
+      "id": "conjure-celestial",
+      "kind": "spell",
+      "sourceHash": "6ad2f4afc395f43653e2c7d8cf1888a4a643686cfb40d2599b6f62f767a231ed"
+    },
+    {
+      "id": "delayed-blast-fireball",
+      "kind": "spell",
+      "sourceHash": "1ed501a1c81316d0eac769f4b7f7b719015bf35111e4bdba4600de9d4f732926"
+    },
+    {
+      "id": "divine-word",
+      "kind": "spell",
+      "sourceHash": "1dc0b125aa256006ce7cb49956f05cd54e444dd6fa75c0bc0417cd561499ab08"
+    },
+    {
+      "id": "etherealness",
+      "kind": "spell",
+      "sourceHash": "fe30f9022ae2845310cccb10e912562c25d81745342089a36b4261f1b83f2f90"
+    },
+    {
+      "id": "finger-of-death",
+      "kind": "spell",
+      "sourceHash": "83049147ecc84d96f7db5d4ea7a53fb159121197c8e9a9b5ecd27b0624456c2e"
+    },
+    {
+      "id": "fire-storm",
+      "kind": "spell",
+      "sourceHash": "2a508cac65f158ed04d47e339a0ad8b72bc05c6cfa08ab65534c003dc2d2388c"
+    },
+    {
+      "id": "forcecage",
+      "kind": "spell",
+      "sourceHash": "ff1ee74e5ba9b658a0baa825a3e66857c1bc6c52297632aa633c5778ed24e83e"
+    },
+    {
+      "id": "magnificent-mansion",
+      "kind": "spell",
+      "sourceHash": "68b09fe8adb20617d55c4704354e71088801e4152137425d5d7280ef1c569960"
+    },
+    {
+      "id": "mirage-arcane",
+      "kind": "spell",
+      "sourceHash": "6b8efeb70ebf0eb1444665a5ae9c6297cab0b4e4d059cb6f9eddd8987fda4c43"
+    },
+    {
+      "id": "plane-shift",
+      "kind": "spell",
+      "sourceHash": "3224d4570693e495d9848c4358754436ca2e0fd7c0bec904ba3dc00309cb56ca"
+    },
+    {
+      "id": "prismatic-spray",
+      "kind": "spell",
+      "sourceHash": "709d15e9290cb77840a88c316290de940dd7692948b86b5cf7956262d2943c70"
+    },
+    {
+      "id": "project-image",
+      "kind": "spell",
+      "sourceHash": "3163daebb7b752c83e09c7fec46d6e380f2c4b8409e9e9f3ec8d8c49714166fb"
+    },
+    {
+      "id": "regenerate",
+      "kind": "spell",
+      "sourceHash": "51bdb6824a49f4c175eb1a46d177d69525ca4f35f5fd06cdf7c4eae7d4f46723"
+    },
+    {
+      "id": "resurrection",
+      "kind": "spell",
+      "sourceHash": "9602f9b35962cc04ddb52792c02c81aa9b5fd4407b91dc4c36760366ff4e5f32"
+    },
+    {
+      "id": "reverse-gravity",
+      "kind": "spell",
+      "sourceHash": "a3b99fb50e49ce73b1b1f212242b22736a4dba638c18c140fcf577694ffd2be8"
+    },
+    {
+      "id": "sequester",
+      "kind": "spell",
+      "sourceHash": "a24a837eebac999d941c9a997cfb3d870e6306205ac886d907214522d1d904b0"
+    },
+    {
+      "id": "simulacrum",
+      "kind": "spell",
+      "sourceHash": "6323686db4805bcbb0e64c2603e7aae5361545c39597a0345d29fe38dbfb66a8"
+    },
+    {
+      "id": "symbol",
+      "kind": "spell",
+      "sourceHash": "bdd1abfe568e87466e00888207dc8663fa690cfbd59024da1a29aa10b111af23"
+    },
+    {
+      "id": "teleport",
+      "kind": "spell",
+      "sourceHash": "f41056c4a0e8835a3609b09cef96e7b28b47bf46274c1f59023f53acc3c2be06"
+    },
+    {
       "id": "traps",
       "kind": "rules",
       "sourceHash": "3235d098b37944d2d0ae80928d91db3b9809dbbf319538e845817de93d512cd6"

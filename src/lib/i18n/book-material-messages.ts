@@ -2145,5 +2145,165 @@ export const BOOK_MATERIAL_MESSAGES = defineMessages({
   "bookMaterial.spell.word-of-recall.meta": {
     "en": "6th-level conjuration",
     "zh-CN": "六环咒法"
+  },
+  "bookMaterial.spell.arcane-sword.header": {
+    "en": "*7th-level evocation*\n\n**Casting Time:** 1 action\n\n**Range:** 60 feet\n\n**Components:** V, S, M (a miniature platinum sword with a grip and pommel of copper and zinc, worth 250 gp)\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*七环塑能*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 60 英尺\n\n**法术成分：** 言语、姿势、材料（价值 250 gp 的微型铂金剑，剑柄和柄首由铜与锌制成）\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.arcane-sword.meta": {
+    "en": "7th-level evocation",
+    "zh-CN": "七环塑能"
+  },
+  "bookMaterial.spell.conjure-celestial.header": {
+    "en": "*7th-level conjuration*\n\n**Casting Time:** 1 minute\n\n**Range:** 90 feet\n\n**Components:** V, S\n\n**Duration:** Concentration, up to 1 hour",
+    "zh-CN": "*七环咒法*\n\n**施法时间：** 1 分钟\n\n**施法距离：** 90 英尺\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 专注，至多 1 小时"
+  },
+  "bookMaterial.spell.conjure-celestial.meta": {
+    "en": "7th-level conjuration",
+    "zh-CN": "七环咒法"
+  },
+  "bookMaterial.spell.delayed-blast-fireball.header": {
+    "en": "*7th-level evocation*\n\n**Casting Time:** 1 action\n\n**Range:** 150 feet\n\n**Components:** V, S, M (a tiny ball of bat guano and sulfur)\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*七环塑能*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 150 英尺\n\n**法术成分：** 言语、姿势、材料（一小团蝙蝠粪和硫磺）\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.delayed-blast-fireball.meta": {
+    "en": "7th-level evocation",
+    "zh-CN": "七环塑能"
+  },
+  "bookMaterial.spell.divine-word.header": {
+    "en": "*7th-level evocation*\n\n**Casting Time:** 1 bonus action\n\n**Range:** 30 feet\n\n**Components:** V\n\n**Duration:** Instantaneous",
+    "zh-CN": "*七环塑能*\n\n**施法时间：** 1 个附赠动作\n\n**施法距离：** 30 英尺\n\n**法术成分：** 言语\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.divine-word.meta": {
+    "en": "7th-level evocation",
+    "zh-CN": "七环塑能"
+  },
+  "bookMaterial.spell.etherealness.header": {
+    "en": "*7th-level transmutation*\n\n**Casting Time:** 1 action\n\n**Range:** Self\n\n**Components:** V, S\n\n**Duration:** Up to 8 hours",
+    "zh-CN": "*七环变化*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 自身\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 至多 8 小时"
+  },
+  "bookMaterial.spell.etherealness.meta": {
+    "en": "7th-level transmutation",
+    "zh-CN": "七环变化"
+  },
+  "bookMaterial.spell.finger-of-death.header": {
+    "en": "*7th-level necromancy*\n\n**Casting Time:** 1 action\n\n**Range:** 60 feet\n\n**Components:** V, S\n\n**Duration:** Instantaneous",
+    "zh-CN": "*七环死灵*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 60 英尺\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.finger-of-death.meta": {
+    "en": "7th-level necromancy",
+    "zh-CN": "七环死灵"
+  },
+  "bookMaterial.spell.fire-storm.header": {
+    "en": "*7th-level evocation*\n\n**Casting Time:** 1 action\n\n**Range:** 150 feet\n\n**Components:** V, S\n\n**Duration:** Instantaneous",
+    "zh-CN": "*七环塑能*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 150 英尺\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.fire-storm.meta": {
+    "en": "7th-level evocation",
+    "zh-CN": "七环塑能"
+  },
+  "bookMaterial.spell.forcecage.header": {
+    "en": "*7th-level evocation*\n\n**Casting Time:** 1 action\n\n**Range:** 100 feet\n\n**Components:** V, S, M (ruby dust worth 1,500 gp)\n\n**Duration:** 1 hour",
+    "zh-CN": "*七环塑能*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 100 英尺\n\n**法术成分：** 言语、姿势、材料（价值 1,500 gp 的红宝石粉）\n\n**持续时间：** 1 小时"
+  },
+  "bookMaterial.spell.forcecage.meta": {
+    "en": "7th-level evocation",
+    "zh-CN": "七环塑能"
+  },
+  "bookMaterial.spell.magnificent-mansion.header": {
+    "en": "*7th-level conjuration*\n\n**Casting Time:** 1 minute\n\n**Range:** 300 feet\n\n**Components:** V, S, M (a miniature portal carved from ivory, a small piece of polished marble, and a tiny silver spoon, each item worth at least 5 gp)\n\n**Duration:** 24 hours",
+    "zh-CN": "*七环咒法*\n\n**施法时间：** 1 分钟\n\n**施法距离：** 300 英尺\n\n**法术成分：** 言语、姿势、材料（象牙雕成的微型门户、一小块抛光大理石和一把小银匙，每件价值至少 5 gp）\n\n**持续时间：** 24 小时"
+  },
+  "bookMaterial.spell.magnificent-mansion.meta": {
+    "en": "7th-level conjuration",
+    "zh-CN": "七环咒法"
+  },
+  "bookMaterial.spell.mirage-arcane.header": {
+    "en": "*7th-level illusion*\n\n**Casting Time:** 10 minutes\n\n**Range:** Sight\n\n**Components:** V, S\n\n**Duration:** 10 days",
+    "zh-CN": "*七环幻术*\n\n**施法时间：** 10 分钟\n\n**施法距离：** 视野内\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 10 天"
+  },
+  "bookMaterial.spell.mirage-arcane.meta": {
+    "en": "7th-level illusion",
+    "zh-CN": "七环幻术"
+  },
+  "bookMaterial.spell.plane-shift.header": {
+    "en": "*7th-level conjuration*\n\n**Casting Time:** 1 action\n\n**Range:** Touch\n\n**Components:** V, S, M (a forked, metal rod worth at least 250 gp, attuned to a particular plane of existence)\n\n**Duration:** Instantaneous",
+    "zh-CN": "*七环咒法*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 接触\n\n**法术成分：** 言语、姿势、材料（价值至少 250 gp、与特定位面调谐的叉形金属棒）\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.plane-shift.meta": {
+    "en": "7th-level conjuration",
+    "zh-CN": "七环咒法"
+  },
+  "bookMaterial.spell.prismatic-spray.header": {
+    "en": "*7th-level evocation*\n\n**Casting Time:** 1 action\n\n**Range:** Self (60-foot cone)\n\n**Components:** V, S\n\n**Duration:** Instantaneous",
+    "zh-CN": "*七环塑能*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 自身（60 英尺锥形区域）\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.prismatic-spray.meta": {
+    "en": "7th-level evocation",
+    "zh-CN": "七环塑能"
+  },
+  "bookMaterial.spell.project-image.header": {
+    "en": "*7th-level illusion*\n\n**Casting Time:** 1 action\n\n**Range:** 500 miles\n\n**Components:** V, S, M (a small replica of you made from materials worth at least 5 gp)\n\n**Duration:** Concentration, up to 1 day",
+    "zh-CN": "*七环幻术*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 500 英里\n\n**法术成分：** 言语、姿势、材料（以价值至少 5 gp 的材料制作的自身小型复制品）\n\n**持续时间：** 专注，至多 1 天"
+  },
+  "bookMaterial.spell.project-image.meta": {
+    "en": "7th-level illusion",
+    "zh-CN": "七环幻术"
+  },
+  "bookMaterial.spell.regenerate.header": {
+    "en": "*7th-level transmutation*\n\n**Casting Time:** 1 minute\n\n**Range:** Touch\n\n**Components:** V, S, M (a prayer wheel and holy water)\n\n**Duration:** 1 hour",
+    "zh-CN": "*七环变化*\n\n**施法时间：** 1 分钟\n\n**施法距离：** 接触\n\n**法术成分：** 言语、姿势、材料（转经轮和圣水）\n\n**持续时间：** 1 小时"
+  },
+  "bookMaterial.spell.regenerate.meta": {
+    "en": "7th-level transmutation",
+    "zh-CN": "七环变化"
+  },
+  "bookMaterial.spell.resurrection.header": {
+    "en": "*7th-level necromancy*\n\n**Casting Time:** 1 hour\n\n**Range:** Touch\n\n**Components:** V, S, M (a diamond worth at least 1,000 gp, which the spell consumes)\n\n**Duration:** Instantaneous",
+    "zh-CN": "*七环死灵*\n\n**施法时间：** 1 小时\n\n**施法距离：** 接触\n\n**法术成分：** 言语、姿势、材料（价值至少 1,000 gp 的钻石，施法时消耗）\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.resurrection.meta": {
+    "en": "7th-level necromancy",
+    "zh-CN": "七环死灵"
+  },
+  "bookMaterial.spell.reverse-gravity.header": {
+    "en": "*7th-level transmutation*\n\n**Casting Time:** 1 action\n\n**Range:** 100 feet\n\n**Components:** V, S, M (a lodestone and iron filings)\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*七环变化*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 100 英尺\n\n**法术成分：** 言语、姿势、材料（一块磁石和铁屑）\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.reverse-gravity.meta": {
+    "en": "7th-level transmutation",
+    "zh-CN": "七环变化"
+  },
+  "bookMaterial.spell.sequester.header": {
+    "en": "*7th-level transmutation*\n\n**Casting Time:** 1 action\n\n**Range:** Touch\n\n**Components:** V, S, M (a powder composed of diamond, emerald, ruby, and sapphire dust worth at least 5,000 gp, which the spell consumes)\n\n**Duration:** Until dispelled",
+    "zh-CN": "*七环变化*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 接触\n\n**法术成分：** 言语、姿势、材料（总价值至少 5,000 gp 的钻石、绿宝石、红宝石和蓝宝石混合粉末，施法时消耗）\n\n**持续时间：** 直到被解除"
+  },
+  "bookMaterial.spell.sequester.meta": {
+    "en": "7th-level transmutation",
+    "zh-CN": "七环变化"
+  },
+  "bookMaterial.spell.simulacrum.header": {
+    "en": "*7th-level illusion*\n\n**Casting Time:** 12 hours\n\n**Range:** Touch\n\n**Components:** V, S, M (snow or ice in quantities sufficient to made a life-size copy of the duplicated creature; some hair, fingernail clippings, or other piece of that creature's body placed inside the snow or ice; and powdered ruby worth 1,500 gp, sprinkled over the duplicate and consumed by the spell)\n\n**Duration:** Until dispelled",
+    "zh-CN": "*七环幻术*\n\n**施法时间：** 12 小时\n\n**施法距离：** 接触\n\n**法术成分：** 言语、姿势、材料（足以制作目标等身复制体的雪或冰，其中放入目标的头发、指甲碎片或其他身体部分；另需价值 1,500 gp 的红宝石粉，撒在复制体上，施法时消耗）\n\n**持续时间：** 直到被解除"
+  },
+  "bookMaterial.spell.simulacrum.meta": {
+    "en": "7th-level illusion",
+    "zh-CN": "七环幻术"
+  },
+  "bookMaterial.spell.symbol.header": {
+    "en": "*7th-level abjuration*\n\n**Casting Time:** 1 minute\n\n**Range:** Touch\n\n**Components:** V, S, M (mercury, phosphorus, and powdered diamond and opal with a total value of at least 1,000 gp, which the spell consumes)\n\n**Duration:** Until dispelled or triggered",
+    "zh-CN": "*七环防护*\n\n**施法时间：** 1 分钟\n\n**施法距离：** 接触\n\n**法术成分：** 言语、姿势、材料（水银、磷、钻石粉和蛋白石粉，总价值至少 1,000 gp，施法时消耗）\n\n**持续时间：** 直到被解除或触发"
+  },
+  "bookMaterial.spell.symbol.meta": {
+    "en": "7th-level abjuration",
+    "zh-CN": "七环防护"
+  },
+  "bookMaterial.spell.teleport.header": {
+    "en": "*7th-level conjuration*\n\n**Casting Time:** 1 action\n\n**Range:** 10 feet\n\n**Components:** V\n\n**Duration:** Instantaneous",
+    "zh-CN": "*七环咒法*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 10 英尺\n\n**法术成分：** 言语\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.teleport.meta": {
+    "en": "7th-level conjuration",
+    "zh-CN": "七环咒法"
   }
 });

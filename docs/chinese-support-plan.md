@@ -66,7 +66,7 @@ report or release gate and does not include a SRD 5.2 rules migration.
 | Player system logs | Localized structured combat/audit display, party item/coin/XP logs, account facts and kickoff notices; English model/tool semantics stay separate | Other native player-log templates and final history/save/resume audit |
 | Resource delivery | UI/content/help scopes and independent retryable lazy help; anonymous bilingual switch/reload, authenticated character/campaign entry and viewer-English/story-Chinese separation observed | Complete authenticated journey and lazy/cache timing; hydrated/network totals and large route JS payload remain unverified |
 | Local Chinese TTS | Implementation and bounded CPU delivery/outage evidence retained in [the runtime record](validation/chinese-tts-runtime.json) | Chinese voice quality rejected by user; further voice work is deferred, not passed, and is not a text-milestone gate |
-| Full native rulebook | Reader chrome localized; **564/933 complete Chinese pages** now render via a server-generated display projection, including all 268 cantrip through sixth-level spell pages, all 239 magic-item pages, all thirty-six rules pages, all nine race pages and all twelve class pages, with complete headers and reused bodies; original English corpus retained; 268 spell and 239 magic-item bodies are available for further reuse | Remaining 51 high-level spell pages and 318 monster pages; complete Chinese corpus coverage, authenticated browser search/navigation and English reading regression |
+| Full native rulebook | Reader chrome localized; **584/933 complete Chinese pages** now render via a server-generated display projection, including all 288 cantrip through seventh-level spell pages, all 239 magic-item pages, all thirty-six rules pages, all nine race pages and all twelve class pages, with complete headers and reused bodies; original English corpus retained; 288 spell and 239 magic-item bodies are available for further reuse | Remaining 31 high-level spell pages and 318 monster pages; complete Chinese corpus coverage, authenticated browser search/navigation and English reading regression |
 | Final text flow | Recorded Chinese exploration/social/utility and combat/slot/correction acceptance on Codex | Complete Chinese text journey, rulebook reading/search and English regression; full tests/lint/build, then pause |
 
 ## Execution adjustment (2026-10-13)
@@ -86,19 +86,18 @@ real interaction has passed. Do not restart a static translation campaign.
 
 ## Next delivery unit and interruption checkpoint
 
-- Added all 31 sixth-level spells to shared game help/book presentation, now
-  564/933 pages and 268 complete native spell-help bodies. Reviewed original
-  English clauses, retained/consumed materials, possession/death boundaries,
-  concentration loss, spell-level blocking, damage type/timing and higher-level
-  effects. Focused native full-help and bilingual page/variant/canonical checks
-  passed. Catalog/AST/resources passed; terminology retains 389 context warnings
-  with 0 errors. This data-only batch does not claim final full-suite/build.
-- Consulted cached published 5etools terminology candidates for sixth-level
-  spell identities; source edition fields remain mostly blank. Existing names
-  are preserved pending source-specific conflict review (e.g. 禁行结界 vs
-  禁制术). Internal references were aligned to existing canonical display names:
-  完全复活术, 异界门, 位面转移, 奥术锁, 防护邪恶与善良 and 魔法防护阵.
-- Next: seventh- through ninth-level spells (51 pages), then monster families.
+- Added all 20 seventh-level spells to shared game help/book presentation, now
+  584/933 pages and 288 complete native spell-help bodies. Reviewed English
+  clauses, teleport probabilities/familiarity, planar limits, material costs,
+  delayed damage and resurrection/simulacrum restrictions. Focused full-help,
+  bilingual page/variant/canonical and table checks passed. Catalog/AST/resources
+  passed; terminology has 0 errors and 389 retained context warnings. Final
+  full-suite/build and real bilingual journey remain unproven.
+- Consulted published 5etools terminology candidates by seventh-level English
+  spell identity. Edition provenance is still missing on many rows; no bulk
+  override or assertion of reviewed 2014 coverage. Existing names remain stable
+  while source-specific alias/conflict review is pending.
+- Next: eighth- and ninth-level spells (31 pages), then monster families.
   Complete terminology conflict review alongside these source batches.
 - Native dynamic UI/material/log ownership remains pending in the UI manifest;
   audit helpers with their actual consumers before the final bilingual journey.
