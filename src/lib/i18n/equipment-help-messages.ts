@@ -1,6 +1,7 @@
 import { defineMessages } from "./catalog.ts";
 
 export const EQUIPMENT_HELP_MESSAGES = /*#__PURE__*/ defineMessages({
+  "itemHelp.rarity.crystalBall": { "en": "Very rare or legendary", "zh-CN": "极珍稀或传奇" },
   "itemHelp.type.ammunition": {"en": "Weapon (any ammunition)", "zh-CN": "武器（任意弹药）"},
   "itemHelp.type.arrow": {"en": "Weapon (arrow)", "zh-CN": "武器（箭）"},
   "itemHelp.type.axe": {"en": "Weapon (any axe)", "zh-CN": "武器（任意斧）"},

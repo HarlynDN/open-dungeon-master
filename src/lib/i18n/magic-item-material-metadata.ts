@@ -1001,5 +1001,179 @@ export const MAGIC_ITEM_MATERIAL = [
     "name": "Winged Boots",
     "key": "itemHelp.native.winged-boots",
     "metaKey": "itemHelp.nativeMeta.amulet-of-proof-against-detection-and-location"
+  },
+  {
+    "id": "apparatus-of-the-crab",
+    "name": "Apparatus of the Crab",
+    "key": "itemHelp.native.apparatus-of-the-crab",
+    "metaKey": "itemHelp.nativeMeta.apparatus-of-the-crab"
+  },
+  {
+    "id": "bag-of-beans",
+    "name": "Bag of Beans",
+    "key": "itemHelp.native.bag-of-beans",
+    "metaKey": "itemHelp.nativeMeta.cape-of-the-mountebank"
+  },
+  {
+    "id": "bag-of-devouring",
+    "name": "Bag of Devouring",
+    "key": "itemHelp.native.bag-of-devouring",
+    "metaKey": "itemHelp.nativeMeta.bag-of-devouring"
+  },
+  {
+    "id": "bag-of-holding",
+    "name": "Bag of Holding",
+    "key": "itemHelp.native.bag-of-holding",
+    "metaKey": "itemHelp.nativeMeta.boots-of-elvenkind"
+  },
+  {
+    "id": "bag-of-tricks",
+    "name": "Bag of Tricks",
+    "key": "itemHelp.native.bag-of-tricks",
+    "metaKey": "itemHelp.nativeMeta.boots-of-elvenkind"
+  },
+  {
+    "id": "bead-of-force",
+    "name": "Bead of Force",
+    "key": "itemHelp.native.bead-of-force",
+    "metaKey": "itemHelp.nativeMeta.cape-of-the-mountebank"
+  },
+  {
+    "id": "bowl-of-commanding-water-elementals",
+    "name": "Bowl of Commanding Water Elementals",
+    "key": "itemHelp.native.bowl-of-commanding-water-elementals",
+    "metaKey": "itemHelp.nativeMeta.cape-of-the-mountebank"
+  },
+  {
+    "id": "brazier-of-commanding-fire-elementals",
+    "name": "Brazier of Commanding Fire Elementals",
+    "key": "itemHelp.native.brazier-of-commanding-fire-elementals",
+    "metaKey": "itemHelp.nativeMeta.cape-of-the-mountebank"
+  },
+  {
+    "id": "broom-of-flying",
+    "name": "Broom of Flying",
+    "key": "itemHelp.native.broom-of-flying",
+    "metaKey": "itemHelp.nativeMeta.boots-of-elvenkind"
+  },
+  {
+    "id": "candle-of-invocation",
+    "name": "Candle of Invocation",
+    "key": "itemHelp.native.candle-of-invocation",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-the-planes"
+  },
+  {
+    "id": "carpet-of-flying",
+    "name": "Carpet of Flying",
+    "key": "itemHelp.native.carpet-of-flying",
+    "metaKey": "itemHelp.nativeMeta.bag-of-devouring"
+  },
+  {
+    "id": "censer-of-controlling-air-elementals",
+    "name": "Censer of Controlling Air Elementals",
+    "key": "itemHelp.native.censer-of-controlling-air-elementals",
+    "metaKey": "itemHelp.nativeMeta.cape-of-the-mountebank"
+  },
+  {
+    "id": "chime-of-opening",
+    "name": "Chime of Opening",
+    "key": "itemHelp.native.chime-of-opening",
+    "metaKey": "itemHelp.nativeMeta.cape-of-the-mountebank"
+  },
+  {
+    "id": "circlet-of-blasting",
+    "name": "Circlet of Blasting",
+    "key": "itemHelp.native.circlet-of-blasting",
+    "metaKey": "itemHelp.nativeMeta.boots-of-elvenkind"
+  },
+  {
+    "id": "crystal-ball",
+    "name": "Crystal Ball",
+    "key": "itemHelp.native.crystal-ball",
+    "metaKey": "itemHelp.nativeMeta.crystal-ball"
+  },
+  {
+    "id": "cube-of-force",
+    "name": "Cube of Force",
+    "key": "itemHelp.native.cube-of-force",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-health"
+  },
+  {
+    "id": "cubic-gate",
+    "name": "Cubic Gate",
+    "key": "itemHelp.native.cubic-gate",
+    "metaKey": "itemHelp.nativeMeta.apparatus-of-the-crab"
+  },
+  {
+    "id": "decanter-of-endless-water",
+    "name": "Decanter of Endless Water",
+    "key": "itemHelp.native.decanter-of-endless-water",
+    "metaKey": "itemHelp.nativeMeta.boots-of-elvenkind"
+  },
+  {
+    "id": "deck-of-illusions",
+    "name": "Deck of Illusions",
+    "key": "itemHelp.native.deck-of-illusions",
+    "metaKey": "itemHelp.nativeMeta.boots-of-elvenkind"
+  },
+  {
+    "id": "deck-of-many-things",
+    "name": "Deck of Many Things",
+    "key": "itemHelp.native.deck-of-many-things",
+    "metaKey": "itemHelp.nativeMeta.apparatus-of-the-crab"
+  },
+  {
+    "id": "dimensional-shackles",
+    "name": "Dimensional Shackles",
+    "key": "itemHelp.native.dimensional-shackles",
+    "metaKey": "itemHelp.nativeMeta.cape-of-the-mountebank"
+  },
+  {
+    "id": "dust-of-disappearance",
+    "name": "Dust of Disappearance",
+    "key": "itemHelp.native.dust-of-disappearance",
+    "metaKey": "itemHelp.nativeMeta.boots-of-elvenkind"
+  },
+  {
+    "id": "dust-of-dryness",
+    "name": "Dust of Dryness",
+    "key": "itemHelp.native.dust-of-dryness",
+    "metaKey": "itemHelp.nativeMeta.boots-of-elvenkind"
+  },
+  {
+    "id": "dust-of-sneezing-and-choking",
+    "name": "Dust of Sneezing and Choking",
+    "key": "itemHelp.native.dust-of-sneezing-and-choking",
+    "metaKey": "itemHelp.nativeMeta.boots-of-elvenkind"
+  },
+  {
+    "id": "efficient-quiver",
+    "name": "Efficient Quiver",
+    "key": "itemHelp.native.efficient-quiver",
+    "metaKey": "itemHelp.nativeMeta.boots-of-elvenkind"
+  },
+  {
+    "id": "efreeti-bottle",
+    "name": "Efreeti Bottle",
+    "key": "itemHelp.native.efreeti-bottle",
+    "metaKey": "itemHelp.nativeMeta.bag-of-devouring"
+  },
+  {
+    "id": "elemental-gem",
+    "name": "Elemental Gem",
+    "key": "itemHelp.native.elemental-gem",
+    "metaKey": "itemHelp.nativeMeta.boots-of-elvenkind"
+  },
+  {
+    "id": "eversmoking-bottle",
+    "name": "Eversmoking Bottle",
+    "key": "itemHelp.native.eversmoking-bottle",
+    "metaKey": "itemHelp.nativeMeta.boots-of-elvenkind"
+  },
+  {
+    "id": "feather-token",
+    "name": "Feather Token",
+    "key": "itemHelp.native.feather-token",
+    "metaKey": "itemHelp.nativeMeta.cape-of-the-mountebank"
   }
 ] as const;

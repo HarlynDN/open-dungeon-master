@@ -75,7 +75,8 @@ const info=await openCombatRenderer({files:[infoFile],stubs:{
  '@/lib/content-scope':scopeStub,
 }});
 const wearable=/^(Amulet|Belt|Boots|Bracers|Brooch|Cape|Cloak|Eyes|Gauntlets|Gloves|Goggles|Hat|Headband|Helm|Ioun Stone|Mantle|Medallion|Necklace|Periapt|Robe|Slippers|Winged)\b/;
-const reviewedNative=native.filter(row=>/^(Potion|Oil|Ring|Wand) of /.test(row.title)||/^(Armor|Weapon|Rod|Staff)/.test(row.meta)||wearable.test(row.title));
+const utilityItems=new Set(["apparatus-of-the-crab","bag-of-beans","bag-of-devouring","bag-of-holding","bag-of-tricks","bead-of-force","bowl-of-commanding-water-elementals","brazier-of-commanding-fire-elementals","broom-of-flying","candle-of-invocation","carpet-of-flying","censer-of-controlling-air-elementals","chime-of-opening","circlet-of-blasting","crystal-ball","cube-of-force","cubic-gate","decanter-of-endless-water","deck-of-illusions","deck-of-many-things","dimensional-shackles","dust-of-disappearance","dust-of-dryness","dust-of-sneezing-and-choking","efficient-quiver","efreeti-bottle","elemental-gem","eversmoking-bottle","feather-token"]);
+const reviewedNative=native.filter(row=>/^(Potion|Oil|Ring|Wand) of /.test(row.title)||/^(Armor|Weapon|Rod|Staff)/.test(row.meta)||wearable.test(row.title)||utilityItems.has(row.id));
 assert.equal(native.filter(row=>wearable.test(row.title)).length,49);
 assert.deepEqual(MAGIC_ITEM_MATERIAL.map(row=>row.id).sort(),reviewedNative.map(row=>row.id).sort());
 const visibleText=html=>html.replace(/<[^>]+>/g,' ').replace(/&#x27;/g,"'").replace(/&quot;/g,'"').replace(/&amp;/g,'&');
@@ -134,6 +135,6 @@ for(const row of frozen.fixtures){
  const state=row.sheet!==undefined?{sheet:row.sheet,loading:false}:{sheet:null,loading:row.name==='loading'};
  assert.equal(gear.render(gear.components.ItemBody,{reference:{kind:'items',slug:row.slug??'authored',name:row.name}},'en',{},[state]),row.html,row.name);
 }
-console.log(`PASS: all ${MAGIC_ITEM_MATERIAL.length} native potion/oil, ring, wand, armor, weapon, rod, staff and wearable bodies and headers, full tables, exact source/signed numbers/dice, actual bilingual item dialogs and four picker flows, English switching, canonical picks and authored/other-book/changed-text overrides.`);
+console.log(`PASS: all ${MAGIC_ITEM_MATERIAL.length} native potion/oil, ring, wand, armor, weapon, rod, staff, wearable and utility bodies and headers, full tables, exact source/signed numbers/dice, actual bilingual item dialogs and four picker flows, English switching, canonical picks and authored/other-book/changed-text overrides.`);
 console.log('PASS: all 185 original frozen English item cards unchanged.');
 console.log('Magic-item localization passed: all 239 SRD source titles and 291 registered names; shared display/search/alias projections; exact +N identities and scoped ambiguity; actual gear/loot/proposal UI in both locales; native callbacks, proper names, tool summaries, inventory and mechanics unchanged.');
