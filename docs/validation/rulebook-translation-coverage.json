@@ -4005,6 +4005,66 @@
       "sourceHash": "4ec6b9a5ba3b0b2ac52fa5770480c59bfcf382d3bd9fba3b89299153deaba759"
     },
     {
+      "id": "bandit",
+      "kind": "monster",
+      "sourceHash": "db0affbdd0e8f92810812a217effad9073054d0eb4fa82218d5a84672b017e54"
+    },
+    {
+      "id": "bandit-captain",
+      "kind": "monster",
+      "sourceHash": "9209776153c72868604dbe668379ca939e90fee1d3ab2852814b7b3001ff772d"
+    },
+    {
+      "id": "berserker",
+      "kind": "monster",
+      "sourceHash": "4481cc533e90a15980eb4cf1e159c8a0f5f40c97b80ff22fbf365fbe8066ee14"
+    },
+    {
+      "id": "commoner",
+      "kind": "monster",
+      "sourceHash": "462453c73e6db8630e003b2ad3604bcdcbdc322cde97dd96d3e8475cdc1d22e5"
+    },
+    {
+      "id": "cultist",
+      "kind": "monster",
+      "sourceHash": "2a0700b7e7d3d77f6031ecb37c421abc36c24775e95851c405a7794824503ceb"
+    },
+    {
+      "id": "guard",
+      "kind": "monster",
+      "sourceHash": "f1d0057b405f5df63a55f2b21cd3bf63bce587c0a10eafc4d10bfdb1cc2adf4f"
+    },
+    {
+      "id": "noble",
+      "kind": "monster",
+      "sourceHash": "4dd03035c4bb39f6d70c8aabbd8b6b4fba4081aa71202fb041f6d60d89d1e2ab"
+    },
+    {
+      "id": "scout",
+      "kind": "monster",
+      "sourceHash": "69b6f1e40a2665b02e538b4c40a642b297575ac24f0008e2fcad589aa58def5e"
+    },
+    {
+      "id": "spy",
+      "kind": "monster",
+      "sourceHash": "3f5cfa7a8023d8ac768d672222cfd922e6a9fd4c1039271bf048e736e3bb8650"
+    },
+    {
+      "id": "thug",
+      "kind": "monster",
+      "sourceHash": "cb1d7ff5391a6c9614f693d73af70b3f74a6ca4cb481385ad4118625f94b18d5"
+    },
+    {
+      "id": "tribal-warrior",
+      "kind": "monster",
+      "sourceHash": "c1b2d62f13fdae661e5b7e7f3438ce01b95fa3629a2455bae1c255539517d645"
+    },
+    {
+      "id": "veteran",
+      "kind": "monster",
+      "sourceHash": "a4f85773a1b1aef9e2f87161c39b6ce807d3305ec056657f1a6d200b8cf1071d"
+    },
+    {
       "id": "conditions",
       "kind": "rules",
       "sourceHash": "278eb06bd1a6c82fae5d27ed2ddb91b5c95f1115e917c39c1961c221a8bfbe4c"
