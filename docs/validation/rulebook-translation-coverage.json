@@ -3230,6 +3230,11 @@
       "sourceHash": "0345a10380cab90bf3ebc690ad386bb4a46efd206e31f7bc63f907e1331605fd"
     },
     {
+      "id": "chuul",
+      "kind": "monster",
+      "sourceHash": "09ad99788b0f5d79d6b9c8e118143b3f3b082cf2936694a4d6b5ebe67e48578c"
+    },
+    {
       "id": "cloud-giant-giant",
       "kind": "monster",
       "sourceHash": "9dd078f4b26cef169b0ba5307fa59877df5195c689ee797b97f0f7f5d5c040f5"
@@ -3593,6 +3598,11 @@
       "id": "wyvern",
       "kind": "monster",
       "sourceHash": "076da9258d0e47cad8722c6ce6dd61b7088ba8e663434884bfd6b065553c7b65"
+    },
+    {
+      "id": "xorn",
+      "kind": "monster",
+      "sourceHash": "fddb0f6c784dbf13e4a91047b7ec4cc4655a87e2f18e3696e7d96980b2db4a17"
     },
     {
       "id": "young-black-dragon-chromatic",

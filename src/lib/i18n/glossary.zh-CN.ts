@@ -395,6 +395,8 @@ export const ZH_CN_GLOSSARY = [
   {"id":"monster.air_elemental","source":"Air Elemental","preferred":"气元素","scope":"monster"},
   {"id":"monster.fire_elemental","source":"Fire Elemental","preferred":"火元素","scope":"monster"},
   {"id":"monster.water_elemental","source":"Water Elemental","preferred":"水元素","scope":"monster"},
+  {"id":"monster.chuul","source":"Chuul","preferred":"甲伏怪","scope":"monster"},
+  {"id":"monster.xorn","source":"Xorn","preferred":"石鼎兽","scope":"monster"},
   {"id":"monster.goblin","source":"Goblin","preferred":"哥布林","scope":"monster","aliases":["地精"]},
   {"id":"monster.bugbear","source":"Bugbear","preferred":"熊地精","scope":"monster"},
   {"id":"monster.hobgoblin","source":"Hobgoblin","preferred":"大地精","scope":"monster"},
