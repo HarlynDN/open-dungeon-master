@@ -212,11 +212,16 @@ player-readable service-unavailable notice. Original diagnostics and English
 are preserved, and unknown errors retain their text. The existing chat-display
 workflow checks actual bilingual MediaPlaceholder output and immutable status,
 alongside its chat/private prose/callback checks. Catalog/types/changed-file
-lint pass once. After refresh, the failed image status was lost and the pending
-image request became a continuing render timer; this separate media lifecycle
-recovery gap remains open rather than being claimed fixed by translation.
-The repaired Chinese failure text has focused component evidence; the live
-failed state was no longer available after refresh. Voice and final full gates
+lint pass once. Refresh initially lost the failed map status and showed a continuing render
+timer. That recovery gap is now repaired: image/map progress is persisted as
+existing table events, and the authorized snapshot restores the latest state
+for its included messages and locations. TTS retains its separate status path.
+The existing event replay check covers failure behind unrelated history, latest
+retry state, target/campaign isolation and separate TTS events. Catalog/types/
+changed-file lint pass. A real retry against the confirmed absent local image
+service persisted a map failure; the browser refresh now shows the Chinese
+failure notice instead of a timer. Evidence outside Git:
+`/tmp/odm-map-failure-recovery.png`. No new model request was needed. Voice and final full gates
 remain open.
 
 Pure state, audio plumbing and glyph helpers can be audited within the session

@@ -8,13 +8,12 @@ import {
 import { getCampaignById, type Campaign } from "@/lib/db/campaigns";
 import { boundaryNegativeTerms } from "@/lib/dm/safety-logic";
 import { imageToolArgsSchema, type ImageToolArgs } from "@/lib/image-tool";
-import { publishEphemeral, publishPersisted } from "@/lib/events";
+import { publishPersisted } from "@/lib/events";
 import { enqueueMediaJob } from "@/lib/media-queue";
 import type { AspectPreset, GeneratedImage, ImageRequest, StorySettings } from "@/lib/types";
 
-// Ephemeral progress refinements for the pending-media placeholders. The
-// durable truth stays derivable (a message with imageRequest and no
-// generatedImage IS pending), so reloads never lose the placeholder.
+// Persist progress and failures so snapshots/reconnects can distinguish a
+// failed request from work still queued; an unanswered request alone cannot.
 export function publishMediaStatus(
   campaignId: string,
   kind: "image" | "map" | "tts",
@@ -23,7 +22,7 @@ export function publishMediaStatus(
   // Why it failed, in words the table can read (narration, issue 88).
   reason?: string,
 ) {
-  publishEphemeral(campaignId, "media_status", {
+  publishPersisted(campaignId, "media_status", {
     kind,
     targetId,
     state,

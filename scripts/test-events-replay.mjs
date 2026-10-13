@@ -17,9 +17,11 @@ register("./lib/register-alias.mjs", import.meta.url);
 
 const { createUser } = await import("../src/lib/db/users.ts");
 const { createCampaign } = await import("../src/lib/db/campaigns.ts");
-const { forEachEventSince, latestEventOfType, listEventsSince, publishPersisted } = await import(
+const { forEachEventSince, latestEventOfType, latestMediaStatuses, listEventsSince, publishPersisted } = await import(
   "../src/lib/events.ts"
 );
+
+const {publishMediaStatus}=await import("../src/lib/dm/images.ts");
 
 let passed = 0;
 function test(name, fn) {
@@ -86,6 +88,23 @@ test("a dismissal lands after the handout it names", () => {
   const dismissed = latestEventOfType(campaign.id, ["handout_dismissed"]);
   assert.ok(dismissed.seq > shown.seq);
   assert.equal(dismissed.payload.id, "h1");
+});
+
+test("media failure snapshots preserve scoped latest states and retries after unrelated history",()=>{
+ const media=createCampaign(dm.id,{title:'Media',description:'',theme:'',maxPlayers:1,startingLevel:1,difficulty:'normal'});
+ publishMediaStatus(media.id,'map','location-1','failed','Native failure.');
+ publishMediaStatus(media.id,'image','message-1','generating');
+ publishMediaStatus(media.id,'image','hidden-target','failed','Hidden failure.');
+ for(let i=0;i<510;i++)publishPersisted(media.id,'turn_complete',{index:i});
+ const states=latestMediaStatuses(media.id,['location-1','message-1']);
+ assert.equal(states['location-1'].state,'failed');assert.equal(states['location-1'].reason,'Native failure.');
+ assert.equal(states['message-1'].state,'generating');assert.equal(states['hidden-target'],undefined);
+ assert.equal(Object.keys(states).length,2);assert.deepEqual(latestMediaStatuses(campaign.id,['location-1']),{});
+ assert.deepEqual(latestMediaStatuses(media.id,[]),{});
+ publishMediaStatus(media.id,'map','location-1','queued');
+ const retried=latestMediaStatuses(media.id,['location-1']);assert.equal(retried['location-1'].state,'queued');assert.equal(retried['location-1'].reason,undefined);
+ publishMediaStatus(media.id,'tts','message-1','failed','Separate voice failure.');
+ assert.equal(latestMediaStatuses(media.id,['message-1'])['message-1'].state,'generating');
 });
 
 // Windows refuses to delete a database file that is still open, so the

@@ -140,3 +140,11 @@ export type StoryCharacter = {
   createdAt: string;
   updatedAt: string;
 };
+
+// Shared snapshot/stream shape for picture and map progress.
+export type MediaStatus = {
+  kind: "image" | "map" | "tts";
+  state: "queued" | "generating" | "failed";
+  startedAt: string;
+  reason?: string;
+};

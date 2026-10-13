@@ -52,13 +52,8 @@ export type DmStatus =
   | "writing_chapter"
   | "plotting_arc";
 
-export type MediaStatus = {
-  kind: "image" | "map" | "tts";
-  state: "queued" | "generating" | "failed";
-  startedAt: string;
-  // Why a picture or map failed, for the line under its placeholder.
-  reason?: string;
-};
+export type { MediaStatus } from "@/lib/types";
+import type { MediaStatus } from "@/lib/types";
 
 // Narration on its way for a message, or why it never arrived. Kept apart
 // from mediaStatus: both are keyed by message id, and a passage can be
@@ -1135,6 +1130,7 @@ export function useCampaignStream(campaignId: string) {
           cast: data.cast ?? [],
           sheets: data.sheets,
           messages: data.messages,
+          mediaStatus: data.mediaStatus ?? {},
           rolls: data.rolls,
           pendingRolls: data.pendingRolls ?? [],
           auditLog: data.auditLog ?? [],

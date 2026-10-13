@@ -1,3 +1,4 @@
+import type { MediaStatus } from "@/lib/types";
 import { getDatabase, nowIso, parseJson } from "@/lib/db/core";
 import { allocateSeq } from "@/lib/db/campaigns";
 import { audienceOf } from "@/lib/event-audience";
@@ -312,4 +313,31 @@ function readEventsSince(campaignId: string, afterSeq: number, limit: number): S
     type: row.type,
     payload: parseJson<unknown>(row.payload_json, null),
   }));
+}
+
+// Only targets already included in the authorized snapshot may restore status.
+// Select the latest state per target, not a bounded replay that can miss an
+// older failed request behind unrelated events. TTS has its own state reader.
+export function latestMediaStatuses(campaignId: string, targetIds: string[]): Record<string, MediaStatus> {
+  const ids = [...new Set(targetIds)];
+  if (!ids.length) return {};
+  const rows = getDatabase().prepare(`
+    SELECT payload_json FROM campaign_events WHERE campaign_id = ? AND type = 'media_status'
+      AND seq IN (
+        SELECT MAX(seq) FROM campaign_events WHERE campaign_id = ? AND type = 'media_status'
+          AND json_extract(payload_json, '$.kind') IN ('image', 'map')
+          AND json_extract(payload_json, '$.targetId') IN (${ids.map(() => "?").join(",")})
+        GROUP BY json_extract(payload_json, '$.targetId')
+      )
+  `).all(campaignId, campaignId, ...ids) as Array<{ payload_json: string }>;
+  const result: Record<string, MediaStatus> = {};
+  for (const row of rows) {
+    const data = parseJson<Record<string, unknown> | null>(row.payload_json, null);
+    if (!data || typeof data.targetId !== "string" || typeof data.startedAt !== "string" ||
+      (data.kind !== "image" && data.kind !== "map") ||
+      (data.state !== "queued" && data.state !== "generating" && data.state !== "failed")) continue;
+    result[data.targetId] = { kind: data.kind, state: data.state, startedAt: data.startedAt,
+      ...(typeof data.reason === "string" ? { reason: data.reason } : {}) };
+  }
+  return result;
 }

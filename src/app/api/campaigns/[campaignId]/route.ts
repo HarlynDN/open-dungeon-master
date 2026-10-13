@@ -45,7 +45,7 @@ import { getDmStatus } from "@/lib/dm/status";
 import { listUtilityCalls } from "@/lib/dm/call-tracker";
 import { listBlockedUserIds } from "@/lib/db/moderation";
 import { xCardRaised } from "@/lib/dm/safety";
-import { latestEventOfType, publishPersisted, publishWithSeq } from "@/lib/events";
+import { latestMediaStatuses, latestEventOfType, publishPersisted, publishWithSeq } from "@/lib/events";
 import type { HandoutShown, TitleCard } from "@/lib/scene/state";
 import { listNarrationAudio } from "@/lib/tts";
 
@@ -95,6 +95,8 @@ export async function GET(
   const { campaign, user } = context;
   const caps = capsFor(context);
   const sheets = listSheets(campaignId);
+  const messages = listRecentMessages(campaignId, 100);
+  const locations = listLocations(campaignId);
   // Their own characters, for the rolls only they and the DM may read.
   const ownedCharacterIds = sheets
     .filter((sheet) => sheet.userId === user.id)
@@ -117,14 +119,15 @@ export async function GET(
     feats: Object.fromEntries(tableFeatsFrom(getDatabase(), campaignId)),
     // The character this user is playing when they have several (11.3).
     activeSheetId: getSheetForUser(campaignId, user.id)?.id ?? "",
-    messages: listRecentMessages(campaignId, 100),
+    messages,
+    mediaStatus: latestMediaStatuses(campaignId, [...messages.map(message => message.id), ...locations.map(location => location.id)]),
     // Blind and DM-only rolls are redacted or dropped here, not in the UI;
     // a player's snapshot must never carry a number they are not meant to
     // have (src/lib/dm/viewer.ts).
     rolls: listRollsVisibleTo(campaignId, caps, ownedCharacterIds, 20),
     pendingRolls: listOpenPendingRolls(campaignId).map(publicPendingRoll),
     auditLog: listRecentAudit(campaignId, 50),
-    locations: listLocations(campaignId),
+    locations,
     chapters: listChapters(campaignId),
     notes: listNotesVisibleTo(campaignId, user.id, caps.steersStory),
     characterEvents: listRecentCampaignEvents(campaignId, 30),
