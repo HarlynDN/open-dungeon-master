@@ -3490,6 +3490,11 @@
       "sourceHash": "1a578dd67b6793762e1c0401fa6951026b9dbdf0910be733c41246cd87e6a372"
     },
     {
+      "id": "ice-devil-devil",
+      "kind": "monster",
+      "sourceHash": "92fa0091f04b819bd5b4315a0f5b0d6281ae45c459f77e8b24be2af6edf9c94d"
+    },
+    {
       "id": "ice-mephit",
       "kind": "monster",
       "sourceHash": "35dba07f0d14b79fc99e0a48302b687f672829c6717b047501b07d6f3d7538eb"

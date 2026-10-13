@@ -443,6 +443,7 @@ export const ZH_CN_GLOSSARY = [
   {"id":"monster.erinyes","source":"Erinyes","preferred":"罪魔","scope":"monster"},
   {"id":"monster.horned_devil","source":"Horned Devil","preferred":"角魔","scope":"monster"},
   {"id":"monster.chain_devil","source":"Chain Devil","preferred":"链魔","scope":"monster"},
+  {"id":"monster.ice_devil","source":"Ice Devil","preferred":"冰魔","scope":"monster"},
   {"id":"monster.goblin","source":"Goblin","preferred":"哥布林","scope":"monster","aliases":["地精"]},
   {"id":"monster.bugbear","source":"Bugbear","preferred":"熊地精","scope":"monster"},
   {"id":"monster.hobgoblin","source":"Hobgoblin","preferred":"大地精","scope":"monster"},
