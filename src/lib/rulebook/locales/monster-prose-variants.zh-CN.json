@@ -43,5 +43,25 @@
     "name": "Aboleth",
     "source": "**Enslave (3/day)**. The aboleth targets one creature it can see within 30 ft. of it. The target must succeed on a DC 14 Wisdom saving throw or be magically charmed by the aboleth until the aboleth dies or until it is on a different plane of existence from the target. The charmed target is under the aboleth's control and can't take reactions, and the aboleth and the target can communicate telepathically with each other over any distance.\nWhenever the charmed target takes damage, the target can repeat the saving throw. On a success, the effect ends. No more than once every 24 hours, the target can also repeat the saving throw when it is at least 1 mile away from the aboleth.",
     "text": "***奴役（每日 3 次）***。底栖魔鱼指定周围 30 英尺内一个它能看见的生物为目标。目标必须成功通过一次 DC 14 的感知豁免，否则被底栖魔鱼以魔法魅惑，直到它死亡或它与目标处于不同位面。被魅惑的目标受底栖魔鱼控制，且无法执行反应；底栖魔鱼与目标可以不受距离限制地相互进行心灵感应交流。\n\n被魅惑的目标每次受到伤害时，都可以重做该豁免，成功则效应结束。此外，每 24 小时至多一次，目标可以在距离底栖魔鱼至少 1 英里时重做该豁免。"
+  },
+  {
+    "name": "Troll",
+    "source": "**Variant: Loathsome Limbs**. Whenever the troll takes at least 15 slashing damage at one time, roll a d20 to determine what else happens to it:",
+    "text": "**变体：可憎断肢**。巨魔每次一次性受到至少 15 点挥砍伤害时，掷一枚 d20，决定还会发生什么："
+  },
+  {
+    "name": "Troll",
+    "source": "**1-10:** Nothing else happens.\n**11-14:** One leg is severed from the troll if it has any legs left.\n**15- 18:** One arm is severed from the troll if it has any arms left.\n**19-20:** The troll is decapitated, but the troll dies only if it can't regenerate. If it dies, so does the severed head.",
+    "text": "**1-10：**没有其他效果。\n**11-14：**若巨魔仍有腿，则一条腿被斩断。\n**15-18：**若巨魔仍有手臂，则一条手臂被斩断。\n**19-20：**巨魔被斩首，但只有无法再生时才会死亡。若巨魔死亡，被斩下的头颅也会死亡。"
+  },
+  {
+    "name": "Troll",
+    "source": "If the troll finishes a short or long rest without reattaching a severed limb or head, the part regrows. At that point, the severed part dies. Until then, a severed part acts on the troll's initiative and has its own action and movement. A severed part has AC 13, 10 hit points, and the troll's Regeneration trait.\nA **severed leg** is unable to attack and has a speed of 5 feet.\nA **severed arm** has a speed of 5 feet and can make one claw attack on its turn, with disadvantage on the attack roll unless the troll can see the arm and its target. Each time the troll loses an arm, it loses a claw attack.\nIf its head is severed, the troll loses its bite attack and its body is blinded unless the head can see it. The **severed head** has a speed of 0 feet and the troll's Keen Smell trait. It can make a bite attack but only against a target in its space.\nThe troll's speed is halved if it's missing a leg. If it loses both legs, it falls prone. If it has both arms, it can crawl. With only one arm, it can still crawl, but its speed is halved. With no arms or legs, its speed is 0, and it can't benefit from bonuses to speed.",
+    "text": "若巨魔完成短休或长休时仍未接回断肢或头颅，该部位便会重新长出，此时被斩下的部位死亡。在此之前，断肢或头颅按巨魔的先攻行动，拥有自己的动作和移动。被斩下的部位具有护甲等级 13、10 点生命值，以及巨魔的再生特性。\n**断腿**无法攻击，速度为 5 英尺。\n**断臂**的速度为 5 英尺，可以在其回合进行一次爪击；除非巨魔能看见断臂及其目标，否则该攻击检定具有劣势。巨魔每失去一条手臂，就失去一次爪击。\n若头颅被斩下，巨魔失去啃咬攻击；除非头颅能看见身体，否则身体处于目盲状态。**断头**的速度为 0 英尺，拥有巨魔的敏锐嗅觉特性。它可以进行啃咬攻击，但只能攻击与其处于同一空间的目标。\n巨魔缺少一条腿时，速度减半。若失去双腿，它会倒地。若仍有双臂，它可以爬行；仅剩一条手臂时仍可爬行，但速度减半。若四肢尽失，其速度为 0，且无法受益于速度加值。"
+  },
+  {
+    "name": "Marilith",
+    "source": "**Variant: Summon Demon (1/Day)**. The demon chooses what to summon and attempts a magical summoning.\nA marilith has a 50 percent chance of summoning 1d6 vrocks, 1d4 hezrous, 1d3 glabrezus, 1d2 nalfeshnees, or one marilith.\nA summoned demon appears in an unoccupied space within 60 feet of its summoner, acts as an ally of its summoner, and can't summon other demons. It remains for 1 minute, until it or its summoner dies, or until its summoner dismisses it as an action.",
+    "text": "**变体：召唤恶魔（每日 1 次）**。恶魔选择要召唤的对象，并尝试进行魔法召唤。\n六臂蛇魔有 50% 的概率召唤出 1d6 只鹫魔、1d4 只狂蟾魔、1d3 只迷诱魔、1d2 只判魂魔，或一只六臂蛇魔。\n被召唤的恶魔出现在召唤者周围 60 英尺内一处未被占据的空间，作为召唤者的盟友行动，且无法召唤其他恶魔。它停留 1 分钟，或直到它自身或召唤者死亡，或召唤者用一个动作将其遣散。"
   }
 ]

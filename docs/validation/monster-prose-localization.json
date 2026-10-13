@@ -28,21 +28,8 @@
       "name": "Troll",
       "slug": "troll",
       "blocks": 10,
-      "untranslatedBlocks": 3,
-      "pending": [
-        {
-          "heading": "**Variant: Loathsome Limbs**. Whenever the troll takes at least 15 slashing damage at one time, roll a d20 to determine ",
-          "source": "**Variant: Loathsome Limbs**. Whenever the troll takes at least 15 slashing damage at one time, roll a d20 to determine what else happens to it:"
-        },
-        {
-          "heading": "**1-10:** Nothing else happens.",
-          "source": "**1-10:** Nothing else happens.\n**11-14:** One leg is severed from the troll if it has any legs left.\n**15- 18:** One arm is severed from the troll if it has any arms left.\n**19-20:** The troll is decapitated, but the troll dies only if it can't regenerate. If it dies, so does the severed head."
-        },
-        {
-          "heading": "If the troll finishes a short or long rest without reattaching a severed limb or head, the part regrows. At that point, ",
-          "source": "If the troll finishes a short or long rest without reattaching a severed limb or head, the part regrows. At that point, the severed part dies. Until then, a severed part acts on the troll's initiative and has its own action and movement. A severed part has AC 13, 10 hit points, and the troll's Regeneration trait.\nA **severed leg** is unable to attack and has a speed of 5 feet.\nA **severed arm** has a speed of 5 feet and can make one claw attack on its turn, with disadvantage on the attack roll unless the troll can see the arm and its target. Each time the troll loses an arm, it loses a claw attack.\nIf its head is severed, the troll loses its bite attack and its body is blinded unless the head can see it. The **severed head** has a speed of 0 feet and the troll's Keen Smell trait. It can make a bite attack but only against a target in its space.\nThe troll's speed is halved if it's missing a leg. If it loses both legs, it falls prone. If it has both arms, it can crawl. With only one arm, it can still crawl, but its speed is halved. With no arms or legs, its speed is 0, and it can't benefit from bonuses to speed."
-        }
-      ]
+      "untranslatedBlocks": 0,
+      "pending": []
     },
     {
       "name": "Giant Spider",
@@ -76,13 +63,8 @@
       "name": "Marilith",
       "slug": "marilith",
       "blocks": 12,
-      "untranslatedBlocks": 1,
-      "pending": [
-        {
-          "heading": "**Variant: Summon Demon (1/Day)**. The demon chooses what to summon and attempts a magical summoning.",
-          "source": "**Variant: Summon Demon (1/Day)**. The demon chooses what to summon and attempts a magical summoning.\nA marilith has a 50 percent chance of summoning 1d6 vrocks, 1d4 hezrous, 1d3 glabrezus, 1d2 nalfeshnees, or one marilith.\nA summoned demon appears in an unoccupied space within 60 feet of its summoner, acts as an ally of its summoner, and can't summon other demons. It remains for 1 minute, until it or its summoner dies, or until its summoner dismisses it as an action."
-        }
-      ]
+      "untranslatedBlocks": 0,
+      "pending": []
     },
     {
       "name": "Black Bear",
