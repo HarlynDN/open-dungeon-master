@@ -3315,6 +3315,11 @@
       "sourceHash": "61c27bfdeda099c413a4782afa0ec63cc3f26d32864d476bac0fc90aeb4f7df4"
     },
     {
+      "id": "gelatinous-cube-ooze",
+      "kind": "monster",
+      "sourceHash": "c38079651cf5250c961fccbad92d4474b8d5d48db07a817b3761b4bab166f687"
+    },
+    {
       "id": "ghast-ghoul",
       "kind": "monster",
       "sourceHash": "a8e2f7a7694f979ed8601782c3a4ee4f8ac5d9efc215dacaaa7546c00994af15"
