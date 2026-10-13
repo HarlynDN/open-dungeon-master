@@ -3185,9 +3185,24 @@
       "sourceHash": "ff8dbba6322fe7f21fc1f5172873f570d61e0f10f7bf9a5821e4d03b8da3015e"
     },
     {
+      "id": "cloud-giant-giant",
+      "kind": "monster",
+      "sourceHash": "9dd078f4b26cef169b0ba5307fa59877df5195c689ee797b97f0f7f5d5c040f5"
+    },
+    {
       "id": "copper-dragon-wyrmling-metallic",
       "kind": "monster",
       "sourceHash": "f3a1d9b13ecb3e87552db78e97f5ce171ed96d849f84710d2647aa5d965f53aa"
+    },
+    {
+      "id": "fire-giant-giant",
+      "kind": "monster",
+      "sourceHash": "ab00dbaf6e179e4b85176aa826e42bbb22f1b65560a796434f369aca1669ec03"
+    },
+    {
+      "id": "frost-giant-giant",
+      "kind": "monster",
+      "sourceHash": "da25d9eb254017fafad19dde454c82eddf15f81dd5f046cfff16be3dcd87b123"
     },
     {
       "id": "gold-dragon-wyrmling-metallic",
@@ -3200,6 +3215,11 @@
       "sourceHash": "6e52de373ce17565f806334c16d1d1cbe9819ad7ceb46b788c3e2bec42b4805c"
     },
     {
+      "id": "hill-giant-giant",
+      "kind": "monster",
+      "sourceHash": "65b45cf16b8849797a120caed75bba32c95ebd5ea89cf2ae1ab5f9f8e3d757a2"
+    },
+    {
       "id": "red-dragon-wyrmling-chromatic",
       "kind": "monster",
       "sourceHash": "2f4f619e1c26422f751739516a58d11f13d73bc12cf6d0e02b510df8f9f1abbc"
@@ -3208,6 +3228,16 @@
       "id": "silver-dragon-wyrmling-metallic",
       "kind": "monster",
       "sourceHash": "90b5164ae5143e42547985b987fc1f808b123ee06bfc8908d6197e2db7febb27"
+    },
+    {
+      "id": "stone-giant-giant",
+      "kind": "monster",
+      "sourceHash": "114df535acbe14a7be4d02e1dab43d083d9807ae30390f5aeda720833ec0a08d"
+    },
+    {
+      "id": "storm-giant-giant",
+      "kind": "monster",
+      "sourceHash": "c79f4b410f7a112cb16684dd8c4ddd7ad18aa002bbd476035765d7d17e3fdac9"
     },
     {
       "id": "white-dragon-wyrmling-chromatic",
