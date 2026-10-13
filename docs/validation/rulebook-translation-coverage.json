@@ -3930,6 +3930,11 @@
       "sourceHash": "407c2f74a37f1b626651cd66f228bd8d3c575dce9e5d4f752fa4e732ecf77cbc"
     },
     {
+      "id": "vampire",
+      "kind": "monster",
+      "sourceHash": "5c4c1a2df983cec0722ce6041b6b25574a460ece71adf178e0f493a33ced5ca9"
+    },
+    {
       "id": "vampire-spawn",
       "kind": "monster",
       "sourceHash": "638defd1bad7a809607bfb8a4d93246849553562eb2a4ed5f2ff57743b7ee7f7"

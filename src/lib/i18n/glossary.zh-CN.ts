@@ -478,6 +478,7 @@ export const ZH_CN_GLOSSARY = [
   {"id":"monster.kraken","source":"Kraken","preferred":"克拉肯","scope":"monster"},
   {"id":"monster.tarrasque","source":"Tarrasque","preferred":"泰拉斯奎","scope":"monster"},
   {"id":"monster.half_dragon_template","source":"Half-Dragon Template","preferred":"半龙模板","scope":"monster"},
+  {"id":"monster.vampire","source":"Vampire","preferred":"吸血鬼","scope":"monster"},
   {"id":"monster.goblin","source":"Goblin","preferred":"哥布林","scope":"monster","aliases":["地精"]},
   {"id":"monster.bugbear","source":"Bugbear","preferred":"熊地精","scope":"monster"},
   {"id":"monster.hobgoblin","source":"Hobgoblin","preferred":"大地精","scope":"monster"},
