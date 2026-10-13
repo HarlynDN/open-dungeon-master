@@ -3665,6 +3665,11 @@
       "sourceHash": "28e1ee00ad5db1fcd1901210e156ed986f9a75df9f25b07df6dca7e930a6726f"
     },
     {
+      "id": "mummy-lord",
+      "kind": "monster",
+      "sourceHash": "fa87fd659a7e59f7da7b9088f40d18ad232040531c562a9aa50a4e576d232c82"
+    },
+    {
       "id": "nalfeshnee-demon",
       "kind": "monster",
       "sourceHash": "3a792836476da137cde82790928bf450ad2a6f0ca0a87b3e58ebc4916f1ff5f5"
