@@ -3600,6 +3600,11 @@
       "sourceHash": "146def09ab990a7678bb8934e296befa65ef87e21a433abd44831147039b7bac"
     },
     {
+      "id": "lich",
+      "kind": "monster",
+      "sourceHash": "5794ec2c092c5882505721ea53a3451d4f8fba1c9c7d6a7b3d0cf36622691262"
+    },
+    {
       "id": "lizardfolk",
       "kind": "monster",
       "sourceHash": "3da88d78f73ebd94d2d64ce601561417a166ff046760a55196dd73a556e62a34"
