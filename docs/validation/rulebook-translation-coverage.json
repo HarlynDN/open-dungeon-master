@@ -3395,6 +3395,11 @@
       "sourceHash": "c39d5b58f38d22485d08c8e6642cbbe242f8fcd027da997d8dc419aa5527d4b1"
     },
     {
+      "id": "glabrezu-demon",
+      "kind": "monster",
+      "sourceHash": "796d70389ec083ed55b614b33a74a7c123b334ba570f1ddc74f214251acc623b"
+    },
+    {
       "id": "gnoll",
       "kind": "monster",
       "sourceHash": "9bd8eaf2f9f3e02422cd2f665445feb73102f55111c5ca0bb40cecd6b15290d1"
