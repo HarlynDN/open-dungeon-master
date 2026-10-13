@@ -110,13 +110,13 @@ function ContentBody({ reference }: { reference: ContentRef }) {
   const { locale, t } = useLocale();
   // The table the dialog opened at reads its DMs' homebrew.
   const campaignId = useContentCampaign();
-  const [state, setState] = useState<{ text: string | null; loading: boolean; name?: string; source?: string; documentSlug?: string; classId?: string; for?: string; failed?: boolean }>({
+  const [state, setState] = useState<{ text: string | null; display?: { locale: string; source: string; text: string }; loading: boolean; name?: string; source?: string; documentSlug?: string; classId?: string; for?: string; failed?: boolean }>({
     text: null,
     loading: true,
   });
 
   const [attempt, setAttempt] = useState(0);
-  const requestKey = JSON.stringify([reference.kind, reference.slug, reference.name, campaignId, attempt]);
+  const requestKey = JSON.stringify([reference.kind, reference.slug, reference.name, campaignId, attempt, locale]);
 
   useEffect(() => {
     let cancelled = false;
@@ -124,14 +124,14 @@ function ContentBody({ reference }: { reference: ContentRef }) {
       try {
         const { describeContentEntry } = await import("@/lib/help");
         const response = await fetch(
-          `/api/content/${reference.kind}/${encodeURIComponent(reference.slug)}${scopeQuery(campaignId)}`,
+          `/api/content/${reference.kind}/${encodeURIComponent(reference.slug)}?localized=1&locale=${encodeURIComponent(locale)}${scopeQuery(campaignId, "&")}`,
         );
         if (response.ok) {
           const data = await response.json();
           const text = describeContentEntry(data?.entry?.data, { includeHigherLevels: reference.kind === "spells" });
           if (text) {
             if (!cancelled) {
-              setState({ for: requestKey, text, name: data?.entry?.name, source: data?.entry?.source,
+              setState({ for: requestKey, text, display: data?.entry?.display, name: data?.entry?.name, source: data?.entry?.source,
                 documentSlug: data?.entry?.documentSlug,
                 classId: typeof data?.entry?.data?.class === "string" ? data.entry.data.class : undefined, loading: false });
             }
@@ -142,7 +142,7 @@ function ContentBody({ reference }: { reference: ContentRef }) {
         // no text. Search by name and take an exact match.
         const wanted = (reference.name ?? reference.slug).trim().toLowerCase();
         const search = await fetch(
-          `/api/content/${reference.kind}?q=${encodeURIComponent(wanted)}&limit=20&mechanics=1${scopeQuery(campaignId, "&")}`,
+          `/api/content/${reference.kind}?q=${encodeURIComponent(wanted)}&limit=20&mechanics=1&localized=1&locale=${encodeURIComponent(locale)}${scopeQuery(campaignId, "&")}`,
         );
         if (!search.ok) {
           if (!cancelled) setState({ for: requestKey, text: null, loading: false, failed: true });
@@ -153,7 +153,7 @@ function ContentBody({ reference }: { reference: ContentRef }) {
           (entry: { name: string; source?: string; documentSlug?: string; data?: Record<string, unknown> }) => entry.name.trim().toLowerCase() === wanted,
         );
         if (!cancelled) {
-          setState({ for: requestKey, text: describeContentEntry(hit?.data, { includeHigherLevels: reference.kind === "spells" }), name: hit?.name, source: hit?.source,
+          setState({ for: requestKey, text: describeContentEntry(hit?.data, { includeHigherLevels: reference.kind === "spells" }), display: hit?.display, name: hit?.name, source: hit?.source,
             documentSlug: hit?.documentSlug,
             classId: typeof hit?.data?.class === "string" ? hit.data.class : undefined, loading: false });
         }
@@ -167,7 +167,7 @@ function ContentBody({ reference }: { reference: ContentRef }) {
     return () => {
       cancelled = true;
     };
-  }, [reference.kind, reference.slug, reference.name, campaignId, attempt, requestKey]);
+  }, [reference.kind, reference.slug, reference.name, campaignId, attempt, requestKey, locale]);
 
   if (state.for !== requestKey || state.loading) {
     return (
@@ -185,6 +185,7 @@ function ContentBody({ reference }: { reference: ContentRef }) {
     );
   }
   let text = state.text;
+  if (state.display?.locale === locale && state.display.source === text) return <>{renderRules(state.display.text)}</>;
   if (reference.kind === "feats" && state.source !== "homebrew") text = nativeFeatHelp(state.name ?? reference.name, text, locale) ?? text;
   else if (reference.kind === "archetypes" && state.classId) text = nativeArchetypeHelp(state.classId, state.name ?? reference.name ?? "", text, locale, state);
   else if (reference.kind === "spells") text = nativeSpellHelp({ ...state, name: state.name ?? reference.name }, text, locale) ?? text;

@@ -102,8 +102,8 @@ real interaction has passed. Do not restart a static translation campaign.
   original row data stays unchanged. Focused source/custom/stale/English-switch
   tests, changed-file lint and i18n checks passed; coverage stays 401/440.
 - Remaining: structured content-pack monster fields are not whole book prose and
-  still need matching/rendering; direct detail and lazy InfoDialog paths also need
-  integration. MonsterHand engine notes must not be replaced with full book pages.
+  still need matching/rendering. Direct detail and lazy InfoDialog now consume
+  the same display projection, with locale-aware requests and stale-response guards. MonsterHand engine notes must not be replaced with full book pages.
 - Next: complete those help paths and inspect real content data, then remaining
   dynamic UI/material/log owners. Full-suite/build and real bilingual journey
   remain unproven; no owner was newly marked covered.
