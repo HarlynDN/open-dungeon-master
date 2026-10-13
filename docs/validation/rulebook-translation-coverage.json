@@ -3895,6 +3895,11 @@
       "sourceHash": "2d6d85bfd9ee3898862925344a2d99e8874f10830d62df2f9c6c43e358022289"
     },
     {
+      "id": "tarrasque",
+      "kind": "monster",
+      "sourceHash": "e8fc53a7934eb7d200a13670edd746f0166c864d330c06d1e0e60081edb416bf"
+    },
+    {
       "id": "treant",
       "kind": "monster",
       "sourceHash": "423493d511a80584adb4c5e270a32ac2473b4aa8a7cbfb71810b349556ecea93"
