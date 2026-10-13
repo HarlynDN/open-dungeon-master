@@ -1,4 +1,4 @@
-import { NATIVE_FEATURE_MATERIAL, NATIVE_FEAT_MATERIAL } from "./feature-material-metadata.ts";
+import { NATIVE_FEATURE_MATERIAL, NATIVE_FEAT_MATERIAL, FIGHTING_STYLE_MATERIAL } from "./feature-material-metadata.ts";
 import { CORE_FEATURE_NAMES, CORE_FEATURE_HELP } from "./core-feature-metadata.ts";
 import { SUBCLASS_FEATURE_MATERIAL } from "./subclass-feature-metadata.ts";
 import { THEMED_FEATURE_MATERIAL } from "./themed-feature-metadata.ts";
@@ -8,6 +8,7 @@ import { normalizeRulesText } from "../help/rules-text.ts";
 import type { AppLocale } from "./locales.ts";
 import { freeCastOf, freeCastResourceId, freeCastResourceText } from "../srd/feat-spells.ts";
 import { referenceDisplayName } from "./references.ts";
+import { builderTermLabel } from "./builder-name-presentations.ts";
 import { featTermLabel } from "./feat-presentations.ts";
 import { sheetResourceHelp } from "./sheet-dialog-presentations.ts";
 
@@ -15,6 +16,8 @@ import { sheetResourceHelp } from "./sheet-dialog-presentations.ts";
 // Translate a known whole summary, never a name-based replacement of homebrew.
 export function nativeFeatureName(name: string, locale: AppLocale, classId?: string): string {
   if (locale === "en") return name;
+  const style = FIGHTING_STYLE_MATERIAL.find(row => row.name === name);
+  if (style) return createTranslator(locale)("callingMaterial.optionFeature", { category: nativeFeatureName("Fighting Style", locale, classId), name: builderTermLabel("fightingStyle", style.style, locale) });
   const free = freeCastOf(name);
   if (free) return createTranslator(locale)("callingMaterial.freeCast.name", {
     spell: referenceDisplayName("spell", free.spell, locale), feat: featTermLabel("feat", free.feat, locale),
@@ -42,6 +45,8 @@ export function nativeFeatureHelp(classId: string, name: string, source: string 
     return sheetResourceHelp(id, source || native, locale);
   }
   if (locale === "en" || !source) return source;
+  const style = FIGHTING_STYLE_MATERIAL.find(row => row.name === name && registeredMessageTemplate("en", row.descriptionKey) === source);
+  if (style) return createTranslator(locale)(style.descriptionKey);
   const option = classOptionHelp(name, source, locale);
   if (option !== source) return option;
   const core = CORE_FEATURE_HELP.find(entry => entry.classId === classId.trim().toLowerCase()

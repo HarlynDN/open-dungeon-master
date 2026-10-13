@@ -64,12 +64,13 @@ for(const locale of ['en','zh-CN']){
  assert(choose);choose.props.onClick();assert.equal(chosenId,race.id);assert(closed);
 }
 // One actual sheet check for saved canonical training and race-owned traits.
-const training={languages:['Common','Dwarvish','Elvish','Draconic','Authored tongue'],tools:["thieves' tools","tinker's tools","smith's tools","alchemist's supplies",'Authored tool'],armor:['light','medium','shields','Authored armor'],weapons:['simple weapons','battleaxes','handaxes','light hammers','warhammers','Authored weapons']};
+const training={languages:['Common','Dwarvish','Elvish','Draconic','Authored tongue'],tools:["thieves' tools","tinker's tools","smith's tools","alchemist's supplies",'Authored tool'],armor:['light','medium','shields','Authored armor'],weapons:['simple','martial','simple weapons','battleaxes','handaxes','light hammers','warhammers','Authored weapons']};
 const original=JSON.stringify(training);
 const enTraining=r.render('TrainingLines',{proficiencies:training},'en');
 for(const values of Object.values(training))for(const value of values)assert(enTraining.includes(value.replaceAll("'",'&#x27;')),value);
 const zhTraining=r.render('TrainingLines',{proficiencies:training},'zh-CN');
-for(const term of ['通用语','矮人语','精灵语','龙语','盗贼工具','修补匠工具','铁匠工具','炼金工具','轻甲','中甲','盾牌','简易武器','战斧','手斧','轻锤','战锤','Authored tongue','Authored tool','Authored armor','Authored weapons'])assert(zhTraining.includes(term),term);
+for(const term of ['通用语','矮人语','精灵语','龙语','盗贼工具','修补匠工具','铁匠工具','炼金工具','轻甲','中甲','盾牌','简易武器','军用武器','战斧','手斧','轻锤','战锤','Authored tongue','Authored tool','Authored armor','Authored weapons'])assert(zhTraining.includes(term),term);
+assert(!/\b(?:simple|martial)\b/.test(zhTraining), 'Saved proficiency categories must not leak canonical English');
 assert.equal(JSON.stringify(training),original);
 const {srdRaceFor}=await import('../src/lib/content/race-options.ts');
 const {lineageFeatureName}=await import('../src/lib/i18n/lineage-presentations.ts');
@@ -90,3 +91,24 @@ for(const [source,raceId,name] of [['story','hill_dwarf','Stonecunning'],['race'
  assert.equal(r.elements().find(e=>e.props.items).props.items[0].name,name);
 }
 console.log('PASS: all 49 bundled background introductions/features/help bind to actual source, exact English assembly and authored/third-party preservation; actual bilingual picker groups, identity tooltips, racial tool callbacks and lineage choice IDs.');
+
+// Saved choices must use the same bilingual display path as the creation UI.
+const {FIGHTING_STYLES,fightingStyleFeatureName}=await import('../src/lib/srd/feature-effects.ts');
+const {describeFeature}=await import('../src/lib/help/index.ts');
+const {nativeFeatureHelp}=await import('../src/lib/i18n/feature-material-presentations.ts');
+for(const style of FIGHTING_STYLES){
+ const name=fightingStyleFeatureName(style.id),help=describeFeature('fighter','',name);
+ const features=[{name,source:'choice'}],before=JSON.stringify(features);
+ for(const locale of ['en','zh-CN']){
+  r.render('FeatureChips',{features,classId:'fighter'},locale);
+  const chip=r.elements().find(e=>e.props.items).props.items[0];
+  assert.equal(chip.id,name);
+  if(locale==='en'){assert.equal(chip.name,name);assert.equal(chip.text,help);}
+  else {assert(/战斗风格/.test(chip.name),chip.name);assert(/\p{Script=Han}/u.test(chip.text),chip.text);assert(!chip.text.includes('Fighting Style'));}
+ }
+ assert.equal(nativeFeatureHelp('fighter',name,'Authored replacement.','zh-CN'),'Authored replacement.');
+ r.render('FeatureChips',{features:[{name,source:'story'}],classId:'fighter'},'zh-CN');
+ assert.equal(r.elements().find(e=>e.props.items).props.items[0].name,name);
+ assert.equal(JSON.stringify(features),before);
+}
+console.log('PASS: six saved fighting styles and canonical simple/martial proficiency categories render in Chinese; English, story labels, changed help and stored IDs remain unchanged.');

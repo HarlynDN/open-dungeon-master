@@ -1006,3 +1006,13 @@ export const NATIVE_FEAT_MATERIAL = [
     "emptyPrerequisite": true
   }
 ] as const;
+
+// Canonical saved choice names; help is bound to complete English guidance.
+export const FIGHTING_STYLE_MATERIAL = [
+  { name: "Fighting Style: Archery", style: "Archery", descriptionKey: "callingMaterial.savedStyle.archery" },
+  { name: "Fighting Style: Defense", style: "Defense", descriptionKey: "callingMaterial.savedStyle.defense" },
+  { name: "Fighting Style: Dueling", style: "Dueling", descriptionKey: "callingMaterial.savedStyle.dueling" },
+  { name: "Fighting Style: Great Weapon Fighting", style: "Great Weapon Fighting", descriptionKey: "callingMaterial.savedStyle.greatWeapon" },
+  { name: "Fighting Style: Protection", style: "Protection", descriptionKey: "callingMaterial.savedStyle.protection" },
+  { name: "Fighting Style: Two-Weapon Fighting", style: "Two-Weapon Fighting", descriptionKey: "callingMaterial.savedStyle.twoWeapon" },
+] as const;

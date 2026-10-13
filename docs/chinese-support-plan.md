@@ -105,7 +105,31 @@ this section records current delivery state and acceptance gaps only.
   variants and original model/tool data. Direct-client full-spell and server
   content-display regressions pass. Feature-material regression passes with
   corrected locale-aware mock keys and unchanged English hashes.
-- UI source coverage: 416/440 owners, zero pending literal sites, 19317 keys.
+- Saved-character follow-up (2026-10-14): the live 3019 instance remained
+  running after its browser tab disappeared; a new tab reused the instance.
+  Created and reopened 中文验收林河 (hill dwarf / fighter / acolyte, level 1)
+  through all six Chinese wizard steps. Saved skills, languages, tool and gear
+  labels were retained. Reopening exposed canonical `simple` / `martial` and
+  `Fighting Style: Defense` display leaks. Presentation-only mappings now cover
+  both short weapon categories and all six exact saved style names/help texts;
+  complete English help matching preserves authored replacements. The grouped
+  background/creation/saved-sheet regression and feature-material regression
+  pass; focused ESLint passes. Frozen English snapshots and canonical fields
+  remain unchanged. The first build caught widened metadata key types; after
+  adding `as const`, webpack build passed (/tmp/odm-saved-character-build-retry.log).
+  Fresh production instance 3020 repeated the entire creation/save/reopen flow:
+  简易武器/军用武器 and 战斗风格：防御 plus its help now display in Chinese.
+  Switching the account to English and reopening the same character restored
+  original category/style/help text while retaining the Chinese authored name.
+  Screenshots: /tmp/odm-saved-style-zh.png and /tmp/odm-saved-style-en.png.
+  This is UI acceptance only, with no configured model runtime or Open5e DB.
+  Saved AC reads 18 while Defense help states the bonus is included; the earlier
+  English source says the same. Preserve this observation for the mechanics
+  acceptance audit rather than claim numerical correctness from translated UI.
+  A failed attempt to reuse the old encrypted temporary DB was abandoned after
+  automatic approval rejected process-key extraction; 3020 uses a newly seeded
+  disposable DB, not recovered credentials. Final release gates remain open.
+- UI source coverage: 416/440 owners, zero pending literal sites, 19323 keys.
   Completed pure-helper/consumer reviews are recorded in
   docs/validation/ui-localization.json. Whole-owner dynamic output and browser
   acceptance remain distinct; stale theme counts were corrected to 733/733.
@@ -162,6 +186,12 @@ this section records current delivery state and acceptance gaps only.
   server display metadata through packClassOptions, and classHelpText accepts
   only matching locale/full-source projections. Server projection reuses the
   complete translated class page only for wotc-srd exact normalized text.
+  Post-patch webpack build passed (log /tmp/odm-class-content-build.log).
+  Fresh isolated production instance on 127.0.0.1:3019 verified Chinese login,
+  character creation landing and Acolyte full background/feature help modal
+  (/tmp/odm-acolyte-help-zh.png). Old 3018 page failed to open the modal while
+  its build assets were being replaced; fresh-instance behavior passed. This
+  verifies the modal consumer, not unavailable external class-pack variants.
   Twelve native class documents pass the option/help pipeline test, including
   English preservation and homebrew/other-book/changed-source refusal. Focused
   lint and type check passed. All six original calling-material regression

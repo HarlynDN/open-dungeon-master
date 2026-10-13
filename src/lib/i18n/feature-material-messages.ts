@@ -2,6 +2,12 @@ import { defineMessages } from "./catalog.ts";
 
 // Translations of the project-owned short help and feat summaries.
 export const FEATURE_MATERIAL_MESSAGES = /*#__PURE__*/ defineMessages({
+  "callingMaterial.savedStyle.archery": {"en": "Archery: +2 on every ranged weapon attack roll. The server applies it.", "zh-CN": "箭术：每次远程武器攻击掷骰获得 +2，由服务器自动应用。"},
+  "callingMaterial.savedStyle.defense": {"en": "Defense: +1 AC while wearing armor. Already in their armor class.", "zh-CN": "防御：穿着护甲时，护甲等级获得 +1。此加值已计入护甲等级。"},
+  "callingMaterial.savedStyle.dueling": {"en": "Dueling: +2 damage when wielding one melee weapon in one hand and nothing in the other. The server applies it.", "zh-CN": "决斗：单手持一件近战武器且另一手空着时，伤害获得 +2，由服务器自动应用。"},
+  "callingMaterial.savedStyle.greatWeapon": {"en": "Great Weapon Fighting: 1s and 2s on the damage dice of a two-handed or versatile melee weapon are rerolled once. The server rerolls them.", "zh-CN": "巨武器战斗：双手或多用近战武器的伤害骰掷出 1 或 2 时，重掷一次，由服务器执行。"},
+  "callingMaterial.savedStyle.protection": {"en": "Protection: as a reaction, using a shield, impose disadvantage on an attack roll against an ally within 5 feet.", "zh-CN": "保护：使用盾牌时，可以用反应使针对 5 英尺内盟友的一次攻击掷骰具有劣势。"},
+  "callingMaterial.savedStyle.twoWeapon": {"en": "Two-Weapon Fighting: the off-hand attack keeps its ability modifier on damage instead of losing it.", "zh-CN": "双武器战斗：副手攻击的伤害保留属性调整值。"},
   "callingMaterial.freeCast.name": {
     "en": "Free cast: {spell} ({feat})",
     "zh-CN": "免费施法：{spell}（{feat}）"

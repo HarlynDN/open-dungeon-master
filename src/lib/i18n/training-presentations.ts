@@ -33,8 +33,8 @@ export function sheetTrainingLabel(kind: "language" | "tool" | "armor" | "weapon
     return translated === name ? value : translated;
   }
   const normalized = normalize(value);
-  const category = normalized === "simple weapons" ? "sessionUi.level.grant.simple"
-    : normalized === "martial weapons" ? "sessionUi.level.grant.martial" : null;
+  const category = (normalized === "simple" || normalized === "simple weapons") ? "sessionUi.level.grant.simple"
+    : (normalized === "martial" || normalized === "martial weapons") ? "sessionUi.level.grant.martial" : null;
   if (category) return createTranslator(locale)(category);
   for (const name of [value, normalized.endsWith("s") ? normalized.slice(0, -1) : value]) {
     const translated = referenceDisplayName("equipment", name, locale);
