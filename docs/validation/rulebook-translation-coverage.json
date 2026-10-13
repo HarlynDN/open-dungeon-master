@@ -3295,6 +3295,11 @@
       "sourceHash": "f3a1d9b13ecb3e87552db78e97f5ce171ed96d849f84710d2647aa5d965f53aa"
     },
     {
+      "id": "couatl",
+      "kind": "monster",
+      "sourceHash": "186e9a7743620bd13450972da766d9c6039198f7e6f6e43a73e9963a11b92fcd"
+    },
+    {
       "id": "darkmantle",
       "kind": "monster",
       "sourceHash": "447df8ab419cfd448ab76ed06ce6b0dcc872b95ae4eabc872435bfa1d6c203ed"
