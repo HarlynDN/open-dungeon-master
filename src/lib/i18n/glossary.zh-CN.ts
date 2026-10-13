@@ -369,6 +369,7 @@ export const ZH_CN_GLOSSARY = [
   {"id":"monster.druid_npc","source":"Druid","preferred":"德鲁伊","scope":"monster"},
   {"id":"monster.mage","source":"Mage","preferred":"魔法师","scope":"monster"},
   {"id":"monster.priest","source":"Priest","preferred":"祭司","scope":"monster"},
+  {"id":"monster.assassin","source":"Assassin","preferred":"刺客","scope":"monster"},
   {"id":"monster.goblin","source":"Goblin","preferred":"哥布林","scope":"monster","aliases":["地精"]},
   {"id":"monster.bugbear","source":"Bugbear","preferred":"熊地精","scope":"monster"},
   {"id":"monster.hobgoblin","source":"Hobgoblin","preferred":"大地精","scope":"monster"},

@@ -51,17 +51,29 @@ for (const row of coverageManifest.requiredPages.filter(row => row.kind === 'mon
   assert.deepEqual(display.md.match(/\d+/g), data.page.md.match(/\d+/g), row.id + ': monster quantities');
   const props = { data: { ...data, display }, terms: [], xrefs, onOpen: () => {} };
   const chinese = renderer.render('RulebookPage', props, 'zh-CN');
-  assert.ok(chinese.includes(display.title) && chinese.includes('护甲等级'), row.id);
-  assert.ok(chinese.includes('rb-abilities'), row.id + ': localized ability table styling');
+  const isNpcGuide = row.id === 'customizing-npcs';
+  assert.ok(chinese.includes(display.title), row.id);
+  if (isNpcGuide) {
+    for (const section of ['种族特性', '替换法术', '更换护甲和武器', '魔法物品']) assert.ok(chinese.includes(section), section);
+    assert.ok(!chinese.includes('rb-abilities'), 'NPC guide must remain prose');
+  } else {
+    assert.ok(chinese.includes('护甲等级'), row.id);
+    assert.ok(chinese.includes('rb-abilities'), row.id + ': localized ability table styling');
+  }
   assert.ok(!chinese.includes('Armor Class') && !chinese.includes('Melee Weapon Attack'), row.id);
   const english = renderer.render('RulebookPage', props, 'en');
-  assert.ok(english.includes('Armor Class') && english.includes('rb-abilities'), row.id);
+  if (isNpcGuide) {
+    for (const section of ['Racial Traits', 'Spell Swaps', 'Armor and Weapon Swaps', 'Magic Items']) assert.ok(english.includes(section), section);
+    assert.ok(!english.includes('rb-abilities'));
+  } else assert.ok(english.includes('Armor Class') && english.includes('rb-abilities'), row.id);
   assert.equal(rulebookPageDisplay(data.page, 'en').md, data.page.md);
   assert.equal(rulebookPageDisplay({ ...data.page, md: data.page.md + '\n\nAuthored change.' }, 'zh-CN').translated, false);
-  assert.equal(referenceDisplayName('monster', data.page.title, 'zh-CN'), display.title);
-  const candidate = { id: row.id, name: data.page.title };
-  assert.equal(resolveReference('monster', display.title, [candidate], 'zh-CN').entry?.id, row.id);
-  assert.equal(referenceDisplayName('monster', data.page.title, 'en'), data.page.title);
+  if (!isNpcGuide) {
+    assert.equal(referenceDisplayName('monster', data.page.title, 'zh-CN'), display.title);
+    const candidate = { id: row.id, name: data.page.title };
+    assert.equal(resolveReference('monster', display.title, [candidate], 'zh-CN').entry?.id, row.id);
+    assert.equal(referenceDisplayName('monster', data.page.title, 'en'), data.page.title);
+  }
   assert.equal(JSON.stringify(data), before);
 }
 for (const row of LOCALIZED_SPELL_PAGES) {

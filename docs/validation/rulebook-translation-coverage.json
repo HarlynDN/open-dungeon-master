@@ -4015,6 +4015,11 @@
       "sourceHash": "63bdf2502e8daa235b7142a5ade7429c014a7f5024ff585b2e11f1708ddfa75a"
     },
     {
+      "id": "assassin",
+      "kind": "monster",
+      "sourceHash": "b469e3beb347f758cc40fba7b99b1d20412c29932e55ec0e941196c87c08b428"
+    },
+    {
       "id": "bandit",
       "kind": "monster",
       "sourceHash": "db0affbdd0e8f92810812a217effad9073054d0eb4fa82218d5a84672b017e54"
@@ -4043,6 +4048,11 @@
       "id": "cultist",
       "kind": "monster",
       "sourceHash": "2a0700b7e7d3d77f6031ecb37c421abc36c24775e95851c405a7794824503ceb"
+    },
+    {
+      "id": "customizing-npcs",
+      "kind": "monster",
+      "sourceHash": "dd90d6e9587dc64bc6cc15c5551b184e29a9242b028514662612d7df39974d83"
     },
     {
       "id": "druid-npc",
