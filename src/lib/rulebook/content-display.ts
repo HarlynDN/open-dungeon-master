@@ -11,7 +11,7 @@ import type { RulebookPage } from "./types.ts";
 
 export function contentDisplay<T extends { name: string; source: string; documentSlug?: string; data: Record<string, unknown> }>(kind: string, entry: T, locale: AppLocale): T & { display?: { locale: AppLocale; source: string; text: string } } {
   if (locale === "en" || entry.source === "homebrew" || entry.documentSlug !== "wotc-srd") return entry;
-  const source = describeContentEntry(entry.data);
+  const source = describeContentEntry(entry.data, { includeHigherLevels: kind === "spells" });
   if (!source) return entry;
   let text = source;
   if (kind === "spells") text = nativeSpellHelp(entry, source, locale) ?? source;

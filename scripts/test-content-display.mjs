@@ -24,3 +24,22 @@ for (const other of [
 const stale = { ...translated, data: { desc: 'Changed after projection.' } };
 assert.equal(referenceRowDescription('monsters', stale, 'zh-CN'), 'Changed after projection.');
 console.log('content-display: source identity, Chinese consumer, English switch, mutation and stale/custom refusal passed');
+
+const { bundledSpellRows, bundledItemRows } = await import('../src/lib/rulebook/catalog-rows.ts');
+const { describeContentEntry } = await import('../src/lib/help/index.ts');
+let spellCount = 0, itemCount = 0;
+for (const [kind, rows] of [['spells', bundledSpellRows()], ['items', bundledItemRows()]]) {
+  for (const native of rows) {
+    const original = describeContentEntry(native.data, { includeHigherLevels: kind === 'spells' });
+    const shown = contentDisplay(kind, native, 'zh-CN');
+    assert.ok(shown.display, native.name + ': complete native projection');
+    assert.equal(shown.display.source, original);
+    assert.equal(referenceRowDescription(kind, shown, 'zh-CN'), shown.display.text);
+    assert.equal(referenceRowDescription(kind, shown, 'en'), original);
+    assert.equal(shown.data, native.data);
+    const changed = { ...native, data: { ...native.data, desc: String(native.data.desc ?? '') + '\nCustom alteration.' } };
+    assert.equal(contentDisplay(kind, changed, 'zh-CN'), changed);
+    if (kind === 'spells') spellCount++; else itemCount++;
+  }
+}
+console.log(`content-display: ${spellCount} complete spells and ${itemCount} items, Chinese/English and changed-source refusal passed`);

@@ -101,6 +101,10 @@ real interaction has passed. Do not restart a static translation campaign.
   referenceRowDescription consumer checks locale and original text before use;
   original row data stays unchanged. Focused source/custom/stale/English-switch
   tests, changed-file lint and i18n checks passed; coverage stays 401/440.
+- Complete-prose regression now covers all 319 bundled spells and 239 items:
+  projection and reference display include higher-level spell text, English switching
+  preserves full source, and changed descriptions refuse replacement. Fixed the
+  prior omission of higher-level paragraphs from the server matching input.
 - Remaining: structured content-pack monster fields are not whole book prose and
   still need matching/rendering. Direct detail and lazy InfoDialog now consume
   the same display projection, with locale-aware requests and stale-response guards. MonsterHand engine notes must not be replaced with full book pages.

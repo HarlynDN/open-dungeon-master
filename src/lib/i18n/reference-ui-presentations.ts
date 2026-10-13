@@ -29,7 +29,7 @@ export function referenceRowName(kind: string, row: ReferenceRow, locale: AppLoc
 // Only already-reviewed identical owned summaries are translated. A pack's
 // extended description or authored prose is never replaced by a name match.
 export function referenceRowDescription(kind: string, row: ReferenceRow, locale: AppLocale): string | null {
-  const source = describeContentEntry(row.data);
+  const source = describeContentEntry(row.data, { includeHigherLevels: kind === "spells" });
   if (!source || !owned(row) || locale === "en") return source;
   if (row.display?.locale === locale && row.display.source === source) return row.display.text;
   if (kind === "feats") return nativeFeatHelp(row.name, source, locale) ?? source;
