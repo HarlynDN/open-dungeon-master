@@ -3170,6 +3170,11 @@
       "sourceHash": "132bb310cba20859b059d4c8af07d02155390924c59f4bc6206269e32eb62b38"
     },
     {
+      "id": "basilisk",
+      "kind": "monster",
+      "sourceHash": "36825263a2de7d3a6a34a88443f439781009e7d470203383611bfceddbd8d9a3"
+    },
+    {
       "id": "black-dragon-wyrmling-chromatic",
       "kind": "monster",
       "sourceHash": "dbe64296f8f1b327afb1fe238c140609a137694f3c25fa064d57efd049d72778"
@@ -3195,9 +3200,19 @@
       "sourceHash": "c353ba12f213282c41d71ebeda63278d85abeb448315943f611794f79c9fcd25"
     },
     {
+      "id": "chimera",
+      "kind": "monster",
+      "sourceHash": "0345a10380cab90bf3ebc690ad386bb4a46efd206e31f7bc63f907e1331605fd"
+    },
+    {
       "id": "cloud-giant-giant",
       "kind": "monster",
       "sourceHash": "9dd078f4b26cef169b0ba5307fa59877df5195c689ee797b97f0f7f5d5c040f5"
+    },
+    {
+      "id": "cockatrice",
+      "kind": "monster",
+      "sourceHash": "81bda756e4c7f1d33b09bdbdbb907c12dd39f2ebac02a334142b630d3f8e77c8"
     },
     {
       "id": "copper-dragon-wyrmling-metallic",
@@ -3235,9 +3250,19 @@
       "sourceHash": "6e52de373ce17565f806334c16d1d1cbe9819ad7ceb46b788c3e2bec42b4805c"
     },
     {
+      "id": "griffon",
+      "kind": "monster",
+      "sourceHash": "b8c849ddb833b64f7ed6f5025f95719a0e470ca61abfb5c4b1f70364e8239549"
+    },
+    {
       "id": "hill-giant-giant",
       "kind": "monster",
       "sourceHash": "65b45cf16b8849797a120caed75bba32c95ebd5ea89cf2ae1ab5f9f8e3d757a2"
+    },
+    {
+      "id": "hippogriff",
+      "kind": "monster",
+      "sourceHash": "4c067ca0e94c0690ef6935c8d44c676e74b31528342ca9658d37902bef23eb66"
     },
     {
       "id": "hobgoblin",
