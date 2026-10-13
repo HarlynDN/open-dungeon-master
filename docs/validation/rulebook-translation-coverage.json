@@ -3185,6 +3185,11 @@
       "sourceHash": "2da71b46116d5294e331e58771b7042b2b2c4b2e7c117f4e90f249119e3356e5"
     },
     {
+      "id": "barbed-devil-devil",
+      "kind": "monster",
+      "sourceHash": "0da1be2841c989fdb9c6aad35a471a5bdfb1528b786eebd168608041a3e4f4af"
+    },
+    {
       "id": "basilisk",
       "kind": "monster",
       "sourceHash": "36825263a2de7d3a6a34a88443f439781009e7d470203383611bfceddbd8d9a3"
