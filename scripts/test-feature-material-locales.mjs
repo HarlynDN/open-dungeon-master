@@ -188,14 +188,14 @@ const info = await openCombatRenderer({files: [infoFile], stubs: {
   '@/lib/content-scope': url('export const useContentCampaign=()=>null;export const scopeQuery=()=>"";'),
 }});
 const infoProps = {open: true, onOpenChange: () => {}, title: 'Tough', reference: {kind: 'feats', name: 'Tough', slug: 'tough'}};
-const loaded = text => ({queues: {[infoFile]: [{text, loading: false,
-  for: JSON.stringify([infoProps.reference.kind, infoProps.reference.slug, infoProps.reference.name, null, 0])}]}});
+const loaded = (text, locale = "en") => ({queues: {[infoFile]: [{text, loading: false,
+  for: JSON.stringify([infoProps.reference.kind, infoProps.reference.slug, infoProps.reference.name, null, 0, locale])}]}});
 const source = authoredFeatDesc('Tough');
 assert.equal(hash(info.render('InfoDialog', infoProps, 'en', loaded(source))), golden.dialog);
-assert(info.render('InfoDialog', infoProps, 'zh-CN', loaded(source)).includes(MESSAGE_CATALOGS['zh-CN'][NATIVE_FEAT_MATERIAL.find(row => row.name === 'Tough').descriptionKey]));
+assert(info.render('InfoDialog', infoProps, 'zh-CN', loaded(source, 'zh-CN')).includes(MESSAGE_CATALOGS['zh-CN'][NATIVE_FEAT_MATERIAL.find(row => row.name === 'Tough').descriptionKey]));
 // The same raw loaded text rerenders in English; it was not translated in state.
 assert.equal(hash(info.render('InfoDialog', infoProps, 'en', loaded(source))), golden.dialog);
-assert(info.render('InfoDialog', infoProps, 'zh-CN', loaded('Authored Tough replacement.')).includes('Authored Tough replacement.'));
+assert(info.render('InfoDialog', infoProps, 'zh-CN', loaded('Authored Tough replacement.', 'zh-CN')).includes('Authored Tough replacement.'));
 
 // One grouped creation -> sheet check for the newly shared core projection.
 const {srdClassOptions} = await import('../src/lib/characters/options.ts');
@@ -263,7 +263,7 @@ for(const locale of ['zh-CN','en']){
  const tooltip=calling.elements().find(e=>e.props.reference?.kind==='archetypes');
  assert(tooltip);assert.equal(tooltip.props.text,expected);assert.equal(tooltip.props.reference.slug,archetype.id);
  const rawState={text:normalizeRulesText(archetype.desc),loading:false,name:archetype.name,classId:'artificer',source:archetype.source,documentSlug:archetype.documentSlug,
-  for:JSON.stringify(['archetypes',archetype.id,archetype.name,null,0])};
+  for:JSON.stringify(['archetypes',archetype.id,archetype.name,null,0,locale])};
  const stateBefore=JSON.stringify(rawState);
  const html=info.render('InfoDialog',archetypeInfo,locale,{queues:{[infoFile]:[rawState]}});
  assert(html.includes(locale==='en'?'Always-prepared spells':'始终准备的法术'));

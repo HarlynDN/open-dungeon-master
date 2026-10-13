@@ -86,6 +86,8 @@ real interaction has passed. Do not restart a static translation campaign.
 
 ## Next delivery unit and interruption checkpoint
 
+- Acceptance checkpoint (2026-10-14): fixed both ESLint errors (NPC review async loading and a spellcasting option helper misidentified as a Hook); focused and full lint pass (0 errors, 22 ESLint warnings; terminology 0 errors, 389 context warnings). The sandboxed full test run was terminated after locating a local mock-server listen EPERM; its failing script passes with elevated execution, and the full suite is rerunning there. Default Turbopack production build failed twice on port binding (including elevated retry); a documented Webpack build is running as supplementary diagnosis, not a default-build pass. The complete bilingual runtime journey remains unverified. Feature-material regression passes after correcting two mock request keys missing locale; immutable English hashes were preserved. Reviewed the pure lead-edit helpers and their UI consumers; coverage is now 406/440, with browser acceptance still separate. Corrected stale 322/733 theme-coverage notes in the data manifest; this does not close whole-owner or browser acceptance.
+
 - Added Vampire: 933/933 pages, 318/318 monster-kind pages. Reviewed bat/mist
   forms, resting-place escape/recovery, weaknesses, bite/spawn creation, charm
   termination and night summons. Native rulebook prose coverage is now complete.

@@ -33,7 +33,7 @@ const abilityOptions = (locale: AppLocale) => [
   ...SAVE_ABILITY_IDS.map((ability) => ({ value: ability as string, label: locale === "en" ? ability.toUpperCase() : abilityLabel(ability, locale) })),
 ];
 
-const useOptions = (locale: AppLocale) => [
+const castingUseOptions = (locale: AppLocale) => [
   { value: "slot", label: monsterUiText("From a slot", locale) },
   { value: "atwill", label: monsterUiText("At will", locale) },
   ...[1, 2, 3].map((count) => ({ value: `day${count}`, label: monsterUiFrame("usesDay", { count }, locale) })),
@@ -144,7 +144,7 @@ export function SpellcastingEditor({ draft, onChange }: Props) {
                             : { name: spell.name, level: null, perDay: Number(use.slice(3)) };
                       set({ ...casting, spells: casting.spells.map((row, at) => (at === index ? next : row)) });
                     }}
-                    options={useOptions(locale)}
+                    options={castingUseOptions(locale)}
                   />
                 </span>
                 {castWay(spell) === "slot" ? (

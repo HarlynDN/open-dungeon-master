@@ -2,7 +2,7 @@
 
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { createTranslator } from "@/lib/i18n/translator";
-import { readLoad } from "@/lib/load-state";
+import { readLoad, type LoadOutcome } from "@/lib/load-state";
 import { controlText, npcAttitudeLabel } from "@/lib/i18n/story-control-presentations";
 import { Check, Loader2, Merge, Pencil, X } from "lucide-react";
 import { isComposingInput } from "@/lib/input-composition";
@@ -42,8 +42,7 @@ export function NpcReviewPanel({ campaignId }: { campaignId: string }) {
 
   const url = `/api/campaigns/${campaignId}/npcs/review`;
 
-  const load = useCallback(async () => {
-    const outcome = await readLoad<{ npcs?: ReviewNpc[]; suggestions?: Suggestion[] }>(fetch(url), "The NPC roster");
+  const settle = useCallback((outcome: LoadOutcome<{ npcs?: ReviewNpc[]; suggestions?: Suggestion[] }>) => {
     if (outcome.error !== null) {
       setLoadError(outcome.error);
       return;
@@ -52,11 +51,19 @@ export function NpcReviewPanel({ campaignId }: { campaignId: string }) {
     setSuggestions(outcome.payload.suggestions ?? []);
     setLoaded(true);
     setLoadError("");
-  }, [url]);
+  }, []);
+
+  const requestRoster = useCallback(() =>
+    readLoad<{ npcs?: ReviewNpc[]; suggestions?: Suggestion[] }>(fetch(url), "The NPC roster"), [url]);
+  const load = useCallback(async () => settle(await requestRoster()), [requestRoster, settle]);
 
   useEffect(() => {
-    void load();
-  }, [load]);
+    let active = true;
+    void requestRoster().then((outcome) => {
+      if (active) settle(outcome);
+    });
+    return () => { active = false; };
+  }, [requestRoster, settle]);
 
   const act = useCallback(
     async (body: Record<string, unknown>) => {
