@@ -434,6 +434,7 @@ export const ZH_CN_GLOSSARY = [
   {"id":"monster.vampire_spawn","source":"Vampire Spawn","preferred":"初生吸血鬼","scope":"monster"},
   {"id":"monster.cloaker","source":"Cloaker","preferred":"斗篷怪","scope":"monster"},
   {"id":"monster.sea_hag","source":"Sea Hag","preferred":"海鬼婆","scope":"monster"},
+  {"id":"monster.green_hag","source":"Green Hag","preferred":"绿鬼婆","scope":"monster"},
   {"id":"monster.goblin","source":"Goblin","preferred":"哥布林","scope":"monster","aliases":["地精"]},
   {"id":"monster.bugbear","source":"Bugbear","preferred":"熊地精","scope":"monster"},
   {"id":"monster.hobgoblin","source":"Hobgoblin","preferred":"大地精","scope":"monster"},

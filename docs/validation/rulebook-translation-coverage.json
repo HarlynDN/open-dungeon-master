@@ -3400,6 +3400,11 @@
       "sourceHash": "6e52de373ce17565f806334c16d1d1cbe9819ad7ceb46b788c3e2bec42b4805c"
     },
     {
+      "id": "green-hag",
+      "kind": "monster",
+      "sourceHash": "919c1f96b92a619f96678668f1d44aff34faa5bffe0644c48c972931384fea50"
+    },
+    {
       "id": "grick",
       "kind": "monster",
       "sourceHash": "1563ee4bfbc563ddb1eca1aedb0119a4a0ab1639f1f477f40e18c3666814c237"
