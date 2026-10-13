@@ -7,7 +7,7 @@ import { Bookmark, ChevronRight, Search, X } from "lucide-react";
 import { isComposingInput } from "@/lib/input-composition";
 import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import { cn } from "@/lib/cn";
-import { stem } from "@/lib/rulebook/search";
+import { cjkHighlightRuns, stem } from "@/lib/rulebook/search";
 import type { ContentsChapter, ContentsEntry, RulebookContents as Contents, RulebookPart, SearchHit } from "@/lib/rulebook/types";
 import { Digits } from "./RulebookPage";
 
@@ -20,6 +20,10 @@ import { Digits } from "./RulebookPage";
 export type OpenFromContents = (id: string, at?: string, terms?: string[]) => void;
 
 function Highlighted({ text, terms }: { text: string; terms: string[] }) {
+  if (terms.some(term => /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u.test(term))) {
+    return <>{cjkHighlightRuns(text, terms).map((run, index) => run.marked
+      ? <mark key={index} className="rb-mark">{run.text}</mark> : run.text)}</>;
+  }
   const parts = text.split(/([A-Za-z0-9]+(?:['’][A-Za-z]+)?)/);
   return (
     <>

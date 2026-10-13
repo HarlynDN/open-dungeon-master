@@ -7,7 +7,7 @@ import { PagePrep } from "./PagePrep";
 import { Fragment, useMemo, type ReactNode } from "react";
 import { cn } from "@/lib/cn";
 import { inlineText, parseBook, preserveBookAnchors, parseInline, type BookBlock, type InlineNode } from "@/lib/rulebook/markdown";
-import { stem } from "@/lib/rulebook/search";
+import { cjkHighlightRuns, stem } from "@/lib/rulebook/search";
 import type { RulebookPageResponse } from "@/lib/rulebook/types";
 
 // One page of the rulebook, set like a printed page: the running head, the
@@ -51,6 +51,12 @@ export function Digits({ text }: { text: string }) {
 }
 
 function marked(text: string, terms: string[], key: string, display = false): ReactNode {
+  if (terms.some(term => /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u.test(term))) {
+    return cjkHighlightRuns(text, terms).map((run, index) => {
+      const body = display ? <Digits text={run.text} /> : run.text;
+      return run.marked ? <mark key={`${key}-${index}`} className="rb-mark">{body}</mark> : <Fragment key={`${key}-${index}`}>{body}</Fragment>;
+    });
+  }
   if (!terms.length && !(display && /\d/.test(text))) return text;
   const parts = text.split(/([A-Za-z0-9]+(?:['’][A-Za-z]+)?)/);
   return parts.map((part, index) => {

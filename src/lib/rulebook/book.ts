@@ -4,8 +4,10 @@
 // changes while it runs; the search index is built on the first search.
 import type { AppLocale } from "../i18n/locales.ts";
 import { rulebookSearchQueries } from "./search-locales.ts";
+import { rulebookPageDisplay } from "./localized-pages.ts";
+import { bookHeader } from "../i18n/book-ui-presentations.ts";
 import data from "./srd-5.1.json";
-import { buildIndex, queryTerms, searchRulebook, type RulebookIndex } from "./search";
+import { buildIndex, localizedSearchHit, queryTerms, searchRulebook, type RulebookIndex } from "./search";
 import type {
   ContentsChapter,
   QuickLink,
@@ -42,6 +44,7 @@ const chapterById = new Map(book.chapters.map((chapter) => [chapter.id, chapter]
 
 let contents: RulebookContents | null = null;
 let index: RulebookIndex | null = null;
+const localizedIndexes = new Map<AppLocale, RulebookIndex>();
 
 export function rulebookContents(): RulebookContents {
   if (contents) return contents;
@@ -86,16 +89,31 @@ export function rulebookPage(id: string): RulebookPageResponse | null {
 
 export function rulebookSearch(query: string, limit?: number, locale: AppLocale = "en"): SearchResponse {
   index ??= buildIndex(book.pages, book.chapters);
-  const queries = rulebookSearchQueries(query, locale);
-  if (queries.length === 1) return { hits: searchRulebook(index, queries[0], limit), terms: queryTerms(queries[0]) };
+  if (locale === "en") return { hits: searchRulebook(index, query, limit), terms: queryTerms(query) };
+  let localized = localizedIndexes.get(locale);
+  if (!localized) {
+    const anchors = new Map<string, string[]>();
+    const pages = book.pages.map(page => {
+      const display = rulebookPageDisplay(page, locale);
+      if (display.anchors) anchors.set(page.id, display.anchors);
+      return display.translated ? { ...page, title: display.title, meta: display.meta, md: display.md } : page;
+    });
+    localized = buildIndex(pages, book.chapters.map(chapter => ({ ...chapter,
+      title: bookHeader("chapter", chapter.id, "title", chapter.title, locale) })), anchors);
+    localizedIndexes.set(locale, localized);
+  }
+  const queries = [...new Set([query, ...rulebookSearchQueries(query, locale)])];
+  const terms = queryTerms(query);
   // Alternatives are separate searches: concatenating unrelated aliases would
   // require every name in one passage and erase the native exact-title boost.
   const byPassage = new Map<string, SearchResponse["hits"][number]>();
-  for (const candidate of queries) for (const hit of searchRulebook(index, candidate, limit)) {
-    const key = `${hit.page}:${hit.at ?? ""}`;
-    if ((byPassage.get(key)?.score ?? -Infinity) < hit.score) byPassage.set(key, hit);
+  for (const candidate of queries) {
+    for (const hit of [...searchRulebook(localized, candidate, limit), ...searchRulebook(index, candidate, limit)]) {
+      const key = `${hit.page}:${hit.at ?? ""}`;
+      if ((byPassage.get(key)?.score ?? -Infinity) < hit.score) byPassage.set(key, localizedSearchHit(localized, hit, terms));
+    }
   }
-  return { hits: [...byPassage.values()].sort((a, b) => b.score - a.score || a.title.localeCompare(b.title)).slice(0, limit ?? 40), terms: [...new Set(queries.flatMap(queryTerms))] };
+  return { hits: [...byPassage.values()].sort((a, b) => b.score - a.score || a.title.localeCompare(b.title)).slice(0, limit ?? 40), terms };
 }
 
 export function rulebookPages(): RulebookPage[] {

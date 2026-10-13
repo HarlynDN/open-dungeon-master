@@ -7,7 +7,7 @@
 //
 // Words are compared by a light stem ("grappling", "grappled" and "grapple"
 // are one word) that the reader also uses to highlight what matched.
-import { blockText, parseBook, stripInline, type BookBlock } from "./markdown";
+import { blockText, parseBook, preserveBookAnchors, stripInline, type BookBlock } from "./markdown";
 import type { RulebookKind, RulebookPage, SearchHit } from "./types";
 
 const STOP = new Set(["a", "an", "and", "the", "of", "to", "in", "on", "or", "for", "is", "it", "at", "by", "be", "as", "with", "do", "does", "how", "what", "when", "can", "i", "you", "my"]);
@@ -25,7 +25,12 @@ export function stem(word: string): string {
 }
 
 export function words(text: string): string[] {
-  return text.toLowerCase().match(/[a-z0-9]+(?:['’][a-z]+)?/g) ?? [];
+  const tokens = text.toLowerCase().match(/[a-z0-9]+(?:['’][a-z]+)?|[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]+/gu) ?? [];
+  return tokens.flatMap(token => {
+    const chars = [...token];
+    return /^[a-z0-9]/.test(token) || chars.length === 1 ? [token]
+      : chars.slice(0, -1).map((char, index) => char + chars[index + 1]);
+  });
 }
 
 // The query as the stems it will be matched by, stop words dropped unless
@@ -111,13 +116,15 @@ function passagesOf(page: RulebookPage, blocks: BookBlock[]): Passage[] {
 export function buildIndex(
   pages: RulebookPage[],
   chapters: Array<{ id: string; numeral: string; title: string }>,
+  anchors?: ReadonlyMap<string, readonly string[]>,
 ): RulebookIndex {
   return {
     pages: pages.map((page) => ({
       page,
       titleStems: new Set(words(page.title).map(stem)),
       titleLower: page.title.toLowerCase(),
-      passages: passagesOf(page, parseBook(page.md)),
+      passages: passagesOf(page, anchors?.has(page.id)
+        ? preserveBookAnchors(parseBook(page.md), anchors.get(page.id)!) ?? parseBook(page.md) : parseBook(page.md)),
     })),
     chapters: new Map(chapters.map((chapter) => [chapter.id, { numeral: chapter.numeral, title: chapter.title }])),
   };
@@ -128,7 +135,7 @@ const KIND_WEIGHT: Record<RulebookKind, number> = { rules: 14, class: 8, race: 8
 
 function hasTerm(stems: Map<string, number> | Set<string>, term: string, prefix: boolean): boolean {
   if (stems.has(term)) return true;
-  if (!prefix || term.length < 2) return false;
+  if (!prefix || (term.length < 2 && !/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u.test(term))) return false;
   for (const key of stems.keys()) if (key.startsWith(term)) return true;
   return false;
 }
@@ -153,19 +160,63 @@ export function snippetFor(text: string, terms: string[], width = 200): string {
       break;
     }
   }
+  const cjk = terms.filter(term => /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u.test(term));
+  for (const term of cjk) {
+    const at = text.toLowerCase().indexOf(term);
+    if (at >= 0 && (first < 0 || at < first)) first = at;
+  }
   if (text.length <= width) return text;
   if (first < 0) first = 0;
   let start = Math.max(0, first - Math.floor(width / 3));
-  if (start > 0) {
+  if (start > 0 && !cjk.length) {
     const space = text.indexOf(" ", start);
     start = space === -1 ? start : space + 1;
   }
   let end = Math.min(text.length, start + width);
-  if (end < text.length) {
+  if (end < text.length && !cjk.length) {
     const space = text.lastIndexOf(" ", end);
     end = space > start ? space : end;
   }
   return `${start > 0 ? "… " : ""}${text.slice(start, end).trim()}${end < text.length ? " …" : ""}`;
+}
+
+// A canonical/alias search can find an English title while the reader displays
+// Chinese. Use the same canonical passage identity to return its visible prose.
+export function localizedSearchHit(index: RulebookIndex, hit: SearchHit, terms: string[]): SearchHit {
+  const entry = index.pages.find(entry => entry.page.id === hit.page);
+  if (!entry) return hit;
+  const passage = entry.passages.find(passage => passage.at === hit.at);
+  return { ...hit, title: entry.page.title, chapter: index.chapters.get(entry.page.chapter)?.title ?? hit.chapter,
+    heading: passage?.heading ?? hit.heading, snippet: passage ? snippetFor(passage.text, terms) : hit.snippet };
+}
+
+// Literal CJK terms may overlap (生命, 命值). Merge intervals so the visible
+// phrase is highlighted once; React still escapes every returned text segment.
+export function cjkHighlightRuns(text: string, terms: string[]): Array<{ text: string; marked: boolean }> {
+  const ranges: Array<[number, number]> = [];
+  for (const match of text.matchAll(/[a-z0-9]+(?:['’][a-z]+)?/gi)) {
+    const key = stem(match[0]);
+    if (terms.some(term => key === term || key.startsWith(term))) ranges.push([match.index, match.index + match[0].length]);
+  }
+  for (const term of terms.filter(term => /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u.test(term))) {
+    let at = text.indexOf(term);
+    while (at >= 0) { ranges.push([at, at + term.length]); at = text.indexOf(term, at + 1); }
+  }
+  ranges.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+  const merged: Array<[number, number]> = [];
+  for (const range of ranges) {
+    const previous = merged.at(-1);
+    if (previous && range[0] <= previous[1]) previous[1] = Math.max(previous[1], range[1]);
+    else merged.push([...range]);
+  }
+  const runs: Array<{ text: string; marked: boolean }> = [];
+  let at = 0;
+  for (const [start, end] of merged) {
+    if (start > at) runs.push({ text: text.slice(at, start), marked: false });
+    runs.push({ text: text.slice(start, end), marked: true }); at = end;
+  }
+  if (at < text.length) runs.push({ text: text.slice(at), marked: false });
+  return runs;
 }
 
 export function searchRulebook(index: RulebookIndex, query: string, limit = 40): SearchHit[] {
@@ -173,7 +224,7 @@ export function searchRulebook(index: RulebookIndex, query: string, limit = 40):
   if (!terms.length) return [];
   const phrase = query.trim().toLowerCase();
   // The last word may still be being typed.
-  const typed = /[a-z0-9]$/i.test(query.trim());
+  const typed = /[a-z0-9\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]$/iu.test(query.trim());
   const isPrefix = (position: number) => typed && position === terms.length - 1;
   const hits: SearchHit[] = [];
 

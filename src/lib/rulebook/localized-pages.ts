@@ -44,7 +44,10 @@ export function rulebookPageDisplay(page: RulebookPageResponse["page"] | Ruleboo
     const meta = registeredMessageTemplate(locale, row.metaKey);
     const title = registeredMessageTemplate(locale, nameRow.key);
     if (!translatedBody || translatedBody === body || !meta || !title) return original;
-    return { locale, translated: true, title, meta, md: `*${meta}*\n\n${translatedBody}` };
+    const md = `*${meta}*\n\n${translatedBody}`;
+    const anchors = bookAnchorIds(parseBook(page.md));
+    if (anchors.length !== bookAnchorIds(parseBook(md)).length) return original;
+    return { locale, translated: true, title, meta, md, anchors };
   }
   if (page.kind !== "spell") return original;
   const row = LOCALIZED_SPELL_PAGES.find(row => row.id === page.id && row.name === page.title);
