@@ -430,6 +430,7 @@ export const ZH_CN_GLOSSARY = [
   {"id":"monster.wight","source":"Wight","preferred":"尸妖","scope":"monster"},
   {"id":"monster.will_o_wisp","source":"Will-o'-Wisp","preferred":"鬼火","scope":"monster"},
   {"id":"monster.ghost","source":"Ghost","preferred":"幽魂","scope":"monster"},
+  {"id":"monster.mummy","source":"Mummy","preferred":"木乃伊","scope":"monster"},
   {"id":"monster.goblin","source":"Goblin","preferred":"哥布林","scope":"monster","aliases":["地精"]},
   {"id":"monster.bugbear","source":"Bugbear","preferred":"熊地精","scope":"monster"},
   {"id":"monster.hobgoblin","source":"Hobgoblin","preferred":"大地精","scope":"monster"},
