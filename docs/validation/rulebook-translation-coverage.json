@@ -3425,6 +3425,11 @@
       "sourceHash": "e042840ccf430d84e320c3a2fcf9a52548c108c785810bacbceabf88c0e69031"
     },
     {
+      "id": "stirge",
+      "kind": "monster",
+      "sourceHash": "b6b5000d520f92d8adc0e6c99f34d7b0d0ccb514a07e2fcf775748764fd7b382"
+    },
+    {
       "id": "stone-giant-giant",
       "kind": "monster",
       "sourceHash": "114df535acbe14a7be4d02e1dab43d083d9807ae30390f5aeda720833ec0a08d"
@@ -3675,6 +3680,11 @@
       "sourceHash": "13d7ce09490dc4969b67cd1448ac0cd806a2a9ea03d06ad905cca4022c2cf962"
     },
     {
+      "id": "giant-centipede",
+      "kind": "monster",
+      "sourceHash": "5c5c94ef06eb84d7c92a83c39e4cc8de6e3c3196e44ac24a046da6fc5b62bdc4"
+    },
+    {
       "id": "giant-constrictor-snake",
       "kind": "monster",
       "sourceHash": "df0c9c2018939083239d1598cf708efd552696fe43e687cd0628efa7a570ed1d"
@@ -3745,6 +3755,11 @@
       "sourceHash": "7d590d8cc8c33f8812b697f47fbd617c7a773f3fd8fa67f1257e0cd784c03651"
     },
     {
+      "id": "giant-scorpion",
+      "kind": "monster",
+      "sourceHash": "cada9294efa75d27dc029aee26101fdf4825684425e8c7f3a7b2ed24021077a5"
+    },
+    {
       "id": "giant-sea-horse",
       "kind": "monster",
       "sourceHash": "76f786a37f7755dd24f89401c81006fa15c5beb36a951416a6e194a9126bf059"
@@ -3753,6 +3768,11 @@
       "id": "giant-shark",
       "kind": "monster",
       "sourceHash": "85ca5a7dd127636d6fb27f9e3bfceb25db19875d31126be42f296380b8309e2c"
+    },
+    {
+      "id": "giant-spider",
+      "kind": "monster",
+      "sourceHash": "9aad46c998c306c53f111d2a5446d091216a0943c2afc384009d55940cc6dfd7"
     },
     {
       "id": "giant-toad",
@@ -3765,9 +3785,19 @@
       "sourceHash": "4a9e4ea9c228a28a5a6821d849e791b60316d099acc53c20a61582d19f650f6c"
     },
     {
+      "id": "giant-wasp",
+      "kind": "monster",
+      "sourceHash": "f28e32be66006c9be030104c46b2861633b675ab6a7d6f75a25a88ca16103b11"
+    },
+    {
       "id": "giant-weasel",
       "kind": "monster",
       "sourceHash": "6bc4f7879e95866a510463520cebe41c9cfb42b1595a6afa4c274d4433eb0df8"
+    },
+    {
+      "id": "giant-wolf-spider",
+      "kind": "monster",
+      "sourceHash": "738d1eef1be0b63807b80fa35fddf517787261af5de95b0bdda8d88340755e40"
     },
     {
       "id": "goat",
