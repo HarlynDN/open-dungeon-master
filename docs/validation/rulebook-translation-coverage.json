@@ -3335,6 +3335,11 @@
       "sourceHash": "6272c51cfc4a490003207bc6f98227a61b1d0edfd80cfb01a50ac6f5dbb7d7a9"
     },
     {
+      "id": "gray-ooze",
+      "kind": "monster",
+      "sourceHash": "9a5c3168fedfa12130e1164fbc47c66e304a49ed5b30ea1c2465d2889e5a815e"
+    },
+    {
       "id": "green-dragon-wyrmling-chromatic",
       "kind": "monster",
       "sourceHash": "6e52de373ce17565f806334c16d1d1cbe9819ad7ceb46b788c3e2bec42b4805c"
@@ -3463,6 +3468,11 @@
       "id": "nightmare",
       "kind": "monster",
       "sourceHash": "f239983e80a6c6ae95d969b4a3da22f504939a21e6e865b49161227791dce46e"
+    },
+    {
+      "id": "ochre-jelly-ooze",
+      "kind": "monster",
+      "sourceHash": "957d5048ae8938ae8914088eef2d62d29ebf508868882b705c087a424cf203b0"
     },
     {
       "id": "ogre",
