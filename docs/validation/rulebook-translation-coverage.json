@@ -3320,6 +3320,11 @@
       "sourceHash": "1bf45421eab65332b16f4cc868549184cc4084b9d46a204e861baebeea048490"
     },
     {
+      "id": "shrieker-fungi",
+      "kind": "monster",
+      "sourceHash": "99c2af36fdde143f0a516754fc1c12bc4f87e76dd14a601486f1a10d71f04c81"
+    },
+    {
       "id": "silver-dragon-wyrmling-metallic",
       "kind": "monster",
       "sourceHash": "90b5164ae5143e42547985b987fc1f808b123ee06bfc8908d6197e2db7febb27"
@@ -3343,6 +3348,11 @@
       "id": "troll",
       "kind": "monster",
       "sourceHash": "65b6fce36e5cbcd33ae08498cdc907ed41a478eb4b50fc4e4bf07989317c5f40"
+    },
+    {
+      "id": "violet-fungus-fungi",
+      "kind": "monster",
+      "sourceHash": "2c5bb83323d65a1804be2b2398b2dc35e6a0d1c0172de7b6144af9bd2c911170"
     },
     {
       "id": "warhorse-skeleton",
@@ -3408,6 +3418,16 @@
       "id": "zombie",
       "kind": "monster",
       "sourceHash": "e0b5d79db1b641a5955801f542c874a5d33b2251c10a4f916c228b5f22c32cd6"
+    },
+    {
+      "id": "awakened-shrub",
+      "kind": "monster",
+      "sourceHash": "6f965e444df7fdc429ddeb7b093ddf923b4c1ce5ad95bb4d79de5f952acc6efe"
+    },
+    {
+      "id": "awakened-tree",
+      "kind": "monster",
+      "sourceHash": "6d65bb53bb21990d1ffe49daa6c5e3f0a3e585f4d924181f297c890b9d9a1fc8"
     },
     {
       "id": "blink-dog",
