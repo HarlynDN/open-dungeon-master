@@ -449,6 +449,7 @@ export const ZH_CN_GLOSSARY = [
   {"id":"monster.glabrezu","source":"Glabrezu","preferred":"迷诱魔","scope":"monster"},
   {"id":"monster.balor","source":"Balor","preferred":"巴洛炎魔","scope":"monster"},
   {"id":"monster.pit_fiend","source":"Pit Fiend","preferred":"深狱炼魔","scope":"monster"},
+  {"id":"monster.elf_drow","source":"Elf, Drow","preferred":"卓尔精灵","scope":"monster","aliases":["卓尔"]},
   {"id":"monster.goblin","source":"Goblin","preferred":"哥布林","scope":"monster","aliases":["地精"]},
   {"id":"monster.bugbear","source":"Bugbear","preferred":"熊地精","scope":"monster"},
   {"id":"monster.hobgoblin","source":"Hobgoblin","preferred":"大地精","scope":"monster"},

@@ -3330,6 +3330,11 @@
       "sourceHash": "3506a90438699f79aa1387600eb1122bfd2498c686463f16ee29fd9f7d03da5e"
     },
     {
+      "id": "elf-drow",
+      "kind": "monster",
+      "sourceHash": "d98dbe48e4ff2acf4d10add8b2785852eed60b51425e1d4db93c38480d3cd858"
+    },
+    {
       "id": "erinyes-devil",
       "kind": "monster",
       "sourceHash": "b40c1f94515ca4a9a36c0e2303eea9244dc8126f8ee0fce0eab41def47b5b60e"
