@@ -112,4 +112,45 @@ await test("Chinese caster sheet preserves mechanics, native names and editable 
   assert(enValues.includes('星澜'));assert(enValues.includes('Wizard Spellcasting'));assert(enValues.some(v=>v?.includes('Magic Missile')));
   if(process.env.ODM_PDF_PREVIEW)fs.writeFileSync(process.env.ODM_PDF_PREVIEW.replace('.pdf','-caster.pdf'),bytes);
 });
+await test("long unspaced Chinese has continuation pages without changing canonical text", async () => {
+  const backstory = "旅人沿着古老城墙寻找失落的地图。".repeat(180) + "终章标记";
+  const character = libraryToPdfCharacter({ name: "长篇角色", race: sheet.race, class: sheet.class,
+    subclass: "", background: "soldier", level: 1, sheet: { ...sheet, backstory, notes: "" } });
+  const bytes = await buildCharacterSheetPdf(character, { locale: "zh-CN",
+    fontBytes: fs.readFileSync(new URL("../public/fonts/NotoSansSC-Regular.ttf", import.meta.url)) });
+  const doc = await PDFDocument.load(bytes);
+  const fields = doc.getForm().getFields().filter(f => typeof f.getText === "function");
+  assert(doc.getPageCount() > 1);
+  assert(fields.some(f => f.getText() === backstory), "canonical field retains every original character");
+  assert(fields.at(-1).getText().replace(/\n/g, "").includes("终章标记"), "last continuation contains the ending");
+  assert(fields.every(f => f.acroField.getWidgets().every(w => Boolean(w.getNormalAppearance()))));
+  if (process.env.ODM_PDF_PREVIEW) fs.writeFileSync(process.env.ODM_PDF_PREVIEW.replace(".pdf", "-long.pdf"), bytes);
+});
+await test("font download failure prevents a corrupt download and a retry succeeds", async () => {
+  const { downloadCharacterSheetPdf } = await import("../src/lib/pdf/download.ts");
+  const character = libraryToPdfCharacter({ name: sheet.name, race: sheet.race, class: sheet.class,
+    subclass: "", background: "soldier", level: 1, sheet });
+  const oldFetch = globalThis.fetch, oldDocument = globalThis.document;
+  let clicked = 0;
+  globalThis.document = { createElement: () => ({ click() { clicked += 1; }, remove() {} }),
+    body: { appendChild() {} } };
+  try {
+    globalThis.fetch = async () => new Response("missing", { status: 404 });
+    await assert.rejects(downloadCharacterSheetPdf(character, "zh-CN"), /font could not be loaded/);
+    assert.equal(clicked, 0);
+    globalThis.fetch = async () => { throw new Error("offline"); };
+    await assert.rejects(downloadCharacterSheetPdf(character, "zh-CN"), /offline/);
+    assert.equal(clicked, 0);
+    globalThis.fetch = async url => {
+      assert.equal(url, "/fonts/NotoSansSC-Regular.ttf");
+      return new Response(fs.readFileSync(new URL("../public/fonts/NotoSansSC-Regular.ttf", import.meta.url)));
+    };
+    await downloadCharacterSheetPdf(character, "zh-CN");
+    assert.equal(clicked, 1);
+  } finally {
+    globalThis.fetch = oldFetch;
+    if (oldDocument === undefined) delete globalThis.document;
+    else globalThis.document = oldDocument;
+  }
+});
 console.log(`test-character-pdf: ${passed} passed`);

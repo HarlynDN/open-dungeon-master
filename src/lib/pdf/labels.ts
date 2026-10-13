@@ -12,6 +12,7 @@ const LABELS: Partial<Record<AppLocale, Readonly<Record<string, string>>>> = {
     "Current HP": "当前生命", "Temp HP": "临时生命", "Hit Dice": "生命骰",
     Successes: "成功", Failures: "失败", "Death Saves": "死亡豁免",
     "Attacks & Spellcasting": "攻击与施法", Name: "名称", Atk: "攻击", "Damage / Type": "伤害／类型",
+    Continued: "续页",
     Equipment: "装备", Gold: "金币", "Features & Traits": "特性与特质", Feat: "专长",
     "Other Proficiencies & Languages": "其他熟练项与语言", Armor: "护甲", Weapons: "武器",
     "all armor": "所有护甲", Tools: "工具", Languages: "语言", "Backstory & Notes": "背景故事与笔记",

@@ -7,6 +7,7 @@
 
 import {
   PDFDocument,
+  defaultTextFieldAppearanceProvider,
   type PDFFont,
   type PDFForm,
   type PDFPage,
@@ -152,6 +153,7 @@ type Ctx = {
   unicode: boolean;
   locale: AppLocale;
   n: number;
+  overflow: { label: string; text: string; size: number }[];
 };
 
 function box(ctx: Ctx, x: number, y: number, w: number, h: number, filled = false) {
@@ -174,6 +176,28 @@ function heading(ctx: Ctx, x: number, y: number, text: string, size = 8) {
   ctx.page.drawText(pdfLabel(text, ctx.locale).toUpperCase(), { x, y, size, font: ctx.bold, color: INK });
 }
 
+// Wrap by grapheme so Chinese without spaces and emoji sequences stay intact.
+// The display layout is separate from the canonical editable field value.
+function wrapText(value: string, font: PDFFont, size: number, width: number): { text: string; end: number }[] {
+  const segmenter = new Intl.Segmenter(undefined, { granularity: "grapheme" });
+  const lines: { text: string; end: number }[] = [];
+  let line = "";
+  for (const { segment, index } of segmenter.segment(value)) {
+    if (/^[\r\n]+$/.test(segment)) {
+      lines.push({ text: line, end: index + segment.length });
+      line = "";
+    } else {
+      if (line && font.widthOfTextAtSize(line + segment, size) >= width) {
+        lines.push({ text: line, end: index });
+        line = "";
+      }
+      line += segment;
+    }
+  }
+  lines.push({ text: line, end: value.length });
+  return lines;
+}
+
 // Create a placed, pre-filled text field. Every value on the sheet goes
 // through here so the whole document is editable.
 function field(
@@ -183,7 +207,7 @@ function field(
   w: number,
   h: number,
   value: string,
-  opts: { size?: number; align?: TextAlignment; multiline?: boolean } = {},
+  opts: { size?: number; align?: TextAlignment; multiline?: boolean; label?: string } = {},
 ) {
   const f = ctx.form.createTextField(`f${ctx.n++}`);
   const fieldFont = ctx.unicode && /^[\x09\x0a\x0d\x20-\x7e]*$/.test(value) ? ctx.latin : ctx.font;
@@ -207,7 +231,26 @@ function field(
   const requested = opts.size ?? 9;
   const valueWidth = value && !opts.multiline ? fieldFont.widthOfTextAtSize(ctx.unicode ? value : sanitize(value), 1) : 0;
   f.setFontSize(opts.multiline ? requested : Math.min(requested, (w - 4) / Math.max(1, valueWidth), h * 0.8));
-  f.updateAppearances(fieldFont);
+  if (opts.multiline) {
+    const displayValue = ctx.unicode ? value : sanitize(value);
+    const lines = wrapText(displayValue, fieldFont, requested, w - 4);
+    const capacity = Math.max(1, Math.floor((h - 4) / (fieldFont.heightAtSize(requested) * 1.2)));
+    const visible = lines.slice(0, capacity).map(line => line.text).join("\n");
+    if (lines.length > capacity) {
+      ctx.overflow.push({ label: opts.label ?? "Continued", text: displayValue.slice(lines[capacity - 1].end), size: requested });
+    }
+    f.updateAppearances(fieldFont, (textField, widget, font) => {
+      // Override only the provider's display text; /V remains lossless.
+      const displayField = new Proxy(textField, {
+        get(target, property, receiver) {
+          return property === "getText" ? () => visible : Reflect.get(target, property, receiver);
+        },
+      });
+      return defaultTextFieldAppearanceProvider(displayField, widget, font);
+    });
+  } else {
+    f.updateAppearances(fieldFont);
+  }
   return f;
 }
 
@@ -443,7 +486,7 @@ function drawCombat(ctx: Ctx, c: PdfCharacter, derived: ReturnType<typeof comput
   const eqText = c.equipment
     .map((item) => (item.qty > 1 ? `${referenceDisplayName("equipment", item.name, ctx.locale)} x${item.qty}` : referenceDisplayName("equipment", item.name, ctx.locale)))
     .join("\n");
-  field(ctx, x + 4, MARGIN + 22, w - 8, eqH - 18, eqText, { size: 8, multiline: true });
+  field(ctx, x + 4, MARGIN + 22, w - 8, eqH - 18, eqText, { size: 8, multiline: true, label: "Equipment" });
   box(ctx, x, MARGIN, w, 16, true);
   caption(ctx, x + 4, MARGIN + 5, "Gold");
   field(ctx, x + 30, MARGIN + 2, w - 34, 12, String(c.gold), { size: 9 });
@@ -466,7 +509,7 @@ async function drawTraits(ctx: Ctx, c: PdfCharacter, portraitBytes?: Uint8Array)
   const featH = 176;
   box(ctx, x, y - featH, w, featH, true);
   heading(ctx, x + 4, y - 11, "Features & Traits");
-  field(ctx, x + 4, y - featH + 3, w - 8, featH - 16, featText, { size: 8, multiline: true });
+  field(ctx, x + 4, y - featH + 3, w - 8, featH - 16, featText, { size: 8, multiline: true, label: "Features & Traits" });
   y -= featH + 8;
 
   // Other proficiencies & languages.
@@ -482,7 +525,7 @@ async function drawTraits(ctx: Ctx, c: PdfCharacter, portraitBytes?: Uint8Array)
   const profH = 120;
   box(ctx, x, y - profH, w, profH, true);
   heading(ctx, x + 4, y - 11, "Other Proficiencies & Languages");
-  field(ctx, x + 4, y - profH + 3, w - 8, profH - 16, profText, { size: 8, multiline: true });
+  field(ctx, x + 4, y - profH + 3, w - 8, profH - 16, profText, { size: 8, multiline: true, label: "Other Proficiencies & Languages" });
   y -= profH + 8;
 
   // Backstory / notes down to the bottom margin.
@@ -490,7 +533,7 @@ async function drawTraits(ctx: Ctx, c: PdfCharacter, portraitBytes?: Uint8Array)
   box(ctx, x, MARGIN, w, bioH, true);
   heading(ctx, x + 4, y - 11, "Backstory & Notes");
   const bioText = [c.backstory, c.notes].filter(Boolean).join("\n\n");
-  field(ctx, x + 4, MARGIN + 3, w - 8, bioH - 16, bioText, { size: 8, multiline: true });
+  field(ctx, x + 4, MARGIN + 3, w - 8, bioH - 16, bioText, { size: 8, multiline: true, label: "Backstory & Notes" });
 }
 
 type WeaponRow = { name: string; toHit: number; damage: string; type: string };
@@ -587,6 +630,7 @@ function drawSpellPage(ctx: Ctx, c: PdfCharacter, derived: ReturnType<typeof com
   field(ctx, MARGIN + 4, MARGIN + 3, PAGE_W - MARGIN * 2 - 8, listH - 16, spellText, {
     size: 9,
     multiline: true,
+    label: "Spells",
   });
 }
 
@@ -616,7 +660,7 @@ export async function buildCharacterSheetPdf(
   const derived = computeSheetDerived(character);
 
   const page1 = doc.addPage([PAGE_W, PAGE_H]);
-  const ctx: Ctx = { doc, page: page1, form, font, latin, bold, unicode: Boolean(options.fontBytes), locale: options.locale ?? "en", n: 0 };
+  const ctx: Ctx = { doc, page: page1, form, font, latin, bold, unicode: Boolean(options.fontBytes), locale: options.locale ?? "en", n: 0, overflow: [] };
   drawHeader(ctx, character);
   drawAbilities(ctx, character, derived);
   drawSavesAndSkills(ctx, character, derived);
@@ -628,6 +672,15 @@ export async function buildCharacterSheetPdf(
     drawSpellPage(ctx, character, derived);
   }
 
+  // A queue also handles material longer than one continuation page.
+  while (ctx.overflow.length) {
+    const continuation = ctx.overflow.shift()!;
+    ctx.page = doc.addPage([PAGE_W, PAGE_H]);
+    heading(ctx, MARGIN, PAGE_H - MARGIN - 12,
+      `${pdfLabel(continuation.label, ctx.locale)} · ${pdfLabel("Continued", ctx.locale)}`);
+    field(ctx, MARGIN, MARGIN, PAGE_W - MARGIN * 2, PAGE_H - MARGIN * 2 - 28,
+      continuation.text, { size: continuation.size, multiline: true, label: continuation.label });
+  }
   form.updateFieldAppearances(font);
   return doc.save();
 }

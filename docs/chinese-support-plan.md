@@ -199,13 +199,18 @@ this section records current delivery state and acceptance gaps only.
   reaches library/session exports; owned labels, native rules/names and spell
   lists project in Chinese, with English switching and authored text preserved.
   Attack table height and single-line font sizing avoid prior clipping; ASCII
-  numeric fields retain Helvetica. Four PDF field/English checks and 18 sheet
+  numeric fields retain Helvetica. Six PDF field/English/overflow/transport checks and 18 sheet
   dialog checks pass; fighter and two-page caster renders were inspected, with
   zero Poppler warnings. Session download failures show a localized error.
-  Final type/lint and 12 sheet-party checks pass. Actual browser download, failed-font transport,
-  long Chinese field wrapping/overflow remain separate gates. No full PDF or
+  Long unspaced Chinese wraps by grapheme with full-width continuation pages;
+  canonical editable fields retain the original text. The two-page long-text
+  render was inspected through its final marker. Font HTTP/offline failure
+  prevents download and a subsequent retry succeeds in the DOM unit fixture.
+  Final type/lint and 12 sheet-party checks pass. Actual browser download
+  remains a separate gate. No full PDF or
   CharacterSheetDialog acceptance claimed yet. Logs: /tmp/odm-pdf-locales-final-test.log
-  and /tmp/odm-pdf-sheet-dialog-regression.log.
+  and /tmp/odm-pdf-sheet-dialog-regression.log; latest PDF checks:
+  /tmp/odm-pdf-wrap-tests.log and /tmp/odm-pdf-wrap-types.log.
 - UI source coverage: 434/438 in-scope owners, two explicitly deferred voice
   owners, zero pending literal sites, 19325 keys. Four text owners still
   require review; the final coverage gate must continue to fail until closed.
