@@ -1897,5 +1897,253 @@ export const BOOK_MATERIAL_MESSAGES = defineMessages({
   "bookMaterial.spell.wall-of-stone.meta": {
     "en": "5th-level evocation",
     "zh-CN": "五环塑能"
+  },
+  "bookMaterial.spell.blade-barrier.header": {
+    "en": "*6th-level evocation*\n\n**Casting Time:** 1 action\n\n**Range:** 90 feet\n\n**Components:** V, S\n\n**Duration:** Concentration, up to 10 minutes",
+    "zh-CN": "*六环塑能*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 90 英尺\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 专注，至多 10 分钟"
+  },
+  "bookMaterial.spell.blade-barrier.meta": {
+    "en": "6th-level evocation",
+    "zh-CN": "六环塑能"
+  },
+  "bookMaterial.spell.chain-lightning.header": {
+    "en": "*6th-level evocation*\n\n**Casting Time:** 1 action\n\n**Range:** 150 feet\n\n**Components:** V, S, M (a bit of fur; a piece of amber, glass, or a crystal rod; and three silver pins)\n\n**Duration:** Instantaneous",
+    "zh-CN": "*六环塑能*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 150 英尺\n\n**法术成分：** 言语、姿势、材料（少许毛皮，一块琥珀、玻璃或一根水晶棒，以及三根银针）\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.chain-lightning.meta": {
+    "en": "6th-level evocation",
+    "zh-CN": "六环塑能"
+  },
+  "bookMaterial.spell.circle-of-death.header": {
+    "en": "*6th-level necromancy*\n\n**Casting Time:** 1 action\n\n**Range:** 150 feet\n\n**Components:** V, S, M (the powder of a crushed black pearl worth at least 500 gp)\n\n**Duration:** Instantaneous",
+    "zh-CN": "*六环死灵*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 150 英尺\n\n**法术成分：** 言语、姿势、材料（价值至少 500 gp 的黑珍珠碾成的粉末）\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.circle-of-death.meta": {
+    "en": "6th-level necromancy",
+    "zh-CN": "六环死灵"
+  },
+  "bookMaterial.spell.conjure-fey.header": {
+    "en": "*6th-level conjuration*\n\n**Casting Time:** 1 minute\n\n**Range:** 90 feet\n\n**Components:** V, S\n\n**Duration:** Concentration, up to 1 hour",
+    "zh-CN": "*六环咒法*\n\n**施法时间：** 1 分钟\n\n**施法距离：** 90 英尺\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 专注，至多 1 小时"
+  },
+  "bookMaterial.spell.conjure-fey.meta": {
+    "en": "6th-level conjuration",
+    "zh-CN": "六环咒法"
+  },
+  "bookMaterial.spell.contingency.header": {
+    "en": "*6th-level evocation*\n\n**Casting Time:** 10 minutes\n\n**Range:** Self\n\n**Components:** V, S, M (a statuette of yourself carved from ivory and decorated with gems worth at least 1,500 gp)\n\n**Duration:** 10 days",
+    "zh-CN": "*六环塑能*\n\n**施法时间：** 10 分钟\n\n**施法距离：** 自身\n\n**法术成分：** 言语、姿势、材料（以象牙雕刻、宝石装饰的自身小雕像，价值至少 1,500 gp）\n\n**持续时间：** 10 天"
+  },
+  "bookMaterial.spell.contingency.meta": {
+    "en": "6th-level evocation",
+    "zh-CN": "六环塑能"
+  },
+  "bookMaterial.spell.create-undead.header": {
+    "en": "*6th-level necromancy*\n\n**Casting Time:** 1 minute\n\n**Range:** 10 feet\n\n**Components:** V, S, M (one clay pot filled with grave dirt, one clay pot filled with brackish water, and one 150 gp black onyx stone for each corpse)\n\n**Duration:** Instantaneous",
+    "zh-CN": "*六环死灵*\n\n**施法时间：** 1 分钟\n\n**施法距离：** 10 英尺\n\n**法术成分：** 言语、姿势、材料（一罐墓土、一罐半咸水，以及每具尸体各需一颗价值 150 gp 的黑缟玛瑙）\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.create-undead.meta": {
+    "en": "6th-level necromancy",
+    "zh-CN": "六环死灵"
+  },
+  "bookMaterial.spell.disintegrate.header": {
+    "en": "*6th-level transmutation*\n\n**Casting Time:** 1 action\n\n**Range:** 60 feet\n\n**Components:** V, S, M (a lodestone and a pinch of dust)\n\n**Duration:** Instantaneous",
+    "zh-CN": "*六环变化*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 60 英尺\n\n**法术成分：** 言语、姿势、材料（一块磁石和少许尘土）\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.disintegrate.meta": {
+    "en": "6th-level transmutation",
+    "zh-CN": "六环变化"
+  },
+  "bookMaterial.spell.eyebite.header": {
+    "en": "*6th-level necromancy*\n\n**Casting Time:** 1 action\n\n**Range:** Self\n\n**Components:** V, S\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*六环死灵*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 自身\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.eyebite.meta": {
+    "en": "6th-level necromancy",
+    "zh-CN": "六环死灵"
+  },
+  "bookMaterial.spell.find-the-path.header": {
+    "en": "*6th-level divination*\n\n**Casting Time:** 1 minute\n\n**Range:** Self\n\n**Components:** V, S, M (a set of divinatory tools- such as bones, ivory sticks, cards, teeth, or carved runes-worth 100 gp and an object from the location you wish to find)\n\n**Duration:** Concentration, up to 1 day",
+    "zh-CN": "*六环预言*\n\n**施法时间：** 1 分钟\n\n**施法距离：** 自身\n\n**法术成分：** 言语、姿势、材料（一套价值 100 gp 的占卜工具，例如骨头、象牙棒、卡牌、牙齿或刻有符文的物品，以及一件来自目标地点的物体）\n\n**持续时间：** 专注，至多 1 天"
+  },
+  "bookMaterial.spell.find-the-path.meta": {
+    "en": "6th-level divination",
+    "zh-CN": "六环预言"
+  },
+  "bookMaterial.spell.flesh-to-stone.header": {
+    "en": "*6th-level transmutation*\n\n**Casting Time:** 1 action\n\n**Range:** 60 feet\n\n**Components:** V, S, M (a pinch of lime, water, and earth)\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*六环变化*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 60 英尺\n\n**法术成分：** 言语、姿势、材料（少许石灰、水和泥土）\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.flesh-to-stone.meta": {
+    "en": "6th-level transmutation",
+    "zh-CN": "六环变化"
+  },
+  "bookMaterial.spell.forbiddance.header": {
+    "en": "*6th-level abjuration (ritual)*\n\n**Casting Time:** 10 minutes\n\n**Range:** Touch\n\n**Components:** V, S, M (a sprinkling of holy water, rare incense, and powdered ruby worth at least 1,000 gp)\n\n**Duration:** 1 day",
+    "zh-CN": "*六环防护（仪式）*\n\n**施法时间：** 10 分钟\n\n**施法距离：** 接触\n\n**法术成分：** 言语、姿势、材料（少许圣水、稀有熏香，以及价值至少 1,000 gp 的红宝石粉）\n\n**持续时间：** 1 天"
+  },
+  "bookMaterial.spell.forbiddance.meta": {
+    "en": "6th-level abjuration (ritual)",
+    "zh-CN": "六环防护（仪式）"
+  },
+  "bookMaterial.spell.freezing-sphere.header": {
+    "en": "*6th-level evocation*\n\n**Casting Time:** 1 action\n\n**Range:** 300 feet\n\n**Components:** V, S, M (a small crystal sphere)\n\n**Duration:** Instantaneous",
+    "zh-CN": "*六环塑能*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 300 英尺\n\n**法术成分：** 言语、姿势、材料（一颗小水晶球）\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.freezing-sphere.meta": {
+    "en": "6th-level evocation",
+    "zh-CN": "六环塑能"
+  },
+  "bookMaterial.spell.globe-of-invulnerability.header": {
+    "en": "*6th-level abjuration*\n\n**Casting Time:** 1 action\n\n**Range:** Self (10-foot radius)\n\n**Components:** V, S, M (a glass or crystal bead that shatters when the spell ends)\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*六环防护*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 自身（半径 10 英尺）\n\n**法术成分：** 言语、姿势、材料（一颗玻璃或水晶珠，法术结束时碎裂）\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.globe-of-invulnerability.meta": {
+    "en": "6th-level abjuration",
+    "zh-CN": "六环防护"
+  },
+  "bookMaterial.spell.guards-and-wards.header": {
+    "en": "*6th-level abjuration*\n\n**Casting Time:** 10 minutes\n\n**Range:** Touch\n\n**Components:** V, S, M (burning incense, a small measure of brimstone and oil, a knotted string, a small amount of umber hulk blood, and a small silver rod worth at least 10 gp)\n\n**Duration:** 24 hours",
+    "zh-CN": "*六环防护*\n\n**施法时间：** 10 分钟\n\n**施法距离：** 接触\n\n**法术成分：** 言语、姿势、材料（燃烧的熏香、少许硫磺和油、一根打结的绳、少许土巨怪血，以及一根价值至少 10 gp 的小银棒）\n\n**持续时间：** 24 小时"
+  },
+  "bookMaterial.spell.guards-and-wards.meta": {
+    "en": "6th-level abjuration",
+    "zh-CN": "六环防护"
+  },
+  "bookMaterial.spell.harm.header": {
+    "en": "*6th-level necromancy*\n\n**Casting Time:** 1 action\n\n**Range:** 60 feet\n\n**Components:** V, S\n\n**Duration:** Instantaneous",
+    "zh-CN": "*六环死灵*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 60 英尺\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.harm.meta": {
+    "en": "6th-level necromancy",
+    "zh-CN": "六环死灵"
+  },
+  "bookMaterial.spell.heal.header": {
+    "en": "*6th-level evocation*\n\n**Casting Time:** 1 action\n\n**Range:** 60 feet\n\n**Components:** V, S\n\n**Duration:** Instantaneous",
+    "zh-CN": "*六环塑能*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 60 英尺\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.heal.meta": {
+    "en": "6th-level evocation",
+    "zh-CN": "六环塑能"
+  },
+  "bookMaterial.spell.heroes-feast.header": {
+    "en": "*6th-level conjuration*\n\n**Casting Time:** 10 minutes\n\n**Range:** 30 feet\n\n**Components:** V, S, M (a gem-encrusted bowl worth at least 1,000 gp, which the spell consumes)\n\n**Duration:** Instantaneous",
+    "zh-CN": "*六环咒法*\n\n**施法时间：** 10 分钟\n\n**施法距离：** 30 英尺\n\n**法术成分：** 言语、姿势、材料（价值至少 1,000 gp 的镶宝石碗，施法时消耗）\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.heroes-feast.meta": {
+    "en": "6th-level conjuration",
+    "zh-CN": "六环咒法"
+  },
+  "bookMaterial.spell.instant-summons.header": {
+    "en": "*6th-level conjuration (ritual)*\n\n**Casting Time:** 1 minute\n\n**Range:** Touch\n\n**Components:** V, S, M (a sapphire worth 1,000 gp)\n\n**Duration:** Until dispelled",
+    "zh-CN": "*六环咒法（仪式）*\n\n**施法时间：** 1 分钟\n\n**施法距离：** 接触\n\n**法术成分：** 言语、姿势、材料（价值 1,000 gp 的蓝宝石）\n\n**持续时间：** 直到被解除"
+  },
+  "bookMaterial.spell.instant-summons.meta": {
+    "en": "6th-level conjuration (ritual)",
+    "zh-CN": "六环咒法（仪式）"
+  },
+  "bookMaterial.spell.irresistible-dance.header": {
+    "en": "*6th-level enchantment*\n\n**Casting Time:** 1 action\n\n**Range:** 30 feet\n\n**Components:** V\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*六环惑控*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 30 英尺\n\n**法术成分：** 言语\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.irresistible-dance.meta": {
+    "en": "6th-level enchantment",
+    "zh-CN": "六环惑控"
+  },
+  "bookMaterial.spell.magic-jar.header": {
+    "en": "*6th-level necromancy*\n\n**Casting Time:** 1 minute\n\n**Range:** Self\n\n**Components:** V, S, M (a gem, crystal, reliquary, or some other ornamental container worth at least 500 gp)\n\n**Duration:** Until dispelled",
+    "zh-CN": "*六环死灵*\n\n**施法时间：** 1 分钟\n\n**施法距离：** 自身\n\n**法术成分：** 言语、姿势、材料（价值至少 500 gp 的宝石、水晶、圣物匣或其他装饰性容器）\n\n**持续时间：** 直到被解除"
+  },
+  "bookMaterial.spell.magic-jar.meta": {
+    "en": "6th-level necromancy",
+    "zh-CN": "六环死灵"
+  },
+  "bookMaterial.spell.mass-suggestion.header": {
+    "en": "*6th-level enchantment*\n\n**Casting Time:** 1 action\n\n**Range:** 60 feet\n\n**Components:** V, M (a snake's tongue and either a bit of honeycomb or a drop of sweet oil)\n\n**Duration:** 24 hours",
+    "zh-CN": "*六环惑控*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 60 英尺\n\n**法术成分：** 言语、材料（一条蛇舌，以及少许蜂巢或一滴甜油）\n\n**持续时间：** 24 小时"
+  },
+  "bookMaterial.spell.mass-suggestion.meta": {
+    "en": "6th-level enchantment",
+    "zh-CN": "六环惑控"
+  },
+  "bookMaterial.spell.move-earth.header": {
+    "en": "*6th-level transmutation*\n\n**Casting Time:** 1 action\n\n**Range:** 120 feet\n\n**Components:** V, S, M (an iron blade and a small bag containing a mixture of soils-clay, loam, and sand)\n\n**Duration:** Concentration, up to 2 hours",
+    "zh-CN": "*六环变化*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 120 英尺\n\n**法术成分：** 言语、姿势、材料（一把铁刃，以及一小袋混合黏土、壤土和沙子的土壤）\n\n**持续时间：** 专注，至多 2 小时"
+  },
+  "bookMaterial.spell.move-earth.meta": {
+    "en": "6th-level transmutation",
+    "zh-CN": "六环变化"
+  },
+  "bookMaterial.spell.planar-ally.header": {
+    "en": "*6th-level conjuration*\n\n**Casting Time:** 10 minutes\n\n**Range:** 60 feet\n\n**Components:** V, S\n\n**Duration:** Instantaneous",
+    "zh-CN": "*六环咒法*\n\n**施法时间：** 10 分钟\n\n**施法距离：** 60 英尺\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.planar-ally.meta": {
+    "en": "6th-level conjuration",
+    "zh-CN": "六环咒法"
+  },
+  "bookMaterial.spell.programmed-illusion.header": {
+    "en": "*6th-level illusion*\n\n**Casting Time:** 1 action\n\n**Range:** 120 feet\n\n**Components:** V, S, M (a bit of fleece and jade dust worth at least 25 gp)\n\n**Duration:** Until dispelled",
+    "zh-CN": "*六环幻术*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 120 英尺\n\n**法术成分：** 言语、姿势、材料（少许羊毛，以及价值至少 25 gp 的玉石粉）\n\n**持续时间：** 直到被解除"
+  },
+  "bookMaterial.spell.programmed-illusion.meta": {
+    "en": "6th-level illusion",
+    "zh-CN": "六环幻术"
+  },
+  "bookMaterial.spell.sunbeam.header": {
+    "en": "*6th-level evocation*\n\n**Casting Time:** 1 action\n\n**Range:** Self (60-foot line)\n\n**Components:** V, S, M (a magnifying glass)\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*六环塑能*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 自身（60 英尺直线）\n\n**法术成分：** 言语、姿势、材料（一面放大镜）\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.sunbeam.meta": {
+    "en": "6th-level evocation",
+    "zh-CN": "六环塑能"
+  },
+  "bookMaterial.spell.transport-via-plants.header": {
+    "en": "*6th-level conjuration*\n\n**Casting Time:** 1 action\n\n**Range:** 10 feet\n\n**Components:** V, S\n\n**Duration:** 1 round",
+    "zh-CN": "*六环咒法*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 10 英尺\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 1 轮"
+  },
+  "bookMaterial.spell.transport-via-plants.meta": {
+    "en": "6th-level conjuration",
+    "zh-CN": "六环咒法"
+  },
+  "bookMaterial.spell.true-seeing.header": {
+    "en": "*6th-level divination*\n\n**Casting Time:** 1 action\n\n**Range:** Touch\n\n**Components:** V, S, M (an ointment for the eyes that costs 25 gp; is made from mushroom powder, saffron, and fat; and is consumed by the spell)\n\n**Duration:** 1 hour",
+    "zh-CN": "*六环预言*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 接触\n\n**法术成分：** 言语、姿势、材料（以蘑菇粉、藏红花和油脂制成、价值 25 gp 的眼膏，施法时消耗）\n\n**持续时间：** 1 小时"
+  },
+  "bookMaterial.spell.true-seeing.meta": {
+    "en": "6th-level divination",
+    "zh-CN": "六环预言"
+  },
+  "bookMaterial.spell.wall-of-ice.header": {
+    "en": "*6th-level evocation*\n\n**Casting Time:** 1 action\n\n**Range:** 120 feet\n\n**Components:** V, S, M (a small piece of quartz)\n\n**Duration:** Concentration, up to 10 minutes",
+    "zh-CN": "*六环塑能*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 120 英尺\n\n**法术成分：** 言语、姿势、材料（一小块石英）\n\n**持续时间：** 专注，至多 10 分钟"
+  },
+  "bookMaterial.spell.wall-of-ice.meta": {
+    "en": "6th-level evocation",
+    "zh-CN": "六环塑能"
+  },
+  "bookMaterial.spell.wall-of-thorns.header": {
+    "en": "*6th-level conjuration*\n\n**Casting Time:** 1 action\n\n**Range:** 120 feet\n\n**Components:** V, S, M (a handful of thorns)\n\n**Duration:** Concentration, up to 10 minutes",
+    "zh-CN": "*六环咒法*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 120 英尺\n\n**法术成分：** 言语、姿势、材料（一把荆棘）\n\n**持续时间：** 专注，至多 10 分钟"
+  },
+  "bookMaterial.spell.wall-of-thorns.meta": {
+    "en": "6th-level conjuration",
+    "zh-CN": "六环咒法"
+  },
+  "bookMaterial.spell.wind-walk.header": {
+    "en": "*6th-level transmutation*\n\n**Casting Time:** 1 minute\n\n**Range:** 30 feet\n\n**Components:** V, S, M (fire and holy water)\n\n**Duration:** 8 hours",
+    "zh-CN": "*六环变化*\n\n**施法时间：** 1 分钟\n\n**施法距离：** 30 英尺\n\n**法术成分：** 言语、姿势、材料（火和圣水）\n\n**持续时间：** 8 小时"
+  },
+  "bookMaterial.spell.wind-walk.meta": {
+    "en": "6th-level transmutation",
+    "zh-CN": "六环变化"
+  },
+  "bookMaterial.spell.word-of-recall.header": {
+    "en": "*6th-level conjuration*\n\n**Casting Time:** 1 action\n\n**Range:** 5 feet\n\n**Components:** V\n\n**Duration:** Instantaneous",
+    "zh-CN": "*六环咒法*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 5 英尺\n\n**法术成分：** 言语\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.word-of-recall.meta": {
+    "en": "6th-level conjuration",
+    "zh-CN": "六环咒法"
   }
 });

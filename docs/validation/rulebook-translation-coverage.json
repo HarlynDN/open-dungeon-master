@@ -1415,6 +1415,161 @@
       "sourceHash": "25054563b1ac138179650a51a9778a6e36f3c24707e98f206dccb8b9f27f5c19"
     },
     {
+      "id": "blade-barrier",
+      "kind": "spell",
+      "sourceHash": "8bf58f46e1df22502ab575ab501e6ef93beb1419992d58cc97931466360a0ea7"
+    },
+    {
+      "id": "chain-lightning",
+      "kind": "spell",
+      "sourceHash": "747bfd0fc95b017a13fde15acb444a8122453b177717e8dee65c2c2a5a4e26c7"
+    },
+    {
+      "id": "circle-of-death",
+      "kind": "spell",
+      "sourceHash": "0c229a2f0778cc424477b31343b2d9b280c05314597a627559e444c7e76081f0"
+    },
+    {
+      "id": "conjure-fey",
+      "kind": "spell",
+      "sourceHash": "048eaeb400397695ccb748d8fc1bc54e566fab9f5e9bf231ff8f0501dce80018"
+    },
+    {
+      "id": "contingency",
+      "kind": "spell",
+      "sourceHash": "3f33563d9009be272c0ba0b86dc7283cabc3de1591ad1a14a47f00baa6d6aeb2"
+    },
+    {
+      "id": "create-undead",
+      "kind": "spell",
+      "sourceHash": "5e90122e0ab837e1976df6f27f86579059add4c791c8d3f09509d1f80ce1db7f"
+    },
+    {
+      "id": "disintegrate",
+      "kind": "spell",
+      "sourceHash": "6124551f78e8780d0396fe4f3544bf1bb0ba51626276860cba22bbe6e49fe9fc"
+    },
+    {
+      "id": "eyebite",
+      "kind": "spell",
+      "sourceHash": "65a921cd2a9cd3e5eed0bbc44c85d0431dcdb6a705a83bd3a997f301f4c0eec1"
+    },
+    {
+      "id": "find-the-path",
+      "kind": "spell",
+      "sourceHash": "59aed3a7ef5ee28c483fe6416a7ee8e35024ac5b05ada887e7bedf1301ecbff9"
+    },
+    {
+      "id": "flesh-to-stone",
+      "kind": "spell",
+      "sourceHash": "77eae6a3ce8d4e68588a23828e51d4631bbdd1c3b9b8fa34b84b646fcd5a7f01"
+    },
+    {
+      "id": "forbiddance",
+      "kind": "spell",
+      "sourceHash": "505b153da71d51f09639be19f98cb4bf231338213b7024aa93ef9b92977fb561"
+    },
+    {
+      "id": "freezing-sphere",
+      "kind": "spell",
+      "sourceHash": "0feee7625f7f3e94503e1bf0ffba0ef290c2c97140d8b89bab271f4759b108d5"
+    },
+    {
+      "id": "globe-of-invulnerability",
+      "kind": "spell",
+      "sourceHash": "f15eac83d0f059c8c31a91680875565848995857f3ee0791eabe55aac14ebf62"
+    },
+    {
+      "id": "guards-and-wards",
+      "kind": "spell",
+      "sourceHash": "160f58c7081cd6d3f4f3d855068cf24d3cf70116c8d74d725482e0d0327248f1"
+    },
+    {
+      "id": "harm",
+      "kind": "spell",
+      "sourceHash": "6737fe07fcd2ff7447f8998dc0ae55511c34b094dd02072cb26eb18b22fc0f2a"
+    },
+    {
+      "id": "heal",
+      "kind": "spell",
+      "sourceHash": "876a5603ade80069715c3249149ef39c555d5fb9a0f7f3dc469726e644666493"
+    },
+    {
+      "id": "heroes-feast",
+      "kind": "spell",
+      "sourceHash": "5d6305e2b84b836160f05684458015c137f8593e8dfb8de73bb5157ecdcfb765"
+    },
+    {
+      "id": "instant-summons",
+      "kind": "spell",
+      "sourceHash": "7cdf91a1029dfa6d26151a464ca1c8be82ddafc1f2502f8de12394165bb67648"
+    },
+    {
+      "id": "irresistible-dance",
+      "kind": "spell",
+      "sourceHash": "4c76693f2c5dad88a8d49f19f9ea951a877a7695b3c2e7f2ad088eca2cb578c6"
+    },
+    {
+      "id": "magic-jar",
+      "kind": "spell",
+      "sourceHash": "ff43d4bd291e4c13a8b5dedf8736b50b01e12ff3204268d1cec4207ac114955c"
+    },
+    {
+      "id": "mass-suggestion",
+      "kind": "spell",
+      "sourceHash": "c1e02c7c0db2c9eabad0e0a3734f1d02897927bcdd2cf7c0acd4d5f083a85f0d"
+    },
+    {
+      "id": "move-earth",
+      "kind": "spell",
+      "sourceHash": "cf17f4609d0a21dc7df1b2223c8d436fc22fda35794d0ea32c018860b514f160"
+    },
+    {
+      "id": "planar-ally",
+      "kind": "spell",
+      "sourceHash": "42fa9250e1ef2f7b0e16522f0bd919895bf162e4b720fdb27b60d076ac2521d8"
+    },
+    {
+      "id": "programmed-illusion",
+      "kind": "spell",
+      "sourceHash": "e99d1364262b5c0254ed3400c0ed6e5d7d9bc5da07b921922f51c9296fac6d74"
+    },
+    {
+      "id": "sunbeam",
+      "kind": "spell",
+      "sourceHash": "e97db131d73f7b3d2eda472db8e481548e2fb5d8adf5000f9fc67b8a76a197e6"
+    },
+    {
+      "id": "transport-via-plants",
+      "kind": "spell",
+      "sourceHash": "8bcf1c1dc8ac4a4848450687b6d9857c838ba21b5912264df1725a5e7b035a1f"
+    },
+    {
+      "id": "true-seeing",
+      "kind": "spell",
+      "sourceHash": "d198af329f6e3ca4939051ddc258e6f4c5d2f895d59cd0ec0687cdb43f930a8a"
+    },
+    {
+      "id": "wall-of-ice",
+      "kind": "spell",
+      "sourceHash": "5558e40b961e405a2a15f0a9c54ed0de2bb9603e98644310b71eba11f6b0b5a5"
+    },
+    {
+      "id": "wall-of-thorns",
+      "kind": "spell",
+      "sourceHash": "c84c73f13a22e56ae186dbfb8ed4ee08cce486b2fec4a7b036f6fb05373c8162"
+    },
+    {
+      "id": "wind-walk",
+      "kind": "spell",
+      "sourceHash": "fb6e09f4d93f0883dece8771e7fc347c6d6493830e1b14ec430b46db79dc9a1e"
+    },
+    {
+      "id": "word-of-recall",
+      "kind": "spell",
+      "sourceHash": "bd0b6cc1d1331c395b47cc70003492900d751b3ef34cca5b7cfd60b6a82b890e"
+    },
+    {
       "id": "traps",
       "kind": "rules",
       "sourceHash": "3235d098b37944d2d0ae80928d91db3b9809dbbf319538e845817de93d512cd6"

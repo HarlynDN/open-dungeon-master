@@ -947,5 +947,129 @@ export const SPELL_HELP = [
   {
     "name": "Wall of Stone",
     "key": "spellHelp.native.wall-of-stone"
+  },
+  {
+    "name": "Blade Barrier",
+    "key": "spellHelp.native.blade-barrier"
+  },
+  {
+    "name": "Chain Lightning",
+    "key": "spellHelp.native.chain-lightning"
+  },
+  {
+    "name": "Circle of Death",
+    "key": "spellHelp.native.circle-of-death"
+  },
+  {
+    "name": "Conjure Fey",
+    "key": "spellHelp.native.conjure-fey"
+  },
+  {
+    "name": "Contingency",
+    "key": "spellHelp.native.contingency"
+  },
+  {
+    "name": "Create Undead",
+    "key": "spellHelp.native.create-undead"
+  },
+  {
+    "name": "Disintegrate",
+    "key": "spellHelp.native.disintegrate"
+  },
+  {
+    "name": "Eyebite",
+    "key": "spellHelp.native.eyebite"
+  },
+  {
+    "name": "Find the Path",
+    "key": "spellHelp.native.find-the-path"
+  },
+  {
+    "name": "Flesh to Stone",
+    "key": "spellHelp.native.flesh-to-stone"
+  },
+  {
+    "name": "Forbiddance",
+    "key": "spellHelp.native.forbiddance"
+  },
+  {
+    "name": "Freezing Sphere",
+    "key": "spellHelp.native.freezing-sphere"
+  },
+  {
+    "name": "Globe of Invulnerability",
+    "key": "spellHelp.native.globe-of-invulnerability"
+  },
+  {
+    "name": "Guards and Wards",
+    "key": "spellHelp.native.guards-and-wards"
+  },
+  {
+    "name": "Harm",
+    "key": "spellHelp.native.harm"
+  },
+  {
+    "name": "Heal",
+    "key": "spellHelp.native.heal"
+  },
+  {
+    "name": "Heroes' Feast",
+    "key": "spellHelp.native.heroes-feast"
+  },
+  {
+    "name": "Instant Summons",
+    "key": "spellHelp.native.instant-summons"
+  },
+  {
+    "name": "Irresistible Dance",
+    "key": "spellHelp.native.irresistible-dance"
+  },
+  {
+    "name": "Magic Jar",
+    "key": "spellHelp.native.magic-jar"
+  },
+  {
+    "name": "Mass Suggestion",
+    "key": "spellHelp.native.mass-suggestion"
+  },
+  {
+    "name": "Move Earth",
+    "key": "spellHelp.native.move-earth"
+  },
+  {
+    "name": "Planar Ally",
+    "key": "spellHelp.native.planar-ally"
+  },
+  {
+    "name": "Programmed Illusion",
+    "key": "spellHelp.native.programmed-illusion"
+  },
+  {
+    "name": "Sunbeam",
+    "key": "spellHelp.native.sunbeam"
+  },
+  {
+    "name": "Transport via Plants",
+    "key": "spellHelp.native.transport-via-plants"
+  },
+  {
+    "name": "True Seeing",
+    "key": "spellHelp.native.true-seeing"
+  },
+  {
+    "name": "Wall of Ice",
+    "key": "spellHelp.native.wall-of-ice"
+  },
+  {
+    "name": "Wall of Thorns",
+    "key": "spellHelp.native.wall-of-thorns"
+  },
+  {
+    "name": "Wind Walk",
+    "key": "spellHelp.native.wind-walk"
+  },
+  {
+    "name": "Word of Recall",
+    "key": "spellHelp.native.word-of-recall"
   }
 ] as const;

@@ -1421,5 +1421,191 @@ export const LOCALIZED_SPELL_PAGES = [
     "name": "Wall of Stone",
     "headerKey": "bookMaterial.spell.wall-of-stone.header",
     "metaKey": "bookMaterial.spell.wall-of-stone.meta"
+  },
+  {
+    "id": "blade-barrier",
+    "name": "Blade Barrier",
+    "headerKey": "bookMaterial.spell.blade-barrier.header",
+    "metaKey": "bookMaterial.spell.blade-barrier.meta"
+  },
+  {
+    "id": "chain-lightning",
+    "name": "Chain Lightning",
+    "headerKey": "bookMaterial.spell.chain-lightning.header",
+    "metaKey": "bookMaterial.spell.chain-lightning.meta"
+  },
+  {
+    "id": "circle-of-death",
+    "name": "Circle of Death",
+    "headerKey": "bookMaterial.spell.circle-of-death.header",
+    "metaKey": "bookMaterial.spell.circle-of-death.meta"
+  },
+  {
+    "id": "conjure-fey",
+    "name": "Conjure Fey",
+    "headerKey": "bookMaterial.spell.conjure-fey.header",
+    "metaKey": "bookMaterial.spell.conjure-fey.meta"
+  },
+  {
+    "id": "contingency",
+    "name": "Contingency",
+    "headerKey": "bookMaterial.spell.contingency.header",
+    "metaKey": "bookMaterial.spell.contingency.meta"
+  },
+  {
+    "id": "create-undead",
+    "name": "Create Undead",
+    "headerKey": "bookMaterial.spell.create-undead.header",
+    "metaKey": "bookMaterial.spell.create-undead.meta"
+  },
+  {
+    "id": "disintegrate",
+    "name": "Disintegrate",
+    "headerKey": "bookMaterial.spell.disintegrate.header",
+    "metaKey": "bookMaterial.spell.disintegrate.meta"
+  },
+  {
+    "id": "eyebite",
+    "name": "Eyebite",
+    "headerKey": "bookMaterial.spell.eyebite.header",
+    "metaKey": "bookMaterial.spell.eyebite.meta"
+  },
+  {
+    "id": "find-the-path",
+    "name": "Find the Path",
+    "headerKey": "bookMaterial.spell.find-the-path.header",
+    "metaKey": "bookMaterial.spell.find-the-path.meta"
+  },
+  {
+    "id": "flesh-to-stone",
+    "name": "Flesh to Stone",
+    "headerKey": "bookMaterial.spell.flesh-to-stone.header",
+    "metaKey": "bookMaterial.spell.flesh-to-stone.meta"
+  },
+  {
+    "id": "forbiddance",
+    "name": "Forbiddance",
+    "headerKey": "bookMaterial.spell.forbiddance.header",
+    "metaKey": "bookMaterial.spell.forbiddance.meta"
+  },
+  {
+    "id": "freezing-sphere",
+    "name": "Freezing Sphere",
+    "headerKey": "bookMaterial.spell.freezing-sphere.header",
+    "metaKey": "bookMaterial.spell.freezing-sphere.meta"
+  },
+  {
+    "id": "globe-of-invulnerability",
+    "name": "Globe of Invulnerability",
+    "headerKey": "bookMaterial.spell.globe-of-invulnerability.header",
+    "metaKey": "bookMaterial.spell.globe-of-invulnerability.meta"
+  },
+  {
+    "id": "guards-and-wards",
+    "name": "Guards and Wards",
+    "headerKey": "bookMaterial.spell.guards-and-wards.header",
+    "metaKey": "bookMaterial.spell.guards-and-wards.meta"
+  },
+  {
+    "id": "harm",
+    "name": "Harm",
+    "headerKey": "bookMaterial.spell.harm.header",
+    "metaKey": "bookMaterial.spell.harm.meta"
+  },
+  {
+    "id": "heal",
+    "name": "Heal",
+    "headerKey": "bookMaterial.spell.heal.header",
+    "metaKey": "bookMaterial.spell.heal.meta"
+  },
+  {
+    "id": "heroes-feast",
+    "name": "Heroes' Feast",
+    "headerKey": "bookMaterial.spell.heroes-feast.header",
+    "metaKey": "bookMaterial.spell.heroes-feast.meta"
+  },
+  {
+    "id": "instant-summons",
+    "name": "Instant Summons",
+    "headerKey": "bookMaterial.spell.instant-summons.header",
+    "metaKey": "bookMaterial.spell.instant-summons.meta"
+  },
+  {
+    "id": "irresistible-dance",
+    "name": "Irresistible Dance",
+    "headerKey": "bookMaterial.spell.irresistible-dance.header",
+    "metaKey": "bookMaterial.spell.irresistible-dance.meta"
+  },
+  {
+    "id": "magic-jar",
+    "name": "Magic Jar",
+    "headerKey": "bookMaterial.spell.magic-jar.header",
+    "metaKey": "bookMaterial.spell.magic-jar.meta"
+  },
+  {
+    "id": "mass-suggestion",
+    "name": "Mass Suggestion",
+    "headerKey": "bookMaterial.spell.mass-suggestion.header",
+    "metaKey": "bookMaterial.spell.mass-suggestion.meta"
+  },
+  {
+    "id": "move-earth",
+    "name": "Move Earth",
+    "headerKey": "bookMaterial.spell.move-earth.header",
+    "metaKey": "bookMaterial.spell.move-earth.meta"
+  },
+  {
+    "id": "planar-ally",
+    "name": "Planar Ally",
+    "headerKey": "bookMaterial.spell.planar-ally.header",
+    "metaKey": "bookMaterial.spell.planar-ally.meta"
+  },
+  {
+    "id": "programmed-illusion",
+    "name": "Programmed Illusion",
+    "headerKey": "bookMaterial.spell.programmed-illusion.header",
+    "metaKey": "bookMaterial.spell.programmed-illusion.meta"
+  },
+  {
+    "id": "sunbeam",
+    "name": "Sunbeam",
+    "headerKey": "bookMaterial.spell.sunbeam.header",
+    "metaKey": "bookMaterial.spell.sunbeam.meta"
+  },
+  {
+    "id": "transport-via-plants",
+    "name": "Transport via Plants",
+    "headerKey": "bookMaterial.spell.transport-via-plants.header",
+    "metaKey": "bookMaterial.spell.transport-via-plants.meta"
+  },
+  {
+    "id": "true-seeing",
+    "name": "True Seeing",
+    "headerKey": "bookMaterial.spell.true-seeing.header",
+    "metaKey": "bookMaterial.spell.true-seeing.meta"
+  },
+  {
+    "id": "wall-of-ice",
+    "name": "Wall of Ice",
+    "headerKey": "bookMaterial.spell.wall-of-ice.header",
+    "metaKey": "bookMaterial.spell.wall-of-ice.meta"
+  },
+  {
+    "id": "wall-of-thorns",
+    "name": "Wall of Thorns",
+    "headerKey": "bookMaterial.spell.wall-of-thorns.header",
+    "metaKey": "bookMaterial.spell.wall-of-thorns.meta"
+  },
+  {
+    "id": "wind-walk",
+    "name": "Wind Walk",
+    "headerKey": "bookMaterial.spell.wind-walk.header",
+    "metaKey": "bookMaterial.spell.wind-walk.meta"
+  },
+  {
+    "id": "word-of-recall",
+    "name": "Word of Recall",
+    "headerKey": "bookMaterial.spell.word-of-recall.header",
+    "metaKey": "bookMaterial.spell.word-of-recall.meta"
   }
 ] as const;
