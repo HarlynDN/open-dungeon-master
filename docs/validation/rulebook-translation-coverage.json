@@ -3250,6 +3250,11 @@
       "sourceHash": "2e0aaea7dfd90883a9a37a05b1036ec2195ab96c8537c8cee6a554c002ca143e"
     },
     {
+      "id": "cloaker",
+      "kind": "monster",
+      "sourceHash": "20b3f83f220ef88ce3f6a6210d1c900eac6032988da16a3c699a33b5a5c3bfb5"
+    },
+    {
       "id": "cloud-giant-giant",
       "kind": "monster",
       "sourceHash": "9dd078f4b26cef169b0ba5307fa59877df5195c689ee797b97f0f7f5d5c040f5"
