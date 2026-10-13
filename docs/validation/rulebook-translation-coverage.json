@@ -3590,6 +3590,11 @@
       "sourceHash": "972839016ec53a6fef2f8e541b57ffef82fa57249971fcc62f8f5dcb74efaec2"
     },
     {
+      "id": "kraken",
+      "kind": "monster",
+      "sourceHash": "e5fff080dfd168c700f49abcbd312de6358c835bb0b5affc28145031f7a4579e"
+    },
+    {
       "id": "lamia",
       "kind": "monster",
       "sourceHash": "0926a7ff9fe012e932946d5d8f97e13933237f18dc04713f03e54567ef763370"
