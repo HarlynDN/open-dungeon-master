@@ -1,4 +1,4 @@
-// Thin identities for display only; translated prose loads with content resources.
+// All SRD 5.1 item identities; prose loads with selected content resources.
 export const MAGIC_ITEM_MATERIAL = [
   {
     "id": "oil-of-etherealness",
@@ -1175,5 +1175,263 @@ export const MAGIC_ITEM_MATERIAL = [
     "name": "Feather Token",
     "key": "itemHelp.native.feather-token",
     "metaKey": "itemHelp.nativeMeta.cape-of-the-mountebank"
+  },
+  {
+    "id": "figurine-of-wondrous-power",
+    "name": "Figurine of Wondrous Power",
+    "key": "itemHelp.native.figurine-of-wondrous-power",
+    "metaKey": "itemHelp.nativeMeta.figurine-of-wondrous-power"
+  },
+  {
+    "id": "folding-boat",
+    "name": "Folding Boat",
+    "key": "itemHelp.native.folding-boat",
+    "metaKey": "itemHelp.nativeMeta.cape-of-the-mountebank"
+  },
+  {
+    "id": "gem-of-brightness",
+    "name": "Gem of Brightness",
+    "key": "itemHelp.native.gem-of-brightness",
+    "metaKey": "itemHelp.nativeMeta.boots-of-elvenkind"
+  },
+  {
+    "id": "gem-of-seeing",
+    "name": "Gem of Seeing",
+    "key": "itemHelp.native.gem-of-seeing",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-health"
+  },
+  {
+    "id": "handy-haversack",
+    "name": "Handy Haversack",
+    "key": "itemHelp.native.handy-haversack",
+    "metaKey": "itemHelp.nativeMeta.cape-of-the-mountebank"
+  },
+  {
+    "id": "horn-of-blasting",
+    "name": "Horn of Blasting",
+    "key": "itemHelp.native.horn-of-blasting",
+    "metaKey": "itemHelp.nativeMeta.cape-of-the-mountebank"
+  },
+  {
+    "id": "horn-of-valhalla",
+    "name": "Horn of Valhalla",
+    "key": "itemHelp.native.horn-of-valhalla",
+    "metaKey": "itemHelp.nativeMeta.horn-of-valhalla"
+  },
+  {
+    "id": "horseshoes-of-a-zephyr",
+    "name": "Horseshoes of a Zephyr",
+    "key": "itemHelp.native.horseshoes-of-a-zephyr",
+    "metaKey": "itemHelp.nativeMeta.bag-of-devouring"
+  },
+  {
+    "id": "horseshoes-of-speed",
+    "name": "Horseshoes of Speed",
+    "key": "itemHelp.native.horseshoes-of-speed",
+    "metaKey": "itemHelp.nativeMeta.cape-of-the-mountebank"
+  },
+  {
+    "id": "instant-fortress",
+    "name": "Instant Fortress",
+    "key": "itemHelp.native.instant-fortress",
+    "metaKey": "itemHelp.nativeMeta.cape-of-the-mountebank"
+  },
+  {
+    "id": "iron-bands-of-binding",
+    "name": "Iron Bands of Binding",
+    "key": "itemHelp.native.iron-bands-of-binding",
+    "metaKey": "itemHelp.nativeMeta.cape-of-the-mountebank"
+  },
+  {
+    "id": "iron-flask",
+    "name": "Iron Flask",
+    "key": "itemHelp.native.iron-flask",
+    "metaKey": "itemHelp.nativeMeta.apparatus-of-the-crab"
+  },
+  {
+    "id": "lantern-of-revealing",
+    "name": "Lantern of Revealing",
+    "key": "itemHelp.native.lantern-of-revealing",
+    "metaKey": "itemHelp.nativeMeta.boots-of-elvenkind"
+  },
+  {
+    "id": "manual-of-bodily-health",
+    "name": "Manual of Bodily Health",
+    "key": "itemHelp.native.manual-of-bodily-health",
+    "metaKey": "itemHelp.nativeMeta.bag-of-devouring"
+  },
+  {
+    "id": "manual-of-gainful-exercise",
+    "name": "Manual of Gainful Exercise",
+    "key": "itemHelp.native.manual-of-gainful-exercise",
+    "metaKey": "itemHelp.nativeMeta.bag-of-devouring"
+  },
+  {
+    "id": "manual-of-golems",
+    "name": "Manual of Golems",
+    "key": "itemHelp.native.manual-of-golems",
+    "metaKey": "itemHelp.nativeMeta.bag-of-devouring"
+  },
+  {
+    "id": "manual-of-quickness-of-action",
+    "name": "Manual of Quickness of Action",
+    "key": "itemHelp.native.manual-of-quickness-of-action",
+    "metaKey": "itemHelp.nativeMeta.bag-of-devouring"
+  },
+  {
+    "id": "marvelous-pigments",
+    "name": "Marvelous Pigments",
+    "key": "itemHelp.native.marvelous-pigments",
+    "metaKey": "itemHelp.nativeMeta.bag-of-devouring"
+  },
+  {
+    "id": "mirror-of-life-trapping",
+    "name": "Mirror of Life Trapping",
+    "key": "itemHelp.native.mirror-of-life-trapping",
+    "metaKey": "itemHelp.nativeMeta.bag-of-devouring"
+  },
+  {
+    "id": "pearl-of-power",
+    "name": "Pearl of Power",
+    "key": "itemHelp.native.pearl-of-power",
+    "metaKey": "itemHelp.nativeMeta.pearl-of-power"
+  },
+  {
+    "id": "philter-of-love",
+    "name": "Philter of Love",
+    "key": "itemHelp.native.philter-of-love",
+    "metaKey": "itemHelp.nativeMeta.oil-of-slipperiness"
+  },
+  {
+    "id": "pipes-of-haunting",
+    "name": "Pipes of Haunting",
+    "key": "itemHelp.native.pipes-of-haunting",
+    "metaKey": "itemHelp.nativeMeta.boots-of-elvenkind"
+  },
+  {
+    "id": "pipes-of-the-sewers",
+    "name": "Pipes of the Sewers",
+    "key": "itemHelp.native.pipes-of-the-sewers",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-proof-against-detection-and-location"
+  },
+  {
+    "id": "portable-hole",
+    "name": "Portable Hole",
+    "key": "itemHelp.native.portable-hole",
+    "metaKey": "itemHelp.nativeMeta.cape-of-the-mountebank"
+  },
+  {
+    "id": "restorative-ointment",
+    "name": "Restorative Ointment",
+    "key": "itemHelp.native.restorative-ointment",
+    "metaKey": "itemHelp.nativeMeta.boots-of-elvenkind"
+  },
+  {
+    "id": "rope-of-climbing",
+    "name": "Rope of Climbing",
+    "key": "itemHelp.native.rope-of-climbing",
+    "metaKey": "itemHelp.nativeMeta.boots-of-elvenkind"
+  },
+  {
+    "id": "rope-of-entanglement",
+    "name": "Rope of Entanglement",
+    "key": "itemHelp.native.rope-of-entanglement",
+    "metaKey": "itemHelp.nativeMeta.cape-of-the-mountebank"
+  },
+  {
+    "id": "scarab-of-protection",
+    "name": "Scarab of Protection",
+    "key": "itemHelp.native.scarab-of-protection",
+    "metaKey": "itemHelp.nativeMeta.scarab-of-protection"
+  },
+  {
+    "id": "sovereign-glue",
+    "name": "Sovereign Glue",
+    "key": "itemHelp.native.sovereign-glue",
+    "metaKey": "itemHelp.nativeMeta.apparatus-of-the-crab"
+  },
+  {
+    "id": "spell-scroll",
+    "name": "Spell Scroll",
+    "key": "itemHelp.native.spell-scroll",
+    "metaKey": "itemHelp.nativeMeta.spell-scroll"
+  },
+  {
+    "id": "sphere-of-annihilation",
+    "name": "Sphere of Annihilation",
+    "key": "itemHelp.native.sphere-of-annihilation",
+    "metaKey": "itemHelp.nativeMeta.apparatus-of-the-crab"
+  },
+  {
+    "id": "stone-of-controlling-earth-elementals",
+    "name": "Stone of Controlling Earth Elementals",
+    "key": "itemHelp.native.stone-of-controlling-earth-elementals",
+    "metaKey": "itemHelp.nativeMeta.cape-of-the-mountebank"
+  },
+  {
+    "id": "stone-of-good-luck-luckstone",
+    "name": "Stone of Good Luck (Luckstone)",
+    "key": "itemHelp.native.stone-of-good-luck-luckstone",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-proof-against-detection-and-location"
+  },
+  {
+    "id": "talisman-of-pure-good",
+    "name": "Talisman of Pure Good",
+    "key": "itemHelp.native.talisman-of-pure-good",
+    "metaKey": "itemHelp.nativeMeta.talisman-of-pure-good"
+  },
+  {
+    "id": "talisman-of-the-sphere",
+    "name": "Talisman of the Sphere",
+    "key": "itemHelp.native.talisman-of-the-sphere",
+    "metaKey": "itemHelp.nativeMeta.scarab-of-protection"
+  },
+  {
+    "id": "talisman-of-ultimate-evil",
+    "name": "Talisman of Ultimate Evil",
+    "key": "itemHelp.native.talisman-of-ultimate-evil",
+    "metaKey": "itemHelp.nativeMeta.talisman-of-ultimate-evil"
+  },
+  {
+    "id": "tome-of-clear-thought",
+    "name": "Tome of Clear Thought",
+    "key": "itemHelp.native.tome-of-clear-thought",
+    "metaKey": "itemHelp.nativeMeta.bag-of-devouring"
+  },
+  {
+    "id": "tome-of-leadership-and-influence",
+    "name": "Tome of Leadership and Influence",
+    "key": "itemHelp.native.tome-of-leadership-and-influence",
+    "metaKey": "itemHelp.nativeMeta.bag-of-devouring"
+  },
+  {
+    "id": "tome-of-understanding",
+    "name": "Tome of Understanding",
+    "key": "itemHelp.native.tome-of-understanding",
+    "metaKey": "itemHelp.nativeMeta.bag-of-devouring"
+  },
+  {
+    "id": "universal-solvent",
+    "name": "Universal Solvent",
+    "key": "itemHelp.native.universal-solvent",
+    "metaKey": "itemHelp.nativeMeta.apparatus-of-the-crab"
+  },
+  {
+    "id": "well-of-many-worlds",
+    "name": "Well of Many Worlds",
+    "key": "itemHelp.native.well-of-many-worlds",
+    "metaKey": "itemHelp.nativeMeta.apparatus-of-the-crab"
+  },
+  {
+    "id": "wind-fan",
+    "name": "Wind Fan",
+    "key": "itemHelp.native.wind-fan",
+    "metaKey": "itemHelp.nativeMeta.boots-of-elvenkind"
+  },
+  {
+    "id": "wings-of-flying",
+    "name": "Wings of Flying",
+    "key": "itemHelp.native.wings-of-flying",
+    "metaKey": "itemHelp.nativeMeta.amulet-of-health"
   }
 ] as const;

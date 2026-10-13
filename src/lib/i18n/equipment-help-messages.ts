@@ -1,6 +1,10 @@
 import { defineMessages } from "./catalog.ts";
 
 export const EQUIPMENT_HELP_MESSAGES = /*#__PURE__*/ defineMessages({
+  "itemHelp.type.scroll": { "en": "Scroll", "zh-CN": "卷轴" },
+  "itemHelp.rarity.figurine": { "en": "Rarity by figurine", "zh-CN": "稀有度随雕像类型而定" },
+  "itemHelp.rarity.horn": { "en": "Rare (silver or brass), very rare (bronze), or legendary (iron)", "zh-CN": "珍稀（银或黄铜）、极珍稀（青铜）或传奇（铁）" },
+  "itemHelp.rarity.varies": { "en": "Varies", "zh-CN": "稀有度不一" },
   "itemHelp.rarity.crystalBall": { "en": "Very rare or legendary", "zh-CN": "极珍稀或传奇" },
   "itemHelp.type.ammunition": {"en": "Weapon (any ammunition)", "zh-CN": "武器（任意弹药）"},
   "itemHelp.type.arrow": {"en": "Weapon (arrow)", "zh-CN": "武器（箭）"},

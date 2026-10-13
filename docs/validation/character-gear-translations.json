@@ -1,7 +1,7 @@
 {
   "version": 1,
   "status": "source-compared-by-implementation-agent",
-  "scope": "Equipment creator controls, all class/genre kit alternatives, native mundane equipment/background fragment names, picker/catalog chrome, purse/AC display and item detail chrome/closed weapon rules. Native potion/oil, ring, wand, armor, weapon, rod, staff, wearable and 29 utility/container/card body/header display is now covered; other magic-item and imported class/spell material and third-party descriptions remain outside this review. Expanded feat and FinishStep work is recorded in their separate reviews.",
+  "scope": "Equipment creator controls, all class/genre kit alternatives, native mundane equipment/background fragment names, picker/catalog chrome, purse/AC display and item detail chrome/closed weapon rules. All 239 bundled SRD magic-item bodies and their source headers are covered; other magic-item and imported class/spell material and third-party descriptions remain outside this review. Expanded feat and FinishStep work is recorded in their separate reviews.",
   "provenance": "Original Chinese translations compared with repository equipment UI, native names and SRD 5.1-derived rules. Existing repository CC-BY attribution retained; no external Chinese PHB text used.",
   "review": "113 actual English gear/kit/browse/search projections and 185 actual English ItemBody cards frozen before migration. Compared quantities, native descriptions, strict armor caps, 10-foot speed penalty, weapon rules, prices, source-matched property/damage explanations, exact authored source, server-roll callback/dice and canonical selection references. Original rule/item helpers untouched. This is implementation-agent source comparison, not human or independent approval. Saved-item help now requests native catalog fallback, so kit entries with a guessed slug recover native cost/weight without a pack. Browser export preserved kit options [1,0,0,0], canonical names, AC 15, HP 13 and gold 5.",
   "sources": {
@@ -22,7 +22,7 @@
   "catalogs": {
     "src/lib/i18n/gear-ui-messages.ts": "9762d8ef614c012861d92d7cf92e11e8362ff7836dd96da528e557919b59ab6a",
     "src/lib/i18n/equipment-name-messages.ts": "babb7d54d96715a26d809cc1256a23a76a041578d62e61b1e57464113f0acb3a",
-    "src/lib/i18n/equipment-help-messages.ts": "ec9a81f2ee1217aebe0ce13c33fc4e98f77e66d5a88fa8a261e8d7d19412b0cd"
+    "src/lib/i18n/equipment-help-messages.ts": "e571918a8a7f35d25b729021578a0713c2328c105820deb13630240792987ceb"
   },
   "reviewRepair": "2026-10-11: browser imports now use scoped resource runtime; co-located catalog construction marked pure. All English/Chinese templates independently compared equal to the pre-repair archive; original golden bytes preserved. See localization-review-repairs.md.",
   "terminologyRepair": {
@@ -36,12 +36,12 @@
   },
   "materialProjectionRepair": {
     "date": "2026-10-13",
-    "review": "Current source-bound corpus: 196 complete SRD bodies and 80 distinct headers. Added 29 container, travel, control, dust, elemental and card items. Retained all command limits, durations, capacities, units, spell references, negative modifiers, complete apparatus/bean/illusion/many-things/feather tables and the Avatar of Death stat block. Existing names, spells, damage, conditions and alignment terms reused; Euryale remains a source proper name. Merged export table outcomes were separated into readable rows without changing the outcomes. Added the exact crystal-ball rarity frame; runtime interfaces, rules data and callbacks unchanged. Focused checks pass all 196 bilingual detail projections, source/numbers/dice, picker callbacks and all 185 immutable English item cards. Catalog, types and changed-file lint passed once; no model/audio/parser/build validation repeated. Implementation-agent comparison, not independent human approval.",
+    "review": "Completed corpus: all 239 bundled SRD 5.1 item bodies and 87 distinct source headers. Final 43 include all figurine forms/Giant Fly stats, golem/scroll/iron-flask/horn/sphere tables, extradimensional and alignment restrictions, permanent ability/max increases, charges and downtime. Existing item/spell/rule vocabulary reused, including consistent horn and pipes names. Percentile 00 notation is retained with a readable explanation; no rule data changed. Exact scroll/figurine/horn rarity frames added. The focused test now compares directly with every native SRD item, without partial category selection; all 239 bilingual cards/source/numbers/dice, picker callbacks and 185 immutable English item cards pass. Catalog, types and changed-file lint passed once. Native inventory, model protocol, rulebook data, runtime interfaces and goldens unchanged. This proves component/static material coverage, not authenticated browser/audio flow, imported variant prose or independent human approval.",
     "previousReviewHashes": {
-      "src/lib/i18n/equipment-help-messages.ts": "4d15417d04f4ab2faac29a3be22f5d463c81ca38bd0454fd308449e1636830a7"
+      "src/lib/i18n/equipment-help-messages.ts": "ec9a81f2ee1217aebe0ce13c33fc4e98f77e66d5a88fa8a261e8d7d19412b0cd"
     },
     "priorCommitHashes": {
-      "src/lib/i18n/equipment-help-messages.ts": "4d15417d04f4ab2faac29a3be22f5d463c81ca38bd0454fd308449e1636830a7"
+      "src/lib/i18n/equipment-help-messages.ts": "ec9a81f2ee1217aebe0ce13c33fc4e98f77e66d5a88fa8a261e8d7d19412b0cd"
     }
   }
 }
