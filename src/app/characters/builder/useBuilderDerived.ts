@@ -19,7 +19,7 @@ import {
 } from "@/lib/srd/starting-wealth";
 import { suggestArmor } from "@/lib/srd/armor";
 import { classFeaturesFor, subclassSpellsFor } from "@/lib/srd/features";
-import { fightingStyleSlots } from "@/lib/srd/feature-effects";
+import { fightingStyleFeatureName, fightingStyleSlots } from "@/lib/srd/feature-effects";
 import { openOptionSlots, optionFeatureName, type OptionSlot } from "@/lib/srd/options";
 import { spellStyleFor, spellbookAllowance, type SpellStyle } from "@/lib/srd/spell-prep";
 import {
@@ -102,7 +102,7 @@ export function useBuilderDerived({
     level, scores, racialAsi, asiChoices, chosenSkills, expertisePicks, bonusLanguages,
     racialSkills, racialTool, backgroundSkills, backgroundGearPicks, hpOverride, acOverride, equipment, removedAutoNames,
     toolPicks, repeatSkills,
-    subclass, optionPicks, spells, cantrips, bookPrepared, keepsStoredGear, asiRecorded, asiReachedLevel,
+    subclass, stylePicks, optionPicks, spells, cantrips, bookPrepared, keepsStoredGear, asiRecorded, asiReachedLevel,
   } = state;
 
   const effectiveLevel = fixedLevel ?? level;
@@ -522,9 +522,12 @@ export function useBuilderDerived({
       abilities: shownAbilities,
       proficiencies: preview.proficiencies,
       equipment: fullEquipment,
-      features: classFeaturesFor(klass.id, subclass, effectiveLevel),
+      features: [
+        ...classFeaturesFor(klass.id, subclass, effectiveLevel),
+        ...stylePicks.map(id => ({ name: fightingStyleFeatureName(id), source: "choice" as const })),
+      ],
     });
-  }, [klass, preview, shownAbilities, fullEquipment, subclass, effectiveLevel]);
+  }, [klass, preview, shownAbilities, fullEquipment, subclass, effectiveLevel, stylePicks]);
   const ac = acInfo?.ac ?? acOverride ?? 10;
 
   // What this class and subclass actually hand the character at this level.
