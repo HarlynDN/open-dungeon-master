@@ -21,28 +21,8 @@
       "name": "Mage",
       "slug": "mage",
       "blocks": 6,
-      "untranslatedBlocks": 6,
+      "untranslatedBlocks": 1,
       "pending": [
-        {
-          "heading": "**Mages** spend their lives in the study and practice of magic. Good-aligned mages offer counsel to nobles and others in",
-          "source": "**Mages** spend their lives in the study and practice of magic. Good-aligned mages offer counsel to nobles and others in power, while evil mages dwell in isolated sites to perform unspeakable experiments without interference."
-        },
-        {
-          "heading": "###### Traits",
-          "source": "###### Traits"
-        },
-        {
-          "heading": "**Spellcasting**. The mage is a 9th-level spellcaster. Its spellcasting ability is Intelligence (spell save DC 14, +6 to",
-          "source": "**Spellcasting**. The mage is a 9th-level spellcaster. Its spellcasting ability is Intelligence (spell save DC 14, +6 to hit with spell attacks). The mage has the following wizard spells prepared:"
-        },
-        {
-          "heading": "* Cantrips (at will): fire bolt, light, mage hand, prestidigitation",
-          "source": "* Cantrips (at will): fire bolt, light, mage hand, prestidigitation\n* 1st level (4 slots): detect magic, mage armor, magic missile, shield\n* 2nd level (3 slots): misty step, suggestion\n* 3rd level (3 slots): counterspell, fireball, fly\n* 4th level (3 slots): greater invisibility, ice storm\n* 5th level (1 slot): cone of cold"
-        },
-        {
-          "heading": "###### Actions",
-          "source": "###### Actions"
-        },
         {
           "heading": "**Dagger**. Melee or Ranged Weapon Attack: +5 to hit, reach 5 ft. or range 20/60 ft., one target. Hit: 4 (1d4 + 2) pierc",
           "source": "**Dagger**. Melee or Ranged Weapon Attack: +5 to hit, reach 5 ft. or range 20/60 ft., one target. Hit: 4 (1d4 + 2) piercing damage."
@@ -73,41 +53,8 @@
       "name": "Giant Spider",
       "slug": "giant-spider",
       "blocks": 8,
-      "untranslatedBlocks": 8,
-      "pending": [
-        {
-          "heading": "To snare its prey, a **giant spider** spins elaborate webs or shoots sticky strands of webbing from its abdomen. Giant s",
-          "source": "To snare its prey, a **giant spider** spins elaborate webs or shoots sticky strands of webbing from its abdomen. Giant spiders are most commonly found underground, making their lairs on ceilings or in dark, web-filled crevices. Such lairs are often festooned with web cocoons holding past victims."
-        },
-        {
-          "heading": "###### Traits",
-          "source": "###### Traits"
-        },
-        {
-          "heading": "**Spider Climb**. The spider can climb difficult surfaces, including upside down on ceilings, without needing to make an",
-          "source": "**Spider Climb**. The spider can climb difficult surfaces, including upside down on ceilings, without needing to make an ability check."
-        },
-        {
-          "heading": "**Web Sense**. While in contact with a web, the spider knows the exact location of any other creature in contact with th",
-          "source": "**Web Sense**. While in contact with a web, the spider knows the exact location of any other creature in contact with the same web."
-        },
-        {
-          "heading": "**Web Walker**. The spider ignores movement restrictions caused by webbing.",
-          "source": "**Web Walker**. The spider ignores movement restrictions caused by webbing."
-        },
-        {
-          "heading": "###### Actions",
-          "source": "###### Actions"
-        },
-        {
-          "heading": "**Bite**. Melee Weapon Attack: +5 to hit, reach 5 ft., one creature. Hit: 7 (1d8 + 3) piercing damage, and the target mu",
-          "source": "**Bite**. Melee Weapon Attack: +5 to hit, reach 5 ft., one creature. Hit: 7 (1d8 + 3) piercing damage, and the target must make a DC 11 Constitution saving throw, taking 9 (2d8) poison damage on a failed save, or half as much damage on a successful one. If the poison damage reduces the target to 0 hit points, the target is stable but poisoned for 1 hour, even after regaining hit points, and is paralyzed while poisoned in this way."
-        },
-        {
-          "heading": "**Web (Recharge 5-6)**. Ranged Weapon Attack: +5 to hit, range 30/60 ft., one creature. Hit: The target is restrained by",
-          "source": "**Web (Recharge 5-6)**. Ranged Weapon Attack: +5 to hit, range 30/60 ft., one creature. Hit: The target is restrained by webbing. As an action, the restrained target can make a DC 12 Strength check, bursting the webbing on a success. The webbing can also be attacked and destroyed (AC 10; hp 5; vulnerability to fire damage; immunity to bludgeoning, poison, and psychic damage)."
-        }
-      ]
+      "untranslatedBlocks": 0,
+      "pending": []
     },
     {
       "name": "Lich",

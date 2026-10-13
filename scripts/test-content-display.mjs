@@ -75,3 +75,11 @@ changedReach.data.special_abilities.find(row => row.name === 'Mucous Cloud').des
 const reachView = contentDisplay('monsters', { ...changedReach, source: 'open5e', documentSlug: 'wotc-srd' }, 'zh-CN');
 assert.ok(reachView.display.text.includes('6 ft.'));
 console.log('monster prose: equivalent foot units translate; changed reach remains authored');
+const spider = fixtures.find(row => row.name === 'Giant Spider');
+const spiderEntry = { ...spider, source: 'open5e', documentSlug: 'wotc-srd' };
+const spiderDisplay = contentDisplay('monsters', spiderEntry, 'zh-CN');
+assert.ok(spiderDisplay.display.text.includes('蛛网感知'));
+assert.ok(!spiderDisplay.display.text.includes('Spider Climb'));
+const alteredFlavor = { ...spiderEntry, data: { ...spiderEntry.data, desc: 'This spider has a custom history.' } };
+assert.equal(contentDisplay('monsters', alteredFlavor, 'zh-CN'), alteredFlavor);
+console.log('native flavor paragraphs permit action translation; changed flavor refuses replacement');

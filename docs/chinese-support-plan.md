@@ -110,13 +110,17 @@ real interaction has passed. Do not restart a static translation campaign.
   native rows without authored description, exact source paragraphs can reuse
   reviewed book translations; changed/unmatched paragraphs stay original.
   Fourteen fixture monsters pass source/numeric/English/custom-change checks;
-  twelve have matching display paragraphs. This is partial prose coverage, not
+  all fourteen have matching display paragraphs. This is partial prose coverage, not
   complete monster localization. Direct detail/lazy help use locale-aware guards.
 - Structured prose audit is reproducible via scripts/audit-monster-prose-locales.mjs
   and docs/validation/monster-prose-localization.json. Current 14-fixture audit
-  retains 26 fully English blocks across eight monsters (mixed text needs review).
+  retains 13 fully English blocks across seven monsters (mixed text needs review).
   Foot-unit spelling is normalized without changing quantities; a changed reach
   regression remains English. Synthetic Traits heading is localized.
+- Native flavor descriptions now permit structured action projection only when
+  every description paragraph matches the book. Giant Spider no longer has fully
+  English blocks; changed flavor descriptions still refuse replacement. Full
+  content-display regression, focused lint and i18n checks passed.
 - Next: complete those help paths and inspect real content data, then remaining
   dynamic UI/material/log owners. Full-suite/build and real bilingual journey
   remain unproven; no owner was newly marked covered.

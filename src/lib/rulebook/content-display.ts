@@ -23,7 +23,7 @@ export function contentDisplay<T extends { name: string; source: string; documen
       const display = rulebookPageDisplay(page, locale);
       if (display.translated) {
         if (normalizeRulesText(page.md) === source) text = display.md;
-        else if (!describeContentEntry(entry.data)) {
+        else {
           // Pair complete source paragraphs only when the reviewed translation
           // preserves their boundaries. Formatting/dice spacing is immaterial;
           // changed wording or numbers must retain the original paragraph.
@@ -39,7 +39,12 @@ export function contentDisplay<T extends { name: string; source: string; documen
               if (pairs.has(sourceKey) && pairs.get(sourceKey) !== zh[index]) ambiguous.add(sourceKey);
               pairs.set(sourceKey, zh[index]);
             });
-            text = source.split(/\n\n+/).map(block => ambiguous.has(key(block)) ? block : pairs.get(key(block)) ?? block).join("\n\n");
+            const authored = describeContentEntry(entry.data);
+            // Native flavor paragraphs may coexist with structured actions.
+            // A modified description must not authorize a partial replacement.
+            if (!authored || authored.split(/\n\n+/).every(block => pairs.has(key(block)) && !ambiguous.has(key(block)))) {
+              text = source.split(/\n\n+/).map(block => ambiguous.has(key(block)) ? block : pairs.get(key(block)) ?? block).join("\n\n");
+            }
           }
         }
       }
