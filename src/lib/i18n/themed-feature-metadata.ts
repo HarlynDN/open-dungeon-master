@@ -1931,5 +1931,2471 @@ export const THEMED_FEATURE_MATERIAL = [
     "name": "Unbreakable Vanguard",
     "nameKey": "sheetPlay.resourceName.steampunk_unbreakable_vanguard",
     "descriptionKey": "sheetDialog.resourceHelp.steampunk_unbreakable_vanguard"
+  },
+  {
+    "classId": "witch_hunter",
+    "name": "Hunter's Brand",
+    "nameKey": "callingMaterial.themedFeature.witch_hunter.0.name",
+    "descriptionKey": "callingMaterial.themedFeature.witch_hunter.0.description"
+  },
+  {
+    "classId": "witch_hunter",
+    "name": "Grim Resolve",
+    "nameKey": "callingMaterial.themedFeature.witch_hunter.1.name",
+    "descriptionKey": "callingMaterial.themedFeature.witch_hunter.1.description"
+  },
+  {
+    "classId": "witch_hunter",
+    "name": "Litany",
+    "nameKey": "callingMaterial.themedFeature.witch_hunter.2.name",
+    "descriptionKey": "callingMaterial.themedFeature.witch_hunter.2.description"
+  },
+  {
+    "classId": "witch_hunter",
+    "name": "Order",
+    "nameKey": "callingMaterial.themedFeature.witch_hunter.3.name",
+    "descriptionKey": "callingMaterial.themedFeature.witch_hunter.3.description"
+  },
+  {
+    "classId": "witch_hunter",
+    "name": "Extra Attack",
+    "nameKey": "callingMaterial.nativeFeature.51.name",
+    "descriptionKey": "callingMaterial.themedFeature.witch_hunter.4.description"
+  },
+  {
+    "classId": "witch_hunter",
+    "name": "Scent of Corruption",
+    "nameKey": "callingMaterial.themedFeature.witch_hunter.5.name",
+    "descriptionKey": "callingMaterial.themedFeature.witch_hunter.5.description"
+  },
+  {
+    "classId": "witch_hunter",
+    "name": "Iron Will",
+    "nameKey": "callingMaterial.themedFeature.witch_hunter.6.name",
+    "descriptionKey": "callingMaterial.themedFeature.witch_hunter.6.description"
+  },
+  {
+    "classId": "witch_hunter",
+    "name": "Relentless Pursuit",
+    "nameKey": "callingMaterial.themedFeature.witch_hunter.7.name",
+    "descriptionKey": "callingMaterial.themedFeature.witch_hunter.7.description"
+  },
+  {
+    "classId": "witch_hunter",
+    "name": "Twin Brand",
+    "nameKey": "callingMaterial.themedFeature.witch_hunter.8.name",
+    "descriptionKey": "callingMaterial.themedFeature.witch_hunter.8.description"
+  },
+  {
+    "classId": "witch_hunter",
+    "name": "Anathema Ward",
+    "nameKey": "callingMaterial.themedFeature.witch_hunter.9.name",
+    "descriptionKey": "callingMaterial.themedFeature.witch_hunter.9.description"
+  },
+  {
+    "classId": "witch_hunter",
+    "name": "The Litany Unbroken",
+    "nameKey": "callingMaterial.themedFeature.witch_hunter.10.name",
+    "descriptionKey": "callingMaterial.themedFeature.witch_hunter.10.description"
+  },
+  {
+    "classId": "witch_hunter",
+    "name": "Sanctioned Execution",
+    "nameKey": "callingMaterial.themedFeature.witch_hunter.11.name",
+    "descriptionKey": "callingMaterial.themedFeature.witch_hunter.11.description"
+  },
+  {
+    "classId": "witch_hunter",
+    "name": "Blessed Ammunition",
+    "nameKey": "callingMaterial.themedFeature.witch_hunter.12.name",
+    "descriptionKey": "callingMaterial.themedFeature.witch_hunter.12.description"
+  },
+  {
+    "classId": "witch_hunter",
+    "name": "Silver Tide",
+    "nameKey": "callingMaterial.themedFeature.witch_hunter.13.name",
+    "descriptionKey": "callingMaterial.themedFeature.witch_hunter.13.description"
+  },
+  {
+    "classId": "plague_doctor",
+    "name": "Miasma Ward",
+    "nameKey": "callingMaterial.themedFeature.plague_doctor.14.name",
+    "descriptionKey": "callingMaterial.themedFeature.plague_doctor.14.description"
+  },
+  {
+    "classId": "plague_doctor",
+    "name": "Anatomist's Eye",
+    "nameKey": "callingMaterial.themedFeature.plague_doctor.15.name",
+    "descriptionKey": "callingMaterial.themedFeature.plague_doctor.15.description"
+  },
+  {
+    "classId": "plague_doctor",
+    "name": "Pharmacopoeia",
+    "nameKey": "callingMaterial.themedFeature.plague_doctor.16.name",
+    "descriptionKey": "callingMaterial.themedFeature.plague_doctor.16.description"
+  },
+  {
+    "classId": "plague_doctor",
+    "name": "Guild",
+    "nameKey": "callingMaterial.themedFeature.plague_doctor.17.name",
+    "descriptionKey": "callingMaterial.themedFeature.plague_doctor.17.description"
+  },
+  {
+    "classId": "plague_doctor",
+    "name": "Triage",
+    "nameKey": "callingMaterial.themedFeature.plague_doctor.18.name",
+    "descriptionKey": "callingMaterial.themedFeature.plague_doctor.18.description"
+  },
+  {
+    "classId": "plague_doctor",
+    "name": "Beaked Mask",
+    "nameKey": "callingMaterial.themedFeature.plague_doctor.19.name",
+    "descriptionKey": "callingMaterial.themedFeature.plague_doctor.19.description"
+  },
+  {
+    "classId": "plague_doctor",
+    "name": "Controlled Dosage",
+    "nameKey": "callingMaterial.themedFeature.plague_doctor.20.name",
+    "descriptionKey": "callingMaterial.themedFeature.plague_doctor.20.description"
+  },
+  {
+    "classId": "plague_doctor",
+    "name": "Death's Cartographer",
+    "nameKey": "callingMaterial.themedFeature.plague_doctor.21.name",
+    "descriptionKey": "callingMaterial.themedFeature.plague_doctor.21.description"
+  },
+  {
+    "classId": "plague_doctor",
+    "name": "Virulent Strain",
+    "nameKey": "callingMaterial.themedFeature.plague_doctor.22.name",
+    "descriptionKey": "callingMaterial.themedFeature.plague_doctor.22.description"
+  },
+  {
+    "classId": "plague_doctor",
+    "name": "Iron Constitution",
+    "nameKey": "callingMaterial.themedFeature.plague_doctor.23.name",
+    "descriptionKey": "callingMaterial.themedFeature.plague_doctor.23.description"
+  },
+  {
+    "classId": "plague_doctor",
+    "name": "Miasma Mantle",
+    "nameKey": "callingMaterial.themedFeature.plague_doctor.24.name",
+    "descriptionKey": "callingMaterial.themedFeature.plague_doctor.24.description"
+  },
+  {
+    "classId": "plague_doctor",
+    "name": "The Doctor's Cut",
+    "nameKey": "callingMaterial.themedFeature.plague_doctor.25.name",
+    "descriptionKey": "callingMaterial.themedFeature.plague_doctor.25.description"
+  },
+  {
+    "classId": "plague_doctor",
+    "name": "Carrion Courier",
+    "nameKey": "callingMaterial.themedFeature.plague_doctor.26.name",
+    "descriptionKey": "callingMaterial.themedFeature.plague_doctor.26.description"
+  },
+  {
+    "classId": "plague_doctor",
+    "name": "Guild Dues",
+    "nameKey": "callingMaterial.themedFeature.plague_doctor.27.name",
+    "descriptionKey": "callingMaterial.themedFeature.plague_doctor.27.description"
+  },
+  {
+    "classId": "grave_knight",
+    "name": "Deathly Pact Blade",
+    "nameKey": "callingMaterial.themedFeature.grave_knight.28.name",
+    "descriptionKey": "callingMaterial.themedFeature.grave_knight.28.description"
+  },
+  {
+    "classId": "grave_knight",
+    "name": "Sepulchral Aura",
+    "nameKey": "callingMaterial.themedFeature.grave_knight.29.name",
+    "descriptionKey": "callingMaterial.themedFeature.grave_knight.29.description"
+  },
+  {
+    "classId": "grave_knight",
+    "name": "Oathbound Casting",
+    "nameKey": "callingMaterial.themedFeature.grave_knight.30.name",
+    "descriptionKey": "callingMaterial.themedFeature.grave_knight.30.description"
+  },
+  {
+    "classId": "grave_knight",
+    "name": "Court",
+    "nameKey": "callingMaterial.themedFeature.grave_knight.31.name",
+    "descriptionKey": "callingMaterial.themedFeature.grave_knight.31.description"
+  },
+  {
+    "classId": "grave_knight",
+    "name": "Extra Attack",
+    "nameKey": "callingMaterial.nativeFeature.51.name",
+    "descriptionKey": "callingMaterial.themedFeature.grave_knight.32.description"
+  },
+  {
+    "classId": "grave_knight",
+    "name": "Knight of Dust",
+    "nameKey": "callingMaterial.themedFeature.grave_knight.33.name",
+    "descriptionKey": "callingMaterial.themedFeature.grave_knight.33.description"
+  },
+  {
+    "classId": "grave_knight",
+    "name": "Barrow Ward",
+    "nameKey": "callingMaterial.themedFeature.grave_knight.34.name",
+    "descriptionKey": "callingMaterial.themedFeature.grave_knight.34.description"
+  },
+  {
+    "classId": "grave_knight",
+    "name": "Reaping Blade",
+    "nameKey": "callingMaterial.themedFeature.grave_knight.35.name",
+    "descriptionKey": "callingMaterial.themedFeature.grave_knight.35.description"
+  },
+  {
+    "classId": "grave_knight",
+    "name": "Sepulchral Dominion",
+    "nameKey": "callingMaterial.themedFeature.grave_knight.36.name",
+    "descriptionKey": "callingMaterial.themedFeature.grave_knight.36.description"
+  },
+  {
+    "classId": "grave_knight",
+    "name": "Wight-Iron Will",
+    "nameKey": "callingMaterial.themedFeature.grave_knight.37.name",
+    "descriptionKey": "callingMaterial.themedFeature.grave_knight.37.description"
+  },
+  {
+    "classId": "grave_knight",
+    "name": "Champion of the Quiet Court",
+    "nameKey": "callingMaterial.themedFeature.grave_knight.38.name",
+    "descriptionKey": "callingMaterial.themedFeature.grave_knight.38.description"
+  },
+  {
+    "classId": "grave_knight",
+    "name": "Rose Thorn Oath",
+    "nameKey": "callingMaterial.themedFeature.grave_knight.39.name",
+    "descriptionKey": "callingMaterial.themedFeature.grave_knight.39.description"
+  },
+  {
+    "classId": "grave_knight",
+    "name": "Funerary Grace",
+    "nameKey": "callingMaterial.themedFeature.grave_knight.40.name",
+    "descriptionKey": "callingMaterial.themedFeature.grave_knight.40.description"
+  },
+  {
+    "classId": "penitent",
+    "name": "Mortified Flesh",
+    "nameKey": "callingMaterial.themedFeature.penitent.41.name",
+    "descriptionKey": "callingMaterial.themedFeature.penitent.41.description"
+  },
+  {
+    "classId": "penitent",
+    "name": "Zeal Through Pain",
+    "nameKey": "callingMaterial.themedFeature.penitent.42.name",
+    "descriptionKey": "callingMaterial.themedFeature.penitent.42.description"
+  },
+  {
+    "classId": "penitent",
+    "name": "Unarmored Devotion",
+    "nameKey": "callingMaterial.themedFeature.penitent.43.name",
+    "descriptionKey": "callingMaterial.themedFeature.penitent.43.description"
+  },
+  {
+    "classId": "penitent",
+    "name": "Discipline",
+    "nameKey": "callingMaterial.themedFeature.penitent.44.name",
+    "descriptionKey": "callingMaterial.themedFeature.penitent.44.description"
+  },
+  {
+    "classId": "penitent",
+    "name": "Extra Attack",
+    "nameKey": "callingMaterial.nativeFeature.51.name",
+    "descriptionKey": "callingMaterial.themedFeature.penitent.45.description"
+  },
+  {
+    "classId": "penitent",
+    "name": "Flagellant's Trance",
+    "nameKey": "callingMaterial.themedFeature.penitent.46.name",
+    "descriptionKey": "callingMaterial.themedFeature.penitent.46.description"
+  },
+  {
+    "classId": "penitent",
+    "name": "Scarred Hide",
+    "nameKey": "callingMaterial.themedFeature.penitent.47.name",
+    "descriptionKey": "callingMaterial.themedFeature.penitent.47.description"
+  },
+  {
+    "classId": "penitent",
+    "name": "Greater Mortification",
+    "nameKey": "callingMaterial.themedFeature.penitent.48.name",
+    "descriptionKey": "callingMaterial.themedFeature.penitent.48.description"
+  },
+  {
+    "classId": "penitent",
+    "name": "Penance Shared",
+    "nameKey": "callingMaterial.themedFeature.penitent.49.name",
+    "descriptionKey": "callingMaterial.themedFeature.penitent.49.description"
+  },
+  {
+    "classId": "penitent",
+    "name": "Numb to the Lash",
+    "nameKey": "callingMaterial.themedFeature.penitent.50.name",
+    "descriptionKey": "callingMaterial.themedFeature.penitent.50.description"
+  },
+  {
+    "classId": "penitent",
+    "name": "Ecstatic Fury",
+    "nameKey": "callingMaterial.themedFeature.penitent.51.name",
+    "descriptionKey": "callingMaterial.themedFeature.penitent.51.description"
+  },
+  {
+    "classId": "penitent",
+    "name": "Sainted Scars",
+    "nameKey": "callingMaterial.themedFeature.penitent.52.name",
+    "descriptionKey": "callingMaterial.themedFeature.penitent.52.description"
+  },
+  {
+    "classId": "penitent",
+    "name": "The Body Is a Prayer",
+    "nameKey": "callingMaterial.themedFeature.penitent.53.name",
+    "descriptionKey": "callingMaterial.themedFeature.penitent.53.description"
+  },
+  {
+    "classId": "penitent",
+    "name": "Ashen Hymn",
+    "nameKey": "callingMaterial.themedFeature.penitent.54.name",
+    "descriptionKey": "callingMaterial.themedFeature.penitent.54.description"
+  },
+  {
+    "classId": "penitent",
+    "name": "Cinder Palms",
+    "nameKey": "callingMaterial.themedFeature.penitent.55.name",
+    "descriptionKey": "callingMaterial.themedFeature.penitent.55.description"
+  },
+  {
+    "classId": "penitent",
+    "name": "Robes of Soot",
+    "nameKey": "callingMaterial.themedFeature.penitent.56.name",
+    "descriptionKey": "callingMaterial.themedFeature.penitent.56.description"
+  },
+  {
+    "classId": "dirgesinger",
+    "name": "Dirge of Sorrow",
+    "nameKey": "callingMaterial.themedFeature.dirgesinger.57.name",
+    "descriptionKey": "callingMaterial.themedFeature.dirgesinger.57.description"
+  },
+  {
+    "classId": "dirgesinger",
+    "name": "Mourning Song",
+    "nameKey": "callingMaterial.themedFeature.dirgesinger.58.name",
+    "descriptionKey": "callingMaterial.themedFeature.dirgesinger.58.description"
+  },
+  {
+    "classId": "dirgesinger",
+    "name": "College",
+    "nameKey": "callingMaterial.themedFeature.dirgesinger.59.name",
+    "descriptionKey": "callingMaterial.themedFeature.dirgesinger.59.description"
+  },
+  {
+    "classId": "dirgesinger",
+    "name": "Requiem d8",
+    "nameKey": "callingMaterial.themedFeature.dirgesinger.60.name",
+    "descriptionKey": "callingMaterial.themedFeature.dirgesinger.60.description"
+  },
+  {
+    "classId": "dirgesinger",
+    "name": "Songs of the Barrow",
+    "nameKey": "callingMaterial.themedFeature.dirgesinger.61.name",
+    "descriptionKey": "callingMaterial.themedFeature.dirgesinger.61.description"
+  },
+  {
+    "classId": "dirgesinger",
+    "name": "Lament of the Lost",
+    "nameKey": "callingMaterial.themedFeature.dirgesinger.62.name",
+    "descriptionKey": "callingMaterial.themedFeature.dirgesinger.62.description"
+  },
+  {
+    "classId": "dirgesinger",
+    "name": "Requiem d10",
+    "nameKey": "callingMaterial.themedFeature.dirgesinger.63.name",
+    "descriptionKey": "callingMaterial.themedFeature.dirgesinger.63.description"
+  },
+  {
+    "classId": "dirgesinger",
+    "name": "Dirge of Ruin",
+    "nameKey": "callingMaterial.themedFeature.dirgesinger.64.name",
+    "descriptionKey": "callingMaterial.themedFeature.dirgesinger.64.description"
+  },
+  {
+    "classId": "dirgesinger",
+    "name": "Funeral March",
+    "nameKey": "callingMaterial.themedFeature.dirgesinger.65.name",
+    "descriptionKey": "callingMaterial.themedFeature.dirgesinger.65.description"
+  },
+  {
+    "classId": "dirgesinger",
+    "name": "Requiem d12",
+    "nameKey": "callingMaterial.themedFeature.dirgesinger.66.name",
+    "descriptionKey": "callingMaterial.themedFeature.dirgesinger.66.description"
+  },
+  {
+    "classId": "dirgesinger",
+    "name": "Voice of the Veil",
+    "nameKey": "callingMaterial.themedFeature.dirgesinger.67.name",
+    "descriptionKey": "callingMaterial.themedFeature.dirgesinger.67.description"
+  },
+  {
+    "classId": "dirgesinger",
+    "name": "The Final Movement",
+    "nameKey": "callingMaterial.themedFeature.dirgesinger.68.name",
+    "descriptionKey": "callingMaterial.themedFeature.dirgesinger.68.description"
+  },
+  {
+    "classId": "dirgesinger",
+    "name": "Last Rites",
+    "nameKey": "callingMaterial.themedFeature.dirgesinger.69.name",
+    "descriptionKey": "callingMaterial.themedFeature.dirgesinger.69.description"
+  },
+  {
+    "classId": "dirgesinger",
+    "name": "Grief Made Strength",
+    "nameKey": "callingMaterial.themedFeature.dirgesinger.70.name",
+    "descriptionKey": "callingMaterial.themedFeature.dirgesinger.70.description"
+  },
+  {
+    "classId": "dirgesinger",
+    "name": "Pallbearer's Procession",
+    "nameKey": "callingMaterial.themedFeature.dirgesinger.71.name",
+    "descriptionKey": "callingMaterial.themedFeature.dirgesinger.71.description"
+  },
+  {
+    "classId": "vermin_lord",
+    "name": "Swarm Sense",
+    "nameKey": "callingMaterial.themedFeature.vermin_lord.72.name",
+    "descriptionKey": "callingMaterial.themedFeature.vermin_lord.72.description"
+  },
+  {
+    "classId": "vermin_lord",
+    "name": "Gutter Fighting",
+    "nameKey": "callingMaterial.themedFeature.vermin_lord.73.name",
+    "descriptionKey": "callingMaterial.themedFeature.vermin_lord.73.description"
+  },
+  {
+    "classId": "vermin_lord",
+    "name": "Underway",
+    "nameKey": "callingMaterial.themedFeature.vermin_lord.74.name",
+    "descriptionKey": "callingMaterial.themedFeature.vermin_lord.74.description"
+  },
+  {
+    "classId": "vermin_lord",
+    "name": "Crown",
+    "nameKey": "callingMaterial.themedFeature.vermin_lord.75.name",
+    "descriptionKey": "callingMaterial.themedFeature.vermin_lord.75.description"
+  },
+  {
+    "classId": "vermin_lord",
+    "name": "Plaguebearer's Immunity",
+    "nameKey": "callingMaterial.themedFeature.vermin_lord.76.name",
+    "descriptionKey": "callingMaterial.themedFeature.vermin_lord.76.description"
+  },
+  {
+    "classId": "vermin_lord",
+    "name": "Nimble Escape",
+    "nameKey": "callingMaterial.themedFeature.vermin_lord.77.name",
+    "descriptionKey": "callingMaterial.themedFeature.vermin_lord.77.description"
+  },
+  {
+    "classId": "vermin_lord",
+    "name": "Gutter King's Word",
+    "nameKey": "callingMaterial.themedFeature.vermin_lord.78.name",
+    "descriptionKey": "callingMaterial.themedFeature.vermin_lord.78.description"
+  },
+  {
+    "classId": "vermin_lord",
+    "name": "Greater Gutter Fighting",
+    "nameKey": "callingMaterial.themedFeature.vermin_lord.79.name",
+    "descriptionKey": "callingMaterial.themedFeature.vermin_lord.79.description"
+  },
+  {
+    "classId": "vermin_lord",
+    "name": "Chittering Court",
+    "nameKey": "callingMaterial.themedFeature.vermin_lord.80.name",
+    "descriptionKey": "callingMaterial.themedFeature.vermin_lord.80.description"
+  },
+  {
+    "classId": "vermin_lord",
+    "name": "Rat Tide (2 uses)",
+    "nameKey": "callingMaterial.themedFeature.vermin_lord.81.name",
+    "descriptionKey": "callingMaterial.themedFeature.vermin_lord.81.description"
+  },
+  {
+    "classId": "vermin_lord",
+    "name": "The Walls Have Teeth",
+    "nameKey": "callingMaterial.themedFeature.vermin_lord.82.name",
+    "descriptionKey": "callingMaterial.themedFeature.vermin_lord.82.description"
+  },
+  {
+    "classId": "vermin_lord",
+    "name": "The City Is Mine",
+    "nameKey": "callingMaterial.themedFeature.vermin_lord.83.name",
+    "descriptionKey": "callingMaterial.themedFeature.vermin_lord.83.description"
+  },
+  {
+    "classId": "vermin_lord",
+    "name": "Favored of the Swarm",
+    "nameKey": "callingMaterial.themedFeature.vermin_lord.84.name",
+    "descriptionKey": "callingMaterial.themedFeature.vermin_lord.84.description"
+  },
+  {
+    "classId": "vermin_lord",
+    "name": "Tunnel Rat",
+    "nameKey": "callingMaterial.themedFeature.vermin_lord.85.name",
+    "descriptionKey": "callingMaterial.themedFeature.vermin_lord.85.description"
+  },
+  {
+    "classId": "vermin_lord",
+    "name": "Pack Hunting",
+    "nameKey": "callingMaterial.themedFeature.vermin_lord.86.name",
+    "descriptionKey": "callingMaterial.themedFeature.vermin_lord.86.description"
+  },
+  {
+    "classId": "vermin_lord",
+    "name": "Grey Tide Rising",
+    "nameKey": "callingMaterial.themedFeature.vermin_lord.87.name",
+    "descriptionKey": "callingMaterial.themedFeature.vermin_lord.87.description"
+  },
+  {
+    "classId": "exorcist",
+    "name": "Consecrated Tools",
+    "nameKey": "callingMaterial.themedFeature.exorcist.0.name",
+    "descriptionKey": "callingMaterial.themedFeature.exorcist.0.description"
+  },
+  {
+    "classId": "exorcist",
+    "name": "Liturgy",
+    "nameKey": "callingMaterial.themedFeature.exorcist.1.name",
+    "descriptionKey": "callingMaterial.themedFeature.exorcist.1.description"
+  },
+  {
+    "classId": "exorcist",
+    "name": "Order",
+    "nameKey": "callingMaterial.themedFeature.exorcist.2.name",
+    "descriptionKey": "callingMaterial.themedFeature.exorcist.2.description"
+  },
+  {
+    "classId": "exorcist",
+    "name": "Sanctified Ground",
+    "nameKey": "callingMaterial.themedFeature.exorcist.3.name",
+    "descriptionKey": "callingMaterial.themedFeature.exorcist.3.description"
+  },
+  {
+    "classId": "exorcist",
+    "name": "Read the Possession",
+    "nameKey": "callingMaterial.themedFeature.exorcist.4.name",
+    "descriptionKey": "callingMaterial.themedFeature.exorcist.4.description"
+  },
+  {
+    "classId": "exorcist",
+    "name": "Litany of Defense",
+    "nameKey": "callingMaterial.themedFeature.exorcist.5.name",
+    "descriptionKey": "callingMaterial.themedFeature.exorcist.5.description"
+  },
+  {
+    "classId": "exorcist",
+    "name": "Voice of Authority",
+    "nameKey": "callingMaterial.subclassFeature.cleric.order-domain.voice-of-authority.name",
+    "descriptionKey": "callingMaterial.themedFeature.exorcist.6.description"
+  },
+  {
+    "classId": "exorcist",
+    "name": "Greater Rite",
+    "nameKey": "callingMaterial.themedFeature.exorcist.7.name",
+    "descriptionKey": "callingMaterial.themedFeature.exorcist.7.description"
+  },
+  {
+    "classId": "exorcist",
+    "name": "Anathema",
+    "nameKey": "callingMaterial.themedFeature.exorcist.8.name",
+    "descriptionKey": "callingMaterial.themedFeature.exorcist.8.description"
+  },
+  {
+    "classId": "exorcist",
+    "name": "Unshakeable Faith",
+    "nameKey": "callingMaterial.themedFeature.exorcist.9.name",
+    "descriptionKey": "callingMaterial.themedFeature.exorcist.9.description"
+  },
+  {
+    "classId": "exorcist",
+    "name": "Sacred Bulwark",
+    "nameKey": "callingMaterial.themedFeature.exorcist.10.name",
+    "descriptionKey": "callingMaterial.themedFeature.exorcist.10.description"
+  },
+  {
+    "classId": "exorcist",
+    "name": "Candlelight Vigil",
+    "nameKey": "callingMaterial.themedFeature.exorcist.11.name",
+    "descriptionKey": "callingMaterial.themedFeature.exorcist.11.description"
+  },
+  {
+    "classId": "exorcist",
+    "name": "Wax and Wick",
+    "nameKey": "callingMaterial.themedFeature.exorcist.12.name",
+    "descriptionKey": "callingMaterial.themedFeature.exorcist.12.description"
+  },
+  {
+    "classId": "exorcist",
+    "name": "Light Against the Dark",
+    "nameKey": "callingMaterial.themedFeature.exorcist.13.name",
+    "descriptionKey": "callingMaterial.themedFeature.exorcist.13.description"
+  },
+  {
+    "classId": "exorcist",
+    "name": "Unguttering Flame",
+    "nameKey": "callingMaterial.themedFeature.exorcist.14.name",
+    "descriptionKey": "callingMaterial.themedFeature.exorcist.14.description"
+  },
+  {
+    "classId": "occultist",
+    "name": "Forbidden Lore",
+    "nameKey": "callingMaterial.themedFeature.occultist.15.name",
+    "descriptionKey": "callingMaterial.themedFeature.occultist.15.description"
+  },
+  {
+    "classId": "occultist",
+    "name": "Warding Sigil",
+    "nameKey": "callingMaterial.themedFeature.occultist.16.name",
+    "descriptionKey": "callingMaterial.themedFeature.occultist.16.description"
+  },
+  {
+    "classId": "occultist",
+    "name": "Pact of the Page",
+    "nameKey": "callingMaterial.themedFeature.occultist.17.name",
+    "descriptionKey": "callingMaterial.themedFeature.occultist.17.description"
+  },
+  {
+    "classId": "occultist",
+    "name": "The Patronless Path",
+    "nameKey": "callingMaterial.themedFeature.occultist.18.name",
+    "descriptionKey": "callingMaterial.themedFeature.occultist.18.description"
+  },
+  {
+    "classId": "occultist",
+    "name": "Whispered Names",
+    "nameKey": "callingMaterial.themedFeature.occultist.19.name",
+    "descriptionKey": "callingMaterial.themedFeature.occultist.19.description"
+  },
+  {
+    "classId": "occultist",
+    "name": "Ink-Stained Mind",
+    "nameKey": "callingMaterial.themedFeature.occultist.20.name",
+    "descriptionKey": "callingMaterial.themedFeature.occultist.20.description"
+  },
+  {
+    "classId": "occultist",
+    "name": "Rite of the Threshold",
+    "nameKey": "callingMaterial.themedFeature.occultist.21.name",
+    "descriptionKey": "callingMaterial.themedFeature.occultist.21.description"
+  },
+  {
+    "classId": "occultist",
+    "name": "Marginalia",
+    "nameKey": "callingMaterial.themedFeature.occultist.22.name",
+    "descriptionKey": "callingMaterial.themedFeature.occultist.22.description"
+  },
+  {
+    "classId": "occultist",
+    "name": "Unblinking Study",
+    "nameKey": "callingMaterial.themedFeature.occultist.23.name",
+    "descriptionKey": "callingMaterial.themedFeature.occultist.23.description"
+  },
+  {
+    "classId": "occultist",
+    "name": "Palimpsest Soul",
+    "nameKey": "callingMaterial.themedFeature.occultist.24.name",
+    "descriptionKey": "callingMaterial.themedFeature.occultist.24.description"
+  },
+  {
+    "classId": "occultist",
+    "name": "Veilsight",
+    "nameKey": "callingMaterial.themedFeature.occultist.25.name",
+    "descriptionKey": "callingMaterial.themedFeature.occultist.25.description"
+  },
+  {
+    "classId": "occultist",
+    "name": "Warden of the Threshold",
+    "nameKey": "callingMaterial.themedFeature.occultist.26.name",
+    "descriptionKey": "callingMaterial.themedFeature.occultist.26.description"
+  },
+  {
+    "classId": "survivor",
+    "name": "How They Made It",
+    "nameKey": "callingMaterial.themedFeature.survivor.27.name",
+    "descriptionKey": "callingMaterial.themedFeature.survivor.27.description"
+  },
+  {
+    "classId": "survivor",
+    "name": "Extra Attack",
+    "nameKey": "callingMaterial.nativeFeature.51.name",
+    "descriptionKey": "callingMaterial.themedFeature.survivor.28.description"
+  },
+  {
+    "classId": "survivor",
+    "name": "Read the Room",
+    "nameKey": "callingMaterial.themedFeature.survivor.29.name",
+    "descriptionKey": "callingMaterial.themedFeature.survivor.29.description"
+  },
+  {
+    "classId": "survivor",
+    "name": "Nine Lives",
+    "nameKey": "callingMaterial.themedFeature.survivor.30.name",
+    "descriptionKey": "callingMaterial.themedFeature.survivor.30.description"
+  },
+  {
+    "classId": "survivor",
+    "name": "Hypervigilant",
+    "nameKey": "callingMaterial.themedFeature.survivor.31.name",
+    "descriptionKey": "callingMaterial.themedFeature.survivor.31.description"
+  },
+  {
+    "classId": "survivor",
+    "name": "Desperate Strength",
+    "nameKey": "callingMaterial.themedFeature.survivor.32.name",
+    "descriptionKey": "callingMaterial.themedFeature.survivor.32.description"
+  },
+  {
+    "classId": "survivor",
+    "name": "Seen Worse",
+    "nameKey": "callingMaterial.themedFeature.survivor.33.name",
+    "descriptionKey": "callingMaterial.themedFeature.survivor.33.description"
+  },
+  {
+    "classId": "survivor",
+    "name": "Deep Reserves",
+    "nameKey": "callingMaterial.themedFeature.survivor.34.name",
+    "descriptionKey": "callingMaterial.themedFeature.survivor.34.description"
+  },
+  {
+    "classId": "survivor",
+    "name": "Death's Old Acquaintance",
+    "nameKey": "callingMaterial.themedFeature.survivor.35.name",
+    "descriptionKey": "callingMaterial.themedFeature.survivor.35.description"
+  },
+  {
+    "classId": "survivor",
+    "name": "Alone in the Dark",
+    "nameKey": "callingMaterial.themedFeature.survivor.36.name",
+    "descriptionKey": "callingMaterial.themedFeature.survivor.36.description"
+  },
+  {
+    "classId": "survivor",
+    "name": "Grim Arithmetic",
+    "nameKey": "callingMaterial.themedFeature.survivor.37.name",
+    "descriptionKey": "callingMaterial.themedFeature.survivor.37.description"
+  },
+  {
+    "classId": "survivor",
+    "name": "No Witnesses Left",
+    "nameKey": "callingMaterial.themedFeature.survivor.38.name",
+    "descriptionKey": "callingMaterial.themedFeature.survivor.38.description"
+  },
+  {
+    "classId": "survivor",
+    "name": "Sole Survivor",
+    "nameKey": "callingMaterial.themedFeature.survivor.39.name",
+    "descriptionKey": "callingMaterial.themedFeature.survivor.39.description"
+  },
+  {
+    "classId": "slayer",
+    "name": "Monster Lore",
+    "nameKey": "callingMaterial.themedFeature.slayer.40.name",
+    "descriptionKey": "callingMaterial.themedFeature.slayer.40.description"
+  },
+  {
+    "classId": "slayer",
+    "name": "Silvered Strikes",
+    "nameKey": "callingMaterial.themedFeature.slayer.41.name",
+    "descriptionKey": "callingMaterial.themedFeature.slayer.41.description"
+  },
+  {
+    "classId": "slayer",
+    "name": "Hunter's Kit",
+    "nameKey": "callingMaterial.themedFeature.slayer.42.name",
+    "descriptionKey": "callingMaterial.themedFeature.slayer.42.description"
+  },
+  {
+    "classId": "slayer",
+    "name": "Lodge",
+    "nameKey": "callingMaterial.themedFeature.slayer.43.name",
+    "descriptionKey": "callingMaterial.themedFeature.slayer.43.description"
+  },
+  {
+    "classId": "slayer",
+    "name": "Extra Attack",
+    "nameKey": "callingMaterial.nativeFeature.51.name",
+    "descriptionKey": "callingMaterial.themedFeature.slayer.44.description"
+  },
+  {
+    "classId": "slayer",
+    "name": "Iron Stomach",
+    "nameKey": "callingMaterial.themedFeature.slayer.45.name",
+    "descriptionKey": "callingMaterial.themedFeature.slayer.45.description"
+  },
+  {
+    "classId": "slayer",
+    "name": "Quarry",
+    "nameKey": "callingMaterial.themedFeature.slayer.46.name",
+    "descriptionKey": "callingMaterial.themedFeature.slayer.46.description"
+  },
+  {
+    "classId": "slayer",
+    "name": "Flinchless",
+    "nameKey": "callingMaterial.themedFeature.slayer.47.name",
+    "descriptionKey": "callingMaterial.themedFeature.slayer.47.description"
+  },
+  {
+    "classId": "slayer",
+    "name": "Tracker of the Strange",
+    "nameKey": "callingMaterial.themedFeature.slayer.48.name",
+    "descriptionKey": "callingMaterial.themedFeature.slayer.48.description"
+  },
+  {
+    "classId": "slayer",
+    "name": "Improved Quarry",
+    "nameKey": "callingMaterial.themedFeature.slayer.49.name",
+    "descriptionKey": "callingMaterial.themedFeature.slayer.49.description"
+  },
+  {
+    "classId": "slayer",
+    "name": "Veteran's Guard",
+    "nameKey": "callingMaterial.themedFeature.slayer.50.name",
+    "descriptionKey": "callingMaterial.themedFeature.slayer.50.description"
+  },
+  {
+    "classId": "slayer",
+    "name": "Deathblow",
+    "nameKey": "callingMaterial.themedFeature.slayer.51.name",
+    "descriptionKey": "callingMaterial.themedFeature.slayer.51.description"
+  },
+  {
+    "classId": "slayer",
+    "name": "The Long Hunt",
+    "nameKey": "callingMaterial.themedFeature.slayer.52.name",
+    "descriptionKey": "callingMaterial.themedFeature.slayer.52.description"
+  },
+  {
+    "classId": "slayer",
+    "name": "Extinction",
+    "nameKey": "callingMaterial.themedFeature.slayer.53.name",
+    "descriptionKey": "callingMaterial.themedFeature.slayer.53.description"
+  },
+  {
+    "classId": "slayer",
+    "name": "Stake and Salt",
+    "nameKey": "callingMaterial.themedFeature.slayer.54.name",
+    "descriptionKey": "callingMaterial.themedFeature.slayer.54.description"
+  },
+  {
+    "classId": "slayer",
+    "name": "Vampiric Scholar",
+    "nameKey": "callingMaterial.themedFeature.slayer.55.name",
+    "descriptionKey": "callingMaterial.themedFeature.slayer.55.description"
+  },
+  {
+    "classId": "slayer",
+    "name": "Piercing the Heart",
+    "nameKey": "callingMaterial.themedFeature.slayer.56.name",
+    "descriptionKey": "callingMaterial.themedFeature.slayer.56.description"
+  },
+  {
+    "classId": "slayer",
+    "name": "Blessed Silver",
+    "nameKey": "callingMaterial.themedFeature.slayer.57.name",
+    "descriptionKey": "callingMaterial.themedFeature.slayer.57.description"
+  },
+  {
+    "classId": "parapsychologist",
+    "name": "Field Instruments",
+    "nameKey": "callingMaterial.themedFeature.parapsychologist.58.name",
+    "descriptionKey": "callingMaterial.themedFeature.parapsychologist.58.description"
+  },
+  {
+    "classId": "parapsychologist",
+    "name": "Rational Mind",
+    "nameKey": "callingMaterial.themedFeature.parapsychologist.59.name",
+    "descriptionKey": "callingMaterial.themedFeature.parapsychologist.59.description"
+  },
+  {
+    "classId": "parapsychologist",
+    "name": "Applied Theory",
+    "nameKey": "callingMaterial.themedFeature.parapsychologist.60.name",
+    "descriptionKey": "callingMaterial.themedFeature.parapsychologist.60.description"
+  },
+  {
+    "classId": "parapsychologist",
+    "name": "Research Program",
+    "nameKey": "callingMaterial.themedFeature.parapsychologist.61.name",
+    "descriptionKey": "callingMaterial.themedFeature.parapsychologist.61.description"
+  },
+  {
+    "classId": "parapsychologist",
+    "name": "Baseline Readings",
+    "nameKey": "callingMaterial.themedFeature.parapsychologist.62.name",
+    "descriptionKey": "callingMaterial.themedFeature.parapsychologist.62.description"
+  },
+  {
+    "classId": "parapsychologist",
+    "name": "Calibrated Sensors",
+    "nameKey": "callingMaterial.themedFeature.parapsychologist.63.name",
+    "descriptionKey": "callingMaterial.themedFeature.parapsychologist.63.description"
+  },
+  {
+    "classId": "parapsychologist",
+    "name": "Controlled Exposure",
+    "nameKey": "callingMaterial.themedFeature.parapsychologist.64.name",
+    "descriptionKey": "callingMaterial.themedFeature.parapsychologist.64.description"
+  },
+  {
+    "classId": "parapsychologist",
+    "name": "Documented Phenomena",
+    "nameKey": "callingMaterial.themedFeature.parapsychologist.65.name",
+    "descriptionKey": "callingMaterial.themedFeature.parapsychologist.65.description"
+  },
+  {
+    "classId": "parapsychologist",
+    "name": "Clinical Detachment",
+    "nameKey": "callingMaterial.themedFeature.parapsychologist.66.name",
+    "descriptionKey": "callingMaterial.themedFeature.parapsychologist.66.description"
+  },
+  {
+    "classId": "parapsychologist",
+    "name": "Resonance Lock",
+    "nameKey": "callingMaterial.themedFeature.parapsychologist.67.name",
+    "descriptionKey": "callingMaterial.themedFeature.parapsychologist.67.description"
+  },
+  {
+    "classId": "parapsychologist",
+    "name": "Unified Theory",
+    "nameKey": "callingMaterial.themedFeature.parapsychologist.68.name",
+    "descriptionKey": "callingMaterial.themedFeature.parapsychologist.68.description"
+  },
+  {
+    "classId": "parapsychologist",
+    "name": "Automatic Writing",
+    "nameKey": "callingMaterial.themedFeature.parapsychologist.69.name",
+    "descriptionKey": "callingMaterial.themedFeature.parapsychologist.69.description"
+  },
+  {
+    "classId": "parapsychologist",
+    "name": "Ectoplasmic Sample",
+    "nameKey": "callingMaterial.themedFeature.parapsychologist.70.name",
+    "descriptionKey": "callingMaterial.themedFeature.parapsychologist.70.description"
+  },
+  {
+    "classId": "apostate",
+    "name": "Residue of the Rite",
+    "nameKey": "callingMaterial.themedFeature.apostate.71.name",
+    "descriptionKey": "callingMaterial.themedFeature.apostate.71.description"
+  },
+  {
+    "classId": "apostate",
+    "name": "Mark of the Cult",
+    "nameKey": "callingMaterial.themedFeature.apostate.72.name",
+    "descriptionKey": "callingMaterial.themedFeature.apostate.72.description"
+  },
+  {
+    "classId": "apostate",
+    "name": "Scar Tissue",
+    "nameKey": "callingMaterial.themedFeature.apostate.73.name",
+    "descriptionKey": "callingMaterial.themedFeature.apostate.73.description"
+  },
+  {
+    "classId": "apostate",
+    "name": "Hunted Instincts",
+    "nameKey": "callingMaterial.themedFeature.apostate.74.name",
+    "descriptionKey": "callingMaterial.themedFeature.apostate.74.description"
+  },
+  {
+    "classId": "apostate",
+    "name": "Deeper Scars",
+    "nameKey": "callingMaterial.themedFeature.apostate.75.name",
+    "descriptionKey": "callingMaterial.themedFeature.apostate.75.description"
+  },
+  {
+    "classId": "apostate",
+    "name": "Turncoat's Insight",
+    "nameKey": "callingMaterial.themedFeature.apostate.76.name",
+    "descriptionKey": "callingMaterial.themedFeature.apostate.76.description"
+  },
+  {
+    "classId": "apostate",
+    "name": "The Mark Burns Back",
+    "nameKey": "callingMaterial.themedFeature.apostate.77.name",
+    "descriptionKey": "callingMaterial.themedFeature.apostate.77.description"
+  },
+  {
+    "classId": "apostate",
+    "name": "Apostasy Complete",
+    "nameKey": "callingMaterial.themedFeature.apostate.78.name",
+    "descriptionKey": "callingMaterial.themedFeature.apostate.78.description"
+  },
+  {
+    "classId": "apostate",
+    "name": "First Scar",
+    "nameKey": "callingMaterial.themedFeature.apostate.79.name",
+    "descriptionKey": "callingMaterial.themedFeature.apostate.79.description"
+  },
+  {
+    "classId": "apostate",
+    "name": "Skin Like Scripture",
+    "nameKey": "callingMaterial.themedFeature.apostate.80.name",
+    "descriptionKey": "callingMaterial.themedFeature.apostate.80.description"
+  },
+  {
+    "classId": "detective",
+    "name": "Case Notes",
+    "nameKey": "callingMaterial.themedFeature.detective.0.name",
+    "descriptionKey": "callingMaterial.themedFeature.detective.0.description"
+  },
+  {
+    "classId": "detective",
+    "name": "Expertise",
+    "nameKey": "callingMaterial.nativeFeature.50.name",
+    "descriptionKey": "callingMaterial.themedFeature.detective.1.description"
+  },
+  {
+    "classId": "detective",
+    "name": "Method",
+    "nameKey": "callingMaterial.themedFeature.detective.2.name",
+    "descriptionKey": "callingMaterial.themedFeature.detective.2.description"
+  },
+  {
+    "classId": "detective",
+    "name": "Reading People",
+    "nameKey": "callingMaterial.themedFeature.detective.3.name",
+    "descriptionKey": "callingMaterial.themedFeature.detective.3.description"
+  },
+  {
+    "classId": "detective",
+    "name": "Practiced Composure",
+    "nameKey": "callingMaterial.themedFeature.detective.4.name",
+    "descriptionKey": "callingMaterial.themedFeature.detective.4.description"
+  },
+  {
+    "classId": "detective",
+    "name": "Anticipate Violence",
+    "nameKey": "callingMaterial.themedFeature.detective.5.name",
+    "descriptionKey": "callingMaterial.themedFeature.detective.5.description"
+  },
+  {
+    "classId": "detective",
+    "name": "Expertise (2 more skills)",
+    "nameKey": "callingMaterial.themedFeature.detective.6.name",
+    "descriptionKey": "callingMaterial.themedFeature.detective.6.description"
+  },
+  {
+    "classId": "detective",
+    "name": "Perfect Recall",
+    "nameKey": "callingMaterial.themedFeature.detective.7.name",
+    "descriptionKey": "callingMaterial.themedFeature.detective.7.description"
+  },
+  {
+    "classId": "detective",
+    "name": "Web of Informants",
+    "nameKey": "callingMaterial.themedFeature.detective.8.name",
+    "descriptionKey": "callingMaterial.themedFeature.detective.8.description"
+  },
+  {
+    "classId": "detective",
+    "name": "Cold Read",
+    "nameKey": "callingMaterial.themedFeature.detective.9.name",
+    "descriptionKey": "callingMaterial.themedFeature.detective.9.description"
+  },
+  {
+    "classId": "detective",
+    "name": "Irregulars",
+    "nameKey": "callingMaterial.themedFeature.detective.10.name",
+    "descriptionKey": "callingMaterial.themedFeature.detective.10.description"
+  },
+  {
+    "classId": "detective",
+    "name": "Sharpened Logic",
+    "nameKey": "callingMaterial.themedFeature.detective.11.name",
+    "descriptionKey": "callingMaterial.themedFeature.detective.11.description"
+  },
+  {
+    "classId": "detective",
+    "name": "Nemesis Study",
+    "nameKey": "callingMaterial.themedFeature.detective.12.name",
+    "descriptionKey": "callingMaterial.themedFeature.detective.12.description"
+  },
+  {
+    "classId": "alienist",
+    "name": "Talking Cure",
+    "nameKey": "callingMaterial.themedFeature.alienist.13.name",
+    "descriptionKey": "callingMaterial.themedFeature.alienist.13.description"
+  },
+  {
+    "classId": "alienist",
+    "name": "Clinical Practice",
+    "nameKey": "callingMaterial.themedFeature.alienist.14.name",
+    "descriptionKey": "callingMaterial.themedFeature.alienist.14.description"
+  },
+  {
+    "classId": "alienist",
+    "name": "School of Thought",
+    "nameKey": "callingMaterial.themedFeature.alienist.15.name",
+    "descriptionKey": "callingMaterial.themedFeature.alienist.15.description"
+  },
+  {
+    "classId": "alienist",
+    "name": "Trauma Map",
+    "nameKey": "callingMaterial.themedFeature.alienist.16.name",
+    "descriptionKey": "callingMaterial.themedFeature.alienist.16.description"
+  },
+  {
+    "classId": "alienist",
+    "name": "Steadying Presence",
+    "nameKey": "callingMaterial.themedFeature.alienist.17.name",
+    "descriptionKey": "callingMaterial.themedFeature.alienist.17.description"
+  },
+  {
+    "classId": "alienist",
+    "name": "Professional Detachment",
+    "nameKey": "callingMaterial.themedFeature.alienist.18.name",
+    "descriptionKey": "callingMaterial.themedFeature.alienist.18.description"
+  },
+  {
+    "classId": "alienist",
+    "name": "Case Study",
+    "nameKey": "callingMaterial.themedFeature.alienist.19.name",
+    "descriptionKey": "callingMaterial.themedFeature.alienist.19.description"
+  },
+  {
+    "classId": "alienist",
+    "name": "Depth Analysis",
+    "nameKey": "callingMaterial.themedFeature.alienist.20.name",
+    "descriptionKey": "callingMaterial.themedFeature.alienist.20.description"
+  },
+  {
+    "classId": "alienist",
+    "name": "Iron Composure",
+    "nameKey": "callingMaterial.themedFeature.alienist.21.name",
+    "descriptionKey": "callingMaterial.themedFeature.alienist.21.description"
+  },
+  {
+    "classId": "alienist",
+    "name": "Group Therapy",
+    "nameKey": "callingMaterial.themedFeature.alienist.22.name",
+    "descriptionKey": "callingMaterial.themedFeature.alienist.22.description"
+  },
+  {
+    "classId": "alienist",
+    "name": "Master of the Couch",
+    "nameKey": "callingMaterial.themedFeature.alienist.23.name",
+    "descriptionKey": "callingMaterial.themedFeature.alienist.23.description"
+  },
+  {
+    "classId": "alienist",
+    "name": "Symbol Reading",
+    "nameKey": "callingMaterial.themedFeature.alienist.24.name",
+    "descriptionKey": "callingMaterial.themedFeature.alienist.24.description"
+  },
+  {
+    "classId": "grifter",
+    "name": "A New Face",
+    "nameKey": "callingMaterial.themedFeature.grifter.25.name",
+    "descriptionKey": "callingMaterial.themedFeature.grifter.25.description"
+  },
+  {
+    "classId": "grifter",
+    "name": "Expertise",
+    "nameKey": "callingMaterial.nativeFeature.50.name",
+    "descriptionKey": "callingMaterial.themedFeature.grifter.26.description"
+  },
+  {
+    "classId": "grifter",
+    "name": "The Angle",
+    "nameKey": "callingMaterial.themedFeature.grifter.27.name",
+    "descriptionKey": "callingMaterial.themedFeature.grifter.27.description"
+  },
+  {
+    "classId": "grifter",
+    "name": "Uncanny Dodge",
+    "nameKey": "callingMaterial.option.134.name",
+    "descriptionKey": "callingMaterial.themedFeature.grifter.28.description"
+  },
+  {
+    "classId": "grifter",
+    "name": "Cold Read the Mark",
+    "nameKey": "callingMaterial.themedFeature.grifter.29.name",
+    "descriptionKey": "callingMaterial.themedFeature.grifter.29.description"
+  },
+  {
+    "classId": "grifter",
+    "name": "Slippery",
+    "nameKey": "callingMaterial.themedFeature.grifter.30.name",
+    "descriptionKey": "callingMaterial.themedFeature.grifter.30.description"
+  },
+  {
+    "classId": "grifter",
+    "name": "The Long Game",
+    "nameKey": "callingMaterial.themedFeature.grifter.31.name",
+    "descriptionKey": "callingMaterial.themedFeature.grifter.31.description"
+  },
+  {
+    "classId": "grifter",
+    "name": "Expertise (2 more skills)",
+    "nameKey": "callingMaterial.themedFeature.grifter.32.name",
+    "descriptionKey": "callingMaterial.themedFeature.grifter.32.description"
+  },
+  {
+    "classId": "grifter",
+    "name": "Twist the Knife",
+    "nameKey": "callingMaterial.themedFeature.grifter.33.name",
+    "descriptionKey": "callingMaterial.themedFeature.grifter.33.description"
+  },
+  {
+    "classId": "grifter",
+    "name": "Mirror Talk",
+    "nameKey": "callingMaterial.themedFeature.grifter.34.name",
+    "descriptionKey": "callingMaterial.themedFeature.grifter.34.description"
+  },
+  {
+    "classId": "grifter",
+    "name": "Silver Tongue (3 uses)",
+    "nameKey": "callingMaterial.themedFeature.grifter.35.name",
+    "descriptionKey": "callingMaterial.themedFeature.grifter.35.description"
+  },
+  {
+    "classId": "grifter",
+    "name": "Seed the Story",
+    "nameKey": "callingMaterial.themedFeature.grifter.36.name",
+    "descriptionKey": "callingMaterial.themedFeature.grifter.36.description"
+  },
+  {
+    "classId": "grifter",
+    "name": "Patient Hands",
+    "nameKey": "callingMaterial.themedFeature.grifter.37.name",
+    "descriptionKey": "callingMaterial.themedFeature.grifter.37.description"
+  },
+  {
+    "classId": "grifter",
+    "name": "Sunk Cost",
+    "nameKey": "callingMaterial.themedFeature.grifter.38.name",
+    "descriptionKey": "callingMaterial.themedFeature.grifter.38.description"
+  },
+  {
+    "classId": "grifter",
+    "name": "The Shill Network",
+    "nameKey": "callingMaterial.themedFeature.grifter.39.name",
+    "descriptionKey": "callingMaterial.themedFeature.grifter.39.description"
+  },
+  {
+    "classId": "enforcer",
+    "name": "Intimidating Presence",
+    "nameKey": "callingMaterial.nativeFeature.73.name",
+    "descriptionKey": "callingMaterial.themedFeature.enforcer.40.description"
+  },
+  {
+    "classId": "enforcer",
+    "name": "Bodyguard",
+    "nameKey": "callingMaterial.themedFeature.enforcer.41.name",
+    "descriptionKey": "callingMaterial.themedFeature.enforcer.41.description"
+  },
+  {
+    "classId": "enforcer",
+    "name": "Heavy Hands",
+    "nameKey": "callingMaterial.themedFeature.enforcer.42.name",
+    "descriptionKey": "callingMaterial.themedFeature.enforcer.42.description"
+  },
+  {
+    "classId": "enforcer",
+    "name": "The Outfit",
+    "nameKey": "callingMaterial.themedFeature.enforcer.43.name",
+    "descriptionKey": "callingMaterial.themedFeature.enforcer.43.description"
+  },
+  {
+    "classId": "enforcer",
+    "name": "Extra Attack",
+    "nameKey": "callingMaterial.nativeFeature.51.name",
+    "descriptionKey": "callingMaterial.themedFeature.enforcer.44.description"
+  },
+  {
+    "classId": "enforcer",
+    "name": "Meat Shield",
+    "nameKey": "callingMaterial.themedFeature.enforcer.45.name",
+    "descriptionKey": "callingMaterial.themedFeature.enforcer.45.description"
+  },
+  {
+    "classId": "enforcer",
+    "name": "Iron Jaw",
+    "nameKey": "callingMaterial.themedFeature.enforcer.46.name",
+    "descriptionKey": "callingMaterial.themedFeature.enforcer.46.description"
+  },
+  {
+    "classId": "enforcer",
+    "name": "Extra Attack (2)",
+    "nameKey": "callingMaterial.coreFeature.23.name",
+    "descriptionKey": "callingMaterial.themedFeature.enforcer.47.description"
+  },
+  {
+    "classId": "enforcer",
+    "name": "Immovable",
+    "nameKey": "callingMaterial.themedFeature.enforcer.48.name",
+    "descriptionKey": "callingMaterial.themedFeature.enforcer.48.description"
+  },
+  {
+    "classId": "enforcer",
+    "name": "Message Sent",
+    "nameKey": "callingMaterial.themedFeature.enforcer.49.name",
+    "descriptionKey": "callingMaterial.themedFeature.enforcer.49.description"
+  },
+  {
+    "classId": "enforcer",
+    "name": "Guardian's Instinct",
+    "nameKey": "callingMaterial.themedFeature.enforcer.50.name",
+    "descriptionKey": "callingMaterial.themedFeature.enforcer.50.description"
+  },
+  {
+    "classId": "enforcer",
+    "name": "Unbreakable",
+    "nameKey": "callingMaterial.themedFeature.enforcer.51.name",
+    "descriptionKey": "callingMaterial.themedFeature.enforcer.51.description"
+  },
+  {
+    "classId": "enforcer",
+    "name": "Wall of Muscle",
+    "nameKey": "callingMaterial.themedFeature.enforcer.52.name",
+    "descriptionKey": "callingMaterial.themedFeature.enforcer.52.description"
+  },
+  {
+    "classId": "enforcer",
+    "name": "Last Man Standing",
+    "nameKey": "callingMaterial.themedFeature.enforcer.53.name",
+    "descriptionKey": "callingMaterial.themedFeature.enforcer.53.description"
+  },
+  {
+    "classId": "enforcer",
+    "name": "Working Class Hero",
+    "nameKey": "callingMaterial.themedFeature.enforcer.54.name",
+    "descriptionKey": "callingMaterial.themedFeature.enforcer.54.description"
+  },
+  {
+    "classId": "enforcer",
+    "name": "Picket Stance",
+    "nameKey": "callingMaterial.themedFeature.enforcer.55.name",
+    "descriptionKey": "callingMaterial.themedFeature.enforcer.55.description"
+  },
+  {
+    "classId": "enforcer",
+    "name": "Solidarity",
+    "nameKey": "callingMaterial.themedFeature.enforcer.56.name",
+    "descriptionKey": "callingMaterial.themedFeature.enforcer.56.description"
+  },
+  {
+    "classId": "muckraker",
+    "name": "Press Credentials",
+    "nameKey": "callingMaterial.themedFeature.muckraker.57.name",
+    "descriptionKey": "callingMaterial.themedFeature.muckraker.57.description"
+  },
+  {
+    "classId": "muckraker",
+    "name": "Shorthand",
+    "nameKey": "callingMaterial.themedFeature.muckraker.58.name",
+    "descriptionKey": "callingMaterial.themedFeature.muckraker.58.description"
+  },
+  {
+    "classId": "muckraker",
+    "name": "The Beat",
+    "nameKey": "callingMaterial.themedFeature.muckraker.59.name",
+    "descriptionKey": "callingMaterial.themedFeature.muckraker.59.description"
+  },
+  {
+    "classId": "muckraker",
+    "name": "Doorstep Ambush",
+    "nameKey": "callingMaterial.themedFeature.muckraker.60.name",
+    "descriptionKey": "callingMaterial.themedFeature.muckraker.60.description"
+  },
+  {
+    "classId": "muckraker",
+    "name": "Morgue File",
+    "nameKey": "callingMaterial.themedFeature.muckraker.61.name",
+    "descriptionKey": "callingMaterial.themedFeature.muckraker.61.description"
+  },
+  {
+    "classId": "muckraker",
+    "name": "Byline Armor",
+    "nameKey": "callingMaterial.themedFeature.muckraker.62.name",
+    "descriptionKey": "callingMaterial.themedFeature.muckraker.62.description"
+  },
+  {
+    "classId": "muckraker",
+    "name": "Follow the Money",
+    "nameKey": "callingMaterial.themedFeature.muckraker.63.name",
+    "descriptionKey": "callingMaterial.themedFeature.muckraker.63.description"
+  },
+  {
+    "classId": "muckraker",
+    "name": "Source Protection",
+    "nameKey": "callingMaterial.themedFeature.muckraker.64.name",
+    "descriptionKey": "callingMaterial.themedFeature.muckraker.64.description"
+  },
+  {
+    "classId": "muckraker",
+    "name": "Two Steps Ahead",
+    "nameKey": "callingMaterial.themedFeature.muckraker.65.name",
+    "descriptionKey": "callingMaterial.themedFeature.muckraker.65.description"
+  },
+  {
+    "classId": "muckraker",
+    "name": "The Rolodex",
+    "nameKey": "callingMaterial.themedFeature.muckraker.66.name",
+    "descriptionKey": "callingMaterial.themedFeature.muckraker.66.description"
+  },
+  {
+    "classId": "muckraker",
+    "name": "Scandal Sense",
+    "nameKey": "callingMaterial.themedFeature.muckraker.67.name",
+    "descriptionKey": "callingMaterial.themedFeature.muckraker.67.description"
+  },
+  {
+    "classId": "muckraker",
+    "name": "Stringers Everywhere",
+    "nameKey": "callingMaterial.themedFeature.muckraker.68.name",
+    "descriptionKey": "callingMaterial.themedFeature.muckraker.68.description"
+  },
+  {
+    "classId": "muckraker",
+    "name": "Print Deadline",
+    "nameKey": "callingMaterial.themedFeature.muckraker.69.name",
+    "descriptionKey": "callingMaterial.themedFeature.muckraker.69.description"
+  },
+  {
+    "classId": "muckraker",
+    "name": "Wire Service",
+    "nameKey": "callingMaterial.themedFeature.muckraker.70.name",
+    "descriptionKey": "callingMaterial.themedFeature.muckraker.70.description"
+  },
+  {
+    "classId": "spirit_medium",
+    "name": "Open Channel",
+    "nameKey": "callingMaterial.themedFeature.spirit_medium.71.name",
+    "descriptionKey": "callingMaterial.themedFeature.spirit_medium.71.description"
+  },
+  {
+    "classId": "spirit_medium",
+    "name": "Grave Whispers",
+    "nameKey": "callingMaterial.themedFeature.spirit_medium.72.name",
+    "descriptionKey": "callingMaterial.themedFeature.spirit_medium.72.description"
+  },
+  {
+    "classId": "spirit_medium",
+    "name": "Cold Spots",
+    "nameKey": "callingMaterial.themedFeature.spirit_medium.73.name",
+    "descriptionKey": "callingMaterial.themedFeature.spirit_medium.73.description"
+  },
+  {
+    "classId": "spirit_medium",
+    "name": "Between Worlds",
+    "nameKey": "callingMaterial.themedFeature.spirit_medium.74.name",
+    "descriptionKey": "callingMaterial.themedFeature.spirit_medium.74.description"
+  },
+  {
+    "classId": "spirit_medium",
+    "name": "Séance Circle",
+    "nameKey": "callingMaterial.themedFeature.spirit_medium.75.name",
+    "descriptionKey": "callingMaterial.themedFeature.spirit_medium.75.description"
+  },
+  {
+    "classId": "spirit_medium",
+    "name": "The Veil Thins",
+    "nameKey": "callingMaterial.themedFeature.spirit_medium.76.name",
+    "descriptionKey": "callingMaterial.themedFeature.spirit_medium.76.description"
+  },
+  {
+    "classId": "spirit_medium",
+    "name": "Chorus of the Dead",
+    "nameKey": "callingMaterial.themedFeature.spirit_medium.77.name",
+    "descriptionKey": "callingMaterial.themedFeature.spirit_medium.77.description"
+  },
+  {
+    "classId": "spirit_medium",
+    "name": "Deathless Counsel",
+    "nameKey": "callingMaterial.themedFeature.spirit_medium.78.name",
+    "descriptionKey": "callingMaterial.themedFeature.spirit_medium.78.description"
+  },
+  {
+    "classId": "spirit_medium",
+    "name": "Mistress of the Threshold",
+    "nameKey": "callingMaterial.themedFeature.spirit_medium.79.name",
+    "descriptionKey": "callingMaterial.themedFeature.spirit_medium.79.description"
+  },
+  {
+    "classId": "scavenger",
+    "name": "Improvised Weapon Mastery",
+    "nameKey": "callingMaterial.themedFeature.scavenger.0.name",
+    "descriptionKey": "callingMaterial.themedFeature.scavenger.0.description"
+  },
+  {
+    "classId": "scavenger",
+    "name": "Packrat",
+    "nameKey": "callingMaterial.themedFeature.scavenger.1.name",
+    "descriptionKey": "callingMaterial.themedFeature.scavenger.1.description"
+  },
+  {
+    "classId": "scavenger",
+    "name": "Haunt",
+    "nameKey": "callingMaterial.themedFeature.scavenger.2.name",
+    "descriptionKey": "callingMaterial.themedFeature.scavenger.2.description"
+  },
+  {
+    "classId": "scavenger",
+    "name": "Extra Attack",
+    "nameKey": "callingMaterial.nativeFeature.51.name",
+    "descriptionKey": "callingMaterial.themedFeature.scavenger.3.description"
+  },
+  {
+    "classId": "scavenger",
+    "name": "Trap Eye",
+    "nameKey": "callingMaterial.themedFeature.scavenger.4.name",
+    "descriptionKey": "callingMaterial.themedFeature.scavenger.4.description"
+  },
+  {
+    "classId": "scavenger",
+    "name": "Waste-Wise",
+    "nameKey": "callingMaterial.themedFeature.scavenger.5.name",
+    "descriptionKey": "callingMaterial.themedFeature.scavenger.5.description"
+  },
+  {
+    "classId": "scavenger",
+    "name": "Junkyard Strikes",
+    "nameKey": "callingMaterial.themedFeature.scavenger.6.name",
+    "descriptionKey": "callingMaterial.themedFeature.scavenger.6.description"
+  },
+  {
+    "classId": "scavenger",
+    "name": "Escape Artist",
+    "nameKey": "callingMaterial.themedFeature.scavenger.7.name",
+    "descriptionKey": "callingMaterial.themedFeature.scavenger.7.description"
+  },
+  {
+    "classId": "scavenger",
+    "name": "Scrap Sense (2 uses)",
+    "nameKey": "callingMaterial.themedFeature.scavenger.8.name",
+    "descriptionKey": "callingMaterial.themedFeature.scavenger.8.description"
+  },
+  {
+    "classId": "scavenger",
+    "name": "Built From Salvage",
+    "nameKey": "callingMaterial.themedFeature.scavenger.9.name",
+    "descriptionKey": "callingMaterial.themedFeature.scavenger.9.description"
+  },
+  {
+    "classId": "scavenger",
+    "name": "Never Unarmed",
+    "nameKey": "callingMaterial.themedFeature.scavenger.10.name",
+    "descriptionKey": "callingMaterial.themedFeature.scavenger.10.description"
+  },
+  {
+    "classId": "scavenger",
+    "name": "Rust Reader",
+    "nameKey": "callingMaterial.themedFeature.scavenger.11.name",
+    "descriptionKey": "callingMaterial.themedFeature.scavenger.11.description"
+  },
+  {
+    "classId": "scavenger",
+    "name": "Silent Salvage",
+    "nameKey": "callingMaterial.themedFeature.scavenger.12.name",
+    "descriptionKey": "callingMaterial.themedFeature.scavenger.12.description"
+  },
+  {
+    "classId": "scavenger",
+    "name": "Tetanus Edge",
+    "nameKey": "callingMaterial.themedFeature.scavenger.13.name",
+    "descriptionKey": "callingMaterial.themedFeature.scavenger.13.description"
+  },
+  {
+    "classId": "scavenger",
+    "name": "One With the Ruins",
+    "nameKey": "callingMaterial.themedFeature.scavenger.14.name",
+    "descriptionKey": "callingMaterial.themedFeature.scavenger.14.description"
+  },
+  {
+    "classId": "road_warrior",
+    "name": "Death or Glory",
+    "nameKey": "callingMaterial.themedFeature.road_warrior.15.name",
+    "descriptionKey": "callingMaterial.themedFeature.road_warrior.15.description"
+  },
+  {
+    "classId": "road_warrior",
+    "name": "Wheelman",
+    "nameKey": "callingMaterial.themedFeature.road_warrior.16.name",
+    "descriptionKey": "callingMaterial.themedFeature.road_warrior.16.description"
+  },
+  {
+    "classId": "road_warrior",
+    "name": "Crew",
+    "nameKey": "callingMaterial.themedFeature.road_warrior.17.name",
+    "descriptionKey": "callingMaterial.themedFeature.road_warrior.17.description"
+  },
+  {
+    "classId": "road_warrior",
+    "name": "Extra Attack",
+    "nameKey": "callingMaterial.nativeFeature.51.name",
+    "descriptionKey": "callingMaterial.themedFeature.road_warrior.18.description"
+  },
+  {
+    "classId": "road_warrior",
+    "name": "Fear No Rust",
+    "nameKey": "callingMaterial.themedFeature.road_warrior.19.name",
+    "descriptionKey": "callingMaterial.themedFeature.road_warrior.19.description"
+  },
+  {
+    "classId": "road_warrior",
+    "name": "Ram Speed",
+    "nameKey": "callingMaterial.themedFeature.road_warrior.20.name",
+    "descriptionKey": "callingMaterial.themedFeature.road_warrior.20.description"
+  },
+  {
+    "classId": "road_warrior",
+    "name": "Scar Tissue",
+    "nameKey": "callingMaterial.themedFeature.road_warrior.21.name",
+    "descriptionKey": "callingMaterial.themedFeature.road_warrior.21.description"
+  },
+  {
+    "classId": "road_warrior",
+    "name": "Hardened (2 uses)",
+    "nameKey": "callingMaterial.themedFeature.road_warrior.22.name",
+    "descriptionKey": "callingMaterial.themedFeature.road_warrior.22.description"
+  },
+  {
+    "classId": "road_warrior",
+    "name": "Extra Attack (2)",
+    "nameKey": "callingMaterial.coreFeature.23.name",
+    "descriptionKey": "callingMaterial.themedFeature.road_warrior.23.description"
+  },
+  {
+    "classId": "road_warrior",
+    "name": "Blood and Chrome",
+    "nameKey": "callingMaterial.themedFeature.road_warrior.24.name",
+    "descriptionKey": "callingMaterial.themedFeature.road_warrior.24.description"
+  },
+  {
+    "classId": "road_warrior",
+    "name": "Unstoppable",
+    "nameKey": "callingMaterial.themedFeature.road_warrior.25.name",
+    "descriptionKey": "callingMaterial.themedFeature.road_warrior.25.description"
+  },
+  {
+    "classId": "road_warrior",
+    "name": "Warlord of the Wastes",
+    "nameKey": "callingMaterial.themedFeature.road_warrior.26.name",
+    "descriptionKey": "callingMaterial.themedFeature.road_warrior.26.description"
+  },
+  {
+    "classId": "road_warrior",
+    "name": "Ride Eternal",
+    "nameKey": "callingMaterial.themedFeature.road_warrior.27.name",
+    "descriptionKey": "callingMaterial.themedFeature.road_warrior.27.description"
+  },
+  {
+    "classId": "road_warrior",
+    "name": "Chained Hook",
+    "nameKey": "callingMaterial.themedFeature.road_warrior.28.name",
+    "descriptionKey": "callingMaterial.themedFeature.road_warrior.28.description"
+  },
+  {
+    "classId": "road_warrior",
+    "name": "Reaver's Toll",
+    "nameKey": "callingMaterial.themedFeature.road_warrior.29.name",
+    "descriptionKey": "callingMaterial.themedFeature.road_warrior.29.description"
+  },
+  {
+    "classId": "road_warrior",
+    "name": "Skull Takers",
+    "nameKey": "callingMaterial.themedFeature.road_warrior.30.name",
+    "descriptionKey": "callingMaterial.themedFeature.road_warrior.30.description"
+  },
+  {
+    "classId": "road_warrior",
+    "name": "Gore Drift",
+    "nameKey": "callingMaterial.themedFeature.road_warrior.31.name",
+    "descriptionKey": "callingMaterial.themedFeature.road_warrior.31.description"
+  },
+  {
+    "classId": "aberrant",
+    "name": "Unstable Genome",
+    "nameKey": "callingMaterial.themedFeature.aberrant.32.name",
+    "descriptionKey": "callingMaterial.themedFeature.aberrant.32.description"
+  },
+  {
+    "classId": "aberrant",
+    "name": "Adaptive Hide",
+    "nameKey": "callingMaterial.themedFeature.aberrant.33.name",
+    "descriptionKey": "callingMaterial.themedFeature.aberrant.33.description"
+  },
+  {
+    "classId": "aberrant",
+    "name": "Predator Senses",
+    "nameKey": "callingMaterial.themedFeature.aberrant.34.name",
+    "descriptionKey": "callingMaterial.themedFeature.aberrant.34.description"
+  },
+  {
+    "classId": "aberrant",
+    "name": "Toxic Blood",
+    "nameKey": "callingMaterial.themedFeature.aberrant.35.name",
+    "descriptionKey": "callingMaterial.themedFeature.aberrant.35.description"
+  },
+  {
+    "classId": "aberrant",
+    "name": "Grafted Power",
+    "nameKey": "callingMaterial.themedFeature.aberrant.36.name",
+    "descriptionKey": "callingMaterial.themedFeature.aberrant.36.description"
+  },
+  {
+    "classId": "aberrant",
+    "name": "Apex Genome",
+    "nameKey": "callingMaterial.themedFeature.aberrant.37.name",
+    "descriptionKey": "callingMaterial.themedFeature.aberrant.37.description"
+  },
+  {
+    "classId": "aberrant",
+    "name": "Perfected Instability",
+    "nameKey": "callingMaterial.themedFeature.aberrant.38.name",
+    "descriptionKey": "callingMaterial.themedFeature.aberrant.38.description"
+  },
+  {
+    "classId": "aberrant",
+    "name": "Chimeric Limb",
+    "nameKey": "callingMaterial.themedFeature.aberrant.39.name",
+    "descriptionKey": "callingMaterial.themedFeature.aberrant.39.description"
+  },
+  {
+    "classId": "aberrant",
+    "name": "Second Adaptation",
+    "nameKey": "callingMaterial.themedFeature.aberrant.40.name",
+    "descriptionKey": "callingMaterial.themedFeature.aberrant.40.description"
+  },
+  {
+    "classId": "aberrant",
+    "name": "Perfect Chimera",
+    "nameKey": "callingMaterial.themedFeature.aberrant.41.name",
+    "descriptionKey": "callingMaterial.themedFeature.aberrant.41.description"
+  },
+  {
+    "classId": "salvage_tech",
+    "name": "Old-World Interface",
+    "nameKey": "callingMaterial.themedFeature.salvage_tech.42.name",
+    "descriptionKey": "callingMaterial.themedFeature.salvage_tech.42.description"
+  },
+  {
+    "classId": "salvage_tech",
+    "name": "Rebuilt Arsenal",
+    "nameKey": "callingMaterial.themedFeature.salvage_tech.43.name",
+    "descriptionKey": "callingMaterial.themedFeature.salvage_tech.43.description"
+  },
+  {
+    "classId": "salvage_tech",
+    "name": "Doctrine",
+    "nameKey": "callingMaterial.themedFeature.salvage_tech.44.name",
+    "descriptionKey": "callingMaterial.themedFeature.salvage_tech.44.description"
+  },
+  {
+    "classId": "salvage_tech",
+    "name": "Scrap Armor Weave",
+    "nameKey": "callingMaterial.themedFeature.salvage_tech.45.name",
+    "descriptionKey": "callingMaterial.themedFeature.salvage_tech.45.description"
+  },
+  {
+    "classId": "salvage_tech",
+    "name": "Signal Whisperer",
+    "nameKey": "callingMaterial.themedFeature.salvage_tech.46.name",
+    "descriptionKey": "callingMaterial.themedFeature.salvage_tech.46.description"
+  },
+  {
+    "classId": "salvage_tech",
+    "name": "Overcharged Rounds",
+    "nameKey": "callingMaterial.themedFeature.salvage_tech.47.name",
+    "descriptionKey": "callingMaterial.themedFeature.salvage_tech.47.description"
+  },
+  {
+    "classId": "salvage_tech",
+    "name": "Field Fabricator",
+    "nameKey": "callingMaterial.themedFeature.salvage_tech.48.name",
+    "descriptionKey": "callingMaterial.themedFeature.salvage_tech.48.description"
+  },
+  {
+    "classId": "salvage_tech",
+    "name": "Power Cell Cache (3rd)",
+    "nameKey": "callingMaterial.themedFeature.salvage_tech.49.name",
+    "descriptionKey": "callingMaterial.themedFeature.salvage_tech.49.description"
+  },
+  {
+    "classId": "salvage_tech",
+    "name": "Machine Empathy",
+    "nameKey": "callingMaterial.themedFeature.salvage_tech.50.name",
+    "descriptionKey": "callingMaterial.themedFeature.salvage_tech.50.description"
+  },
+  {
+    "classId": "salvage_tech",
+    "name": "Blessed Isotope",
+    "nameKey": "callingMaterial.themedFeature.salvage_tech.51.name",
+    "descriptionKey": "callingMaterial.themedFeature.salvage_tech.51.description"
+  },
+  {
+    "classId": "salvage_tech",
+    "name": "Geiger Sense",
+    "nameKey": "callingMaterial.themedFeature.salvage_tech.52.name",
+    "descriptionKey": "callingMaterial.themedFeature.salvage_tech.52.description"
+  },
+  {
+    "classId": "salvage_tech",
+    "name": "Meltdown Ward",
+    "nameKey": "callingMaterial.themedFeature.salvage_tech.53.name",
+    "descriptionKey": "callingMaterial.themedFeature.salvage_tech.53.description"
+  },
+  {
+    "classId": "waste_preacher",
+    "name": "Words for the End",
+    "nameKey": "callingMaterial.themedFeature.waste_preacher.54.name",
+    "descriptionKey": "callingMaterial.themedFeature.waste_preacher.54.description"
+  },
+  {
+    "classId": "waste_preacher",
+    "name": "Lay On the Word",
+    "nameKey": "callingMaterial.themedFeature.waste_preacher.55.name",
+    "descriptionKey": "callingMaterial.themedFeature.waste_preacher.55.description"
+  },
+  {
+    "classId": "waste_preacher",
+    "name": "Shepherd's Stare",
+    "nameKey": "callingMaterial.themedFeature.waste_preacher.56.name",
+    "descriptionKey": "callingMaterial.themedFeature.waste_preacher.56.description"
+  },
+  {
+    "classId": "waste_preacher",
+    "name": "Judgment",
+    "nameKey": "callingMaterial.themedFeature.waste_preacher.57.name",
+    "descriptionKey": "callingMaterial.themedFeature.waste_preacher.57.description"
+  },
+  {
+    "classId": "waste_preacher",
+    "name": "Congregation",
+    "nameKey": "callingMaterial.themedFeature.waste_preacher.58.name",
+    "descriptionKey": "callingMaterial.themedFeature.waste_preacher.58.description"
+  },
+  {
+    "classId": "waste_preacher",
+    "name": "Walk Through the Valley",
+    "nameKey": "callingMaterial.themedFeature.waste_preacher.59.name",
+    "descriptionKey": "callingMaterial.themedFeature.waste_preacher.59.description"
+  },
+  {
+    "classId": "waste_preacher",
+    "name": "The Word Made Iron",
+    "nameKey": "callingMaterial.themedFeature.waste_preacher.60.name",
+    "descriptionKey": "callingMaterial.themedFeature.waste_preacher.60.description"
+  },
+  {
+    "classId": "waste_preacher",
+    "name": "Baptism of Ash",
+    "nameKey": "callingMaterial.themedFeature.waste_preacher.61.name",
+    "descriptionKey": "callingMaterial.themedFeature.waste_preacher.61.description"
+  },
+  {
+    "classId": "waste_preacher",
+    "name": "The Last Dawn Rises",
+    "nameKey": "callingMaterial.themedFeature.waste_preacher.62.name",
+    "descriptionKey": "callingMaterial.themedFeature.waste_preacher.62.description"
+  },
+  {
+    "classId": "packmaster",
+    "name": "Bonded Beast",
+    "nameKey": "callingMaterial.themedFeature.packmaster.63.name",
+    "descriptionKey": "callingMaterial.themedFeature.packmaster.63.description"
+  },
+  {
+    "classId": "packmaster",
+    "name": "Pack Tactics Training",
+    "nameKey": "callingMaterial.themedFeature.packmaster.64.name",
+    "descriptionKey": "callingMaterial.themedFeature.packmaster.64.description"
+  },
+  {
+    "classId": "packmaster",
+    "name": "Green Tongue",
+    "nameKey": "callingMaterial.themedFeature.packmaster.65.name",
+    "descriptionKey": "callingMaterial.themedFeature.packmaster.65.description"
+  },
+  {
+    "classId": "packmaster",
+    "name": "Pack Law",
+    "nameKey": "callingMaterial.themedFeature.packmaster.66.name",
+    "descriptionKey": "callingMaterial.themedFeature.packmaster.66.description"
+  },
+  {
+    "classId": "packmaster",
+    "name": "Extra Attack",
+    "nameKey": "callingMaterial.nativeFeature.51.name",
+    "descriptionKey": "callingMaterial.themedFeature.packmaster.67.description"
+  },
+  {
+    "classId": "packmaster",
+    "name": "Scent the Wind",
+    "nameKey": "callingMaterial.themedFeature.packmaster.68.name",
+    "descriptionKey": "callingMaterial.themedFeature.packmaster.68.description"
+  },
+  {
+    "classId": "packmaster",
+    "name": "Mended Hide",
+    "nameKey": "callingMaterial.themedFeature.packmaster.69.name",
+    "descriptionKey": "callingMaterial.themedFeature.packmaster.69.description"
+  },
+  {
+    "classId": "packmaster",
+    "name": "War Beast",
+    "nameKey": "callingMaterial.themedFeature.packmaster.70.name",
+    "descriptionKey": "callingMaterial.themedFeature.packmaster.70.description"
+  },
+  {
+    "classId": "packmaster",
+    "name": "Twin Bond",
+    "nameKey": "callingMaterial.themedFeature.packmaster.71.name",
+    "descriptionKey": "callingMaterial.themedFeature.packmaster.71.description"
+  },
+  {
+    "classId": "packmaster",
+    "name": "Coordinated Takedown",
+    "nameKey": "callingMaterial.themedFeature.packmaster.72.name",
+    "descriptionKey": "callingMaterial.themedFeature.packmaster.72.description"
+  },
+  {
+    "classId": "packmaster",
+    "name": "Lord of the Green",
+    "nameKey": "callingMaterial.themedFeature.packmaster.73.name",
+    "descriptionKey": "callingMaterial.themedFeature.packmaster.73.description"
+  },
+  {
+    "classId": "packmaster",
+    "name": "One Blood",
+    "nameKey": "callingMaterial.themedFeature.packmaster.74.name",
+    "descriptionKey": "callingMaterial.themedFeature.packmaster.74.description"
+  },
+  {
+    "classId": "packmaster",
+    "name": "Den Mother's Eye",
+    "nameKey": "callingMaterial.themedFeature.packmaster.75.name",
+    "descriptionKey": "callingMaterial.themedFeature.packmaster.75.description"
+  },
+  {
+    "classId": "packmaster",
+    "name": "Blood Bond",
+    "nameKey": "callingMaterial.themedFeature.packmaster.76.name",
+    "descriptionKey": "callingMaterial.themedFeature.packmaster.76.description"
+  },
+  {
+    "classId": "packmaster",
+    "name": "Apex Pair",
+    "nameKey": "callingMaterial.themedFeature.packmaster.77.name",
+    "descriptionKey": "callingMaterial.themedFeature.packmaster.77.description"
+  },
+  {
+    "classId": "machinist",
+    "name": "Arcanomechanical Casting",
+    "nameKey": "callingMaterial.themedFeature.machinist.0.name",
+    "descriptionKey": "callingMaterial.themedFeature.machinist.0.description"
+  },
+  {
+    "classId": "machinist",
+    "name": "Blueprint Memory",
+    "nameKey": "callingMaterial.themedFeature.machinist.1.name",
+    "descriptionKey": "callingMaterial.themedFeature.machinist.1.description"
+  },
+  {
+    "classId": "machinist",
+    "name": "Guild Chapter",
+    "nameKey": "callingMaterial.themedFeature.machinist.2.name",
+    "descriptionKey": "callingMaterial.themedFeature.machinist.2.description"
+  },
+  {
+    "classId": "machinist",
+    "name": "Clockwork Familiar",
+    "nameKey": "callingMaterial.themedFeature.machinist.3.name",
+    "descriptionKey": "callingMaterial.themedFeature.machinist.3.description"
+  },
+  {
+    "classId": "machinist",
+    "name": "Reinforced Chassis",
+    "nameKey": "callingMaterial.themedFeature.machinist.4.name",
+    "descriptionKey": "callingMaterial.themedFeature.machinist.4.description"
+  },
+  {
+    "classId": "machinist",
+    "name": "Precision Engineering",
+    "nameKey": "callingMaterial.themedFeature.machinist.5.name",
+    "descriptionKey": "callingMaterial.themedFeature.machinist.5.description"
+  },
+  {
+    "classId": "machinist",
+    "name": "Field Repair (2d8)",
+    "nameKey": "callingMaterial.themedFeature.machinist.6.name",
+    "descriptionKey": "callingMaterial.themedFeature.machinist.6.description"
+  },
+  {
+    "classId": "machinist",
+    "name": "Redundant Systems",
+    "nameKey": "callingMaterial.themedFeature.machinist.7.name",
+    "descriptionKey": "callingMaterial.themedFeature.machinist.7.description"
+  },
+  {
+    "classId": "machinist",
+    "name": "Perpetual Motion",
+    "nameKey": "callingMaterial.themedFeature.machinist.8.name",
+    "descriptionKey": "callingMaterial.themedFeature.machinist.8.description"
+  },
+  {
+    "classId": "machinist",
+    "name": "Improved Familiar Frame",
+    "nameKey": "callingMaterial.themedFeature.machinist.9.name",
+    "descriptionKey": "callingMaterial.themedFeature.machinist.9.description"
+  },
+  {
+    "classId": "machinist",
+    "name": "Wind-Up Ally",
+    "nameKey": "callingMaterial.themedFeature.machinist.10.name",
+    "descriptionKey": "callingMaterial.themedFeature.machinist.10.description"
+  },
+  {
+    "classId": "machinist",
+    "name": "Twin Automata",
+    "nameKey": "callingMaterial.themedFeature.machinist.11.name",
+    "descriptionKey": "callingMaterial.themedFeature.machinist.11.description"
+  },
+  {
+    "classId": "aeronaut",
+    "name": "Sky Legs",
+    "nameKey": "callingMaterial.themedFeature.aeronaut.12.name",
+    "descriptionKey": "callingMaterial.themedFeature.aeronaut.12.description"
+  },
+  {
+    "classId": "aeronaut",
+    "name": "Daring Maneuver",
+    "nameKey": "callingMaterial.themedFeature.aeronaut.13.name",
+    "descriptionKey": "callingMaterial.themedFeature.aeronaut.13.description"
+  },
+  {
+    "classId": "aeronaut",
+    "name": "Rigging Runner",
+    "nameKey": "callingMaterial.themedFeature.aeronaut.14.name",
+    "descriptionKey": "callingMaterial.themedFeature.aeronaut.14.description"
+  },
+  {
+    "classId": "aeronaut",
+    "name": "Commission",
+    "nameKey": "callingMaterial.themedFeature.aeronaut.15.name",
+    "descriptionKey": "callingMaterial.themedFeature.aeronaut.15.description"
+  },
+  {
+    "classId": "aeronaut",
+    "name": "Extra Attack",
+    "nameKey": "callingMaterial.nativeFeature.51.name",
+    "descriptionKey": "callingMaterial.themedFeature.aeronaut.16.description"
+  },
+  {
+    "classId": "aeronaut",
+    "name": "Grapnel Line",
+    "nameKey": "callingMaterial.themedFeature.aeronaut.17.name",
+    "descriptionKey": "callingMaterial.themedFeature.aeronaut.17.description"
+  },
+  {
+    "classId": "aeronaut",
+    "name": "Evasion",
+    "nameKey": "callingMaterial.option.132.name",
+    "descriptionKey": "callingMaterial.themedFeature.aeronaut.18.description"
+  },
+  {
+    "classId": "aeronaut",
+    "name": "Duelist's Flourish",
+    "nameKey": "callingMaterial.themedFeature.aeronaut.19.name",
+    "descriptionKey": "callingMaterial.themedFeature.aeronaut.19.description"
+  },
+  {
+    "classId": "aeronaut",
+    "name": "Weather Eye",
+    "nameKey": "callingMaterial.themedFeature.aeronaut.20.name",
+    "descriptionKey": "callingMaterial.themedFeature.aeronaut.20.description"
+  },
+  {
+    "classId": "aeronaut",
+    "name": "Greater Daring",
+    "nameKey": "callingMaterial.themedFeature.aeronaut.21.name",
+    "descriptionKey": "callingMaterial.themedFeature.aeronaut.21.description"
+  },
+  {
+    "classId": "aeronaut",
+    "name": "Cat's Grace",
+    "nameKey": "callingMaterial.themedFeature.aeronaut.22.name",
+    "descriptionKey": "callingMaterial.themedFeature.aeronaut.22.description"
+  },
+  {
+    "classId": "aeronaut",
+    "name": "Grapnel Ace",
+    "nameKey": "callingMaterial.themedFeature.aeronaut.23.name",
+    "descriptionKey": "callingMaterial.themedFeature.aeronaut.23.description"
+  },
+  {
+    "classId": "aeronaut",
+    "name": "Sky Duelist",
+    "nameKey": "callingMaterial.themedFeature.aeronaut.24.name",
+    "descriptionKey": "callingMaterial.themedFeature.aeronaut.24.description"
+  },
+  {
+    "classId": "aeronaut",
+    "name": "Master of the High Wire",
+    "nameKey": "callingMaterial.themedFeature.aeronaut.25.name",
+    "descriptionKey": "callingMaterial.themedFeature.aeronaut.25.description"
+  },
+  {
+    "classId": "aeronaut",
+    "name": "Legend of the Skies",
+    "nameKey": "callingMaterial.themedFeature.aeronaut.26.name",
+    "descriptionKey": "callingMaterial.themedFeature.aeronaut.26.description"
+  },
+  {
+    "classId": "aeronaut",
+    "name": "Pistol and Blade",
+    "nameKey": "callingMaterial.themedFeature.aeronaut.27.name",
+    "descriptionKey": "callingMaterial.themedFeature.aeronaut.27.description"
+  },
+  {
+    "classId": "aeronaut",
+    "name": "Corsair's Swagger",
+    "nameKey": "callingMaterial.themedFeature.aeronaut.28.name",
+    "descriptionKey": "callingMaterial.themedFeature.aeronaut.28.description"
+  },
+  {
+    "classId": "aeronaut",
+    "name": "Powder Discipline",
+    "nameKey": "callingMaterial.themedFeature.aeronaut.29.name",
+    "descriptionKey": "callingMaterial.themedFeature.aeronaut.29.description"
+  },
+  {
+    "classId": "alchemist",
+    "name": "Volatile Concoctions",
+    "nameKey": "callingMaterial.themedFeature.alchemist.30.name",
+    "descriptionKey": "callingMaterial.themedFeature.alchemist.30.description"
+  },
+  {
+    "classId": "alchemist",
+    "name": "School of Practice",
+    "nameKey": "callingMaterial.themedFeature.alchemist.31.name",
+    "descriptionKey": "callingMaterial.themedFeature.alchemist.31.description"
+  },
+  {
+    "classId": "alchemist",
+    "name": "Reagent Pouch",
+    "nameKey": "callingMaterial.themedFeature.alchemist.32.name",
+    "descriptionKey": "callingMaterial.themedFeature.alchemist.32.description"
+  },
+  {
+    "classId": "alchemist",
+    "name": "Emergency Draught",
+    "nameKey": "callingMaterial.themedFeature.alchemist.33.name",
+    "descriptionKey": "callingMaterial.themedFeature.alchemist.33.description"
+  },
+  {
+    "classId": "alchemist",
+    "name": "Acid Resistant Apron",
+    "nameKey": "callingMaterial.themedFeature.alchemist.34.name",
+    "descriptionKey": "callingMaterial.themedFeature.alchemist.34.description"
+  },
+  {
+    "classId": "alchemist",
+    "name": "Improved Catalyst",
+    "nameKey": "callingMaterial.themedFeature.alchemist.35.name",
+    "descriptionKey": "callingMaterial.themedFeature.alchemist.35.description"
+  },
+  {
+    "classId": "alchemist",
+    "name": "Transmuter's Touch",
+    "nameKey": "callingMaterial.themedFeature.alchemist.36.name",
+    "descriptionKey": "callingMaterial.themedFeature.alchemist.36.description"
+  },
+  {
+    "classId": "alchemist",
+    "name": "Philosopher's Draught",
+    "nameKey": "callingMaterial.themedFeature.alchemist.37.name",
+    "descriptionKey": "callingMaterial.themedFeature.alchemist.37.description"
+  },
+  {
+    "classId": "alchemist",
+    "name": "Volatile Chain",
+    "nameKey": "callingMaterial.themedFeature.alchemist.38.name",
+    "descriptionKey": "callingMaterial.themedFeature.alchemist.38.description"
+  },
+  {
+    "classId": "alchemist",
+    "name": "Stone of the Magnum Opus",
+    "nameKey": "callingMaterial.themedFeature.alchemist.39.name",
+    "descriptionKey": "callingMaterial.themedFeature.alchemist.39.description"
+  },
+  {
+    "classId": "alchemist",
+    "name": "Alkahest",
+    "nameKey": "callingMaterial.themedFeature.alchemist.40.name",
+    "descriptionKey": "callingMaterial.themedFeature.alchemist.40.description"
+  },
+  {
+    "classId": "alchemist",
+    "name": "Corrosive Focus",
+    "nameKey": "callingMaterial.themedFeature.alchemist.41.name",
+    "descriptionKey": "callingMaterial.themedFeature.alchemist.41.description"
+  },
+  {
+    "classId": "alchemist",
+    "name": "Etching Acid",
+    "nameKey": "callingMaterial.themedFeature.alchemist.42.name",
+    "descriptionKey": "callingMaterial.themedFeature.alchemist.42.description"
+  },
+  {
+    "classId": "alchemist",
+    "name": "Universal Solvent",
+    "nameKey": "callingMaterial.themedFeature.alchemist.43.name",
+    "descriptionKey": "callingMaterial.themedFeature.alchemist.43.description"
+  },
+  {
+    "classId": "gadgeteer",
+    "name": "Utility Gadgets",
+    "nameKey": "callingMaterial.themedFeature.gadgeteer.44.name",
+    "descriptionKey": "callingMaterial.themedFeature.gadgeteer.44.description"
+  },
+  {
+    "classId": "gadgeteer",
+    "name": "Tinker's Speed",
+    "nameKey": "callingMaterial.themedFeature.gadgeteer.45.name",
+    "descriptionKey": "callingMaterial.themedFeature.gadgeteer.45.description"
+  },
+  {
+    "classId": "gadgeteer",
+    "name": "Workshop",
+    "nameKey": "callingMaterial.themedFeature.gadgeteer.46.name",
+    "descriptionKey": "callingMaterial.themedFeature.gadgeteer.46.description"
+  },
+  {
+    "classId": "gadgeteer",
+    "name": "Extra Attack",
+    "nameKey": "callingMaterial.nativeFeature.51.name",
+    "descriptionKey": "callingMaterial.themedFeature.gadgeteer.47.description"
+  },
+  {
+    "classId": "gadgeteer",
+    "name": "Third Gadget",
+    "nameKey": "callingMaterial.themedFeature.gadgeteer.48.name",
+    "descriptionKey": "callingMaterial.themedFeature.gadgeteer.48.description"
+  },
+  {
+    "classId": "gadgeteer",
+    "name": "Spring Heels",
+    "nameKey": "callingMaterial.themedFeature.gadgeteer.49.name",
+    "descriptionKey": "callingMaterial.themedFeature.gadgeteer.49.description"
+  },
+  {
+    "classId": "gadgeteer",
+    "name": "Smoke Discipline",
+    "nameKey": "callingMaterial.themedFeature.gadgeteer.50.name",
+    "descriptionKey": "callingMaterial.themedFeature.gadgeteer.50.description"
+  },
+  {
+    "classId": "gadgeteer",
+    "name": "Fourth Gadget",
+    "nameKey": "callingMaterial.themedFeature.gadgeteer.51.name",
+    "descriptionKey": "callingMaterial.themedFeature.gadgeteer.51.description"
+  },
+  {
+    "classId": "gadgeteer",
+    "name": "Fifth Gadget",
+    "nameKey": "callingMaterial.themedFeature.gadgeteer.52.name",
+    "descriptionKey": "callingMaterial.themedFeature.gadgeteer.52.description"
+  },
+  {
+    "classId": "gadgeteer",
+    "name": "Chain Deployment",
+    "nameKey": "callingMaterial.themedFeature.gadgeteer.53.name",
+    "descriptionKey": "callingMaterial.themedFeature.gadgeteer.53.description"
+  },
+  {
+    "classId": "gadgeteer",
+    "name": "Signature Invention",
+    "nameKey": "callingMaterial.themedFeature.gadgeteer.54.name",
+    "descriptionKey": "callingMaterial.themedFeature.gadgeteer.54.description"
+  },
+  {
+    "classId": "gadgeteer",
+    "name": "Perpetual Toolkit",
+    "nameKey": "callingMaterial.themedFeature.gadgeteer.55.name",
+    "descriptionKey": "callingMaterial.themedFeature.gadgeteer.55.description"
+  },
+  {
+    "classId": "gadgeteer",
+    "name": "Prodigy's Precision",
+    "nameKey": "callingMaterial.themedFeature.gadgeteer.56.name",
+    "descriptionKey": "callingMaterial.themedFeature.gadgeteer.56.description"
+  },
+  {
+    "classId": "gadgeteer",
+    "name": "Quick Study",
+    "nameKey": "callingMaterial.themedFeature.gadgeteer.57.name",
+    "descriptionKey": "callingMaterial.themedFeature.gadgeteer.57.description"
+  },
+  {
+    "classId": "gadgeteer",
+    "name": "Auto-Loader Harness",
+    "nameKey": "callingMaterial.themedFeature.gadgeteer.58.name",
+    "descriptionKey": "callingMaterial.themedFeature.gadgeteer.58.description"
+  },
+  {
+    "classId": "gadgeteer",
+    "name": "Masterwork Arsenal",
+    "nameKey": "callingMaterial.themedFeature.gadgeteer.59.name",
+    "descriptionKey": "callingMaterial.themedFeature.gadgeteer.59.description"
+  },
+  {
+    "classId": "aether_channeler",
+    "name": "Conduit Body",
+    "nameKey": "callingMaterial.themedFeature.aether_channeler.60.name",
+    "descriptionKey": "callingMaterial.themedFeature.aether_channeler.60.description"
+  },
+  {
+    "classId": "aether_channeler",
+    "name": "Static Sense",
+    "nameKey": "callingMaterial.themedFeature.aether_channeler.61.name",
+    "descriptionKey": "callingMaterial.themedFeature.aether_channeler.61.description"
+  },
+  {
+    "classId": "aether_channeler",
+    "name": "Grounded Stance",
+    "nameKey": "callingMaterial.themedFeature.aether_channeler.62.name",
+    "descriptionKey": "callingMaterial.themedFeature.aether_channeler.62.description"
+  },
+  {
+    "classId": "aether_channeler",
+    "name": "Lightning Rod",
+    "nameKey": "callingMaterial.themedFeature.aether_channeler.63.name",
+    "descriptionKey": "callingMaterial.themedFeature.aether_channeler.63.description"
+  },
+  {
+    "classId": "aether_channeler",
+    "name": "The Grid Bows",
+    "nameKey": "callingMaterial.themedFeature.aether_channeler.64.name",
+    "descriptionKey": "callingMaterial.themedFeature.aether_channeler.64.description"
+  },
+  {
+    "classId": "aether_channeler",
+    "name": "Dynamo Spark",
+    "nameKey": "callingMaterial.themedFeature.aether_channeler.65.name",
+    "descriptionKey": "callingMaterial.themedFeature.aether_channeler.65.description"
+  },
+  {
+    "classId": "aether_channeler",
+    "name": "Heart of the Storm",
+    "nameKey": "callingMaterial.subclassFeature.sorcerer.storm-sorcery.heart-of-the-storm.name",
+    "descriptionKey": "callingMaterial.themedFeature.aether_channeler.66.description"
+  },
+  {
+    "classId": "steam_knight",
+    "name": "Boiler Plate",
+    "nameKey": "callingMaterial.themedFeature.steam_knight.67.name",
+    "descriptionKey": "callingMaterial.themedFeature.steam_knight.67.description"
+  },
+  {
+    "classId": "steam_knight",
+    "name": "Piston Strike",
+    "nameKey": "callingMaterial.themedFeature.steam_knight.68.name",
+    "descriptionKey": "callingMaterial.themedFeature.steam_knight.68.description"
+  },
+  {
+    "classId": "steam_knight",
+    "name": "Head of Steam",
+    "nameKey": "callingMaterial.themedFeature.steam_knight.69.name",
+    "descriptionKey": "callingMaterial.themedFeature.steam_knight.69.description"
+  },
+  {
+    "classId": "steam_knight",
+    "name": "Order of the Boiler",
+    "nameKey": "callingMaterial.themedFeature.steam_knight.70.name",
+    "descriptionKey": "callingMaterial.themedFeature.steam_knight.70.description"
+  },
+  {
+    "classId": "steam_knight",
+    "name": "Extra Attack",
+    "nameKey": "callingMaterial.nativeFeature.51.name",
+    "descriptionKey": "callingMaterial.themedFeature.steam_knight.71.description"
+  },
+  {
+    "classId": "steam_knight",
+    "name": "Locomotive Charge",
+    "nameKey": "callingMaterial.themedFeature.steam_knight.72.name",
+    "descriptionKey": "callingMaterial.themedFeature.steam_knight.72.description"
+  },
+  {
+    "classId": "steam_knight",
+    "name": "Pressure Seal",
+    "nameKey": "callingMaterial.themedFeature.steam_knight.73.name",
+    "descriptionKey": "callingMaterial.themedFeature.steam_knight.73.description"
+  },
+  {
+    "classId": "steam_knight",
+    "name": "Reinforced Boiler",
+    "nameKey": "callingMaterial.themedFeature.steam_knight.74.name",
+    "descriptionKey": "callingMaterial.themedFeature.steam_knight.74.description"
+  },
+  {
+    "classId": "steam_knight",
+    "name": "Extra Attack (2)",
+    "nameKey": "callingMaterial.coreFeature.23.name",
+    "descriptionKey": "callingMaterial.themedFeature.steam_knight.75.description"
+  },
+  {
+    "classId": "steam_knight",
+    "name": "Juggernaut Frame",
+    "nameKey": "callingMaterial.themedFeature.steam_knight.76.name",
+    "descriptionKey": "callingMaterial.themedFeature.steam_knight.76.description"
+  },
+  {
+    "classId": "steam_knight",
+    "name": "Piston Barrage",
+    "nameKey": "callingMaterial.themedFeature.steam_knight.77.name",
+    "descriptionKey": "callingMaterial.themedFeature.steam_knight.77.description"
+  },
+  {
+    "classId": "steam_knight",
+    "name": "Adamant Boiler",
+    "nameKey": "callingMaterial.themedFeature.steam_knight.78.name",
+    "descriptionKey": "callingMaterial.themedFeature.steam_knight.78.description"
+  },
+  {
+    "classId": "steam_knight",
+    "name": "The Engine Eternal",
+    "nameKey": "callingMaterial.themedFeature.steam_knight.79.name",
+    "descriptionKey": "callingMaterial.themedFeature.steam_knight.79.description"
+  },
+  {
+    "classId": "steam_knight",
+    "name": "Hold the Line",
+    "nameKey": "callingMaterial.subclassFeature.fighter.cavalier.hold-the-line.name",
+    "descriptionKey": "callingMaterial.themedFeature.steam_knight.80.description"
+  },
+  {
+    "classId": "steam_knight",
+    "name": "Shield Coupling",
+    "nameKey": "callingMaterial.themedFeature.steam_knight.81.name",
+    "descriptionKey": "callingMaterial.themedFeature.steam_knight.81.description"
+  },
+  {
+    "classId": "steam_knight",
+    "name": "Intercept Protocol",
+    "nameKey": "callingMaterial.themedFeature.steam_knight.82.name",
+    "descriptionKey": "callingMaterial.themedFeature.steam_knight.82.description"
+  },
+  {
+    "classId": "steam_knight",
+    "name": "Bulwark Advance",
+    "nameKey": "callingMaterial.themedFeature.steam_knight.83.name",
+    "descriptionKey": "callingMaterial.themedFeature.steam_knight.83.description"
   }
 ] as const;

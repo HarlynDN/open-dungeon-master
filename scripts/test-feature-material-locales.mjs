@@ -46,10 +46,10 @@ for(const file of fs.readdirSync(new URL('../src/lib/classes/',import.meta.url))
   themedSource.push({classId,subclass:table.subclass.name,...feature,theme:file.replace('-features.json','')});
 }
 const themeSourceBefore=JSON.stringify(themedSource);
-const cyberSource=themedSource.filter(row=>row.theme==='cyberpunk');
-const cyberClassIds=new Set(cyberSource.map(row=>row.classId));
-assert.equal(cyberClassIds.size,6);assert.equal(cyberSource.length,119);
-assert.deepEqual(THEMED_FEATURE_MATERIAL.filter(row=>cyberClassIds.has(row.classId)).map(row=>row.classId+'::'+row.name).sort(),cyberSource.map(row=>row.classId+'::'+row.n).sort());
+const themeClassIds=new Set(themedSource.map(row=>row.classId));
+assert.equal(themeClassIds.size,36);assert.equal(themedSource.length,733);
+assert.equal(new Set(themedSource.map(row=>row.theme)).size,6);
+assert.deepEqual(THEMED_FEATURE_MATERIAL.map(row=>row.classId+'::'+row.name).sort(),themedSource.map(row=>row.classId+'::'+row.n).sort());
 for(const row of THEMED_FEATURE_MATERIAL){
  const original=themedSource.find(entry=>entry.classId===row.classId&&entry.n===row.name);assert(original);
  assert.equal(MESSAGE_CATALOGS.en[row.nameKey],original.n);
@@ -272,10 +272,10 @@ for(const locale of ['zh-CN','en']){
  const custom=info.render('InfoDialog',archetypeInfo,locale,{queues:{[infoFile]:[{...rawState,source:'homebrew'}]}});
  assert(custom.includes('Always-prepared spells'));assert(custom.includes('Experimental Elixir'));
 }
-// The same six complete native classes reach actual creation and sheet views.
-for(const classId of cyberClassIds){
+// All six themes and 36 complete native classes reach actual creation and sheet views.
+for(const classId of themeClassIds){
  const klass=srdClassOptions().find(row=>row.id===classId);assert(klass);
- const source=cyberSource.filter(row=>row.classId===classId);
+ const source=themedSource.filter(row=>row.classId===classId);
  const features=source.map(row=>({name:row.n,source:'class',classId,level:1}));
  const props={state:{subclass:source[0].subclass,gender:'',chosenSkills:[],racialSkills:[],backgroundSkills:[]},
   derived:{effectiveLevel:20,grantedFeatures:features},actions:{},klass,pack:null,
@@ -295,7 +295,7 @@ for(const classId of cyberClassIds){
  chips.render('FeatureChips',{features:[{name:source[0].n,source:'story'}],classId},'zh-CN');
  assert.equal(chips.elements().find(e=>e.props.items).props.items[0].name,source[0].n);
 }
-console.log(`PASS: ${THEMED_FEATURE_MATERIAL.length} source-bound theme feature projections, exact English source/dice/numbers, all 119 cyberpunk features across six actual creator/sheet flows, class ownership and authored overrides.`);
+console.log(`PASS: ${THEMED_FEATURE_MATERIAL.length} source-bound theme feature projections, exact English source/dice/numbers, all 733 themed features across 36 actual creator/sheet flows, class ownership and authored overrides.`);
 console.log('PASS: all 105 authored full archetype documents, importer byte parity, level/feature/spell display, actual creator and lazy help, English switching and source provenance preserved.');
 console.log('PASS: 146 native feature and 54 feat summaries, class overrides, source-bound display, unchanged parser inputs, canonical chip/reference identities, lazy feat help and English render parity.');
 console.log('PASS: bilingual core features across actual creation and sheet components; localized tooltip props, canonical identities and explicit pack names/help preserved.');
