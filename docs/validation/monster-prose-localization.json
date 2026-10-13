@@ -1,0 +1,217 @@
+{
+  "version": 1,
+  "scope": "14 checked-in SRD monster fixtures; not the deployed catalog or a full localization acceptance",
+  "detection": "Entirely Latin prose blocks; mixed-language blocks require separate review. Zero is not proof of complete translation.",
+  "rows": [
+    {
+      "name": "Adult Red Dragon",
+      "slug": "adult-red-dragon",
+      "blocks": 14,
+      "untranslatedBlocks": 0,
+      "pending": []
+    },
+    {
+      "name": "Ghoul",
+      "slug": "ghoul",
+      "blocks": 3,
+      "untranslatedBlocks": 0,
+      "pending": []
+    },
+    {
+      "name": "Mage",
+      "slug": "mage",
+      "blocks": 6,
+      "untranslatedBlocks": 6,
+      "pending": [
+        {
+          "heading": "**Mages** spend their lives in the study and practice of magic. Good-aligned mages offer counsel to nobles and others in",
+          "source": "**Mages** spend their lives in the study and practice of magic. Good-aligned mages offer counsel to nobles and others in power, while evil mages dwell in isolated sites to perform unspeakable experiments without interference."
+        },
+        {
+          "heading": "###### Traits",
+          "source": "###### Traits"
+        },
+        {
+          "heading": "**Spellcasting**. The mage is a 9th-level spellcaster. Its spellcasting ability is Intelligence (spell save DC 14, +6 to",
+          "source": "**Spellcasting**. The mage is a 9th-level spellcaster. Its spellcasting ability is Intelligence (spell save DC 14, +6 to hit with spell attacks). The mage has the following wizard spells prepared:"
+        },
+        {
+          "heading": "* Cantrips (at will): fire bolt, light, mage hand, prestidigitation",
+          "source": "* Cantrips (at will): fire bolt, light, mage hand, prestidigitation\n* 1st level (4 slots): detect magic, mage armor, magic missile, shield\n* 2nd level (3 slots): misty step, suggestion\n* 3rd level (3 slots): counterspell, fireball, fly\n* 4th level (3 slots): greater invisibility, ice storm\n* 5th level (1 slot): cone of cold"
+        },
+        {
+          "heading": "###### Actions",
+          "source": "###### Actions"
+        },
+        {
+          "heading": "**Dagger**. Melee or Ranged Weapon Attack: +5 to hit, reach 5 ft. or range 20/60 ft., one target. Hit: 4 (1d4 + 2) pierc",
+          "source": "**Dagger**. Melee or Ranged Weapon Attack: +5 to hit, reach 5 ft. or range 20/60 ft., one target. Hit: 4 (1d4 + 2) piercing damage."
+        }
+      ]
+    },
+    {
+      "name": "Troll",
+      "slug": "troll",
+      "blocks": 10,
+      "untranslatedBlocks": 3,
+      "pending": [
+        {
+          "heading": "**Variant: Loathsome Limbs**. Whenever the troll takes at least 15 slashing damage at one time, roll a d20 to determine ",
+          "source": "**Variant: Loathsome Limbs**. Whenever the troll takes at least 15 slashing damage at one time, roll a d20 to determine what else happens to it:"
+        },
+        {
+          "heading": "**1-10:** Nothing else happens.",
+          "source": "**1-10:** Nothing else happens.\n**11-14:** One leg is severed from the troll if it has any legs left.\n**15- 18:** One arm is severed from the troll if it has any arms left.\n**19-20:** The troll is decapitated, but the troll dies only if it can't regenerate. If it dies, so does the severed head."
+        },
+        {
+          "heading": "If the troll finishes a short or long rest without reattaching a severed limb or head, the part regrows. At that point, ",
+          "source": "If the troll finishes a short or long rest without reattaching a severed limb or head, the part regrows. At that point, the severed part dies. Until then, a severed part acts on the troll's initiative and has its own action and movement. A severed part has AC 13, 10 hit points, and the troll's Regeneration trait.\nA **severed leg** is unable to attack and has a speed of 5 feet.\nA **severed arm** has a speed of 5 feet and can make one claw attack on its turn, with disadvantage on the attack roll unless the troll can see the arm and its target. Each time the troll loses an arm, it loses a claw attack.\nIf its head is severed, the troll loses its bite attack and its body is blinded unless the head can see it. The **severed head** has a speed of 0 feet and the troll's Keen Smell trait. It can make a bite attack but only against a target in its space.\nThe troll's speed is halved if it's missing a leg. If it loses both legs, it falls prone. If it has both arms, it can crawl. With only one arm, it can still crawl, but its speed is halved. With no arms or legs, its speed is 0, and it can't benefit from bonuses to speed."
+        }
+      ]
+    },
+    {
+      "name": "Giant Spider",
+      "slug": "giant-spider",
+      "blocks": 8,
+      "untranslatedBlocks": 8,
+      "pending": [
+        {
+          "heading": "To snare its prey, a **giant spider** spins elaborate webs or shoots sticky strands of webbing from its abdomen. Giant s",
+          "source": "To snare its prey, a **giant spider** spins elaborate webs or shoots sticky strands of webbing from its abdomen. Giant spiders are most commonly found underground, making their lairs on ceilings or in dark, web-filled crevices. Such lairs are often festooned with web cocoons holding past victims."
+        },
+        {
+          "heading": "###### Traits",
+          "source": "###### Traits"
+        },
+        {
+          "heading": "**Spider Climb**. The spider can climb difficult surfaces, including upside down on ceilings, without needing to make an",
+          "source": "**Spider Climb**. The spider can climb difficult surfaces, including upside down on ceilings, without needing to make an ability check."
+        },
+        {
+          "heading": "**Web Sense**. While in contact with a web, the spider knows the exact location of any other creature in contact with th",
+          "source": "**Web Sense**. While in contact with a web, the spider knows the exact location of any other creature in contact with the same web."
+        },
+        {
+          "heading": "**Web Walker**. The spider ignores movement restrictions caused by webbing.",
+          "source": "**Web Walker**. The spider ignores movement restrictions caused by webbing."
+        },
+        {
+          "heading": "###### Actions",
+          "source": "###### Actions"
+        },
+        {
+          "heading": "**Bite**. Melee Weapon Attack: +5 to hit, reach 5 ft., one creature. Hit: 7 (1d8 + 3) piercing damage, and the target mu",
+          "source": "**Bite**. Melee Weapon Attack: +5 to hit, reach 5 ft., one creature. Hit: 7 (1d8 + 3) piercing damage, and the target must make a DC 11 Constitution saving throw, taking 9 (2d8) poison damage on a failed save, or half as much damage on a successful one. If the poison damage reduces the target to 0 hit points, the target is stable but poisoned for 1 hour, even after regaining hit points, and is paralyzed while poisoned in this way."
+        },
+        {
+          "heading": "**Web (Recharge 5-6)**. Ranged Weapon Attack: +5 to hit, range 30/60 ft., one creature. Hit: The target is restrained by",
+          "source": "**Web (Recharge 5-6)**. Ranged Weapon Attack: +5 to hit, range 30/60 ft., one creature. Hit: The target is restrained by webbing. As an action, the restrained target can make a DC 12 Strength check, bursting the webbing on a success. The webbing can also be attacked and destroyed (AC 10; hp 5; vulnerability to fire damage; immunity to bludgeoning, poison, and psychic damage)."
+        }
+      ]
+    },
+    {
+      "name": "Lich",
+      "slug": "lich",
+      "blocks": 14,
+      "untranslatedBlocks": 1,
+      "pending": [
+        {
+          "heading": "* Cantrips (at will): mage hand, prestidigitation, ray of frost",
+          "source": "* Cantrips (at will): mage hand, prestidigitation, ray of frost\n* 1st level (4 slots): detect magic, magic missile, shield, thunderwave\n* 2nd level (3 slots): detect thoughts, invisibility, acid arrow, mirror image\n* 3rd level (3 slots): animate dead, counterspell, dispel magic, fireball\n* 4th level (3 slots): blight, dimension door\n* 5th level (3 slots): cloudkill, scrying\n* 6th level (1 slot): disintegrate, globe of invulnerability\n* 7th level (1 slot): finger of death, plane shift\n* 8th level (1 slot): dominate monster, power word stun\n* 9th level (1 slot): power word kill"
+        }
+      ]
+    },
+    {
+      "name": "Vampire Spawn",
+      "slug": "vampire-spawn",
+      "blocks": 8,
+      "untranslatedBlocks": 1,
+      "pending": [
+        {
+          "heading": "**Vampire Weaknesses**. The vampire has the following flaws:",
+          "source": "**Vampire Weaknesses**. The vampire has the following flaws:\nForbiddance. The vampire can't enter a residence without an invitation from one of the occupants.\nHarmed by Running Water. The vampire takes 20 acid damage when it ends its turn in running water.\nStake to the Heart. The vampire is destroyed if a piercing weapon made of wood is driven into its heart while it is incapacitated in its resting place.\nSunlight Hypersensitivity. The vampire takes 20 radiant damage when it starts its turn in sunlight. While in sunlight, it has disadvantage on attack rolls and ability checks."
+        }
+      ]
+    },
+    {
+      "name": "Rug of Smothering",
+      "slug": "rug-of-smothering",
+      "blocks": 6,
+      "untranslatedBlocks": 0,
+      "pending": []
+    },
+    {
+      "name": "Marilith",
+      "slug": "marilith",
+      "blocks": 12,
+      "untranslatedBlocks": 3,
+      "pending": [
+        {
+          "heading": "**Reactive**. The marilith can take one reaction on every turn in combat.",
+          "source": "**Reactive**. The marilith can take one reaction on every turn in combat."
+        },
+        {
+          "heading": "**Multiattack**. The marilith can make seven attacks: six with its longswords and one with its tail.",
+          "source": "**Multiattack**. The marilith can make seven attacks: six with its longswords and one with its tail."
+        },
+        {
+          "heading": "**Variant: Summon Demon (1/Day)**. The demon chooses what to summon and attempts a magical summoning.",
+          "source": "**Variant: Summon Demon (1/Day)**. The demon chooses what to summon and attempts a magical summoning.\nA marilith has a 50 percent chance of summoning 1d6 vrocks, 1d4 hezrous, 1d3 glabrezus, 1d2 nalfeshnees, or one marilith.\nA summoned demon appears in an unoccupied space within 60 feet of its summoner, acts as an ally of its summoner, and can't summon other demons. It remains for 1 minute, until it or its summoner dies, or until its summoner dismisses it as an action."
+        }
+      ]
+    },
+    {
+      "name": "Black Bear",
+      "slug": "black-bear",
+      "blocks": 6,
+      "untranslatedBlocks": 0,
+      "pending": []
+    },
+    {
+      "name": "Purple Worm",
+      "slug": "purple-worm",
+      "blocks": 6,
+      "untranslatedBlocks": 2,
+      "pending": [
+        {
+          "heading": "**Tunneler**. The worm can burrow through solid rock at half its burrow speed and leaves a 10-foot-diameter tunnel in it",
+          "source": "**Tunneler**. The worm can burrow through solid rock at half its burrow speed and leaves a 10-foot-diameter tunnel in its wake."
+        },
+        {
+          "heading": "**Bite**. Melee Weapon Attack: +14 to hit, reach 10 ft., one target. Hit: 22 (3d8 + 9) piercing damage. If the target is",
+          "source": "**Bite**. Melee Weapon Attack: +14 to hit, reach 10 ft., one target. Hit: 22 (3d8 + 9) piercing damage. If the target is a Large or smaller creature, it must succeed on a DC 19 Dexterity saving throw or be swallowed by the worm. A swallowed creature is blinded and restrained, it has total cover against attacks and other effects outside the worm, and it takes 21 (6d6) acid damage at the start of each of the worm's turns.\nIf the worm takes 30 damage or more on a single turn from a creature inside it, the worm must succeed on a DC 21 Constitution saving throw at the end of that turn or regurgitate all swallowed creatures, which fall prone in a space within 10 feet of the worm. If the worm dies, a swallowed creature is no longer restrained by it and can escape from the corpse by using 20 feet of movement, exiting prone."
+        }
+      ]
+    },
+    {
+      "name": "Owlbear",
+      "slug": "owlbear",
+      "blocks": 6,
+      "untranslatedBlocks": 0,
+      "pending": []
+    },
+    {
+      "name": "Aboleth",
+      "slug": "aboleth",
+      "blocks": 14,
+      "untranslatedBlocks": 2,
+      "pending": [
+        {
+          "heading": "**Tail**. Melee Weapon Attack: +9 to hit, reach 10 ft., one target. Hit: 15 (3d6 + 5) bludgeoning damage.",
+          "source": "**Tail**. Melee Weapon Attack: +9 to hit, reach 10 ft., one target. Hit: 15 (3d6 + 5) bludgeoning damage."
+        },
+        {
+          "heading": "**Enslave (3/day)**. The aboleth targets one creature it can see within 30 ft. of it. The target must succeed on a DC 14",
+          "source": "**Enslave (3/day)**. The aboleth targets one creature it can see within 30 ft. of it. The target must succeed on a DC 14 Wisdom saving throw or be magically charmed by the aboleth until the aboleth dies or until it is on a different plane of existence from the target. The charmed target is under the aboleth's control and can't take reactions, and the aboleth and the target can communicate telepathically with each other over any distance.\nWhenever the charmed target takes damage, the target can repeat the saving throw. On a success, the effect ends. No more than once every 24 hours, the target can also repeat the saving throw when it is at least 1 mile away from the aboleth."
+        }
+      ]
+    },
+    {
+      "name": "Ankheg",
+      "slug": "ankheg",
+      "blocks": 3,
+      "untranslatedBlocks": 0,
+      "pending": []
+    }
+  ]
+}

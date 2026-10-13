@@ -112,6 +112,11 @@ real interaction has passed. Do not restart a static translation campaign.
   Fourteen fixture monsters pass source/numeric/English/custom-change checks;
   twelve have matching display paragraphs. This is partial prose coverage, not
   complete monster localization. Direct detail/lazy help use locale-aware guards.
+- Structured prose audit is reproducible via scripts/audit-monster-prose-locales.mjs
+  and docs/validation/monster-prose-localization.json. Current 14-fixture audit
+  retains 26 fully English blocks across seven monsters (mixed text needs review).
+  Foot-unit spelling is normalized without changing quantities; a changed reach
+  regression remains English. Synthetic Traits heading is localized.
 - Next: complete those help paths and inspect real content data, then remaining
   dynamic UI/material/log owners. Full-suite/build and real bilingual journey
   remain unproven; no owner was newly marked covered.

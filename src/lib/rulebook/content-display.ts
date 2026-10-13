@@ -29,9 +29,10 @@ export function contentDisplay<T extends { name: string; source: string; documen
           // changed wording or numbers must retain the original paragraph.
           const en = page.md.split(/\n\n+/);
           const zh = display.md.split(/\n\n+/);
-          const key = (value: string) => normalizeRulesText(value).replace(/\*/g, "").replace(/\s+/g, "");
+          const key = (value: string) => normalizeRulesText(value).replace(/\*/g, "").replace(/\bft\./g, "feet").replace(/\s+/g, "");
           if (en.length === zh.length) {
             const pairs = new Map<string, string>();
+            if (locale === "zh-CN") pairs.set(key("###### Traits"), "###### 特性");
             const ambiguous = new Set<string>();
             en.forEach((block, index) => {
               const sourceKey = key(block);

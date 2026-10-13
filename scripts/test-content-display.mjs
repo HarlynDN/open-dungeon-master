@@ -65,3 +65,13 @@ for (const fixture of fixtures) {
 }
 assert.ok(translatedMonsters > 0);
 console.log(`structured monster prose: ${fixtures.length} source rows checked, ${translatedMonsters} have matching translated paragraphs; unmatched paragraphs retained`);
+
+const aboleth = fixtures.find(row => row.name === 'Aboleth');
+const abolethView = contentDisplay('monsters', { ...aboleth, source: 'open5e', documentSlug: 'wotc-srd' }, 'zh-CN');
+assert.ok(abolethView.display.text.includes('黏液云'));
+assert.ok(!abolethView.display.text.includes('###### Traits'));
+const changedReach = structuredClone(aboleth);
+changedReach.data.special_abilities.find(row => row.name === 'Mucous Cloud').desc = changedReach.data.special_abilities.find(row => row.name === 'Mucous Cloud').desc.replace('5 ft.', '6 ft.');
+const reachView = contentDisplay('monsters', { ...changedReach, source: 'open5e', documentSlug: 'wotc-srd' }, 'zh-CN');
+assert.ok(reachView.display.text.includes('6 ft.'));
+console.log('monster prose: equivalent foot units translate; changed reach remains authored');
