@@ -3300,6 +3300,11 @@
       "sourceHash": "447df8ab419cfd448ab76ed06ce6b0dcc872b95ae4eabc872435bfa1d6c203ed"
     },
     {
+      "id": "djinni-genie",
+      "kind": "monster",
+      "sourceHash": "5bc9e9949f96c92d2c365b0b67fd0a9345604a7eaa7bde67b91aea449f391fe5"
+    },
+    {
       "id": "doppelganger",
       "kind": "monster",
       "sourceHash": "3f129d60c6994a332ebfb983d57a92ea25b94289c8ac42b27aa2dc662f2a67b8"
