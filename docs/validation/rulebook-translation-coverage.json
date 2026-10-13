@@ -3305,6 +3305,11 @@
       "sourceHash": "447df8ab419cfd448ab76ed06ce6b0dcc872b95ae4eabc872435bfa1d6c203ed"
     },
     {
+      "id": "deva-angel",
+      "kind": "monster",
+      "sourceHash": "2eaca739848577364cf52f7e32fd160ec9d7c9a438a529f71b19d276efd6de02"
+    },
+    {
       "id": "djinni-genie",
       "kind": "monster",
       "sourceHash": "5bc9e9949f96c92d2c365b0b67fd0a9345604a7eaa7bde67b91aea449f391fe5"
