@@ -293,5 +293,85 @@ export const SPELL_HELP_MESSAGES = defineMessages({
   "spellHelp.native.unseen-servant": {
     "en": "This spell creates an invisible, mindless, shapeless, Medium force that performs simple tasks at your command until the spell ends. The servant springs into existence in an unoccupied space on the ground within range. It has AC 10, 1 hit point, and a Strength of 2, and it can't attack. If it drops to 0 hit points, the spell ends.\n\nOnce on each of your turns as a bonus action, you can mentally command the servant to move up to 15 feet and interact with an object. The servant can perform simple tasks that a human servant could do, such as fetching things, cleaning, mending, folding clothes, lighting fires, serving food, and pouring wine. Once you give the command, the servant performs the task to the best of its ability until it completes the task, then waits for your next command.\n\nIf you command the servant to perform a task that would move it more than 60 feet away from you, the spell ends.",
     "zh-CN": "此法术创造一股隐形、无心智、无形状的中型力量，直到法术结束前，都能按你的命令执行简单任务。仆役出现在施法距离内地面上一个未被占据的位置。它的护甲等级为 10、生命值为 1、力量为 2，且不能攻击。生命值降至 0 时，法术结束。\n\n在你的每个回合，你可以用一个附赠动作，以心灵命令仆役移动至多 15 英尺并操作一个物体，每回合限一次。仆役可以执行人类仆役能做的简单任务，例如取物、清洁、修补、叠衣、点火、端上食物和倒酒。收到命令后，仆役会尽力完成任务，然后等待下一条命令。\n\n如果你命令仆役执行的任务会使其离你超过 60 英尺，法术结束。"
+  },
+  "spellHelp.native.aid": {
+    "en": "Your spell bolsters your allies with toughness and resolve. Choose up to three creatures within range. Each target's hit point maximum and current hit points increase by 5 for the duration.\n\n**At Higher Levels.** When you cast this spell using a spell slot of 3rd level or higher, a target's hit points increase by an additional 5 for each slot level above 2nd.",
+    "zh-CN": "此法术使你的盟友更加坚韧、坚定。选择施法距离内至多 3 个生物。在法术持续时间内，每个目标的生命值上限和当前生命值都增加 5。\n\n**升环施法。** 当你使用三环或更高环阶的法术位施放此法术时，法术位每比二环高一环，目标的生命值便额外增加 5。"
+  },
+  "spellHelp.native.barkskin": {
+    "en": "You touch a willing creature. Until the spell ends, the target's skin has a rough, bark-like appearance, and the target's AC can't be less than 16, regardless of what kind of armor it is wearing.",
+    "zh-CN": "你触碰一个自愿接受法术的生物。法术结束前，目标的皮肤呈现粗糙的树皮外观；无论穿着何种护甲，其护甲等级都不会低于 16。"
+  },
+  "spellHelp.native.blur": {
+    "en": "Your body becomes blurred, shifting and wavering to all who can see you. For the duration, any creature has disadvantage on attack rolls against you. An attacker is immune to this effect if it doesn't rely on sight, as with blindsight, or can see through illusions, as with truesight.",
+    "zh-CN": "在所有能看见你的人眼中，你的身体变得模糊、摇曳、不断变化。法术持续时间内，任何生物对你的攻击检定都具有劣势。如果攻击者不依赖视觉，例如拥有盲视，或能看穿幻象，例如拥有真实视觉，则不受此效果影响。"
+  },
+  "spellHelp.native.darkvision": {
+    "en": "You touch a willing creature to grant it the ability to see in the dark. For the duration, that creature has darkvision out to a range of 60 feet.",
+    "zh-CN": "你触碰一个自愿接受法术的生物，赋予它在黑暗中视物的能力。在法术持续时间内，该生物获得 60 英尺范围的黑暗视觉。"
+  },
+  "spellHelp.native.hold-person": {
+    "en": "Choose a humanoid that you can see within range. The target must succeed on a Wisdom saving throw or be paralyzed for the duration. At the end of each of its turns, the target can make another Wisdom saving throw. On a success, the spell ends on the target.\n\n**At Higher Levels.** When you cast this spell using a spell slot of 3rd level or higher, you can target one additional humanoid for each slot level above 2nd. The humanoids must be within 30 feet of each other when you target them.",
+    "zh-CN": "选择施法距离内一个能看见的类人生物。目标必须成功通过一次感知豁免，否则在法术持续时间内麻痹。在它的每个回合结束时，目标都可以再次进行感知豁免；成功时，法术对该目标结束。\n\n**升环施法。** 当你使用三环或更高环阶的法术位施放此法术时，法术位每比二环高一环，就能额外指定一个类人生物。指定目标时，这些类人生物彼此之间的距离必须在 30 英尺以内。"
+  },
+  "spellHelp.native.invisibility": {
+    "en": "A creature you touch becomes invisible until the spell ends. Anything the target is wearing or carrying is invisible as long as it is on the target's person. The spell ends for a target that attacks or casts a spell.\n\n**At Higher Levels.** When you cast this spell using a spell slot of 3rd level or higher, you can target one additional creature for each slot level above 2nd.",
+    "zh-CN": "你触碰的一个生物变为隐形，直到法术结束。目标穿戴或携带的物品只要仍在其身上，也会隐形。目标进行攻击或施放法术时，此法术对它结束。\n\n**升环施法。** 当你使用三环或更高环阶的法术位施放此法术时，法术位每比二环高一环，就能额外指定一个目标。"
+  },
+  "spellHelp.native.knock": {
+    "en": "Choose an object that you can see within range. The object can be a door, a box, a chest, a set of manacles, a padlock, or another object that contains a mundane or magical means that prevents access.\n\nA target that is held shut by a mundane lock or that is stuck or barred becomes unlocked, unstuck, or unbarred. If the object has multiple locks, only one of them is unlocked.\n\nIf you choose a target that is held shut with *arcane lock*, that spell is suppressed for 10 minutes, during which time the target can be opened and shut normally.\n\nWhen you cast the spell, a loud knock, audible from as far away as 300 feet, emanates from the target object.",
+    "zh-CN": "选择施法距离内一个能看见的物体。它可以是门、盒子、箱子、镣铐、挂锁，或其他以普通或魔法方式阻止开启或进入的物体。\n\n被普通锁锁住、卡住或被门闩闩住的目标，会被解锁、解除卡阻或打开门闩。如果物体有多个锁，只会打开其中一个。\n\n如果目标被*秘法锁*锁住，该法术会被压制 10 分钟；期间目标可以正常开启和关闭。\n\n施放此法术时，目标物体会发出响亮的敲击声，在 300 英尺外都能听见。"
+  },
+  "spellHelp.native.lesser-restoration": {
+    "en": "You touch a creature and can end either one disease or one condition afflicting it. The condition can be blinded, deafened, paralyzed, or poisoned.",
+    "zh-CN": "你触碰一个生物，可以结束影响它的一种疾病或一种状态。可结束的状态包括目盲、耳聋、麻痹或中毒。"
+  },
+  "spellHelp.native.magic-weapon": {
+    "en": "You touch a nonmagical weapon. Until the spell ends, that weapon becomes a magic weapon with a +1 bonus to attack rolls and damage rolls.\n\n**At Higher Levels.** When you cast this spell using a spell slot of 4th level or higher, the bonus increases to +2. When you use a spell slot of 6th level or higher, the bonus increases to +3.",
+    "zh-CN": "你触碰一件非魔法武器。法术结束前，它变为魔法武器，攻击检定和伤害掷骰获得 +1 加值。\n\n**升环施法。** 使用四环或更高环阶的法术位施放此法术时，加值增加至 +2。使用六环或更高环阶的法术位时，加值增加至 +3。"
+  },
+  "spellHelp.native.mirror-image": {
+    "en": "Three illusory duplicates of yourself appear in your space. Until the spell ends, the duplicates move with you and mimic your actions, shifting position so it's impossible to track which image is real. You can use your action to dismiss the illusory duplicates.\n\nEach time a creature targets you with an attack during the spell's duration, roll a d20 to determine whether the attack instead targets one of your duplicates.\n\nIf you have three duplicates, you must roll a 6 or higher to change the attack's target to a duplicate. With two duplicates, you must roll an 8 or higher. With one duplicate, you must roll an 11 or higher.\n\nA duplicate's AC equals 10 + your Dexterity modifier. If an attack hits a duplicate, the duplicate is destroyed. A duplicate can be destroyed only by an attack that hits it. It ignores all other damage and effects. The spell ends when all three duplicates are destroyed.\n\nA creature is unaffected by this spell if it can't see, if it relies on senses other than sight, such as blindsight, or if it can perceive illusions as false, as with truesight.",
+    "zh-CN": "你的所在位置出现 3 个幻象分身。法术结束前，分身随你移动并模仿你的动作，不断变换位置，使人无法分辨哪个是真身。你可以用一个动作解除这些幻象分身。\n\n法术持续时间内，每当一个生物以攻击指定你为目标时，掷 1d20，决定攻击是否转而指定一个分身。\n\n有 3 个分身时，掷出 6 或更高即可将攻击目标改为分身；有 2 个分身时，需要 8 或更高；有 1 个分身时，需要 11 或更高。\n\n分身的护甲等级等于 10 + 你的敏捷调整值。攻击命中分身时，分身被摧毁。只有命中分身的攻击才能摧毁它；分身忽略所有其他伤害和效果。全部 3 个分身被摧毁时，法术结束。\n\n如果一个生物看不见、依赖视觉以外的感官（例如盲视），或能看穿幻象（例如拥有真实视觉），则不受此法术影响。"
+  },
+  "spellHelp.native.misty-step": {
+    "en": "Briefly surrounded by silvery mist, you teleport up to 30 feet to an unoccupied space that you can see.",
+    "zh-CN": "银色薄雾短暂环绕着你。你传送至多 30 英尺，到达一个你能看见且未被占据的位置。"
+  },
+  "spellHelp.native.pass-without-trace": {
+    "en": "A veil of shadows and silence radiates from you, masking you and your companions from detection. For the duration, each creature you choose within 30 feet of you (including you) has a +10 bonus to Dexterity (Stealth) checks and can't be tracked except by magical means. A creature that receives this bonus leaves behind no tracks or other traces of its passage.",
+    "zh-CN": "一层阴影与寂静从你身上扩散，遮掩你和同伴，使你们不易被发现。在法术持续时间内，你周围 30 英尺内由你选定的每个生物（可以包括你自己），其敏捷（隐匿）检定获得 +10 加值，且除魔法手段外无法被追踪。获得此加值的生物不会留下足迹或其他经过的痕迹。"
+  },
+  "spellHelp.native.prayer-of-healing": {
+    "en": "Up to six creatures of your choice that you can see within range each regain hit points equal to 2d8 + your spellcasting ability modifier. This spell has no effect on undead or constructs.\n\n**At Higher Levels.** When you cast this spell using a spell slot of 3rd level or higher, the healing increases by 1d8 for each slot level above 2nd.",
+    "zh-CN": "施法距离内至多 6 个你选定且能看见的生物，各自恢复生命值，数值等于 2d8 + 你的施法属性调整值。此法术对不死生物和构装体无效。\n\n**升环施法。** 当你使用三环或更高环阶的法术位施放此法术时，法术位每比二环高一环，治疗量便增加 1d8。"
+  },
+  "spellHelp.native.protection-from-poison": {
+    "en": "You touch a creature. If it is poisoned, you neutralize the poison. If more than one poison afflicts the target, you neutralize one poison that you know is present, or you neutralize one at random.\n\nFor the duration, the target has advantage on saving throws against being poisoned, and it has resistance to poison damage.",
+    "zh-CN": "你触碰一个生物。如果它已中毒，你会中和毒素。如果目标受到多种毒素影响，你会中和其中一种已知存在的毒素，或随机中和一种。\n\n在法术持续时间内，目标针对中毒进行的豁免具有优势，并获得毒素伤害抗性。"
+  },
+  "spellHelp.native.scorching-ray": {
+    "en": "You create three rays of fire and hurl them at targets within range. You can hurl them at one target or several.\n\nMake a ranged spell attack for each ray. On a hit, the target takes 2d6 fire damage.\n\n**At Higher Levels.** When you cast this spell using a spell slot of 3rd level or higher, you create one additional ray for each slot level above 2nd.",
+    "zh-CN": "你创造 3 道火焰射线，射向施法距离内的目标。可以让它们攻击同一目标，也可以分配给多个目标。\n\n每道射线分别进行一次远程法术攻击。命中时，目标受到 2d6 点火焰伤害。\n\n**升环施法。** 当你使用三环或更高环阶的法术位施放此法术时，法术位每比二环高一环，便额外产生一道射线。"
+  },
+  "spellHelp.native.see-invisibility": {
+    "en": "For the duration, you see invisible creatures and objects as if they were visible, and you can see into the Ethereal Plane. Ethereal creatures and objects appear ghostly and translucent.",
+    "zh-CN": "在法术持续时间内，你能看见隐形生物和物体，如同它们没有隐形，也能看进以太位面。以太生物和物体呈现为幽灵般的半透明形态。"
+  },
+  "spellHelp.native.shatter": {
+    "en": "A sudden loud ringing noise, painfully intense, erupts from a point of your choice within range. Each creature in a 10-foot radius sphere centered on that point must make a Constitution saving throw. A creature takes 3d8 thunder damage on a failed save, or half as much damage on a successful one. A creature made of inorganic material such as stone, crystal, or metal has disadvantage on this saving throw.\n\nA nonmagical object that isn't being worn or carried also takes the damage if it's in the spell's area.\n\n**At Higher Levels.** When you cast this spell using a spell slot of 3rd level or higher, the damage increases by 1d8 for each slot level above 2nd.",
+    "zh-CN": "施法距离内你选定的一点骤然爆发出剧烈刺耳的鸣响。以该点为中心，半径 10 英尺球形区域内的每个生物都必须进行体质豁免。豁免失败时，生物受到 3d8 点雷鸣伤害；豁免成功则受到一半伤害。由石头、水晶、金属等无机材料构成的生物，在这次豁免中具有劣势。\n\n区域内未被穿戴或携带的非魔法物体也会受到此伤害。\n\n**升环施法。** 当你使用三环或更高环阶的法术位施放此法术时，法术位每比二环高一环，伤害便增加 1d8。"
+  },
+  "spellHelp.native.silence": {
+    "en": "For the duration, no sound can be created within or pass through a 20-foot radius sphere centered on a point you choose within range. Any creature or object entirely inside the sphere is immune to thunder damage, and creatures are deafened while entirely inside it. Casting a spell that includes a verbal component is impossible there.",
+    "zh-CN": "在法术持续时间内，以施法距离内你选定的一点为中心，半径 20 英尺的球形区域内无法产生声音，声音也无法穿过该区域。完全位于球体内的生物或物体免疫雷鸣伤害；完全位于其中的生物处于耳聋状态。在区域内无法施放包含言语成分的法术。"
+  },
+  "spellHelp.native.spider-climb": {
+    "en": "Until the spell ends, one willing creature you touch gains the ability to move up, down, and across vertical surfaces and upside down along ceilings, while leaving its hands free. The target also gains a climbing speed equal to its walking speed.",
+    "zh-CN": "法术结束前，你触碰的一个自愿接受法术的生物，可以沿垂直表面向上、向下或横向移动，也能倒挂着沿天花板移动，同时双手保持空闲。目标还获得等于其步行速度的攀爬速度。"
+  },
+  "spellHelp.native.spiritual-weapon": {
+    "en": "You create a floating, spectral weapon within range that lasts for the duration or until you cast this spell again. When you cast the spell, you can make a melee spell attack against a creature within 5 feet of the weapon. On a hit, the target takes force damage equal to 1d8 + your spellcasting ability modifier.\n\nAs a bonus action on your turn, you can move the weapon up to 20 feet and repeat the attack against a creature within 5 feet of it.\n\nThe weapon can take whatever form you choose. Clerics of deities who are associated with a particular weapon (as St. Cuthbert is known for his mace and Thor for his hammer) make this spell's effect resemble that weapon.\n\n**At Higher Levels.** When you cast this spell using a spell slot of 3rd level or higher, the damage increases by 1d8 for every two slot levels above 2nd.",
+    "zh-CN": "你在施法距离内创造一件漂浮的幽灵武器，在法术持续时间内存在，或直到你再次施放此法术。施法时，你可以对武器周围 5 英尺内的一个生物进行一次近战法术攻击。命中时，目标受到力场伤害，数值等于 1d8 + 你的施法属性调整值。\n\n在你的回合，你可以用一个附赠动作，将武器移动至多 20 英尺，并对武器周围 5 英尺内的一个生物再次进行攻击。\n\n武器可以采用你选择的任意形态。如果牧师信奉的神祇与某种武器有关，例如圣库斯伯特的硬头锤或托尔的战锤，通常会使法术显现为该武器的形态。\n\n**升环施法。** 当你使用三环或更高环阶的法术位施放此法术时，法术位每比二环高两环，伤害便增加 1d8。"
   }
 });

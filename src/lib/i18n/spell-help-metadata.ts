@@ -291,5 +291,85 @@ export const SPELL_HELP = [
   {
     "name": "Unseen Servant",
     "key": "spellHelp.native.unseen-servant"
+  },
+  {
+    "name": "Aid",
+    "key": "spellHelp.native.aid"
+  },
+  {
+    "name": "Barkskin",
+    "key": "spellHelp.native.barkskin"
+  },
+  {
+    "name": "Blur",
+    "key": "spellHelp.native.blur"
+  },
+  {
+    "name": "Darkvision",
+    "key": "spellHelp.native.darkvision"
+  },
+  {
+    "name": "Hold Person",
+    "key": "spellHelp.native.hold-person"
+  },
+  {
+    "name": "Invisibility",
+    "key": "spellHelp.native.invisibility"
+  },
+  {
+    "name": "Knock",
+    "key": "spellHelp.native.knock"
+  },
+  {
+    "name": "Lesser Restoration",
+    "key": "spellHelp.native.lesser-restoration"
+  },
+  {
+    "name": "Magic Weapon",
+    "key": "spellHelp.native.magic-weapon"
+  },
+  {
+    "name": "Mirror Image",
+    "key": "spellHelp.native.mirror-image"
+  },
+  {
+    "name": "Misty Step",
+    "key": "spellHelp.native.misty-step"
+  },
+  {
+    "name": "Pass without Trace",
+    "key": "spellHelp.native.pass-without-trace"
+  },
+  {
+    "name": "Prayer of Healing",
+    "key": "spellHelp.native.prayer-of-healing"
+  },
+  {
+    "name": "Protection from Poison",
+    "key": "spellHelp.native.protection-from-poison"
+  },
+  {
+    "name": "Scorching Ray",
+    "key": "spellHelp.native.scorching-ray"
+  },
+  {
+    "name": "See Invisibility",
+    "key": "spellHelp.native.see-invisibility"
+  },
+  {
+    "name": "Shatter",
+    "key": "spellHelp.native.shatter"
+  },
+  {
+    "name": "Silence",
+    "key": "spellHelp.native.silence"
+  },
+  {
+    "name": "Spider Climb",
+    "key": "spellHelp.native.spider-climb"
+  },
+  {
+    "name": "Spiritual Weapon",
+    "key": "spellHelp.native.spiritual-weapon"
   }
 ] as const;
