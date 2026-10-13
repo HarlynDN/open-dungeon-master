@@ -3465,6 +3465,11 @@
       "sourceHash": "23517ffd1f7eb392af21081a19b4e2b557e1638898a583a793cf96a607d9fa2a"
     },
     {
+      "id": "shambling-mound",
+      "kind": "monster",
+      "sourceHash": "f0a3a92aed21b9233b338588e56ca2681cf73efe671f37f584719dfc7dcd43f6"
+    },
+    {
       "id": "shrieker-fungi",
       "kind": "monster",
       "sourceHash": "99c2af36fdde143f0a516754fc1c12bc4f87e76dd14a601486f1a10d71f04c81"
@@ -3498,6 +3503,11 @@
       "id": "storm-giant-giant",
       "kind": "monster",
       "sourceHash": "c79f4b410f7a112cb16684dd8c4ddd7ad18aa002bbd476035765d7d17e3fdac9"
+    },
+    {
+      "id": "treant",
+      "kind": "monster",
+      "sourceHash": "423493d511a80584adb4c5e270a32ac2473b4aa8a7cbfb71810b349556ecea93"
     },
     {
       "id": "triceratops-dinosaur",

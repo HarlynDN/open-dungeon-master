@@ -383,6 +383,8 @@ export const ZH_CN_GLOSSARY = [
   {"id":"monster.phase_spider","source":"Phase Spider","preferred":"相位蜘蛛","scope":"monster"},
   {"id":"monster.ettercap","source":"Ettercap","preferred":"伊特怪","scope":"monster"},
   {"id":"monster.mimic","source":"Mimic","preferred":"拟身怪","scope":"monster"},
+  {"id":"monster.shambling_mound","source":"Shambling Mound","preferred":"蔓生怪","scope":"monster"},
+  {"id":"monster.treant","source":"Treant","preferred":"树人","scope":"monster"},
   {"id":"monster.goblin","source":"Goblin","preferred":"哥布林","scope":"monster","aliases":["地精"]},
   {"id":"monster.bugbear","source":"Bugbear","preferred":"熊地精","scope":"monster"},
   {"id":"monster.hobgoblin","source":"Hobgoblin","preferred":"大地精","scope":"monster"},
