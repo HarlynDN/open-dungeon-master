@@ -80,6 +80,16 @@
       "sourceHash": "3f651925f35583c02baec9a3911f08d4e8d5b6cc7d1ea5a22133ba28d637f622"
     },
     {
+      "id": "paladin",
+      "kind": "class",
+      "sourceHash": "d955478cde5371d01d7075126242a19a3e28bdcc86b064e1917548c36358a0ac"
+    },
+    {
+      "id": "ranger",
+      "kind": "class",
+      "sourceHash": "030a472ad9b45bbde123b2e278a6ba8e3bd1bcad5f7a92ded31b2cf9a35fe778"
+    },
+    {
       "id": "rogue",
       "kind": "class",
       "sourceHash": "4e3d11559e2fe28bede3e580582d5af632ac7ffd097df532eb6af3f9fbcf94f0"
