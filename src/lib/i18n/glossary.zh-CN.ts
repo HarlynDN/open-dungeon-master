@@ -423,6 +423,7 @@ export const ZH_CN_GLOSSARY = [
   {"id":"monster.flesh_golem","source":"Flesh Golem","preferred":"血肉魔像","scope":"monster"},
   {"id":"monster.iron_golem","source":"Iron Golem","preferred":"铁魔像","scope":"monster"},
   {"id":"monster.stone_golem","source":"Stone Golem","preferred":"石魔像","scope":"monster"},
+  {"id":"monster.shield_guardian","source":"Shield Guardian","preferred":"构装盾卫","scope":"monster"},
   {"id":"monster.goblin","source":"Goblin","preferred":"哥布林","scope":"monster","aliases":["地精"]},
   {"id":"monster.bugbear","source":"Bugbear","preferred":"熊地精","scope":"monster"},
   {"id":"monster.hobgoblin","source":"Hobgoblin","preferred":"大地精","scope":"monster"},

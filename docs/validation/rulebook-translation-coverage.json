@@ -3635,6 +3635,11 @@
       "sourceHash": "f0a3a92aed21b9233b338588e56ca2681cf73efe671f37f584719dfc7dcd43f6"
     },
     {
+      "id": "shield-guardian",
+      "kind": "monster",
+      "sourceHash": "0e04a7e78ed373bc4b8ed15a57790c02d4e228289da362247b6f9ec678dfd9ee"
+    },
+    {
       "id": "shrieker-fungi",
       "kind": "monster",
       "sourceHash": "99c2af36fdde143f0a516754fc1c12bc4f87e76dd14a601486f1a10d71f04c81"
