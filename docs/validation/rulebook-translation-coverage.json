@@ -3820,6 +3820,11 @@
       "sourceHash": "c79f4b410f7a112cb16684dd8c4ddd7ad18aa002bbd476035765d7d17e3fdac9"
     },
     {
+      "id": "succubus-incubus",
+      "kind": "monster",
+      "sourceHash": "2d6d85bfd9ee3898862925344a2d99e8874f10830d62df2f9c6c43e358022289"
+    },
+    {
       "id": "treant",
       "kind": "monster",
       "sourceHash": "423493d511a80584adb4c5e270a32ac2473b4aa8a7cbfb71810b349556ecea93"
