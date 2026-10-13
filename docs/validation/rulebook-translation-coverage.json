@@ -3550,6 +3550,16 @@
       "sourceHash": "b40c21a9656d17d1cd7c71d6014dab9a04d1b17743f24a14d0d2bffa2374fc4c"
     },
     {
+      "id": "boar",
+      "kind": "monster",
+      "sourceHash": "cd248e307939427eef92e6c0f30128d3aa4cce198e50bc1901252caf5d1e51bd"
+    },
+    {
+      "id": "camel",
+      "kind": "monster",
+      "sourceHash": "d2138109ab7c866628191bacd62cf6ebacb7411c61939e319d99a10a5c6f7690"
+    },
+    {
       "id": "cat",
       "kind": "monster",
       "sourceHash": "33ae75e6a66b68d3be6161c31508eee3ed298628b88a38d8b2d06f3aca0a0b01"
@@ -3575,14 +3585,49 @@
       "sourceHash": "3affafd7285842b2025d3b056a6133187109f53e5fa02e6aa7ea2b2b2071f0f8"
     },
     {
+      "id": "draft-horse",
+      "kind": "monster",
+      "sourceHash": "09ac7ef2b9994425c2718ef78c752ab8f3f8e449b1069be71292f97202b4f920"
+    },
+    {
       "id": "eagle",
       "kind": "monster",
       "sourceHash": "1c7e56b15910caf18c2689f984d0e7369bc5021c5c66d555551029a40daf40e0"
     },
     {
+      "id": "elephant",
+      "kind": "monster",
+      "sourceHash": "741c941dc11d454b2e3257428e1f2a7d42e1b93963a7837c0ac37f22c2588ccd"
+    },
+    {
+      "id": "elk",
+      "kind": "monster",
+      "sourceHash": "3601fdd607804c5317566d9d35116b6c2a6123672fe89ea9fc331ab8349a96db"
+    },
+    {
       "id": "frog",
       "kind": "monster",
       "sourceHash": "48a2664da1e9ebf1b31c682c2e2dcb43423bb32236fb6670e631daeb12ff0630"
+    },
+    {
+      "id": "giant-boar",
+      "kind": "monster",
+      "sourceHash": "13d7ce09490dc4969b67cd1448ac0cd806a2a9ea03d06ad905cca4022c2cf962"
+    },
+    {
+      "id": "giant-elk",
+      "kind": "monster",
+      "sourceHash": "435a2edb689a0b7f89af9f42146d17b6ca2230d52b8e2349d8e20361a032c797"
+    },
+    {
+      "id": "giant-goat",
+      "kind": "monster",
+      "sourceHash": "79e0d55240a6608a13850cb9223b59019bf5b2dd2e09f0659af2259340004951"
+    },
+    {
+      "id": "goat",
+      "kind": "monster",
+      "sourceHash": "a9635643c57eb7023ad94797ce31e454bc8c871ee8f9b2d6e6147f5d75f02ed7"
     },
     {
       "id": "hawk",
@@ -3605,6 +3650,16 @@
       "sourceHash": "9a6481b47cd5c2374e25215680f33715381d43cf7262edf5388f2f1b6197f165"
     },
     {
+      "id": "mammoth",
+      "kind": "monster",
+      "sourceHash": "44a691035dbd28dfd6e569531e6ec463a8440eef4f2502f9cc68534c4476dc55"
+    },
+    {
+      "id": "mule",
+      "kind": "monster",
+      "sourceHash": "16da775df7c2c8905d15cdb5fa9d4d50e095d0f86936bd6ba6da039c48a6db80"
+    },
+    {
       "id": "octopus",
       "kind": "monster",
       "sourceHash": "8ea1d065537301668ef47788edcc95bd02b77023ebc82fb2ce3d59fca0ae43ad"
@@ -3613,6 +3668,11 @@
       "id": "owl",
       "kind": "monster",
       "sourceHash": "9815559e41bf47661d05eff6ea4710b27d5c27ccf9ecde407d90116ed243f8bf"
+    },
+    {
+      "id": "pony",
+      "kind": "monster",
+      "sourceHash": "31cd42ee823b920079deeecf2c59baa488cffe1e3d5e24b0d50ac2bc7d230422"
     },
     {
       "id": "quipper",
@@ -3628,6 +3688,16 @@
       "id": "raven",
       "kind": "monster",
       "sourceHash": "4925e6ad88cc42a105541b8c3c52602e9b8864b0c03e7824de227fb327f9219a"
+    },
+    {
+      "id": "rhinoceros",
+      "kind": "monster",
+      "sourceHash": "9784975917b69f49dfa2668809e59de53ae3869752673c0cdc53e0beaf73fd14"
+    },
+    {
+      "id": "riding-horse",
+      "kind": "monster",
+      "sourceHash": "51c8d05c4fb908d885f0dad330c09498654342b1ec18a49e738413e82e714e42"
     },
     {
       "id": "scorpion",
@@ -3648,6 +3718,11 @@
       "id": "vulture",
       "kind": "monster",
       "sourceHash": "1c247678f71b0c5d5ab2caa9fcbd7cf8686dfdab548ab713df299ff2b7c24375"
+    },
+    {
+      "id": "warhorse",
+      "kind": "monster",
+      "sourceHash": "82eade6b69f5332532178a31458068e92d4c842dc44c8f1365cc20fa7bf6d76c"
     },
     {
       "id": "weasel",
