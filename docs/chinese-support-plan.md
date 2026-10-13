@@ -105,7 +105,7 @@ this section records current delivery state and acceptance gaps only.
   variants and original model/tool data. Direct-client full-spell and server
   content-display regressions pass. Feature-material regression passes with
   corrected locale-aware mock keys and unchanged English hashes.
-- UI source coverage: 412/440 owners, zero pending literal sites, 19317 keys.
+- UI source coverage: 416/440 owners, zero pending literal sites, 19317 keys.
   Completed pure-helper/consumer reviews are recorded in
   docs/validation/ui-localization.json. Whole-owner dynamic output and browser
   acceptance remain distinct; stale theme counts were corrected to 733/733.
@@ -154,7 +154,20 @@ this section records current delivery state and acceptance gaps only.
   tests/review records. All 24 rulebook checks and 933-page/directory checks pass.
   No actual DM/utility generation was accepted on this instance; its homepage
   reported qwen3.6-35b unavailable. No model configuration was changed.
-- Next: rebuild and verify the browser fixes, complete remaining dynamic
+- Current checks: full lint after 28e60318 passed (terminology 557 entries,
+  zero errors, 389 context warnings); type check passed. Full regression is
+  running in session 45004 with output /tmp/odm-full-tests-navigation.log.
+  Market/picker and magic-item owner regressions passed. Additional synthetic monster/condition
+  ContentPick rendering checks confirmed Chinese server projections, English
+  fallback, source-mismatch refusal, unchanged selection objects and authored
+  names (/tmp/odm-content-pick-owner-check.log). BoardMoveNotes whole-owner
+  review is closed; session glyph and ambience-hook source reviews are also
+  closed (asset IDs/state only, labels owned by localized consumers). Builder
+  state is reviewed end to end: canonical selections and typed diagnostics are
+  formatted by existing presentation consumers. Persistent
+  logs, playback and real combat remain independent gates.
+  Do not duplicate the live full-suite run.
+- Next: complete remaining dynamic
   UI/material/log owners and real content-data review, then run one complete
   Chinese/English create/play/combat/rest/save/resume/book-search journey. Real
   model/runtime acceptance remains unproven; deferred voice/third-party scope

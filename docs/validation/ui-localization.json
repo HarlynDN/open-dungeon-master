@@ -155,8 +155,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/BoardMoveNotes.tsx",
-      "state": "pending",
-      "review": "Native notice text/tone/timers/stack/IDs unchanged. Whole movement outcomes, zero damage, fall/reversion and quake compounds render with viewer uiLocale; attached unknown outcomes preserve the whole source. Opportunity notices distinguish raw damage roll from HP deduction and translate known damage/mitigation details. Ephemeral copied name/kind context captured at enqueue survives token removal/rename and UI locale switching; authored names, unknown types/notes and raw server body stay literal. Current table-flow batch: Reviewed board-toast state/queue and captured name roles; existing whole-native-frame adapter rerenders in viewer locale while source movement notes, authored diagnostics and role snapshots remain unchanged. General persisted backend logs remain a separate open gate. Remaining known material/native-output gaps above still prevent full-owner completion."
+      "state": "covered",
+      "review": "Whole 85-line owner and moveNotesFrom boundary reviewed. All visible text routes through boardMoveNoteText; native jump/opportunity/zone outcomes and compound fall/reversion/quake frames have existing bilingual tests, including unchanged English render and unknown-source fallback. Queue retains source text and copied actor-role snapshots across removal/rename and UI language switch. Tone, IDs, 4-note stack, timers and callbacks remain mechanical. Persistent backend logs are a separate owner/gate, not output of this ephemeral component. Final live combat acceptance remains open."
     },
     {
       "path": "src/app/campaigns/[campaignId]/BoardPanelParts.tsx",
@@ -984,7 +984,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/sessionGlyphs.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Whole 82-line module reviewed: returns asset IDs for tabs, input modes and legacy system-line patterns only, never UI prose. MessageParts prioritizes structured systemEventGlyph before this legacy text fallback. Canonical source text, existing English matching and neutral bell fallback stay unchanged; no historical message translation or persistent-log acceptance is implied."
     },
     {
       "path": "src/app/campaigns/[campaignId]/streamWatchdog.ts",
@@ -1013,7 +1014,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/useAmbienceAudio.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Whole 338-line hook reviewed: exposes booleans, volume and playback callbacks only; transport URLs, cue IDs, local preference keys and timing are canonical. Fetch/playback failures produce state or silence, not English UI messages. SessionHeader supplies localized ambience mute/unmute/enable/volume labels. Playback quality, native output and deferred speech acceptance remain separate; this is source text coverage only."
     },
     {
       "path": "src/app/campaigns/[campaignId]/useBoardCamera.ts",
@@ -1279,7 +1281,8 @@
     },
     {
       "path": "src/app/characters/builder/useBuilderState.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Whole 578-line state hook reviewed. Stores authored character fields and canonical race/class/feature/spell/equipment selections, numeric resources and typed BuilderValidation; it emits no rendered prose. Drop reasons are the seven recognized canonical values (race, class, background, subclass, level, stored character, content pack), all handled by builder presentations. CharacterBuilder formats localError with builderFeedbackText. Hydration, reconciliation, original feat descriptions used for mechanics, saved choices and callback values remain unchanged. Derived/material owners and browser save/reopen acceptance remain separate."
     },
     {
       "path": "src/app/characters/builder/useContentSearch.ts",
@@ -2052,7 +2055,7 @@
     {
       "path": "src/components/ui/ContentPick.tsx",
       "state": "pending",
-      "review": "Owned no-match/level chrome localized and viewer locale forwarded to existing localized item search. Campaign content boundaries project registered item/spell/feat names; selections and references retain source names. Other kind labels/descriptions and deferred-editor content boundaries remain pending; this shared owner is not complete."
+      "review": "Whole source reviewed: five supported kinds use existing native name/help adapters; supplied labels/placeholders remain caller-owned. Viewer locale enters the shared request identity; picker callback returns the original entry. Market regression verifies item display and callbacks. Synthetic monster/condition rows verify server-projected help with exact source/locale guards, English fallback, homebrew name preservation and unchanged callback objects. Magic-item regression passed (239 bodies, four picker flows and 185 frozen English cards); deployed catalog and browser help acceptance remain distinct and open."
     },
     {
       "path": "src/components/ui/ContextMenu.tsx",
