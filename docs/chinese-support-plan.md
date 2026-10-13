@@ -66,7 +66,7 @@ report or release gate and does not include a SRD 5.2 rules migration.
 | Player system logs | Localized structured combat/audit display, party item/coin/XP logs, account facts and kickoff notices; English model/tool semantics stay separate | Other native player-log templates and final history/save/resume audit |
 | Resource delivery | UI/content/help scopes and independent retryable lazy help; anonymous bilingual switch/reload, authenticated character/campaign entry and viewer-English/story-Chinese separation observed | Complete authenticated journey and lazy/cache timing; hydrated/network totals and large route JS payload remain unverified |
 | Local Chinese TTS | Implementation and bounded CPU delivery/outage evidence retained in [the runtime record](validation/chinese-tts-runtime.json) | Chinese voice quality rejected by user; further voice work is deferred, not passed, and is not a text-milestone gate |
-| Full native rulebook | Reader chrome localized; **830/933 complete Chinese pages** render via a server-generated display projection: all 319 spells, 239 magic items, 36 rules, 9 races, 12 classes and 215 monsters. Exact page IDs and source hashes are maintained in the coverage manifest; original English corpus retained | Remaining 103 monster pages; game-card/help prose reuse, authenticated browser search/navigation and English reading regression |
+| Full native rulebook | Reader chrome localized; **832/933 complete Chinese pages** render via a server-generated display projection: all 319 spells, 239 magic items, 36 rules, 9 races, 12 classes and 217 monsters. Exact page IDs and source hashes are maintained in the coverage manifest; original English corpus retained | Remaining 101 monster pages; game-card/help prose reuse, authenticated browser search/navigation and English reading regression |
 | Final text flow | Recorded Chinese exploration/social/utility and combat/slot/correction acceptance on Codex | Complete Chinese text journey, rulebook reading/search and English regression; full tests/lint/build, then pause |
 
 ## Execution adjustment (2026-10-13)
@@ -86,16 +86,16 @@ real interaction has passed. Do not restart a static translation campaign.
 
 ## Next delivery unit and interruption checkpoint
 
-- Added Ghoul and Ghast: 830/933 pages, 215/318 monster-kind pages. Preserved
-  elf immunity only for Ghoul paralysis, undead immunity for both, end-turn repeat
-  saves, Ghast stench onset/duration and per-ghast immunity, and nearby-ghoul turning
-  defense. English source and shared damage terminology retained.
-- Added 2 shared names aligned with cached 5etools candidates; edition/review
-  provenance remains unverified. No external prose imported.
+- Added Hell Hound and Nightmare: 832/933 pages, 217/318 monster-kind pages.
+  Reviewed breath recharge/save, rider fire resistance (not immunity), language
+  comprehension without speech, and up to three willing companions for Ethereal
+  Stride. English source remains unchanged.
+- Added 2 shared names and 地狱犬 alias aligned with cached 5etools candidates;
+  edition/review provenance remains unverified. No external prose imported.
 - Numeric/table, bilingual rendering, English switch, source refusal, identity,
-  terminology/guard and AST/catalog/resources checks passed: 454 terminology entries,
+  terminology/guard and AST/catalog/resources checks passed: 456 terminology entries,
   0 errors, 389 context warnings; UI remains 401/440.
-- Next: remaining 103 monster pages, game-card/help prose reuse and native source
+- Next: remaining 101 monster pages, game-card/help prose reuse and native source
   ownership. Final full-suite/build and real bilingual journey remain unproven.
 - Native dynamic UI/material/log ownership remains pending in the UI manifest;
   audit helpers with their actual consumers before the final bilingual journey.

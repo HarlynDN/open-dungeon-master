@@ -376,6 +376,8 @@ export const ZH_CN_GLOSSARY = [
   {"id":"monster.steam_mephit","source":"Steam Mephit","preferred":"蒸汽魔蝠","scope":"monster"},
   {"id":"monster.ghast_ghoul","source":"Ghast","preferred":"妖鬼","scope":"monster"},
   {"id":"monster.ghoul","source":"Ghoul","preferred":"食尸鬼","scope":"monster"},
+  {"id":"monster.hell_hound","source":"Hell Hound","preferred":"地狱猎犬","scope":"monster","aliases":["地狱犬"]},
+  {"id":"monster.nightmare","source":"Nightmare","preferred":"梦魇","scope":"monster"},
   {"id":"monster.goblin","source":"Goblin","preferred":"哥布林","scope":"monster","aliases":["地精"]},
   {"id":"monster.bugbear","source":"Bugbear","preferred":"熊地精","scope":"monster"},
   {"id":"monster.hobgoblin","source":"Hobgoblin","preferred":"大地精","scope":"monster"},

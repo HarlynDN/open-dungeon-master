@@ -3310,6 +3310,11 @@
       "sourceHash": "d9efc6bc14b744b129baead420f0dec4504f3756ebca7c2f17a5fdaa05ff8f50"
     },
     {
+      "id": "hell-hound",
+      "kind": "monster",
+      "sourceHash": "d0cfd4077b3d0b183ed3fd5c75523436ad87d06880da82131a40f0bb75ac36f1"
+    },
+    {
       "id": "hill-giant-giant",
       "kind": "monster",
       "sourceHash": "65b45cf16b8849797a120caed75bba32c95ebd5ea89cf2ae1ab5f9f8e3d757a2"
@@ -3373,6 +3378,11 @@
       "id": "minotaur-skeleton",
       "kind": "monster",
       "sourceHash": "5aa76a53f64dc6572773799f525832b43c50290e7072b3e71d698c45086de5a2"
+    },
+    {
+      "id": "nightmare",
+      "kind": "monster",
+      "sourceHash": "f239983e80a6c6ae95d969b4a3da22f504939a21e6e865b49161227791dce46e"
     },
     {
       "id": "ogre",
