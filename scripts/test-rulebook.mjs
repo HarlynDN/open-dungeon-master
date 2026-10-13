@@ -233,6 +233,12 @@ try {
   });
 
   const top = (query) => rulebookSearch(query).hits[0];
+  await test("travel pace keeps the official 2014 daily distances", () => {
+    const table = parseBook(rulebookPage("adventuring").page.md).find(block => block.kind === "table" && block.head[0] === "Pace");
+    assert.deepEqual(table.rows.slice(0, 3).map(row => [row[0], row[3]]), [
+      ["Fast", "30 miles"], ["Normal", "24 miles"], ["Slow", "18 miles"],
+    ]);
+  });
   await test("search puts the rule itself first", () => {
     assert.deepEqual([top("grapple").page, top("grapple").at], ["combat", "grappling"]);
     assert.deepEqual([top("opportunity attack").page, top("opportunity attack").at], ["combat", "opportunity-attacks"]);

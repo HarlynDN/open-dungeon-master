@@ -208,6 +208,10 @@ const PARTS = [
 // Slips in the conversion, put back to the SRD's own words: page id, the
 // text as converted, the text as printed.
 const ERRATA = [
+  // Official 2014 Travel Pace table: normal 24 miles/day, slow 18.
+  // https://www.dndbeyond.com/sources/dnd/basic-rules-2014/adventuring
+  ["adventuring", "| Normal | 300 feet | 3 miles | 18 miles | -                                                |", "| Normal | 300 feet | 3 miles | 24 miles | -                                                |"],
+  ["adventuring", "| Slow   | 200 feet | 2 miles | 24 miles | Able to use stealth                              |", "| Slow   | 200 feet | 2 miles | 18 miles | Able to use stealth                              |"],
   ["creation", "vegetable matter within\n**Range:** soft goods", "vegetable matter within range: soft goods"],
   ["contagion", "**Range:** Touch\n**Component:** V, S", "**Range:** Touch\n\n**Components:** V, S"],
 ];
