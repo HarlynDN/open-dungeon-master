@@ -654,9 +654,17 @@
       ],
       "messageSha256": {
         "en": "91496f3733bf47ea62e0aa77425a13a4f68cea616895d168c33190594edae2de",
-        "zh-CN": "a962dbdb346587ca744a181b13f7c23835a65ad6726b0695d981c3beaac73eff"
+        "zh-CN": "f4b119790758649a3484706ece96258c8f077356acea58b74a9626cf5f16c862"
       },
-      "scopeSha256": "69045b5a88c576270de14c9b2c243f2f1f5eb7520625b0cd344b3c1a5228b149"
+      "scopeSha256": "69045b5a88c576270de14c9b2c243f2f1f5eb7520625b0cd344b3c1a5228b149",
+      "terminologyReview": {
+        "date": "2026-10-14",
+        "key": "combatSpecial.name.combat_wild_shape",
+        "before": "战斗野性变形",
+        "after": "战斗荒野形态",
+        "previousSha256": "a962dbdb346587ca744a181b13f7c23835a65ad6726b0695d981c3beaac73eff",
+        "review": "Single-value glossary alignment; restoring this value exactly reproduces the prior semantic hash. English, placeholders and delivery scopes unchanged."
+      }
     },
     "terminology": {
       "keys": [
@@ -934,9 +942,17 @@
       ],
       "messageSha256": {
         "en": "63005b9cf70808f9d248224cd17bd5a0cff9843febfeea866149c66eec95aba7",
-        "zh-CN": "6b18deaeedfdc251412b35eed3bec30b7aaf72798df9382bd2abc584180e083e"
+        "zh-CN": "bb078a0792cfbdc841c333ac4472bac82bc718a460409e47b979b31df7435e1f"
       },
-      "scopeSha256": "55c3b20994c9c619e1f95f3f95c8b9d783b2d2d992b1a3cfaf6e28782d2051c5"
+      "scopeSha256": "55c3b20994c9c619e1f95f3f95c8b9d783b2d2d992b1a3cfaf6e28782d2051c5",
+      "terminologyReview": {
+        "date": "2026-10-14",
+        "key": "combatSpecial.name.combat_wild_shape",
+        "before": "战斗野性变形",
+        "after": "战斗荒野形态",
+        "previousSha256": "6b18deaeedfdc251412b35eed3bec30b7aaf72798df9382bd2abc584180e083e",
+        "review": "Single-value glossary alignment; restoring this value exactly reproduces the prior semantic hash. English, placeholders and delivery scopes unchanged."
+      }
     }
   }
 }

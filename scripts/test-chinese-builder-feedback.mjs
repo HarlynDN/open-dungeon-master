@@ -148,11 +148,15 @@ await test("13 frozen picker outputs retain complete English and locale changes 
     for (const group of chinese[index].output.alignmentGroups) for (const option of group.options) {
       assert.match(option.name, /善良|中立|邪恶/); assert.match(option.infoText, /\p{Script=Han}/u);
     }
-    // Native lineage summaries now have their own reviewed display corpus.
-    // Native class/subclass help now has its own frozen projections and
-    // source-compared tests in test-chinese-calling-material.mjs. Background
-    // help still retains the complete source pending migration.
-    for (const kind of ["backgroundGroups"]) assert.deepEqual(chinese[index].output[kind].flatMap(group => group.options.map(option => option.infoText)), english[index].output[kind].flatMap(group => group.options.map(option => option.infoText)));
+    // Source-owned background help now localizes; imported book prose stays literal.
+    const enBackgrounds=english[index].output.backgroundGroups.flatMap(group=>group.options);
+    for (const option of chinese[index].output.backgroundGroups.flatMap(group=>group.options)) {
+      const original=enBackgrounds.find(row=>row.id===option.id);
+      assert.ok(original);
+      if (!original.infoText) assert.equal(option.infoText,original.infoText);
+      else if (option.id.startsWith('external-')) assert.equal(option.infoText,original.infoText.replace(/\*\*Feature: (.*?)\.\*\*/, '**特性：$1。**'));
+      else { assert.notEqual(option.infoText,original.infoText,option.id); assert.match(option.infoText,/\p{Script=Han}/u); }
+    }
   }
   const reskin = chinese.find(row => row.name === "pack-reskin").output;
   for (const [kind, id, name] of [["raceGroups", "human", "云海{race}\nCitizen"], ["classGroups", "fighter", "云海{class}\nKeeper"], ["backgroundGroups", "soldier", "云海{background}\nSoldier"]]) assert.equal(reskin[kind].flatMap(group => group.options).find(option => option.id === id).name, name);

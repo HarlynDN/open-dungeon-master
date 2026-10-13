@@ -27,7 +27,7 @@
     "src/lib/i18n/roll-presentations.ts": "3999299af4647b88f15531dfeca1c5bae09350bbd2479b877eba0c8d7706d582",
     "src/lib/i18n/sheet-play-messages.ts": "bb0d4fedc82ddce4fbd7bb8703182b085c97eb17532ac9251424cd01581056ff",
     "src/lib/i18n/sheet-play-presentations.ts": "ac25c60c3ae74bb3e66b46cf6b03e6d8210ee0190f98c029bedbca03b4016649",
-    "src/lib/i18n/special-roll-messages.ts": "2da4569d2861de7be61a703df37bccfa9d0317bd4c41d9f24b65df8c7a2a5833",
+    "src/lib/i18n/special-roll-messages.ts": "e189a82db30268fb8361bb726483fd530cb2e935c247f0c1b5f535c5c83c7a73",
     "src/lib/roll-special-presentation.ts": "050cc8074cec75b611565f9fd833121b187889167921aa8bfc8860b3e59a9118"
   },
   "remaining": "Full CharacterSheetDialog, other sheet controls/native resource guidance, native attack/reaction caption frames, wider play UI/logs, authenticated browser/save-resume journey, configured Codex full-flow acceptance and local Chinese TTS. This checkpoint runs no real model/browser/audio.",
@@ -98,5 +98,12 @@
     },
     "review": "Shared TrainingLines now projects registered language/tool/armor/weapon labels without changing canonical values; FeatureChips receives race identity from character page and campaign dialog and translates only exact race-owned native traits. Custom/story/unknown values preserved; English returns original text.",
     "validation": "One grouped existing background-flow script checks actual bilingual TrainingLines, native-race FeatureChips and source preservation. Actual saved character page refreshed successfully. Campaign-dialog end-to-end rendering remains in the campaign browser gate."
+  },
+  "wildShapeTermReview": {
+    "date": "2026-10-14",
+    "previousHashes": {
+      "sourceSha256": "2da4569d2861de7be61a703df37bccfa9d0317bd4c41d9f24b65df8c7a2a5833"
+    },
+    "review": "Only Combat Wild Shape Chinese display name changed from 战斗野性变形 to 战斗荒野形态. Git diff against bf87a494 confirms one line; reversing that one catalog value reproduces both prior semantic group hashes. English and mechanics unchanged."
   }
 }

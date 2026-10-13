@@ -15,7 +15,11 @@ for (const [query, page, at] of [
   assert.match(result.hits[0].snippet, /[\u4e00-\u9fff]/);
 }
 assert.ok(rulebookSearch('熟练加值', undefined, 'zh-CN').hits.some(hit => hit.page === 'beyond-1st-level'));
-assert.ok(rulebookSearch('魔', undefined, 'zh-CN').hits.some(hit => hit.page === 'magic-missile'));
+// A single character is admitted; a full 933-page catalog need not rank this spell in the first 40 hits.
+const singleCharacter = rulebookSearch('魔', undefined, 'zh-CN');
+assert.deepEqual(singleCharacter.terms, ['魔']);
+assert.ok(singleCharacter.hits.length > 0 && singleCharacter.hits.length <= 40);
+assert.ok(rulebookSearch('魔', 3000, 'zh-CN').hits.some(hit => hit.page === 'magic-missile'));
 assert.ok(rulebookSearch('至少100金币', undefined, 'zh-CN').hits.some(hit => hit.page === 'identify'));
 for (const query of ['Magic Missile', '魔法飞弹']) {
   const first = rulebookSearch(query, undefined, 'zh-CN').hits[0];

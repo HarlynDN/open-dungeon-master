@@ -23,7 +23,7 @@
     "src/lib/srd/classes.json": "f0de0db010ca49668953488018d510917444f582fb58587a88a1b3bdf83e5371",
     "src/lib/srd/features.ts": "1251dbd9e5a05fbf052ef5cafb0ef458ffa6a48e914d1f6b86bb444d8ebac84f",
     "src/lib/srd/subclasses.json": "94f65f85c8e39d4b2c15979a74ec835967d620dff69013284f14fe64764230cb",
-    "src/lib/help/index.ts": "56503b4dba185a71c14e60cff2017a2b4ce0d0b0e947bca3a09a4bcb5c6156a2",
+    "src/lib/help/index.ts": "7ff4f4cd962f23f301d09902fcd8fba024f1f5956ddca7c5a99d9105ab4c7dbd",
     "src/lib/i18n/calling-material-presentations.ts": "2fbd450ead476eab375f980b1e119789393bde1fcffa923ddb85d9835e9ccc93",
     "src/app/characters/builder/usePickerGroups.ts": "649ed670bb4cf630809f26ab83d0e0f26283d53d69a7876205af9bf9709667eb",
     "src/app/characters/builder/steps/CallingStep.tsx": "9f5b4431d56ecb3a9503afc5d0e87dcb1c1cf4be40245e97ead7bc5d0cea4476",
@@ -109,5 +109,15 @@
       "src/app/characters/builder/steps/CallingStep.tsx": "095ea3c0052ff7cd0ef810e1f3d1cd6bd0eda071a244479c2dcecd81ca9f9455"
     },
     "review": "The caller now supplies its native class ID for feature display. Native source/grants and stored feature names are unchanged. One focused material script retains its original English render hashes and checks all 322 theme bindings plus actual six-class English/Chinese creator/sheet projections, unknown or modified prose and story names. Source comparison by the implementation agent; not human approval. Other theme material and broader browser acceptance remain open."
+  },
+  "sourceBoundFollowupReview": {
+    "date": "2026-10-14",
+    "files": {
+      "src/lib/help/index.ts": {
+        "previousSha256": "56503b4dba185a71c14e60cff2017a2b4ce0d0b0e947bca3a09a4bcb5c6156a2",
+        "baseCommit": "ae59e8a8fa7800fe562c0793468bdc28bfd5f4e6"
+      }
+    },
+    "review": "Compared full diffs against Git versions reproducing each prior hash. Changes add native source-bound feature/option/background/archetype display, homebrew name guards, opt-in spell/monster help sections, and a shared English free-cast label helper. Death messages now persist typed campaign-locale events while model-facing notes and engine outcomes remain English/unchanged; condition tick avoids duplicating the wake message. Original frozen output files are unchanged. Larger feat-choice/level-up diffs and glossary history remain separately open; this source review does not claim final acceptance."
   }
 }

@@ -138,6 +138,14 @@ await test('reviewed source and catalog fingerprints remain current',()=>{
  const callingReview=read('docs/validation/character-calling-translations.json');
  for(const[file,hash]of Object.entries({...callingReview.sources,...callingReview.catalogs}))assert.equal(createHash('sha256').update(fs.readFileSync(path.join(root,file))).digest('hex'),hash,file);
  for(const[file,hash]of Object.entries({...review.sources,...review.catalogs}))assert.equal(createHash('sha256').update(fs.readFileSync(path.join(root,file))).digest('hex'),hash,file);
- for(const[file,hash]of Object.entries(before.sources)){if(file==='src/components/ui/GameTerm.tsx')continue;assert.equal(createHash('sha256').update(fs.readFileSync(path.join(root,file))).digest('hex'),hash,'original source '+file);}
+ for(const[file,hash]of Object.entries(before.sources)){
+  if(file==='src/components/ui/GameTerm.tsx')continue;
+  // The frozen default-output baseline remains immutable. This reviewed helper
+  // gained opt-in higher-level/monster prose; verify both sides of that revision.
+  if(file==='src/lib/help/index.ts'){
+   assert.equal(review.sourceBoundFollowupReview.files[file].previousSha256,hash);
+   assert.equal(createHash('sha256').update(fs.readFileSync(path.join(root,file))).digest('hex'),review.sources[file],file);
+  }else assert.equal(createHash('sha256').update(fs.readFileSync(path.join(root,file))).digest('hex'),hash,'original source '+file);
+ }
 });
 finish();

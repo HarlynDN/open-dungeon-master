@@ -13,10 +13,10 @@
     "src/app/characters/builder/OptionCardGrid.tsx": "e77b970222d0368ac74330bdcaaf26a64f4590893384ea6ff7abcddd259c2386",
     "src/app/characters/builder/RacialChoicesSection.tsx": "bf2db286b025eed1b7b05758fd1c6f3f1c6aaa9edf08853e579286ac797a68a6",
     "src/lib/characters/options.ts": "e0294a844664240604091c945104e20adc08bcbf7d0fc32bafacfff70174c31c",
-    "src/lib/help/index.ts": "56503b4dba185a71c14e60cff2017a2b4ce0d0b0e947bca3a09a4bcb5c6156a2",
+    "src/lib/help/index.ts": "7ff4f4cd962f23f301d09902fcd8fba024f1f5956ddca7c5a99d9105ab4c7dbd",
     "src/lib/i18n/lineage-presentations.ts": "57e5eafa4ad8c16610026ffdb959b02eea50bb6c89ed6f4030d43b0489cbede9",
     "src/lib/i18n/racial-presentations.ts": "6dfcacdffbb4c3e35110b24ed972a12dd87092bbfa4ae51b22688440558c9b27",
-    "src/lib/i18n/builder-picker-presentations.ts": "728ad42accc71a7f52efb7f8c38493ff357ff2c956a182edb6e0263af0a8b539"
+    "src/lib/i18n/builder-picker-presentations.ts": "66939a0bff47a5e1c3ff8271bef1db90660c3c2267845067440ba70026796545"
   },
   "catalogs": {
     "src/lib/i18n/lineage-ui-messages.ts": "7e7e9477291558288c1ca424d20e76fc371ae1fe9c4cca38f44a5bd518e64945",
@@ -36,5 +36,19 @@
     "priorSourceSha256": "14c6c88eb6200584eb6b8c7c5a46ba99de1cdc98838747f42528a40a95ed4a8b",
     "review": "Added exact native-race trait projection at sheet display, requiring race ownership and unchanged whole trait. Stored names, other races, story/custom traits and English remain unchanged.",
     "validation": "Existing background-flow test covers native race trait chip IDs/names and custom/story/source preservation."
+  },
+  "sourceBoundFollowupReview": {
+    "date": "2026-10-14",
+    "files": {
+      "src/lib/help/index.ts": {
+        "previousSha256": "56503b4dba185a71c14e60cff2017a2b4ce0d0b0e947bca3a09a4bcb5c6156a2",
+        "baseCommit": "ae59e8a8fa7800fe562c0793468bdc28bfd5f4e6"
+      },
+      "src/lib/i18n/builder-picker-presentations.ts": {
+        "previousSha256": "728ad42accc71a7f52efb7f8c38493ff357ff2c956a182edb6e0263af0a8b539",
+        "baseCommit": "05510fb249956c5f435d7eec33ec15badbf67972"
+      }
+    },
+    "review": "Compared full diffs against Git versions reproducing each prior hash. Changes add native source-bound feature/option/background/archetype display, homebrew name guards, opt-in spell/monster help sections, and a shared English free-cast label helper. Death messages now persist typed campaign-locale events while model-facing notes and engine outcomes remain English/unchanged; condition tick avoids duplicating the wake message. Original frozen output files are unchanged. Larger feat-choice/level-up diffs and glossary history remain separately open; this source review does not claim final acceptance."
   }
 }

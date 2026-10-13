@@ -51,8 +51,8 @@
     "src/lib/roll-special-presentation.ts": "050cc8074cec75b611565f9fd833121b187889167921aa8bfc8860b3e59a9118",
     "src/lib/i18n/roll-presentations.ts": "3999299af4647b88f15531dfeca1c5bae09350bbd2479b877eba0c8d7706d582",
     "src/lib/i18n/check-roll-messages.ts": "22c2f41bd26ab8aa4c9f198e42e530c37e0adab54ad8227f878ee4ce766353a4",
-    "src/lib/i18n/special-roll-messages.ts": "2da4569d2861de7be61a703df37bccfa9d0317bd4c41d9f24b65df8c7a2a5833",
-    "src/lib/i18n/glossary.zh-CN.ts": "356a38e27c23d45dbb0318802b35b7e928158f0a3888ea040976a217ed2d1f4d",
+    "src/lib/i18n/special-roll-messages.ts": "e189a82db30268fb8361bb726483fd530cb2e935c247f0c1b5f535c5c83c7a73",
+    "src/lib/i18n/glossary.zh-CN.ts": "c37b585376a6cb080873d334492a76bc25566485e725f45cbc58d3a644be215f",
     "scripts/lib/special-caption-fixtures.mjs": "8c37932032e361c72af04e557a71c6383a8d86c2f4651834b4a9077a454e815a",
     "scripts/lib/special-caption-contracts.mjs": "68ab118a2d22851acb3c52065c74f90759619f9efa9fb1151f6310f631c8db3d"
   },
@@ -164,5 +164,22 @@
       "src/lib/i18n/resource-scope.ts": "69ac97fecf5c508828cd1070c285e98cd67114b5e675a1420399862d33e10a50"
     },
     "scopeNote": "The fixed reviewed key-to-scope projections already verify the delivery boundary; adding sheetDialog does not alter those reviewed mappings."
+  },
+  "wildShapeTermReview": {
+    "date": "2026-10-14",
+    "previousHashes": {
+      "sourceSha256": "2da4569d2861de7be61a703df37bccfa9d0317bd4c41d9f24b65df8c7a2a5833"
+    },
+    "review": "Only Combat Wild Shape Chinese display name changed from 战斗野性变形 to 战斗荒野形态. Git diff against bf87a494 confirms one line; reversing that one catalog value reproduces both prior semantic group hashes. English and mechanics unchanged."
+  },
+  "remainingSourceReview": {
+    "date": "2026-10-14",
+    "files": {
+      "src/lib/i18n/glossary.zh-CN.ts": {
+        "previousSha256": "356a38e27c23d45dbb0318802b35b7e928158f0a3888ea040976a217ed2d1f4d",
+        "baseCommit": "b478a558"
+      }
+    },
+    "review": "Compared feat-choice and level-up historical diffs: localized labels, native source-bound descriptions, class/skill/tool/spell names, failure/notice display and stable feature chip IDs; original option values and submission callbacks remain canonical. Glossary baseline has 257 entries and current has 557, none removed; only prior-entry changes are Combat Wild Shape -> 战斗荒野形态 and Hawk -> 隼 with 鹰 retained as alias. The 300 later additions belong to completed material batches and are not newly certified as external-source translations here. Frozen English baselines remain untouched. Focused grouped rerun pending."
   }
 }

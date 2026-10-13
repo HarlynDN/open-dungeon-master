@@ -7,10 +7,20 @@
   "sources": {
     "src/lib/srd/starting-kit-data.ts": "6893dec99296e05b939af7f1f64f0d1c3561c2508cda9651e154c58df61c6224",
     "src/lib/srd/genre-kits.ts": "baf4c230b42ec90adbd1b2274f0a655e672832e70881b2efde88eacc2acb8a71",
-    "src/lib/srd/feat-spells.ts": "875b5cc589e9467674ea9ddfb346f7ed2265ef22d3bd4fe36908b3b18eec23c2",
+    "src/lib/srd/feat-spells.ts": "f2c72c15e6700f674347e0045e1cc7ef0a9ab62b68ac89ab43a30c40b43df32d",
     "src/lib/srd/third-caster.ts": "9f94203471cb11848a7dc706228113852fa50f2e9bd917e56a2c8cdaecfe9c69",
     "src/lib/srd/manifest/spells.json": "bb4394ff03455353eaf7dec77007bd7ac4a5311c35c0fe7925933b38de0417c4"
   },
   "catalog": "src/lib/i18n/character-spell-gear-name-messages.ts",
-  "catalogSha256": "6aa64bb1208772cc7b0e26a35463d130c6a7850a31948a23ef42afc7f383426b"
+  "catalogSha256": "6aa64bb1208772cc7b0e26a35463d130c6a7850a31948a23ef42afc7f383426b",
+  "sourceBoundFollowupReview": {
+    "date": "2026-10-14",
+    "files": {
+      "src/lib/srd/feat-spells.ts": {
+        "previousSha256": "875b5cc589e9467674ea9ddfb346f7ed2265ef22d3bd4fe36908b3b18eec23c2",
+        "baseCommit": "05510fb249956c5f435d7eec33ec15badbf67972"
+      }
+    },
+    "review": "Compared full diffs against Git versions reproducing each prior hash. Changes add native source-bound feature/option/background/archetype display, homebrew name guards, opt-in spell/monster help sections, and a shared English free-cast label helper. Death messages now persist typed campaign-locale events while model-facing notes and engine outcomes remain English/unchanged; condition tick avoids duplicating the wake message. Original frozen output files are unchanged. Larger feat-choice/level-up diffs and glossary history remain separately open; this source review does not claim final acceptance."
+  }
 }

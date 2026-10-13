@@ -155,7 +155,7 @@ const pickers=await openCombatRenderer({files:pickerFiles,sourceOf:file=>readFil
 }});
 for(const locale of ['en','zh-CN']) for(const component of ['ContentPick','ContentPicker','MultiContentPicker','CatalogBrowser']){
  const picked=[],props={kind:'items',placeholder:'Search',label:'Items',selectedNames:[],onPick:entry=>picked.push(entry),onAdd:entries=>picked.push(...entries),buttonLabel:'Browse',sections:[{key:'potions',label:'Potions'}]};
- const key=JSON.stringify(['items','','potions','']);
+ const key=JSON.stringify(['items','','potions',new URLSearchParams({locale,localized:'1'}).toString()]);
  pickers.render(component,props,locale,component==='CatalogBrowser'?{queues:{[pickerFiles[3]]:[true,['potions'],{[key]:{rows:[healing,custom],truncated:false}},[],'']}}:component==='MultiContentPicker'?{queues:{[pickerFiles[2]]:[[{name:healing.name,source:healing.source}]]}}:{});
  const tips=pickers.elements().filter(row=>typeof row.props.text==='string'&&typeof row.props.label==='string');
  assert(tips.some(row=>row.props.reference?.slug===healing.slug&&row.props.text===nativeItemHelp(healing,describeContentEntry(healing.data),locale)),component+':'+locale);

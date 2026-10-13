@@ -6,7 +6,7 @@ import { APP_LOCALES, browserLocale, resolveUiLocale } from "../src/lib/i18n/loc
 import { withGenerationLocale } from "../src/lib/i18n/generation.ts";
 import { estimateTokens } from "../src/lib/dm/context-budget.ts";
 import { MESSAGE_CATALOGS } from "../src/lib/i18n/messages.ts";
-import { messageScope } from "../src/lib/i18n/resource-scope.ts";
+import { messageScope, MESSAGE_SCOPES } from "../src/lib/i18n/resource-scope.ts";
 register("./lib/register-alias.mjs", import.meta.url);
 
 assert.equal(browserLocale("en-US;q=0.6,zh-Hans-CN;q=0.9"), "zh-CN");
@@ -58,7 +58,7 @@ assert.equal(isolated.status, 0, isolated.stderr);
 
 for (const locale of APP_LOCALES) {
   const merged = {};
-  for (const scope of ["ui", "content"]) {
+  for (const scope of MESSAGE_SCOPES) {
     const resource = JSON.parse(readFileSync(new URL(`../src/lib/i18n/resources/${locale}.${scope}.json`, import.meta.url), "utf8"));
     assert.ok(Object.keys(resource).every(key => messageScope(key) === scope));
     Object.assign(merged, resource);
@@ -68,5 +68,5 @@ for (const locale of APP_LOCALES) {
 const provider = readFileSync(new URL("../src/lib/i18n/LocaleProvider.tsx", import.meta.url), "utf8");
 assert.ok(!provider.includes('from "./messages"'));
 const { loadLocaleMessages } = await import("../src/lib/i18n/client-catalogs.ts");
-await Promise.all(APP_LOCALES.map(locale => loadLocaleMessages(locale, "content")));
+await Promise.all(APP_LOCALES.flatMap(locale => MESSAGE_SCOPES.map(scope => loadLocaleMessages(locale, scope))));
 console.log("test-localization-review-repairs: preference precedence, protocol, token classification, production fallback and scoped locale resources passed");

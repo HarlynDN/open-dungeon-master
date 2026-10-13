@@ -5,7 +5,7 @@
   "scope": "46 bilingual engine roll-caption templates, stock modifier notes, common action labels, hazard frames and seven prismatic colors. Proper/authored names and unknown prose are retained. This is not an audit of every generated roll detail.",
   "provenance": "Original Chinese drafts compared to repository English names and engine caption/modifier generators. No proprietary Chinese rulebook translation used; original source licenses are retained. Not independent human approval.",
   "sourceSha256": {
-    "src/lib/dm/death.ts": "e49f02e9dc6bee92be2b5cc4923c83272f3f095dc464e3ed13a40332a40e3dfb",
+    "src/lib/dm/death.ts": "97628cd5ba7113de678c5d62415124542008bc3acd5eb5db8a9a3718a7653b8f",
     "src/lib/dm/aoe-damage.ts": "816d8ea3b229c763d25b8354a11ee58547a6712b24997e3de92485228887c4e0",
     "src/lib/dm/rolls.ts": "65de00926f0c77a90958ca16686d5c850aea5f1e5e833139eee8375ca4a06770",
     "src/lib/dm/aura.ts": "0545c1578e8455eff52d6a8499fbe60a1d3d07e3b17624202a693a27ddec61ab",
@@ -29,5 +29,15 @@
       "src/lib/dm/aoe-damage.ts": "e3c045d801cf44d8fbc666380a3de89c2710f127bd9639e46539e1a39fc313dc"
     },
     "review": "Inspected the source diff: only the roll-labels import and existing enemy save record gain additive typed source metadata. All blast calculations, save flags/DCs, English detail strings and the 46 previous roll messages remain unchanged. Original 25 English component renders and prior golden bytes are retained."
+  },
+  "sourceBoundFollowupReview": {
+    "date": "2026-10-14",
+    "files": {
+      "src/lib/dm/death.ts": {
+        "previousSha256": "e49f02e9dc6bee92be2b5cc4923c83272f3f095dc464e3ed13a40332a40e3dfb",
+        "baseCommit": "c2d8683850a87953778ecaf6f25e3546daabdf8a"
+      }
+    },
+    "review": "Compared full diffs against Git versions reproducing each prior hash. Changes add native source-bound feature/option/background/archetype display, homebrew name guards, opt-in spell/monster help sections, and a shared English free-cast label helper. Death messages now persist typed campaign-locale events while model-facing notes and engine outcomes remain English/unchanged; condition tick avoids duplicating the wake message. Original frozen output files are unchanged. Larger feat-choice/level-up diffs and glossary history remain separately open; this source review does not claim final acceptance."
   }
 }

@@ -13,7 +13,7 @@
     "src/lib/dm/authored-spend-effects.ts": "be3b7b2ec04036e78ce0f57cc0c1f2d9a87c30dbc30c4c1fd2708b0d86f0b031",
     "src/lib/dm/authored-spend-more.ts": "5aeca4a00ec9e2cefa377d23accc4ee1b5456e9082f5ed3ca5c8dd0ed5db5283",
     "src/lib/dm/cast-at-enemy.ts": "d4c7413db511f85bab3ef2c1cda842ceb06da2f7f70b4462871b4aab6900be00",
-    "src/lib/dm/condition-tick.ts": "f7f4306f01a36c01afcaff8a7a1dd1d6d0c1a2fbe0cffb1aea2bb68798f90a13",
+    "src/lib/dm/condition-tick.ts": "5c76705f537b151f92a8c50f0f0b3b05b25e63cfdfcfada9d821d2374fefa5f2",
     "src/lib/dm/contest-roll.ts": "470324c2c97e131aacec50910cb2d50e392e40f2256e796659488e8a2f79985b",
     "src/lib/dm/encounter-tools-extra.ts": "d33e9d24ad70fe8916cff4b6cd8c4a1ced7d52168350c0369964ef6db81d9c12",
     "src/lib/dm/enemy-damage.ts": "96493d07e7f0fb9089a23214abb124982f732099dc1ebea1f88c63a24e1c5a40",
@@ -37,7 +37,7 @@
     "src/lib/dm/zone-quake.ts": "114eaaffd226a95746c24bfc56b5d6748c1c15592215ae74ab20e21ce4707827",
     "src/lib/dm/zone-triggers.ts": "dad0437d98e4de4502c6a6cbf3b9ddc3e4bead40454707e178652bbc011b963b",
     "src/lib/i18n/check-roll-messages.ts": "22c2f41bd26ab8aa4c9f198e42e530c37e0adab54ad8227f878ee4ce766353a4",
-    "src/lib/i18n/glossary.zh-CN.ts": "356a38e27c23d45dbb0318802b35b7e928158f0a3888ea040976a217ed2d1f4d",
+    "src/lib/i18n/glossary.zh-CN.ts": "c37b585376a6cb080873d334492a76bc25566485e725f45cbc58d3a644be215f",
     "src/lib/i18n/roll-presentations.ts": "3999299af4647b88f15531dfeca1c5bae09350bbd2479b877eba0c8d7706d582",
     "src/lib/roll-labels.ts": "afe57bc08299f5edf94827b8d55ae13cd7b07c2e0f5660ba36f9770e6a3dd865",
     "src/lib/roll-presentation.ts": "644383d124542129ea03d71baeb4d0547c4e52d9957dbb8e453f94fdd6137267"
@@ -116,5 +116,25 @@
         }
       ]
     }
-  ]
+  ],
+  "sourceBoundFollowupReview": {
+    "date": "2026-10-14",
+    "files": {
+      "src/lib/dm/condition-tick.ts": {
+        "previousSha256": "f7f4306f01a36c01afcaff8a7a1dd1d6d0c1a2fbe0cffb1aea2bb68798f90a13",
+        "baseCommit": "d0b8f87975ae9dcb73d957b4316d6917ac22c563"
+      }
+    },
+    "review": "Compared full diffs against Git versions reproducing each prior hash. Changes add native source-bound feature/option/background/archetype display, homebrew name guards, opt-in spell/monster help sections, and a shared English free-cast label helper. Death messages now persist typed campaign-locale events while model-facing notes and engine outcomes remain English/unchanged; condition tick avoids duplicating the wake message. Original frozen output files are unchanged. Larger feat-choice/level-up diffs and glossary history remain separately open; this source review does not claim final acceptance."
+  },
+  "remainingSourceReview": {
+    "date": "2026-10-14",
+    "files": {
+      "src/lib/i18n/glossary.zh-CN.ts": {
+        "previousSha256": "356a38e27c23d45dbb0318802b35b7e928158f0a3888ea040976a217ed2d1f4d",
+        "baseCommit": "b478a558"
+      }
+    },
+    "review": "Compared feat-choice and level-up historical diffs: localized labels, native source-bound descriptions, class/skill/tool/spell names, failure/notice display and stable feature chip IDs; original option values and submission callbacks remain canonical. Glossary baseline has 257 entries and current has 557, none removed; only prior-entry changes are Combat Wild Shape -> 战斗荒野形态 and Hawk -> 隼 with 鹰 retained as alias. The 300 later additions belong to completed material batches and are not newly certified as external-source translations here. Frozen English baselines remain untouched. Focused grouped rerun pending."
+  }
 }

@@ -5,8 +5,8 @@
   "provenance": "Original Chinese prose compared with repository English UI, frozen picker outputs and canonical material-name catalogs. No proprietary Chinese rulebook translation used.",
   "review": "Compared original English strings, numeric/count semantics, stock-name versus authored/reskin boundaries, alignment meaning and all thirteen frozen grouping outputs. This is implementation-agent review, not human or external approval. Native race help now uses the separately reviewed lineage display corpus; frozen English picker outputs and other help remain unchanged. Skill help now uses the separately source-compared game-help presentation corpus; default English help remains original. Native class/subclass brief help is now separately source-compared in character-calling-material-translations.json; only display calls change, with exact English projection and canonical selection regression retained.",
   "sources": {
-    "src/app/characters/builder/steps/IdentityStep.tsx": "7f6bcf73b0a2c7db740b023f2669c663d9fca0bbb885dff386928f1450d1117a",
-    "src/app/characters/builder/usePickerGroups.ts": "d271803b233c0f3fd4add709fb4b4247c0c622a9dfd9e63f543c59ebc987a5f1",
+    "src/app/characters/builder/steps/IdentityStep.tsx": "9e63ff51dbb733e50dae011bddec3009aaee81d955a3d3a88a91871c521a0ae5",
+    "src/app/characters/builder/usePickerGroups.ts": "649ed670bb4cf630809f26ab83d0e0f26283d53d69a7876205af9bf9709667eb",
     "src/lib/srd/backgrounds.json": "d4a3ff20a0a5cc802fd28b409b40d338f867c61e9a49e5d71c012e14c7210c1d",
     "src/lib/srd/races.json": "a3661913715291b4ca72cc730f4d261b4da98cd6d9240490bbf5fa0550e6871e",
     "src/lib/srd/classes.json": "f0de0db010ca49668953488018d510917444f582fb58587a88a1b3bdf83e5371",
@@ -17,5 +17,13 @@
     "src/lib/i18n/builder-identity-messages.ts": "f7c9035a41d2b79a5d1fabe54e654f539241e07fc53c5a79757cb04b3da3d008",
     "src/lib/i18n/builder-picker-messages.ts": "50affb9cfe9ec80d2f121d971f65f4f315211e61e66db33653751c2fcf5a42ee"
   },
-  "reviewRepair": "2026-10-11: browser imports now use scoped resource runtime; co-located catalog construction marked pure. All English/Chinese templates independently compared equal to the pre-repair archive; original golden bytes preserved. See localization-review-repairs.md."
+  "reviewRepair": "2026-10-11: browser imports now use scoped resource runtime; co-located catalog construction marked pure. All English/Chinese templates independently compared equal to the pre-repair archive; original golden bytes preserved. See localization-review-repairs.md.",
+  "helpProjectionReview": {
+    "date": "2026-10-14",
+    "previousHashes": {
+      "src/app/characters/builder/steps/IdentityStep.tsx": "7f6bcf73b0a2c7db740b023f2669c663d9fca0bbb885dff386928f1450d1117a",
+      "src/app/characters/builder/usePickerGroups.ts": "d271803b233c0f3fd4add709fb4b4247c0c622a9dfd9e63f543c59ebc987a5f1"
+    },
+    "review": "Reviewed source-bound background identity/help from 778c0708 and complete authored archetype help from 1ff49999. Canonical options, callbacks, ordering and English projections remain under frozen regression; external-book prose remains literal. Updated test now requires Chinese native background help rather than the obsolete unmigrated English expectation. Focused builder-feedback rerun passes all 11 grouped checks."
+  }
 }

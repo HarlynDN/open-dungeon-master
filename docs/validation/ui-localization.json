@@ -954,7 +954,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/liveStore.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Reviewed all value-store exports and useCampaignStream append/reset consumers. Stores transport narration text verbatim plus sequence IDs and speaker identity/time; no native UI copy or locale-dependent mutation. Generated narration language remains a server/runtime gate."
     },
     {
       "path": "src/app/campaigns/[campaignId]/mapCatalogue.ts",
@@ -1069,7 +1070,8 @@
     },
     {
       "path": "src/app/campaigns/[campaignId]/useTableAudio.ts",
-      "state": "pending"
+      "state": "covered",
+      "review": "Reviewed complete narration/ambience coordinator and SessionHeader controls. Only IDs, URLs, sequence comparisons and playback/ducking state are produced. Parent narration/ambience controls translate all visible and accessible labels. Underlying audio hooks and actual playback acceptance remain separate."
     },
     {
       "path": "src/app/campaigns/[campaignId]/useVoicePrefs.ts",

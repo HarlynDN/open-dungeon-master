@@ -105,7 +105,7 @@ this section records current delivery state and acceptance gaps only.
   variants and original model/tool data. Direct-client full-spell and server
   content-display regressions pass. Feature-material regression passes with
   corrected locale-aware mock keys and unchanged English hashes.
-- UI source coverage: 410/440 owners, zero pending literal sites, 19317 keys.
+- UI source coverage: 412/440 owners, zero pending literal sites, 19317 keys.
   Completed pure-helper/consumer reviews are recorded in
   docs/validation/ui-localization.json. Whole-owner dynamic output and browser
   acceptance remain distinct; stale theme counts were corrected to 733/733.
@@ -113,7 +113,22 @@ this section records current delivery state and acceptance gaps only.
   22 ESLint warnings); terminology reports 557 entries, 0 errors and 389 context
   warnings. The sandboxed full test run was terminated after a local mock-server
   listen EPERM. That script passes with elevated execution; the elevated full
-  suite is still running and failures await final diagnosis.
+  suite completed: 570/585 passed, 15 failed (681 seconds). Gear subsequently
+  passed separately. Resource-scope and single-character book-search regressions
+  now pass after correcting outdated test assumptions; magic-item locale cache
+  fixtures also pass. Reviewed-message tests pass after a verified one-value
+  Wild Shape terminology update, with prior hashes retained. Builder background
+  help expectations and their source review were corrected; all 11 grouped
+  builder-feedback checks now pass. Historical Git versions reproducing old hashes were located and reviewed for
+  the smaller source changes (display adapters, opt-in help and typed death/wake
+  notices); their review records retain prior hashes and base commits. The larger feat-choice/level-up diffs are now reviewed. Glossary history
+  confirms 257 prior entries retained, two explicit term changes and 300 later
+  additions. Nine affected regression scripts completed with eight passing; game-help
+  then passed separately after replacing its duplicate old-byte lock with an
+  explicit audited before/after helper revision check. All 15 original failures
+  now have passing focused follow-ups, but the final full suite has not rerun. Picker background tests preserve third-party body
+  text while allowing the localized Feature label. Final failures still require
+  verification; final full-suite acceptance remains open.
 - Build: default Turbopack failed twice on port binding, including elevated retry.
   Webpack exposed Node crypto imported into browser dice validation. Pure
   dice-core now serves browser validation/scoring; server wrappers retain the
