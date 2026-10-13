@@ -4005,6 +4005,16 @@
       "sourceHash": "4ec6b9a5ba3b0b2ac52fa5770480c59bfcf382d3bd9fba3b89299153deaba759"
     },
     {
+      "id": "acolyte",
+      "kind": "monster",
+      "sourceHash": "13882b7d9c062cf637a703611971861202357c27a3613dc01f197877845f0977"
+    },
+    {
+      "id": "archmage",
+      "kind": "monster",
+      "sourceHash": "63bdf2502e8daa235b7142a5ade7429c014a7f5024ff585b2e11f1708ddfa75a"
+    },
+    {
       "id": "bandit",
       "kind": "monster",
       "sourceHash": "db0affbdd0e8f92810812a217effad9073054d0eb4fa82218d5a84672b017e54"
@@ -4025,9 +4035,19 @@
       "sourceHash": "462453c73e6db8630e003b2ad3604bcdcbdc322cde97dd96d3e8475cdc1d22e5"
     },
     {
+      "id": "cult-fanatic",
+      "kind": "monster",
+      "sourceHash": "940874bcf573dfb5228061ab9d08dc574ac2bc61e53106e9edd9ceb2f3c160b0"
+    },
+    {
       "id": "cultist",
       "kind": "monster",
       "sourceHash": "2a0700b7e7d3d77f6031ecb37c421abc36c24775e95851c405a7794824503ceb"
+    },
+    {
+      "id": "druid-npc",
+      "kind": "monster",
+      "sourceHash": "11096b120d9c29338b4624d9585baa407f92d9001f1d4b0321b2b036b06365e7"
     },
     {
       "id": "gladiator",
@@ -4045,9 +4065,19 @@
       "sourceHash": "a45354554d32fbd5c0de3465f61b25b457a4fef9e70ebca701e5269e5d077fc9"
     },
     {
+      "id": "mage",
+      "kind": "monster",
+      "sourceHash": "12673eab0aeca669eccbdbd8f828b3e5c6a4b46269d24ac74040cd6cb8a73f9f"
+    },
+    {
       "id": "noble",
       "kind": "monster",
       "sourceHash": "4dd03035c4bb39f6d70c8aabbd8b6b4fba4081aa71202fb041f6d60d89d1e2ab"
+    },
+    {
+      "id": "priest",
+      "kind": "monster",
+      "sourceHash": "2be299d44b57d239146c169a53fb61a27afcb262c7d63069ce52ca115c05226e"
     },
     {
       "id": "scout",
