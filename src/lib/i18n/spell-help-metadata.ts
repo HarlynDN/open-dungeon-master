@@ -675,5 +675,129 @@ export const SPELL_HELP = [
   {
     "name": "Wind Wall",
     "key": "spellHelp.native.wind-wall"
+  },
+  {
+    "name": "Arcane Eye",
+    "key": "spellHelp.native.arcane-eye"
+  },
+  {
+    "name": "Banishment",
+    "key": "spellHelp.native.banishment"
+  },
+  {
+    "name": "Black Tentacles",
+    "key": "spellHelp.native.black-tentacles"
+  },
+  {
+    "name": "Blight",
+    "key": "spellHelp.native.blight"
+  },
+  {
+    "name": "Compulsion",
+    "key": "spellHelp.native.compulsion"
+  },
+  {
+    "name": "Confusion",
+    "key": "spellHelp.native.confusion"
+  },
+  {
+    "name": "Conjure Minor Elementals",
+    "key": "spellHelp.native.conjure-minor-elementals"
+  },
+  {
+    "name": "Conjure Woodland Beings",
+    "key": "spellHelp.native.conjure-woodland-beings"
+  },
+  {
+    "name": "Control Water",
+    "key": "spellHelp.native.control-water"
+  },
+  {
+    "name": "Death Ward",
+    "key": "spellHelp.native.death-ward"
+  },
+  {
+    "name": "Dimension Door",
+    "key": "spellHelp.native.dimension-door"
+  },
+  {
+    "name": "Divination",
+    "key": "spellHelp.native.divination"
+  },
+  {
+    "name": "Dominate Beast",
+    "key": "spellHelp.native.dominate-beast"
+  },
+  {
+    "name": "Fabricate",
+    "key": "spellHelp.native.fabricate"
+  },
+  {
+    "name": "Faithful Hound",
+    "key": "spellHelp.native.faithful-hound"
+  },
+  {
+    "name": "Fire Shield",
+    "key": "spellHelp.native.fire-shield"
+  },
+  {
+    "name": "Freedom of Movement",
+    "key": "spellHelp.native.freedom-of-movement"
+  },
+  {
+    "name": "Giant Insect",
+    "key": "spellHelp.native.giant-insect"
+  },
+  {
+    "name": "Greater Invisibility",
+    "key": "spellHelp.native.greater-invisibility"
+  },
+  {
+    "name": "Guardian of Faith",
+    "key": "spellHelp.native.guardian-of-faith"
+  },
+  {
+    "name": "Hallucinatory Terrain",
+    "key": "spellHelp.native.hallucinatory-terrain"
+  },
+  {
+    "name": "Ice Storm",
+    "key": "spellHelp.native.ice-storm"
+  },
+  {
+    "name": "Locate Creature",
+    "key": "spellHelp.native.locate-creature"
+  },
+  {
+    "name": "Phantasmal Killer",
+    "key": "spellHelp.native.phantasmal-killer"
+  },
+  {
+    "name": "Polymorph",
+    "key": "spellHelp.native.polymorph"
+  },
+  {
+    "name": "Private Sanctum",
+    "key": "spellHelp.native.private-sanctum"
+  },
+  {
+    "name": "Resilient Sphere",
+    "key": "spellHelp.native.resilient-sphere"
+  },
+  {
+    "name": "Secret Chest",
+    "key": "spellHelp.native.secret-chest"
+  },
+  {
+    "name": "Stone Shape",
+    "key": "spellHelp.native.stone-shape"
+  },
+  {
+    "name": "Stoneskin",
+    "key": "spellHelp.native.stoneskin"
+  },
+  {
+    "name": "Wall of Fire",
+    "key": "spellHelp.native.wall-of-fire"
   }
 ] as const;

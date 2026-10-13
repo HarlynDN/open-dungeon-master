@@ -1013,5 +1013,191 @@ export const LOCALIZED_SPELL_PAGES = [
     "name": "Wind Wall",
     "headerKey": "bookMaterial.spell.wind-wall.header",
     "metaKey": "bookMaterial.spell.wind-wall.meta"
+  },
+  {
+    "id": "arcane-eye",
+    "name": "Arcane Eye",
+    "headerKey": "bookMaterial.spell.arcane-eye.header",
+    "metaKey": "bookMaterial.spell.arcane-eye.meta"
+  },
+  {
+    "id": "banishment",
+    "name": "Banishment",
+    "headerKey": "bookMaterial.spell.banishment.header",
+    "metaKey": "bookMaterial.spell.banishment.meta"
+  },
+  {
+    "id": "black-tentacles",
+    "name": "Black Tentacles",
+    "headerKey": "bookMaterial.spell.black-tentacles.header",
+    "metaKey": "bookMaterial.spell.black-tentacles.meta"
+  },
+  {
+    "id": "blight",
+    "name": "Blight",
+    "headerKey": "bookMaterial.spell.blight.header",
+    "metaKey": "bookMaterial.spell.blight.meta"
+  },
+  {
+    "id": "compulsion",
+    "name": "Compulsion",
+    "headerKey": "bookMaterial.spell.compulsion.header",
+    "metaKey": "bookMaterial.spell.compulsion.meta"
+  },
+  {
+    "id": "confusion",
+    "name": "Confusion",
+    "headerKey": "bookMaterial.spell.confusion.header",
+    "metaKey": "bookMaterial.spell.confusion.meta"
+  },
+  {
+    "id": "conjure-minor-elementals",
+    "name": "Conjure Minor Elementals",
+    "headerKey": "bookMaterial.spell.conjure-minor-elementals.header",
+    "metaKey": "bookMaterial.spell.conjure-minor-elementals.meta"
+  },
+  {
+    "id": "conjure-woodland-beings",
+    "name": "Conjure Woodland Beings",
+    "headerKey": "bookMaterial.spell.conjure-woodland-beings.header",
+    "metaKey": "bookMaterial.spell.conjure-woodland-beings.meta"
+  },
+  {
+    "id": "control-water",
+    "name": "Control Water",
+    "headerKey": "bookMaterial.spell.control-water.header",
+    "metaKey": "bookMaterial.spell.control-water.meta"
+  },
+  {
+    "id": "death-ward",
+    "name": "Death Ward",
+    "headerKey": "bookMaterial.spell.death-ward.header",
+    "metaKey": "bookMaterial.spell.death-ward.meta"
+  },
+  {
+    "id": "dimension-door",
+    "name": "Dimension Door",
+    "headerKey": "bookMaterial.spell.dimension-door.header",
+    "metaKey": "bookMaterial.spell.dimension-door.meta"
+  },
+  {
+    "id": "divination",
+    "name": "Divination",
+    "headerKey": "bookMaterial.spell.divination.header",
+    "metaKey": "bookMaterial.spell.divination.meta"
+  },
+  {
+    "id": "dominate-beast",
+    "name": "Dominate Beast",
+    "headerKey": "bookMaterial.spell.dominate-beast.header",
+    "metaKey": "bookMaterial.spell.dominate-beast.meta"
+  },
+  {
+    "id": "fabricate",
+    "name": "Fabricate",
+    "headerKey": "bookMaterial.spell.fabricate.header",
+    "metaKey": "bookMaterial.spell.fabricate.meta"
+  },
+  {
+    "id": "faithful-hound",
+    "name": "Faithful Hound",
+    "headerKey": "bookMaterial.spell.faithful-hound.header",
+    "metaKey": "bookMaterial.spell.faithful-hound.meta"
+  },
+  {
+    "id": "fire-shield",
+    "name": "Fire Shield",
+    "headerKey": "bookMaterial.spell.fire-shield.header",
+    "metaKey": "bookMaterial.spell.fire-shield.meta"
+  },
+  {
+    "id": "freedom-of-movement",
+    "name": "Freedom of Movement",
+    "headerKey": "bookMaterial.spell.freedom-of-movement.header",
+    "metaKey": "bookMaterial.spell.freedom-of-movement.meta"
+  },
+  {
+    "id": "giant-insect",
+    "name": "Giant Insect",
+    "headerKey": "bookMaterial.spell.giant-insect.header",
+    "metaKey": "bookMaterial.spell.giant-insect.meta"
+  },
+  {
+    "id": "greater-invisibility",
+    "name": "Greater Invisibility",
+    "headerKey": "bookMaterial.spell.greater-invisibility.header",
+    "metaKey": "bookMaterial.spell.greater-invisibility.meta"
+  },
+  {
+    "id": "guardian-of-faith",
+    "name": "Guardian of Faith",
+    "headerKey": "bookMaterial.spell.guardian-of-faith.header",
+    "metaKey": "bookMaterial.spell.guardian-of-faith.meta"
+  },
+  {
+    "id": "hallucinatory-terrain",
+    "name": "Hallucinatory Terrain",
+    "headerKey": "bookMaterial.spell.hallucinatory-terrain.header",
+    "metaKey": "bookMaterial.spell.hallucinatory-terrain.meta"
+  },
+  {
+    "id": "ice-storm",
+    "name": "Ice Storm",
+    "headerKey": "bookMaterial.spell.ice-storm.header",
+    "metaKey": "bookMaterial.spell.ice-storm.meta"
+  },
+  {
+    "id": "locate-creature",
+    "name": "Locate Creature",
+    "headerKey": "bookMaterial.spell.locate-creature.header",
+    "metaKey": "bookMaterial.spell.locate-creature.meta"
+  },
+  {
+    "id": "phantasmal-killer",
+    "name": "Phantasmal Killer",
+    "headerKey": "bookMaterial.spell.phantasmal-killer.header",
+    "metaKey": "bookMaterial.spell.phantasmal-killer.meta"
+  },
+  {
+    "id": "polymorph",
+    "name": "Polymorph",
+    "headerKey": "bookMaterial.spell.polymorph.header",
+    "metaKey": "bookMaterial.spell.polymorph.meta"
+  },
+  {
+    "id": "private-sanctum",
+    "name": "Private Sanctum",
+    "headerKey": "bookMaterial.spell.private-sanctum.header",
+    "metaKey": "bookMaterial.spell.private-sanctum.meta"
+  },
+  {
+    "id": "resilient-sphere",
+    "name": "Resilient Sphere",
+    "headerKey": "bookMaterial.spell.resilient-sphere.header",
+    "metaKey": "bookMaterial.spell.resilient-sphere.meta"
+  },
+  {
+    "id": "secret-chest",
+    "name": "Secret Chest",
+    "headerKey": "bookMaterial.spell.secret-chest.header",
+    "metaKey": "bookMaterial.spell.secret-chest.meta"
+  },
+  {
+    "id": "stone-shape",
+    "name": "Stone Shape",
+    "headerKey": "bookMaterial.spell.stone-shape.header",
+    "metaKey": "bookMaterial.spell.stone-shape.meta"
+  },
+  {
+    "id": "stoneskin",
+    "name": "Stoneskin",
+    "headerKey": "bookMaterial.spell.stoneskin.header",
+    "metaKey": "bookMaterial.spell.stoneskin.meta"
+  },
+  {
+    "id": "wall-of-fire",
+    "name": "Wall of Fire",
+    "headerKey": "bookMaterial.spell.wall-of-fire.header",
+    "metaKey": "bookMaterial.spell.wall-of-fire.meta"
   }
 ] as const;

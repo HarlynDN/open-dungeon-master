@@ -40,12 +40,12 @@ Before pausing, finish the native dynamic text audit and one bilingual text jour
 | Locale foundation | Registry, persistence, browser fallback, typed complete catalogs, model locale policy, classified token proxy, chapter budget, CJK retrieval, IME protection | Real prompt-usage calibration; keep legacy campaign/history regressions |
 | DM safety | Per-event engine conclusions with English/Chinese renderers; AI prose separated; one text-only correction and safe fallback; shared localized enemy names and held-resource names/IDs; scoped resource aliases and ambiguity retries; real Codex combat/resource acceptance | Untracked feature/reaction options and broader spell/condition/pack coverage; conservative regex coverage is not full language understanding |
 | Embeddings | Original English deployment default retained; explicit multilingual opt-in; fixed bilingual calibration/holdout and hard-negative policy | Broader pack quality; opt-in affects English campaigns and rebuilds indexes |
-| UI | **401/440** covered files, **0** pending literal sites, **18867** message keys; scoped AST gate across entry, character, play, board, settings and help surfaces | 39 zero-literal owners need dynamic/source-ownership review; locale-sensitive thresholds and backend/native text remain audit items |
-| Character creation/material | Source-bound names/help: 517 spell names, 228 equipment names, 239 item bodies, 169/319 spell bodies; 415 registered resources, 135 bundled options, 533 expanded subclass features, 105 archetype documents, 49 backgrounds and 733 themed features; immutable English material baselines | Remaining dynamic material and help/loading paths; third-party, changed and authored variants retain their source |
+| UI | **401/440** covered files, **0** pending literal sites, **18960** message keys; scoped AST gate across entry, character, play, board, settings and help surfaces | 39 zero-literal owners need dynamic/source-ownership review; locale-sensitive thresholds and backend/native text remain audit items |
+| Character creation/material | Source-bound names/help: 517 spell names, 228 equipment names, 239 item bodies, 200/319 spell bodies; 415 registered resources, 135 bundled options, 533 expanded subclass features, 105 archetype documents, 49 backgrounds and 733 themed features; immutable English material baselines | Remaining dynamic material and help/loading paths; third-party, changed and authored variants retain their source |
 | Player system logs | Localized structured combat/audit display, party item/coin/XP logs, account facts and kickoff notices; English model/tool semantics stay separate | Other native player-log templates and final history/save/resume audit |
 | Resource delivery | UI/content/help scopes and independent retryable lazy help; anonymous bilingual switch/reload, authenticated character/campaign entry and viewer-English/story-Chinese separation observed | Complete authenticated journey and lazy/cache timing; hydrated/network totals and large route JS payload remain unverified |
 | Local Chinese TTS | Implementation and bounded CPU delivery/outage evidence retained in [the runtime record](validation/chinese-tts-runtime.json) | Chinese voice quality rejected by user; further voice work is deferred, not passed, and is not a text-milestone gate |
-| Full native rulebook | Reader chrome localized; **465/933 complete Chinese pages** now render via a server-generated display projection, including all 169 cantrip/first-/second-/third-level spell pages, all 239 magic-item pages, all thirty-six rules pages, all nine race pages and all twelve class pages, with complete headers and reused bodies; original English corpus retained; 169 spell and 239 magic-item bodies are available for further reuse | Remaining 150 high-level spell pages and 318 monster pages; complete Chinese corpus coverage, authenticated browser search/navigation and English reading regression |
+| Full native rulebook | Reader chrome localized; **496/933 complete Chinese pages** now render via a server-generated display projection, including all 200 cantrip through fourth-level spell pages, all 239 magic-item pages, all thirty-six rules pages, all nine race pages and all twelve class pages, with complete headers and reused bodies; original English corpus retained; 200 spell and 239 magic-item bodies are available for further reuse | Remaining 119 high-level spell pages and 318 monster pages; item-table semantic/source-layout audit; complete Chinese corpus coverage, authenticated browser search/navigation and English reading regression |
 | Final text flow | Recorded Chinese exploration/social/utility and combat/slot/correction acceptance on Codex | Complete Chinese text journey, rulebook reading/search and English regression; full tests/lint/build, then pause |
 
 ## Execution adjustment (2026-10-13)
@@ -65,14 +65,16 @@ real interaction has passed. Do not restart a static translation campaign.
 
 ## Next delivery unit and interruption checkpoint
 
-- All twelve class pages are complete (`54cb75d3`). The next shared-body batch
-  added all 42 third-level spells to game help and book presentation; focused
-  bilingual/source/variant/quantity/page checks passed at 465/933. Catalog/AST,
-  generated resources, TypeScript and changed-file lint passed. Terminology had
-  zero errors with context warnings retained. English canonical source/mechanics
-  and existing expectations were preserved; no test logic was changed.
-- Next: remaining fourth- through ninth-level spell batches with shared game-help
-  bodies, then monster families. Final release checks have not run for this state.
+- Added all 31 fourth-level spells to shared game help/book presentation.
+  Focused bilingual/full-body/variant/page checks passed at 496/933; table
+  structure and numeric/dice parity now also cover shared spell-help pages.
+  Catalog/AST/resources, TypeScript and changed-file lint passed; terminology
+  retained its context warnings with zero errors. English canonical data stayed
+  unchanged. The first broader table probe exposed item-layout differences;
+  those remain open below rather than forcing Chinese to match broken layouts.
+- Next: close the item-table source-layout/semantic comparison, then fifth-
+  through ninth-level spells and monster families. Final release checks have
+  not run for this state.
 - Native dynamic UI/material/log ownership remains pending in the UI manifest;
   audit helpers with their actual consumers before the final bilingual journey.
 
@@ -88,7 +90,7 @@ as independently reviewable units.
 
 | Remaining work | Batch rule |
 | --- | --- |
-| 150 high-level spells | Group by level/theme and source volume; reuse names, headers and matching game-help bodies. A book-only body does not close the corresponding in-game help gap. |
+| 119 high-level spells | Group by level/theme and source volume; reuse names, headers and matching game-help bodies. A book-only body does not close the corresponding in-game help gap. |
 | 318 monsters | Group families with shared stat-block shapes; review each creature's exceptional actions, quantities and conditions against its full source. |
 | Dynamic UI/material/logs | Group producers/helpers with their consumer flow. Mark already-correct owners reviewed without inventing code changes or duplicate tests. |
 
@@ -284,6 +286,17 @@ have actual evidence.
 
 ## Source exceptions and retained evidence
 
+- The fourth-level batch's broader table probe found source-layout differences
+  in existing item translations: Bag of Beans has 11 parsed source rows vs 12
+  Chinese rows, Robe of Useful Items 12 vs 13, and Wand of Wonder 20 vs 22.
+  Original conversion text joins separate roll intervals inside cells; Chinese
+  separates them. Deck tables also translate written card ranks to digits, and
+  Chinese can reorder quantities within a cell. Keep this failed probe as an
+  open semantic/source-layout audit, not a translation rollback or a passed
+  structural check. The generic row/value gate currently covers native chapters
+  and shared spells; item bilingual/ownership/golden/render checks are retained.
+  Resolve and record source exceptions before final acceptance without weakening
+  numeric/row checks or refreshing English baselines.
 - Animal Friendship's bundled English higher-level clause is truncated. The
   Chinese clause was verified against the publisher's
   [2014 rules entry](https://www.dndbeyond.com/spells/1993-animal-friendship).

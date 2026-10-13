@@ -1075,6 +1075,161 @@
       "sourceHash": "b4a6264c27cef71dc347b52ed5958997ab40033e70c9422f3232e045963ae016"
     },
     {
+      "id": "arcane-eye",
+      "kind": "spell",
+      "sourceHash": "36ab74f01bcaeb34b93bb270f1c04ad1219ab4f95555712b2cd3eeb9b9823e7d"
+    },
+    {
+      "id": "banishment",
+      "kind": "spell",
+      "sourceHash": "b49461945cca9932a596294aaac2bd2e415de560f56c16020d17f1d783a00697"
+    },
+    {
+      "id": "black-tentacles",
+      "kind": "spell",
+      "sourceHash": "7f41e0e22db51ea0a0bf86ee503536d0edef47e09c16a8c694fb3cb27442f5db"
+    },
+    {
+      "id": "blight",
+      "kind": "spell",
+      "sourceHash": "595c92a4edd8f91ec41d14ec2728f3bc57a70415cd73326c941323c350978690"
+    },
+    {
+      "id": "compulsion",
+      "kind": "spell",
+      "sourceHash": "1f093871f182d9150eda2bfcab3200bf7046de9de4ce3c22e551b9a45968ecf6"
+    },
+    {
+      "id": "confusion",
+      "kind": "spell",
+      "sourceHash": "106f6685b5153a3b4dfbca68433a81709a0ffcb291b4e9d89aab6f3433c81f5e"
+    },
+    {
+      "id": "conjure-minor-elementals",
+      "kind": "spell",
+      "sourceHash": "ba6f4e319f35a86174b196b102ad06f14af95490b828da65e3fd1c4dda57c39a"
+    },
+    {
+      "id": "conjure-woodland-beings",
+      "kind": "spell",
+      "sourceHash": "33d0ffae945feb4d70a780d2acb4bf1ae5eb9af0da48fd4a30e0923e977bd301"
+    },
+    {
+      "id": "control-water",
+      "kind": "spell",
+      "sourceHash": "192b73c66fc065b3bdacdba3d4316bd7bb060dc9802b58d034a7d3aff696bfc0"
+    },
+    {
+      "id": "death-ward",
+      "kind": "spell",
+      "sourceHash": "7b5d06319e1bfd56f4f93420e218b87f3eea551de7b6bf9fdf55fd998deba850"
+    },
+    {
+      "id": "dimension-door",
+      "kind": "spell",
+      "sourceHash": "0bcda70accd21c4ebdb2a41c7f61741788c80c0d8b09149de342b21f986c746e"
+    },
+    {
+      "id": "divination",
+      "kind": "spell",
+      "sourceHash": "04f4dfc27ae9429e4552bfe8ff91f957cd68566e6122641a72207b017ec8a0a8"
+    },
+    {
+      "id": "dominate-beast",
+      "kind": "spell",
+      "sourceHash": "39f0f9e8197802ec8b457bf105dd297c0f177d0a88b16a6ee0b9ce809669a502"
+    },
+    {
+      "id": "fabricate",
+      "kind": "spell",
+      "sourceHash": "13d2602bcea41ee8101d532d1413434d16b42f9fe8f226f22360929ca0c3250c"
+    },
+    {
+      "id": "faithful-hound",
+      "kind": "spell",
+      "sourceHash": "9a205a4262bd6142c4a843724087f70a7eca5d7cee94ce43ad34277f0484b268"
+    },
+    {
+      "id": "fire-shield",
+      "kind": "spell",
+      "sourceHash": "a6ed901ffb9d0c424e90ece3f84f4ac244bb84837e1c588863e8564a85c8edde"
+    },
+    {
+      "id": "freedom-of-movement",
+      "kind": "spell",
+      "sourceHash": "4b49bcd9ced3d92f77cc6f9264d9264908372e3e016ee4ab6d89df95c16b672b"
+    },
+    {
+      "id": "giant-insect",
+      "kind": "spell",
+      "sourceHash": "60f529bf2352c82b1462b9a9b1c42b4e33b548063af956cf7d0b7fb7efa150d9"
+    },
+    {
+      "id": "greater-invisibility",
+      "kind": "spell",
+      "sourceHash": "8965dcf0185b9635cb8c1fca544a88227eddb3ccca0197ca5bb192c516d65597"
+    },
+    {
+      "id": "guardian-of-faith",
+      "kind": "spell",
+      "sourceHash": "ec496190fece0e9d9f0ee9a61a25c4933efcf2d3d51a901706b525cc4871d34a"
+    },
+    {
+      "id": "hallucinatory-terrain",
+      "kind": "spell",
+      "sourceHash": "140d475d4b6ce7d2dab6943aa05415874fd790d0bf69ce63a2bbe07548f75320"
+    },
+    {
+      "id": "ice-storm",
+      "kind": "spell",
+      "sourceHash": "cae7475fc85f4c2b57887d7025cf73eb9df743ed7247ee74fec852e2d7cb6eb3"
+    },
+    {
+      "id": "locate-creature",
+      "kind": "spell",
+      "sourceHash": "cdc179dd06c9bbc21cf5d1b3a9944592a3fa7267cf390f95008a3b93e9dbc0e7"
+    },
+    {
+      "id": "phantasmal-killer",
+      "kind": "spell",
+      "sourceHash": "fc079424ce214036f88d6c7a0be1eb22b0cf88b2f6dbc6448d3c1dd008ddc6b9"
+    },
+    {
+      "id": "polymorph",
+      "kind": "spell",
+      "sourceHash": "6e8c59dd23d5b0e3211d07d0b1e4e3ef5b592f78f2fc2c2b09408bbfc043cdfe"
+    },
+    {
+      "id": "private-sanctum",
+      "kind": "spell",
+      "sourceHash": "cf40acd3b913816e15b746b17580d538ff2fb1dc1ca95c76ddee75e90be8d408"
+    },
+    {
+      "id": "resilient-sphere",
+      "kind": "spell",
+      "sourceHash": "f5322eb954e0ae07ec910495e01ed983f791f9c2f2595dbd87110403a7982b03"
+    },
+    {
+      "id": "secret-chest",
+      "kind": "spell",
+      "sourceHash": "089e76c960bdbc552781ec8ce5674e7d8b9bb0d7a012e2e2058bf250cde44c6c"
+    },
+    {
+      "id": "stone-shape",
+      "kind": "spell",
+      "sourceHash": "f08696b3c1d667731df7d502921274f1746e9dea73bbbfab47401c9794aeed17"
+    },
+    {
+      "id": "stoneskin",
+      "kind": "spell",
+      "sourceHash": "a1c026e472c3d2abff955cd6f8e0bdddae42a3207eb103c4f6469fc9b25c6d6c"
+    },
+    {
+      "id": "wall-of-fire",
+      "kind": "spell",
+      "sourceHash": "9ea428ac99042b28de4855f409f6ff4684f27d463ceca87ec6e2354c2e7f563c"
+    },
+    {
       "id": "traps",
       "kind": "rules",
       "sourceHash": "3235d098b37944d2d0ae80928d91db3b9809dbbf319538e845817de93d512cd6"

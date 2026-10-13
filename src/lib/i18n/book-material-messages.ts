@@ -1353,5 +1353,253 @@ export const BOOK_MATERIAL_MESSAGES = defineMessages({
   "bookMaterial.spell.wind-wall.meta": {
     "en": "3rd-level evocation",
     "zh-CN": "三环塑能"
+  },
+  "bookMaterial.spell.arcane-eye.header": {
+    "en": "*4th-level divination*\n\n**Casting Time:** 1 action\n\n**Range:** 30 feet\n\n**Components:** V, S, M (a bit of bat fur)\n\n**Duration:** Concentration, up to 1 hour",
+    "zh-CN": "*四环预言*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 30 英尺\n\n**法术成分：** 言语、姿势、材料（少许蝙蝠毛）\n\n**持续时间：** 专注，至多 1 小时"
+  },
+  "bookMaterial.spell.arcane-eye.meta": {
+    "en": "4th-level divination",
+    "zh-CN": "四环预言"
+  },
+  "bookMaterial.spell.banishment.header": {
+    "en": "*4th-level abjuration*\n\n**Casting Time:** 1 action\n\n**Range:** 60 feet\n\n**Components:** V, S, M (an item distasteful to the target)\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*四环防护*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 60 英尺\n\n**法术成分：** 言语、姿势、材料（目标厌恶的一件物品）\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.banishment.meta": {
+    "en": "4th-level abjuration",
+    "zh-CN": "四环防护"
+  },
+  "bookMaterial.spell.black-tentacles.header": {
+    "en": "*4th-level conjuration*\n\n**Casting Time:** 1 action\n\n**Range:** 90 feet\n\n**Components:** V, S, M (a piece of tentacle from a giant octopus or a giant squid)\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*四环咒法*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 90 英尺\n\n**法术成分：** 言语、姿势、材料（一段巨章鱼或巨鱿鱼的触手）\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.black-tentacles.meta": {
+    "en": "4th-level conjuration",
+    "zh-CN": "四环咒法"
+  },
+  "bookMaterial.spell.blight.header": {
+    "en": "*4th-level necromancy*\n\n**Casting Time:** 1 action\n\n**Range:** 30 feet\n\n**Components:** V, S\n\n**Duration:** Instantaneous",
+    "zh-CN": "*四环死灵*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 30 英尺\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.blight.meta": {
+    "en": "4th-level necromancy",
+    "zh-CN": "四环死灵"
+  },
+  "bookMaterial.spell.compulsion.header": {
+    "en": "*4th-level enchantment*\n\n**Casting Time:** 1 action\n\n**Range:** 30 feet\n\n**Components:** V, S\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*四环惑控*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 30 英尺\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.compulsion.meta": {
+    "en": "4th-level enchantment",
+    "zh-CN": "四环惑控"
+  },
+  "bookMaterial.spell.confusion.header": {
+    "en": "*4th-level enchantment*\n\n**Casting Time:** 1 action\n\n**Range:** 90 feet\n\n**Components:** V, S, M (three nut shells)\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*四环惑控*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 90 英尺\n\n**法术成分：** 言语、姿势、材料（三个坚果壳）\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.confusion.meta": {
+    "en": "4th-level enchantment",
+    "zh-CN": "四环惑控"
+  },
+  "bookMaterial.spell.conjure-minor-elementals.header": {
+    "en": "*4th-level conjuration*\n\n**Casting Time:** 1 minute\n\n**Range:** 90 feet\n\n**Components:** V, S\n\n**Duration:** Concentration, up to 1 hour",
+    "zh-CN": "*四环咒法*\n\n**施法时间：** 1 分钟\n\n**施法距离：** 90 英尺\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 专注，至多 1 小时"
+  },
+  "bookMaterial.spell.conjure-minor-elementals.meta": {
+    "en": "4th-level conjuration",
+    "zh-CN": "四环咒法"
+  },
+  "bookMaterial.spell.conjure-woodland-beings.header": {
+    "en": "*4th-level conjuration*\n\n**Casting Time:** 1 action\n\n**Range:** 60 feet\n\n**Components:** V, S, M (one holly berry per creature summoned)\n\n**Duration:** Concentration, up to 1 hour",
+    "zh-CN": "*四环咒法*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 60 英尺\n\n**法术成分：** 言语、姿势、材料（每个召唤生物需要一颗冬青浆果）\n\n**持续时间：** 专注，至多 1 小时"
+  },
+  "bookMaterial.spell.conjure-woodland-beings.meta": {
+    "en": "4th-level conjuration",
+    "zh-CN": "四环咒法"
+  },
+  "bookMaterial.spell.control-water.header": {
+    "en": "*4th-level transmutation*\n\n**Casting Time:** 1 action\n\n**Range:** 300 feet\n\n**Components:** V, S, M (a drop of water and a pinch of dust)\n\n**Duration:** Concentration, up to 10 minutes",
+    "zh-CN": "*四环变化*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 300 英尺\n\n**法术成分：** 言语、姿势、材料（一滴水与少量尘土）\n\n**持续时间：** 专注，至多 10 分钟"
+  },
+  "bookMaterial.spell.control-water.meta": {
+    "en": "4th-level transmutation",
+    "zh-CN": "四环变化"
+  },
+  "bookMaterial.spell.death-ward.header": {
+    "en": "*4th-level abjuration*\n\n**Casting Time:** 1 action\n\n**Range:** Touch\n\n**Components:** V, S\n\n**Duration:** 8 hours",
+    "zh-CN": "*四环防护*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 接触\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 8 小时"
+  },
+  "bookMaterial.spell.death-ward.meta": {
+    "en": "4th-level abjuration",
+    "zh-CN": "四环防护"
+  },
+  "bookMaterial.spell.dimension-door.header": {
+    "en": "*4th-level conjuration*\n\n**Casting Time:** 1 action\n\n**Range:** 500 feet\n\n**Components:** V\n\n**Duration:** Instantaneous",
+    "zh-CN": "*四环咒法*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 500 英尺\n\n**法术成分：** 言语\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.dimension-door.meta": {
+    "en": "4th-level conjuration",
+    "zh-CN": "四环咒法"
+  },
+  "bookMaterial.spell.divination.header": {
+    "en": "*4th-level divination (ritual)*\n\n**Casting Time:** 1 action\n\n**Range:** Self\n\n**Components:** V, S, M (incense and a sacrificial offering appropriate to your religion, together worth at least 25 gp, which the spell consumes)\n\n**Duration:** Instantaneous",
+    "zh-CN": "*四环预言（仪式）*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 自身\n\n**法术成分：** 言语、姿势、材料（熏香与符合你宗教的祭品，总价值至少 25 gp，施法时消耗）\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.divination.meta": {
+    "en": "4th-level divination (ritual)",
+    "zh-CN": "四环预言（仪式）"
+  },
+  "bookMaterial.spell.dominate-beast.header": {
+    "en": "*4th-level enchantment*\n\n**Casting Time:** 1 action\n\n**Range:** 60 feet\n\n**Components:** V, S\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*四环惑控*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 60 英尺\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.dominate-beast.meta": {
+    "en": "4th-level enchantment",
+    "zh-CN": "四环惑控"
+  },
+  "bookMaterial.spell.fabricate.header": {
+    "en": "*4th-level transmutation*\n\n**Casting Time:** 10 minutes\n\n**Range:** 120 feet\n\n**Components:** V, S\n\n**Duration:** Instantaneous",
+    "zh-CN": "*四环变化*\n\n**施法时间：** 10 分钟\n\n**施法距离：** 120 英尺\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.fabricate.meta": {
+    "en": "4th-level transmutation",
+    "zh-CN": "四环变化"
+  },
+  "bookMaterial.spell.faithful-hound.header": {
+    "en": "*4th-level conjuration*\n\n**Casting Time:** 1 action\n\n**Range:** 30 feet\n\n**Components:** V, S, M (a tiny silver whistle, a piece of bone, and a thread)\n\n**Duration:** 8 hours",
+    "zh-CN": "*四环咒法*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 30 英尺\n\n**法术成分：** 言语、姿势、材料（一只小银哨、一块骨头，以及一根线）\n\n**持续时间：** 8 小时"
+  },
+  "bookMaterial.spell.faithful-hound.meta": {
+    "en": "4th-level conjuration",
+    "zh-CN": "四环咒法"
+  },
+  "bookMaterial.spell.fire-shield.header": {
+    "en": "*4th-level evocation*\n\n**Casting Time:** 1 action\n\n**Range:** Self\n\n**Components:** V, S, M (a bit of phosphorus or a firefly)\n\n**Duration:** 10 minutes",
+    "zh-CN": "*四环塑能*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 自身\n\n**法术成分：** 言语、姿势、材料（少许磷或一只萤火虫）\n\n**持续时间：** 10 分钟"
+  },
+  "bookMaterial.spell.fire-shield.meta": {
+    "en": "4th-level evocation",
+    "zh-CN": "四环塑能"
+  },
+  "bookMaterial.spell.freedom-of-movement.header": {
+    "en": "*4th-level abjuration*\n\n**Casting Time:** 1 action\n\n**Range:** Touch\n\n**Components:** V, S, M (a leather strap, bound around the arm or a similar appendage)\n\n**Duration:** 1 hour",
+    "zh-CN": "*四环防护*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 接触\n\n**法术成分：** 言语、姿势、材料（绑在手臂或类似肢体上的皮带）\n\n**持续时间：** 1 小时"
+  },
+  "bookMaterial.spell.freedom-of-movement.meta": {
+    "en": "4th-level abjuration",
+    "zh-CN": "四环防护"
+  },
+  "bookMaterial.spell.giant-insect.header": {
+    "en": "*4th-level transmutation*\n\n**Casting Time:** 1 action\n\n**Range:** 30 feet\n\n**Components:** V, S\n\n**Duration:** Concentration, up to 10 minutes",
+    "zh-CN": "*四环变化*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 30 英尺\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 专注，至多 10 分钟"
+  },
+  "bookMaterial.spell.giant-insect.meta": {
+    "en": "4th-level transmutation",
+    "zh-CN": "四环变化"
+  },
+  "bookMaterial.spell.greater-invisibility.header": {
+    "en": "*4th-level illusion*\n\n**Casting Time:** 1 action\n\n**Range:** Touch\n\n**Components:** V, S\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*四环幻术*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 接触\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.greater-invisibility.meta": {
+    "en": "4th-level illusion",
+    "zh-CN": "四环幻术"
+  },
+  "bookMaterial.spell.guardian-of-faith.header": {
+    "en": "*4th-level conjuration*\n\n**Casting Time:** 1 action\n\n**Range:** 30 feet\n\n**Components:** V\n\n**Duration:** 8 hours",
+    "zh-CN": "*四环咒法*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 30 英尺\n\n**法术成分：** 言语\n\n**持续时间：** 8 小时"
+  },
+  "bookMaterial.spell.guardian-of-faith.meta": {
+    "en": "4th-level conjuration",
+    "zh-CN": "四环咒法"
+  },
+  "bookMaterial.spell.hallucinatory-terrain.header": {
+    "en": "*4th-level illusion*\n\n**Casting Time:** 10 minutes\n\n**Range:** 300 feet\n\n**Components:** V, S, M (a stone, a twig, and a bit of green plant)\n\n**Duration:** 24 hours",
+    "zh-CN": "*四环幻术*\n\n**施法时间：** 10 分钟\n\n**施法距离：** 300 英尺\n\n**法术成分：** 言语、姿势、材料（一块石头、一根细枝，以及少许绿色植物）\n\n**持续时间：** 24 小时"
+  },
+  "bookMaterial.spell.hallucinatory-terrain.meta": {
+    "en": "4th-level illusion",
+    "zh-CN": "四环幻术"
+  },
+  "bookMaterial.spell.ice-storm.header": {
+    "en": "*4th-level evocation*\n\n**Casting Time:** 1 action\n\n**Range:** 300 feet\n\n**Components:** V, S, M (a pinch of dust and a few drops of water)\n\n**Duration:** Instantaneous",
+    "zh-CN": "*四环塑能*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 300 英尺\n\n**法术成分：** 言语、姿势、材料（少量尘土与几滴水）\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.ice-storm.meta": {
+    "en": "4th-level evocation",
+    "zh-CN": "四环塑能"
+  },
+  "bookMaterial.spell.locate-creature.header": {
+    "en": "*4th-level divination*\n\n**Casting Time:** 1 action\n\n**Range:** Self\n\n**Components:** V, S, M (a bit of fur from a bloodhound)\n\n**Duration:** Concentration, up to 1 hour",
+    "zh-CN": "*四环预言*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 自身\n\n**法术成分：** 言语、姿势、材料（少许寻血猎犬的毛）\n\n**持续时间：** 专注，至多 1 小时"
+  },
+  "bookMaterial.spell.locate-creature.meta": {
+    "en": "4th-level divination",
+    "zh-CN": "四环预言"
+  },
+  "bookMaterial.spell.phantasmal-killer.header": {
+    "en": "*4th-level illusion*\n\n**Casting Time:** 1 action\n\n**Range:** 120 feet\n\n**Components:** V, S\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*四环幻术*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 120 英尺\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.phantasmal-killer.meta": {
+    "en": "4th-level illusion",
+    "zh-CN": "四环幻术"
+  },
+  "bookMaterial.spell.polymorph.header": {
+    "en": "*4th-level transmutation*\n\n**Casting Time:** 1 action\n\n**Range:** 60 feet\n\n**Components:** V, S, M (a caterpillar cocoon)\n\n**Duration:** Concentration, up to 1 hour",
+    "zh-CN": "*四环变化*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 60 英尺\n\n**法术成分：** 言语、姿势、材料（一个毛虫茧）\n\n**持续时间：** 专注，至多 1 小时"
+  },
+  "bookMaterial.spell.polymorph.meta": {
+    "en": "4th-level transmutation",
+    "zh-CN": "四环变化"
+  },
+  "bookMaterial.spell.private-sanctum.header": {
+    "en": "*4th-level abjuration*\n\n**Casting Time:** 10 minutes\n\n**Range:** 120 feet\n\n**Components:** V, S, M (a thin sheet of lead, a piece of opaque glass, a wad of cotton or cloth, and powdered chrysolite)\n\n**Duration:** 24 hours",
+    "zh-CN": "*四环防护*\n\n**施法时间：** 10 分钟\n\n**施法距离：** 120 英尺\n\n**法术成分：** 言语、姿势、材料（一片薄铅片、一片不透明玻璃、一团棉花或布，以及橄榄石粉）\n\n**持续时间：** 24 小时"
+  },
+  "bookMaterial.spell.private-sanctum.meta": {
+    "en": "4th-level abjuration",
+    "zh-CN": "四环防护"
+  },
+  "bookMaterial.spell.resilient-sphere.header": {
+    "en": "*4th-level evocation*\n\n**Casting Time:** 1 action\n\n**Range:** 30 feet\n\n**Components:** V, S, M (a hemispherical piece of clear crystal and a matching hemispherical piece of gum arabic)\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*四环塑能*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 30 英尺\n\n**法术成分：** 言语、姿势、材料（一块半球形透明水晶，以及一块匹配的半球形阿拉伯胶）\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.resilient-sphere.meta": {
+    "en": "4th-level evocation",
+    "zh-CN": "四环塑能"
+  },
+  "bookMaterial.spell.secret-chest.header": {
+    "en": "*4th-level conjuration*\n\n**Casting Time:** 1 action\n\n**Range:** Touch\n\n**Components:** V, S, M (an exquisite chest, 3 feet by 2 feet by 2 feet, constructed from rare materials worth at least 5,000 gp, and a Tiny replica made from the same materials worth at least 50 gp)\n\n**Duration:** Instantaneous",
+    "zh-CN": "*四环咒法*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 接触\n\n**法术成分：** 言语、姿势、材料（以价值至少 5,000 gp 的稀有材料制作、长 3 英尺宽 2 英尺高 2 英尺的精美箱子，以及相同材料制作、价值至少 50 gp 的微型复制品）\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.secret-chest.meta": {
+    "en": "4th-level conjuration",
+    "zh-CN": "四环咒法"
+  },
+  "bookMaterial.spell.stone-shape.header": {
+    "en": "*4th-level transmutation*\n\n**Casting Time:** 1 action\n\n**Range:** Touch\n\n**Components:** V, S, M (soft clay, which must be worked into roughly the desired shape of the stone object)\n\n**Duration:** Instantaneous",
+    "zh-CN": "*四环变化*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 接触\n\n**法术成分：** 言语、姿势、材料（软黏土，须捏成大致希望石质物体变成的形状）\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.stone-shape.meta": {
+    "en": "4th-level transmutation",
+    "zh-CN": "四环变化"
+  },
+  "bookMaterial.spell.stoneskin.header": {
+    "en": "*4th-level abjuration*\n\n**Casting Time:** 1 action\n\n**Range:** Touch\n\n**Components:** V, S, M (diamond dust worth 100 gp, which the spell consumes)\n\n**Duration:** Concentration, up to 1 hour",
+    "zh-CN": "*四环防护*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 接触\n\n**法术成分：** 言语、姿势、材料（价值 100 gp 的钻石粉，施法时消耗）\n\n**持续时间：** 专注，至多 1 小时"
+  },
+  "bookMaterial.spell.stoneskin.meta": {
+    "en": "4th-level abjuration",
+    "zh-CN": "四环防护"
+  },
+  "bookMaterial.spell.wall-of-fire.header": {
+    "en": "*4th-level evocation*\n\n**Casting Time:** 1 action\n\n**Range:** 120 feet\n\n**Components:** V, S, M (a small piece of phosphorus)\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*四环塑能*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 120 英尺\n\n**法术成分：** 言语、姿势、材料（一小块磷）\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.wall-of-fire.meta": {
+    "en": "4th-level evocation",
+    "zh-CN": "四环塑能"
   }
 });

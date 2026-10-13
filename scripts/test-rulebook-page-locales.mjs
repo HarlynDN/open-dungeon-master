@@ -5,9 +5,29 @@ const { rulebookPage, rulebookPages } = await import('../src/lib/rulebook/book.t
 const { rulebookPageDisplay, nativeBookSourceHash } = await import('../src/lib/rulebook/localized-pages.ts');
 const { default: coverageManifest } = await import('../docs/validation/rulebook-translation-coverage.json', { with: { type: 'json' } });
 const { verifyRulebookCoverage } = await import('./lib/rulebook-coverage.mjs');
+const { bookAnchorIds, parseBook, preserveBookAnchors } = await import('../src/lib/rulebook/markdown.ts');
 const pages = rulebookPages();
 const verify = (manifest = coverageManifest, display = rulebookPageDisplay, options) => verifyRulebookCoverage(manifest, pages, nativeBookSourceHash, display, options);
 const coverage = verify(coverageManifest, rulebookPageDisplay, { full: process.argv.includes('--final') });
+
+// Native chapters and shared spell help preserve source table structure/values.
+// Item tables have previously repaired conversion rows and card-rank notation;
+// their semantic comparison remains a separately recorded acceptance task.
+for (const { id, kind } of coverageManifest.requiredPages) {
+  if (kind === 'item') continue;
+  const data = rulebookPage(id);
+  const display = rulebookPageDisplay(data.page, 'zh-CN');
+  const sourceTables = parseBook(data.page.md).filter(block => block.kind === 'table');
+  const translatedTables = parseBook(display.md).filter(block => block.kind === 'table');
+  assert.equal(translatedTables.length, sourceTables.length, id + ': complete tables');
+  for (let i = 0; i < sourceTables.length; i++) {
+    assert.equal(translatedTables[i].head.length, sourceTables[i].head.length, id + ': table columns');
+    assert.equal(translatedTables[i].rows.length, sourceTables[i].rows.length, id + ': complete table rows');
+    assert.deepEqual(translatedTables[i].rows.map(row => row.length), sourceTables[i].rows.map(row => row.length), id + ': complete table cells');
+    const numbers = table => table.rows.flatMap(row => row.flatMap(cell => cell.match(/\b(?:\d+d\d+|d\d+)\b|(?<![A-Za-z0-9])[+−×÷-]?\d+(?:[\d,/]*(?:[½¼¾])?)/gi) ?? []));
+    assert.deepEqual(numbers(translatedTables[i]), numbers(sourceTables[i]), id + ': table values');
+  }
+}
 const firstRequired = coverageManifest.requiredPages[0];
 assert.throws(() => verify({ ...coverageManifest, requiredPages: [...coverageManifest.requiredPages, firstRequired] }), /Duplicate required page/);
 assert.throws(() => verify({ ...coverageManifest, requiredPages: [{ ...firstRequired, id: 'unknown-page' }] }), /Unknown required page/);
@@ -73,7 +93,6 @@ for (const page of rulebookPages().filter(page => page.kind === 'spell' && /(?:c
   assert.ok(LOCALIZED_SPELL_PAGES.some(row => row.id === page.id), 'Missing complete low-level book page: ' + page.id);
 }
 
-const { bookAnchorIds, parseBook, preserveBookAnchors } = await import('../src/lib/rulebook/markdown.ts');
 const { default: nativeCatalog } = await import('../src/lib/rulebook/locales/zh-CN.json', { with: { type: 'json' } });
 const { prepareRulebookTranslations } = await import('./import-rulebook-translations.mjs');
 const anchors = md => bookAnchorIds(parseBook(md));
@@ -96,16 +115,6 @@ for (const id of nativeRules) {
   const html = renderer.render('RulebookPage', { data: { ...data, display }, terms: [], at: id === 'conditions' ? 'exhaustion' : undefined, xrefs, onOpen: () => {} }, 'zh-CN');
   assert.ok(html.replace(/<[^>]+>/g, '').includes(display.title), id);
   for (const anchor of display.anchors) assert.ok(html.includes('data-anchor="' + anchor + '"'), id + ': ' + anchor);
-  const sourceTables = parseBook(data.page.md).filter(block => block.kind === 'table');
-  const translatedTables = blocks.filter(block => block.kind === 'table');
-  assert.equal(translatedTables.length, sourceTables.length);
-  for (let i = 0; i < sourceTables.length; i++) {
-    assert.equal(translatedTables[i].head.length, sourceTables[i].head.length, id + ': table columns');
-    assert.equal(translatedTables[i].rows.length, sourceTables[i].rows.length, id + ': complete table rows');
-    assert.deepEqual(translatedTables[i].rows.map(row => row.length), sourceTables[i].rows.map(row => row.length), id + ': complete table cells');
-    const numbers = table => table.rows.flatMap(row => row.flatMap(cell => cell.match(/(?<![A-Za-z0-9])[+−×÷-]?\d+(?:d\d+|[\d,/]*(?:[½¼¾])?)/gi) ?? []));
-    assert.deepEqual(numbers(translatedTables[i]), numbers(sourceTables[i]), id + ': table values');
-  }
   assert.equal(rulebookPageDisplay(data.page, 'en').md, data.page.md);
   assert.equal(rulebookPageDisplay({ ...data.page, md: data.page.md + '\nNew authored rule.' }, 'zh-CN').translated, false);
   assert.equal(rulebookPageDisplay({ ...data.page, title: data.page.title + ' variant' }, 'zh-CN').translated, false);
