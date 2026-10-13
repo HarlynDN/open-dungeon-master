@@ -37,6 +37,30 @@ const link = renderer.elements().find(element => element.type === 'button' && el
 assert.ok(link, 'Translated spell reference remains clickable');
 link.props.onClick();
 assert.equal(opened, 'magic-missile');
+
+const items = rulebookPages().filter(page => page.kind === 'item');
+assert.equal(items.length, 239);
+for (const page of items) {
+  const before = JSON.stringify(page);
+  const display = rulebookPageDisplay(page, 'zh-CN');
+  assert.equal(display.translated, true, page.id);
+  assert.match(display.title, /[\u4e00-\u9fff]/, page.id);
+  assert.equal(rulebookPageDisplay(page, 'en').md, page.md);
+  assert.equal(rulebookPageDisplay({ ...page, meta: page.meta + ' authored variant' }, 'zh-CN').translated, false);
+  assert.equal(rulebookPageDisplay({ ...page, md: page.md + '\n\nExtra rule.' }, 'zh-CN').translated, false);
+  assert.equal(JSON.stringify(page), before);
+}
+// Exercise complete tables and embedded blocks in the real book renderer.
+for (const id of ['bag-of-tricks', 'deck-of-many-things', 'figurine-of-wondrous-power', 'staff-of-the-magi']) {
+  const data = rulebookPage(id);
+  const display = rulebookPageDisplay(data.page, 'zh-CN');
+  const html = renderer.render('RulebookPage', { data: { ...data, display }, terms: [], xrefs, onOpen: () => {} }, 'zh-CN');
+  assert.ok(html.includes(display.title), id);
+}
+for (const page of rulebookPages().filter(page => page.kind === 'spell' && /(?:cantrip|[12]\w*-level)/.test(page.meta))) {
+  assert.ok(LOCALIZED_SPELL_PAGES.some(row => row.id === page.id), 'Missing complete low-level book page: ' + page.id);
+}
+
 const untouched = rulebookPages().find(page => page.kind === 'spell' && !LOCALIZED_SPELL_PAGES.some(row => row.id === page.id));
 assert.equal(rulebookPageDisplay(untouched, 'zh-CN').md, untouched.md);
-console.log('Rulebook: 8 complete Chinese spell pages, actual bilingual rendering, source/canonical preservation and translated cross-reference passed.');
+console.log(`Rulebook: ${LOCALIZED_SPELL_PAGES.length} complete Chinese spell pages and ${items.length} full item pages; bilingual rendering, source/canonical preservation and translated cross-reference passed.`);
