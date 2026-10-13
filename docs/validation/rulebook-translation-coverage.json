@@ -3190,6 +3190,11 @@
       "sourceHash": "ff8dbba6322fe7f21fc1f5172873f570d61e0f10f7bf9a5821e4d03b8da3015e"
     },
     {
+      "id": "bugbear",
+      "kind": "monster",
+      "sourceHash": "c353ba12f213282c41d71ebeda63278d85abeb448315943f611794f79c9fcd25"
+    },
+    {
       "id": "cloud-giant-giant",
       "kind": "monster",
       "sourceHash": "9dd078f4b26cef169b0ba5307fa59877df5195c689ee797b97f0f7f5d5c040f5"
@@ -3215,6 +3220,11 @@
       "sourceHash": "da25d9eb254017fafad19dde454c82eddf15f81dd5f046cfff16be3dcd87b123"
     },
     {
+      "id": "goblin",
+      "kind": "monster",
+      "sourceHash": "9adfb12d62ea0fb31bfe58c40136088692c823fa260f58f2546582e6d8aaa526"
+    },
+    {
       "id": "gold-dragon-wyrmling-metallic",
       "kind": "monster",
       "sourceHash": "6272c51cfc4a490003207bc6f98227a61b1d0edfd80cfb01a50ac6f5dbb7d7a9"
@@ -3228,6 +3238,21 @@
       "id": "hill-giant-giant",
       "kind": "monster",
       "sourceHash": "65b45cf16b8849797a120caed75bba32c95ebd5ea89cf2ae1ab5f9f8e3d757a2"
+    },
+    {
+      "id": "hobgoblin",
+      "kind": "monster",
+      "sourceHash": "010aacdf3a3e0fcae54948af0db859b2aad0529578145b0c350655657c35ceb5"
+    },
+    {
+      "id": "ogre",
+      "kind": "monster",
+      "sourceHash": "b8c96abcfc3c28a7da56ef1e506a3e3d9892939199173fa1ebedcce0e0efd79d"
+    },
+    {
+      "id": "orc",
+      "kind": "monster",
+      "sourceHash": "c8275c424de830c9adea76ec0e716ec64900a1084fb1986cdf3cb86f15ac8179"
     },
     {
       "id": "red-dragon-wyrmling-chromatic",
@@ -3253,6 +3278,11 @@
       "id": "storm-giant-giant",
       "kind": "monster",
       "sourceHash": "c79f4b410f7a112cb16684dd8c4ddd7ad18aa002bbd476035765d7d17e3fdac9"
+    },
+    {
+      "id": "troll",
+      "kind": "monster",
+      "sourceHash": "65b6fce36e5cbcd33ae08498cdc907ed41a478eb4b50fc4e4bf07989317c5f40"
     },
     {
       "id": "white-dragon-wyrmling-chromatic",

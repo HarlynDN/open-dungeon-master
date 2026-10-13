@@ -66,7 +66,7 @@ report or release gate and does not include a SRD 5.2 rules migration.
 | Player system logs | Localized structured combat/audit display, party item/coin/XP logs, account facts and kickoff notices; English model/tool semantics stay separate | Other native player-log templates and final history/save/resume audit |
 | Resource delivery | UI/content/help scopes and independent retryable lazy help; anonymous bilingual switch/reload, authenticated character/campaign entry and viewer-English/story-Chinese separation observed | Complete authenticated journey and lazy/cache timing; hydrated/network totals and large route JS payload remain unverified |
 | Local Chinese TTS | Implementation and bounded CPU delivery/outage evidence retained in [the runtime record](validation/chinese-tts-runtime.json) | Chinese voice quality rejected by user; further voice work is deferred, not passed, and is not a text-milestone gate |
-| Full native rulebook | Reader chrome localized; **669/933 complete Chinese pages** now render via a server-generated display projection, including all 319 cantrip through ninth-level spell pages, all 239 magic-item pages, all thirty-six rules pages, all nine race pages and all twelve class pages and all forty chromatic/metallic dragon pages and all six giant pages and three animated-object pages and five canine pages, with complete headers and reused bodies; original English corpus retained; 319 spell and 239 magic-item bodies are available for further reuse | Remaining 264 monster pages; complete Chinese corpus coverage, authenticated browser search/navigation and English reading regression |
+| Full native rulebook | Reader chrome localized; **675/933 complete Chinese pages** now render via a server-generated display projection, including all 319 cantrip through ninth-level spell pages, all 239 magic-item pages, all thirty-six rules pages, all nine race pages and all twelve class pages and all forty chromatic/metallic dragon pages and all six giant pages and three animated-object pages and five canine pages and six common humanoid/giant enemies, with complete headers and reused bodies; original English corpus retained; 319 spell and 239 magic-item bodies are available for further reuse | Remaining 258 monster pages; complete Chinese corpus coverage, authenticated browser search/navigation and English reading regression |
 | Final text flow | Recorded Chinese exploration/social/utility and combat/slot/correction acceptance on Codex | Complete Chinese text journey, rulebook reading/search and English regression; full tests/lint/build, then pause |
 
 ## Execution adjustment (2026-10-13)
@@ -86,18 +86,18 @@ real interaction has passed. Do not restart a static translation campaign.
 
 ## Next delivery unit and interruption checkpoint
 
-- Added Blink Dog, Death Dog, Dire Wolf, Winter Wolf and Worg with complete
-  abilities, attacks and source lore: 669/933 pages, 54/318 monsters. Preserved
-  teleport/attack timing, disease/max-HP loss, pack-tactics ally restrictions,
-  knockdown saves and the winter wolf's Dexterity-save breath.
-- Reused the existing 恐狼 glossary identity; added four others. Matched 5etools
-  creature candidates separately from same-English language names. Adopted
-  亡命恶犬 with 死亡犬 as an alias; candidate edition/review provenance remains
-  explicitly unverified. Goblin stays 哥布林/哥布林语 per user policy.
-- Monster numeric/table, bilingual rendering, English switching, stale-source
-  protection and alias checks passed. AST/catalog/resources and terminology
-  checks passed (310 entries, 0 errors, 389 context warnings).
-- Next: remaining monster families (264 pages), game-card/help prose reuse and
+- Added Bugbear, Goblin, Hobgoblin, Ogre, Orc and Troll: 675/933 pages,
+  60/318 monsters. Reused existing glossary identities. Preserved surprise-round
+  limits, melee/ranged javelin damage, Martial Advantage ally/once-per-turn
+  conditions, bonus actions, and troll regeneration suppression/death timing.
+- Checked 5etools name candidates without importing prose; retained user-selected
+  哥布林/哥布林语. Orc candidates include newer XMM/XPHB sources, so these do not
+  replace the bundled 2014 mechanics or establish reviewed 2014 provenance.
+- Monster numeric/table, bilingual component rendering, cached English switching,
+  stale-source protection and reference checks passed; terminology/guard regression
+  and diff hygiene passed. This batch changes only server-side book data and the
+  delivery manifest; UI/catalog runtime is unchanged.
+- Next: remaining monster families (258 pages), game-card/help prose reuse and
   native source ownership. Final full-suite/build and real bilingual journey
   remain unproven.
 - Native dynamic UI/material/log ownership remains pending in the UI manifest;
