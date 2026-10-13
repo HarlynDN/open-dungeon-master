@@ -3530,9 +3530,34 @@
       "sourceHash": "6d65bb53bb21990d1ffe49daa6c5e3f0a3e585f4d924181f297c890b9d9a1fc8"
     },
     {
+      "id": "baboon",
+      "kind": "monster",
+      "sourceHash": "8ad94d95aa14c68d33eff5c27847643d937966084de3fe41013d67b97551ecf4"
+    },
+    {
+      "id": "badger",
+      "kind": "monster",
+      "sourceHash": "8e5ef4572d0d46a50cbfc6e7f01c500987a6ca5c85634846664428b3f4863893"
+    },
+    {
+      "id": "bat",
+      "kind": "monster",
+      "sourceHash": "87d0951906dbf1360dad39d1e5fa9a83c0d797b9b79e3f4e3e64e86056710586"
+    },
+    {
       "id": "blink-dog",
       "kind": "monster",
       "sourceHash": "b40c21a9656d17d1cd7c71d6014dab9a04d1b17743f24a14d0d2bffa2374fc4c"
+    },
+    {
+      "id": "cat",
+      "kind": "monster",
+      "sourceHash": "33ae75e6a66b68d3be6161c31508eee3ed298628b88a38d8b2d06f3aca0a0b01"
+    },
+    {
+      "id": "crab",
+      "kind": "monster",
+      "sourceHash": "8f3ecd9332d543d43edfcc9e597efa82f6bf8ba2560b2490252d9ad8b546cd0e"
     },
     {
       "id": "death-dog",
@@ -3540,9 +3565,94 @@
       "sourceHash": "142338b47c6c63042c6f34968b40fb33a1ff84eee1017aafe3360a107f2342f8"
     },
     {
+      "id": "deer",
+      "kind": "monster",
+      "sourceHash": "95dff06f6defc0b2958360e646183a468cc456a41f8b6004b5f150b3497614be"
+    },
+    {
       "id": "dire-wolf",
       "kind": "monster",
       "sourceHash": "3affafd7285842b2025d3b056a6133187109f53e5fa02e6aa7ea2b2b2071f0f8"
+    },
+    {
+      "id": "eagle",
+      "kind": "monster",
+      "sourceHash": "1c7e56b15910caf18c2689f984d0e7369bc5021c5c66d555551029a40daf40e0"
+    },
+    {
+      "id": "frog",
+      "kind": "monster",
+      "sourceHash": "48a2664da1e9ebf1b31c682c2e2dcb43423bb32236fb6670e631daeb12ff0630"
+    },
+    {
+      "id": "hawk",
+      "kind": "monster",
+      "sourceHash": "f153b57f671b71b2089771b58175d999537946556a0da380fd6b8c2ff1198b19"
+    },
+    {
+      "id": "hyena",
+      "kind": "monster",
+      "sourceHash": "3b6fbe35a9966cba13ff4704a08b58aff99beb2f47c9a8f249187ffda4ff395b"
+    },
+    {
+      "id": "jackal",
+      "kind": "monster",
+      "sourceHash": "433651541cba1dcf26ece352a732dd0dac85c73acd50a12629d04a5ceb61bd01"
+    },
+    {
+      "id": "lizard",
+      "kind": "monster",
+      "sourceHash": "9a6481b47cd5c2374e25215680f33715381d43cf7262edf5388f2f1b6197f165"
+    },
+    {
+      "id": "octopus",
+      "kind": "monster",
+      "sourceHash": "8ea1d065537301668ef47788edcc95bd02b77023ebc82fb2ce3d59fca0ae43ad"
+    },
+    {
+      "id": "owl",
+      "kind": "monster",
+      "sourceHash": "9815559e41bf47661d05eff6ea4710b27d5c27ccf9ecde407d90116ed243f8bf"
+    },
+    {
+      "id": "quipper",
+      "kind": "monster",
+      "sourceHash": "8167a6223fdb80de6d67dfb34c2948a2e75b0614916e3d71ddbc7f95dcde0a33"
+    },
+    {
+      "id": "rat",
+      "kind": "monster",
+      "sourceHash": "283a5eb946c3b8fc613b5d65a09c254a958925e8d509b5c7f1f3ee50325a7a51"
+    },
+    {
+      "id": "raven",
+      "kind": "monster",
+      "sourceHash": "4925e6ad88cc42a105541b8c3c52602e9b8864b0c03e7824de227fb327f9219a"
+    },
+    {
+      "id": "scorpion",
+      "kind": "monster",
+      "sourceHash": "2a9ac98c0e9a43dc238c9f5330d74b22200c0cd2a45a2d53f1633cfba68e9eed"
+    },
+    {
+      "id": "sea-horse",
+      "kind": "monster",
+      "sourceHash": "e22a8bbc7d1a8d3400dc70982c8a75930b59a184ed0b0bcade916c0127f6f7bd"
+    },
+    {
+      "id": "spider",
+      "kind": "monster",
+      "sourceHash": "b4df9b212fe13836bacf4744377b36371e38ff7f0a1bb1d62393445b7f4a9e8e"
+    },
+    {
+      "id": "vulture",
+      "kind": "monster",
+      "sourceHash": "1c247678f71b0c5d5ab2caa9fcbd7cf8686dfdab548ab713df299ff2b7c24375"
+    },
+    {
+      "id": "weasel",
+      "kind": "monster",
+      "sourceHash": "67d6e8ab3413ff2420d77c68b722467d1dac0884b87a0fb411850e212863a6fa"
     },
     {
       "id": "winter-wolf",

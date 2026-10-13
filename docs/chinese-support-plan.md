@@ -66,7 +66,7 @@ report or release gate and does not include a SRD 5.2 rules migration.
 | Player system logs | Localized structured combat/audit display, party item/coin/XP logs, account facts and kickoff notices; English model/tool semantics stay separate | Other native player-log templates and final history/save/resume audit |
 | Resource delivery | UI/content/help scopes and independent retryable lazy help; anonymous bilingual switch/reload, authenticated character/campaign entry and viewer-English/story-Chinese separation observed | Complete authenticated journey and lazy/cache timing; hydrated/network totals and large route JS payload remain unverified |
 | Local Chinese TTS | Implementation and bounded CPU delivery/outage evidence retained in [the runtime record](validation/chinese-tts-runtime.json) | Chinese voice quality rejected by user; further voice work is deferred, not passed, and is not a text-milestone gate |
-| Full native rulebook | Reader chrome localized; **713/933 complete Chinese pages** now render via a server-generated display projection, including all 319 cantrip through ninth-level spell pages, all 239 magic-item pages, all thirty-six rules pages, all nine race pages and all twelve class pages and all forty chromatic/metallic dragon pages and all six giant pages and three animated-object pages and five canine pages and six common humanoid/giant enemies and five petrifying/flying monstrosities and five skeleton/zombie entries and four additional monstrosities and four plant/fungus entries plus centaur, ettin, minotaur, gargoyle, harpy, manticore and merrow, with complete headers and reused bodies; original English corpus retained; 319 spell and 239 magic-item bodies are available for further reuse | Remaining 220 monster pages; complete Chinese corpus coverage, authenticated browser search/navigation and English reading regression |
+| Full native rulebook | Reader chrome localized; **735/933 complete Chinese pages** now render via a server-generated display projection, including all 319 cantrip through ninth-level spell pages, all 239 magic-item pages, all thirty-six rules pages, all nine race pages and all twelve class pages and all forty chromatic/metallic dragon pages and all six giant pages and three animated-object pages and five canine pages and six common humanoid/giant enemies and five petrifying/flying monstrosities and five skeleton/zombie entries and four additional monstrosities and four plant/fungus entries plus centaur, ettin, minotaur, gargoyle, harpy, manticore and merrow, with complete headers and reused bodies; original English corpus retained; 319 spell and 239 magic-item bodies are available for further reuse | Remaining 198 monster pages; complete Chinese corpus coverage, authenticated browser search/navigation and English reading regression |
 | Final text flow | Recorded Chinese exploration/social/utility and combat/slot/correction acceptance on Codex | Complete Chinese text journey, rulebook reading/search and English regression; full tests/lint/build, then pause |
 
 ## Execution adjustment (2026-10-13)
@@ -86,17 +86,18 @@ real interaction has passed. Do not restart a static translation campaign.
 
 ## Next delivery unit and interruption checkpoint
 
-- Added Azer, Magmin and Salamander: 713/933 pages, 98/318 monsters. Preserved
-  contact/reach heat damage, included weapon riders, death burst, ignition and
-  end-turn damage, two-handed damage, and grapple-specific automatic tail hits.
-  Repaired the translated Salamander Senses label's source markup typo only.
-- Added 火矮人/火童/火蜥蜴 from English-identity-matched 5etools candidates to
-  the glossary; source mechanics remain SRD 5.1 and candidate review provenance
-  remains unverified. No external prose imported.
-- Numeric/table, bilingual rendering, English switch, source refusal, alias and
-  terminology/guard checks passed. AST/catalog/resources passed (346 terminology
-  entries, 0 errors, 389 context warnings).
-- Next: remaining monster families (220 pages), game-card/help prose reuse and
+- Added 22 ordinary beasts (baboon through weasel, exact IDs in coverage manifest):
+  735/933 pages, 120/318 monsters. Shared stat headers and strictly matched English
+  attack/sense templates reduced duplication; special breath, ink cloud, mimicry,
+  poison, web, flyby and no-attack lore clauses were translated separately.
+- Added 15 shared names; matched 5etools terminology candidates. Resolved Hawk/Eagle
+  display conflict to 隼/鹰, retaining 鹰 as Hawk's legacy input alias. A regression
+  proves both present yields ambiguity, isolated legacy Hawk still resolves, and
+  canonical English remains exact. Candidate edition/review provenance is unverified.
+- Numeric/table, bilingual rendering, English switch, source refusal and identity
+  checks passed. Terminology/guard and new ambiguity regression passed, as did
+  AST/catalog/resources (361 entries, 0 errors, 389 context warnings).
+- Next: remaining monster families (198 pages), game-card/help prose reuse and
   native source ownership. Final full-suite/build and real bilingual journey
   remain unproven.
 - Native dynamic UI/material/log ownership remains pending in the UI manifest;
