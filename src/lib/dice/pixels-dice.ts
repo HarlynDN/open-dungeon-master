@@ -1,5 +1,6 @@
-import { pixelChooserFailure } from "./pixel-chooser-errors";
 "use client";
+
+import { pixelChooserFailure } from "./pixel-chooser-errors";
 
 // Browser-side manager for Pixels Bluetooth dice (https://gamewithpixels.com).
 // Wraps @systemic-games/pixels-web-connect, the same library Foundry VTT's

@@ -162,6 +162,22 @@ Campaign-dialog browser behavior, authenticated language switching and broader
 character variants remain open. No model or voice requests were made; the test
 server's unavailable default model is not the approved Codex CLI backend.
 
+Authenticated campaign browser acceptance completed the six-step Chinese
+creation wizard, persisted a new AI-DM campaign with `zh-CN`, and imported the
+previously saved character from the library into its lobby. The language menu
+shows Simplified Chinese selected after creation and subsequent route loads.
+Two concrete entry blockers were repaired: the Pixels dice client directive
+was below an import, and unused legacy settings-info exports read translation
+resources at module evaluation before registration. The creator and lobby
+already call `tableInfo` at render time; removing the unreferenced eager exports
+keeps that shared source and English copy unchanged. The existing Chinese table
+settings workflow plus catalog/types/changed-file lint pass. Actual campaign
+and character-selection routes now load; screenshot is outside Git at
+`/tmp/odm-chinese-campaign-lobby.png`. This is creation/lobby acceptance only.
+Active play awaits configuring this isolated server's approved Codex CLI
+harness backend; its unavailable default Qwen endpoint was not used for a DM
+request. Local TTS and final authenticated bilingual journey remain open.
+
 Pure state, audio plumbing and glyph helpers can be audited within the session
 batch; their file count must not displace player-visible work.
 Shared Workshop types remain in the manifest's import closure; deep editors

@@ -38,19 +38,6 @@ import {
   type Genre,
 } from "@/lib/schemas/game-settings-options";
 
-// The Living World explainer, shared with the campaign creator's info
-// button so the two never drift.
-// English exports retained for existing callers. UI uses tableInfo with its locale.
-export const LIVING_WORLD_INFO = tableInfo("livingWorld", "en").text;
-
-// The same explainers as this panel's tooltips, shared with the campaign
-// creator's info buttons so the two surfaces never drift apart.
-export const BONDS_INFO = tableInfo("bonds", "en").text;
-
-export const ROMANCE_INFO = tableInfo("romance", "en").text;
-
-export const NARRATION_GUARD_INFO = tableInfo("narrationGuard", "en").text;
-
 // Lobby game-settings section: the party lead edits live (PATCHes propagate to
 // everyone over SSE); other players see a read-only summary.
 export function GameSettingsPanel({
