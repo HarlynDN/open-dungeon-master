@@ -6,7 +6,6 @@ import { pickerQueryParams, pickerSectionKey } from "@/lib/i18n/picker-requests"
 import { spellSummaryView } from "@/lib/i18n/spell-ui-presentations";
 import { nativeItemHelp } from "@/lib/i18n/magic-item-material-presentations";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
-import { nativeFeatHelp } from "@/lib/i18n/feature-material-presentations";
 import { pickerName, pickerMatches } from "@/lib/i18n/gear-ui-presentations";
 import { scopedParams, useContentCampaign } from "@/lib/content-scope";
 import { Check, ChevronDown, ChevronRight, Loader2, Plus } from "lucide-react";
@@ -380,7 +379,7 @@ export default function CatalogBrowser({
                                   <InfoButton
                                     label={pickerName(kind, entry, locale)}
                                     meta={kind === "spells" ? spellSummaryView(entry.data, locale, entry.source === "homebrew") : undefined}
-                                    text={kind === "feats" && entry.source !== "homebrew" ? nativeFeatHelp(entry.name, describeContentEntry(entry.data), locale) : kind === "items" ? nativeItemHelp(entry, describeContentEntry(entry.data), locale) : referenceRowDescription(kind, entry, locale)}
+                                    text={kind === "items" ? nativeItemHelp(entry, describeContentEntry(entry.data), locale) : referenceRowDescription(kind, entry, locale)}
                                     reference={
                                       entry.source === "homebrew"
                                         ? undefined

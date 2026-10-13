@@ -1127,8 +1127,8 @@
     },
     {
       "path": "src/app/characters/builder/CatalogBrowser.tsx",
-      "state": "pending",
-      "review": "Picker-flow checkpoint: viewer-language alias queries, registered spell fact/metadata summaries, canonical help name/slug, per-native-filter/scope catalog cache and distinct retryable read failures reviewed. Lazy content holds matched name/source/request key, suppresses stale references and preserves homebrew text. This owner stays pending for remaining owned long descriptions/help body audit; no full material translation or real browser acceptance claim."
+      "state": "covered",
+      "review": "Whole-owner dynamic review: localized empty/loading/failure/retry/unavailable/custom/pending/truncation controls; caller-owned headings/meta/placeholder remain delegated. Registered names project without changing selection IDs or callback objects; custom names remain authored. Spells/items/feats use source-bound help, including the unified owned-document feat gate tested on all three components in both locales. Catalog caches include locale/scope and failed loads do not claim a confirmed zero count. Existing gear/magic/spell regressions cover English preservation and canonical callbacks. Actual installed Open5e catalog/browser lifecycle remains a separate acceptance gate."
     },
     {
       "path": "src/app/characters/builder/CharacterBuilder.tsx",
@@ -1137,8 +1137,8 @@
     },
     {
       "path": "src/app/characters/builder/ContentPicker.tsx",
-      "state": "pending",
-      "review": "Picker-flow checkpoint: viewer-language alias queries, registered spell fact/metadata summaries, canonical help name/slug, per-native-filter/scope catalog cache and distinct retryable read failures reviewed. Lazy content holds matched name/source/request key, suppresses stale references and preserves homebrew text. This owner stays pending for remaining owned long descriptions/help body audit; no full material translation or real browser acceptance claim."
+      "state": "covered",
+      "review": "Whole-owner dynamic review: localized empty/loading/failure/retry/unavailable/custom/pending/truncation controls; caller-owned headings/meta/placeholder remain delegated. Registered names project without changing selection IDs or callback objects; custom names remain authored. Spells/items/feats use source-bound help, including the unified owned-document feat gate tested on all three components in both locales. Catalog caches include locale/scope and failed loads do not claim a confirmed zero count. Existing gear/magic/spell regressions cover English preservation and canonical callbacks. Actual installed Open5e catalog/browser lifecycle remains a separate acceptance gate."
     },
     {
       "path": "src/app/characters/builder/Dice.tsx",
@@ -1167,8 +1167,8 @@
     },
     {
       "path": "src/app/characters/builder/MultiContentPicker.tsx",
-      "state": "pending",
-      "review": "Picker-flow checkpoint: viewer-language alias queries, registered spell fact/metadata summaries, canonical help name/slug, per-native-filter/scope catalog cache and distinct retryable read failures reviewed. Lazy content holds matched name/source/request key, suppresses stale references and preserves homebrew text. This owner stays pending for remaining owned long descriptions/help body audit; no full material translation or real browser acceptance claim."
+      "state": "covered",
+      "review": "Whole-owner dynamic review: localized empty/loading/failure/retry/unavailable/custom/pending/truncation controls; caller-owned headings/meta/placeholder remain delegated. Registered names project without changing selection IDs or callback objects; custom names remain authored. Spells/items/feats use source-bound help, including the unified owned-document feat gate tested on all three components in both locales. Catalog caches include locale/scope and failed loads do not claim a confirmed zero count. Existing gear/magic/spell regressions cover English preservation and canonical callbacks. Actual installed Open5e catalog/browser lifecycle remains a separate acceptance gate."
     },
     {
       "path": "src/app/characters/builder/OptionCardGrid.tsx",

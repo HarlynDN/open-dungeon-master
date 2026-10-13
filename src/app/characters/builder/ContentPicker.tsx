@@ -6,7 +6,6 @@ import { Loader2, Plus } from "lucide-react";
 import { spellSummaryView } from "@/lib/i18n/spell-ui-presentations";
 import { nativeItemHelp } from "@/lib/i18n/magic-item-material-presentations";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
-import { nativeFeatHelp } from "@/lib/i18n/feature-material-presentations";
 import { pickerName } from "@/lib/i18n/gear-ui-presentations";
 import { useEffect, useRef } from "react";
 import { cn } from "@/lib/cn";
@@ -120,7 +119,7 @@ export default function ContentPicker({
               <InfoButton
                 label={pickerName(kind, entry, locale)}
                 meta={kind === "spells" ? spellSummaryView(entry.data, locale, entry.source === "homebrew") : undefined}
-                text={kind === "feats" && entry.source !== "homebrew" ? nativeFeatHelp(entry.name, describeContentEntry(entry.data), locale) : kind === "items" ? nativeItemHelp(entry, describeContentEntry(entry.data), locale) : referenceRowDescription(kind, entry, locale)}
+                text={kind === "items" ? nativeItemHelp(entry, describeContentEntry(entry.data), locale) : referenceRowDescription(kind, entry, locale)}
                 reference={
                   entry.source === "homebrew" ? undefined : { kind, slug: entry.slug, name: entry.name }
                 }

@@ -138,7 +138,18 @@ this section records current delivery state and acceptance gaps only.
   locales. No rule values, stored labels or old saved sheets were rewritten.
   Browser verification of this newer numeric fix remains open. The pure campaign
   draft owner is now reviewed; its existing four option checks pass.
-- UI source coverage: 417/440 owners, zero pending literal sites, 19323 keys.
+- Grouped picker owner review: ContentPicker, MultiContentPicker and
+  CatalogBrowser are reviewed through all display branches. Search/catalog feat
+  help bypassed the shared owned-document gate; both now use the same source
+  projection as multi-select. Real component regression passes for native,
+  external-book, homebrew and changed descriptions in English and Chinese.
+  Feature-material regression, all seven gear regression groups, type check,
+  focused ESLint and UI inventory pass. Logs: /tmp/odm-picker-source-boundary.log
+  and /tmp/odm-picker-gear-regression.log.
+  The two source-review hashes retain previous values and base commit; frozen
+  English goldens remain untouched. Installed-catalog browser acceptance remains
+  separate from component coverage.
+- UI source coverage: 420/440 owners, zero pending literal sites, 19323 keys.
   Completed pure-helper/consumer reviews are recorded in
   docs/validation/ui-localization.json. Whole-owner dynamic output and browser
   acceptance remain distinct; stale theme counts were corrected to 733/733.

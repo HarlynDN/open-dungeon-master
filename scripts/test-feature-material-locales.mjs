@@ -301,3 +301,27 @@ console.log('PASS: 146 native feature and 54 feat summaries, class overrides, so
 console.log('PASS: bilingual core features across actual creation and sheet components; localized tooltip props, canonical identities and explicit pack names/help preserved.');
 console.log(`PASS: ${SUBCLASS_FEATURE_MATERIAL.length} authored subclass source bindings and actual creation/sheet projections for the registered classes; subclass-specific help, changed and unrelated-class prose preserved.`);
 console.log('PASS: multiclass feature help/icon ownership, legacy primary fallback, missing/ambiguous secondary subclasses, canonical IDs and story names preserved.');
+
+// Search, multi-select and catalog must enforce the same full-source/book gate.
+const pickerFiles=['ContentPicker','MultiContentPicker','CatalogBrowser'].map(name=>`src/app/characters/builder/${name}.tsx`);
+const feat=NATIVE_FEAT_MATERIAL[0],native={name:feat.name,slug:'native-feat',source:'open5e',documentSlug:'odm-expanded',data:{desc:MESSAGE_CATALOGS.en[feat.descriptionKey]}};
+const variants=[native,{...native,slug:'other-book',documentSlug:'external-book'},{...native,slug:'homebrew',source:'homebrew'},{...native,slug:'changed',data:{desc:'Authored replacement.'}}];
+const dataUrl=source=>'data:text/javascript;base64,'+Buffer.from(source).toString('base64');
+const pickerRenderer=await openCombatRenderer({files:pickerFiles,sourceOf:file=>fs.readFileSync(file,'utf8')+(pickerFiles.includes(file)?`\nexport {${file.split('/').at(-1).replace('.tsx','')}};`:''),stubs:{
+ './useContentSearch':dataUrl('export const useContentSearch=()=>({query:"",results:'+JSON.stringify(variants)+',open:true,loading:false,unavailable:false,unadmitted:[],setQuery:()=>{},setResults:()=>{},setOpen:()=>{}});'),
+ '@/components/ui/InfoDialog':dataUrl('export const InfoButton=()=>null;'),
+ '@/lib/content-scope':dataUrl('export const useContentCampaign=()=>null; export const scopedParams=x=>x;'),
+}});
+const {describeContentEntry}=await import('../src/lib/help/index.ts');
+const {pickerQueryParams,pickerSectionKey}=await import('../src/lib/i18n/picker-requests.ts');
+for(const locale of ['en','zh-CN'])for(const component of ['ContentPicker','MultiContentPicker','CatalogBrowser']){
+ const key=pickerSectionKey('feats',null,'feats',pickerQueryParams(new URLSearchParams(),locale));
+ pickerRenderer.render(component,{kind:'feats',placeholder:'Search',selectedNames:[],onPick:()=>{},onAdd:()=>{},buttonLabel:'Browse',sections:[{key:'feats',label:'Feats'}]},locale,component==='CatalogBrowser'?{queues:{[pickerFiles[2]]:[true,['feats'],{[key]:{rows:variants,truncated:false}},[],'']}}:{});
+ const tips=pickerRenderer.elements().filter(e=>typeof e.props.text==='string'&&typeof e.props.label==='string');
+ for(let i=0;i<variants.length;i++){
+  const row=variants[i],tip=tips[i];assert(tip,component+':'+row.slug);
+  const source=describeContentEntry(row.data);
+  assert.equal(tip.props.text,locale==='zh-CN'&&i===0?nativeFeatHelp(row.name,source,locale):source,component+':'+locale+':'+row.slug);
+ }
+}
+console.log('PASS: three real feat pickers agree on owned source translations, third-party/homebrew/changed prose preservation and unchanged English.');
