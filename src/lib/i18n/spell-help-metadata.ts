@@ -507,5 +507,173 @@ export const SPELL_HELP = [
   {
     "name": "Zone of Truth",
     "key": "spellHelp.native.zone-of-truth"
+  },
+  {
+    "name": "Animate Dead",
+    "key": "spellHelp.native.animate-dead"
+  },
+  {
+    "name": "Beacon of Hope",
+    "key": "spellHelp.native.beacon-of-hope"
+  },
+  {
+    "name": "Bestow Curse",
+    "key": "spellHelp.native.bestow-curse"
+  },
+  {
+    "name": "Blink",
+    "key": "spellHelp.native.blink"
+  },
+  {
+    "name": "Call Lightning",
+    "key": "spellHelp.native.call-lightning"
+  },
+  {
+    "name": "Clairvoyance",
+    "key": "spellHelp.native.clairvoyance"
+  },
+  {
+    "name": "Conjure Animals",
+    "key": "spellHelp.native.conjure-animals"
+  },
+  {
+    "name": "Counterspell",
+    "key": "spellHelp.native.counterspell"
+  },
+  {
+    "name": "Create Food and Water",
+    "key": "spellHelp.native.create-food-and-water"
+  },
+  {
+    "name": "Daylight",
+    "key": "spellHelp.native.daylight"
+  },
+  {
+    "name": "Dispel Magic",
+    "key": "spellHelp.native.dispel-magic"
+  },
+  {
+    "name": "Fear",
+    "key": "spellHelp.native.fear"
+  },
+  {
+    "name": "Fireball",
+    "key": "spellHelp.native.fireball"
+  },
+  {
+    "name": "Fly",
+    "key": "spellHelp.native.fly"
+  },
+  {
+    "name": "Gaseous Form",
+    "key": "spellHelp.native.gaseous-form"
+  },
+  {
+    "name": "Glyph of Warding",
+    "key": "spellHelp.native.glyph-of-warding"
+  },
+  {
+    "name": "Haste",
+    "key": "spellHelp.native.haste"
+  },
+  {
+    "name": "Hypnotic Pattern",
+    "key": "spellHelp.native.hypnotic-pattern"
+  },
+  {
+    "name": "Lightning Bolt",
+    "key": "spellHelp.native.lightning-bolt"
+  },
+  {
+    "name": "Magic Circle",
+    "key": "spellHelp.native.magic-circle"
+  },
+  {
+    "name": "Major Image",
+    "key": "spellHelp.native.major-image"
+  },
+  {
+    "name": "Mass Healing Word",
+    "key": "spellHelp.native.mass-healing-word"
+  },
+  {
+    "name": "Meld into Stone",
+    "key": "spellHelp.native.meld-into-stone"
+  },
+  {
+    "name": "Nondetection",
+    "key": "spellHelp.native.nondetection"
+  },
+  {
+    "name": "Phantom Steed",
+    "key": "spellHelp.native.phantom-steed"
+  },
+  {
+    "name": "Plant Growth",
+    "key": "spellHelp.native.plant-growth"
+  },
+  {
+    "name": "Protection from Energy",
+    "key": "spellHelp.native.protection-from-energy"
+  },
+  {
+    "name": "Remove Curse",
+    "key": "spellHelp.native.remove-curse"
+  },
+  {
+    "name": "Revivify",
+    "key": "spellHelp.native.revivify"
+  },
+  {
+    "name": "Sending",
+    "key": "spellHelp.native.sending"
+  },
+  {
+    "name": "Sleet Storm",
+    "key": "spellHelp.native.sleet-storm"
+  },
+  {
+    "name": "Slow",
+    "key": "spellHelp.native.slow"
+  },
+  {
+    "name": "Speak with Dead",
+    "key": "spellHelp.native.speak-with-dead"
+  },
+  {
+    "name": "Speak with Plants",
+    "key": "spellHelp.native.speak-with-plants"
+  },
+  {
+    "name": "Spirit Guardians",
+    "key": "spellHelp.native.spirit-guardians"
+  },
+  {
+    "name": "Stinking Cloud",
+    "key": "spellHelp.native.stinking-cloud"
+  },
+  {
+    "name": "Tiny Hut",
+    "key": "spellHelp.native.tiny-hut"
+  },
+  {
+    "name": "Tongues",
+    "key": "spellHelp.native.tongues"
+  },
+  {
+    "name": "Vampiric Touch",
+    "key": "spellHelp.native.vampiric-touch"
+  },
+  {
+    "name": "Water Breathing",
+    "key": "spellHelp.native.water-breathing"
+  },
+  {
+    "name": "Water Walk",
+    "key": "spellHelp.native.water-walk"
+  },
+  {
+    "name": "Wind Wall",
+    "key": "spellHelp.native.wind-wall"
   }
 ] as const;

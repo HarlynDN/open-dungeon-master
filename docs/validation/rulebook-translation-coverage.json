@@ -865,6 +865,216 @@
       "sourceHash": "efe4949e33fe428875670def37a34ed8ed07d1944ec04a5f4b697be32ec41e3a"
     },
     {
+      "id": "animate-dead",
+      "kind": "spell",
+      "sourceHash": "6456ff2421a6a4a26a6e053c8d1c977a2da29135506a00038d6f20b419d9b586"
+    },
+    {
+      "id": "beacon-of-hope",
+      "kind": "spell",
+      "sourceHash": "f017b4f61c2167a8f4c028db9115921d301e1c3cf0af887afd944002753ce4e9"
+    },
+    {
+      "id": "bestow-curse",
+      "kind": "spell",
+      "sourceHash": "387c54289294364b95ca01f745c5a65cfd6d6abe973a50150cd93e5df543c30d"
+    },
+    {
+      "id": "blink",
+      "kind": "spell",
+      "sourceHash": "7ff5ed0aa67f96287f419e325ef74fa943d165eca38bfa535de91661335e9187"
+    },
+    {
+      "id": "call-lightning",
+      "kind": "spell",
+      "sourceHash": "7c8a5a2492f26cb99cc2c0cde90775a05b30e7a7ac3c725e4458eaa429314599"
+    },
+    {
+      "id": "clairvoyance",
+      "kind": "spell",
+      "sourceHash": "f3e96f557f103860fab3de35a131b0c68b731669bddd0df78c8a15fcccf20087"
+    },
+    {
+      "id": "conjure-animals",
+      "kind": "spell",
+      "sourceHash": "951056223ee79a27a3edf336e1df5c4f0026c92632f6d5ffc1d827ad7da98bef"
+    },
+    {
+      "id": "counterspell",
+      "kind": "spell",
+      "sourceHash": "23ba30485339054ab0ee0c0c81296835fb7c5f8eb7ce6a5517cfbf28176ef5cc"
+    },
+    {
+      "id": "create-food-and-water",
+      "kind": "spell",
+      "sourceHash": "d7c57ceae2117a4b0ee7b203e1ff0b80e5d6091cea3124dabd1b3232d65ee169"
+    },
+    {
+      "id": "daylight",
+      "kind": "spell",
+      "sourceHash": "0d200d08811c648893b25ef53d264d0202ccbbb1df3230f8b05e1227f938343e"
+    },
+    {
+      "id": "dispel-magic",
+      "kind": "spell",
+      "sourceHash": "ec8d3b2461d4a04db9439c829b6291f08e00c1034f89fd709cda6fadace52d98"
+    },
+    {
+      "id": "fear",
+      "kind": "spell",
+      "sourceHash": "160565f3d90294f52e392505c86b6179abb547e96c00fcc18def6d5d23b3182d"
+    },
+    {
+      "id": "fireball",
+      "kind": "spell",
+      "sourceHash": "71b6a3cee42d62bbda5108e683ed91446434d74d43fce130637c2a6dbdb5b0d3"
+    },
+    {
+      "id": "fly",
+      "kind": "spell",
+      "sourceHash": "3cbe79f4f6763bd788bd3b801de3cc950b286546d7d5655b66b75b1c1878f610"
+    },
+    {
+      "id": "gaseous-form",
+      "kind": "spell",
+      "sourceHash": "199263dc9afeac7745f56e2bbf61ef3849b8966c302035f9fcfd161c5a082292"
+    },
+    {
+      "id": "glyph-of-warding",
+      "kind": "spell",
+      "sourceHash": "414ff9ac8b8251decd333686aa35d54ba3b3c2bf4d62e423209e583dfbbba661"
+    },
+    {
+      "id": "haste",
+      "kind": "spell",
+      "sourceHash": "a1955fd89ddaec0fd14eb509ce93899d9d266a2b8bfb03a80b0be6aa18787f9d"
+    },
+    {
+      "id": "hypnotic-pattern",
+      "kind": "spell",
+      "sourceHash": "7ad9e07e2c8436720e9a3a0fe4311902d9d861006827657ad786a599517f1e9c"
+    },
+    {
+      "id": "lightning-bolt",
+      "kind": "spell",
+      "sourceHash": "a6ef62cffb766457184c4de46a59e78b83e74f21c723bf1a175ceefe77a8c81a"
+    },
+    {
+      "id": "magic-circle",
+      "kind": "spell",
+      "sourceHash": "9ba4f5cd79414cf363d0ad7121249a88f0d56dd5612c6f33650e005defd0a0a8"
+    },
+    {
+      "id": "major-image",
+      "kind": "spell",
+      "sourceHash": "9e7981bc0844ce7e3698d2f4a6cafff1dae0c9d914bc49c9242c6f8384407332"
+    },
+    {
+      "id": "mass-healing-word",
+      "kind": "spell",
+      "sourceHash": "586387c2a768d1f59536e162cd9244c940835e817a2fdd8d30217174b34615ab"
+    },
+    {
+      "id": "meld-into-stone",
+      "kind": "spell",
+      "sourceHash": "fba65a97e8095ba2581848e6275ca76c5b3562bdd041d895504ed99d7bb551bc"
+    },
+    {
+      "id": "nondetection",
+      "kind": "spell",
+      "sourceHash": "1483ca43289a8b8e2a1531f303a5a2fda7a35a44d7239887d0f12835a1620fdf"
+    },
+    {
+      "id": "phantom-steed",
+      "kind": "spell",
+      "sourceHash": "7e20806b952690b8e0fd703e14945b0059e940d45f886bfdf39a74c11220e7c2"
+    },
+    {
+      "id": "plant-growth",
+      "kind": "spell",
+      "sourceHash": "f864ee9f0d4e4472a383fdf2ccb7c928c3deda0264fa8374472a8d6aa9030ce3"
+    },
+    {
+      "id": "protection-from-energy",
+      "kind": "spell",
+      "sourceHash": "a5aa2ecf18e00d1022757c48d709f0d0864f0212d8a957da198588571c5b3667"
+    },
+    {
+      "id": "remove-curse",
+      "kind": "spell",
+      "sourceHash": "3c81f4a0570c9652969e51d9c8fb87c467341e05331b34ebb728c29566490e67"
+    },
+    {
+      "id": "revivify",
+      "kind": "spell",
+      "sourceHash": "b207af5d1e5845c37761fba5bcf6c90b7c742f0d6da2d756c20ea0d207a9c55b"
+    },
+    {
+      "id": "sending",
+      "kind": "spell",
+      "sourceHash": "7b5ed3fa9908fe5db167551a8225773f3c67bcea7a198798b45bd0064f79e26b"
+    },
+    {
+      "id": "sleet-storm",
+      "kind": "spell",
+      "sourceHash": "cca541c2ce43abf40cda731733510674b6a86e3a445696931d7cfa0df9bdaac5"
+    },
+    {
+      "id": "slow",
+      "kind": "spell",
+      "sourceHash": "c9350a1381bfc81bb162a89a88b0a176f560cb9cdeea6330022257f0ea372010"
+    },
+    {
+      "id": "speak-with-dead",
+      "kind": "spell",
+      "sourceHash": "45f2d8d5444ed873ef2973be7d60c60a825675f32e76ef8c5dfa8b32b5f9d9b9"
+    },
+    {
+      "id": "speak-with-plants",
+      "kind": "spell",
+      "sourceHash": "24d5313296e8d39be912c74a3d7f5aa45715308b9bf9f9f27a571e4cc483ea9f"
+    },
+    {
+      "id": "spirit-guardians",
+      "kind": "spell",
+      "sourceHash": "7cd18c4d2e3218cc8ed985536f7d473b9bccddc509b4a4776e86ee66af414ece"
+    },
+    {
+      "id": "stinking-cloud",
+      "kind": "spell",
+      "sourceHash": "8362744c2376b7bdf994fbfd9f09386fa87bc0b406155c3226de1f307e051bda"
+    },
+    {
+      "id": "tiny-hut",
+      "kind": "spell",
+      "sourceHash": "02b09e2ab50074019b1189845445350bf7d50de9866806df43ec7696d9736e40"
+    },
+    {
+      "id": "tongues",
+      "kind": "spell",
+      "sourceHash": "bd3226ac5c40b414cd81499a883cd01406bdc1e69d5797c1b2294837df0c8ea4"
+    },
+    {
+      "id": "vampiric-touch",
+      "kind": "spell",
+      "sourceHash": "88672fc9a6fb765b415ee1fd8e68a34eecf3e98f0ab3f245291d20fc3e30dfeb"
+    },
+    {
+      "id": "water-breathing",
+      "kind": "spell",
+      "sourceHash": "6e25312bb35734d307c507eb1c068ab83f7f3a3ecde2e0d0a90e017ea8c645c8"
+    },
+    {
+      "id": "water-walk",
+      "kind": "spell",
+      "sourceHash": "2d05792f8fdaa845d2d3a9677188f1fa3058a45c1d15be51d01ac54161f08580"
+    },
+    {
+      "id": "wind-wall",
+      "kind": "spell",
+      "sourceHash": "b4a6264c27cef71dc347b52ed5958997ab40033e70c9422f3232e045963ae016"
+    },
+    {
       "id": "traps",
       "kind": "rules",
       "sourceHash": "3235d098b37944d2d0ae80928d91db3b9809dbbf319538e845817de93d512cd6"

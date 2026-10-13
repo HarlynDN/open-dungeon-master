@@ -761,5 +761,257 @@ export const LOCALIZED_SPELL_PAGES = [
     "name": "Zone of Truth",
     "headerKey": "bookMaterial.spell.zone-of-truth.header",
     "metaKey": "bookMaterial.spell.zone-of-truth.meta"
+  },
+  {
+    "id": "animate-dead",
+    "name": "Animate Dead",
+    "headerKey": "bookMaterial.spell.animate-dead.header",
+    "metaKey": "bookMaterial.spell.animate-dead.meta"
+  },
+  {
+    "id": "beacon-of-hope",
+    "name": "Beacon of Hope",
+    "headerKey": "bookMaterial.spell.beacon-of-hope.header",
+    "metaKey": "bookMaterial.spell.beacon-of-hope.meta"
+  },
+  {
+    "id": "bestow-curse",
+    "name": "Bestow Curse",
+    "headerKey": "bookMaterial.spell.bestow-curse.header",
+    "metaKey": "bookMaterial.spell.bestow-curse.meta"
+  },
+  {
+    "id": "blink",
+    "name": "Blink",
+    "headerKey": "bookMaterial.spell.blink.header",
+    "metaKey": "bookMaterial.spell.blink.meta"
+  },
+  {
+    "id": "call-lightning",
+    "name": "Call Lightning",
+    "headerKey": "bookMaterial.spell.call-lightning.header",
+    "metaKey": "bookMaterial.spell.call-lightning.meta"
+  },
+  {
+    "id": "clairvoyance",
+    "name": "Clairvoyance",
+    "headerKey": "bookMaterial.spell.clairvoyance.header",
+    "metaKey": "bookMaterial.spell.clairvoyance.meta"
+  },
+  {
+    "id": "conjure-animals",
+    "name": "Conjure Animals",
+    "headerKey": "bookMaterial.spell.conjure-animals.header",
+    "metaKey": "bookMaterial.spell.conjure-animals.meta"
+  },
+  {
+    "id": "counterspell",
+    "name": "Counterspell",
+    "headerKey": "bookMaterial.spell.counterspell.header",
+    "metaKey": "bookMaterial.spell.counterspell.meta"
+  },
+  {
+    "id": "create-food-and-water",
+    "name": "Create Food and Water",
+    "headerKey": "bookMaterial.spell.create-food-and-water.header",
+    "metaKey": "bookMaterial.spell.create-food-and-water.meta"
+  },
+  {
+    "id": "daylight",
+    "name": "Daylight",
+    "headerKey": "bookMaterial.spell.daylight.header",
+    "metaKey": "bookMaterial.spell.daylight.meta"
+  },
+  {
+    "id": "dispel-magic",
+    "name": "Dispel Magic",
+    "headerKey": "bookMaterial.spell.dispel-magic.header",
+    "metaKey": "bookMaterial.spell.dispel-magic.meta"
+  },
+  {
+    "id": "fear",
+    "name": "Fear",
+    "headerKey": "bookMaterial.spell.fear.header",
+    "metaKey": "bookMaterial.spell.fear.meta"
+  },
+  {
+    "id": "fireball",
+    "name": "Fireball",
+    "headerKey": "bookMaterial.spell.fireball.header",
+    "metaKey": "bookMaterial.spell.fireball.meta"
+  },
+  {
+    "id": "fly",
+    "name": "Fly",
+    "headerKey": "bookMaterial.spell.fly.header",
+    "metaKey": "bookMaterial.spell.fly.meta"
+  },
+  {
+    "id": "gaseous-form",
+    "name": "Gaseous Form",
+    "headerKey": "bookMaterial.spell.gaseous-form.header",
+    "metaKey": "bookMaterial.spell.gaseous-form.meta"
+  },
+  {
+    "id": "glyph-of-warding",
+    "name": "Glyph of Warding",
+    "headerKey": "bookMaterial.spell.glyph-of-warding.header",
+    "metaKey": "bookMaterial.spell.glyph-of-warding.meta"
+  },
+  {
+    "id": "haste",
+    "name": "Haste",
+    "headerKey": "bookMaterial.spell.haste.header",
+    "metaKey": "bookMaterial.spell.haste.meta"
+  },
+  {
+    "id": "hypnotic-pattern",
+    "name": "Hypnotic Pattern",
+    "headerKey": "bookMaterial.spell.hypnotic-pattern.header",
+    "metaKey": "bookMaterial.spell.hypnotic-pattern.meta"
+  },
+  {
+    "id": "lightning-bolt",
+    "name": "Lightning Bolt",
+    "headerKey": "bookMaterial.spell.lightning-bolt.header",
+    "metaKey": "bookMaterial.spell.lightning-bolt.meta"
+  },
+  {
+    "id": "magic-circle",
+    "name": "Magic Circle",
+    "headerKey": "bookMaterial.spell.magic-circle.header",
+    "metaKey": "bookMaterial.spell.magic-circle.meta"
+  },
+  {
+    "id": "major-image",
+    "name": "Major Image",
+    "headerKey": "bookMaterial.spell.major-image.header",
+    "metaKey": "bookMaterial.spell.major-image.meta"
+  },
+  {
+    "id": "mass-healing-word",
+    "name": "Mass Healing Word",
+    "headerKey": "bookMaterial.spell.mass-healing-word.header",
+    "metaKey": "bookMaterial.spell.mass-healing-word.meta"
+  },
+  {
+    "id": "meld-into-stone",
+    "name": "Meld into Stone",
+    "headerKey": "bookMaterial.spell.meld-into-stone.header",
+    "metaKey": "bookMaterial.spell.meld-into-stone.meta"
+  },
+  {
+    "id": "nondetection",
+    "name": "Nondetection",
+    "headerKey": "bookMaterial.spell.nondetection.header",
+    "metaKey": "bookMaterial.spell.nondetection.meta"
+  },
+  {
+    "id": "phantom-steed",
+    "name": "Phantom Steed",
+    "headerKey": "bookMaterial.spell.phantom-steed.header",
+    "metaKey": "bookMaterial.spell.phantom-steed.meta"
+  },
+  {
+    "id": "plant-growth",
+    "name": "Plant Growth",
+    "headerKey": "bookMaterial.spell.plant-growth.header",
+    "metaKey": "bookMaterial.spell.plant-growth.meta"
+  },
+  {
+    "id": "protection-from-energy",
+    "name": "Protection from Energy",
+    "headerKey": "bookMaterial.spell.protection-from-energy.header",
+    "metaKey": "bookMaterial.spell.protection-from-energy.meta"
+  },
+  {
+    "id": "remove-curse",
+    "name": "Remove Curse",
+    "headerKey": "bookMaterial.spell.remove-curse.header",
+    "metaKey": "bookMaterial.spell.remove-curse.meta"
+  },
+  {
+    "id": "revivify",
+    "name": "Revivify",
+    "headerKey": "bookMaterial.spell.revivify.header",
+    "metaKey": "bookMaterial.spell.revivify.meta"
+  },
+  {
+    "id": "sending",
+    "name": "Sending",
+    "headerKey": "bookMaterial.spell.sending.header",
+    "metaKey": "bookMaterial.spell.sending.meta"
+  },
+  {
+    "id": "sleet-storm",
+    "name": "Sleet Storm",
+    "headerKey": "bookMaterial.spell.sleet-storm.header",
+    "metaKey": "bookMaterial.spell.sleet-storm.meta"
+  },
+  {
+    "id": "slow",
+    "name": "Slow",
+    "headerKey": "bookMaterial.spell.slow.header",
+    "metaKey": "bookMaterial.spell.slow.meta"
+  },
+  {
+    "id": "speak-with-dead",
+    "name": "Speak with Dead",
+    "headerKey": "bookMaterial.spell.speak-with-dead.header",
+    "metaKey": "bookMaterial.spell.speak-with-dead.meta"
+  },
+  {
+    "id": "speak-with-plants",
+    "name": "Speak with Plants",
+    "headerKey": "bookMaterial.spell.speak-with-plants.header",
+    "metaKey": "bookMaterial.spell.speak-with-plants.meta"
+  },
+  {
+    "id": "spirit-guardians",
+    "name": "Spirit Guardians",
+    "headerKey": "bookMaterial.spell.spirit-guardians.header",
+    "metaKey": "bookMaterial.spell.spirit-guardians.meta"
+  },
+  {
+    "id": "stinking-cloud",
+    "name": "Stinking Cloud",
+    "headerKey": "bookMaterial.spell.stinking-cloud.header",
+    "metaKey": "bookMaterial.spell.stinking-cloud.meta"
+  },
+  {
+    "id": "tiny-hut",
+    "name": "Tiny Hut",
+    "headerKey": "bookMaterial.spell.tiny-hut.header",
+    "metaKey": "bookMaterial.spell.tiny-hut.meta"
+  },
+  {
+    "id": "tongues",
+    "name": "Tongues",
+    "headerKey": "bookMaterial.spell.tongues.header",
+    "metaKey": "bookMaterial.spell.tongues.meta"
+  },
+  {
+    "id": "vampiric-touch",
+    "name": "Vampiric Touch",
+    "headerKey": "bookMaterial.spell.vampiric-touch.header",
+    "metaKey": "bookMaterial.spell.vampiric-touch.meta"
+  },
+  {
+    "id": "water-breathing",
+    "name": "Water Breathing",
+    "headerKey": "bookMaterial.spell.water-breathing.header",
+    "metaKey": "bookMaterial.spell.water-breathing.meta"
+  },
+  {
+    "id": "water-walk",
+    "name": "Water Walk",
+    "headerKey": "bookMaterial.spell.water-walk.header",
+    "metaKey": "bookMaterial.spell.water-walk.meta"
+  },
+  {
+    "id": "wind-wall",
+    "name": "Wind Wall",
+    "headerKey": "bookMaterial.spell.wind-wall.header",
+    "metaKey": "bookMaterial.spell.wind-wall.meta"
   }
 ] as const;

@@ -1017,5 +1017,341 @@ export const BOOK_MATERIAL_MESSAGES = defineMessages({
   "bookMaterial.spell.zone-of-truth.meta": {
     "en": "2nd-level enchantment",
     "zh-CN": "二环惑控"
+  },
+  "bookMaterial.spell.animate-dead.header": {
+    "en": "*3rd-level necromancy*\n\n**Casting Time:** 1 minute\n\n**Range:** 10 feet\n\n**Components:** V, S, M (a drop of blood, a piece of flesh, and a pinch of bone dust)\n\n**Duration:** Instantaneous",
+    "zh-CN": "*三环死灵*\n\n**施法时间：** 1 分钟\n\n**施法距离：** 10 英尺\n\n**法术成分：** 言语、姿势、材料（一滴血、一块肉，以及少量骨粉）\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.animate-dead.meta": {
+    "en": "3rd-level necromancy",
+    "zh-CN": "三环死灵"
+  },
+  "bookMaterial.spell.beacon-of-hope.header": {
+    "en": "*3rd-level abjuration*\n\n**Casting Time:** 1 action\n\n**Range:** 30 feet\n\n**Components:** V, S\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*三环防护*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 30 英尺\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.beacon-of-hope.meta": {
+    "en": "3rd-level abjuration",
+    "zh-CN": "三环防护"
+  },
+  "bookMaterial.spell.bestow-curse.header": {
+    "en": "*3rd-level necromancy*\n\n**Casting Time:** 1 action\n\n**Range:** Touch\n\n**Components:** V, S\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*三环死灵*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 接触\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.bestow-curse.meta": {
+    "en": "3rd-level necromancy",
+    "zh-CN": "三环死灵"
+  },
+  "bookMaterial.spell.blink.header": {
+    "en": "*3rd-level transmutation*\n\n**Casting Time:** 1 action\n\n**Range:** Self\n\n**Components:** V, S\n\n**Duration:** 1 minute",
+    "zh-CN": "*三环变化*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 自身\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 1 分钟"
+  },
+  "bookMaterial.spell.blink.meta": {
+    "en": "3rd-level transmutation",
+    "zh-CN": "三环变化"
+  },
+  "bookMaterial.spell.call-lightning.header": {
+    "en": "*3rd-level conjuration*\n\n**Casting Time:** 1 action\n\n**Range:** 120 feet\n\n**Components:** V, S\n\n**Duration:** Concentration, up to 10 minutes",
+    "zh-CN": "*三环咒法*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 120 英尺\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 专注，至多 10 分钟"
+  },
+  "bookMaterial.spell.call-lightning.meta": {
+    "en": "3rd-level conjuration",
+    "zh-CN": "三环咒法"
+  },
+  "bookMaterial.spell.clairvoyance.header": {
+    "en": "*3rd-level divination*\n\n**Casting Time:** 10 minutes\n\n**Range:** 1 mile\n\n**Components:** V, S, M (a focus worth at least 100 gp, either a jeweled horn for hearing or a glass eye for seeing)\n\n**Duration:** Concentration, up to 10 minutes",
+    "zh-CN": "*三环预言*\n\n**施法时间：** 10 分钟\n\n**施法距离：** 1 英里\n\n**法术成分：** 言语、姿势、材料（价值至少 100 gp 的法器：用于听觉的镶宝石号角，或用于视觉的玻璃眼）\n\n**持续时间：** 专注，至多 10 分钟"
+  },
+  "bookMaterial.spell.clairvoyance.meta": {
+    "en": "3rd-level divination",
+    "zh-CN": "三环预言"
+  },
+  "bookMaterial.spell.conjure-animals.header": {
+    "en": "*3rd-level conjuration*\n\n**Casting Time:** 1 action\n\n**Range:** 60 feet\n\n**Components:** V, S\n\n**Duration:** Concentration, up to 1 hour",
+    "zh-CN": "*三环咒法*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 60 英尺\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 专注，至多 1 小时"
+  },
+  "bookMaterial.spell.conjure-animals.meta": {
+    "en": "3rd-level conjuration",
+    "zh-CN": "三环咒法"
+  },
+  "bookMaterial.spell.counterspell.header": {
+    "en": "*3rd-level abjuration*\n\n**Casting Time:** 1 reaction, which you take when you see a creature within 60 feet of you casting a spell\n\n**Range:** 60 feet\n\n**Components:** S\n\n**Duration:** Instantaneous",
+    "zh-CN": "*三环防护*\n\n**施法时间：** 1 个反应，当你看见 60 英尺内的生物正在施法时采取\n\n**施法距离：** 60 英尺\n\n**法术成分：** 姿势\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.counterspell.meta": {
+    "en": "3rd-level abjuration",
+    "zh-CN": "三环防护"
+  },
+  "bookMaterial.spell.create-food-and-water.header": {
+    "en": "*3rd-level conjuration*\n\n**Casting Time:** 1 action\n\n**Range:** 30 feet\n\n**Components:** V, S\n\n**Duration:** Instantaneous",
+    "zh-CN": "*三环咒法*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 30 英尺\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.create-food-and-water.meta": {
+    "en": "3rd-level conjuration",
+    "zh-CN": "三环咒法"
+  },
+  "bookMaterial.spell.daylight.header": {
+    "en": "*3rd-level evocation*\n\n**Casting Time:** 1 action\n\n**Range:** 60 feet\n\n**Components:** V, S\n\n**Duration:** 1 hour",
+    "zh-CN": "*三环塑能*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 60 英尺\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 1 小时"
+  },
+  "bookMaterial.spell.daylight.meta": {
+    "en": "3rd-level evocation",
+    "zh-CN": "三环塑能"
+  },
+  "bookMaterial.spell.dispel-magic.header": {
+    "en": "*3rd-level abjuration*\n\n**Casting Time:** 1 action\n\n**Range:** 120 feet\n\n**Components:** V, S\n\n**Duration:** Instantaneous",
+    "zh-CN": "*三环防护*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 120 英尺\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.dispel-magic.meta": {
+    "en": "3rd-level abjuration",
+    "zh-CN": "三环防护"
+  },
+  "bookMaterial.spell.fear.header": {
+    "en": "*3rd-level illusion*\n\n**Casting Time:** 1 action\n\n**Range:** Self (30-foot cone)\n\n**Components:** V, S, M (a white feather or the heart of a hen)\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*三环幻术*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 自身（30 英尺锥形区域）\n\n**法术成分：** 言语、姿势、材料（一根白色羽毛，或一颗母鸡心脏）\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.fear.meta": {
+    "en": "3rd-level illusion",
+    "zh-CN": "三环幻术"
+  },
+  "bookMaterial.spell.fireball.header": {
+    "en": "*3rd-level evocation*\n\n**Casting Time:** 1 action\n\n**Range:** 150 feet\n\n**Components:** V, S, M (a tiny ball of bat guano and sulfur)\n\n**Duration:** Instantaneous",
+    "zh-CN": "*三环塑能*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 150 英尺\n\n**法术成分：** 言语、姿势、材料（一小团蝙蝠粪与硫磺）\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.fireball.meta": {
+    "en": "3rd-level evocation",
+    "zh-CN": "三环塑能"
+  },
+  "bookMaterial.spell.fly.header": {
+    "en": "*3rd-level transmutation*\n\n**Casting Time:** 1 action\n\n**Range:** Touch\n\n**Components:** V, S, M (a wing feather from any bird)\n\n**Duration:** Concentration, up to 10 minutes",
+    "zh-CN": "*三环变化*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 接触\n\n**法术成分：** 言语、姿势、材料（任意鸟类的一根翅羽）\n\n**持续时间：** 专注，至多 10 分钟"
+  },
+  "bookMaterial.spell.fly.meta": {
+    "en": "3rd-level transmutation",
+    "zh-CN": "三环变化"
+  },
+  "bookMaterial.spell.gaseous-form.header": {
+    "en": "*3rd-level transmutation*\n\n**Casting Time:** 1 action\n\n**Range:** Touch\n\n**Components:** V, S, M (a bit of gauze and a wisp of smoke)\n\n**Duration:** Concentration, up to 1 hour",
+    "zh-CN": "*三环变化*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 接触\n\n**法术成分：** 言语、姿势、材料（少许纱布与一缕烟）\n\n**持续时间：** 专注，至多 1 小时"
+  },
+  "bookMaterial.spell.gaseous-form.meta": {
+    "en": "3rd-level transmutation",
+    "zh-CN": "三环变化"
+  },
+  "bookMaterial.spell.glyph-of-warding.header": {
+    "en": "*3rd-level abjuration*\n\n**Casting Time:** 1 hour\n\n**Range:** Touch\n\n**Components:** V, S, M (incense and powdered diamond worth at least 200 gp, which the spell consumes)\n\n**Duration:** Until dispelled or triggered",
+    "zh-CN": "*三环防护*\n\n**施法时间：** 1 小时\n\n**施法距离：** 接触\n\n**法术成分：** 言语、姿势、材料（熏香与价值至少 200 gp 的钻石粉，施法时消耗）\n\n**持续时间：** 直到被解除或触发"
+  },
+  "bookMaterial.spell.glyph-of-warding.meta": {
+    "en": "3rd-level abjuration",
+    "zh-CN": "三环防护"
+  },
+  "bookMaterial.spell.haste.header": {
+    "en": "*3rd-level transmutation*\n\n**Casting Time:** 1 action\n\n**Range:** 30 feet\n\n**Components:** V, S, M (a shaving of licorice root)\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*三环变化*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 30 英尺\n\n**法术成分：** 言语、姿势、材料（一片甘草根碎屑）\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.haste.meta": {
+    "en": "3rd-level transmutation",
+    "zh-CN": "三环变化"
+  },
+  "bookMaterial.spell.hypnotic-pattern.header": {
+    "en": "*3rd-level illusion*\n\n**Casting Time:** 1 action\n\n**Range:** 120 feet\n\n**Components:** S, M (a glowing stick of incense or a crystal vial filled with phosphorescent material)\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*三环幻术*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 120 英尺\n\n**法术成分：** 姿势、材料（一支发光的熏香，或装满磷光材料的水晶小瓶）\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.hypnotic-pattern.meta": {
+    "en": "3rd-level illusion",
+    "zh-CN": "三环幻术"
+  },
+  "bookMaterial.spell.lightning-bolt.header": {
+    "en": "*3rd-level evocation*\n\n**Casting Time:** 1 action\n\n**Range:** Self (100-foot line)\n\n**Components:** V, S, M (a bit of fur and a rod of amber, crystal, or glass)\n\n**Duration:** Instantaneous",
+    "zh-CN": "*三环塑能*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 自身（100 英尺直线）\n\n**法术成分：** 言语、姿势、材料（少许毛皮，以及一根琥珀、水晶或玻璃棒）\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.lightning-bolt.meta": {
+    "en": "3rd-level evocation",
+    "zh-CN": "三环塑能"
+  },
+  "bookMaterial.spell.magic-circle.header": {
+    "en": "*3rd-level abjuration*\n\n**Casting Time:** 1 minute\n\n**Range:** 10 feet\n\n**Components:** V, S, M (holy water or powdered silver and iron worth at least 100 gp, which the spell consumes)\n\n**Duration:** 1 hour",
+    "zh-CN": "*三环防护*\n\n**施法时间：** 1 分钟\n\n**施法距离：** 10 英尺\n\n**法术成分：** 言语、姿势、材料（圣水，或价值至少 100 gp 的银粉与铁粉，施法时消耗）\n\n**持续时间：** 1 小时"
+  },
+  "bookMaterial.spell.magic-circle.meta": {
+    "en": "3rd-level abjuration",
+    "zh-CN": "三环防护"
+  },
+  "bookMaterial.spell.major-image.header": {
+    "en": "*3rd-level illusion*\n\n**Casting Time:** 1 action\n\n**Range:** 120 feet\n\n**Components:** V, S, M (a bit of fleece)\n\n**Duration:** Concentration, up to 10 minutes",
+    "zh-CN": "*三环幻术*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 120 英尺\n\n**法术成分：** 言语、姿势、材料（少许羊毛）\n\n**持续时间：** 专注，至多 10 分钟"
+  },
+  "bookMaterial.spell.major-image.meta": {
+    "en": "3rd-level illusion",
+    "zh-CN": "三环幻术"
+  },
+  "bookMaterial.spell.mass-healing-word.header": {
+    "en": "*3rd-level evocation*\n\n**Casting Time:** 1 bonus action\n\n**Range:** 60 feet\n\n**Components:** V\n\n**Duration:** Instantaneous",
+    "zh-CN": "*三环塑能*\n\n**施法时间：** 1 个附赠动作\n\n**施法距离：** 60 英尺\n\n**法术成分：** 言语\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.mass-healing-word.meta": {
+    "en": "3rd-level evocation",
+    "zh-CN": "三环塑能"
+  },
+  "bookMaterial.spell.meld-into-stone.header": {
+    "en": "*3rd-level transmutation (ritual)*\n\n**Casting Time:** 1 action\n\n**Range:** Touch\n\n**Components:** V, S\n\n**Duration:** 8 hours",
+    "zh-CN": "*三环变化（仪式）*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 接触\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 8 小时"
+  },
+  "bookMaterial.spell.meld-into-stone.meta": {
+    "en": "3rd-level transmutation (ritual)",
+    "zh-CN": "三环变化（仪式）"
+  },
+  "bookMaterial.spell.nondetection.header": {
+    "en": "*3rd-level abjuration*\n\n**Casting Time:** 1 action\n\n**Range:** Touch\n\n**Components:** V, S, M (a pinch of diamond dust worth 25 gp sprinkled over the target, which the spell consumes)\n\n**Duration:** 8 hours",
+    "zh-CN": "*三环防护*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 接触\n\n**法术成分：** 言语、姿势、材料（价值 25 gp 的少量钻石粉，撒在目标上，施法时消耗）\n\n**持续时间：** 8 小时"
+  },
+  "bookMaterial.spell.nondetection.meta": {
+    "en": "3rd-level abjuration",
+    "zh-CN": "三环防护"
+  },
+  "bookMaterial.spell.phantom-steed.header": {
+    "en": "*3rd-level illusion (ritual)*\n\n**Casting Time:** 1 minute\n\n**Range:** 30 feet\n\n**Components:** V, S\n\n**Duration:** 1 hour",
+    "zh-CN": "*三环幻术（仪式）*\n\n**施法时间：** 1 分钟\n\n**施法距离：** 30 英尺\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 1 小时"
+  },
+  "bookMaterial.spell.phantom-steed.meta": {
+    "en": "3rd-level illusion (ritual)",
+    "zh-CN": "三环幻术（仪式）"
+  },
+  "bookMaterial.spell.plant-growth.header": {
+    "en": "*3rd-level transmutation*\n\n**Casting Time:** 1 action or 8 hours\n\n**Range:** 150 feet\n\n**Components:** V, S\n\n**Duration:** Instantaneous",
+    "zh-CN": "*三环变化*\n\n**施法时间：** 1 个动作或 8 小时\n\n**施法距离：** 150 英尺\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.plant-growth.meta": {
+    "en": "3rd-level transmutation",
+    "zh-CN": "三环变化"
+  },
+  "bookMaterial.spell.protection-from-energy.header": {
+    "en": "*3rd-level abjuration*\n\n**Casting Time:** 1 action\n\n**Range:** Touch\n\n**Components:** V, S\n\n**Duration:** Concentration, up to 1 hour",
+    "zh-CN": "*三环防护*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 接触\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 专注，至多 1 小时"
+  },
+  "bookMaterial.spell.protection-from-energy.meta": {
+    "en": "3rd-level abjuration",
+    "zh-CN": "三环防护"
+  },
+  "bookMaterial.spell.remove-curse.header": {
+    "en": "*3rd-level abjuration*\n\n**Casting Time:** 1 action\n\n**Range:** Touch\n\n**Components:** V, S\n\n**Duration:** Instantaneous",
+    "zh-CN": "*三环防护*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 接触\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.remove-curse.meta": {
+    "en": "3rd-level abjuration",
+    "zh-CN": "三环防护"
+  },
+  "bookMaterial.spell.revivify.header": {
+    "en": "*3rd-level necromancy*\n\n**Casting Time:** 1 action\n\n**Range:** Touch\n\n**Components:** V, S, M (diamonds worth 300 gp, which the spell consumes)\n\n**Duration:** Instantaneous",
+    "zh-CN": "*三环死灵*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 接触\n\n**法术成分：** 言语、姿势、材料（价值 300 gp 的钻石，施法时消耗）\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.revivify.meta": {
+    "en": "3rd-level necromancy",
+    "zh-CN": "三环死灵"
+  },
+  "bookMaterial.spell.sending.header": {
+    "en": "*3rd-level evocation*\n\n**Casting Time:** 1 action\n\n**Range:** Unlimited\n\n**Components:** V, S, M (a short piece of fine copper wire)\n\n**Duration:** 1 round",
+    "zh-CN": "*三环塑能*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 无限\n\n**法术成分：** 言语、姿势、材料（一小段精细铜丝）\n\n**持续时间：** 1 轮"
+  },
+  "bookMaterial.spell.sending.meta": {
+    "en": "3rd-level evocation",
+    "zh-CN": "三环塑能"
+  },
+  "bookMaterial.spell.sleet-storm.header": {
+    "en": "*3rd-level conjuration*\n\n**Casting Time:** 1 action\n\n**Range:** 150 feet\n\n**Components:** V, S, M (a pinch of dust and a few drops of water)\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*三环咒法*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 150 英尺\n\n**法术成分：** 言语、姿势、材料（少量尘土与几滴水）\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.sleet-storm.meta": {
+    "en": "3rd-level conjuration",
+    "zh-CN": "三环咒法"
+  },
+  "bookMaterial.spell.slow.header": {
+    "en": "*3rd-level transmutation*\n\n**Casting Time:** 1 action\n\n**Range:** 120 feet\n\n**Components:** V, S, M (a drop of molasses)\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*三环变化*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 120 英尺\n\n**法术成分：** 言语、姿势、材料（一滴糖蜜）\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.slow.meta": {
+    "en": "3rd-level transmutation",
+    "zh-CN": "三环变化"
+  },
+  "bookMaterial.spell.speak-with-dead.header": {
+    "en": "*3rd-level necromancy*\n\n**Casting Time:** 1 action\n\n**Range:** 10 feet\n\n**Components:** V, S, M (burning incense)\n\n**Duration:** 10 minutes",
+    "zh-CN": "*三环死灵*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 10 英尺\n\n**法术成分：** 言语、姿势、材料（燃烧的熏香）\n\n**持续时间：** 10 分钟"
+  },
+  "bookMaterial.spell.speak-with-dead.meta": {
+    "en": "3rd-level necromancy",
+    "zh-CN": "三环死灵"
+  },
+  "bookMaterial.spell.speak-with-plants.header": {
+    "en": "*3rd-level transmutation*\n\n**Casting Time:** 1 action\n\n**Range:** Self (30-foot radius)\n\n**Components:** V, S\n\n**Duration:** 10 minutes",
+    "zh-CN": "*三环变化*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 自身（半径 30 英尺）\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 10 分钟"
+  },
+  "bookMaterial.spell.speak-with-plants.meta": {
+    "en": "3rd-level transmutation",
+    "zh-CN": "三环变化"
+  },
+  "bookMaterial.spell.spirit-guardians.header": {
+    "en": "*3rd-level conjuration*\n\n**Casting Time:** 1 action\n\n**Range:** Self (15-foot radius)\n\n**Components:** V, S, M (a holy symbol)\n\n**Duration:** Concentration, up to 10 minutes",
+    "zh-CN": "*三环咒法*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 自身（半径 15 英尺）\n\n**法术成分：** 言语、姿势、材料（圣徽）\n\n**持续时间：** 专注，至多 10 分钟"
+  },
+  "bookMaterial.spell.spirit-guardians.meta": {
+    "en": "3rd-level conjuration",
+    "zh-CN": "三环咒法"
+  },
+  "bookMaterial.spell.stinking-cloud.header": {
+    "en": "*3rd-level conjuration*\n\n**Casting Time:** 1 action\n\n**Range:** 90 feet\n\n**Components:** V, S, M (a rotten egg or several skunk cabbage leaves)\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*三环咒法*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 90 英尺\n\n**法术成分：** 言语、姿势、材料（一个臭鸡蛋，或几片臭菘叶）\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.stinking-cloud.meta": {
+    "en": "3rd-level conjuration",
+    "zh-CN": "三环咒法"
+  },
+  "bookMaterial.spell.tiny-hut.header": {
+    "en": "*3rd-level evocation (ritual)*\n\n**Casting Time:** 1 minute\n\n**Range:** Self (10-foot radius hemisphere)\n\n**Components:** V, S, M (a small crystal bead)\n\n**Duration:** 8 hours",
+    "zh-CN": "*三环塑能（仪式）*\n\n**施法时间：** 1 分钟\n\n**施法距离：** 自身（半径 10 英尺半球）\n\n**法术成分：** 言语、姿势、材料（一颗小水晶珠）\n\n**持续时间：** 8 小时"
+  },
+  "bookMaterial.spell.tiny-hut.meta": {
+    "en": "3rd-level evocation (ritual)",
+    "zh-CN": "三环塑能（仪式）"
+  },
+  "bookMaterial.spell.tongues.header": {
+    "en": "*3rd-level divination*\n\n**Casting Time:** 1 action\n\n**Range:** Touch\n\n**Components:** V, M (a small clay model of a ziggurat)\n\n**Duration:** 1 hour",
+    "zh-CN": "*三环预言*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 接触\n\n**法术成分：** 言语、材料（一座通天塔的微型黏土模型）\n\n**持续时间：** 1 小时"
+  },
+  "bookMaterial.spell.tongues.meta": {
+    "en": "3rd-level divination",
+    "zh-CN": "三环预言"
+  },
+  "bookMaterial.spell.vampiric-touch.header": {
+    "en": "*3rd-level necromancy*\n\n**Casting Time:** 1 action\n\n**Range:** Self\n\n**Components:** V, S\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*三环死灵*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 自身\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.vampiric-touch.meta": {
+    "en": "3rd-level necromancy",
+    "zh-CN": "三环死灵"
+  },
+  "bookMaterial.spell.water-breathing.header": {
+    "en": "*3rd-level transmutation (ritual)*\n\n**Casting Time:** 1 action\n\n**Range:** 30 feet\n\n**Components:** V, S, M (a short reed or piece of straw)\n\n**Duration:** 24 hours",
+    "zh-CN": "*三环变化（仪式）*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 30 英尺\n\n**法术成分：** 言语、姿势、材料（一小段芦苇或稻草）\n\n**持续时间：** 24 小时"
+  },
+  "bookMaterial.spell.water-breathing.meta": {
+    "en": "3rd-level transmutation (ritual)",
+    "zh-CN": "三环变化（仪式）"
+  },
+  "bookMaterial.spell.water-walk.header": {
+    "en": "*3rd-level transmutation (ritual)*\n\n**Casting Time:** 1 action\n\n**Range:** 30 feet\n\n**Components:** V, S, M (a piece of cork)\n\n**Duration:** 1 hour",
+    "zh-CN": "*三环变化（仪式）*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 30 英尺\n\n**法术成分：** 言语、姿势、材料（一块软木）\n\n**持续时间：** 1 小时"
+  },
+  "bookMaterial.spell.water-walk.meta": {
+    "en": "3rd-level transmutation (ritual)",
+    "zh-CN": "三环变化（仪式）"
+  },
+  "bookMaterial.spell.wind-wall.header": {
+    "en": "*3rd-level evocation*\n\n**Casting Time:** 1 action\n\n**Range:** 120 feet\n\n**Components:** V, S, M (a tiny fan and a feather of exotic origin)\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*三环塑能*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 120 英尺\n\n**法术成分：** 言语、姿势、材料（一把小扇子与一根异域羽毛）\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.wind-wall.meta": {
+    "en": "3rd-level evocation",
+    "zh-CN": "三环塑能"
   }
 });
