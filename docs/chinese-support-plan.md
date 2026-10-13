@@ -2,7 +2,7 @@
 
 This is the active delivery plan. Implementation history remains in Git and the
 linked validation reports; it is not repeated here. The full playable flow is
-still incomplete. The approved goal remains active with its original scope.
+still incomplete. Delivery follows the latest approved text scope below.
 
 ## Approved scope and boundaries
 
@@ -27,7 +27,7 @@ still incomplete. The approved goal remains active with its original scope.
 
 ## Latest user scope — text completion, then pause (2026-10-13)
 
-The latest user instruction overrides older deferred/full-acceptance rows below. Finish Chinese text for the game itself and the entire bundled SRD 5.1 rulebook, then pause the active task. Third-party expansion-pack translation and Chinese voice work are deferred and are no longer gates for this text milestone. Preserve their existing implementations and honest evidence, including rejected voice quality. Do not pause before the requested text scope is finished.
+The latest text-scope instruction governs delivery and acceptance. Finish Chinese text for the game itself and the entire bundled SRD 5.1 rulebook, then pause the active task. Third-party expansion-pack translation and Chinese voice work are deferred and are no longer gates for this text milestone. Preserve their existing implementations and honest evidence, including rejected voice quality. Do not pause before the requested text scope is finished.
 
 Text delivery includes native interface/system/help text and repository-owned materials, plus all 933 bundled rulebook pages (319 spells and 239 magic items included), chapter/part navigation, tables and Chinese search/display. Existing material translations should be reused wherever the full source matches; the remaining rulebook chapters and monster text need original source-bound translations. Keep English available, preserve canonical mechanics/IDs and authored or third-party variants, and retain source/license attribution. Player and DM rulebook views must both use translated presentation; translation does not change model-facing machine protocols. User-authored campaign prose and imported third-party text retain their source.
 
@@ -40,12 +40,12 @@ Before pausing, finish the native dynamic text audit and one bilingual text jour
 | Locale foundation | Registry, persistence, browser fallback, typed complete catalogs, model locale policy, classified token proxy, chapter budget, CJK retrieval, IME protection | Real prompt-usage calibration; keep legacy campaign/history regressions |
 | DM safety | Per-event engine conclusions with English/Chinese renderers; AI prose separated; one text-only correction and safe fallback; shared localized enemy names and held-resource names/IDs; scoped resource aliases and ambiguity retries; real Codex combat/resource acceptance | Untracked feature/reaction options and broader spell/condition/pack coverage; conservative regex coverage is not full language understanding |
 | Embeddings | Original English deployment default retained; explicit multilingual opt-in; fixed bilingual calibration/holdout and hard-negative policy | Broader pack quality; opt-in affects English campaigns and rebuilds indexes |
-| UI | **401/440** covered files, **0** pending literal sites, **18741** message keys; scoped AST gate; earlier play/session surfaces plus hand labels/targets/area selection, campaign-locale action sentences, native previews, basic/reaction rules, common casting refusals, spell selectors, all 113 owned mechanic notes, 103 native technique and 23 maneuver labels, attack/bonus-route and material/ritual refusals, built-in form attack names and verified current-actor labels, correction/multi-picker chrome, native downtime facts and inventory/vitals approval/player-trade controls, guided progression chrome, rest/loot/travel moments and all native option summaries, owned generic feature/feat summaries, feat choice controls, campaign/map entry notices the complete app help walkthrough story/chronicle/arc controls, NPC roster review, campaign model controls market/shelf/trade, party-lead, quest-log/faction controls plus facts, pinned memories, context-trace presentation and passage edit/reroll/action controls and character/companion entry and private-chat/media presentation and audit/timeline controls and dice tray/source controls and board movement/camera/order/area/target/drawing and DM placement/measurement controls | 39 zero-literal owners still require dynamic composition/source-ownership review; locale-sensitive selection thresholds and backend/native messages remain audit items; file fraction is not overall completion or an effort estimate |
-| Character creation/material | Identity, ancestry, class introductions, ability allocation, gear, spell book/preparation and finish preview; 517 spell and 228 equipment names plus all 239 SRD magic-item titles and 52 exact variants; 257-entry contextual terminology policy and lint gate; 415/415 static registered resource names and guidance shared with DM references; 135/135 bundled option names/descriptions plus all 20 nonempty requirement frames; 146 shared/class-specific feature summaries, 54 native feat summaries and owned feat choice controls; four native pregen card summaries and backstories; 533/533 authored feature names/short summaries across all 105 expanded subclasses in 13 classes; all 49 bundled background introductions, feature names and help; full display projection for all 105 ODM-authored archetype documents including 42 spell tables; 733/733 source-bound themed feature names/help across all six themes and 36 classes; 239/239 native SRD magic-item bodies with complete source headers, tables and embedded stat blocks; 127/319 complete native SRD spell help bodies (all cantrips, first-level and second-level spells) including higher-level clauses; item help and four pickers; original-source review records | Remaining native dynamic material and imported variant-specific prose stay open; dynamic free-cast display/help now shares scoped DM aliases; user-authored/pack text remains outside the static resource review |
-| Player system logs | Structured rule diagnostics, engine-generated combat conclusions and structured audit/timeline presentation retain English protocol semantics with localized display | Typed party-item/coin/banked-XP logs now persist campaign-locale text and original facts; new account notifications have typed display facts and preserve original English/legacy bodies; other player-visible log templates remain pending; model-facing English tool results remain independent |
-| Resource delivery | UI/content/help scopes; selected-locale help loads independently on open, with retry; character/campaign boundaries; generated resources checked by lint; production Turbopack build and anonymous bilingual browser switch/reload succeed; home/character/campaign SSR and initial-script payloads measured | Hydrated/lazy network totals, authenticated campaign switching and active-play browser acceptance; route-level JS payload remains large |
+| UI | **401/440** covered files, **0** pending literal sites, **18741** message keys; scoped AST gate across entry, character, play, board, settings and help surfaces | 39 zero-literal owners need dynamic/source-ownership review; locale-sensitive thresholds and backend/native text remain audit items |
+| Character creation/material | Source-bound names/help: 517 spell names, 228 equipment names, 239 item bodies, 127/319 spell bodies; 415 registered resources, 135 bundled options, 533 expanded subclass features, 105 archetype documents, 49 backgrounds and 733 themed features; immutable English material baselines | Remaining dynamic material and help/loading paths; third-party, changed and authored variants retain their source |
+| Player system logs | Localized structured combat/audit display, party item/coin/XP logs, account facts and kickoff notices; English model/tool semantics stay separate | Other native player-log templates and final history/save/resume audit |
+| Resource delivery | UI/content/help scopes and independent retryable lazy help; anonymous bilingual switch/reload, authenticated character/campaign entry and viewer-English/story-Chinese separation observed | Complete authenticated journey and lazy/cache timing; hydrated/network totals and large route JS payload remain unverified |
 | Local Chinese TTS | Locale-driven voice prefixes/defaults, Chinese single narrator, Unicode sentence/hard limits, campaign-language voice discovery and previews, cache isolation and Chinese failure UI implemented; mock transport/queue and English compatibility checks pass | Isolated real CPU service configured; Chinese sample decode and actual DM audio delivery succeed; Arabic numbers/dice/mixed-name and English samples also decode; real preview outage/retry succeeds; Chinese voice quality rejected by user; all further Chinese voice work deferred by latest instruction, not a text-milestone gate |
-| Full native rulebook | Reader chrome localized; **386/933 complete Chinese pages** now render via a server-generated display projection, including all 127 cantrip/first-/second-level spell pages, all 239 magic-item pages and twenty foundational rule pages, with complete headers and reused bodies; original English corpus retained; 127 spell and 239 magic-item bodies are available for further reuse | Remaining full-page rules/monster/high-level spell prose and tables; complete Chinese corpus coverage, authenticated browser search/navigation and English reading regression |
+| Full native rulebook | Reader chrome localized; **391/933 complete Chinese pages** now render via a server-generated display projection, including all 127 cantrip/first-/second-level spell pages, all 239 magic-item pages and twenty-five foundational rule pages, with complete headers and reused bodies; original English corpus retained; 127 spell and 239 magic-item bodies are available for further reuse | Remaining full-page rules/monster/high-level spell prose and tables; complete Chinese corpus coverage, authenticated browser search/navigation and English reading regression |
 | Final text flow | Recorded Chinese exploration/social/utility and combat/slot/correction acceptance on Codex | Complete Chinese text journey, rulebook reading/search and English regression; full tests/lint/build, then pause |
 
 The concrete UI scope and deferred areas are in
@@ -68,209 +68,104 @@ or real interaction has passed. Do not restart a static translation campaign.
 | 3 | Full bundled rulebook text | All native book pages, navigation, tables and search display Chinese, with English switching and source attribution retained. Reuse matching material translations. |
 | 4 | One complete bilingual journey | Chinese create/play/combat/rest/save/resume and rulebook reading/search, plus English switching/regression pass; perform the remaining full-suite, full lint and production build at this release boundary. Record failures and genuinely untested gates explicitly. |
 
-The shared builder/sheet material path is the next implementation priority. It
-already has complete source-bound background and expanded-feature tables; review
-remaining imported class descriptions and dynamic material rather than
-retranslating those tables. The unchanged full ODM-authored archetype documents
-now reuse those resources in creation, upgrade and lazy help. Third-party, changed
-and homebrew documents retain their prose; raw cached descriptions and native IDs
-remain intact. Catalog/type/changed-file lint and focused material-flow checks
-cover source parity, bilingual display and English renders; real browser
-acceptance remains open. This does not close the full creation/sheet workflow.
+## Next delivery unit and interruption checkpoint
 
-Dynamic free-cast resources now share generated English source, Chinese names and
-help across sheet, hand and actor-scoped DM references. Library preview uses
-native resource population; a story label needs matching mechanic context before
-projection. The focused sheet script passes 18 cases, including the 26 original
-English renders, library/table display, canonical requests and actual free-cast
-payment/refusal/rest recharge. The check also distinguishes spell 黑暗术 from
-zone lighting 黑暗. Only failed or changed-file checks were repeated; no model,
-audio or full build was run. Remaining material and real browser gates stay open.
+- Recovered the interrupted `fa342a50` unit: Diseases, Objects, Artifacts,
+  Nonplayer Characters and Legal Information are source-reviewed and included
+  with the independent coverage manifest. Focused bilingual/source checks,
+  TypeScript and changed-file lint passed. These are not final release acceptance.
+- Next unit: group Madness, Poisons, Magic Items and Sentient Magic Items through
+  the existing server page catalog, then continue remaining rules/race/class
+  pages, spells and monsters. Update delivery data without modifying test logic.
+- Native dynamic UI/material/log ownership remains open. Complete its audit
+  before the final bilingual journey; combine pure helpers with their consumers.
+  Deep Workshop editors, native-shell-only UI, third-party expansion prose,
+  Chinese STT and Chinese voice work remain deferred.
 
-Themed feature display covers all 733 repository-authored entries across six
-themes and 36 classes. Exact existing name/help bindings are reused; the remaining
-411 entries add 799 scoped messages. These are original Chinese translations of
-the repository's short summaries, reviewed against source names, numbers, dice,
-units, conditions and cross-referenced resource terminology. The model/rule JSON
-and English baseline render artifacts remain unchanged. Whole-source matching
-preserves changed, third-party and authored prose; class identity scopes names.
-The existing focused material script passes all 733 source projections and all
-36 actual bilingual creation/sheet render flows, alongside prior archetype and
-multiclass checks. Catalog, types and changed-file lint also pass in one batch.
-This is component evidence, not authenticated browser or real audio acceptance.
-The ambiguous original Whispered Names advantage clause is preserved rather than
-silently changing a rule during translation. Other material/browser gates remain
-open; no model, audio or production build was repeated for this copy batch.
+## Batch size and execution efficiency (2026-10-13)
 
-Native item help has a locale-extensible, whole-source projection with
-name/book/source provenance. All 239 bundled SRD 5.1 item bodies are translated,
-including complete tables, embedded creature stats, figurine variants, curses,
-alignment/class restrictions, capacities, charge/reset timing and permanent
-ability/max changes. The 87 distinct source headers share keys; detailed cards
-retain special attunement requirements, while previews begin with effects.
-Closed type and rarity frames, including scroll/figurine/horn variants, display
-in Chinese. Existing item, spell and rule terms are reused. Percentile 00 notation
-is retained with an explanation. Inventory, model protocol, rulebook data and
-runtime interfaces stay native. Workshop, other-book, changed and unknown prose
-stays original. These are implementation-agent source-compared original drafts,
-not independent human approval. The existing magic-item test now compares with
-the entire SRD item set rather than selecting partial categories. All 239
-source bodies/headers, signed numbers/dice, actual bilingual detail cards and
-four picker/callback paths pass, plus all 185 frozen English item cards.
-Catalog/types/changed-file lint passed once the final batch; no model, audio,
-parser or production build was repeated. Only the affected equipment-help catalog
-fingerprint was updated; immutable goldens were preserved. Earlier Unicode
-preview/parser evidence remains valid; the legacy parser script needed a temporary
-TypeScript TSX loader, not a verified permanent runner. Imported variant-specific
-prose and authenticated browser/audio gates remain open.
+Group prose using the same source catalog, renderer and validation path into one
+reviewable batch. Combine short related pages; group spells by level/theme and
+monsters by family/shared stat-block shape. Choose size by source length,
+mechanical complexity and review/context capacity, not page count alone. A long
+or complex chapter can remain its own batch. Keep search, cache, persistence and
+component behavior changes independently reviewable; explain any adjacent fix
+that is necessary for the same Chinese flow.
 
-Item-help loading now resets by canonical slug/name/campaign identity before
-new effects run, retaining cached original text when only the viewer locale
-changes. In-flight reads cancel on disposal. Manual retry clears prior results
-and starts a fresh scoped direct/search attempt; ordinary 404 misses remain
-separate from transport/server/JSON failures. Usable bundled fallback facts stay
-visible with a retry notice when some reads fail. The existing focused magic-item
-script passes scoped requests, miss/search recovery, failure/recovery, partial
-facts, actual bilingual retry callbacks and identity/scope keys, alongside all
-239 material projections and 185 immutable English cards. Catalog/types and
-changed-file lint passed once; no model/audio/build rerun. The affected dialog
-fingerprint was source-reviewed, not the original rule helpers or goldens.
-Real browser cancellation/timing and authenticated acceptance remain open.
+Each batch has one short gap list, one combined review/check boundary and one
+commit. Source investigation and settled-name review are not separate delivery
+cycles. Reuse matching translations and existing terminology; inspect only new
+or conflicting source. Correctly localized owners need an audit note, not a new
+test or behavior change. Do not expand into unrelated refactors, speculative
+hardening or new reporting infrastructure.
 
-Anonymous browser acceptance used an isolated local test database on port 3005.
-It exposed a cold-import failure: spell preparation recognized content templates
-at module evaluation before the resource boundary registered them. Recognition
-now happens at use time, retaining original text until resources arrive. The
-existing spell workflow passes isolated cold import/late resource loading and
-38 unchanged English projections. Catalog/types/changed-file lint pass. Actual
-homepage English and Chinese switch and refresh both succeed; authenticated
-character/campaign/play and voice acceptance are still open. Screenshot evidence
-is outside Git at `/tmp/odm-home-locale-proof.png`.
+## Data-driven coverage contract
 
-Authenticated browser character creation used an isolated existing test account
-and local database (no real user data or signup agreement). The six-step Chinese
-hill-dwarf artificer flow covered background languages/tools, skills, standard
-array, spell selection, loaded studded-leather help and final preview. It found
-that off-list starter recommendations could be submitted and rejected at save.
-Suggestions now require the available class pool or canonical checklist; the
-no-pack pool also uses the shared supplemented class lists. The focused spell
-workflow passes 11 checks, including the new no-pack case and all 38 unchanged
-English fixtures. Catalog/types/changed-file lint pass once after the repair.
-The same browser flow then saved and reopened the character successfully.
-Evidence: `/tmp/odm-character-save-proof.png` outside Git. This proves one actual
-creation/save/reopen path, not full character acceptance: reopened TrainingLines
-still prints raw language/tool/armor/weapon values, and racial feature chips
-still show raw dwarf traits. These two observed gaps are now repaired in the shared sheet components:
-registered training labels use existing catalogs, and exact native race traits
-require the feature race source plus the owning race identity. Unknown/custom
-values and canonical records remain intact. The existing background-flow check
-covers actual bilingual training rows, all native race trait chips and story,
-wrong-race and custom preservation. Catalog/types/changed-file lint pass.
-The saved character page was refreshed and shows these rows and traits in
-Chinese; evidence is outside Git at `/tmp/odm-character-sheet-localized.png`.
-Campaign-dialog browser behavior, authenticated language switching and broader
-character variants remain open. No model or voice requests were made; the test
-server's unavailable default model is not the approved Codex CLI backend.
+Implemented in [the coverage manifest](validation/rulebook-translation-coverage.json)
+and `scripts/lib/rulebook-coverage.mjs`, consumed by the existing page check.
+The focused check also proves duplicate/unknown IDs, stale bindings, missing
+translations and omitted manifest entries fail. `--final` refuses partial delivery.
+Continue applying this contract to routine prose batches:
 
-Authenticated campaign browser acceptance completed the six-step Chinese
-creation wizard, persisted a new AI-DM campaign with `zh-CN`, and imported the
-previously saved character from the library into its lobby. The language menu
-shows Simplified Chinese selected after creation and subsequent route loads.
-Two concrete entry blockers were repaired: the Pixels dice client directive
-was below an import, and unused legacy settings-info exports read translation
-resources at module evaluation before registration. The creator and lobby
-already call `tableInfo` at render time; removing the unreferenced eager exports
-keeps that shared source and English copy unchanged. The existing Chinese table
-settings workflow plus catalog/types/changed-file lint pass. Actual campaign
-and character-selection routes now load; screenshot is outside Git at
-`/tmp/odm-chinese-campaign-lobby.png`. This is creation/lobby acceptance only.
-Active play awaits configuring this isolated server's approved Codex CLI
-harness backend; its unavailable default Qwen endpoint was not used for a DM
-request. Local TTS and final authenticated bilingual journey remain open.
+- Use a separate data manifest for the required canonical page IDs and source
+  identities in the delivered subset. Translation catalogs contain translations;
+  they must not define the expected set against which they themselves are tested.
+- The initial manifest binds twenty-five reviewed rules pages, all 127 delivered
+  low-level spells and all 239 items. Validate IDs against the canonical 933-page corpus;
+  reject duplicates, unknown IDs, missing translations and stale source bindings.
+- Existing tests read the manifest and iterate registered translations. Normal
+  additions update data, not a growing hard-coded ID list in test source.
+  Preserve current assertions for complete bodies/headers, tables, numeric/dice
+  values, links/anchors, modified-source rejection and canonical immutability.
+- Keep English source/render assertions and immutable goldens. A missing or
+  invalid translation must fail the check, not disappear from the expected set.
+  Do not regenerate the manifest from the available translations to hide a
+  regression or remove required IDs merely to make checks pass.
+- Derive coverage totals and missing IDs from corpus/manifest/catalog comparison.
+  Run `node scripts/test-rulebook-page-locales.mjs --final` at final acceptance
+  and require every canonical page in all six kinds
+  (rules, race, class, spell, item, monster), not just the delivered subset.
+  Until that gate passes, report partial coverage explicitly.
 
-The isolated browser server now uses the Codex CLI subscription harness for
-story and utility, with model overrides blank (the user's current default).
-Codex CLI reports 0.162.1; a read-only app-server thread/start, without any
-additional generation, resolves that default to `gpt-6-sol`. This records the
-resolved runtime configuration, not a model field separately captured for
-every generation. Actual browser kickoff and a player action asking travellers
-about the temple completed as persisted DM turns (3 and 2 calls respectively),
-with Chinese narrative and next-action prompts. Screenshot remains outside Git
-at `/tmp/odm-chinese-play-codex.png`.
-
-That journey exposed an English kickoff instruction in the player log. New
-kickoffs now persist a locale-bound event notice; the model-history projector
-reconstructs the original instruction from the event. English text stays exact,
-and earlier unkeyed history is untouched, including this test campaign's old
-kickoff. The existing survival/localization script checks both human/AI modes,
-both locales, event validation/persistence and actual buildDmMessages input,
-alongside existing rest/death/reaction cases. Catalog/types/changed-file lint
-pass once. No combat reacceptance was repeated. The absent local image service
-also exposed a raw English ComfyUI failure diagnostic; its player presentation
-is the next concrete play-flow gap. Image generation and local TTS were not
-accepted; authenticated English switch, further play/log/material ownership,
-local voice and final full checks remain open.
-
-Authenticated language separation now has browser evidence: the test account
-switched its interface to English in account settings, revisited the active
-campaign, and saw English controls with unchanged Chinese narration and
-spotlight text. The account was restored to Chinese. Screenshot outside Git:
-`/tmp/odm-english-ui-chinese-story.png`. No new model or combat run was needed.
-
-The complete observed ComfyUI transport failure now projects to a Chinese
-player-readable service-unavailable notice. Original diagnostics and English
-are preserved, and unknown errors retain their text. The existing chat-display
-workflow checks actual bilingual MediaPlaceholder output and immutable status,
-alongside its chat/private prose/callback checks. Catalog/types/changed-file
-lint pass once. Refresh initially lost the failed map status and showed a continuing render
-timer. That recovery gap is now repaired: image/map progress is persisted as
-existing table events, and the authorized snapshot restores the latest state
-for its included messages and locations. TTS retains its separate status path.
-The existing event replay check covers failure behind unrelated history, latest
-retry state, target/campaign isolation and separate TTS events. Catalog/types/
-changed-file lint pass. A real retry against the confirmed absent local image
-service persisted a map failure; the browser refresh now shows the Chinese
-failure notice instead of a timer. Evidence outside Git:
-`/tmp/odm-map-failure-recovery.png`. No new model request was needed. Voice and final full gates
-remain open.
-
-Pure state, audio plumbing and glyph helpers can be audited within the session
-batch; their file count must not displace player-visible work.
-Shared Workshop types remain in the manifest's import closure; deep editors
-remain deferred and must not become new release work.
-
-A batch begins with one short list of concrete player-visible gaps and ends with
-an independently reviewable commit. Fix adjacent behavior only if it prevents the
-same Chinese flow. Do not expand into unrelated refactors, speculative hardening,
-new reporting infrastructure or repeated source investigations of settled paths.
-If an owner is already correctly localized, record the source/consumer audit and
-move on without writing redundant tests or changing behavior to raise coverage.
+Any import helper should reuse the production source-fingerprint function and
+existing catalog format. Add it only if repeated source-binding work warrants
+it; no new translation framework or reporting service is required.
 
 ## Lightweight verification and progress reporting
 
-Delivery follows complete player flows: character creation and sheet → campaign
-creation and entry → active play and logs → local single-narrator speech.
-Finish one flow's concrete gaps before starting another. Source investigation
-and settled-name review are not standalone delivery batches. Use one focused
-check per flow batch, not a new acceptance cycle for every component. Report
-player-visible outcomes and the next flow; remaining owner counts are only an
-audit aid. External TTS setup must not hold up independently available UI work.
+Use the following checks once at the final state of each batch. Independent
+checks may run together; dependent writes, reviews and commits remain sequential.
 
-- At batch end, run the catalog/AST/terminology gate once. Run TypeScript and
-  changed-file lint for code batches; documentation-only updates do not need
-  application checks.
-- Add or reuse one focused workflow check when interaction, persistence or shared
-  dynamic display changes. Ordinary copy does not need a new test script,
-  exhaustive snapshots or a separate acceptance cycle for each file.
-- After passing, stop verification and commit. Repeat only a failed check or a
-  check affected by a subsequent change. Do not rerun passed Goblin, naming,
-  real-model, embedding, build or audio acceptance for ordinary UI batches.
-- Keep full tests/lint/build at the final boundary, or an earlier shared-runtime
-  change with a concrete need for broad regression. Do not weaken assertions or
-  refresh English goldens to hide failures.
-- Report completed player flows, remaining gaps and the next delivery unit.
-  Keep UI file coverage separate from overall completion and remaining effort.
-  Progress questions reuse existing evidence instead of launching checks.
+| Change | Required batch verification |
+| --- | --- |
+| Documentation only | Inspect the diff and `git diff --check`; no application checks. |
+| Prose/coverage data only, existing delivery path | Reuse one focused material/page check for manifest completeness, source binding, bilingual rendering, numeric/dice/table parity, links/anchors, canonical and English preservation. Run the catalog/AST/terminology/generated-resource gate once if its inputs changed; regenerate resources only when needed. No TypeScript or code lint solely for unchanged code. |
+| TypeScript/JavaScript, test logic or runtime behavior | Relevant focused workflow check, TypeScript and changed-file lint; run catalog/AST/terminology/resource checks if their inputs changed. Cover changed interaction, persistence, dynamic display and English behavior. |
+| Shared runtime with a concrete broad-regression risk | Broaden tests/build only for the identified affected contracts; record the reason. |
+| Final text release | Complete the bilingual journey, then full tests, full lint and production build on the final source boundary. |
+
+After passing, stop verification and commit. Repeat only failed checks or checks
+invalidated by later changes. Do not rerun passed naming, real-model, embedding,
+build or audio acceptance for ordinary prose/UI work. Preserve assertions and
+English goldens; fix failures rather than weakening them. Translation review
+still compares the complete source, conditions, quantities, dice, units and
+cross-references; a structural check is not independent human proofreading.
+
+Keep the plan's current-state table as the single prose summary of progress.
+Use the manifest/check output for detailed coverage. Each batch
+updates only changed status, remaining gates and the next unit, with a commit or
+existing evidence link when needed. Keep exceptional defects, failed checks and
+new runtime evidence in the existing validation reports; do not append another
+full batch narrative or repeat unchanged invariants and deferred checks.
+
+Progress questions reuse existing evidence without launching application checks.
+Reports state player-visible outcomes, unresolved gaps and the next unit; file
+and page fractions are audit aids, not overall completion or remaining effort.
+If interrupted, retain a short checkpoint here: last commit, uncommitted unit,
+passed/failed checks, remaining operation. Resume from that difference without
+reinvestigating settled paths or rerunning unchanged passed checks. Preserve real
+model/service versions and failures; local evidence does not imply current
+production acceptance.
 
 ## Compatibility contracts
 
@@ -360,8 +255,9 @@ not complete play, production guard recall, full English UI parity or local-mode
 [Combat acceptance](validation/chinese-combat-narration.md) records engine conclusions,
 correction fallback, speech-input checks and the actual Codex narratives.
 A local-model comparison is future compatibility work, not this user's release
-backend. Chinese TTS now has partial real CPU acceptance in [the runtime record](validation/chinese-tts-runtime.json); discover installed voices before
-assuming `zf_xiaobei`, `lang_code=z` and `misaki[zh]` are available. Test actual
+backend. Chinese TTS has partial real CPU acceptance in
+[the runtime record](validation/chinese-tts-runtime.json). If deferred voice work
+resumes, discover installed voices before assuming `zf_xiaobei`, `lang_code=z` and `misaki[zh]` are available. Test actual
 numbers, units, names, closing quotation marks and long unpunctuated text.
 
 The [review repair report](validation/localization-review-repairs.md) records
@@ -375,12 +271,13 @@ existing authorization. Use the configured Codex CLI subscription; a local-model
 comparison is future compatibility work, not this user's release backend. Do not
 reopen settled terminology or add model/audio cost boundaries without a reason.
 User involvement is required only for inaccessible account/service access or a
-proposed change to the approved model/cost scope. Local TTS setup can proceed
-independently where access permits; missing service access does not stop UI work.
+proposed change to the approved model/cost scope. Deferred voice work must not
+block or restart independently available text delivery.
 
 Remaining acceptance includes other native dynamic and item/feature material,
-other new player logs, authenticated switching and save/resume, prompt-usage and
-narration-guard evidence within the actual journey, and real local Chinese audio.
+other new player logs, complete rulebook translation/reading/search, authenticated
+switching and save/resume, prompt-usage and narration-guard evidence within the
+actual journey, and final full tests/lint/build. Real Chinese audio remains deferred.
 Existing bounded DM combat/resource evidence is reused; broader guard recall and
 all pack content are not implied by it. Engine-generated decisive combat facts,
 one text-only prose correction and safe fallback must never repeat an action,
@@ -393,50 +290,40 @@ Use [the UI manifest](validation/ui-localization.json),
 sources. Do not mark the goal complete until the required release gates above
 have actual evidence.
 
-### Native spell help and voice-quality boundary (2026-10-13)
+## Source exceptions and retained evidence
 
-Complete source-bound Chinese help now covers **127/319 native SRD spells**, including every cantrip, first-level and second-level spell; **192 third-level and higher bodies remain**. The last second-level batch closes Detect Thoughts, Enhance Ability, Enlarge/Reduce, Enthrall, Find Steed, Flame Blade, Flaming Sphere, Gust of Wind, Heat Metal, Levitate, Magic Mouth, Moonbeam, Rope Trick, Spike Growth, Suggestion, Warding Bond, Web and Zone of Truth. The newest batch adds Acid Arrow, Alter Self, Animal Messenger, Arcane Lock, Arcanist's Magic Aura, Augury, Blindness/Deafness, Branding Smite, Calm Emotions, Continual Flame, Darkness, Find Traps, Gentle Repose, Locate Animals or Plants, Locate Object and Ray of Enfeeblement. The second-level batch covers Aid, Lesser Restoration, Misty Step, Invisibility, Blur, Mirror Image, Hold Person, Silence, Darkvision, See Invisibility, Spider Climb, Knock, Magic Weapon, Scorching Ray, Shatter, Spiritual Weapon, Prayer of Healing, Pass without Trace, Protection from Poison and Barkskin. The latest batch closes Find Familiar, Heroism, Hideous Laughter, Hunter's Mark, Identify, Illusory Script, Inflict Wounds, Jump, Longstrider, Protection from Evil and Good, Purify Food and Drink, Sanctuary, Shield of Faith, Speak with Animals, Unseen Servant and Animal Friendship. This is player-facing content help, not full rulebook translation.
-
-Content help previously omitted the separate higher_level field; spell dialogs now include it in both locales. Complete-source matching preserves homebrew, other-book and modified variants. Canonical spell records and original English source remain unchanged. Prose lives in the selected-language content catalog; the presentation helper imports only thin metadata.
-
-Animal Friendship's bundled English higher-level clause is truncated. Its Chinese meaning was verified against the publisher's [2014 Basic Rules entry](https://www.dndbeyond.com/spells/1993-animal-friendship): a higher spell slot permits one additional beast for each level above first. The full-source key still matches the original bundled text; this correction is confined to the Chinese presentation, with no silent rewrite of English source or protocol data.
-
-The grouped source check covers all registered bodies, requires every native cantrip/first-level/second-level entry, and checks higher-level clauses, numeric/dice retention, English preservation, modified-source/homebrew/other-book preservation and unchanged canonical records. Catalog, TypeScript and changed-file lint passed once for the final batch. Translation review is implementation-agent source review, not independent human proofreading.
-
-The user rejected the current Kokoro Chinese sample as unpleasant. Generation/decode and outage/retry evidence remain valid, but Chinese narrator quality has failed acceptance. Text completion takes priority; further voice acceptance requires an acceptable voice.
-
-### Rulebook full-page presentation (2026-10-13)
-
-The page API accepts an optional locale and returns a separate display object. Canonical page data, page IDs, folios, chapter membership, neighbours and workshop-copy inputs remain English/source-owned. Complete page coverage is now 386/933: all 127 native cantrip, first-level and second-level spell pages, all 239 magic-item pages, and twenty foundational rule pages (Conditions, Inspiration, Coinage, Selling Treasure, Racial Traits, Beyond 1st Level, Alignment, Languages, Trade Goods, Feats, Armor, Tools, Mounts and Vehicles, Weapons, Expenses, Spellcasting, Adventuring, Multiclassing, Backgrounds and Using Ability Scores). Spell header review covers all eight casting-time forms, 11 ranges, 69 component combinations and 18 duration forms, preserving reaction triggers, material costs, consumption requirements and concentration. Item titles, rarity/type/attunement headers, full tables and embedded blocks reuse the already reviewed item catalogs without duplicating prose. Translated headers include school/level, casting time (including Shield's reaction trigger), range, verbal/somatic/material components and duration/concentration; effect and higher-level prose reuse the existing spell-help catalog. No full English or Chinese book corpus is imported by the reader client. Additional locales use the same AppLocale/display interface.
-
-Reader caches are separated by locale and page ID, a locale change refreshes the current page, and stale navigation responses from another locale are discarded. Chinese italic spell references resolve to canonical page IDs. The full-source/header/meta checks preserve modified sources instead of translating by title alone. A focused test renders all 127 real spell-page components in both locales, requires every low-level spell page, checks all 239 complete item projections plus four table/embedded-block pages in the real renderer, cached-display language isolation, English and canonical preservation, changed-source rejection and an actual Chinese link click to Magic Missile. Types, catalog checks and changed-file lint passed. Asynchronous cache refresh and authenticated browser reading/search remain part of the final text journey; this unit does not claim all 933 pages translated.
-
-### Native rules prose and stable anchors (2026-10-13)
-
-Four full rules pages are translated and rendered: Conditions (all 15 states and the six-level exhaustion table), Inspiration, Coinage (complete currency exchange table) and Selling Treasure. Large native prose translations live in a server-only per-locale page catalog, outside the UI/content client chunks. Every record carries a SHA-256 signature over the canonical ID, title, kind, metadata and complete original Markdown; changed sources retain their original display until reviewed. The locale registry can add further page catalogs without special cases in reader components.
-
-Translated headings and sidebars retain native anchors in structural order; duplicate Chinese headings do not collapse quick links. Structural mismatches cannot silently remap headings. The focused renderer/source test verifies all four pages, original anchors including exhaustion/poisoned, unchanged numeric table cells, full-source/title modification rejection and English/canonical preservation. It also exercises invalid anchor-shape rejection. Catalog and types passed. Changed-file lint found a React Compiler memo dependency mismatch; the dependency was corrected and only that affected file was rechecked successfully. These are implementation-agent source reviews; independent human proofreading and final authenticated Chinese search/navigation remain open.
-
-The next prose batch adds six full pages: Racial Traits, Beyond 1st Level, Alignment, Languages, Trade Goods and Feats (including the complete Grappler entry). XP/proficiency values and commodity prices/weights remain exact; full source fingerprints and native heading anchors are checked. Language names match the existing character-training catalog (Goblin: 哥布林语; Deep Speech: 深层语; Sylvan: 林地语; Auran: 气族语), and Neutral (N) uses the character builder's 绝对中立 label. The grouped test now enumerates every registered prose page rather than a fixed four-page list; it renders all ten pages, preserves tables and links, and rejects modified sources. Its initial title assertion was corrected to read visible text rather than raw HTML because numeric title digits are wrapped in spans. The focused check, TypeScript and changed-script lint passed; unchanged UI catalogs were not regenerated or retested for this prose-only batch. Independent human proofreading and final full-suite/browser gates remain open.
-
-### Native Chinese rulebook search (2026-10-13)
-
-Search now builds a cached index for each requested display locale, including the translated full prose and headers, with preserved native heading/sidebar anchors. The original English index and English query behavior remain separate. CJK word runs use adjacent-character terms plus single-character prefix support; Latin stemming and ranking are preserved. Direct Chinese queries and existing canonical/alias queries are searched separately, merged by canonical page/passage identity, and projected into the displayed page's title, chapter, heading and snippet. Untranslated pages intentionally retain source English until their full translations are added. No model or embedding calls are required.
-
-Chinese snippets center on matching text instead of relying on spaces, and overlapping Chinese highlight terms merge into a single visible span. Mixed Latin/number terms retain highlighting and React text escaping. All 239 magic-item page projections now also carry their original anchors, matching both search and reading. The dedicated focused search check covers named rules, full Chinese sentences, mixed currency/numeric queries, single-character typing, English canonical names in a Chinese view, empty/no-hit queries, snippet bounds, real component highlighting and HTML escaping. The initial expectation that 熟练加值 must rank the advancement table first was corrected: the canonical Proficiency Bonus rules passage is legitimately ranked first; the translated advancement table remains among the results. All 21 existing English rulebook checks, the bilingual page projection check, types and changed-file lint passed. Final authenticated search/navigation remains unverified, and overall page coverage remains 376/933.
-
-The equipment prose batch adds Armor, Tools and Mounts and Vehicles in full, including all six source tables. Armor proficiency restrictions, AC/dexterity formulas, strength/speed requirements, shields and don/doff times remain source-faithful. Tool and instrument names match the owned equipment catalog. Mount carrying capacities, drawn-vehicle multipliers and fractional vessel speeds remain unchanged. The existing grouped renderer check now includes all thirteen prose pages and compares signed/multiplied/fractional numeric table tokens, native anchors, source fingerprints and English preservation. That focused check, types and changed-script lint passed. Unchanged UI catalogs/search/model/voice checks were not repeated. Full translation coverage is 379/933 pages; page fraction is not word-volume completion.
-
-The next full prose batch adds Weapons and Expenses. All weapon proficiency/property rules, improvised/silvered weapons, lance/net restrictions and the full weapon table are translated, with the existing equipment/property names retained. Lifestyle tiers match the character and DM controls; food/lodging/service tables and the Self-Sufficiency sidebar are complete. Source dice, damage types, normal/long ranges, costs, weights and daily/per-mile units are preserved. The grouped renderer check now covers all fifteen prose pages and compares complete dice tokens as well as signed/fractional table numbers; native sidebar and heading anchors remain unchanged. The focused check, types and changed-script lint passed. No unrelated catalogs, model runs, audio or broad searches were repeated. Total complete book-page coverage is 381/933; independent proofreading and final full-suite/browser gates remain open.
-
-The Spellcasting chapter is translated in full, including spell levels/slots/upcasting, known/prepared spells, armor and school sidebars, cantrips/rituals, casting time and bonus/reaction restrictions, range/components, concentration, targeting/cover, all five area shapes, save/attack formulas and effect stacking. Original headings, sidebar anchors and the Conditions cross-reference remain intact. Cure Wounds references use the existing preferred display name 治疗伤口, including the earlier expense example. The focused full-page source/renderer check covers all sixteen prose pages.
-
-This chapter exposed a Chinese keyword recall issue: mandatory cross-word bigrams made 法术专注 fail to match 法术…专注. Query terms now use Intl.Segmenter words when available; indexes retain those words plus adjacent-character terms for names/prefixes. A no-Segmenter environment retains the previous bigram fallback. English terms/stemming remain unchanged. In Chinese searches, exact native/canonical titles now outrank longer related aliases, so 魔法飞弹 returns the spell before its wand. Focused cases for 法术专注 and 如何维持专注, bilingual name queries and safe highlighting pass. All 21 English rulebook checks, types and changed-file lint also pass. Only the affected failing Chinese cases were rerun after the segmentation/ranking repair. Full page coverage is 382/933; final corpus/full-suite/browser acceptance remains open.
-
-The Adventuring chapter is translated in full: time/movement, travel pace/forced marches, difficult terrain and special movement, falling/suffocation, vision/light/senses, food/water, object interactions, short/long rests and all downtime activities. Native anchors such as travel-pace, resting and long-rest, and explicit Conditions links are retained. The source projection/renderer check covers all seventeen prose pages.
-
-A real source defect was found in the bundled travel table: Normal and Slow daily distances were reversed. The [publisher's 2014 Basic Rules](https://www.dndbeyond.com/sources/dnd/basic-rules-2014/adventuring) specify Fast 30, Normal 24 and Slow 18 miles/day. Both English source cells and the Chinese table now match those values. Exact replacement entries were added to the existing import ERRATA list, so regenerating the pinned conversion keeps the correction. This is a deliberate, documented English text correction; source IDs and other data are unchanged. A dedicated independent expected-value assertion joins the existing English rulebook suite (22 checks passed). Types and changed-script lint pass. The existing travel engine accumulates hourly rates; its hourly-versus-published-day-table behavior is unchanged by this text correction. No unrelated models/audio/catalog checks were repeated. Total full translated page coverage is 383/933; final corpus/full-suite/browser gates remain open.
-
-Multiclassing and Backgrounds are now translated in full, including multiclass prerequisites/proficiencies/slot tables, class-feature stacking rules and the complete Acolyte feature/characteristic table. The combined spellcaster level is distinguished from character total level; per-class spell learning/preparation and Pact Magic interchange remain source-faithful. Names such as 引导神力、额外攻击、无甲防御、契约魔法、饥渴之刃 and 信徒庇护 match existing character material. The focused renderer/source/table check covers all nineteen prose pages; types and changed-script lint passed. Other catalog/model/audio/search checks were not repeated. Full translated page coverage is 386/933; independent proofreading and final corpus/full-suite/browser gates remain open.
-
-Using Ability Scores is now translated in full, including all six attributes, the complete skills table, advantage/disadvantage, proficiency, passive/group checks, lifting/encumbrance, hiding and saving throws. Source-bound display preserves all canonical heading anchors and numeric tables. The focused renderer/source/table check covers twenty prose pages and passed; types and changed-script lint passed. No model, voice or repeated catalog checks were run for this prose-only batch. Current full-page coverage is 386/933; remaining corpus and final text-flow gates stay open.
+- Animal Friendship's bundled English higher-level clause is truncated. The
+  Chinese clause was verified against the publisher's
+  [2014 rules entry](https://www.dndbeyond.com/spells/1993-animal-friendship).
+  Preserve that correction and its source binding; the English source was not
+  rewritten. Spell help includes the separate higher-level field in both locales.
+- The bundled travel table reversed Normal/Slow daily distances. Commit
+  `9b7c83a6` corrects English and Chinese to 24/18 miles/day using the publisher's
+  [2014 rules](https://www.dndbeyond.com/sources/dnd/basic-rules-2014/adventuring),
+  retains the import ERRATA and independent expected-value test. Hourly travel
+  engine behavior was not changed.
+- Rulebook display remains server-generated with complete-source fingerprints;
+  canonical records and workshop-copy inputs stay source-owned. Preserve native
+  heading/sidebar anchors, Chinese cross-reference links, locale/page cache
+  isolation and stale-response rejection. Chinese full-text search/snippets and
+  keyword highlighting retain English stemming/ranking and text escaping.
+  Chapter-by-chapter implementation and checks remain in Git.
+- Authenticated browser evidence covers Chinese character creation/save/reopen,
+  campaign creation/lobby, Codex kickoff/player action and English controls with
+  unchanged Chinese narration. Media failure state survives refresh. These
+  bounded observations do not close the full bilingual journey. Screenshots
+  remain outside Git; their historical paths are retained in earlier plan commits.
+  This isolated server used Codex CLI 0.162.1 with the existing default resolved
+  to `gpt-6-sol`; the model was not independently captured for every generation.
+- Preserve unresolved source ambiguity, including the Whispered Names advantage
+  clause, rather than inventing a rule during translation. Earlier Unicode
+  preview/parser checks used a temporary TSX loader; a permanent legacy parser
+  runner remains unverified. Preserve that limitation when reusing the evidence.
+- Historical full regression/lint/Next 16.3.8 Turbopack build passed at the
+  [combat UI checkpoint](validation/chinese-combat-ui-checks.json).
+  Subsequent changes require the final release checks; earlier default-build
+  failures are superseded, not erased. The alternate webpack path is unverified.
+- Kokoro synthesis, real delivery and outage/retry evidence remain in
+  [the runtime record](validation/chinese-tts-runtime.json). The user rejected
+  Chinese voice quality. Voice work is deferred, not passed, and is not a gate
+  for this text milestone.

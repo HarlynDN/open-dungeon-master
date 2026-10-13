@@ -2,7 +2,19 @@ import assert from 'node:assert/strict';
 import { register } from 'node:module';
 register('./lib/register-alias.mjs', import.meta.url);
 const { rulebookPage, rulebookPages } = await import('../src/lib/rulebook/book.ts');
-const { rulebookPageDisplay } = await import('../src/lib/rulebook/localized-pages.ts');
+const { rulebookPageDisplay, nativeBookSourceHash } = await import('../src/lib/rulebook/localized-pages.ts');
+const { default: coverageManifest } = await import('../docs/validation/rulebook-translation-coverage.json', { with: { type: 'json' } });
+const { verifyRulebookCoverage } = await import('./lib/rulebook-coverage.mjs');
+const pages = rulebookPages();
+const verify = (manifest = coverageManifest, display = rulebookPageDisplay, options) => verifyRulebookCoverage(manifest, pages, nativeBookSourceHash, display, options);
+const coverage = verify(coverageManifest, rulebookPageDisplay, { full: process.argv.includes('--final') });
+const firstRequired = coverageManifest.requiredPages[0];
+assert.throws(() => verify({ ...coverageManifest, requiredPages: [...coverageManifest.requiredPages, firstRequired] }), /Duplicate required page/);
+assert.throws(() => verify({ ...coverageManifest, requiredPages: [{ ...firstRequired, id: 'unknown-page' }] }), /Unknown required page/);
+assert.throws(() => verify({ ...coverageManifest, requiredPages: [{ ...firstRequired, sourceHash: 'stale' }] }), /Stale source binding/);
+assert.throws(() => verify(coverageManifest, (page, locale) => page.id === firstRequired.id ? { translated: false } : rulebookPageDisplay(page, locale)), /Missing required translation/);
+assert.throws(() => verify({ ...coverageManifest, requiredPages: coverageManifest.requiredPages.slice(1) }), /Translation omitted from delivery manifest/);
+if (coverage.translated !== coverage.total) assert.throws(() => verify(coverageManifest, rulebookPageDisplay, { full: true }), /Incomplete rulebook/);
 const { LOCALIZED_SPELL_PAGES } = await import('../src/lib/rulebook/localized-page-metadata.ts');
 const { openCombatRenderer } = await import('./lib/combat-ui-fixtures.mjs');
 const stub = source => 'data:text/javascript;base64,' + Buffer.from(source).toString('base64');
@@ -64,7 +76,6 @@ for (const page of rulebookPages().filter(page => page.kind === 'spell' && /(?:c
 const { bookAnchorIds, parseBook, preserveBookAnchors } = await import('../src/lib/rulebook/markdown.ts');
 const { default: nativeCatalog } = await import('../src/lib/rulebook/locales/zh-CN.json', { with: { type: 'json' } });
 const nativeRules = Object.keys(nativeCatalog);
-for (const id of ['conditions', 'inspiration', 'coinage', 'selling-treasure', 'racial-traits', 'beyond-1st-level', 'alignment', 'languages', 'trade-goods', 'feats', 'armor', 'tools', 'mounts-and-vehicles', 'weapons', 'expenses', 'spellcasting', 'adventuring', 'multiclassing', 'backgrounds', 'using-ability-scores']) assert.ok(nativeRules.includes(id), id);
 for (const id of nativeRules) {
   const data = rulebookPage(id);
   const before = JSON.stringify(data);
@@ -80,7 +91,7 @@ for (const id of nativeRules) {
   const translatedTables = blocks.filter(block => block.kind === 'table');
   assert.equal(translatedTables.length, sourceTables.length);
   for (let i = 0; i < sourceTables.length; i++) {
-    const numbers = table => table.rows.flatMap(row => row.flatMap(cell => cell.match(/[+−×÷-]?\d+(?:d\d+|[\d,/]*(?:[½¼¾])?)/gi) ?? []));
+    const numbers = table => table.rows.flatMap(row => row.flatMap(cell => cell.match(/(?<![A-Za-z0-9])[+−×÷-]?\d+(?:d\d+|[\d,/]*(?:[½¼¾])?)/gi) ?? []));
     assert.deepEqual(numbers(translatedTables[i]), numbers(sourceTables[i]), id + ': table values');
   }
   assert.equal(rulebookPageDisplay(data.page, 'en').md, data.page.md);
@@ -94,5 +105,7 @@ assert.match(conditions.md, /体内已经存在的毒素或疾病只是暂时停
 assert.match(conditions.md, /从死亡中复活也会使生物的力竭等级降低 1/);
 
 const untouched = rulebookPages().find(page => page.kind === 'spell' && !LOCALIZED_SPELL_PAGES.some(row => row.id === page.id));
-assert.equal(rulebookPageDisplay(untouched, 'zh-CN').md, untouched.md);
-console.log(`Rulebook: ${LOCALIZED_SPELL_PAGES.length} complete Chinese spell pages and ${items.length} full item pages and ${nativeRules.length} full rules pages; bilingual rendering, source/canonical preservation and translated cross-reference passed.`);
+if (untouched && !nativeCatalog[untouched.id]) assert.equal(rulebookPageDisplay(untouched, 'zh-CN').md, untouched.md);
+console.log(`Rulebook: ${coverage.translated}/${coverage.total} complete Chinese pages; manifest integrity, bilingual rendering, source/canonical preservation and translated cross-reference passed.`);
+console.log(JSON.stringify(coverage.kinds));
+if (process.argv.includes('--missing')) console.log(JSON.stringify(coverage.missingIds));

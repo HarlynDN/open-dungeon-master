@@ -1,0 +1,1973 @@
+{
+  "schemaVersion": 1,
+  "locale": "zh-CN",
+  "corpus": {
+    "pageCount": 933,
+    "kinds": {
+      "rules": 36,
+      "race": 9,
+      "class": 12,
+      "spell": 319,
+      "item": 239,
+      "monster": 318
+    },
+    "sha256": "2a856cddb7b33c01ddb64b4e832cbd9e1e8fb7bf8bd1c4a702acb083e2ae992b"
+  },
+  "requiredPages": [
+    {
+      "id": "racial-traits",
+      "kind": "rules",
+      "sourceHash": "24738ad9d8aea30c20697a75274d862e62887f5116a5bc02a7147c991bffd571"
+    },
+    {
+      "id": "beyond-1st-level",
+      "kind": "rules",
+      "sourceHash": "e38f0468e4ae1916a6083c5faf3cd5fa4034af55905d8415aa9dda34ab4a85f3"
+    },
+    {
+      "id": "multiclassing",
+      "kind": "rules",
+      "sourceHash": "fbcf98cb32786345f2df56bc47bf179126f217b75992efc770482be71bc06401"
+    },
+    {
+      "id": "alignment",
+      "kind": "rules",
+      "sourceHash": "a202fb91b11393053d8b28e99fb77875b3b339ec8a5b84b339f5b3b0729987db"
+    },
+    {
+      "id": "languages",
+      "kind": "rules",
+      "sourceHash": "28bab7fa614621336f4e13a4c0e491029bc0db02c16298fca4ebf25e9a82469c"
+    },
+    {
+      "id": "inspiration",
+      "kind": "rules",
+      "sourceHash": "20175aeb9458df644744589a751457211584c5c10818d715b65a2ea286917005"
+    },
+    {
+      "id": "backgrounds",
+      "kind": "rules",
+      "sourceHash": "bb132c8223f61df48bda7af3956e53d0d92f9e68b4319da9667731475d4f0513"
+    },
+    {
+      "id": "coinage",
+      "kind": "rules",
+      "sourceHash": "44474f79ffa71820d5407c8de975631daa1701833da28df725d3674e2e0737be"
+    },
+    {
+      "id": "selling-treasure",
+      "kind": "rules",
+      "sourceHash": "c1a147a9ba00e1c67c9a0cee854d2d8673d19a75f9d0745a1afa15741f263df4"
+    },
+    {
+      "id": "armor",
+      "kind": "rules",
+      "sourceHash": "1ecc26e5736c510ec6582d9d644f6300bce8f0eb13b2a29113a7dfa31eb51390"
+    },
+    {
+      "id": "weapons",
+      "kind": "rules",
+      "sourceHash": "1a541a0fd1ea83f953eb6d4ede465eba960efd856190c1670abe592801a9b587"
+    },
+    {
+      "id": "tools",
+      "kind": "rules",
+      "sourceHash": "5033f95243befb1527a3a381e924b2c2c0ab49f2032edb3bc387c49da8b18745"
+    },
+    {
+      "id": "mounts-and-vehicles",
+      "kind": "rules",
+      "sourceHash": "f90196a63e8c25e150c8ae47eab1419e710ae9ab76a57d6ced7c7f6846d9b06b"
+    },
+    {
+      "id": "trade-goods",
+      "kind": "rules",
+      "sourceHash": "863711b1d956f330b4cda1d40fa7d627d26035b42ad56981629fa4c347e17701"
+    },
+    {
+      "id": "expenses",
+      "kind": "rules",
+      "sourceHash": "f338d17330e504e9cfc17e9e4263eda406ef70533ac86b2b0945410f82466df7"
+    },
+    {
+      "id": "feats",
+      "kind": "rules",
+      "sourceHash": "f491817b408222a0c02b1396ae374e3415a900f93e872353fc85ddc816dd3cec"
+    },
+    {
+      "id": "using-ability-scores",
+      "kind": "rules",
+      "sourceHash": "d6b3030774a871d5ab7e2ed0d82d52a8f1e87e7873724a0b2bcf0ff8fbcca1e0"
+    },
+    {
+      "id": "adventuring",
+      "kind": "rules",
+      "sourceHash": "c99b4ad712d625205a478f91940bc7dc9a88af8ae36a62125990795a6e28d35b"
+    },
+    {
+      "id": "spellcasting",
+      "kind": "rules",
+      "sourceHash": "d0d3139cbff271c3c0e3d35abb934ebb92a8467ae5b0864e786edc10465481a9"
+    },
+    {
+      "id": "acid-splash",
+      "kind": "spell",
+      "sourceHash": "ed0307f874bca2d69abd1555a23f6b8b0827174936b64cf7f0661122ef98f183"
+    },
+    {
+      "id": "chill-touch",
+      "kind": "spell",
+      "sourceHash": "f0ff25e89dd5c75a4425fe9af5c902ad2256bfb756ca1e3477aae7892ea6225e"
+    },
+    {
+      "id": "dancing-lights",
+      "kind": "spell",
+      "sourceHash": "17804d3a6a371788a9d97323c64bab1de27c9fff01b901adc53d4cb156545852"
+    },
+    {
+      "id": "druidcraft",
+      "kind": "spell",
+      "sourceHash": "855d7436ab573da27a3c4f3f468b3bba10d8e2d53e50bef2864eba46e74f68be"
+    },
+    {
+      "id": "eldritch-blast",
+      "kind": "spell",
+      "sourceHash": "72ef32eb51b596ccea88a4ce19442f5e17a7db71bf998b257509f1ecc63af51c"
+    },
+    {
+      "id": "fire-bolt",
+      "kind": "spell",
+      "sourceHash": "8b14a75708249f147d57280b238e4c36c2198a854503951dd22eb87c84c14200"
+    },
+    {
+      "id": "guidance",
+      "kind": "spell",
+      "sourceHash": "06d1bda1b2e8e74627a9ef64a26b0ab13a4c9a92668732e59d330041e3edb37c"
+    },
+    {
+      "id": "light",
+      "kind": "spell",
+      "sourceHash": "0a03abbf7b9a62220db2d7948f9c2e0dbe466fc528b585c0d89b72ee61b8aa1c"
+    },
+    {
+      "id": "mage-hand",
+      "kind": "spell",
+      "sourceHash": "f0975307fa9ec00c8201745c896b1477774ee3cedd469f9eb2feb87668cc6822"
+    },
+    {
+      "id": "mending",
+      "kind": "spell",
+      "sourceHash": "217f854512c00c6a31a750b36551a049a52eb8f365e994f6d9a97167633a846e"
+    },
+    {
+      "id": "message",
+      "kind": "spell",
+      "sourceHash": "5cb4bbd7dfd5f4769bff64403309657c404ccf77bb67b3f72a903887933e6e21"
+    },
+    {
+      "id": "minor-illusion",
+      "kind": "spell",
+      "sourceHash": "afb12eab805b4a0c003d4743d51bda49960aa89660faea6ae88fce98abcc52d7"
+    },
+    {
+      "id": "poison-spray",
+      "kind": "spell",
+      "sourceHash": "baa7ad038acb0ea8c5408e80d2fee0ed837c52e3d013735fa411d292a166a3b4"
+    },
+    {
+      "id": "prestidigitation",
+      "kind": "spell",
+      "sourceHash": "b5aada45438d0acb04da0ef36f39385c57452edb8cee445dcb4ec8a414e03ff0"
+    },
+    {
+      "id": "produce-flame",
+      "kind": "spell",
+      "sourceHash": "2c9e582561ea97114a899ff99af838585a02b52b3b6946a0170e5df66a0eb30f"
+    },
+    {
+      "id": "ray-of-frost",
+      "kind": "spell",
+      "sourceHash": "f32867ff3da965788cda3116ba3051f1cd5980d54b9887d292fe4ff778a45c10"
+    },
+    {
+      "id": "resistance",
+      "kind": "spell",
+      "sourceHash": "82a0b50811ee62b9db5df5d91bea227ec41de3b9d86915ccbc93b23c2e7f7e7d"
+    },
+    {
+      "id": "sacred-flame",
+      "kind": "spell",
+      "sourceHash": "4780b38814a56e67f2ab9f93802327255a539f41d80727943faa3121aa4f85cf"
+    },
+    {
+      "id": "shillelagh",
+      "kind": "spell",
+      "sourceHash": "fc367c6e12302aa4661284ce86fc71d5ebd54d221396644033472002caca4ec6"
+    },
+    {
+      "id": "shocking-grasp",
+      "kind": "spell",
+      "sourceHash": "accf2499308d85e1772aa863779f2c55a8054697574fa1f52380bb75e2c58718"
+    },
+    {
+      "id": "spare-the-dying",
+      "kind": "spell",
+      "sourceHash": "9dcf4eae33bce49d079117d0188ce6951823d4c546d807569c26f3062fe19187"
+    },
+    {
+      "id": "thaumaturgy",
+      "kind": "spell",
+      "sourceHash": "8c93b46da4015e7f1b9ed39a3d09414695c7cf716f483701598ab3cd3be03b38"
+    },
+    {
+      "id": "true-strike",
+      "kind": "spell",
+      "sourceHash": "a6bb03dc50dac856ca7681e85488e83096611e6bdfc8110c6969a5cef574faab"
+    },
+    {
+      "id": "vicious-mockery",
+      "kind": "spell",
+      "sourceHash": "e5b6da745102573692b1538c6bf8b85d98d9e7f5da89acc536288ebe53a36b05"
+    },
+    {
+      "id": "alarm",
+      "kind": "spell",
+      "sourceHash": "867ff7491941a130533cf0d1374ef732300ca701ff8bfaa4e7daf1e0d495bfab"
+    },
+    {
+      "id": "animal-friendship",
+      "kind": "spell",
+      "sourceHash": "a3590b0ad588098d49b3dc15dccbe9f241d96f00afdae4c79284c43ca51dbeac"
+    },
+    {
+      "id": "bane",
+      "kind": "spell",
+      "sourceHash": "6963595c981db5eba4fb4a0e7c27300646771d530d6af39988eab49d4833e0ed"
+    },
+    {
+      "id": "bless",
+      "kind": "spell",
+      "sourceHash": "4d2cb6fd1b2de6bd719ad3a0f365e35979399787f009bc4a9b439efc030f292b"
+    },
+    {
+      "id": "burning-hands",
+      "kind": "spell",
+      "sourceHash": "e50866a8d7a7e1ee94e5fd9cbe82e8ee180b676342934bf2be9626a9650cbc0b"
+    },
+    {
+      "id": "charm-person",
+      "kind": "spell",
+      "sourceHash": "7d2caecbced01bc6d3b12378bda709e0a429313fc5b10ac11ba2b960bfc4f577"
+    },
+    {
+      "id": "color-spray",
+      "kind": "spell",
+      "sourceHash": "3f34393ca566c9871c6716bd62dd45b44a64bca38f9a362ceb525f0a63b179d8"
+    },
+    {
+      "id": "command",
+      "kind": "spell",
+      "sourceHash": "2dac389467ee92fa6397b0316a5736ee183af4d2641e8ab7b9ba9f662fa21837"
+    },
+    {
+      "id": "comprehend-languages",
+      "kind": "spell",
+      "sourceHash": "1255729a8dd2536d1de71f708e1f1972111c816052e2ddd4ae4e603a3a6a69b9"
+    },
+    {
+      "id": "create-or-destroy-water",
+      "kind": "spell",
+      "sourceHash": "53921d467f01c9165dc55cb98a0aa4030003c9a8ea6274a8f3fda626267ccbe2"
+    },
+    {
+      "id": "cure-wounds",
+      "kind": "spell",
+      "sourceHash": "58f6ce99841a9585fa4b4d0828bac7abc7ac82b462bef200ee9b88ccfbbf7ce5"
+    },
+    {
+      "id": "detect-evil-and-good",
+      "kind": "spell",
+      "sourceHash": "2099179ff4bf648fd147603ef49bb95cca7a09224911111d0fa9a411bf4a1a96"
+    },
+    {
+      "id": "detect-magic",
+      "kind": "spell",
+      "sourceHash": "057177a6cf683cf66a8b304210647b9be519ba368875299dc8c06dd04d263eb9"
+    },
+    {
+      "id": "detect-poison-and-disease",
+      "kind": "spell",
+      "sourceHash": "2009045b177469cf00ea9337064d719df64bab18742c7607bfba4477d234e2ab"
+    },
+    {
+      "id": "disguise-self",
+      "kind": "spell",
+      "sourceHash": "3b8f4c3268670899286ae1a9557e352adea4bce8cbc5e7ffc8aa76dad596ef8e"
+    },
+    {
+      "id": "divine-favor",
+      "kind": "spell",
+      "sourceHash": "72830452058a4a0ed9df7be9d0ed2accdf4b5bb560554f742f9c4cede87eecda"
+    },
+    {
+      "id": "entangle",
+      "kind": "spell",
+      "sourceHash": "23e3d10cf1a659690516221b9a970ae2db96d8fae0e4b8d39cd4bf0ed3b71186"
+    },
+    {
+      "id": "expeditious-retreat",
+      "kind": "spell",
+      "sourceHash": "cf9fd03d1bd0b6919a6dfb47d7158fa7a33f6b620c16dca039fb5ffe4f95a090"
+    },
+    {
+      "id": "faerie-fire",
+      "kind": "spell",
+      "sourceHash": "ca66e9e6a9e3982f4e7c0c2acd1fdbf4718881532cb1ff814351f440f39d7868"
+    },
+    {
+      "id": "false-life",
+      "kind": "spell",
+      "sourceHash": "3b2fe70736a261342fe5d9b7693eb6be68a49557e5801e8e1c793c664f2bbd4d"
+    },
+    {
+      "id": "feather-fall",
+      "kind": "spell",
+      "sourceHash": "eced53e489a07392793907548d09b5181e78fbe8c7b7a6839c17eedf2f705f0c"
+    },
+    {
+      "id": "find-familiar",
+      "kind": "spell",
+      "sourceHash": "2abb338ea877f910136dc370c98eb0e5728e4aa105b9a528442efe04693e70ed"
+    },
+    {
+      "id": "floating-disk",
+      "kind": "spell",
+      "sourceHash": "696e6e3cce19bd89a2a7f1f3f535d0f0a14dfd9af047593020bbd885b5272bdb"
+    },
+    {
+      "id": "fog-cloud",
+      "kind": "spell",
+      "sourceHash": "3f48573fffb17eea7f8df04512733daf377de3c1d75249887c9570db41b66a79"
+    },
+    {
+      "id": "goodberry",
+      "kind": "spell",
+      "sourceHash": "f08ace79a5659a2e5431e81e615a09bbbece1bf407b6cdd6a33ebbc5ba24e44c"
+    },
+    {
+      "id": "grease",
+      "kind": "spell",
+      "sourceHash": "0c0e85660a20419b08b7cab3b89098ceda9807a2d46d628f2bef9174d1221de6"
+    },
+    {
+      "id": "guiding-bolt",
+      "kind": "spell",
+      "sourceHash": "283c67e314fa1f9148252cb631ba1bcca4e456e136dc85b215cb92abfaeb311d"
+    },
+    {
+      "id": "healing-word",
+      "kind": "spell",
+      "sourceHash": "ffe2f2f5e318560be870f63c877e01d469632cbfbfb32a439a564ff143141885"
+    },
+    {
+      "id": "hellish-rebuke",
+      "kind": "spell",
+      "sourceHash": "c30746190f87af6bc0442bcc31ba02abcb0c4c64b01c0fa1fe078a7fae964b77"
+    },
+    {
+      "id": "heroism",
+      "kind": "spell",
+      "sourceHash": "fed76f457bfdfd6cff309d1ac0086bde88dd5c17c6057a1bb216bb905f7f2500"
+    },
+    {
+      "id": "hideous-laughter",
+      "kind": "spell",
+      "sourceHash": "60d999ee09503197e8a25e4e13373741e9e256392789f9c211ade285154ca4f1"
+    },
+    {
+      "id": "hunters-mark",
+      "kind": "spell",
+      "sourceHash": "e19c4b7f023e6a2c862635e5eb2713938a2e992e0e196c03fe6ee4bcb174c387"
+    },
+    {
+      "id": "identify",
+      "kind": "spell",
+      "sourceHash": "0d9e8a0cd85ab06e120de39e1732d221a04fb0fdde4d53433bd299ea118e3e83"
+    },
+    {
+      "id": "illusory-script",
+      "kind": "spell",
+      "sourceHash": "ccc6d0f61c3cc5a839ab05ea8fbef71c0d8bc3f4d0493e7b0e0cb6d93faffe89"
+    },
+    {
+      "id": "inflict-wounds",
+      "kind": "spell",
+      "sourceHash": "ba2a4e86ca27426a26a85b152ddb75a09d9ac74cbaa8e759783d7a0a1759721c"
+    },
+    {
+      "id": "jump",
+      "kind": "spell",
+      "sourceHash": "cb6ba55eee286773d54bf1150c11894715c55f25336f3072da4a30505e1e57c9"
+    },
+    {
+      "id": "longstrider",
+      "kind": "spell",
+      "sourceHash": "8e0649041828078c1e6017269b094a5f0d18395e88fd3fd92a6135a12f5c126d"
+    },
+    {
+      "id": "mage-armor",
+      "kind": "spell",
+      "sourceHash": "6b23894ccb33a2d4c20ad8e38e4736a11d0b901abbd9bdb65ba7a20bdb14e837"
+    },
+    {
+      "id": "magic-missile",
+      "kind": "spell",
+      "sourceHash": "a16c7820131c8b37e1d8e21f725d8581d030e03d699ae89006e9815727d8fda9"
+    },
+    {
+      "id": "protection-from-evil-and-good",
+      "kind": "spell",
+      "sourceHash": "d0cc809b836d3bbad9e8d3a1b7d71520c1c3feee33e540f2d5330eaaf31df2c2"
+    },
+    {
+      "id": "purify-food-and-drink",
+      "kind": "spell",
+      "sourceHash": "d374910c4a14508bc8935f5a98d9f327ea3ba1919281904a68ef37ddb91fa9fc"
+    },
+    {
+      "id": "sanctuary",
+      "kind": "spell",
+      "sourceHash": "5e6860ee4c04fb9f720eeab721b5798d6e860c6c96cc0fa40c444f7697c6ddc5"
+    },
+    {
+      "id": "shield",
+      "kind": "spell",
+      "sourceHash": "509ce1c5d519b2a10d24900d49deab01d516ca9b9198051fb4c739dde4327a83"
+    },
+    {
+      "id": "shield-of-faith",
+      "kind": "spell",
+      "sourceHash": "484d05d6dbe3d44d6f717355e9ee1bb6023177e0d25373ee66673c8b2b09cfd9"
+    },
+    {
+      "id": "silent-image",
+      "kind": "spell",
+      "sourceHash": "d94ecb6380d28f9afc445a9de6a7129d6c29c02d20268299893be68a17fe6f1a"
+    },
+    {
+      "id": "sleep",
+      "kind": "spell",
+      "sourceHash": "47dcbac81c46efeeccb1acc03fe0491147ab8b36ede81940bd820babba9be35e"
+    },
+    {
+      "id": "speak-with-animals",
+      "kind": "spell",
+      "sourceHash": "a7ae3155b309ce4576dc2a2eb6b37ed38cc84e38eb536565fec035c4fb635077"
+    },
+    {
+      "id": "thunderwave",
+      "kind": "spell",
+      "sourceHash": "f7cd635073b50f1984330b727673192f2718799be1f5c04c2a76821dc5fbd004"
+    },
+    {
+      "id": "unseen-servant",
+      "kind": "spell",
+      "sourceHash": "11b879e244cd87d10695f441816960dc7e8b25ea7ea3b1ab8c1e919196a972fb"
+    },
+    {
+      "id": "acid-arrow",
+      "kind": "spell",
+      "sourceHash": "e499b1ebc96fba6f4ad9a002ca012415801ca9b9fdf09730c7a0a7290b13901a"
+    },
+    {
+      "id": "aid",
+      "kind": "spell",
+      "sourceHash": "8214f0c0c24e4dfe8e0bd4d5f91fab172f5f6a5870031b1c489a3a836ab2dcab"
+    },
+    {
+      "id": "alter-self",
+      "kind": "spell",
+      "sourceHash": "1eb1c5d7556a5b05c88aa5299d9a1d7a1223acb1d7c668a47b56fdb6d496a32e"
+    },
+    {
+      "id": "animal-messenger",
+      "kind": "spell",
+      "sourceHash": "14cd5b7b0ba775460f5781eb67d4ac88c6dbdce7c2b9dcb4ff80eca65c08cdcb"
+    },
+    {
+      "id": "arcane-lock",
+      "kind": "spell",
+      "sourceHash": "351fa21d03f7a770097049449716a6c2c81a1480fc1c5517c390a52a03d66df8"
+    },
+    {
+      "id": "arcanists-magic-aura",
+      "kind": "spell",
+      "sourceHash": "4ed5f01eaba3d4a3ba163add4d07696801606f9638c705144d1fbc932dced835"
+    },
+    {
+      "id": "augury",
+      "kind": "spell",
+      "sourceHash": "f59100b0286316a4faa2a50d69cb303f774bde02d33a2b743fbf9e3528260445"
+    },
+    {
+      "id": "barkskin",
+      "kind": "spell",
+      "sourceHash": "b7421659039efccbc68d69b5711c2249be2676c29a6129a4dbca871b47528353"
+    },
+    {
+      "id": "blindness-deafness",
+      "kind": "spell",
+      "sourceHash": "263d4782c58b0600805818ba2cda1254bbb5af4dda28da34eaeff4ef75ca6c94"
+    },
+    {
+      "id": "blur",
+      "kind": "spell",
+      "sourceHash": "53866702ff9401234e98f0d64152b1273647881b95ed077a77bf917987a8f4b7"
+    },
+    {
+      "id": "branding-smite",
+      "kind": "spell",
+      "sourceHash": "f096b38ff9f14fa002df6beb545e4087d5ccc5a53214d0e3360c18bb5d8308ea"
+    },
+    {
+      "id": "calm-emotions",
+      "kind": "spell",
+      "sourceHash": "0ecf526759d4d0c48d18e3a2bc006adf146dcb609160dc9da246c3402b7670e4"
+    },
+    {
+      "id": "continual-flame",
+      "kind": "spell",
+      "sourceHash": "091d978220bf9e14f6231d27c32a6ada4f5e511a717bd72949e7461ad0a8becd"
+    },
+    {
+      "id": "darkness",
+      "kind": "spell",
+      "sourceHash": "f145f2413ff9465a0f81073f6258fe56f1e75756c33c3fa0058fcf25a567357b"
+    },
+    {
+      "id": "darkvision",
+      "kind": "spell",
+      "sourceHash": "d4f27eeb41519881e6d97ee1f5e643862c7f156be0ae0f0439fbeab424bd41be"
+    },
+    {
+      "id": "detect-thoughts",
+      "kind": "spell",
+      "sourceHash": "e9bedcea42dfff7b164ac3e7175bfb6fb1be0c243011542239f5e7b06c4d7299"
+    },
+    {
+      "id": "enhance-ability",
+      "kind": "spell",
+      "sourceHash": "706fe56b4dccf0e96de1f394690bf400eee6c6972bb8e564a296c3bfc2ee4e2d"
+    },
+    {
+      "id": "enlarge-reduce",
+      "kind": "spell",
+      "sourceHash": "7a4dd858d3d565d59f447af96d38f201ce5d40fcbeaecbe063cfff73cb9857d9"
+    },
+    {
+      "id": "enthrall",
+      "kind": "spell",
+      "sourceHash": "b3616384e276b8c900be251e9f433edcd03836fab3c3a0563805e2295fc2e2bd"
+    },
+    {
+      "id": "find-steed",
+      "kind": "spell",
+      "sourceHash": "4644086add9b0e35eb74e3bca8e96351fc83ae68088e648b48398facaced9207"
+    },
+    {
+      "id": "find-traps",
+      "kind": "spell",
+      "sourceHash": "0f172d47c9363eeb69fe920bff994d834800b57215f1226aab2650e76a2317c5"
+    },
+    {
+      "id": "flame-blade",
+      "kind": "spell",
+      "sourceHash": "ac0d2f86dda5248c0e0ccc867d41282f4a08539f066a377910d521285ec1eb08"
+    },
+    {
+      "id": "flaming-sphere",
+      "kind": "spell",
+      "sourceHash": "442040ddd97c1a3bc791dfc4b23e27d5eda8d8808abf21989e50c0ae0ce1169c"
+    },
+    {
+      "id": "gentle-repose",
+      "kind": "spell",
+      "sourceHash": "f622a9335fb1c173cff11051bc03d0ef3c354cf5e2973ac499885c4f2087537d"
+    },
+    {
+      "id": "gust-of-wind",
+      "kind": "spell",
+      "sourceHash": "81777b764ed03a557b06e43b13c9db630cb1d71d07d309dd0eb3eefaacaac923"
+    },
+    {
+      "id": "heat-metal",
+      "kind": "spell",
+      "sourceHash": "6f83785f292ae5a3d03658e418de6ddc99253a39f238fb62b0352ec48b05b23d"
+    },
+    {
+      "id": "hold-person",
+      "kind": "spell",
+      "sourceHash": "1d66e44c574aad8ed49b780f5178aa9effe01371cb8687d6780e31040a101967"
+    },
+    {
+      "id": "invisibility",
+      "kind": "spell",
+      "sourceHash": "ca34afa56fa94cdb71e2b4d2a8345cf2f3d84fe8755b8d8e63414dce0a970794"
+    },
+    {
+      "id": "knock",
+      "kind": "spell",
+      "sourceHash": "4234ff24454245bf356965d916a9107a53e4585898d42df1c804c7e16c92c9d7"
+    },
+    {
+      "id": "lesser-restoration",
+      "kind": "spell",
+      "sourceHash": "bf386b743668f7361f370da37ee19dc3c85b031f18da34883d2345b835270595"
+    },
+    {
+      "id": "levitate",
+      "kind": "spell",
+      "sourceHash": "378dd7eb6a3900bda7258df3c46857781fe29549d38073fcb79319f8c5e5d567"
+    },
+    {
+      "id": "locate-animals-or-plants",
+      "kind": "spell",
+      "sourceHash": "76203b77d4a067311c8ba376f4f4bde22205dd3685078f3f10cad70a83ddaf03"
+    },
+    {
+      "id": "locate-object",
+      "kind": "spell",
+      "sourceHash": "79854cda0ade31f4f111587bdbb3c867d668cccb4ebcb1a08e4357e6d35abfa0"
+    },
+    {
+      "id": "magic-mouth",
+      "kind": "spell",
+      "sourceHash": "7b34692ac5644590a2e028db285f7092b743a12b5ea33e2dcb82b14c705ac39f"
+    },
+    {
+      "id": "magic-weapon",
+      "kind": "spell",
+      "sourceHash": "178a2c83d7d9be7097356fc0bf1cd6f12c8027ce181826a7761d4ad0dd430f23"
+    },
+    {
+      "id": "mirror-image",
+      "kind": "spell",
+      "sourceHash": "fbf472df2cabbb774c2b0348fd76d9a41f10260ae35ee65447a2ea319a28bed2"
+    },
+    {
+      "id": "misty-step",
+      "kind": "spell",
+      "sourceHash": "449cc25dfa9f51e0560c49460b8ae2e7e43dfdd543d93347b854887abb06f709"
+    },
+    {
+      "id": "moonbeam",
+      "kind": "spell",
+      "sourceHash": "fd3b9a833139481719e41a8a5d8e73dc66e9f4dd2525e3c86fb4ecb909f5b2ef"
+    },
+    {
+      "id": "pass-without-trace",
+      "kind": "spell",
+      "sourceHash": "05d93087f8959d61deaf3a3c67adbd4d080cd05fef6548be6d1fd26ba51ea0dd"
+    },
+    {
+      "id": "prayer-of-healing",
+      "kind": "spell",
+      "sourceHash": "ab3969a82399eabf7df115827607cafde6399692d60f217f3c4367eff9fb1edd"
+    },
+    {
+      "id": "protection-from-poison",
+      "kind": "spell",
+      "sourceHash": "9644e28a867825ec03ae81d2920a4335493b9ccc9294767619897bafc4ad4ca7"
+    },
+    {
+      "id": "ray-of-enfeeblement",
+      "kind": "spell",
+      "sourceHash": "d1880cff9375aed973af92481dfdad318bdd6388fd0c0f247727b275985d190f"
+    },
+    {
+      "id": "rope-trick",
+      "kind": "spell",
+      "sourceHash": "3293bf8230cb8f343065ece8781dc9724ad65d121222e9820e4d4114339ad696"
+    },
+    {
+      "id": "scorching-ray",
+      "kind": "spell",
+      "sourceHash": "590ebbe4ca4b02ec4f40283201af25f968b49d610ad8c765598126455119442c"
+    },
+    {
+      "id": "see-invisibility",
+      "kind": "spell",
+      "sourceHash": "67c58fd8b1a06cbcf8037e9a7f3b44e97081ae75a5c5668baa33f110eebde20d"
+    },
+    {
+      "id": "shatter",
+      "kind": "spell",
+      "sourceHash": "c4c5ca1d81ad918235e25bf01a16ce64a2c7003025bacd4d2522175acd37a297"
+    },
+    {
+      "id": "silence",
+      "kind": "spell",
+      "sourceHash": "a5a06d4c6138c0dbb0fb6b7f53d944a5fc93c628ceaf1065071772666389a768"
+    },
+    {
+      "id": "spider-climb",
+      "kind": "spell",
+      "sourceHash": "592d4757b5df120869b4369f0a8092be29f980344453784a68a2932d1017af82"
+    },
+    {
+      "id": "spike-growth",
+      "kind": "spell",
+      "sourceHash": "e7e1f942802a74df313390f0a5f31254800929c5905b139573eb9af8bb145381"
+    },
+    {
+      "id": "spiritual-weapon",
+      "kind": "spell",
+      "sourceHash": "6a02778c2fd7cb8be1dc784ae453d47bfca67bc378f68c64747da52a66bf0c90"
+    },
+    {
+      "id": "suggestion",
+      "kind": "spell",
+      "sourceHash": "d0367bd78ddb3348ae46d488870456c7e69d55bc2565d1954b7230a691698146"
+    },
+    {
+      "id": "warding-bond",
+      "kind": "spell",
+      "sourceHash": "84b9f4ae4c231b4efceca1d9b80aa827ac4b7e85f994e5acd125fbb9b5573e4f"
+    },
+    {
+      "id": "web",
+      "kind": "spell",
+      "sourceHash": "843a5938874c97667f0d768d6ab7bd3c48d83fcde9190765ca0dce98bbfca9ae"
+    },
+    {
+      "id": "zone-of-truth",
+      "kind": "spell",
+      "sourceHash": "efe4949e33fe428875670def37a34ed8ed07d1944ec04a5f4b697be32ec41e3a"
+    },
+    {
+      "id": "diseases",
+      "kind": "rules",
+      "sourceHash": "10529d0c56f55fc731129a9136f16860c549c7d3a28f8e522c8288e28f33fe10"
+    },
+    {
+      "id": "objects",
+      "kind": "rules",
+      "sourceHash": "dae2c60320e3b71d940b1a6771d3df45eb3241b205019149cdaccdd5ad3603fb"
+    },
+    {
+      "id": "artifacts",
+      "kind": "rules",
+      "sourceHash": "c9e5e6155e8fae8247d5c9fd1a9ccfb93cbc1f7795cd8cc416fb1e894d1ccea5"
+    },
+    {
+      "id": "adamantine-armor",
+      "kind": "item",
+      "sourceHash": "19dd561dd754d46716b4ae5d67e3fac62596d39a9353638b47c1da2592dfa931"
+    },
+    {
+      "id": "ammunition-1-2-or-3",
+      "kind": "item",
+      "sourceHash": "dcdb02da7c4eda1d946eb1ed71e1b9b3c7fe266aedbc456edabf27a0f71975d8"
+    },
+    {
+      "id": "amulet-of-health",
+      "kind": "item",
+      "sourceHash": "26de7e00a11b7b2c0adf476979dc569b78cc7be726e2205283f7ff4e17b273ff"
+    },
+    {
+      "id": "amulet-of-proof-against-detection-and-location",
+      "kind": "item",
+      "sourceHash": "1cf3dc36cd9441cd29cc2d3ae9b8ca693afa8043640422b292e06901e0f826a8"
+    },
+    {
+      "id": "amulet-of-the-planes",
+      "kind": "item",
+      "sourceHash": "9ab6e058427fefde1eebfb07f5e747973abfa48428646d2c245b3ed9c7caf121"
+    },
+    {
+      "id": "animated-shield",
+      "kind": "item",
+      "sourceHash": "ad39d618a60b28e402acd98f9def92039a7c1f606aaa28969ec7b65b54d7b8c5"
+    },
+    {
+      "id": "apparatus-of-the-crab",
+      "kind": "item",
+      "sourceHash": "69cd9d0972da82d864740b6698e5c57c8820735256084211afc33bb33ba8b4b8"
+    },
+    {
+      "id": "armor-of-invulnerability",
+      "kind": "item",
+      "sourceHash": "1565bff143c0b6716e5f6e0f3fa781899772f9ebad73abc43e61eeaaecf918f9"
+    },
+    {
+      "id": "armor-of-resistance",
+      "kind": "item",
+      "sourceHash": "3aaed1a364342844fbb85cda1f9cccb722cad5942f6a55e5ff3128df46b4ffc9"
+    },
+    {
+      "id": "armor-of-vulnerability",
+      "kind": "item",
+      "sourceHash": "7d53c7f337392cc3bd9b92dd76da3fdd2f3fd149f20fbbeec887c2943aef2e04"
+    },
+    {
+      "id": "armor-1-2-or-3",
+      "kind": "item",
+      "sourceHash": "b8754d99b3c4893ef6f0375067f74123b27b8d81f6f00557afa0d8431cc42178"
+    },
+    {
+      "id": "arrow-of-slaying",
+      "kind": "item",
+      "sourceHash": "c97a7f727e48dc799a73395bbfb15e0071200ee346f78ddbcc61a408bbba60e5"
+    },
+    {
+      "id": "arrow-catching-shield",
+      "kind": "item",
+      "sourceHash": "9a36608fab5d97a0872f867f7f8a25dae1230e918484e5525010ec7dcf6d893f"
+    },
+    {
+      "id": "bag-of-beans",
+      "kind": "item",
+      "sourceHash": "62d52d4353d73d21401c66c5313af187ab917c6269cd674b860bb5e490984a85"
+    },
+    {
+      "id": "bag-of-devouring",
+      "kind": "item",
+      "sourceHash": "83a00c4406e32c6234e833a757cd86f1764f87656ecef342b956caead25a4cb2"
+    },
+    {
+      "id": "bag-of-holding",
+      "kind": "item",
+      "sourceHash": "134b4d4d1ce0d7628b7cf7f21e4cec7e1ddf744a13cd8f82c20ca14a388e535c"
+    },
+    {
+      "id": "bag-of-tricks",
+      "kind": "item",
+      "sourceHash": "9eaa25ee0064a11d85e43409d57a9e41a24c08edf877c91818584bea6c013aca"
+    },
+    {
+      "id": "bead-of-force",
+      "kind": "item",
+      "sourceHash": "b9b57e785996e7b63c1a78c21a5fe3864a852857541f77e689e3b5bfab76f613"
+    },
+    {
+      "id": "belt-of-dwarvenkind",
+      "kind": "item",
+      "sourceHash": "aff868748a51631462ee539bb912bee6c44c1d5dcee8192a0014c3c994db2978"
+    },
+    {
+      "id": "belt-of-giant-strength",
+      "kind": "item",
+      "sourceHash": "d7b1e39873136a1cab6d2f192f9e858d5bd32e31faf2ac49819d4f3e135eefc0"
+    },
+    {
+      "id": "berserker-axe",
+      "kind": "item",
+      "sourceHash": "f65f7c03f9c2c03548d09e25fbe3de254f4d9aad0adf13f2dad5ed140b2f9fee"
+    },
+    {
+      "id": "boots-of-elvenkind",
+      "kind": "item",
+      "sourceHash": "f003d8e48dcd182841f0c819a9073cdee947f35e50c492a8e76a6d15c8128e8f"
+    },
+    {
+      "id": "boots-of-levitation",
+      "kind": "item",
+      "sourceHash": "6709a1a0c00d269facc0170f6bc1bee43044ae33d42f46a0028a748b0ec11a48"
+    },
+    {
+      "id": "boots-of-speed",
+      "kind": "item",
+      "sourceHash": "4bac1c888356110597358486b5a8bb5fa42725f4f3fe20df1d21788f9c5d3b3d"
+    },
+    {
+      "id": "boots-of-striding-and-springing",
+      "kind": "item",
+      "sourceHash": "a1696e7b592d94adef87f31d9280e93b5dd77ec0611d9d4e4bb39f9a538f200e"
+    },
+    {
+      "id": "boots-of-the-winterlands",
+      "kind": "item",
+      "sourceHash": "57dd22a4a164d34571619813eb81d35f3c1ec51ead67bfc62fc6a8599011687a"
+    },
+    {
+      "id": "bowl-of-commanding-water-elementals",
+      "kind": "item",
+      "sourceHash": "1c2dde53cd4a755203b0352279b9adc58ed219794ac8f45408b2a8fe16bc2b52"
+    },
+    {
+      "id": "bracers-of-archery",
+      "kind": "item",
+      "sourceHash": "036ada6392a7f88446dd33ee9860810dab578a564a037de433acd03b295734c3"
+    },
+    {
+      "id": "bracers-of-defense",
+      "kind": "item",
+      "sourceHash": "b3be283f8a66e9a39d9dd926400daea9d7b59d464c0c04f27d2d94cb394f82bb"
+    },
+    {
+      "id": "brazier-of-commanding-fire-elementals",
+      "kind": "item",
+      "sourceHash": "4594d4e8826400eee324fca2a8dc1cbca7d6ee88ca901886dffeda355a24435f"
+    },
+    {
+      "id": "brooch-of-shielding",
+      "kind": "item",
+      "sourceHash": "7b7bb8ee7ed88fdd1410603ee6b549d4a1104abe1755e90e4826f402a65b9b94"
+    },
+    {
+      "id": "broom-of-flying",
+      "kind": "item",
+      "sourceHash": "f2f374a5709958f05a2757a905c8938254aa29c20927bcc42fa6bd8cb3bb9fdf"
+    },
+    {
+      "id": "candle-of-invocation",
+      "kind": "item",
+      "sourceHash": "372cbf2e432bb3067ad0cde487a6707be2126563089036d1412f892d405c3e72"
+    },
+    {
+      "id": "cape-of-the-mountebank",
+      "kind": "item",
+      "sourceHash": "73df238add0d515301538aa44a49b3268383c6c757fa9d0fe24103a8ce7bf884"
+    },
+    {
+      "id": "carpet-of-flying",
+      "kind": "item",
+      "sourceHash": "a5c6160eb69d38fe24a39d2c307f19c8153b031d36e7f60b5d81d1d769d6f2cb"
+    },
+    {
+      "id": "censer-of-controlling-air-elementals",
+      "kind": "item",
+      "sourceHash": "71e73a16f6d13269606b9e9f9e8ffdf8ea0df1f46bdca611002f501673d88f4a"
+    },
+    {
+      "id": "chime-of-opening",
+      "kind": "item",
+      "sourceHash": "06eea6641cb88d7a1364cd50470a6abfa7834d8d2f447b82d49c0d0d96ae493c"
+    },
+    {
+      "id": "circlet-of-blasting",
+      "kind": "item",
+      "sourceHash": "9bddaeded68592d3315cecbcc6e738187c7646f4edcc1572d8b35a2b43ddd3da"
+    },
+    {
+      "id": "cloak-of-arachnida",
+      "kind": "item",
+      "sourceHash": "c8770508e8d9ee2fb6c1ce6d55a3572e824e5bd9d24874dec7861a58b83b9d62"
+    },
+    {
+      "id": "cloak-of-displacement",
+      "kind": "item",
+      "sourceHash": "cbabdbf75d54c74611211d0a188f40e175f0ac3cf9b9a13cddefdc44a2998316"
+    },
+    {
+      "id": "cloak-of-elvenkind",
+      "kind": "item",
+      "sourceHash": "a256fed245c9ccbc8783699a26a5113d793baf79702f1f4b58ac9ee33af7ead1"
+    },
+    {
+      "id": "cloak-of-protection",
+      "kind": "item",
+      "sourceHash": "c32d11f04fcbb94b80f421c163e01b93743e832ac408a6ddbdc99e8777a6707e"
+    },
+    {
+      "id": "cloak-of-the-bat",
+      "kind": "item",
+      "sourceHash": "f03542027db74aceabc2e30e57f29b4ccf5e48bed61fff04788b5ebdf01e7b0d"
+    },
+    {
+      "id": "cloak-of-the-manta-ray",
+      "kind": "item",
+      "sourceHash": "bd03432ad0f8138be098df793aec807bb3a45c3077f7ecb8e35a477c84482861"
+    },
+    {
+      "id": "crystal-ball",
+      "kind": "item",
+      "sourceHash": "f68358771da3bf54b6937ebb6c7840a9e8f85ac0d29ecf085e555df824dc25c4"
+    },
+    {
+      "id": "cube-of-force",
+      "kind": "item",
+      "sourceHash": "f7b3c9082aa9e779371d6a1bde749f738dd18742c73e8838837a84bdd229975c"
+    },
+    {
+      "id": "cubic-gate",
+      "kind": "item",
+      "sourceHash": "c6642ff77a7939a58baf8bcd28673b1a7e3895411caf06eec77cf558d07b4c66"
+    },
+    {
+      "id": "dagger-of-venom",
+      "kind": "item",
+      "sourceHash": "b5a17a068cb930ec4bf7eefef3f1132ce0e256d7b3dfa332cd4f329c23a53a63"
+    },
+    {
+      "id": "dancing-sword",
+      "kind": "item",
+      "sourceHash": "498d37fb250172ed92b2636b24e222ebd967ce851b05c1b9ee5e491e45bfa0d2"
+    },
+    {
+      "id": "decanter-of-endless-water",
+      "kind": "item",
+      "sourceHash": "859bdc74c2a25fa73301e4da3aaa165d3a6f7bc133c2781006f9efe9772a2c6e"
+    },
+    {
+      "id": "deck-of-illusions",
+      "kind": "item",
+      "sourceHash": "9a09ea075999963c6661fa5c8cf2a154c3effe0e3f6cb9639c0fcd22469b16fe"
+    },
+    {
+      "id": "deck-of-many-things",
+      "kind": "item",
+      "sourceHash": "08391ad1dcc678249ef8cf5c103dcfa14802317258f2b0757962879cf77ebc73"
+    },
+    {
+      "id": "defender",
+      "kind": "item",
+      "sourceHash": "b4b5d3c199be608b9f4ee121bdbe21c408d9f037a438d480c49e2012cd280d51"
+    },
+    {
+      "id": "demon-armor",
+      "kind": "item",
+      "sourceHash": "832e3f032b41741d86697f85eb2eccc2bc8bc2c19929a8ca0eefddda1853cc34"
+    },
+    {
+      "id": "dimensional-shackles",
+      "kind": "item",
+      "sourceHash": "ffca961b77245ee9cb4b5dcdc18328183dc895905145ef93a26695457af17f99"
+    },
+    {
+      "id": "dragon-scale-mail",
+      "kind": "item",
+      "sourceHash": "82d01f2298a51e8a9d6e0d7d5a187455e755dd42b8043f33059cc6a0c589539e"
+    },
+    {
+      "id": "dragon-slayer",
+      "kind": "item",
+      "sourceHash": "a33abb8969a9f94e304ffda8834deb114a61149c61e86b33b942ce5c19c5cb2c"
+    },
+    {
+      "id": "dust-of-disappearance",
+      "kind": "item",
+      "sourceHash": "9acbadb7f2665567da05ea9e8cfcec5bc0238f622ba78b5eae2cbc40ec02d249"
+    },
+    {
+      "id": "dust-of-dryness",
+      "kind": "item",
+      "sourceHash": "d467fc9fa77cb5a39b7b1db98da35ff3e71baa0ff6dddf0f5aab54affddb6862"
+    },
+    {
+      "id": "dust-of-sneezing-and-choking",
+      "kind": "item",
+      "sourceHash": "9d9d62242ea2193ffa5a9f189bdceccf34833d7931836b17f8107449810ded1a"
+    },
+    {
+      "id": "dwarven-plate",
+      "kind": "item",
+      "sourceHash": "19a57f68f93dd5b5cd37b83945b32b125e8d0e995b56b20f2ebf29453d6f9342"
+    },
+    {
+      "id": "dwarven-thrower",
+      "kind": "item",
+      "sourceHash": "55b6d29cb0b5fbd3e6f1ec7784f8de5eb8ca4f8b9c5bc8a6ed7f1ce17f7bb795"
+    },
+    {
+      "id": "efficient-quiver",
+      "kind": "item",
+      "sourceHash": "4742b175a3ad41a61df586bacc49f01ad4b219c20c878f4b1e65aa4ce386064b"
+    },
+    {
+      "id": "efreeti-bottle",
+      "kind": "item",
+      "sourceHash": "7aa5178bff3aa77bb6b20be88ba8a42f65b47292d7be2421d2c9bfd9efb6a1a1"
+    },
+    {
+      "id": "elemental-gem",
+      "kind": "item",
+      "sourceHash": "71597ee80c8f9152930ce59b2d710a45deb9bd93509c55c983f047e57c81665d"
+    },
+    {
+      "id": "elven-chain",
+      "kind": "item",
+      "sourceHash": "f71d9330344b78b3559fd2d79b4b81c8336679854019bc7b77c0284ed4de981f"
+    },
+    {
+      "id": "eversmoking-bottle",
+      "kind": "item",
+      "sourceHash": "8cc82756f38b440c1a75ffaadd4770c9e07ee134f098261c2e1736191c06dad2"
+    },
+    {
+      "id": "eyes-of-charming",
+      "kind": "item",
+      "sourceHash": "989f4dd516dfb6dbd09ce88b4e378b44de7014dadac68791581c2e8acf0a9971"
+    },
+    {
+      "id": "eyes-of-minute-seeing",
+      "kind": "item",
+      "sourceHash": "cb8073f97b6c217979dc13623b5f4680d4a978e184759045bcfad2b60324b9d5"
+    },
+    {
+      "id": "eyes-of-the-eagle",
+      "kind": "item",
+      "sourceHash": "5b12d2e585314c4ef93a49b477f15f6f6d178668dc0e91852e62d021c576792b"
+    },
+    {
+      "id": "feather-token",
+      "kind": "item",
+      "sourceHash": "7fc18b3a25e784be15695865acb81cf692005d03013d85c681423848f2655e3d"
+    },
+    {
+      "id": "figurine-of-wondrous-power",
+      "kind": "item",
+      "sourceHash": "fb9afe0b7d7f08b0a9caafa7dd33f0142bb58cddb1f605de8b83c8e7e320c735"
+    },
+    {
+      "id": "flame-tongue",
+      "kind": "item",
+      "sourceHash": "eac2223fb21cdf0920f743c0f1786c622e085f43e099e78ff57ed700a13a13f6"
+    },
+    {
+      "id": "folding-boat",
+      "kind": "item",
+      "sourceHash": "5687dcc2aa8a29cd3c4a4f8d36e1f916e21dd5ccdbf1f9c90ac10fd888e5d993"
+    },
+    {
+      "id": "frost-brand",
+      "kind": "item",
+      "sourceHash": "191ed5241a02508156dde62bcca5632e777d0b4b7cef6d34ec2ee7674c29d4ff"
+    },
+    {
+      "id": "gauntlets-of-ogre-power",
+      "kind": "item",
+      "sourceHash": "9528106e2628a4673519400e39e3ecefb741a3538589d4372ed6dfc972707562"
+    },
+    {
+      "id": "gem-of-brightness",
+      "kind": "item",
+      "sourceHash": "595acf605bfc37332cc03b188b39ab8cdd789195e49e83e9dde783cc9a6acb18"
+    },
+    {
+      "id": "gem-of-seeing",
+      "kind": "item",
+      "sourceHash": "5bf25b9c94191fd01f94747358a4fa71130b04c5a390c458f6158c734d09728b"
+    },
+    {
+      "id": "giant-slayer",
+      "kind": "item",
+      "sourceHash": "5fca6e8456961d4212a24db9828d703ae4c053595770868be8a567d08a256876"
+    },
+    {
+      "id": "glamoured-studded-leather",
+      "kind": "item",
+      "sourceHash": "64e3c5e72f8fe57a8413c88bca5bea12174cde12f981bef0461808f54ac79ae2"
+    },
+    {
+      "id": "gloves-of-missile-snaring",
+      "kind": "item",
+      "sourceHash": "85eaab6a9c62507d2932fd229174b4534bd55f90be5b2353296c9f41f83c6368"
+    },
+    {
+      "id": "gloves-of-swimming-and-climbing",
+      "kind": "item",
+      "sourceHash": "9d9fd1e08d8d9ade00286c173ee7a5bcdda3245b95090ae6c3befae90993d56c"
+    },
+    {
+      "id": "goggles-of-night",
+      "kind": "item",
+      "sourceHash": "26b85d9855350da7d477396f6a3637d8d8830f9a0a5e107e9dc61cd78f107128"
+    },
+    {
+      "id": "hammer-of-thunderbolts",
+      "kind": "item",
+      "sourceHash": "da873a7c9a6a8ebf5f40815313bdf1cdf02eb9992566a9439f7d3afce29c98d4"
+    },
+    {
+      "id": "handy-haversack",
+      "kind": "item",
+      "sourceHash": "32d248c1efd6d292afc18be330b8ca4d587fa35ec4b9fb3409c46b02ffde640d"
+    },
+    {
+      "id": "hat-of-disguise",
+      "kind": "item",
+      "sourceHash": "cde672915a251f8e326d678ccc74566ba7ed4e568cfe8bf80c6d91fd5195b35e"
+    },
+    {
+      "id": "headband-of-intellect",
+      "kind": "item",
+      "sourceHash": "dabbcc0ea9ea6f266a47b920b0bbcc8a89ed1dba75ec8960264f278c0f6cec77"
+    },
+    {
+      "id": "helm-of-brilliance",
+      "kind": "item",
+      "sourceHash": "06142c28400dcb096b74a763911e32a2916d12a90de6be695f7cdd0c0128c174"
+    },
+    {
+      "id": "helm-of-comprehending-languages",
+      "kind": "item",
+      "sourceHash": "a6ba535d05b566c225a0969853b8fe04e161bd2a66ccef0f1386e81c7d743660"
+    },
+    {
+      "id": "helm-of-telepathy",
+      "kind": "item",
+      "sourceHash": "01dcb7f8e41da426da27ff8bc6a02b5f1a9822b1eadd65d15d1f8d9995a9479b"
+    },
+    {
+      "id": "helm-of-teleportation",
+      "kind": "item",
+      "sourceHash": "e4b58b30889f900976e8af6a56154db46791c739029097053f9ac478c5602d61"
+    },
+    {
+      "id": "holy-avenger",
+      "kind": "item",
+      "sourceHash": "6fed98c62735c5c345405e2cf8cb1756099f0bc4a9c5f9cd88e50ffa2bd70f6a"
+    },
+    {
+      "id": "horn-of-blasting",
+      "kind": "item",
+      "sourceHash": "8d8ffa4ed030d4d8fb909354e5dd7f0dd710f7a366066092f531c476f0cc3be6"
+    },
+    {
+      "id": "horn-of-valhalla",
+      "kind": "item",
+      "sourceHash": "e8615c729c05704b43f33abda0bc0b255e5191d4f0fb964ad427dcbbd1ea4ae2"
+    },
+    {
+      "id": "horseshoes-of-a-zephyr",
+      "kind": "item",
+      "sourceHash": "3d27a1ae8eda19cdc8600aab8789c873121f92b2e48f1c7a0f1aa909c581a4e6"
+    },
+    {
+      "id": "horseshoes-of-speed",
+      "kind": "item",
+      "sourceHash": "7cd18d59521f18d903471f3a560e7691955f62129516a9ce5ddc80223ab1cb09"
+    },
+    {
+      "id": "immovable-rod",
+      "kind": "item",
+      "sourceHash": "1a2c416a2385b6eae37bc03b3318d23c279ebf94819c5fe31414b4756dc77040"
+    },
+    {
+      "id": "instant-fortress",
+      "kind": "item",
+      "sourceHash": "20728cfa49e5ee949d0b997c0fdb2d1df1594d33dac257449b6cf3576d2219c4"
+    },
+    {
+      "id": "ioun-stone",
+      "kind": "item",
+      "sourceHash": "a100e34299c3b0e22095a9e569d5e18c68638a0a77bde6c661ad96ce6bfb2c04"
+    },
+    {
+      "id": "iron-bands-of-binding",
+      "kind": "item",
+      "sourceHash": "e4c2a90a4951fcd7ca55145a8d9c1239a6e30c60afa558c9fb5732df32ed6ca2"
+    },
+    {
+      "id": "iron-flask",
+      "kind": "item",
+      "sourceHash": "f8931791faa1f6a7752be2d35af74605e59facce7168e5a83081046da6605811"
+    },
+    {
+      "id": "javelin-of-lightning",
+      "kind": "item",
+      "sourceHash": "37a831c226d0b1c8ef4132e738e6d5b41e1c4216a93f609cb4901e3a9157606d"
+    },
+    {
+      "id": "lantern-of-revealing",
+      "kind": "item",
+      "sourceHash": "5a2ee63b4a0a9b05933fcab1ca5ecc4826e1db4d20462ac1cb8e2d3bb85c270e"
+    },
+    {
+      "id": "luck-blade",
+      "kind": "item",
+      "sourceHash": "90199da6ab2ec0c74620f026f55bec60169f6243f4aa6d9fbbcbd050e224d983"
+    },
+    {
+      "id": "mace-of-disruption",
+      "kind": "item",
+      "sourceHash": "62f1e077ec26056aa5f66cb30eb29ff619b78feaaf8097764c15f6d6fd32248d"
+    },
+    {
+      "id": "mace-of-smiting",
+      "kind": "item",
+      "sourceHash": "a146edda106b3492fca11224330497ea801e2c46c2c1833d2e32ee23a4805e8d"
+    },
+    {
+      "id": "mace-of-terror",
+      "kind": "item",
+      "sourceHash": "bd9724957dc42a545e30363974a41bf95e5fe44046526229375cbc26020482f1"
+    },
+    {
+      "id": "mantle-of-spell-resistance",
+      "kind": "item",
+      "sourceHash": "13b5db2bd68e876d2d75e8c91ea0af27dd182332edc4d2f52800817137d81dfd"
+    },
+    {
+      "id": "manual-of-bodily-health",
+      "kind": "item",
+      "sourceHash": "262de8f33b3c14b7111ccecf0ae83a8c544573d7b78d8a78bb1034b7dd81988e"
+    },
+    {
+      "id": "manual-of-gainful-exercise",
+      "kind": "item",
+      "sourceHash": "17d5cd5b44b101233f2e7a90a7371cc9b580d18d987ca661842c085d591335ca"
+    },
+    {
+      "id": "manual-of-golems",
+      "kind": "item",
+      "sourceHash": "c01bcc0db2fc544e91413b951fda26d622834a3575b84679be26e58e1248022e"
+    },
+    {
+      "id": "manual-of-quickness-of-action",
+      "kind": "item",
+      "sourceHash": "943bd8f306b460dbd0e85cf5171b9afc9ae43618758a5e55488d86ec676ebd68"
+    },
+    {
+      "id": "marvelous-pigments",
+      "kind": "item",
+      "sourceHash": "1e6a451b4ff2372506bd83d62a7a21ad261151868e275c593c9fc911ef31f678"
+    },
+    {
+      "id": "medallion-of-thoughts",
+      "kind": "item",
+      "sourceHash": "ae7b6b4ece5e5dfa55946b5e1797d28ccaeb8d4b919b3554d1c762211f1d4fa7"
+    },
+    {
+      "id": "mirror-of-life-trapping",
+      "kind": "item",
+      "sourceHash": "f3e0d8b3eb45b19b0e86fed4638a3d24649219129a57e7f317470a84a407a482"
+    },
+    {
+      "id": "mithral-armor",
+      "kind": "item",
+      "sourceHash": "bc1bd99abda099a4a5ddc844a589a7d5b2d7e9ccdb7a684e9d29a451c01cf98d"
+    },
+    {
+      "id": "necklace-of-adaptation",
+      "kind": "item",
+      "sourceHash": "7ac2778563e0c49efcaf0bdf9402804d5c4b6ec79341a83f252c9f2690e56e09"
+    },
+    {
+      "id": "necklace-of-fireballs",
+      "kind": "item",
+      "sourceHash": "b7d07452f7548dbbb8c0dee73772d2acabd82146c7cc470a055187137ea615f8"
+    },
+    {
+      "id": "necklace-of-prayer-beads",
+      "kind": "item",
+      "sourceHash": "9080d3f86aee7523c3d3344fc5839d56215a8fe0fe52e09828293500c8a85d6b"
+    },
+    {
+      "id": "nine-lives-stealer",
+      "kind": "item",
+      "sourceHash": "9b02fe2dc6d4892ef45d0f717876a4034a9ae3c1506ff132a04125f7838606d0"
+    },
+    {
+      "id": "oathbow",
+      "kind": "item",
+      "sourceHash": "2a1db5406249ab4a4ce456e29cb7651e68ff7f537692bb8a873c1455e3464c33"
+    },
+    {
+      "id": "oil-of-etherealness",
+      "kind": "item",
+      "sourceHash": "636c8d73fb35c889b56b018d12fa4831b766babf29741f7cdf59868122bd3463"
+    },
+    {
+      "id": "oil-of-sharpness",
+      "kind": "item",
+      "sourceHash": "41205cbd06c006042c053c7db81105a08ef9d1925b334995789ed671d173517b"
+    },
+    {
+      "id": "oil-of-slipperiness",
+      "kind": "item",
+      "sourceHash": "dde6d1e06459a2574a3f8cd88ec43e8c9ecf20e45c16b8719d7f610048dea4b1"
+    },
+    {
+      "id": "pearl-of-power",
+      "kind": "item",
+      "sourceHash": "57ed0f6362f55c6a2c67b69520ee32620c92ca04a8f686a0c2ec592d0b2ccbe3"
+    },
+    {
+      "id": "periapt-of-health",
+      "kind": "item",
+      "sourceHash": "4ec529de5f8e7dd6e6fc8662b578351aa687e253d14ecf74e84a334863fb78d4"
+    },
+    {
+      "id": "periapt-of-proof-against-poison",
+      "kind": "item",
+      "sourceHash": "3148e6d7b903b9dc6c1ec26744b3283c1effc332920f5b12b6327bd4f87a3ee4"
+    },
+    {
+      "id": "periapt-of-wound-closure",
+      "kind": "item",
+      "sourceHash": "645750caacb4093d97af899ee483d274724e1783aca3c7af73d26e8762e7737b"
+    },
+    {
+      "id": "philter-of-love",
+      "kind": "item",
+      "sourceHash": "507f1c8833321b667a89f4079f323fdc27c14f3c264a98c1be170486fe420d87"
+    },
+    {
+      "id": "pipes-of-haunting",
+      "kind": "item",
+      "sourceHash": "08656d0e915178f1410c78fc6d75f99eb6b97a44d1ea9b9d7ad0105fec4d9c6f"
+    },
+    {
+      "id": "pipes-of-the-sewers",
+      "kind": "item",
+      "sourceHash": "202d91d0988b1709ae1aa34fbc668f9518003c920823106babb2a97088b3a966"
+    },
+    {
+      "id": "plate-armor-of-etherealness",
+      "kind": "item",
+      "sourceHash": "ba773552e65bcb6e9f271c9389017ac858c7dc4ea8fe04e23ecb05d322e593f3"
+    },
+    {
+      "id": "portable-hole",
+      "kind": "item",
+      "sourceHash": "20c5f169b74f4296b76e51fb2a51897ddd2e39462772f4bb3c910dfeeb5b6252"
+    },
+    {
+      "id": "potion-of-animal-friendship",
+      "kind": "item",
+      "sourceHash": "e4e9aacc3bb1bda4187c75b32cac6502e709082c657e5748e20eb5c1ec669351"
+    },
+    {
+      "id": "potion-of-clairvoyance",
+      "kind": "item",
+      "sourceHash": "4357400aced9aad3bdc99eec407ead2b41593e659fd64f7c310b6a335e21060b"
+    },
+    {
+      "id": "potion-of-climbing",
+      "kind": "item",
+      "sourceHash": "30f8643cf6be56dd296b8d5f24de527327d0e7d6386c7df2006ac02eb7a2a7f2"
+    },
+    {
+      "id": "potion-of-diminution",
+      "kind": "item",
+      "sourceHash": "448f70b6b8563722e539c61396dd14fcfd7ec4582edc260b59d68079269a9232"
+    },
+    {
+      "id": "potion-of-flying",
+      "kind": "item",
+      "sourceHash": "25826cf07dcb1fdc9d2e60bf8e9c3f86e5b05b56974494d0d690a3a107e60385"
+    },
+    {
+      "id": "potion-of-gaseous-form",
+      "kind": "item",
+      "sourceHash": "b28e4eaa1af97fdda24b1cec82e6cf9a1b1a877473c3d17a77af14b7bda92dc5"
+    },
+    {
+      "id": "potion-of-giant-strength",
+      "kind": "item",
+      "sourceHash": "712824f08b9bacef6b3da38ba2e6c8af6139d6b0fbbe0b35d3b6dbee369a5193"
+    },
+    {
+      "id": "potion-of-growth",
+      "kind": "item",
+      "sourceHash": "c644f5dbb87fe5140b28e9e6cbf1b76c66bba8231a323c7d6c0cfe7727ad48d8"
+    },
+    {
+      "id": "potion-of-healing",
+      "kind": "item",
+      "sourceHash": "bb262ad5d56ab91895bb757a77c68a93637c3e27bb30522396d587619ba25cdf"
+    },
+    {
+      "id": "potion-of-heroism",
+      "kind": "item",
+      "sourceHash": "0604749e914d7f5b40dbb469a29d10df170257453032d7d0b696a73fee7ed609"
+    },
+    {
+      "id": "potion-of-invisibility",
+      "kind": "item",
+      "sourceHash": "ff4364a60bdb68b5864172058a26f3c11c3e7920708b18c49a075e6cfb564ce1"
+    },
+    {
+      "id": "potion-of-mind-reading",
+      "kind": "item",
+      "sourceHash": "115b9a74af69749457c1d005da575b4f7c7ce6d33a6c4038a20a6ff0c9b58d48"
+    },
+    {
+      "id": "potion-of-poison",
+      "kind": "item",
+      "sourceHash": "a8d678114cade69bb1c04d9d3c8eb8af487e43fc77e6c977168cf791c0409659"
+    },
+    {
+      "id": "potion-of-resistance",
+      "kind": "item",
+      "sourceHash": "c5791d9e67dfca6c3be8ed4684e92c4e32f841fe42a28803846300037680fd99"
+    },
+    {
+      "id": "potion-of-speed",
+      "kind": "item",
+      "sourceHash": "bc521964c4d74135b9cde0c37c185a7de12f0d8efc7e2b1da49c0ff62dd4a1fa"
+    },
+    {
+      "id": "potion-of-water-breathing",
+      "kind": "item",
+      "sourceHash": "21d52f0fe347880224c34fcc4b9fe106cabf718fe9238035676837b90d7aac91"
+    },
+    {
+      "id": "restorative-ointment",
+      "kind": "item",
+      "sourceHash": "e87d624414c3bfe112c947eb068b487f2180169209d9a8afe2542927bb6a1fc3"
+    },
+    {
+      "id": "ring-of-animal-influence",
+      "kind": "item",
+      "sourceHash": "a8700c0ae286520411f391076bc3184123deec61f66a9d5b3788eef668212d72"
+    },
+    {
+      "id": "ring-of-djinni-summoning",
+      "kind": "item",
+      "sourceHash": "0fd8cb635b70397ed24ac22f80ad9abedde3dfa58f7640b16924ceedaf3003c7"
+    },
+    {
+      "id": "ring-of-elemental-command",
+      "kind": "item",
+      "sourceHash": "f940a3fa53d975fa4fe2adff2972d017b407a649f4c47cdcf817988558cf8e7e"
+    },
+    {
+      "id": "ring-of-evasion",
+      "kind": "item",
+      "sourceHash": "8f57c1b95fb419bf23b1010303a9498cd61d8863cf55e0e9ceefdedd73866368"
+    },
+    {
+      "id": "ring-of-feather-falling",
+      "kind": "item",
+      "sourceHash": "3f596107616c140ad9d5bd366961fdd0549b4b94a630f1ec48a2c90cbcb72d99"
+    },
+    {
+      "id": "ring-of-free-action",
+      "kind": "item",
+      "sourceHash": "e009a86cc78192c0be92748b30127e5cca26498b99d10fd321d2a2ceaf6a5cef"
+    },
+    {
+      "id": "ring-of-invisibility",
+      "kind": "item",
+      "sourceHash": "953eabbf4777636cbe2102d9d767b819dfbc56093cb17c8d814e00a2977f0076"
+    },
+    {
+      "id": "ring-of-jumping",
+      "kind": "item",
+      "sourceHash": "71506d72126875ea1f42eb038c9c46856833426f63c9cf5956db0c4979fad9d6"
+    },
+    {
+      "id": "ring-of-mind-shielding",
+      "kind": "item",
+      "sourceHash": "81fa86893df01d4db9e22ed5da43bde5f7319d8e2b68923a82ed7b0cff03fc46"
+    },
+    {
+      "id": "ring-of-protection",
+      "kind": "item",
+      "sourceHash": "6c557817b25943a1ada463cfe589de1f719300bab2d6f110ebb6d2cc814b353f"
+    },
+    {
+      "id": "ring-of-regeneration",
+      "kind": "item",
+      "sourceHash": "3f4891c40fa3d88aeee5a29561acb85a24f525fc1acbcd759d4430abfe53c966"
+    },
+    {
+      "id": "ring-of-resistance",
+      "kind": "item",
+      "sourceHash": "62c2f85b1511c8cda0675d8ddb6963788686dcad47fdcaa6e5dd01c9fdf64177"
+    },
+    {
+      "id": "ring-of-shooting-stars",
+      "kind": "item",
+      "sourceHash": "37e3fbc9f2f3f11e42efd703e479b5f07c8e71ae25df908dca6985b87a350297"
+    },
+    {
+      "id": "ring-of-spell-storing",
+      "kind": "item",
+      "sourceHash": "7f9ce40b6c65a541d855c217e6c47b436f8dc24a4b6f2dcc922538de053e6c7b"
+    },
+    {
+      "id": "ring-of-spell-turning",
+      "kind": "item",
+      "sourceHash": "ad17cbeef3227de675cf8ad0ee18a47da22142aa1b4bca903cd372169e63c148"
+    },
+    {
+      "id": "ring-of-swimming",
+      "kind": "item",
+      "sourceHash": "2fb8011e93123a7d1b6a3e107c51037a9a5a953df12593ede3a1ac826b3ffda8"
+    },
+    {
+      "id": "ring-of-telekinesis",
+      "kind": "item",
+      "sourceHash": "853f75dbe3f3cdb8f2a6d345c7cf4b3d4006732c93587283c259aea6dc120f7a"
+    },
+    {
+      "id": "ring-of-the-ram",
+      "kind": "item",
+      "sourceHash": "e9c3e3b69587a72a34a51419c2ed4a829fa3508d5e27a1f65f42f2609cd5fcc9"
+    },
+    {
+      "id": "ring-of-three-wishes",
+      "kind": "item",
+      "sourceHash": "707e777729973d3d9de2a2cf65aa98932b45ebe15bf3adc7baf19b7ca5530a8c"
+    },
+    {
+      "id": "ring-of-warmth",
+      "kind": "item",
+      "sourceHash": "ea69c1192a77a1214ee5985801ff871d45e43994eaffdcbe274b3a47c6fa096e"
+    },
+    {
+      "id": "ring-of-water-walking",
+      "kind": "item",
+      "sourceHash": "b6b4d6fcaffe86444bb90d3126ff3507b9440e0f75e46aca94fae34f24a0926a"
+    },
+    {
+      "id": "ring-of-x-ray-vision",
+      "kind": "item",
+      "sourceHash": "7dfbd0a5be5935c2e2e3fcd0717cd62e14a52fc8fd67f5132d2407dd073e70cc"
+    },
+    {
+      "id": "robe-of-eyes",
+      "kind": "item",
+      "sourceHash": "683e21a60f7db121cf87bc3af3a08cdeb2e6e698b88fa25e2d39376537c67001"
+    },
+    {
+      "id": "robe-of-scintillating-colors",
+      "kind": "item",
+      "sourceHash": "9c2ee39eb6b743d4d01b65c144a9db88d15e6322ae4839fca281d385f61abb5e"
+    },
+    {
+      "id": "robe-of-stars",
+      "kind": "item",
+      "sourceHash": "58749eb5c0fb4fa9ba06374ca9245ae98619e5cea0f7ec6a77eb409009dc216a"
+    },
+    {
+      "id": "robe-of-the-archmagi",
+      "kind": "item",
+      "sourceHash": "443444b9a34d6fd0c886b54914f5e2aa45de7764b5df0baf4e53b5edd4834c74"
+    },
+    {
+      "id": "robe-of-useful-items",
+      "kind": "item",
+      "sourceHash": "706b11086e1abea3589a655de4ff5fbe6bfab17cc1bcf34ffc24395114f60e43"
+    },
+    {
+      "id": "rod-of-absorption",
+      "kind": "item",
+      "sourceHash": "0bcb3e2ccd837a5df9ae3e7557753e82787f45a1f2e04533a28d0af8c82721e3"
+    },
+    {
+      "id": "rod-of-alertness",
+      "kind": "item",
+      "sourceHash": "5fc9c4b267a052da9934432e7e8146af5c5174c3772116bf801e1029102096eb"
+    },
+    {
+      "id": "rod-of-lordly-might",
+      "kind": "item",
+      "sourceHash": "aa285fb1e0934b5da568ef70f8857ba121ba8ef4b0354d3cde63a89e2fd9b448"
+    },
+    {
+      "id": "rod-of-rulership",
+      "kind": "item",
+      "sourceHash": "0597ec8766eafecde79a05d68ed257c811bfdbaff2eb9a4b99a331714e33dfb2"
+    },
+    {
+      "id": "rod-of-security",
+      "kind": "item",
+      "sourceHash": "7a3d497a306da9dcab1d73700df6f79d0626a4a4a5d98ab0367dc982bfd49c7a"
+    },
+    {
+      "id": "rope-of-climbing",
+      "kind": "item",
+      "sourceHash": "d7b75ca7ca3ba7078d736af72788048730dc6dc8651c9c662d8c54d70a147fc9"
+    },
+    {
+      "id": "rope-of-entanglement",
+      "kind": "item",
+      "sourceHash": "1021dd60bccf5dd38175c57fee3eb87267758d482775c62b6c852f4e6b55a361"
+    },
+    {
+      "id": "scarab-of-protection",
+      "kind": "item",
+      "sourceHash": "2d1b58742ef5d87e6ac1a26ecd8045f192356bac8726d668dd40d8a61b0bd0eb"
+    },
+    {
+      "id": "scimitar-of-speed",
+      "kind": "item",
+      "sourceHash": "d859382781941461dbba0b0502f7f59882ac34c1ecf97ce7f1375d45082ee397"
+    },
+    {
+      "id": "shield-of-missile-attraction",
+      "kind": "item",
+      "sourceHash": "974b4f2db0bbc8dca0313fda9d3ffbeeff4e32b06d19bcc5452990ec04b10c5b"
+    },
+    {
+      "id": "shield-1-2-or-3",
+      "kind": "item",
+      "sourceHash": "e9d2f9396eb2e08abf157e41ca11b18f399eb11596df39093f7cbaea702a4aa5"
+    },
+    {
+      "id": "slippers-of-spider-climbing",
+      "kind": "item",
+      "sourceHash": "78ed184abf44c0c4e988fec202b2f4afc133c96c5b828be02c3197e19f708af8"
+    },
+    {
+      "id": "sovereign-glue",
+      "kind": "item",
+      "sourceHash": "28762b988e770bbacab7d3f89fd0853e67e87085386e58807524458c1f992fb0"
+    },
+    {
+      "id": "spell-scroll",
+      "kind": "item",
+      "sourceHash": "8bb3b9da2576a177c04ee1cd525c3cfe736bfd6eb78ec28cf4e5e58b12cfae00"
+    },
+    {
+      "id": "spellguard-shield",
+      "kind": "item",
+      "sourceHash": "fec9a205b15ebb72a2e35129386865fedaec8a3c7535acbb92fdb45a84e3da0f"
+    },
+    {
+      "id": "sphere-of-annihilation",
+      "kind": "item",
+      "sourceHash": "46c76bb090fe6adf20192e87b772ed1ba99b76839090e026204b6b36174b264f"
+    },
+    {
+      "id": "staff-of-charming",
+      "kind": "item",
+      "sourceHash": "ddf75c5c60d5d78445d9432898ea60e4d54f98077e4637c20f902e252b128ad0"
+    },
+    {
+      "id": "staff-of-fire",
+      "kind": "item",
+      "sourceHash": "dff5c3598d0ffda4736ace3d12de54906c377465a60c28b30830991299a094e6"
+    },
+    {
+      "id": "staff-of-frost",
+      "kind": "item",
+      "sourceHash": "d61ce0ba64939b3d35b8067dec3cfeee81a3cd5614a9bfd5d17b6add80d1ce14"
+    },
+    {
+      "id": "staff-of-healing",
+      "kind": "item",
+      "sourceHash": "f0611ab9b3471321194c669794ccc7fe1149a86317951cf51ce77d0254647c94"
+    },
+    {
+      "id": "staff-of-power",
+      "kind": "item",
+      "sourceHash": "1c726c2f2ec85976ee0dda0969b76e4fedb0187599ee60e120ac9d98220528ba"
+    },
+    {
+      "id": "staff-of-striking",
+      "kind": "item",
+      "sourceHash": "679d1d865d0a15a9f2511765ba20e622ecbe6bbd5dd92354752fa8b5cfc67cca"
+    },
+    {
+      "id": "staff-of-swarming-insects",
+      "kind": "item",
+      "sourceHash": "98c66b1341f39d1e9d98f5e0d3f5b667a57fbdf6c1730da1ef6ac08baddcfa7e"
+    },
+    {
+      "id": "staff-of-the-magi",
+      "kind": "item",
+      "sourceHash": "f118aa93d92ca4462c5a74587d28b506062b4e806024c8954bbf62bacb921f2b"
+    },
+    {
+      "id": "staff-of-the-python",
+      "kind": "item",
+      "sourceHash": "4f80a68aed6c309ff038f55145bc897b1a64872169fe1da90901c26564c6dbb7"
+    },
+    {
+      "id": "staff-of-the-woodlands",
+      "kind": "item",
+      "sourceHash": "49337a1c6b832cf8609673c37a1dd908f69af7abbf06bdff5d375a690bb8b5eb"
+    },
+    {
+      "id": "staff-of-thunder-and-lightning",
+      "kind": "item",
+      "sourceHash": "f6e1c0bf94ba28d0bc6da715673c4074366056a17f381a5fc6e92519dfdcbfa6"
+    },
+    {
+      "id": "staff-of-withering",
+      "kind": "item",
+      "sourceHash": "1dc1aa6d5ee5bf9e7dacf97f2566acfe39d2fb88475e97751f1fc2a583c634ce"
+    },
+    {
+      "id": "stone-of-controlling-earth-elementals",
+      "kind": "item",
+      "sourceHash": "8b0c3f0976926f404c85653e2814242d4fe31ad2afe1248a3f1164922020872d"
+    },
+    {
+      "id": "stone-of-good-luck-luckstone",
+      "kind": "item",
+      "sourceHash": "05d4bef93457ea46c70b8a6d5ff3cb8aeea9ac01f0f53bbc2ad441273e898105"
+    },
+    {
+      "id": "sun-blade",
+      "kind": "item",
+      "sourceHash": "ca1acb11c4b6df70c5bcf91a45cc08ca06a9f590600a3f5c173120db0bf070a0"
+    },
+    {
+      "id": "sword-of-life-stealing",
+      "kind": "item",
+      "sourceHash": "edfb327b878c7675857e798de63a5fac820034a3373a92403c39659685f78740"
+    },
+    {
+      "id": "sword-of-sharpness",
+      "kind": "item",
+      "sourceHash": "3eebfbf1ba66d88ec0d9d46cce59f1f1373604e61716d00e0029c7e4662da820"
+    },
+    {
+      "id": "sword-of-wounding",
+      "kind": "item",
+      "sourceHash": "9dc5c7943f4e4da026dffc0ddfe49f4f899154e3b486cf42094e7ef632fd0b3b"
+    },
+    {
+      "id": "talisman-of-pure-good",
+      "kind": "item",
+      "sourceHash": "c35216b076ca369c8b8801708267b888e0d248a6286bc32abe17e562bb4c748c"
+    },
+    {
+      "id": "talisman-of-the-sphere",
+      "kind": "item",
+      "sourceHash": "a09511834f3b1c6f81a909ed7a00bdb47903fb45ac1a7c722daa4f35ebe801fc"
+    },
+    {
+      "id": "talisman-of-ultimate-evil",
+      "kind": "item",
+      "sourceHash": "ef28a2626d379813e44e25f1215cc4d37d7c9c8dad2c40c578b895d6d59d674c"
+    },
+    {
+      "id": "tome-of-clear-thought",
+      "kind": "item",
+      "sourceHash": "3c60123b4656d26e49342c5cf78906c7d0f960cafa532cb3e48e884d7ca3fe4b"
+    },
+    {
+      "id": "tome-of-leadership-and-influence",
+      "kind": "item",
+      "sourceHash": "bb96fe4a26e580f40e07917809baddd1da3f6b6747d0c87b9d28bcf60683e08b"
+    },
+    {
+      "id": "tome-of-understanding",
+      "kind": "item",
+      "sourceHash": "af3165db8b45f25a19eeac15d848a9f19b191b4aeb64e7de93768c994b80cabd"
+    },
+    {
+      "id": "trident-of-fish-command",
+      "kind": "item",
+      "sourceHash": "d9e73aaa39eae8dd88a2ba315c3ad2b669a77923548d08b8ce607e2fda5a0e75"
+    },
+    {
+      "id": "universal-solvent",
+      "kind": "item",
+      "sourceHash": "ae38cc6addd7cab37d5708c8e415340e6d920dd6d68994776c8ff019bf447ad4"
+    },
+    {
+      "id": "vicious-weapon",
+      "kind": "item",
+      "sourceHash": "4c64ac9678ff8b54f7bdcd9e2dd1d042b0a9664cd0539a441c88d9bf7024f75c"
+    },
+    {
+      "id": "vorpal-sword",
+      "kind": "item",
+      "sourceHash": "008e856bd8fb2f8423a6b0243c6c626a8f11f7ac9e1302a3e4a30b8428d9b3e7"
+    },
+    {
+      "id": "wand-of-binding",
+      "kind": "item",
+      "sourceHash": "55b9c242324ff652320da667e23dc437d6b139044537736f95f2f414cf207dae"
+    },
+    {
+      "id": "wand-of-enemy-detection",
+      "kind": "item",
+      "sourceHash": "aec695dd19aea828362a196f3dbfe4546aa586abb6e1635537750ff053ecdb98"
+    },
+    {
+      "id": "wand-of-fear",
+      "kind": "item",
+      "sourceHash": "83b41aca7fab3c99d19616154c55f333a7c46287c0977537aba420e3e7f5f695"
+    },
+    {
+      "id": "wand-of-fireballs",
+      "kind": "item",
+      "sourceHash": "e1f1fddeb29c40439544b4e161dea80b439452e75ecf53a00148776e0c102619"
+    },
+    {
+      "id": "wand-of-lightning-bolts",
+      "kind": "item",
+      "sourceHash": "518ca342099c0a0cf71b9970ec86b636591a50dc95ded5dd1b21b276b244d207"
+    },
+    {
+      "id": "wand-of-magic-detection",
+      "kind": "item",
+      "sourceHash": "458fd0483f69faa2e6432386c7def1cfcb335b7ed3225f461495ad65b071f811"
+    },
+    {
+      "id": "wand-of-magic-missiles",
+      "kind": "item",
+      "sourceHash": "b1b689197da3e9924749aa08d0f7b3e58140eb424b79a5b827e9e574a116ddce"
+    },
+    {
+      "id": "wand-of-paralysis",
+      "kind": "item",
+      "sourceHash": "77cdeb7a2cf517b42fb3c31796a757badb50605b741a9223597bb0ec2eafeebf"
+    },
+    {
+      "id": "wand-of-polymorph",
+      "kind": "item",
+      "sourceHash": "b71239d02207004006278cc4c6ddea21a469f486b474f774d39c94df17cce9d6"
+    },
+    {
+      "id": "wand-of-secrets",
+      "kind": "item",
+      "sourceHash": "11c71b0b4de8fd9a5ff8f29c1af09a3dd3fa2b8529d184129141a85a00972f05"
+    },
+    {
+      "id": "wand-of-the-war-mage-1-2-or-3",
+      "kind": "item",
+      "sourceHash": "f41365dc8b0f4fe0bcf49998d4dc3b517e8aae98960bef09c53365494f41d691"
+    },
+    {
+      "id": "wand-of-web",
+      "kind": "item",
+      "sourceHash": "160bef287c98cc8611debb3c336ba8066f5f435cf29b355f1d1137e8a7aa9a57"
+    },
+    {
+      "id": "wand-of-wonder",
+      "kind": "item",
+      "sourceHash": "4dd9d3933a121534ac878b53c3a28a54d8c3fec460b18ae00b4eb0a77da8ef8d"
+    },
+    {
+      "id": "weapon-1-2-or-3",
+      "kind": "item",
+      "sourceHash": "2f66ed0aee08ec50bba7201287479fc37520fbd5278a7a0c2fbb1679aab5a0d0"
+    },
+    {
+      "id": "well-of-many-worlds",
+      "kind": "item",
+      "sourceHash": "8f40ee6ea94b839eb094aec79c7a2bbf2bb90c170e7012a6a4781c26fef7b9e2"
+    },
+    {
+      "id": "wind-fan",
+      "kind": "item",
+      "sourceHash": "4447ab704393363eb7735524dbca202165e9074d1f1557880598eb37d2d3afef"
+    },
+    {
+      "id": "winged-boots",
+      "kind": "item",
+      "sourceHash": "b337d4d2e72491a57fca6960469de2432066b2ed329f2a63cbaa827ebdb642c2"
+    },
+    {
+      "id": "wings-of-flying",
+      "kind": "item",
+      "sourceHash": "38c2f0226077bfc1d4d17ac791486825497294551e95386158105d8982b25eda"
+    },
+    {
+      "id": "nonplayer-characters",
+      "kind": "rules",
+      "sourceHash": "4ec6b9a5ba3b0b2ac52fa5770480c59bfcf382d3bd9fba3b89299153deaba759"
+    },
+    {
+      "id": "conditions",
+      "kind": "rules",
+      "sourceHash": "278eb06bd1a6c82fae5d27ed2ddb91b5c95f1115e917c39c1961c221a8bfbe4c"
+    },
+    {
+      "id": "legal-information",
+      "kind": "rules",
+      "sourceHash": "ff3f7349099b4de6530954a2be5b7a73e3b8da21de737dde62f5053f712976b3"
+    }
+  ]
+}
