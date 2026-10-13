@@ -3890,6 +3890,16 @@
       "sourceHash": "06481260d7746530d66a7b4577cff52298a92cb2d3209b683318306525bb4568"
     },
     {
+      "id": "werebear-lycanthrope",
+      "kind": "monster",
+      "sourceHash": "1010ac9e71409ed171afefd29a8e57c4073c864dc70436ba1b58088181e49a71"
+    },
+    {
+      "id": "wereboar-lycanthrope",
+      "kind": "monster",
+      "sourceHash": "b3a638c7dad44a723f3c729926584377f63d0842e7a96f110cca997c1faf0297"
+    },
+    {
       "id": "white-dragon-wyrmling-chromatic",
       "kind": "monster",
       "sourceHash": "f8361a32d04b2cecc91c33e4ba2245ef13f29bd0ee746d903c86534c1f10f8af"

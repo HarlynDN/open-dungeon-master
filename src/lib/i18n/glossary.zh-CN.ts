@@ -460,6 +460,8 @@ export const ZH_CN_GLOSSARY = [
   {"id":"monster.djinni","source":"Djinni","preferred":"气巨灵","scope":"monster"},
   {"id":"monster.spirit_naga","source":"Spirit Naga","preferred":"阴魂纳迦","scope":"monster"},
   {"id":"monster.guardian_naga","source":"Guardian Naga","preferred":"守秘纳迦","scope":"monster"},
+  {"id":"monster.werebear","source":"Werebear","preferred":"熊人","scope":"monster"},
+  {"id":"monster.wereboar","source":"Wereboar","preferred":"野猪人","scope":"monster"},
   {"id":"monster.goblin","source":"Goblin","preferred":"哥布林","scope":"monster","aliases":["地精"]},
   {"id":"monster.bugbear","source":"Bugbear","preferred":"熊地精","scope":"monster"},
   {"id":"monster.hobgoblin","source":"Hobgoblin","preferred":"大地精","scope":"monster"},
