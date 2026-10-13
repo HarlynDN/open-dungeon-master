@@ -1199,5 +1199,227 @@ export const LOCALIZED_SPELL_PAGES = [
     "name": "Wall of Fire",
     "headerKey": "bookMaterial.spell.wall-of-fire.header",
     "metaKey": "bookMaterial.spell.wall-of-fire.meta"
+  },
+  {
+    "id": "animate-objects",
+    "name": "Animate Objects",
+    "headerKey": "bookMaterial.spell.animate-objects.header",
+    "metaKey": "bookMaterial.spell.animate-objects.meta"
+  },
+  {
+    "id": "antilife-shell",
+    "name": "Antilife Shell",
+    "headerKey": "bookMaterial.spell.antilife-shell.header",
+    "metaKey": "bookMaterial.spell.antilife-shell.meta"
+  },
+  {
+    "id": "arcane-hand",
+    "name": "Arcane Hand",
+    "headerKey": "bookMaterial.spell.arcane-hand.header",
+    "metaKey": "bookMaterial.spell.arcane-hand.meta"
+  },
+  {
+    "id": "awaken",
+    "name": "Awaken",
+    "headerKey": "bookMaterial.spell.awaken.header",
+    "metaKey": "bookMaterial.spell.awaken.meta"
+  },
+  {
+    "id": "cloudkill",
+    "name": "Cloudkill",
+    "headerKey": "bookMaterial.spell.cloudkill.header",
+    "metaKey": "bookMaterial.spell.cloudkill.meta"
+  },
+  {
+    "id": "commune",
+    "name": "Commune",
+    "headerKey": "bookMaterial.spell.commune.header",
+    "metaKey": "bookMaterial.spell.commune.meta"
+  },
+  {
+    "id": "commune-with-nature",
+    "name": "Commune with Nature",
+    "headerKey": "bookMaterial.spell.commune-with-nature.header",
+    "metaKey": "bookMaterial.spell.commune-with-nature.meta"
+  },
+  {
+    "id": "cone-of-cold",
+    "name": "Cone of Cold",
+    "headerKey": "bookMaterial.spell.cone-of-cold.header",
+    "metaKey": "bookMaterial.spell.cone-of-cold.meta"
+  },
+  {
+    "id": "conjure-elemental",
+    "name": "Conjure Elemental",
+    "headerKey": "bookMaterial.spell.conjure-elemental.header",
+    "metaKey": "bookMaterial.spell.conjure-elemental.meta"
+  },
+  {
+    "id": "contact-other-plane",
+    "name": "Contact Other Plane",
+    "headerKey": "bookMaterial.spell.contact-other-plane.header",
+    "metaKey": "bookMaterial.spell.contact-other-plane.meta"
+  },
+  {
+    "id": "contagion",
+    "name": "Contagion",
+    "headerKey": "bookMaterial.spell.contagion.header",
+    "metaKey": "bookMaterial.spell.contagion.meta"
+  },
+  {
+    "id": "creation",
+    "name": "Creation",
+    "headerKey": "bookMaterial.spell.creation.header",
+    "metaKey": "bookMaterial.spell.creation.meta"
+  },
+  {
+    "id": "dispel-evil-and-good",
+    "name": "Dispel Evil and Good",
+    "headerKey": "bookMaterial.spell.dispel-evil-and-good.header",
+    "metaKey": "bookMaterial.spell.dispel-evil-and-good.meta"
+  },
+  {
+    "id": "dominate-person",
+    "name": "Dominate Person",
+    "headerKey": "bookMaterial.spell.dominate-person.header",
+    "metaKey": "bookMaterial.spell.dominate-person.meta"
+  },
+  {
+    "id": "dream",
+    "name": "Dream",
+    "headerKey": "bookMaterial.spell.dream.header",
+    "metaKey": "bookMaterial.spell.dream.meta"
+  },
+  {
+    "id": "flame-strike",
+    "name": "Flame Strike",
+    "headerKey": "bookMaterial.spell.flame-strike.header",
+    "metaKey": "bookMaterial.spell.flame-strike.meta"
+  },
+  {
+    "id": "geas",
+    "name": "Geas",
+    "headerKey": "bookMaterial.spell.geas.header",
+    "metaKey": "bookMaterial.spell.geas.meta"
+  },
+  {
+    "id": "greater-restoration",
+    "name": "Greater Restoration",
+    "headerKey": "bookMaterial.spell.greater-restoration.header",
+    "metaKey": "bookMaterial.spell.greater-restoration.meta"
+  },
+  {
+    "id": "hallow",
+    "name": "Hallow",
+    "headerKey": "bookMaterial.spell.hallow.header",
+    "metaKey": "bookMaterial.spell.hallow.meta"
+  },
+  {
+    "id": "hold-monster",
+    "name": "Hold Monster",
+    "headerKey": "bookMaterial.spell.hold-monster.header",
+    "metaKey": "bookMaterial.spell.hold-monster.meta"
+  },
+  {
+    "id": "insect-plague",
+    "name": "Insect Plague",
+    "headerKey": "bookMaterial.spell.insect-plague.header",
+    "metaKey": "bookMaterial.spell.insect-plague.meta"
+  },
+  {
+    "id": "legend-lore",
+    "name": "Legend Lore",
+    "headerKey": "bookMaterial.spell.legend-lore.header",
+    "metaKey": "bookMaterial.spell.legend-lore.meta"
+  },
+  {
+    "id": "mass-cure-wounds",
+    "name": "Mass Cure Wounds",
+    "headerKey": "bookMaterial.spell.mass-cure-wounds.header",
+    "metaKey": "bookMaterial.spell.mass-cure-wounds.meta"
+  },
+  {
+    "id": "mislead",
+    "name": "Mislead",
+    "headerKey": "bookMaterial.spell.mislead.header",
+    "metaKey": "bookMaterial.spell.mislead.meta"
+  },
+  {
+    "id": "modify-memory",
+    "name": "Modify Memory",
+    "headerKey": "bookMaterial.spell.modify-memory.header",
+    "metaKey": "bookMaterial.spell.modify-memory.meta"
+  },
+  {
+    "id": "passwall",
+    "name": "Passwall",
+    "headerKey": "bookMaterial.spell.passwall.header",
+    "metaKey": "bookMaterial.spell.passwall.meta"
+  },
+  {
+    "id": "planar-binding",
+    "name": "Planar Binding",
+    "headerKey": "bookMaterial.spell.planar-binding.header",
+    "metaKey": "bookMaterial.spell.planar-binding.meta"
+  },
+  {
+    "id": "raise-dead",
+    "name": "Raise Dead",
+    "headerKey": "bookMaterial.spell.raise-dead.header",
+    "metaKey": "bookMaterial.spell.raise-dead.meta"
+  },
+  {
+    "id": "reincarnate",
+    "name": "Reincarnate",
+    "headerKey": "bookMaterial.spell.reincarnate.header",
+    "metaKey": "bookMaterial.spell.reincarnate.meta"
+  },
+  {
+    "id": "scrying",
+    "name": "Scrying",
+    "headerKey": "bookMaterial.spell.scrying.header",
+    "metaKey": "bookMaterial.spell.scrying.meta"
+  },
+  {
+    "id": "seeming",
+    "name": "Seeming",
+    "headerKey": "bookMaterial.spell.seeming.header",
+    "metaKey": "bookMaterial.spell.seeming.meta"
+  },
+  {
+    "id": "telekinesis",
+    "name": "Telekinesis",
+    "headerKey": "bookMaterial.spell.telekinesis.header",
+    "metaKey": "bookMaterial.spell.telekinesis.meta"
+  },
+  {
+    "id": "telepathic-bond",
+    "name": "Telepathic Bond",
+    "headerKey": "bookMaterial.spell.telepathic-bond.header",
+    "metaKey": "bookMaterial.spell.telepathic-bond.meta"
+  },
+  {
+    "id": "teleportation-circle",
+    "name": "Teleportation Circle",
+    "headerKey": "bookMaterial.spell.teleportation-circle.header",
+    "metaKey": "bookMaterial.spell.teleportation-circle.meta"
+  },
+  {
+    "id": "tree-stride",
+    "name": "Tree Stride",
+    "headerKey": "bookMaterial.spell.tree-stride.header",
+    "metaKey": "bookMaterial.spell.tree-stride.meta"
+  },
+  {
+    "id": "wall-of-force",
+    "name": "Wall of Force",
+    "headerKey": "bookMaterial.spell.wall-of-force.header",
+    "metaKey": "bookMaterial.spell.wall-of-force.meta"
+  },
+  {
+    "id": "wall-of-stone",
+    "name": "Wall of Stone",
+    "headerKey": "bookMaterial.spell.wall-of-stone.header",
+    "metaKey": "bookMaterial.spell.wall-of-stone.meta"
   }
 ] as const;

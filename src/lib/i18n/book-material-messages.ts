@@ -1601,5 +1601,301 @@ export const BOOK_MATERIAL_MESSAGES = defineMessages({
   "bookMaterial.spell.wall-of-fire.meta": {
     "en": "4th-level evocation",
     "zh-CN": "四环塑能"
+  },
+  "bookMaterial.spell.animate-objects.header": {
+    "en": "*5th-level transmutation*\n\n**Casting Time:** 1 action\n\n**Range:** 120 feet\n\n**Components:** V, S\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*五环变化*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 120 英尺\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.animate-objects.meta": {
+    "en": "5th-level transmutation",
+    "zh-CN": "五环变化"
+  },
+  "bookMaterial.spell.antilife-shell.header": {
+    "en": "*5th-level abjuration*\n\n**Casting Time:** 1 action\n\n**Range:** Self (10-foot radius)\n\n**Components:** V, S\n\n**Duration:** Concentration, up to 1 hour",
+    "zh-CN": "*五环防护*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 自身（半径 10 英尺）\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 专注，至多 1 小时"
+  },
+  "bookMaterial.spell.antilife-shell.meta": {
+    "en": "5th-level abjuration",
+    "zh-CN": "五环防护"
+  },
+  "bookMaterial.spell.arcane-hand.header": {
+    "en": "*5th-level evocation*\n\n**Casting Time:** 1 action\n\n**Range:** 120 feet\n\n**Components:** V, S, M (an eggshell and a snakeskin glove)\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*五环塑能*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 120 英尺\n\n**法术成分：** 言语、姿势、材料（一个蛋壳和一只蛇皮手套）\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.arcane-hand.meta": {
+    "en": "5th-level evocation",
+    "zh-CN": "五环塑能"
+  },
+  "bookMaterial.spell.awaken.header": {
+    "en": "*5th-level transmutation*\n\n**Casting Time:** 8 hours\n\n**Range:** Touch\n\n**Components:** V, S, M (an agate worth at least 1,000 gp, which the spell consumes)\n\n**Duration:** Instantaneous",
+    "zh-CN": "*五环变化*\n\n**施法时间：** 8 小时\n\n**施法距离：** 接触\n\n**法术成分：** 言语、姿势、材料（价值至少 1,000 gp 的玛瑙，施法时消耗）\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.awaken.meta": {
+    "en": "5th-level transmutation",
+    "zh-CN": "五环变化"
+  },
+  "bookMaterial.spell.cloudkill.header": {
+    "en": "*5th-level conjuration*\n\n**Casting Time:** 1 action\n\n**Range:** 120 feet\n\n**Components:** V, S\n\n**Duration:** Concentration, up to 10 minutes",
+    "zh-CN": "*五环咒法*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 120 英尺\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 专注，至多 10 分钟"
+  },
+  "bookMaterial.spell.cloudkill.meta": {
+    "en": "5th-level conjuration",
+    "zh-CN": "五环咒法"
+  },
+  "bookMaterial.spell.commune.header": {
+    "en": "*5th-level divination (ritual)*\n\n**Casting Time:** 1 minute\n\n**Range:** Self\n\n**Components:** V, S, M (incense and a vial of holy or unholy water)\n\n**Duration:** 1 minute",
+    "zh-CN": "*五环预言（仪式）*\n\n**施法时间：** 1 分钟\n\n**施法距离：** 自身\n\n**法术成分：** 言语、姿势、材料（熏香和一小瓶圣水或邪水）\n\n**持续时间：** 1 分钟"
+  },
+  "bookMaterial.spell.commune.meta": {
+    "en": "5th-level divination (ritual)",
+    "zh-CN": "五环预言（仪式）"
+  },
+  "bookMaterial.spell.commune-with-nature.header": {
+    "en": "*5th-level divination (ritual)*\n\n**Casting Time:** 1 minute\n\n**Range:** Self\n\n**Components:** V, S\n\n**Duration:** Instantaneous",
+    "zh-CN": "*五环预言（仪式）*\n\n**施法时间：** 1 分钟\n\n**施法距离：** 自身\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.commune-with-nature.meta": {
+    "en": "5th-level divination (ritual)",
+    "zh-CN": "五环预言（仪式）"
+  },
+  "bookMaterial.spell.cone-of-cold.header": {
+    "en": "*5th-level evocation*\n\n**Casting Time:** 1 action\n\n**Range:** Self (60-foot cone)\n\n**Components:** V, S, M (a small crystal or glass cone)\n\n**Duration:** Instantaneous",
+    "zh-CN": "*五环塑能*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 自身（60 英尺锥形区域）\n\n**法术成分：** 言语、姿势、材料（一个小型水晶或玻璃锥体）\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.cone-of-cold.meta": {
+    "en": "5th-level evocation",
+    "zh-CN": "五环塑能"
+  },
+  "bookMaterial.spell.conjure-elemental.header": {
+    "en": "*5th-level conjuration*\n\n**Casting Time:** 1 minute\n\n**Range:** 90 feet\n\n**Components:** V, S, M (burning incense for air, soft clay for earth, sulfur and phosphorus for fire, or water and sand for water)\n\n**Duration:** Concentration, up to 1 hour",
+    "zh-CN": "*五环咒法*\n\n**施法时间：** 1 分钟\n\n**施法距离：** 90 英尺\n\n**法术成分：** 言语、姿势、材料（召唤气元素需要燃烧的熏香，土元素需要软黏土，火元素需要硫磺和磷，水元素需要水和沙子）\n\n**持续时间：** 专注，至多 1 小时"
+  },
+  "bookMaterial.spell.conjure-elemental.meta": {
+    "en": "5th-level conjuration",
+    "zh-CN": "五环咒法"
+  },
+  "bookMaterial.spell.contact-other-plane.header": {
+    "en": "*5th-level divination (ritual)*\n\n**Casting Time:** 1 minute\n\n**Range:** Self\n\n**Components:** V\n\n**Duration:** 1 minute",
+    "zh-CN": "*五环预言（仪式）*\n\n**施法时间：** 1 分钟\n\n**施法距离：** 自身\n\n**法术成分：** 言语\n\n**持续时间：** 1 分钟"
+  },
+  "bookMaterial.spell.contact-other-plane.meta": {
+    "en": "5th-level divination (ritual)",
+    "zh-CN": "五环预言（仪式）"
+  },
+  "bookMaterial.spell.contagion.header": {
+    "en": "*5th-level necromancy*\n\n**Casting Time:** 1 action\n\n**Range:** Touch\n\n**Components:** V, S\n\n**Duration:** 7 days",
+    "zh-CN": "*五环死灵*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 接触\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 7 天"
+  },
+  "bookMaterial.spell.contagion.meta": {
+    "en": "5th-level necromancy",
+    "zh-CN": "五环死灵"
+  },
+  "bookMaterial.spell.creation.header": {
+    "en": "*5th-level illusion*\n\n**Casting Time:** 1 minute\n\n**Range:** 30 feet\n\n**Components:** V, S, M (a tiny piece of matter of the same type of the item you plan to create)\n\n**Duration:** Special",
+    "zh-CN": "*五环幻术*\n\n**施法时间：** 1 分钟\n\n**施法距离：** 30 英尺\n\n**法术成分：** 言语、姿势、材料（一小块与你计划创造的物品同类的材料）\n\n**持续时间：** 特殊"
+  },
+  "bookMaterial.spell.creation.meta": {
+    "en": "5th-level illusion",
+    "zh-CN": "五环幻术"
+  },
+  "bookMaterial.spell.dispel-evil-and-good.header": {
+    "en": "*5th-level abjuration*\n\n**Casting Time:** 1 action\n\n**Range:** Self\n\n**Components:** V, S, M (holy water or powdered silver and iron)\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*五环防护*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 自身\n\n**法术成分：** 言语、姿势、材料（圣水，或银粉和铁粉）\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.dispel-evil-and-good.meta": {
+    "en": "5th-level abjuration",
+    "zh-CN": "五环防护"
+  },
+  "bookMaterial.spell.dominate-person.header": {
+    "en": "*5th-level enchantment*\n\n**Casting Time:** 1 action\n\n**Range:** 60 feet\n\n**Components:** V, S\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*五环惑控*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 60 英尺\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.dominate-person.meta": {
+    "en": "5th-level enchantment",
+    "zh-CN": "五环惑控"
+  },
+  "bookMaterial.spell.dream.header": {
+    "en": "*5th-level illusion*\n\n**Casting Time:** 1 minute\n\n**Range:** Special\n\n**Components:** V, S, M (a handful of sand, a dab of ink, and a writing quill plucked from a sleeping bird)\n\n**Duration:** 8 hours",
+    "zh-CN": "*五环幻术*\n\n**施法时间：** 1 分钟\n\n**施法距离：** 特殊\n\n**法术成分：** 言语、姿势、材料（一把沙子、少许墨水，以及从熟睡鸟儿身上拔取的羽毛笔）\n\n**持续时间：** 8 小时"
+  },
+  "bookMaterial.spell.dream.meta": {
+    "en": "5th-level illusion",
+    "zh-CN": "五环幻术"
+  },
+  "bookMaterial.spell.flame-strike.header": {
+    "en": "*5th-level evocation*\n\n**Casting Time:** 1 action\n\n**Range:** 60 feet\n\n**Components:** V, S, M (pinch of sulfur)\n\n**Duration:** Instantaneous",
+    "zh-CN": "*五环塑能*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 60 英尺\n\n**法术成分：** 言语、姿势、材料（少许硫磺）\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.flame-strike.meta": {
+    "en": "5th-level evocation",
+    "zh-CN": "五环塑能"
+  },
+  "bookMaterial.spell.geas.header": {
+    "en": "*5th-level enchantment*\n\n**Casting Time:** 1 minute\n\n**Range:** 60 feet\n\n**Components:** V\n\n**Duration:** 30 days",
+    "zh-CN": "*五环惑控*\n\n**施法时间：** 1 分钟\n\n**施法距离：** 60 英尺\n\n**法术成分：** 言语\n\n**持续时间：** 30 天"
+  },
+  "bookMaterial.spell.geas.meta": {
+    "en": "5th-level enchantment",
+    "zh-CN": "五环惑控"
+  },
+  "bookMaterial.spell.greater-restoration.header": {
+    "en": "*5th-level abjuration*\n\n**Casting Time:** 1 action\n\n**Range:** Touch\n\n**Components:** V, S, M (diamond dust worth at least 100 gp, which the spell consumes)\n\n**Duration:** Instantaneous",
+    "zh-CN": "*五环防护*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 接触\n\n**法术成分：** 言语、姿势、材料（价值至少 100 gp 的钻石粉，施法时消耗）\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.greater-restoration.meta": {
+    "en": "5th-level abjuration",
+    "zh-CN": "五环防护"
+  },
+  "bookMaterial.spell.hallow.header": {
+    "en": "*5th-level evocation*\n\n**Casting Time:** 24 hours\n\n**Range:** Touch\n\n**Components:** V, S, M (herbs, oils, and incense worth at least 1,000 gp, which the spell consumes)\n\n**Duration:** Until dispelled",
+    "zh-CN": "*五环塑能*\n\n**施法时间：** 24 小时\n\n**施法距离：** 接触\n\n**法术成分：** 言语、姿势、材料（价值至少 1,000 gp 的草药、油和熏香，施法时消耗）\n\n**持续时间：** 直到被解除"
+  },
+  "bookMaterial.spell.hallow.meta": {
+    "en": "5th-level evocation",
+    "zh-CN": "五环塑能"
+  },
+  "bookMaterial.spell.hold-monster.header": {
+    "en": "*5th-level enchantment*\n\n**Casting Time:** 1 action\n\n**Range:** 90 feet\n\n**Components:** V, S, M (a small, straight piece of iron)\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*五环惑控*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 90 英尺\n\n**法术成分：** 言语、姿势、材料（一小段笔直的铁条）\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.hold-monster.meta": {
+    "en": "5th-level enchantment",
+    "zh-CN": "五环惑控"
+  },
+  "bookMaterial.spell.insect-plague.header": {
+    "en": "*5th-level conjuration*\n\n**Casting Time:** 1 action\n\n**Range:** 300 feet\n\n**Components:** V, S, M (a few grains of sugar, some kernels of grain, and a smear of fat)\n\n**Duration:** Concentration, up to 10 minutes",
+    "zh-CN": "*五环咒法*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 300 英尺\n\n**法术成分：** 言语、姿势、材料（几粒糖、一些谷粒，以及少许油脂）\n\n**持续时间：** 专注，至多 10 分钟"
+  },
+  "bookMaterial.spell.insect-plague.meta": {
+    "en": "5th-level conjuration",
+    "zh-CN": "五环咒法"
+  },
+  "bookMaterial.spell.legend-lore.header": {
+    "en": "*5th-level divination*\n\n**Casting Time:** 10 minutes\n\n**Range:** Self\n\n**Components:** V, S, M (incense worth at least 250 gp, which the spell consumes, and four ivory strips worth at least 50 gp each)\n\n**Duration:** Instantaneous",
+    "zh-CN": "*五环预言*\n\n**施法时间：** 10 分钟\n\n**施法距离：** 自身\n\n**法术成分：** 言语、姿势、材料（价值至少 250 gp 的熏香，施法时消耗；另需四根象牙条，每根价值至少 50 gp）\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.legend-lore.meta": {
+    "en": "5th-level divination",
+    "zh-CN": "五环预言"
+  },
+  "bookMaterial.spell.mass-cure-wounds.header": {
+    "en": "*5th-level evocation*\n\n**Casting Time:** 1 action\n\n**Range:** 60 feet\n\n**Components:** V, S\n\n**Duration:** Instantaneous",
+    "zh-CN": "*五环塑能*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 60 英尺\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.mass-cure-wounds.meta": {
+    "en": "5th-level evocation",
+    "zh-CN": "五环塑能"
+  },
+  "bookMaterial.spell.mislead.header": {
+    "en": "*5th-level illusion*\n\n**Casting Time:** 1 action\n\n**Range:** Self\n\n**Components:** S\n\n**Duration:** Concentration, up to 1 hour",
+    "zh-CN": "*五环幻术*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 自身\n\n**法术成分：** 姿势\n\n**持续时间：** 专注，至多 1 小时"
+  },
+  "bookMaterial.spell.mislead.meta": {
+    "en": "5th-level illusion",
+    "zh-CN": "五环幻术"
+  },
+  "bookMaterial.spell.modify-memory.header": {
+    "en": "*5th-level enchantment*\n\n**Casting Time:** 1 action\n\n**Range:** 30 feet\n\n**Components:** V, S\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*五环惑控*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 30 英尺\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.modify-memory.meta": {
+    "en": "5th-level enchantment",
+    "zh-CN": "五环惑控"
+  },
+  "bookMaterial.spell.passwall.header": {
+    "en": "*5th-level transmutation*\n\n**Casting Time:** 1 action\n\n**Range:** 30 feet\n\n**Components:** V, S, M (a pinch of sesame seeds)\n\n**Duration:** 1 hour",
+    "zh-CN": "*五环变化*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 30 英尺\n\n**法术成分：** 言语、姿势、材料（少许芝麻）\n\n**持续时间：** 1 小时"
+  },
+  "bookMaterial.spell.passwall.meta": {
+    "en": "5th-level transmutation",
+    "zh-CN": "五环变化"
+  },
+  "bookMaterial.spell.planar-binding.header": {
+    "en": "*5th-level abjuration*\n\n**Casting Time:** 1 hour\n\n**Range:** 60 feet\n\n**Components:** V, S, M (a jewel worth at least 1,000 gp, which the spell consumes)\n\n**Duration:** 24 hours",
+    "zh-CN": "*五环防护*\n\n**施法时间：** 1 小时\n\n**施法距离：** 60 英尺\n\n**法术成分：** 言语、姿势、材料（价值至少 1,000 gp 的宝石，施法时消耗）\n\n**持续时间：** 24 小时"
+  },
+  "bookMaterial.spell.planar-binding.meta": {
+    "en": "5th-level abjuration",
+    "zh-CN": "五环防护"
+  },
+  "bookMaterial.spell.raise-dead.header": {
+    "en": "*5th-level necromancy*\n\n**Casting Time:** 1 hour\n\n**Range:** Touch\n\n**Components:** V, S, M (a diamond worth at least 500 gp, which the spell consumes)\n\n**Duration:** Instantaneous",
+    "zh-CN": "*五环死灵*\n\n**施法时间：** 1 小时\n\n**施法距离：** 接触\n\n**法术成分：** 言语、姿势、材料（价值至少 500 gp 的钻石，施法时消耗）\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.raise-dead.meta": {
+    "en": "5th-level necromancy",
+    "zh-CN": "五环死灵"
+  },
+  "bookMaterial.spell.reincarnate.header": {
+    "en": "*5th-level transmutation*\n\n**Casting Time:** 1 hour\n\n**Range:** Touch\n\n**Components:** V, S, M (rare oils and unguents worth at least 1,000 gp, which the spell consumes)\n\n**Duration:** Instantaneous",
+    "zh-CN": "*五环变化*\n\n**施法时间：** 1 小时\n\n**施法距离：** 接触\n\n**法术成分：** 言语、姿势、材料（价值至少 1,000 gp 的稀有油和药膏，施法时消耗）\n\n**持续时间：** 瞬间"
+  },
+  "bookMaterial.spell.reincarnate.meta": {
+    "en": "5th-level transmutation",
+    "zh-CN": "五环变化"
+  },
+  "bookMaterial.spell.scrying.header": {
+    "en": "*5th-level divination*\n\n**Casting Time:** 10 minutes\n\n**Range:** Self\n\n**Components:** V, S, M (a focus worth at least 1,000 gp, such as a crystal ball, a silver mirror, or a font filled with holy water)\n\n**Duration:** Concentration, up to 10 minutes",
+    "zh-CN": "*五环预言*\n\n**施法时间：** 10 分钟\n\n**施法距离：** 自身\n\n**法术成分：** 言语、姿势、材料（价值至少 1,000 gp 的法器，例如水晶球、银镜或盛满圣水的水盆）\n\n**持续时间：** 专注，至多 10 分钟"
+  },
+  "bookMaterial.spell.scrying.meta": {
+    "en": "5th-level divination",
+    "zh-CN": "五环预言"
+  },
+  "bookMaterial.spell.seeming.header": {
+    "en": "*5th-level illusion*\n\n**Casting Time:** 1 action\n\n**Range:** 30 feet\n\n**Components:** V, S\n\n**Duration:** 8 hours",
+    "zh-CN": "*五环幻术*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 30 英尺\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 8 小时"
+  },
+  "bookMaterial.spell.seeming.meta": {
+    "en": "5th-level illusion",
+    "zh-CN": "五环幻术"
+  },
+  "bookMaterial.spell.telekinesis.header": {
+    "en": "*5th-level transmutation*\n\n**Casting Time:** 1 action\n\n**Range:** 60 feet\n\n**Components:** V, S\n\n**Duration:** Concentration, up to 10 minutes",
+    "zh-CN": "*五环变化*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 60 英尺\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 专注，至多 10 分钟"
+  },
+  "bookMaterial.spell.telekinesis.meta": {
+    "en": "5th-level transmutation",
+    "zh-CN": "五环变化"
+  },
+  "bookMaterial.spell.telepathic-bond.header": {
+    "en": "*5th-level divination (ritual)*\n\n**Casting Time:** 1 action\n\n**Range:** 30 feet\n\n**Components:** V, S, M (pieces of eggshell from two different kinds of creatures)\n\n**Duration:** 1 hour",
+    "zh-CN": "*五环预言（仪式）*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 30 英尺\n\n**法术成分：** 言语、姿势、材料（两种不同生物的蛋壳碎片）\n\n**持续时间：** 1 小时"
+  },
+  "bookMaterial.spell.telepathic-bond.meta": {
+    "en": "5th-level divination (ritual)",
+    "zh-CN": "五环预言（仪式）"
+  },
+  "bookMaterial.spell.teleportation-circle.header": {
+    "en": "*5th-level conjuration*\n\n**Casting Time:** 1 minute\n\n**Range:** 10 feet\n\n**Components:** V, M (rare chalks and inks infused with precious gems with 50 gp, which the spell consumes)\n\n**Duration:** 1 round",
+    "zh-CN": "*五环咒法*\n\n**施法时间：** 1 分钟\n\n**施法距离：** 10 英尺\n\n**法术成分：** 言语、材料（融有宝石、价值 50 gp 的稀有粉笔和墨水，施法时消耗）\n\n**持续时间：** 1 轮"
+  },
+  "bookMaterial.spell.teleportation-circle.meta": {
+    "en": "5th-level conjuration",
+    "zh-CN": "五环咒法"
+  },
+  "bookMaterial.spell.tree-stride.header": {
+    "en": "*5th-level conjuration*\n\n**Casting Time:** 1 action\n\n**Range:** Self\n\n**Components:** V, S\n\n**Duration:** Concentration, up to 1 minute",
+    "zh-CN": "*五环咒法*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 自身\n\n**法术成分：** 言语、姿势\n\n**持续时间：** 专注，至多 1 分钟"
+  },
+  "bookMaterial.spell.tree-stride.meta": {
+    "en": "5th-level conjuration",
+    "zh-CN": "五环咒法"
+  },
+  "bookMaterial.spell.wall-of-force.header": {
+    "en": "*5th-level evocation*\n\n**Casting Time:** 1 action\n\n**Range:** 120 feet\n\n**Components:** V, S, M (a pinch of powder made by crushing a clear gemstone)\n\n**Duration:** Concentration, up to 10 minutes",
+    "zh-CN": "*五环塑能*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 120 英尺\n\n**法术成分：** 言语、姿势、材料（少许碾碎透明宝石制成的粉末）\n\n**持续时间：** 专注，至多 10 分钟"
+  },
+  "bookMaterial.spell.wall-of-force.meta": {
+    "en": "5th-level evocation",
+    "zh-CN": "五环塑能"
+  },
+  "bookMaterial.spell.wall-of-stone.header": {
+    "en": "*5th-level evocation*\n\n**Casting Time:** 1 action\n\n**Range:** 120 feet\n\n**Components:** V, S, M (a small block of granite)\n\n**Duration:** Concentration, up to 10 minutes",
+    "zh-CN": "*五环塑能*\n\n**施法时间：** 1 个动作\n\n**施法距离：** 120 英尺\n\n**法术成分：** 言语、姿势、材料（一小块花岗岩）\n\n**持续时间：** 专注，至多 10 分钟"
+  },
+  "bookMaterial.spell.wall-of-stone.meta": {
+    "en": "5th-level evocation",
+    "zh-CN": "五环塑能"
   }
 });

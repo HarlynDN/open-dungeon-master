@@ -1230,6 +1230,191 @@
       "sourceHash": "9ea428ac99042b28de4855f409f6ff4684f27d463ceca87ec6e2354c2e7f563c"
     },
     {
+      "id": "animate-objects",
+      "kind": "spell",
+      "sourceHash": "b456e074d1a23c93608426e1338ada7108b18adae3b1dcec491b35926dd7aaaf"
+    },
+    {
+      "id": "antilife-shell",
+      "kind": "spell",
+      "sourceHash": "fa6ee2fe04c2bff9f05cf78f33b2dbe1311577f31d47d5211d6d013492736aaf"
+    },
+    {
+      "id": "arcane-hand",
+      "kind": "spell",
+      "sourceHash": "c8a8108779a9231999b295bd00fb4e8611e64b1cd596b67a62458f08bd4376e2"
+    },
+    {
+      "id": "awaken",
+      "kind": "spell",
+      "sourceHash": "7def84e6c52dbaf1d0cfa25217f1ff0ddc9dd39f2c5ff9fce9afe32f853dbcc6"
+    },
+    {
+      "id": "cloudkill",
+      "kind": "spell",
+      "sourceHash": "6a8fcdf2674c57e82cb7db405bc93f5b45dbb6e2214a5a2fc233856d4339a7ee"
+    },
+    {
+      "id": "commune",
+      "kind": "spell",
+      "sourceHash": "85cd9e7a2023d267089c0c163767c03885197bff355cd0add73788f61612f315"
+    },
+    {
+      "id": "commune-with-nature",
+      "kind": "spell",
+      "sourceHash": "ecd04ddf3311450dbeec7804f2ae8f9648c3b0028ecf939f62e72ceb21560cc7"
+    },
+    {
+      "id": "cone-of-cold",
+      "kind": "spell",
+      "sourceHash": "18ff1eeb8ea4e67f2a8ffe03dd1ba39c6b6d00f014ebf1c5d85baa0356cb3628"
+    },
+    {
+      "id": "conjure-elemental",
+      "kind": "spell",
+      "sourceHash": "63f52fb457504f35d3008a00bdb62aa9a394c196799e736a98704fe55e87c347"
+    },
+    {
+      "id": "contact-other-plane",
+      "kind": "spell",
+      "sourceHash": "feeab0fe550977c4d61cc3546655c2c8d34b0f09765bcdedfa427211b1f2d180"
+    },
+    {
+      "id": "contagion",
+      "kind": "spell",
+      "sourceHash": "ccd0bc05df7034a52248a0a1558c17fb68861e18abb2a93b999b0e9bc2084aea"
+    },
+    {
+      "id": "creation",
+      "kind": "spell",
+      "sourceHash": "9da458e278b757116049f11f33279f6081669e124949434d5db2948eacb4934b"
+    },
+    {
+      "id": "dispel-evil-and-good",
+      "kind": "spell",
+      "sourceHash": "9a2f2d4c27d150e104d4987ba351bc43ef2f048e76df9ff0ef4cf977d401a70f"
+    },
+    {
+      "id": "dominate-person",
+      "kind": "spell",
+      "sourceHash": "897905f99583d4326a92959091d7b64a6087056e65365b08c65fbc39f9f90e73"
+    },
+    {
+      "id": "dream",
+      "kind": "spell",
+      "sourceHash": "b81718cc8e300ded4bd25588207710ded38b78c7af4a4a5f642f013432f7733a"
+    },
+    {
+      "id": "flame-strike",
+      "kind": "spell",
+      "sourceHash": "890e88128fc6a097ff164698beb5f699552541851ff67b6acd0f474532967e75"
+    },
+    {
+      "id": "geas",
+      "kind": "spell",
+      "sourceHash": "c3f6a0d8450c0526857273c42faa0a24b72fcb2e0e2809e4356d69081c0f868f"
+    },
+    {
+      "id": "greater-restoration",
+      "kind": "spell",
+      "sourceHash": "000e27e61392c8a8c6e38d0bf8c4abad84b7ff529e24dc10c4cb8dc43ea16a1d"
+    },
+    {
+      "id": "hallow",
+      "kind": "spell",
+      "sourceHash": "73302a817486a881bf627c8dd3584135a67925ccea5f09d92151057a423258f8"
+    },
+    {
+      "id": "hold-monster",
+      "kind": "spell",
+      "sourceHash": "d25465b1e9648ca2b6e95a1688882ab2bcfedfad385cc8d191a675f8f73dcfe2"
+    },
+    {
+      "id": "insect-plague",
+      "kind": "spell",
+      "sourceHash": "68e6b9d432cf087b66b9c11646a3dec815773cef1fa8c5805a556011b82db30d"
+    },
+    {
+      "id": "legend-lore",
+      "kind": "spell",
+      "sourceHash": "42bb4b9a3a61ee2255d9a0659712e5408311983d0dfbbae2b0504cac0db82894"
+    },
+    {
+      "id": "mass-cure-wounds",
+      "kind": "spell",
+      "sourceHash": "12bcc90cfe8614646fb8148656c6090ebb491ad09f169e35e721e2a69265c156"
+    },
+    {
+      "id": "mislead",
+      "kind": "spell",
+      "sourceHash": "82bb13b07afd992a7b051e238e5b6a5038ab0989526bb0a50c49b66d0967c22f"
+    },
+    {
+      "id": "modify-memory",
+      "kind": "spell",
+      "sourceHash": "0ca2c490ce80091212a782decce3acd767317c400708c3e2f5d96635097cf370"
+    },
+    {
+      "id": "passwall",
+      "kind": "spell",
+      "sourceHash": "08e98816d2d4aa36e299e37b4218399255a05c2b11b74ba04cc84d3fe9ffb30e"
+    },
+    {
+      "id": "planar-binding",
+      "kind": "spell",
+      "sourceHash": "e4030ce876f02f5830625b0d193acd49f20a97baa0e487ce35818d4815d3344c"
+    },
+    {
+      "id": "raise-dead",
+      "kind": "spell",
+      "sourceHash": "b8723fbad685cd659559cba3af2922c9db0c7727473d14cd7459f6a82fd6f332"
+    },
+    {
+      "id": "reincarnate",
+      "kind": "spell",
+      "sourceHash": "ee3bfd0ec9bb7e51b687b1741045006f5fcf6127b8d7ea5bd5d36c479effde62"
+    },
+    {
+      "id": "scrying",
+      "kind": "spell",
+      "sourceHash": "0eced22926114f66af6a40056540272c3528ccfa82127afd996b91eb116241c5"
+    },
+    {
+      "id": "seeming",
+      "kind": "spell",
+      "sourceHash": "4ca78637762faf97796235b84340d69a9f18d31f3ed3442612e4090a333f34ec"
+    },
+    {
+      "id": "telekinesis",
+      "kind": "spell",
+      "sourceHash": "502bcbd52c8924f218473c63e491916595ca79bbc073c935138e9d98d73ed3cf"
+    },
+    {
+      "id": "telepathic-bond",
+      "kind": "spell",
+      "sourceHash": "256846b3a01d74fbdd307fcda0c3c16e6b5b0387204a8ec295af3fbf60a92b9c"
+    },
+    {
+      "id": "teleportation-circle",
+      "kind": "spell",
+      "sourceHash": "9511b5a566cb5bfb06f48134d65cdec0f2af11b9672c2a33f711939b16267e83"
+    },
+    {
+      "id": "tree-stride",
+      "kind": "spell",
+      "sourceHash": "fbc8b35921bb2c4c406ea83dc663f1333d6f5beb4b0c420dcab772ef872d2509"
+    },
+    {
+      "id": "wall-of-force",
+      "kind": "spell",
+      "sourceHash": "496dfad7dd3e8b9f54d3e125467e2ce289ed3e1011f7f4045a017f6a92e6e5de"
+    },
+    {
+      "id": "wall-of-stone",
+      "kind": "spell",
+      "sourceHash": "25054563b1ac138179650a51a9778a6e36f3c24707e98f206dccb8b9f27f5c19"
+    },
+    {
       "id": "traps",
       "kind": "rules",
       "sourceHash": "3235d098b37944d2d0ae80928d91db3b9809dbbf319538e845817de93d512cd6"

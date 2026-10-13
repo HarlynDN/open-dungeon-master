@@ -799,5 +799,153 @@ export const SPELL_HELP = [
   {
     "name": "Wall of Fire",
     "key": "spellHelp.native.wall-of-fire"
+  },
+  {
+    "name": "Animate Objects",
+    "key": "spellHelp.native.animate-objects"
+  },
+  {
+    "name": "Antilife Shell",
+    "key": "spellHelp.native.antilife-shell"
+  },
+  {
+    "name": "Arcane Hand",
+    "key": "spellHelp.native.arcane-hand"
+  },
+  {
+    "name": "Awaken",
+    "key": "spellHelp.native.awaken"
+  },
+  {
+    "name": "Cloudkill",
+    "key": "spellHelp.native.cloudkill"
+  },
+  {
+    "name": "Commune",
+    "key": "spellHelp.native.commune"
+  },
+  {
+    "name": "Commune with Nature",
+    "key": "spellHelp.native.commune-with-nature"
+  },
+  {
+    "name": "Cone of Cold",
+    "key": "spellHelp.native.cone-of-cold"
+  },
+  {
+    "name": "Conjure Elemental",
+    "key": "spellHelp.native.conjure-elemental"
+  },
+  {
+    "name": "Contact Other Plane",
+    "key": "spellHelp.native.contact-other-plane"
+  },
+  {
+    "name": "Contagion",
+    "key": "spellHelp.native.contagion"
+  },
+  {
+    "name": "Creation",
+    "key": "spellHelp.native.creation"
+  },
+  {
+    "name": "Dispel Evil and Good",
+    "key": "spellHelp.native.dispel-evil-and-good"
+  },
+  {
+    "name": "Dominate Person",
+    "key": "spellHelp.native.dominate-person"
+  },
+  {
+    "name": "Dream",
+    "key": "spellHelp.native.dream"
+  },
+  {
+    "name": "Flame Strike",
+    "key": "spellHelp.native.flame-strike"
+  },
+  {
+    "name": "Geas",
+    "key": "spellHelp.native.geas"
+  },
+  {
+    "name": "Greater Restoration",
+    "key": "spellHelp.native.greater-restoration"
+  },
+  {
+    "name": "Hallow",
+    "key": "spellHelp.native.hallow"
+  },
+  {
+    "name": "Hold Monster",
+    "key": "spellHelp.native.hold-monster"
+  },
+  {
+    "name": "Insect Plague",
+    "key": "spellHelp.native.insect-plague"
+  },
+  {
+    "name": "Legend Lore",
+    "key": "spellHelp.native.legend-lore"
+  },
+  {
+    "name": "Mass Cure Wounds",
+    "key": "spellHelp.native.mass-cure-wounds"
+  },
+  {
+    "name": "Mislead",
+    "key": "spellHelp.native.mislead"
+  },
+  {
+    "name": "Modify Memory",
+    "key": "spellHelp.native.modify-memory"
+  },
+  {
+    "name": "Passwall",
+    "key": "spellHelp.native.passwall"
+  },
+  {
+    "name": "Planar Binding",
+    "key": "spellHelp.native.planar-binding"
+  },
+  {
+    "name": "Raise Dead",
+    "key": "spellHelp.native.raise-dead"
+  },
+  {
+    "name": "Reincarnate",
+    "key": "spellHelp.native.reincarnate"
+  },
+  {
+    "name": "Scrying",
+    "key": "spellHelp.native.scrying"
+  },
+  {
+    "name": "Seeming",
+    "key": "spellHelp.native.seeming"
+  },
+  {
+    "name": "Telekinesis",
+    "key": "spellHelp.native.telekinesis"
+  },
+  {
+    "name": "Telepathic Bond",
+    "key": "spellHelp.native.telepathic-bond"
+  },
+  {
+    "name": "Teleportation Circle",
+    "key": "spellHelp.native.teleportation-circle"
+  },
+  {
+    "name": "Tree Stride",
+    "key": "spellHelp.native.tree-stride"
+  },
+  {
+    "name": "Wall of Force",
+    "key": "spellHelp.native.wall-of-force"
+  },
+  {
+    "name": "Wall of Stone",
+    "key": "spellHelp.native.wall-of-stone"
   }
 ] as const;
