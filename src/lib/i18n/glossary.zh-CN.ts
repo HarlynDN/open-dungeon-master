@@ -415,6 +415,8 @@ export const ZH_CN_GLOSSARY = [
   {"id":"monster.hydra","source":"Hydra","preferred":"多头蛇","scope":"monster"},
   {"id":"monster.purple_worm","source":"Purple Worm","preferred":"紫虫","scope":"monster"},
   {"id":"monster.remorhaz","source":"Remorhaz","preferred":"百足魔兽","scope":"monster"},
+  {"id":"monster.behir","source":"Behir","preferred":"青足龙蛇","scope":"monster"},
+  {"id":"monster.dragon_turtle","source":"Dragon Turtle","preferred":"龙龟","scope":"monster"},
   {"id":"monster.goblin","source":"Goblin","preferred":"哥布林","scope":"monster","aliases":["地精"]},
   {"id":"monster.bugbear","source":"Bugbear","preferred":"熊地精","scope":"monster"},
   {"id":"monster.hobgoblin","source":"Hobgoblin","preferred":"大地精","scope":"monster"},

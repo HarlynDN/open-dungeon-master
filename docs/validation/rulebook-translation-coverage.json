@@ -3190,6 +3190,11 @@
       "sourceHash": "36825263a2de7d3a6a34a88443f439781009e7d470203383611bfceddbd8d9a3"
     },
     {
+      "id": "behir",
+      "kind": "monster",
+      "sourceHash": "72fe9448b975a3d63782db2e0530db6ae1cefc2aefe29daa9e56a4da648e0099"
+    },
+    {
       "id": "black-dragon-wyrmling-chromatic",
       "kind": "monster",
       "sourceHash": "dbe64296f8f1b327afb1fe238c140609a137694f3c25fa064d57efd049d72778"
@@ -3263,6 +3268,11 @@
       "id": "doppelganger",
       "kind": "monster",
       "sourceHash": "3f129d60c6994a332ebfb983d57a92ea25b94289c8ac42b27aa2dc662f2a67b8"
+    },
+    {
+      "id": "dragon-turtle",
+      "kind": "monster",
+      "sourceHash": "ffddc946d4038726683e2aa0faaca8dab5ff9b533e1f5e5ea6eb09648cd9dbd5"
     },
     {
       "id": "dretch-demon",

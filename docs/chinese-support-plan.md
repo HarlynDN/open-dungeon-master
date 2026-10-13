@@ -66,7 +66,7 @@ report or release gate and does not include a SRD 5.2 rules migration.
 | Player system logs | Localized structured combat/audit display, party item/coin/XP logs, account facts and kickoff notices; English model/tool semantics stay separate | Other native player-log templates and final history/save/resume audit |
 | Resource delivery | UI/content/help scopes and independent retryable lazy help; anonymous bilingual switch/reload, authenticated character/campaign entry and viewer-English/story-Chinese separation observed | Complete authenticated journey and lazy/cache timing; hydrated/network totals and large route JS payload remain unverified |
 | Local Chinese TTS | Implementation and bounded CPU delivery/outage evidence retained in [the runtime record](validation/chinese-tts-runtime.json) | Chinese voice quality rejected by user; further voice work is deferred, not passed, and is not a text-milestone gate |
-| Full native rulebook | Reader chrome localized; **869/933 complete Chinese pages** render via a server-generated display projection: all 319 spells, 239 magic items, 36 rules, 9 races, 12 classes and 254 monsters. Exact page IDs and source hashes are maintained in the coverage manifest; original English corpus retained | Remaining 64 monster pages; game-card/help prose reuse, authenticated browser search/navigation and English reading regression |
+| Full native rulebook | Reader chrome localized; **871/933 complete Chinese pages** render via a server-generated display projection: all 319 spells, 239 magic items, 36 rules, 9 races, 12 classes and 256 monsters. Exact page IDs and source hashes are maintained in the coverage manifest; original English corpus retained | Remaining 62 monster pages; game-card/help prose reuse, authenticated browser search/navigation and English reading regression |
 | Final text flow | Recorded Chinese exploration/social/utility and combat/slot/correction acceptance on Codex | Complete Chinese text journey, rulebook reading/search and English regression; full tests/lint/build, then pause |
 
 ## Execution adjustment (2026-10-13)
@@ -86,15 +86,15 @@ real interaction has passed. Do not restart a static translation campaign.
 
 ## Next delivery unit and interruption checkpoint
 
-- Added Hydra, Purple Worm and Remorhaz together: 869/933 pages, 254/318
-  monster-kind pages. Reviewed head loss/regrowth and fire suppression, extra
-  reactions, swallow size limits, internal damage regurgitation and corpse escape.
-- Added 多头蛇、紫虫、百足魔兽 from cached 5etools candidates; source edition
-  and review provenance remain unverified. No external prose imported.
+- Added Behir and Dragon Turtle together: 871/933 pages, 256/318 monster-kind
+  pages. Reviewed constriction/swallow capacity, internal damage regurgitation,
+  breath dimensions, tail-for-claws substitution and underwater steam exception.
+- Added 青足龙蛇、龙龟 from cached 5etools candidates; source edition and review
+  provenance remain unverified. No external prose imported.
 - Numeric/table, bilingual rendering, English switch, source refusal, identity,
-  terminology/guard and AST/catalog/resources checks passed: 493 terminology entries,
+  terminology/guard and AST/catalog/resources checks passed: 495 terminology entries,
   0 errors, 389 context warnings; UI remains 401/440.
-- Next: remaining 64 monster pages, game-card/help prose reuse and native source
+- Next: remaining 62 monster pages, game-card/help prose reuse and native source
   ownership. Final full-suite/build and real bilingual journey remain unproven.
 - Native dynamic UI/material/log ownership remains pending in the UI manifest;
   audit helpers with their actual consumers before the final bilingual journey.
