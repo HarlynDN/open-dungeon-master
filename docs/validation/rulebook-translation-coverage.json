@@ -3210,6 +3210,11 @@
       "sourceHash": "a4bd7f570998889810b36186dc03db4d33e8c81a1913d59d681a2de896b2b60b"
     },
     {
+      "id": "bone-devil-devil",
+      "kind": "monster",
+      "sourceHash": "ddc104a8213d2e42abc656e861ce0892221c08e1c7754a980d4ecaf49f4d0ee4"
+    },
+    {
       "id": "brass-dragon-wyrmling-metallic",
       "kind": "monster",
       "sourceHash": "17d40037b3c096b0984787b1cc78356f89d24cd84aff28d71ec33134f4c3d9e4"
