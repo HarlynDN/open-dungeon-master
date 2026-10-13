@@ -83,3 +83,12 @@ assert.ok(!spiderDisplay.display.text.includes('Spider Climb'));
 const alteredFlavor = { ...spiderEntry, data: { ...spiderEntry.data, desc: 'This spider has a custom history.' } };
 assert.equal(contentDisplay('monsters', alteredFlavor, 'zh-CN'), alteredFlavor);
 console.log('native flavor paragraphs permit action translation; changed flavor refuses replacement');
+const variants = JSON.parse(readFileSync(new URL('../src/lib/rulebook/locales/monster-prose-variants.zh-CN.json', import.meta.url)));
+assert.equal(variants.length, 9);
+for (const variant of variants) {
+  assert.deepEqual(variant.text.match(/\d+/g), variant.source.match(/\d+/g), variant.name);
+}
+const mage = fixtures.find(row => row.name === 'Mage');
+const mageView = contentDisplay('monsters', { ...mage, source: 'open5e', documentSlug: 'wotc-srd' }, 'zh-CN');
+assert.ok(mageView.display.text.includes('1d4 + 2'));
+assert.ok(!mageView.display.text.includes('**Dagger**'));

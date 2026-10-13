@@ -1,3 +1,4 @@
+import monsterProseVariants from "./locales/monster-prose-variants.zh-CN.json";
 // Server projection. Original catalog data remains available to engine callers.
 import type { AppLocale } from "../i18n/locales.ts";
 import { nativeSpellHelp } from "../i18n/spell-help-presentations.ts";
@@ -39,6 +40,11 @@ export function contentDisplay<T extends { name: string; source: string; documen
               if (pairs.has(sourceKey) && pairs.get(sourceKey) !== zh[index]) ambiguous.add(sourceKey);
               pairs.set(sourceKey, zh[index]);
             });
+            if (locale === "zh-CN") {
+              for (const variant of monsterProseVariants) {
+                if (variant.name === entry.name) pairs.set(key(variant.source), variant.text);
+              }
+            }
             const authored = describeContentEntry(entry.data);
             // Native flavor paragraphs may coexist with structured actions.
             // A modified description must not authorize a partial replacement.

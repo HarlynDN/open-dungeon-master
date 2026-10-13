@@ -114,13 +114,18 @@ real interaction has passed. Do not restart a static translation campaign.
   complete monster localization. Direct detail/lazy help use locale-aware guards.
 - Structured prose audit is reproducible via scripts/audit-monster-prose-locales.mjs
   and docs/validation/monster-prose-localization.json. Current 14-fixture audit
-  retains 13 fully English blocks across seven monsters (mixed text needs review).
+  retains 4 fully English blocks across two monsters (mixed text needs review).
   Foot-unit spelling is normalized without changing quantities; a changed reach
   regression remains English. Synthetic Traits heading is localized.
 - Native flavor descriptions now permit structured action projection only when
   every description paragraph matches the book. Giant Spider no longer has fully
   English blocks; changed flavor descriptions still refuse replacement. Full
   content-display regression, focused lint and i18n checks passed.
+- Nine reviewed pack-specific paragraphs now have exact source/name-bound
+  translations, including Mage dagger 1d4+2 (book remains 1d4+1), reordered Lich
+  spells and combined weakness/swallow/enslave paragraphs. Remaining sample
+  blocks are Troll limb and Marilith summon variants; no fuzzy rule replacement.
+  Numeric/source/English regressions, focused lint and i18n checks passed.
 - Next: complete those help paths and inspect real content data, then remaining
   dynamic UI/material/log owners. Full-suite/build and real bilingual journey
   remain unproven; no owner was newly marked covered.
