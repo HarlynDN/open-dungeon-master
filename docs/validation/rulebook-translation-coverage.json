@@ -3345,6 +3345,11 @@
       "sourceHash": "010aacdf3a3e0fcae54948af0db859b2aad0529578145b0c350655657c35ceb5"
     },
     {
+      "id": "homunculus",
+      "kind": "monster",
+      "sourceHash": "0e5c95449992e48210ce2506ff6fc025e097828e5d71eba665f9a41fbbed826f"
+    },
+    {
       "id": "ice-mephit",
       "kind": "monster",
       "sourceHash": "35dba07f0d14b79fc99e0a48302b687f672829c6717b047501b07d6f3d7538eb"
@@ -3433,6 +3438,11 @@
       "id": "plesiosaurus-dinosaur",
       "kind": "monster",
       "sourceHash": "cc4eef3a9d57993d98997d73ebbb2ea53cfd806107000dd852278c4a5545cfae"
+    },
+    {
+      "id": "pseudodragon",
+      "kind": "monster",
+      "sourceHash": "59d7f1d40645987606faa7898945683a80c9c6e9a40237e39f68d692bd1e6a2d"
     },
     {
       "id": "red-dragon-wyrmling-chromatic",
