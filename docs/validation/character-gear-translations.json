@@ -1,20 +1,20 @@
 {
   "version": 1,
   "status": "source-compared-by-implementation-agent",
-  "scope": "Equipment creator controls, all class/genre kit alternatives, native mundane equipment/background fragment names, picker/catalog chrome, purse/AC display and item detail chrome/closed weapon rules. Full spell/feat/magic-item/third-party descriptions and FinishStep remain pending.",
+  "scope": "Equipment creator controls, all class/genre kit alternatives, native mundane equipment/background fragment names, picker/catalog chrome, purse/AC display and item detail chrome/closed weapon rules. Native potion/oil body display is now covered; other magic-item and imported class/spell material and third-party descriptions remain outside this review. Expanded feat and FinishStep work is recorded in their separate reviews.",
   "provenance": "Original Chinese translations compared with repository equipment UI, native names and SRD 5.1-derived rules. Existing repository CC-BY attribution retained; no external Chinese PHB text used.",
   "review": "113 actual English gear/kit/browse/search projections and 185 actual English ItemBody cards frozen before migration. Compared quantities, native descriptions, strict armor caps, 10-foot speed penalty, weapon rules, prices, source-matched property/damage explanations, exact authored source, server-roll callback/dice and canonical selection references. Original rule/item helpers untouched. This is implementation-agent source comparison, not human or independent approval. Saved-item help now requests native catalog fallback, so kit entries with a guessed slug recover native cost/weight without a pack. Browser export preserved kit options [1,0,0,0], canonical names, AC 15, HP 13 and gold 5.",
   "sources": {
     "src/app/characters/builder/EquipmentSection.tsx": "b681c5b497ab99c07071519d7f2146fb544ed3127b27933836b1f93abe291d24",
     "src/app/characters/builder/KitChoicesSection.tsx": "c220596a5df835cf5c4d051ee593ae972889e880ff49e856f081a06d06508578",
     "src/app/characters/builder/BackgroundKitSection.tsx": "91c51c6a7deb28339283bf9c29ffd587974b58a188f0cfd7cd0e8a169e650441",
-    "src/app/characters/builder/ContentPicker.tsx": "9a86e34f839408cc130f5fe1040760870176c204477e0a145f5afca22fde885f",
-    "src/app/characters/builder/CatalogBrowser.tsx": "fbf972ee8c9f75baad96c7a95e7b3b6489f711ebd1384e01497146a4224f958a",
+    "src/app/characters/builder/ContentPicker.tsx": "52607ba0276305747bae748d00c5dd7d105aac48ad23f3d980a4e483ea4d0c86",
+    "src/app/characters/builder/CatalogBrowser.tsx": "14330809cf826563ba51f34f283299efe6526a17ffbfa29db79b00a285dbe0fc",
     "src/app/characters/builder/steps/SpellsGearStep.tsx": "c0b08ea47e76e8fc46924efcf21b04850d9fcc23e37a7ccb3ca62bf487a3a768",
-    "src/components/ui/InfoDialog.tsx": "ec56cf69c1a833d8d56c7a23343dffefa69ed20cc1374c3b8f441c8237a6c8bd",
+    "src/components/ui/InfoDialog.tsx": "ef241a0a9f4fa27eb48124a20bebb329321a251519c1f64dcfd3922287953dc6",
     "src/lib/i18n/equipment-presentations.ts": "7b5cc62cf0d7348b25f0baf693af129e7ce8e911b94255c932553b392a9645d6",
     "src/lib/i18n/gear-ui-presentations.ts": "7f5e42e0c8d41b35948beefea931bff76257146f50bd2b722638b24ee182ca80",
-    "src/lib/i18n/equipment-help-presentations.ts": "8e0cbb2471312fa9c85dc6f253af275ea9be8c885985f0ded40f61a893ceee41",
+    "src/lib/i18n/equipment-help-presentations.ts": "e8a84d4656f25ba21a13c2ab97de40b7f2bbf06c403563298db8d75bce1bfc99",
     "src/lib/i18n/reference-names.ts": "8811aa04f8ddcf46bbba5853186751b3140e84b4c398fd19ff47e4fe03946c7e",
     "src/lib/content/native-equipment-search.ts": "6ade2d40d22e64f6d1ac6e4e1bbd05e4d40e0d38991f06cbc14504bef1218d32",
     "src/app/api/content/[kind]/route.ts": "e8990c888a6a6a04db0943709610be63fbcc59d70f0eef36cf975636c8201d89"
@@ -22,7 +22,7 @@
   "catalogs": {
     "src/lib/i18n/gear-ui-messages.ts": "9762d8ef614c012861d92d7cf92e11e8362ff7836dd96da528e557919b59ab6a",
     "src/lib/i18n/equipment-name-messages.ts": "babb7d54d96715a26d809cc1256a23a76a041578d62e61b1e57464113f0acb3a",
-    "src/lib/i18n/equipment-help-messages.ts": "98a9b13249b077f83f277dfe7a2234a7d18a14ed8e86e5c081e2d95fb4fd04c2"
+    "src/lib/i18n/equipment-help-messages.ts": "b22809be9fe3694114a09ffeac992e331ee1dce3533ce25c532e89cb7b55bb6c"
   },
   "reviewRepair": "2026-10-11: browser imports now use scoped resource runtime; co-located catalog construction marked pure. All English/Chinese templates independently compared equal to the pre-repair archive; original golden bytes preserved. See localization-review-repairs.md.",
   "terminologyRepair": {
@@ -32,6 +32,24 @@
       "src/lib/i18n/reference-names.ts": "339580a3ea95ebcb2185ace6558f203eb907caefe0b5e7a25c90abcf4aa095bd",
       "src/lib/i18n/gear-ui-messages.ts": "72c709098612fe489f29895896bd02cf9ca8ff088114e0fe56e56d4fc70ba681",
       "src/lib/i18n/equipment-help-messages.ts": "aabd782f86396dbff1ef58e2121daf529ea4179a916f6130300a9f28496f51ee"
+    }
+  },
+  "materialProjectionRepair": {
+    "date": "2026-10-13",
+    "review": "Source comparison of the affected caller diffs: item data remains raw and ordered as before; the description provider carries its name/book/source for exact whole-source display matching. The item-view API retains its English early return and adds optional identity only. Native potion/oil bodies include original tables and use existing rule/spell/rarity terminology. Original rulebook/engine data and English goldens are unchanged. Current focused checks, distinct from the historical 113/185 record above, are recorded in chinese-support-plan.md. This is implementation-agent review, not independent human approval.",
+    "previousReviewHashes": {
+      "src/app/characters/builder/ContentPicker.tsx": "9a86e34f839408cc130f5fe1040760870176c204477e0a145f5afca22fde885f",
+      "src/app/characters/builder/CatalogBrowser.tsx": "fbf972ee8c9f75baad96c7a95e7b3b6489f711ebd1384e01497146a4224f958a",
+      "src/components/ui/InfoDialog.tsx": "ec56cf69c1a833d8d56c7a23343dffefa69ed20cc1374c3b8f441c8237a6c8bd",
+      "src/lib/i18n/equipment-help-presentations.ts": "8e0cbb2471312fa9c85dc6f253af275ea9be8c885985f0ded40f61a893ceee41",
+      "src/lib/i18n/equipment-help-messages.ts": "98a9b13249b077f83f277dfe7a2234a7d18a14ed8e86e5c081e2d95fb4fd04c2"
+    },
+    "priorCommitHashes": {
+      "src/app/characters/builder/ContentPicker.tsx": "9a86e34f839408cc130f5fe1040760870176c204477e0a145f5afca22fde885f",
+      "src/app/characters/builder/CatalogBrowser.tsx": "fbf972ee8c9f75baad96c7a95e7b3b6489f711ebd1384e01497146a4224f958a",
+      "src/components/ui/InfoDialog.tsx": "2f5ef98c80f23ece7309f69ad9199306eb06515e170523faa1a5ffd479221ead",
+      "src/lib/i18n/equipment-help-presentations.ts": "8e0cbb2471312fa9c85dc6f253af275ea9be8c885985f0ded40f61a893ceee41",
+      "src/lib/i18n/equipment-help-messages.ts": "98a9b13249b077f83f277dfe7a2234a7d18a14ed8e86e5c081e2d95fb4fd04c2"
     }
   }
 }

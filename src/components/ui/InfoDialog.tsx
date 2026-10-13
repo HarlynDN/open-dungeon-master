@@ -14,6 +14,7 @@ import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { nativeFeatHelp } from "@/lib/i18n/feature-material-presentations";
 import { nativeArchetypeHelp } from "@/lib/i18n/calling-material-presentations";
 import { itemSheetView } from "@/lib/i18n/equipment-help-presentations";
+import { nativeItemHelp, type ItemMaterialIdentity } from "@/lib/i18n/magic-item-material-presentations";
 
 // The "what does this do?" affordance, used everywhere a game term appears.
 //
@@ -184,6 +185,7 @@ function ContentBody({ reference }: { reference: ContentRef }) {
   let text = state.text;
   if (reference.kind === "feats" && state.source !== "homebrew") text = nativeFeatHelp(state.name ?? reference.name, text, locale) ?? text;
   else if (reference.kind === "archetypes" && state.classId) text = nativeArchetypeHelp(state.classId, state.name ?? reference.name ?? "", text, locale, state);
+  else if (reference.kind === "items") text = nativeItemHelp({ ...state, name: state.name ?? reference.name }, text, locale) ?? text;
   return <>{renderRules(text)}</>;
 }
 
@@ -229,7 +231,7 @@ function RuleList({ rows }: { rows: Array<{ label: string; text: string | null }
 function ItemBody({ reference }: { reference: ContentRef }) {
   const { locale, t } = useLocale();
   const campaignId = useContentCampaign();
-  const [state, setState] = useState<{ sheet: ItemSheet | null; loading: boolean }>({
+  const [state, setState] = useState<{ sheet: ItemSheet | null; loading: boolean; descriptionOwner?: ItemMaterialIdentity }>({
     sheet: null,
     loading: true,
   });
@@ -241,17 +243,23 @@ function ItemBody({ reference }: { reference: ContentRef }) {
       const wanted = name.toLowerCase();
       const readJson = async (response: Response) => (response.ok ? response.json() : null);
       try {
-        const [{ buildItemSheet }, direct, search] = await Promise.all([
+        const [{ buildItemSheet }, { describeContentEntry }, direct, search] = await Promise.all([
           import("@/lib/help/item-sheet"),
+          import("@/lib/help"),
           fetch(`/api/content/items/${encodeURIComponent(reference.slug)}${scopeQuery(campaignId)}`).then(readJson).catch(() => null),
           fetch(`/api/content/items?q=${encodeURIComponent(wanted)}&limit=20&native=1${scopeQuery(campaignId, "&")}`).then(readJson).catch(() => null),
         ]);
-        const hits = ((search?.results ?? []) as Array<{ name: string; data?: Record<string, unknown> }>)
-          .filter((entry) => entry.name.trim().toLowerCase() === wanted)
-          .map((entry) => entry.data);
-        const sheet = buildItemSheet(name, [direct?.entry?.data, ...hits]);
+        const hits = ((search?.results ?? []) as Array<ItemMaterialIdentity & { name: string; data?: Record<string, unknown> }>)
+          .filter((entry) => entry.name.trim().toLowerCase() === wanted);
+        const entries = [direct?.entry, ...hits];
+        const sheet = buildItemSheet(name, entries.map(entry => entry?.data));
+        // Keep the provenance of the row that actually supplied the text, not
+        // a different search hit whose name happens to match the inventory.
+        const descriptionOwner = entries.find(entry => describeContentEntry(entry?.data));
         if (!cancelled) {
-          setState({ sheet, loading: false });
+          setState({ sheet, loading: false, descriptionOwner: descriptionOwner ? {
+            name: descriptionOwner.name, source: descriptionOwner.source, documentSlug: descriptionOwner.documentSlug,
+          } : undefined });
         }
       } catch {
         if (!cancelled) {
@@ -272,7 +280,7 @@ function ItemBody({ reference }: { reference: ContentRef }) {
       </p>
     );
   }
-  const sheet = state.sheet ? itemSheetView(state.sheet, locale) : null;
+  const sheet = state.sheet ? itemSheetView(state.sheet, locale, state.descriptionOwner ?? { name: reference.name }) : null;
   if (!sheet) {
     return (
       <p className="text-sm text-stone-500">

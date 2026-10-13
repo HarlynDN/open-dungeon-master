@@ -1,6 +1,7 @@
 import { defineMessages } from "./catalog.ts";
 
 export const EQUIPMENT_HELP_MESSAGES = /*#__PURE__*/ defineMessages({
+  "itemHelp.type.potion": { "en": "Potion", "zh-CN": "药水" },
   "itemHelp.propertyRange": { "en": "range {value}", "zh-CN": "射程 {value}" },
   "itemHelp.loading": {
     "en": "Looking it up...",

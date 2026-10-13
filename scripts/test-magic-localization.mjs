@@ -2,6 +2,8 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {openCombatRenderer} from './lib/combat-ui-fixtures.mjs';
+import {openGearRenderer} from './lib/gear-ui-fixtures.mjs';
+import {readValidationJson} from './lib/validation-json.mjs';
 const {MAGIC_ITEM_NAMES,MAGIC_ITEM_NAME_MESSAGES}=await import('../src/lib/i18n/magic-item-name-messages.ts');
 const {equipmentName,equipmentSearchNames}=await import('../src/lib/i18n/equipment-presentations.ts');
 const {referenceDisplayName,resolveReference,translatedReferenceNames}=await import('../src/lib/i18n/references.ts');
@@ -9,6 +11,14 @@ const {proposalSummary}=await import('../src/lib/dm/proposal-logic.ts');
 const {proposalSummaryDetail}=await import('../src/lib/dm/proposal-summary.ts');
 const {magicItemRiders}=await import('../src/lib/srd/magic-items.ts');
 const {systemEventText}=await import('../src/lib/i18n/system-event-presentations.ts');
+const {MAGIC_ITEM_MATERIAL}=await import('../src/lib/i18n/magic-item-material-metadata.ts');
+const {nativeItemHelp}=await import('../src/lib/i18n/magic-item-material-presentations.ts');
+const {MESSAGE_CATALOGS}=await import('../src/lib/i18n/messages.ts');
+const {bundledItemRows}=await import('../src/lib/rulebook/catalog-rows.ts');
+const {buildItemSheet}=await import('../src/lib/help/item-sheet.ts');
+const {describeContentEntry}=await import('../src/lib/help/index.ts');
+const {itemSheetView}=await import('../src/lib/i18n/equipment-help-presentations.ts');
+const {normalizeRulesText}=await import('../src/lib/help/rules-text.ts');
 const book=JSON.parse(readFileSync(new URL('../src/lib/rulebook/srd-5.1.json',import.meta.url),'utf8'));
 const native=book.pages.filter(page=>page.chapter==='magic-items'&&page.kind==='item');
 assert.equal(native.length,239);
@@ -51,4 +61,66 @@ for(const locale of ['en','zh-CN']){
  const stored=systemEventText(event);assert.ok(stored.includes(equipmentName(args.name,locale)));assert.ok(stored.includes(sheet.name));
 }
 assert.equal(JSON.stringify(sheet),baseline);assert.deepEqual(magicItemRiders(sheet.equipment,sheet),riders);
+const bodies=bundledItemRows(),infoFile='src/components/ui/InfoDialog.tsx';
+const url=source=>'data:text/javascript;base64,'+Buffer.from(source).toString('base64');
+const scopeStub=url('export const useContentCampaign=()=>null;export const scopeQuery=()=>"";export const scopedParams=p=>p;');
+const info=await openCombatRenderer({files:[infoFile],stubs:{
+ '@/components/ui/Dialog':url('export const Dialog=({children})=>children;'),
+ '@/components/ui/Tooltip':url('export const Tooltip=({children})=>children;'),
+ '@/lib/content-scope':scopeStub,
+}});
+assert.deepEqual(MAGIC_ITEM_MATERIAL.map(row=>row.id).sort(),native.filter(row=>/^(Potion|Oil) of /.test(row.title)).map(row=>row.id).sort());
+const visibleText=html=>html.replace(/<[^>]+>/g,' ').replace(/&#x27;/g,"'").replace(/&quot;/g,'"').replace(/&amp;/g,'&');
+const numeric=text=>new Set((text.match(/\d+(?:\.\d+)?/g)??[]).map(Number));
+for(const row of MAGIC_ITEM_MATERIAL){
+ const entry=bodies.find(entry=>entry.rulebook===row.id);assert(entry,row.id);
+ const source=describeContentEntry(entry.data),saved=JSON.stringify(entry),raw=buildItemSheet(entry.name,[entry.data]);
+ assert.equal(normalizeRulesText(MESSAGE_CATALOGS.en[row.key]),source);
+ const zh=nativeItemHelp(entry,source,'zh-CN');assert.equal(zh,MESSAGE_CATALOGS['zh-CN'][row.key]);assert.match(zh,/\p{Script=Han}/u);
+ assert.equal(nativeItemHelp(entry,source,'en'),source);
+ for(const number of numeric(source)) assert(numeric(zh).has(number),row.id+':'+number);
+ assert.deepEqual(zh.match(/\b\d*d\d+\b/g),source.match(/\b\d*d\d+\b/g),row.id);
+ for(const replacement of [{...entry,source:'homebrew'},{...entry,documentSlug:'other-book'},{...entry,name:'Authored potion'}]) assert.equal(nativeItemHelp(replacement,source,'zh-CN'),source);
+ assert.equal(nativeItemHelp(entry,source+' Authored addition.','zh-CN'),source+' Authored addition.');
+ for(const locale of ['en','zh-CN']){
+  const projected=itemSheetView(raw,locale,entry);assert.equal(projected.description,locale==='en'?source:zh);
+  assert.deepEqual({...projected,description:raw.description,type:raw.type,rarity:raw.rarity},{...raw});
+  const html=info.render('InfoDialog',{open:true,onOpenChange:()=>{},title:equipmentName(entry.name,locale),reference:{kind:'items',slug:entry.slug,name:entry.name}},locale,{queues:{[infoFile]:[{sheet:raw,loading:false,descriptionOwner:entry}]}});
+  assert(html.includes(locale==='en'?'Description':'说明'));
+  const text=visibleText(html);
+  assert(text.includes((locale==='en'?source:zh).split('\n')[0].split('*')[0].trim()));
+ }
+ const custom=info.render('InfoDialog',{open:true,onOpenChange:()=>{},title:entry.name,reference:{kind:'items',slug:entry.slug,name:entry.name}},'zh-CN',{queues:{[infoFile]:[{sheet:raw,loading:false,descriptionOwner:{...entry,source:'homebrew'}}]}});
+ assert(visibleText(custom).includes(source.split('\n')[0].split('*')[0].trim()));assert.equal(JSON.stringify(entry),saved);
+}
+// The same cached canonical row feeds all four pickers. Check display props and
+// callbacks rather than snapshotting another catalog or issuing network calls.
+const healing=bodies.find(entry=>entry.name==='Potion of Healing'),custom={...healing,source:'homebrew',slug:'custom-potion'};
+const pickerFiles=['src/components/ui/ContentPick.tsx',...['ContentPicker','MultiContentPicker','CatalogBrowser'].map(name=>`src/app/characters/builder/${name}.tsx`)];
+const exports={ [pickerFiles[1]]:'ContentPicker', [pickerFiles[2]]:'MultiContentPicker', [pickerFiles[3]]:'CatalogBrowser' };
+const hook=url('export const useContentSearch=()=>({query:"",results:'+JSON.stringify([healing,custom])+',open:true,loading:false,unavailable:false,unadmitted:[],setQuery:()=>{},setResults:()=>{},setOpen:()=>{}});');
+const pickers=await openCombatRenderer({files:pickerFiles,sourceOf:file=>readFileSync(new URL('../'+file,import.meta.url),'utf8')+(exports[file]?`\nexport {${exports[file]}};`:''),stubs:{
+ './useContentSearch':hook,'@/app/characters/builder/useContentSearch':hook,
+ '@/components/ui/InfoDialog':url('export const InfoButton=()=>null;'),
+ '@/lib/content-scope':scopeStub,
+}});
+for(const locale of ['en','zh-CN']) for(const component of ['ContentPick','ContentPicker','MultiContentPicker','CatalogBrowser']){
+ const picked=[],props={kind:'items',placeholder:'Search',label:'Items',selectedNames:[],onPick:entry=>picked.push(entry),onAdd:entries=>picked.push(...entries),buttonLabel:'Browse',sections:[{key:'potions',label:'Potions'}]};
+ const key=JSON.stringify(['items','','potions','']);
+ pickers.render(component,props,locale,component==='CatalogBrowser'?{queues:{[pickerFiles[3]]:[true,['potions'],{[key]:{rows:[healing,custom],truncated:false}},[],'']}}:component==='MultiContentPicker'?{queues:{[pickerFiles[2]]:[[{name:healing.name,source:healing.source}]]}}:{});
+ const tips=pickers.elements().filter(row=>typeof row.props.text==='string'&&typeof row.props.label==='string');
+ assert(tips.some(row=>row.props.reference?.slug===healing.slug&&row.props.text===nativeItemHelp(healing,describeContentEntry(healing.data),locale)),component+':'+locale);
+ assert(tips.some(row=>row.props.text===describeContentEntry(custom.data)&&row.props.label===custom.name),component+':custom:'+locale);
+ const handler=component==='CatalogBrowser'?'toggleRow(entry)':component==='MultiContentPicker'?'onAdd(':'onPick(entry)';
+ const button=pickers.elements().find(row=>row.type==='button'&&String(row.props.onClick).includes(handler));
+ assert(button,component);button.props.onClick();assert.deepEqual(picked,component==='MultiContentPicker'?[{name:healing.name}]:[healing]);
+}
+const frozen=readValidationJson(new URL('../docs/validation/character-gear-help-goldens.json',import.meta.url).pathname);
+const gear=await openGearRenderer();assert.equal(frozen.fixtures.length,185);
+for(const row of frozen.fixtures){
+ const state=row.sheet!==undefined?{sheet:row.sheet,loading:false}:{sheet:null,loading:row.name==='loading'};
+ assert.equal(gear.render(gear.components.ItemBody,{reference:{kind:'items',slug:row.slug??'authored',name:row.name}},'en',{},[state]),row.html,row.name);
+}
+console.log('PASS: all 19 native potion/oil bodies and tables, exact source/numbers/dice, actual bilingual item dialogs and four picker flows, English switching, canonical picks and authored/other-book/changed-text overrides.');
+console.log('PASS: all 185 original frozen English item cards unchanged.');
 console.log('Magic-item localization passed: all 239 SRD source titles and 291 registered names; shared display/search/alias projections; exact +N identities and scoped ambiguity; actual gear/loot/proposal UI in both locales; native callbacks, proper names, tool summaries, inventory and mechanics unchanged.');

@@ -7,10 +7,11 @@ import { createTranslator } from './translator.ts';
 import { featTermLabel } from './feat-presentations.ts';
 import { gearRarity } from './gear-ui-presentations.ts';
 import type { AppLocale } from './locales.ts';
+import { nativeItemHelp, type ItemMaterialIdentity } from './magic-item-material-presentations.ts';
 
 // A display-only projection of the existing item sheet. Unknown pack/author
 // prose remains verbatim, even when its name is a stock property or item.
-export function itemSheetView(sheet: ItemSheet, locale: AppLocale): ItemSheet {
+export function itemSheetView(sheet: ItemSheet, locale: AppLocale, identity?: ItemMaterialIdentity): ItemSheet {
   if (locale === 'en') return sheet;
   const t = createTranslator(locale);
   const unit = (value: string | null, pattern: RegExp, key: 'weightValue' | 'rangeValue' | 'goldValue' | 'silverValue' | 'copperValue') => {
@@ -47,6 +48,7 @@ export function itemSheetView(sheet: ItemSheet, locale: AppLocale): ItemSheet {
     rarity: sheet.rarity ? gearRarity(sheet.rarity, locale) : null,
     weight: unit(sheet.weight, /^(\d+(?:\.\d+)?) lb\.$/, 'weightValue'),
     cost: unit(unit(unit(sheet.cost, /^(\d+(?:\.\d+)?) gp$/, 'goldValue'), /^(\d+(?:\.\d+)?) sp$/, 'silverValue'), /^(\d+(?:\.\d+)?) cp$/, 'copperValue'),
+    description: identity ? nativeItemHelp(identity, sheet.description, locale) : sheet.description,
     armor, weapon };
 }
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { nativeItemHelp } from "@/lib/i18n/magic-item-material-presentations";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { catalogFor } from "@/lib/i18n/translator";
 import { pickerName, gearRarity, gearKind } from "@/lib/i18n/gear-ui-presentations";
@@ -105,7 +106,7 @@ export function ContentPick({
               <InfoButton
                 label={displayName(entry)}
                 meta={kind === "spells" ? spellSummary(entry.data) : undefined}
-                text={kind === "feats" && hasNames && entry.source !== "homebrew" ? nativeFeatHelp(entry.name, describeContentEntry(entry.data), locale) : describeContentEntry(entry.data)}
+                text={kind === "feats" && hasNames && entry.source !== "homebrew" ? nativeFeatHelp(entry.name, describeContentEntry(entry.data), locale) : kind === "items" ? nativeItemHelp(entry, describeContentEntry(entry.data), locale) : describeContentEntry(entry.data)}
                 reference={
                   entry.source === "homebrew" ? undefined : { kind, slug: entry.slug, name: entry.name }
                 }
