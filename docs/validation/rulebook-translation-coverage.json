@@ -3350,6 +3350,11 @@
       "sourceHash": "a8e2f7a7694f979ed8601782c3a4ee4f8ac5d9efc215dacaaa7546c00994af15"
     },
     {
+      "id": "ghost",
+      "kind": "monster",
+      "sourceHash": "6d214038d19ed23052002f217703d1bab042bf734f4841481b49026054499092"
+    },
+    {
       "id": "ghoul",
       "kind": "monster",
       "sourceHash": "4c08349f179e178a4f63c434904dbe5f40d28da3b92239358cb2277e128f94f4"
