@@ -1,3 +1,4 @@
+import { contentDisplay } from "@/lib/rulebook/content-display";
 import { localizedReferenceSearch } from "@/lib/content/localized-reference-search";
 import { currentUser, unauthorized } from "@/lib/auth";
 import { catalogPrices } from "@/lib/characters/catalog";
@@ -208,6 +209,9 @@ export async function GET(
     if (kind === "archetypes" && !packInstalled) {
       results = [...results, ...bundledArchetypeRows(url.searchParams.get("class") ?? "", q, results as Array<{ name: string }>)];
     }
+  }
+  if (url.searchParams.get("localized") === "1") {
+    results = results.map(row => contentDisplay(kind, row as Parameters<typeof contentDisplay>[1], normalizeLocale(url.searchParams.get("locale"))));
   }
   return Response.json({ results, packInstalled, unadmitted: unadmittedNames(scope, user.id, kind, q) });
 }

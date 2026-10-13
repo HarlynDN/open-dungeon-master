@@ -12,7 +12,7 @@ import { describeContentEntry } from "../help/index.ts";
 import { spellStarterText } from "./spell-ui-presentations.ts";
 
 export const REFERENCE_NOTICES = { desk: "The desk could not answer that." } as const;
-type ReferenceRow = { name: string; source: string; slug?: string; documentSlug?: string; data: Record<string, unknown> };
+type ReferenceRow = { display?: { locale: AppLocale; source: string; text: string }; name: string; source: string; slug?: string; documentSlug?: string; data: Record<string, unknown> };
 const owned = (row: ReferenceRow) => row.source !== "homebrew" && ["wotc-srd", "odm-expanded"].includes(row.documentSlug ?? "");
 
 export function referenceRowName(kind: string, row: ReferenceRow, locale: AppLocale): string {
@@ -31,6 +31,7 @@ export function referenceRowName(kind: string, row: ReferenceRow, locale: AppLoc
 export function referenceRowDescription(kind: string, row: ReferenceRow, locale: AppLocale): string | null {
   const source = describeContentEntry(row.data);
   if (!source || !owned(row) || locale === "en") return source;
+  if (row.display?.locale === locale && row.display.source === source) return row.display.text;
   if (kind === "feats") return nativeFeatHelp(row.name, source, locale) ?? source;
   if (kind === "spells") return spellStarterText(source, locale);
   return source;
