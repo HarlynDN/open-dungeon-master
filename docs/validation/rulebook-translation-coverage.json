@@ -3705,6 +3705,11 @@
       "sourceHash": "4aa94ed3b39c3579cf393122ab905926f6d5ea8d64faca4fd15e9dd04547f62c"
     },
     {
+      "id": "planetar-angel",
+      "kind": "monster",
+      "sourceHash": "ad0c6883fc3ee71d33cb146a3cdfe40d60215d7f4a296a8ee43d15b1cc41df3e"
+    },
+    {
       "id": "plesiosaurus-dinosaur",
       "kind": "monster",
       "sourceHash": "cc4eef3a9d57993d98997d73ebbb2ea53cfd806107000dd852278c4a5545cfae"

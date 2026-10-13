@@ -468,6 +468,7 @@ export const ZH_CN_GLOSSARY = [
   {"id":"monster.couatl","source":"Couatl","preferred":"羽蛇","scope":"monster"},
   {"id":"monster.unicorn","source":"Unicorn","preferred":"独角兽","scope":"monster"},
   {"id":"monster.deva","source":"Deva","preferred":"天神使徒","scope":"monster"},
+  {"id":"monster.planetar","source":"Planetar","preferred":"异界神侍","scope":"monster"},
   {"id":"monster.goblin","source":"Goblin","preferred":"哥布林","scope":"monster","aliases":["地精"]},
   {"id":"monster.bugbear","source":"Bugbear","preferred":"熊地精","scope":"monster"},
   {"id":"monster.hobgoblin","source":"Hobgoblin","preferred":"大地精","scope":"monster"},
