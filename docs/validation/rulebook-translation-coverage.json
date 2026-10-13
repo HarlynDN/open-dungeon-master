@@ -3385,6 +3385,11 @@
       "sourceHash": "35dba07f0d14b79fc99e0a48302b687f672829c6717b047501b07d6f3d7538eb"
     },
     {
+      "id": "imp-devil",
+      "kind": "monster",
+      "sourceHash": "bec9c0086665f4e60dfbcba2d958f5a9bf899af24e0ad7fa6d47d8e754d74c7f"
+    },
+    {
       "id": "invisible-stalker",
       "kind": "monster",
       "sourceHash": "f462369688028087842c92481ac2eb2fe18a1b16c0546f91741f4ab02a270d02"
@@ -3483,6 +3488,11 @@
       "id": "pseudodragon",
       "kind": "monster",
       "sourceHash": "59d7f1d40645987606faa7898945683a80c9c6e9a40237e39f68d692bd1e6a2d"
+    },
+    {
+      "id": "quasit-demon",
+      "kind": "monster",
+      "sourceHash": "e24363625a824e146fe6550980a4d95e25233d31c5ac7bbc5432991f15e152a2"
     },
     {
       "id": "red-dragon-wyrmling-chromatic",
