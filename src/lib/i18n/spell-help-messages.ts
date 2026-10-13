@@ -129,5 +129,105 @@ export const SPELL_HELP_MESSAGES = defineMessages({
   "spellHelp.native.thunderwave": {
     "en": "A wave of thunderous force sweeps out from you. Each creature in a 15-foot cube originating from you must make a Constitution saving throw. On a failed save, a creature takes 2d8 thunder damage and is pushed 10 feet away from you. On a successful save, the creature takes half as much damage and isn't pushed.\n\nIn addition, unsecured objects that are completely within the area of effect are automatically pushed 10 feet away from you by the spell's effect, and the spell emits a thunderous boom audible out to 300 feet.\n\n**At Higher Levels.** When you cast this spell using a spell slot of 2nd level or higher, the damage increases by 1d8 for each slot level above 1st.",
     "zh-CN": "一股雷鸣般的冲击力从你身上向外扫出。以你为起点、边长 15 英尺的立方体内，每个生物都必须进行体质豁免。豁免失败时，生物受到 2d8 点雷鸣伤害，并被推离你 10 英尺；豁免成功时，受到一半伤害，且不会被推动。\n\n此外，完全位于效果区域内且未被固定的物体，会自动被推离你 10 英尺。此法术还会发出雷鸣般的巨响，在 300 英尺外都能听见。\n\n**升环施法。** 当你使用二环或更高环阶的法术位施放此法术时，法术位每比一环高一环，伤害便增加 1d8。"
+  },
+  "spellHelp.native.acid-splash": {
+    "en": "You hurl a bubble of acid. Choose one creature you can see within range, or choose two creatures you can see within range that are within 5 feet of each other. A target must succeed on a Dexterity saving throw or take 1d6 acid damage.\n\nThis spell's damage increases by 1d6 when you reach 5th level (2d6), 11th level (3d6), and 17th level (4d6).",
+    "zh-CN": "你掷出一团酸液。选择施法距离内一个能看见的生物，或选择两个你能看见且彼此相距不超过 5 英尺的生物。目标必须成功通过一次敏捷豁免，否则受到 1d6 点强酸伤害。\n\n此法术的伤害在你达到 5 级时增加 1d6（2d6），11 级时增加至 3d6，17 级时增加至 4d6。"
+  },
+  "spellHelp.native.chill-touch": {
+    "en": "You create a ghostly, skeletal hand in the space of a creature within range. Make a ranged spell attack against the creature to assail it with the chill of the grave. On a hit, the target takes 1d8 necrotic damage, and it can't regain hit points until the start of your next turn. Until then, the hand clings to the target.\n\nIf you hit an undead target, it also has disadvantage on attack rolls against you until the end of your next turn.\n\nThis spell's damage increases by 1d8 when you reach 5th level (2d8), 11th level (3d8), and 17th level (4d8).",
+    "zh-CN": "你在施法距离内一个生物所在的位置创造一只幽灵般的骷髅手。对该生物进行一次远程法术攻击，以墓穴的寒意侵袭它。命中时，目标受到 1d8 点黯蚀伤害，并且直到你的下一回合开始前都不能恢复生命值。在此之前，骷髅手一直附着在目标身上。\n\n如果命中的是不死生物，它对你的攻击检定还会具有劣势，持续到你的下一回合结束。\n\n此法术的伤害在你达到 5 级时增加 1d8（2d8），11 级时增加至 3d8，17 级时增加至 4d8。"
+  },
+  "spellHelp.native.dancing-lights": {
+    "en": "You create up to four torch-sized lights within range, making them appear as torches, lanterns, or glowing orbs that hover in the air for the duration. You can also combine the four lights into one glowing vaguely humanoid form of Medium size. Whichever form you choose, each light sheds dim light in a 10-foot radius.\n\nAs a bonus action on your turn, you can move the lights up to 60 feet to a new spot within range. A light must be within 20 feet of another light created by this spell, and a light winks out if it exceeds the spell's range.",
+    "zh-CN": "你在施法距离内创造至多 4 个火把大小的光源，使其呈现为火把、提灯或发光球体，并在法术持续时间内悬浮于空中。你也可以将这 4 个光源组合成一个大致呈类人形态的中型发光形体。无论选择何种形态，每个光源都会在 10 英尺半径内发出微光。\n\n在你的回合，你可以用一个附赠动作，将光源移动至多 60 英尺，到达施法距离内的新位置。每个光源都必须位于此法术创造的另一个光源周围 20 英尺以内；超出施法距离的光源会熄灭。"
+  },
+  "spellHelp.native.eldritch-blast": {
+    "en": "A beam of crackling energy streaks toward a creature within range. Make a ranged spell attack against the target. On a hit, the target takes 1d10 force damage.\n\nThe spell creates more than one beam when you reach higher levels: two beams at 5th level, three beams at 11th level, and four beams at 17th level. You can direct the beams at the same target or at different ones. Make a separate attack roll for each beam.",
+    "zh-CN": "一道噼啪作响的能量束射向施法距离内的一个生物。对目标进行一次远程法术攻击。命中时，目标受到 1d10 点力场伤害。\n\n达到更高等级后，此法术会创造多道能量束：5 级时为 2 道，11 级时为 3 道，17 级时为 4 道。你可以让它们攻击同一目标或不同目标，每道能量束分别进行攻击检定。"
+  },
+  "spellHelp.native.message": {
+    "en": "You point your finger toward a creature within range and whisper a message. The target (and only the target) hears the message and can reply in a whisper that only you can hear.\n\nYou can cast this spell through solid objects if you are familiar with the target and know it is beyond the barrier. Magical silence, 1 foot of stone, 1 inch of common metal, a thin sheet of lead, or 3 feet of wood blocks the spell. The spell doesn't have to follow a straight line and can travel freely around corners or through openings.",
+    "zh-CN": "你用手指指向施法距离内的一个生物，低声传递一条讯息。只有目标能听见，并且它可以低声回复，回复只有你能听见。\n\n如果你熟悉目标，并知道它位于障碍物另一侧，就可以隔着实体物体施放此法术。魔法造成的寂静、1 英尺厚的石头、1 英寸厚的普通金属、一层薄铅板或 3 英尺厚的木材会阻挡法术。讯息不必沿直线传递，可以自由绕过转角或穿过开口。"
+  },
+  "spellHelp.native.minor-illusion": {
+    "en": "You create a sound or an image of an object within range that lasts for the duration. The illusion also ends if you dismiss it as an action or cast this spell again.\n\nIf you create a sound, its volume can range from a whisper to a scream. It can be your voice, someone else's voice, a lion's roar, a beating of drums, or any other sound you choose. The sound continues unabated throughout the duration, or you can make discrete sounds at different times before the spell ends.\n\nIf you create an image of an object-such as a chair, muddy footprints, or a small chest-it must be no larger than a 5-foot cube. The image can't create sound, light, smell, or any other sensory effect. Physical interaction with the image reveals it to be an illusion, because things can pass through it.\n\nIf a creature uses its action to examine the sound or image, the creature can determine that it is an illusion with a successful Intelligence (Investigation) check against your spell save DC. If a creature discerns the illusion for what it is, the illusion becomes faint to the creature.",
+    "zh-CN": "你在施法距离内创造一个声音或一个物体的影像，在法术持续时间内存在。你以一个动作解除幻象或再次施放此法术时，幻象也会结束。\n\n创造声音时，其音量可以从耳语到尖叫。声音可以是你或他人的嗓音、狮吼、鼓声或其他你选择的声音。它可以在整个持续时间内连续响起，也可以在法术结束前的不同时刻分别发声。\n\n创造物体影像时，例如椅子、泥泞脚印或小箱子，其尺寸不能超过边长 5 英尺的立方体。影像不能产生声音、光、气味或其他感官效果。与影像发生实体接触会暴露它是幻象，因为物体可以穿过它。\n\n一个生物可以用一个动作检查声音或影像，并以你的法术豁免 DC 为难度进行智力（调查）检定；成功便能识破幻象。识破幻象的生物会觉得幻象变得模糊微弱。"
+  },
+  "spellHelp.native.produce-flame": {
+    "en": "A flickering flame appears in your hand. The flame remains there for the duration and harms neither you nor your equipment. The flame sheds bright light in a 10-foot radius and dim light for an additional 10 feet. The spell ends if you dismiss it as an action or if you cast it again.\n\nYou can also attack with the flame, although doing so ends the spell. When you cast this spell, or as an action on a later turn, you can hurl the flame at a creature within 30 feet of you. Make a ranged spell attack. On a hit, the target takes 1d8 fire damage.\n\nThis spell's damage increases by 1d8 when you reach 5th level (2d8), 11th level (3d8), and 17th level (4d8).",
+    "zh-CN": "一团摇曳的火焰出现在你手中，在法术持续时间内存在，不会伤害你或你的装备。火焰在 10 英尺半径内发出明亮光照，并在其外侧另一个 10 英尺范围内发出微光。你以一个动作解除法术或再次施放它时，法术结束。\n\n你也可以用火焰攻击，但这样会结束法术。施放此法术时，或在之后的回合用一个动作，你可以将火焰掷向周围 30 英尺内的一个生物。进行一次远程法术攻击；命中时，目标受到 1d8 点火焰伤害。\n\n此法术的伤害在你达到 5 级时增加 1d8（2d8），11 级时增加至 3d8，17 级时增加至 4d8。"
+  },
+  "spellHelp.native.shillelagh": {
+    "en": "The wood of a club or quarterstaff you are holding is imbued with nature's power. For the duration, you can use your spellcasting ability instead of Strength for the attack and damage rolls of melee attacks using that weapon, and the weapon's damage die becomes a d8. The weapon also becomes magical, if it isn't already. The spell ends if you cast it again or if you let go of the weapon.",
+    "zh-CN": "你持握的一根木棒或长棍的木材被注入自然之力。在法术持续时间内，使用该武器进行近战攻击时，你可以用施法属性替代力量，计算攻击检定和伤害掷骰；武器的伤害骰变为 1d8。如果武器原本不是魔法武器，它也会成为魔法武器。你再次施放此法术或松开武器时，法术结束。"
+  },
+  "spellHelp.native.spare-the-dying": {
+    "en": "You touch a living creature that has 0 hit points. The creature becomes stable. This spell has no effect on undead or constructs.",
+    "zh-CN": "你触碰一个生命值为 0 的活着的生物，使其伤势稳定。此法术对不死生物和构装体无效。"
+  },
+  "spellHelp.native.true-strike": {
+    "en": "You extend your hand and point a finger at a target in range. Your magic grants you a brief insight into the target's defenses. On your next turn, you gain advantage on your first attack roll against the target, provided that this spell hasn't ended.",
+    "zh-CN": "你伸出手，用手指指向施法距离内的一个目标。魔法使你短暂洞悉目标的防御。只要此法术尚未结束，你在下一回合对该目标进行的第一次攻击检定便具有优势。"
+  },
+  "spellHelp.native.vicious-mockery": {
+    "en": "You unleash a string of insults laced with subtle enchantments at a creature you can see within range. If the target can hear you (though it need not understand you), it must succeed on a Wisdom saving throw or take 1d4 psychic damage and have disadvantage on the next attack roll it makes before the end of its next turn.\n\nThis spell's damage increases by 1d4 when you reach 5th level (2d4), 11th level (3d4), and 17th level (4d4).",
+    "zh-CN": "你对施法距离内一个能看见的生物发出一连串暗藏魔法的辱骂。如果目标能听见你，即使不理解你的话，也必须成功通过一次感知豁免，否则受到 1d4 点心灵伤害，并在它的下一回合结束前进行的下一次攻击检定中具有劣势。\n\n此法术的伤害在你达到 5 级时增加 1d4（2d4），11 级时增加至 3d4，17 级时增加至 4d4。"
+  },
+  "spellHelp.native.alarm": {
+    "en": "You set an alarm against unwanted intrusion. Choose a door, a window, or an area within range that is no larger than a 20-foot cube. Until the spell ends, an alarm alerts you whenever a Tiny or larger creature touches or enters the warded area. When you cast the spell, you can designate creatures that won't set off the alarm. You also choose whether the alarm is mental or audible.\n\nA mental alarm alerts you with a ping in your mind if you are within 1 mile of the warded area. This ping awakens you if you are sleeping.\n\nAn audible alarm produces the sound of a hand bell for 10 seconds within 60 feet.",
+    "zh-CN": "你设置一道警报，防范不受欢迎的闯入者。选择施法距离内的一扇门、一扇窗，或一个尺寸不超过边长 20 英尺立方体的区域。法术结束前，只要微型或更大的生物触碰或进入受保护区域，警报就会提醒你。施法时，你可以指定不会触发警报的生物，并选择心灵警报或声音警报。\n\n如果你位于受保护区域周围 1 英里以内，心灵警报会在你脑海中响起提示。熟睡时，这个提示也会唤醒你。\n\n声音警报会发出手铃声，持续 10 秒，周围 60 英尺内都能听见。"
+  },
+  "spellHelp.native.color-spray": {
+    "en": "A dazzling array of flashing, colored light springs from your hand. Roll 6d10; the total is how many hit points of creatures this spell can effect. Creatures in a 15-foot cone originating from you are affected in ascending order of their current hit points (ignoring unconscious creatures and creatures that can't see).\n\nStarting with the creature that has the lowest current hit points, each creature affected by this spell is blinded until the end of your next turn. Subtract each creature's hit points from the total before moving on to the creature with the next lowest hit points. A creature's hit points must be equal to or less than the remaining total for that creature to be affected.\n\n**At Higher Levels.** When you cast this spell using a spell slot of 2nd level or higher, roll an additional 2d10 for each slot level above 1st.",
+    "zh-CN": "耀眼的彩色闪光从你手中迸发。掷 6d10，结果总和决定此法术可以影响的生物生命值总量。以你为起点的 15 英尺锥形区域内，生物按当前生命值从低到高依次受到影响，忽略已经失去意识或无法看见的生物。\n\n从当前生命值最低的生物开始，每个受影响的生物都目盲，直到你的下一回合结束。影响一个生物后，从剩余总量中减去它的生命值，再考虑生命值次低的生物。一个生物的生命值必须不超过剩余总量，才能受到影响。\n\n**升环施法。** 当你使用二环或更高环阶的法术位施放此法术时，法术位每比一环高一环，就额外掷 2d10。"
+  },
+  "spellHelp.native.comprehend-languages": {
+    "en": "For the duration, you understand the literal meaning of any spoken language that you hear. You also understand any written language that you see, but you must be touching the surface on which the words are written. It takes about 1 minute to read one page of text.\n\nThis spell doesn't decode secret messages in a text or a glyph, such as an arcane sigil, that isn't part of a written language.",
+    "zh-CN": "在法术持续时间内，你能理解听到的任何口语的字面含义。你也能理解看见的任何书面语言，但必须触碰写有文字的表面。阅读一页文字大约需要 1 分钟。\n\n此法术不能破解文字中的秘密讯息，也不能解读不属于书面语言的符文，例如奥术印记。"
+  },
+  "spellHelp.native.create-or-destroy-water": {
+    "en": "You either create or destroy water.\n\n***Create Water***. You create up to 10 gallons of clean water within range in an open container. Alternatively, the water falls as rain in a 30-foot cube within range, extinguishing exposed flames in the area.\n\n***Destroy Water***. You destroy up to 10 gallons of water in an open container within range. Alternatively, you destroy fog in a 30-foot cube within range.\n\n**At Higher Levels.** When you cast this spell using a spell slot of 2nd level or higher, you create or destroy 10 additional gallons of water, or the size of the cube increases by 5 feet, for each slot level above 1st.",
+    "zh-CN": "你可以创造或销毁水。\n\n***造水。*** 你在施法距离内一个敞开的容器中创造至多 10 加仑干净的水。也可以让水以雨的形式降在施法距离内一个边长 30 英尺的立方体区域中，熄灭区域内暴露的火焰。\n\n***销水。*** 你销毁施法距离内一个敞开的容器中至多 10 加仑的水。也可以消除施法距离内一个边长 30 英尺的立方体区域中的雾。\n\n**升环施法。** 当你使用二环或更高环阶的法术位施放此法术时，法术位每比一环高一环，创造或销毁的水便增加 10 加仑，或立方体的边长增加 5 英尺。"
+  },
+  "spellHelp.native.detect-evil-and-good": {
+    "en": "For the duration, you know if there is an aberration, celestial, elemental, fey, fiend, or undead within 30 feet of you, as well as where the creature is located. Similarly, you know if there is a place or object within 30 feet of you that has been magically consecrated or desecrated.\n\nThe spell can penetrate most barriers, but it is blocked by 1 foot of stone, 1 inch of common metal, a thin sheet of lead, or 3 feet of wood or dirt.",
+    "zh-CN": "在法术持续时间内，你能知道周围 30 英尺内是否存在异怪、天界生物、元素生物、精类、邪魔或不死生物，以及它们的位置。同样，你能知道周围 30 英尺内是否存在被魔法祝圣或亵渎的地点或物体。\n\n此法术能穿透大多数障碍，但会被 1 英尺厚的石头、1 英寸厚的普通金属、一层薄铅板，或 3 英尺厚的木材或泥土阻挡。"
+  },
+  "spellHelp.native.detect-poison-and-disease": {
+    "en": "For the duration, you can sense the presence and location of poisons, poisonous creatures, and diseases within 30 feet of you. You also identify the kind of poison, poisonous creature, or disease in each case.\n\nThe spell can penetrate most barriers, but it is blocked by 1 foot of stone, 1 inch of common metal, a thin sheet of lead, or 3 feet of wood or dirt.",
+    "zh-CN": "在法术持续时间内，你能感知周围 30 英尺内的毒素、有毒生物和疾病是否存在，以及它们的位置。你还能辨认每种毒素、有毒生物或疾病的种类。\n\n此法术能穿透大多数障碍，但会被 1 英尺厚的石头、1 英寸厚的普通金属、一层薄铅板，或 3 英尺厚的木材或泥土阻挡。"
+  },
+  "spellHelp.native.divine-favor": {
+    "en": "Your prayer empowers you with divine radiance. Until the spell ends, your weapon attacks deal an extra 1d4 radiant damage on a hit.",
+    "zh-CN": "你的祈祷使你获得神圣光辉的力量。法术结束前，你的武器攻击命中时额外造成 1d4 点光耀伤害。"
+  },
+  "spellHelp.native.expeditious-retreat": {
+    "en": "This spell allows you to move at an incredible pace. When you cast this spell, and then as a bonus action on each of your turns until the spell ends, you can take the Dash action.",
+    "zh-CN": "此法术使你能以惊人的速度移动。施放此法术时，以及法术结束前你的每个回合，你都可以用一个附赠动作执行疾走动作。"
+  },
+  "spellHelp.native.false-life": {
+    "en": "Bolstering yourself with a necromantic facsimile of life, you gain 1d4 + 4 temporary hit points for the duration.\n\n**At Higher Levels.** When you cast this spell using a spell slot of 2nd level or higher, you gain 5 additional temporary hit points for each slot level above 1st.",
+    "zh-CN": "你以死灵魔法模拟生命，强化自身，获得 1d4 + 4 点临时生命值，在法术持续时间内有效。\n\n**升环施法。** 当你使用二环或更高环阶的法术位施放此法术时，法术位每比一环高一环，获得的临时生命值便增加 5 点。"
+  },
+  "spellHelp.native.floating-disk": {
+    "en": "This spell creates a circular, horizontal plane of force, 3 feet in diameter and 1 inch thick, that floats 3 feet above the ground in an unoccupied space of your choice that you can see within range. The disk remains for the duration, and can hold up to 500 pounds. If more weight is placed on it, the spell ends, and everything on the disk falls to the ground.\n\nThe disk is immobile while you are within 20 feet of it. If you move more than 20 feet away from it, the disk follows you so that it remains within 20 feet of you. It can move across uneven terrain, up or down stairs, slopes and the like, but it can't cross an elevation change of 10 feet or more. For example, the disk can't move across a 10-foot deep pit, nor could it leave such a pit if it was created at the bottom.\n\nIf you move more than 100 feet from the disk (typically because it can't move around an obstacle to follow you), the spell ends.",
+    "zh-CN": "此法术在施法距离内一个你能看见且未被占据的位置，创造一个水平的圆形力场盘。圆盘直径 3 英尺、厚 1 英寸，悬浮在离地 3 英尺的高度。它在法术持续时间内存在，能承载至多 500 磅。如果放置的重量超过上限，法术结束，盘上的一切都会掉到地上。\n\n你位于圆盘周围 20 英尺以内时，它保持不动。你离开超过 20 英尺后，它会跟随你，使自身保持在你周围 20 英尺以内。圆盘可以越过不平整的地面、上下楼梯和斜坡等，但不能跨越 10 英尺或更大的高度差。例如，它不能越过一个深 10 英尺的坑；如果在坑底被创造出来，也不能离开这个坑。\n\n你距离圆盘超过 100 英尺时，法术结束。这通常发生在圆盘无法绕过障碍物跟随你时。"
+  },
+  "spellHelp.native.fog-cloud": {
+    "en": "You create a 20-foot radius sphere of fog centered on a point within range. The sphere spreads around corners, and its area is heavily obscured. It lasts for the duration or until a wind of moderate or greater speed (at least 10 miles per hour) disperses it.\n\n**At Higher Levels.** When you cast this spell using a spell slot of 2nd level or higher, the radius of the fog increases by 20 feet for each slot level above 1st.",
+    "zh-CN": "你以施法距离内的一点为中心，创造一个半径 20 英尺的球形雾区。雾会绕过转角扩散，其区域属于重度遮蔽。雾在法术持续时间内存在，或直到被中等或更强的风吹散，即风速至少每小时 10 英里。\n\n**升环施法。** 当你使用二环或更高环阶的法术位施放此法术时，法术位每比一环高一环，雾区半径便增加 20 英尺。"
+  },
+  "spellHelp.native.grease": {
+    "en": "Slick grease covers the ground in a 10-foot square centered on a point within range and turns it into difficult terrain for the duration.\n\nWhen the grease appears, each creature standing in its area must succeed on a Dexterity saving throw or fall prone. A creature that enters the area or ends its turn there must also succeed on a Dexterity saving throw or fall prone.",
+    "zh-CN": "以施法距离内一点为中心、边长 10 英尺的正方形地面被滑腻的油脂覆盖，在法术持续时间内成为困难地形。\n\n油脂出现时，站在区域内的每个生物都必须成功通过一次敏捷豁免，否则倒地。进入区域或在区域内结束回合的生物，也必须成功通过一次敏捷豁免，否则倒地。"
+  },
+  "spellHelp.native.guiding-bolt": {
+    "en": "A flash of light streaks toward a creature of your choice within range. Make a ranged spell attack against the target. On a hit, the target takes 4d6 radiant damage, and the next attack roll made against this target before the end of your next turn has advantage, thanks to the mystical dim light glittering on the target until then.\n\n**At Higher Levels.** When you cast this spell using a spell slot of 2nd level or higher, the damage increases by 1d6 for each slot level above 1st.",
+    "zh-CN": "一道闪光射向施法距离内你选定的一个生物。对目标进行一次远程法术攻击。命中时，目标受到 4d6 点光耀伤害；目标身上闪烁的神秘微光还会使你的下一回合结束前，对它进行的下一次攻击检定具有优势。\n\n**升环施法。** 当你使用二环或更高环阶的法术位施放此法术时，法术位每比一环高一环，伤害便增加 1d6。"
+  },
+  "spellHelp.native.hellish-rebuke": {
+    "en": "You point your finger, and the creature that damaged you is momentarily surrounded by hellish flames. The creature must make a Dexterity saving throw. It takes 2d10 fire damage on a failed save, or half as much damage on a successful one.\n\n**At Higher Levels.** When you cast this spell using a spell slot of 2nd level or higher, the damage increases by 1d10 for each slot level above 1st.",
+    "zh-CN": "你伸出手指，伤害你的生物瞬间被地狱烈焰包围。该生物必须进行敏捷豁免。豁免失败时受到 2d10 点火焰伤害；豁免成功则受到一半伤害。\n\n**升环施法。** 当你使用二环或更高环阶的法术位施放此法术时，法术位每比一环高一环，伤害便增加 1d10。"
   }
 });
