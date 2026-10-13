@@ -1,6 +1,6 @@
 "use client";
 
-import { referenceRowDescription } from "@/lib/i18n/reference-ui-presentations";
+import { referenceRowDescription, referenceRowName } from "@/lib/i18n/reference-ui-presentations";
 
 import { spellSummaryView } from "@/lib/i18n/spell-ui-presentations";
 import { nativeItemHelp } from "@/lib/i18n/magic-item-material-presentations";
@@ -48,7 +48,7 @@ export function ContentPick({
   const { locale, t } = useLocale();
   // Shared deferred editors without content resources keep their source names.
   const hasNames = locale !== "en" && Object.keys(catalogFor(locale, "equipmentName.")).length > 0;
-  const displayName = (entry: PickerEntry) => hasNames && ["items", "spells", "feats"].includes(kind) ? pickerName(kind, entry, locale) : entry.name;
+  const displayName = (entry: PickerEntry) => hasNames && ["items", "spells", "feats"].includes(kind) ? pickerName(kind, entry, locale) : (kind === "monsters" || kind === "conditions") ? referenceRowName(kind, entry, locale) : entry.name;
   const { query, setQuery, results, open, setOpen, loading, unavailable } = useContentSearch(
     kind,
     { ...extraParams, locale },

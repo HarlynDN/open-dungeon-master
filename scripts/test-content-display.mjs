@@ -93,3 +93,15 @@ const mage = fixtures.find(row => row.name === 'Mage');
 const mageView = contentDisplay('monsters', { ...mage, source: 'open5e', documentSlug: 'wotc-srd' }, 'zh-CN');
 assert.ok(mageView.display.text.includes('1d4 + 2'));
 assert.ok(!mageView.display.text.includes('**Dagger**'));
+
+const { pickerQueryParams } = await import('../src/lib/i18n/picker-requests.ts');
+for (const query of ['', 'goblin']) {
+  const raw = new URLSearchParams({ q: query, campaign: 'kept', locale: 'zh-CN' });
+  const chinese = pickerQueryParams(raw, 'zh-CN');
+  const english = pickerQueryParams(raw, 'en');
+  assert.equal(chinese.get('localized'), '1');
+  assert.equal(english.get('locale'), 'en');
+  assert.notEqual(chinese.toString(), english.toString());
+  assert.equal(chinese.get('campaign'), 'kept');
+  assert.equal(raw.get('localized'), null);
+}

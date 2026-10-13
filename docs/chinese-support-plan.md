@@ -139,6 +139,11 @@ real interaction has passed. Do not restart a static translation campaign.
   higher-level text; shared ContentPick also localizes spell summary metadata.
   All 319 bundled spells pass direct-client (no server display) regression;
   starter-summary fallback remains. Browser interaction gates remain open.
+- Shared picker requests now ask for localized display in both browse/search,
+  always keying by viewer locale (including switching back to English). This fixes
+  the previously absent server prose projection in picker results. ContentPick
+  also renders native monster/condition names via source-aware name adapters.
+  Request isolation/source-preservation regressions, lint and i18n checks passed.
 - Next: complete those help paths and inspect real content data, then remaining
   dynamic UI/material/log owners. Full-suite/build and real bilingual journey
   remain unproven; no owner was newly marked covered.

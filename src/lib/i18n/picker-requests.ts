@@ -1,10 +1,11 @@
 import type { AppLocale } from "./locales.ts";
 
-// Only alias search needs a locale. Browsing raw canonical rows can keep its
-// cache across interface-language changes; names are projected at render time.
+// Both browsing and search carry server-projected prose. Include viewer locale
+// in request/cache identity so translated results cannot outlive a language switch.
 export function pickerQueryParams(raw: URLSearchParams, locale: AppLocale): URLSearchParams {
   const params = new URLSearchParams(raw);
-  if (locale !== "en" && params.get("q")?.trim()) params.set("locale", locale);
+  params.set("locale", locale);
+  params.set("localized", "1");
   return params;
 }
 export function pickerSectionKey(kind: string, campaignId: string | null | undefined, section: string, params: URLSearchParams): string {
