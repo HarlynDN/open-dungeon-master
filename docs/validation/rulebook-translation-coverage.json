@@ -3515,6 +3515,11 @@
       "sourceHash": "b41bff5da4e20178ea18d1f61a0f683523f504646f11920a13df688f6704f863"
     },
     {
+      "id": "half-dragon-template",
+      "kind": "monster",
+      "sourceHash": "48f009d0ff1471b552ace4ac786a5a50ee99af63e501aaa63902f6079df8be9a"
+    },
+    {
       "id": "harpy",
       "kind": "monster",
       "sourceHash": "d9efc6bc14b744b129baead420f0dec4504f3756ebca7c2f17a5fdaa05ff8f50"
