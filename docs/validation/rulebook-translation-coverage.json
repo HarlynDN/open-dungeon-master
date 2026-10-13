@@ -3255,6 +3255,11 @@
       "sourceHash": "f3a1d9b13ecb3e87552db78e97f5ce171ed96d849f84710d2647aa5d965f53aa"
     },
     {
+      "id": "darkmantle",
+      "kind": "monster",
+      "sourceHash": "447df8ab419cfd448ab76ed06ce6b0dcc872b95ae4eabc872435bfa1d6c203ed"
+    },
+    {
       "id": "doppelganger",
       "kind": "monster",
       "sourceHash": "3f129d60c6994a332ebfb983d57a92ea25b94289c8ac42b27aa2dc662f2a67b8"
@@ -3343,6 +3348,11 @@
       "id": "gold-dragon-wyrmling-metallic",
       "kind": "monster",
       "sourceHash": "6272c51cfc4a490003207bc6f98227a61b1d0edfd80cfb01a50ac6f5dbb7d7a9"
+    },
+    {
+      "id": "gorgon",
+      "kind": "monster",
+      "sourceHash": "1b09427f3d02b500fefbafcae994485af08e8581252ec0c2a12fc6f24f9c932f"
     },
     {
       "id": "gray-ooze",
@@ -3448,6 +3458,11 @@
       "id": "manticore",
       "kind": "monster",
       "sourceHash": "69ed0ab55c9148a28731186c7daccdd72886ec153089f7b04566ec77b8a4f59a"
+    },
+    {
+      "id": "medusa",
+      "kind": "monster",
+      "sourceHash": "fcadd266cc374f1fe2c72c29522593fb1fa5c637683daa7e27c855f22c2ae533"
     },
     {
       "id": "merfolk",
