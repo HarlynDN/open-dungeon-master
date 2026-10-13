@@ -212,6 +212,9 @@ const ERRATA = [
   // https://www.dndbeyond.com/sources/dnd/basic-rules-2014/adventuring
   ["adventuring", "| Normal | 300 feet | 3 miles | 18 miles | -                                                |", "| Normal | 300 feet | 3 miles | 24 miles | -                                                |"],
   ["adventuring", "| Slow   | 200 feet | 2 miles | 24 miles | Able to use stealth                              |", "| Slow   | 200 feet | 2 miles | 18 miles | Able to use stealth                              |"],
+  // Official 2014 equipment table: the conversion split 50 gp across columns.
+  // https://www.dndbeyond.com/sources/dnd/basic-rules-2014/equipment
+  ["adventuring-gear", "| Potion of healing 5          | 0 gp     | 1/2 lb.      |", "| Potion of healing            | 50 gp    | 1/2 lb.      |"],
   ["creation", "vegetable matter within\n**Range:** soft goods", "vegetable matter within range: soft goods"],
   ["contagion", "**Range:** Touch\n**Component:** V, S", "**Range:** Touch\n\n**Components:** V, S"],
 ];

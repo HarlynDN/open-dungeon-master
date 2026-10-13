@@ -11,7 +11,7 @@
       "item": 239,
       "monster": 318
     },
-    "sha256": "2a856cddb7b33c01ddb64b4e832cbd9e1e8fb7bf8bd1c4a702acb083e2ae992b"
+    "sha256": "6bfe77ada2cf84a82bf18217b2832e68fdc1271f3e0e79951b48044ae061b3bd"
   },
   "requiredPages": [
     {
@@ -113,6 +113,11 @@
       "id": "weapons",
       "kind": "rules",
       "sourceHash": "1a541a0fd1ea83f953eb6d4ede465eba960efd856190c1670abe592801a9b587"
+    },
+    {
+      "id": "adventuring-gear",
+      "kind": "rules",
+      "sourceHash": "7d7e09aef61b24034445883d685c2b63b2c697af102bf2408a444856939ef110"
     },
     {
       "id": "tools",
@@ -798,6 +803,11 @@
       "id": "zone-of-truth",
       "kind": "spell",
       "sourceHash": "efe4949e33fe428875670def37a34ed8ed07d1944ec04a5f4b697be32ec41e3a"
+    },
+    {
+      "id": "traps",
+      "kind": "rules",
+      "sourceHash": "3235d098b37944d2d0ae80928d91db3b9809dbbf319538e845817de93d512cd6"
     },
     {
       "id": "diseases",

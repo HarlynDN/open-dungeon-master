@@ -239,6 +239,11 @@ try {
       ["Fast", "30 miles"], ["Normal", "24 miles"], ["Slow", "18 miles"],
     ]);
   });
+  await test("healing potion keeps the official 2014 equipment price and weight", () => {
+    const table = parseBook(rulebookPage("adventuring-gear").page.md).find(block => block.kind === "table" && block.head[0] === "Item");
+    assert.deepEqual(table.rows.find(row => row[0] === "Potion of healing"), ["Potion of healing", "50 gp", "1/2 lb."]);
+    assert.ok(!table.rows.some(row => row[0] === "Potion of healing 5"));
+  });
   await test("search puts the rule itself first", () => {
     assert.deepEqual([top("grapple").page, top("grapple").at], ["combat", "grappling"]);
     assert.deepEqual([top("opportunity attack").page, top("opportunity attack").at], ["combat", "opportunity-attacks"]);
