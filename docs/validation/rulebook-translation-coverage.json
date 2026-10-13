@@ -3625,6 +3625,11 @@
       "sourceHash": "3a792836476da137cde82790928bf450ad2a6f0ca0a87b3e58ebc4916f1ff5f5"
     },
     {
+      "id": "night-hag",
+      "kind": "monster",
+      "sourceHash": "7b8ad857a804156639cf3883c5d0d63695444ee7be730de3399dc72f123e1285"
+    },
+    {
       "id": "nightmare",
       "kind": "monster",
       "sourceHash": "f239983e80a6c6ae95d969b4a3da22f504939a21e6e865b49161227791dce46e"
