@@ -66,7 +66,7 @@ report or release gate and does not include a SRD 5.2 rules migration.
 | Player system logs | Localized structured combat/audit display, party item/coin/XP logs, account facts and kickoff notices; English model/tool semantics stay separate | Other native player-log templates and final history/save/resume audit |
 | Resource delivery | UI/content/help scopes and independent retryable lazy help; anonymous bilingual switch/reload, authenticated character/campaign entry and viewer-English/story-Chinese separation observed | Complete authenticated journey and lazy/cache timing; hydrated/network totals and large route JS payload remain unverified |
 | Local Chinese TTS | Implementation and bounded CPU delivery/outage evidence retained in [the runtime record](validation/chinese-tts-runtime.json) | Chinese voice quality rejected by user; further voice work is deferred, not passed, and is not a text-milestone gate |
-| Full native rulebook | Reader chrome localized; **661/933 complete Chinese pages** now render via a server-generated display projection, including all 319 cantrip through ninth-level spell pages, all 239 magic-item pages, all thirty-six rules pages, all nine race pages and all twelve class pages and all forty chromatic/metallic dragon pages and all six giant pages, with complete headers and reused bodies; original English corpus retained; 319 spell and 239 magic-item bodies are available for further reuse | Remaining 272 monster pages; complete Chinese corpus coverage, authenticated browser search/navigation and English reading regression |
+| Full native rulebook | Reader chrome localized; **664/933 complete Chinese pages** now render via a server-generated display projection, including all 319 cantrip through ninth-level spell pages, all 239 magic-item pages, all thirty-six rules pages, all nine race pages and all twelve class pages and all forty chromatic/metallic dragon pages and all six giant pages and three animated-object pages, with complete headers and reused bodies; original English corpus retained; 319 spell and 239 magic-item bodies are available for further reuse | Remaining 269 monster pages; complete Chinese corpus coverage, authenticated browser search/navigation and English reading regression |
 | Final text flow | Recorded Chinese exploration/social/utility and combat/slot/correction acceptance on Codex | Complete Chinese text journey, rulebook reading/search and English regression; full tests/lint/build, then pause |
 
 ## Execution adjustment (2026-10-13)
@@ -86,21 +86,20 @@ real interaction has passed. Do not restart a static translation campaign.
 
 ## Next delivery unit and interruption checkpoint
 
-- Added all six giant stat blocks (cloud, fire, frost, hill, stone and storm),
-  now 661/933 pages and 46/318 monsters. Preserved cloud-giant alignment odds,
-  innate spell lists and per-spell uses, stone-giant knockdown/catching reaction,
-  and storm-giant lightning damage/area/recharge. Linked spell names match the
-  existing spell glossary; no missing source spell DC was invented.
-- Added all six monster identities to the shared glossary. 5etools candidates
-  agree with 云巨人/火巨人/霜巨人/山丘巨人/石巨人/风暴巨人; candidate provenance
-  remains separate from the repository's authoritative SRD 5.1 mechanics.
-- All delivered monster numeric/table, bilingual component rendering, cached
-  locale switch, source preservation and alias checks passed. AST/catalog/resources
-  and terminology regression passed (303 entries, 0 errors, 389 context warnings).
-- Next: remaining monster families (272 pages), with game-card/help prose reuse
-  and native source ownership still required. Rulebook coverage does not prove
-  game-card coverage. Final full-suite/build and real bilingual journey remain
-  unproven.
+- Added all three animated objects: 664/933 pages, 49/318 monsters. Preserved
+  antimagic/dispel conditions, immunities, hover/blindsight limits, damage transfer,
+  and smothering grapple/suffocation/turn-start damage. Rejoined the armor source's
+  broken Constitution-save sentence without changing its meaning or English source.
+- Matched 5etools names to native English creature identities and adopted
+  活化盔甲/凌空剑/闷人毯, retaining 活化铠甲/飞剑/窒息地毯 as aliases. Preserved
+  the canonical title's Animated Object suffix in localized display; glossary notes
+  explicitly retain the unverified edition/review provenance of candidates.
+- Delivered monster numeric/table, bilingual rendering, English switching,
+  stale-source protection and reference identity checks passed. AST/catalog/resources
+  and terminology checks passed (306 entries, 0 errors, 389 context warnings).
+- Next: remaining monster families (269 pages), with game-card/help prose reuse
+  and native source ownership still required. Final full-suite/build and real
+  bilingual journey remain unproven.
 - Native dynamic UI/material/log ownership remains pending in the UI manifest;
   audit helpers with their actual consumers before the final bilingual journey.
 

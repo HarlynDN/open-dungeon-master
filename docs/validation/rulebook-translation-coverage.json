@@ -3165,6 +3165,11 @@
       "sourceHash": "f5363d2e56c731887a834307e587af8bd53c409774c79211d669f83ac9a059e6"
     },
     {
+      "id": "animated-armor-animated-object-animated-object",
+      "kind": "monster",
+      "sourceHash": "132bb310cba20859b059d4c8af07d02155390924c59f4bc6206269e32eb62b38"
+    },
+    {
       "id": "black-dragon-wyrmling-chromatic",
       "kind": "monster",
       "sourceHash": "dbe64296f8f1b327afb1fe238c140609a137694f3c25fa064d57efd049d72778"
@@ -3200,6 +3205,11 @@
       "sourceHash": "ab00dbaf6e179e4b85176aa826e42bbb22f1b65560a796434f369aca1669ec03"
     },
     {
+      "id": "flying-sword-animated-object-animated-object",
+      "kind": "monster",
+      "sourceHash": "aa2cc6d3302785f40a90a4839a20667f0a44275ff61fc857e3bdfef3c1f24781"
+    },
+    {
       "id": "frost-giant-giant",
       "kind": "monster",
       "sourceHash": "da25d9eb254017fafad19dde454c82eddf15f81dd5f046cfff16be3dcd87b123"
@@ -3223,6 +3233,11 @@
       "id": "red-dragon-wyrmling-chromatic",
       "kind": "monster",
       "sourceHash": "2f4f619e1c26422f751739516a58d11f13d73bc12cf6d0e02b510df8f9f1abbc"
+    },
+    {
+      "id": "rug-of-smothering-animated-object-animated-object",
+      "kind": "monster",
+      "sourceHash": "988a90102edcf163fea969c64b7f5c4a89784653f133cafc9062ecdc27275043"
     },
     {
       "id": "silver-dragon-wyrmling-metallic",
