@@ -3590,6 +3590,11 @@
       "sourceHash": "28e1ee00ad5db1fcd1901210e156ed986f9a75df9f25b07df6dca7e930a6726f"
     },
     {
+      "id": "nalfeshnee-demon",
+      "kind": "monster",
+      "sourceHash": "3a792836476da137cde82790928bf450ad2a6f0ca0a87b3e58ebc4916f1ff5f5"
+    },
+    {
       "id": "nightmare",
       "kind": "monster",
       "sourceHash": "f239983e80a6c6ae95d969b4a3da22f504939a21e6e865b49161227791dce46e"

@@ -445,6 +445,7 @@ export const ZH_CN_GLOSSARY = [
   {"id":"monster.chain_devil","source":"Chain Devil","preferred":"链魔","scope":"monster"},
   {"id":"monster.ice_devil","source":"Ice Devil","preferred":"冰魔","scope":"monster"},
   {"id":"monster.marilith","source":"Marilith","preferred":"六臂蛇魔","scope":"monster"},
+  {"id":"monster.nalfeshnee","source":"Nalfeshnee","preferred":"判魂魔","scope":"monster"},
   {"id":"monster.goblin","source":"Goblin","preferred":"哥布林","scope":"monster","aliases":["地精"]},
   {"id":"monster.bugbear","source":"Bugbear","preferred":"熊地精","scope":"monster"},
   {"id":"monster.hobgoblin","source":"Hobgoblin","preferred":"大地精","scope":"monster"},
