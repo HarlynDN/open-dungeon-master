@@ -3255,6 +3255,11 @@
       "sourceHash": "da25d9eb254017fafad19dde454c82eddf15f81dd5f046cfff16be3dcd87b123"
     },
     {
+      "id": "gargoyle",
+      "kind": "monster",
+      "sourceHash": "61c27bfdeda099c413a4782afa0ec63cc3f26d32864d476bac0fc90aeb4f7df4"
+    },
+    {
       "id": "goblin",
       "kind": "monster",
       "sourceHash": "9adfb12d62ea0fb31bfe58c40136088692c823fa260f58f2546582e6d8aaa526"
@@ -3275,6 +3280,11 @@
       "sourceHash": "b8c849ddb833b64f7ed6f5025f95719a0e470ca61abfb5c4b1f70364e8239549"
     },
     {
+      "id": "harpy",
+      "kind": "monster",
+      "sourceHash": "d9efc6bc14b744b129baead420f0dec4504f3756ebca7c2f17a5fdaa05ff8f50"
+    },
+    {
       "id": "hill-giant-giant",
       "kind": "monster",
       "sourceHash": "65b45cf16b8849797a120caed75bba32c95ebd5ea89cf2ae1ab5f9f8e3d757a2"
@@ -3288,6 +3298,16 @@
       "id": "hobgoblin",
       "kind": "monster",
       "sourceHash": "010aacdf3a3e0fcae54948af0db859b2aad0529578145b0c350655657c35ceb5"
+    },
+    {
+      "id": "manticore",
+      "kind": "monster",
+      "sourceHash": "69ed0ab55c9148a28731186c7daccdd72886ec153089f7b04566ec77b8a4f59a"
+    },
+    {
+      "id": "merrow",
+      "kind": "monster",
+      "sourceHash": "db69299ef4b06a99c440e402bc95cb824c31870a4ef48f8244249782c9253a09"
     },
     {
       "id": "minotaur",
