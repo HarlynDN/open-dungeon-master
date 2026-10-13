@@ -3245,6 +3245,11 @@
       "sourceHash": "ba635c197bbac2a1a4a7de2a1f4e652a1cc025a756eef87bda1829223ec1d649"
     },
     {
+      "id": "ettercap",
+      "kind": "monster",
+      "sourceHash": "cd9363af60be6119eb3e8993dc042fe7c7e82413b2fb5d67faf3f112154a0501"
+    },
+    {
       "id": "ettin",
       "kind": "monster",
       "sourceHash": "9e67b23a6cf7790250fe3ec586ea8a99aab996ac8816bdb1247a5658514ae3c3"
@@ -3378,6 +3383,11 @@
       "id": "merrow",
       "kind": "monster",
       "sourceHash": "db69299ef4b06a99c440e402bc95cb824c31870a4ef48f8244249782c9253a09"
+    },
+    {
+      "id": "mimic",
+      "kind": "monster",
+      "sourceHash": "5f253d3e7f83784bf0fdeba2fd4aa9b2100e64a50ad5b62435be7848ab37faa1"
     },
     {
       "id": "minotaur",

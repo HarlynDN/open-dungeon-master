@@ -66,7 +66,7 @@ report or release gate and does not include a SRD 5.2 rules migration.
 | Player system logs | Localized structured combat/audit display, party item/coin/XP logs, account facts and kickoff notices; English model/tool semantics stay separate | Other native player-log templates and final history/save/resume audit |
 | Resource delivery | UI/content/help scopes and independent retryable lazy help; anonymous bilingual switch/reload, authenticated character/campaign entry and viewer-English/story-Chinese separation observed | Complete authenticated journey and lazy/cache timing; hydrated/network totals and large route JS payload remain unverified |
 | Local Chinese TTS | Implementation and bounded CPU delivery/outage evidence retained in [the runtime record](validation/chinese-tts-runtime.json) | Chinese voice quality rejected by user; further voice work is deferred, not passed, and is not a text-milestone gate |
-| Full native rulebook | Reader chrome localized; **835/933 complete Chinese pages** render via a server-generated display projection: all 319 spells, 239 magic items, 36 rules, 9 races, 12 classes and 220 monsters. Exact page IDs and source hashes are maintained in the coverage manifest; original English corpus retained | Remaining 98 monster pages; game-card/help prose reuse, authenticated browser search/navigation and English reading regression |
+| Full native rulebook | Reader chrome localized; **837/933 complete Chinese pages** render via a server-generated display projection: all 319 spells, 239 magic items, 36 rules, 9 races, 12 classes and 222 monsters. Exact page IDs and source hashes are maintained in the coverage manifest; original English corpus retained | Remaining 96 monster pages; game-card/help prose reuse, authenticated browser search/navigation and English reading regression |
 | Final text flow | Recorded Chinese exploration/social/utility and combat/slot/correction acceptance on Codex | Complete Chinese text journey, rulebook reading/search and English regression; full tests/lint/build, then pause |
 
 ## Execution adjustment (2026-10-13)
@@ -86,17 +86,16 @@ real interaction has passed. Do not restart a static translation campaign.
 
 ## Next delivery unit and interruption checkpoint
 
-- Added Grick, Grimlock and Phase Spider: 835/933 pages, 220/318 monster-kind
-  pages. Reviewed conditional follow-up beak attacks, nonmagical resistance,
-  shortened deafened blindsight versus total sensory loss, and bonus-action planar
-  movement with poison/paralysis. English source remains unchanged.
-- Added 3 shared names aligned with cached 5etools candidates (穴居攫怪,
-  幽邃盲族, 相位蜘蛛); edition/review provenance remains unverified. No external
-  prose imported.
+- Added Ettercap and Mimic: 837/933 pages, 222/318 monster-kind pages.
+  Reviewed unconditional bite poison damage versus poisoned-condition save,
+  Large web-target limit, web defenses, object-only adhesive, Huge grapple limit,
+  escape disadvantage and unchanged carried equipment during shapechanging.
+- Added shared names 伊特怪 and 拟身怪 aligned with cached 5etools candidates;
+  edition/review provenance remains unverified. No external prose imported.
 - Numeric/table, bilingual rendering, English switch, source refusal, identity,
-  terminology/guard and AST/catalog/resources checks passed: 459 terminology entries,
+  terminology/guard and AST/catalog/resources checks passed: 461 terminology entries,
   0 errors, 389 context warnings; UI remains 401/440.
-- Next: remaining 98 monster pages, game-card/help prose reuse and native source
+- Next: remaining 96 monster pages, game-card/help prose reuse and native source
   ownership. Final full-suite/build and real bilingual journey remain unproven.
 - Native dynamic UI/material/log ownership remains pending in the UI manifest;
   audit helpers with their actual consumers before the final bilingual journey.
