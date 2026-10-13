@@ -1,0 +1,53 @@
+{
+  "status": "partial-real-runtime-acceptance",
+  "service": {
+    "name": "Kokoro-FastAPI",
+    "version": "0.9.1-rc1",
+    "commit": "61797914e5f8da0baf1d0b97d9d0b15c66625615",
+    "source": "https://github.com/remsky/Kokoro-FastAPI",
+    "url": "http://127.0.0.1:8880",
+    "directory": "/tmp/odm-kokoro-fastapi",
+    "scope": "isolated temporary acceptance service; no system Python changes",
+    "device": "cpu",
+    "python": "3.12.14",
+    "kokoro": "0.9.4",
+    "misaki": "0.9.4",
+    "torch": "2.8.0",
+    "fastapi": "0.143.0",
+    "espeakng-loader": "0.2.4"
+  },
+  "model": {
+    "name": "Kokoro v1.0 / Kokoro-82M",
+    "sha256": "496dba118d1a58f5f3db2efc88dbdc216e0483fc89fe6e47ee1f2c53f18ad1e4",
+    "validation": "official download script verified hash"
+  },
+  "chineseSample": {
+    "voice": "zf_xiaobei",
+    "lang_code": "z",
+    "installedVoiceCount": 72,
+    "mime": "audio/wav",
+    "sampleRate": 24000,
+    "seconds": 17.5455,
+    "bytes": 842262,
+    "rms": 0.07065414651125988,
+    "file": "/tmp/odm-kokoro-chinese-sample.wav",
+    "text": "米拉施放了一环魔法飞弹。哥布林受到七点伤害，生命值剩余十二点。你掷出二十面骰，结果为十五。清晨的日光照着石桥，驿站大厅里，旅人们正低声议论神殿失踪的钟声。",
+    "listenReview": "pending"
+  },
+  "browser": {
+    "campaignLocale": "zh-CN",
+    "uiLocale": "zh-CN",
+    "actualDmReplayRequested": true,
+    "serverSynthesisCompleted": true,
+    "audioDeliveryHttpStatus": 206,
+    "screenshot": "/tmp/odm-local-chinese-tts-browser.png",
+    "boundary": "Controls and real audio delivery observed; not proof of all playback controls or listened pronunciation quality."
+  },
+  "remaining": [
+    "spoken Arabic numbers/dice/mixed names and quality review",
+    "English real speech regression",
+    "continuous chunks/first play/replay/mute/retry full browser acceptance",
+    "native playback",
+    "final bilingual journey and full tests/lint/build"
+  ]
+}

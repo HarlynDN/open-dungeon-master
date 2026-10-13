@@ -50,5 +50,27 @@ KOKORO_URL=http://127.0.0.1:8880
 应显示可理解的失败提示，文字游玩仍可继续；服务恢复后可重试。
 
 `scripts/test-tts-locales.mjs` 使用模拟音频传输检查接口、缓存、队列和控件。
-它不会证明真实音频质量、浏览器解码或实际播放成功。当前机器的默认服务地址
-尚不可达，这些真实验收项仍未完成。
+它不会证明真实音频质量、浏览器解码或实际播放成功。
+
+本轮在独立临时目录启动了真实 CPU 服务，版本、依赖和验收边界记录在
+[运行记录](../validation/chinese-tts-runtime.json)。中文样本已生成并通过音频解码、
+时长及信号检查；测试战役也成功请求并取回实际 DM 段落的中文语音。听审、
+英文回归和完整播放控制验收仍待完成。`/tmp` 服务用于隔离验收，不代表已配置
+持久生产部署，系统 Python 未修改。
+
+本轮服务使用 Python 3.12、Kokoro-FastAPI 固定提交
+`61797914e5f8da0baf1d0b97d9d0b15c66625615`（0.9.1-rc1）、PyTorch 2.8.0，
+按官方源码依赖安装，包含 `misaki[zh]`。先运行官方模型下载脚本并通过其哈希
+校验，然后在独立虚拟环境启动；将下面路径替换为实际服务目录：
+
+```sh
+env USE_GPU=false DEVICE_TYPE=cpu \
+  MODEL_DIR=/path/to/Kokoro-FastAPI/api/src/models \
+  VOICES_DIR=/path/to/Kokoro-FastAPI/api/src/voices/v1_0 \
+  WEB_PLAYER_PATH=/path/to/Kokoro-FastAPI/web \
+  .venv/bin/python -m uvicorn api.src.main:app --host 127.0.0.1 --port 8880
+```
+
+启动时载入音色不等于中文生成成功。新版音色接口可返回包含 `id` 的对象，
+项目同时支持对象和字符串列表；应核对 `zf_xiaobei` 等音色实际存在，并向
+`/v1/audio/speech` 请求中文样本确认。
