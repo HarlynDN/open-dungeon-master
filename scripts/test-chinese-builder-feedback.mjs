@@ -26,7 +26,29 @@ const text = name => builderFeedbackText(viewOf(name), "zh-CN");
 
 await test("45 frozen gate/validation results retain English, target routing, canonical sheets and every purse amount", () => {
   assert.equal(rows.length, 45);
-  assert.deepEqual(rows.map(builderUiSnapshot), before.fixtures);
+  // 9e1c73f7 fixes the builder's omitted Defense bonus. Keep the historical
+  // golden intact and permit only these reviewed AC changes, not regenerated
+  // snapshots or a blanket exclusion of AC from the English regression.
+  // These gate fixtures reuse the fighter's derived preview even when a gate
+  // overrides state (e.g. calling-style); the preview itself has Defense.
+  const defenseCorrections = new Set([
+    "identity-name", "identity-background-skill", "ancestry-language",
+    "ancestry-ability", "ancestry-skills", "ancestry-tool", "ancestry-cantrip",
+    "ancestry-feat", "ancestry-feat-picks", "ancestry-dragon", "ancestry-repeat",
+    "calling-skills", "calling-tools", "calling-subclass", "calling-style",
+    "calling-expertise", "calling-option", "calling-option-authored",
+    "abilities-missing", "abilities-standard", "abilities-point-range",
+    "abilities-point-budget", "abilities-roll", "abilities-asi",
+    "abilities-feat-picks", "gear-magic", "gear-multiple", "gear-budget",
+    "gear-kit-option", "gear-kit-slot", "valid-fighter",
+  ]);
+  const expected = structuredClone(before.fixtures);
+  for (const fixture of expected) if (defenseCorrections.delete(fixture.name)) {
+    assert.equal(fixture.result.sheet.ac, 18, fixture.name);
+    fixture.result.sheet.ac = 19;
+  }
+  assert.equal(defenseCorrections.size, 0, "every reviewed correction must match a frozen fixture");
+  assert.deepEqual(rows.map(builderUiSnapshot), expected);
   assert.equal(rowOf("valid-fighter").validation, null); assert.equal(rowOf("valid-wizard").validation, null);
   for (const row of rows) for (const view of [...Object.values(row.gates), row.validation]) if (view) assert.equal(builderFeedbackText(view, "en"), view.message);
 });
