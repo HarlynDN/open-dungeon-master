@@ -8,6 +8,9 @@ export function voiceSupportsLocale(voice: string, locale: AppLocale): boolean {
 }
 
 export function localeNarratorVoice(voice: string, locale: AppLocale, fallback = ""): string {
+  const legacyChinese = /^(?:zf_(?:xiaobei|xiaoni|xiaoxiao|xiaoyi)|zm_(?:yunjian|yunxi|yunxia|yunyang))$/;
+  const normalize = (value: string) => locale === "zh-CN" && legacyChinese.test(value.trim()) ? LOCALE_DEFINITIONS[locale].tts.defaultVoice : value.trim();
+  voice = normalize(voice); fallback = normalize(fallback);
   const asked = voice.trim() || fallback.trim() || LOCALE_DEFINITIONS[locale].tts.defaultVoice;
   if (voiceSupportsLocale(asked, locale)) return asked;
   return fallback.trim() && voiceSupportsLocale(fallback.trim(), locale) ? fallback.trim() : LOCALE_DEFINITIONS[locale].tts.defaultVoice;

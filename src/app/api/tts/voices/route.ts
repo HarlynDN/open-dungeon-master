@@ -1,5 +1,5 @@
 import { currentUser, unauthorized } from "@/lib/auth";
-import { labelVoices, serverVoices, ttsBackend, voicesForLocale } from "@/lib/tts-backend";
+import { backendForLocale, labelVoices, serverVoices, ttsBackend, voicesForLocale } from "@/lib/tts-backend";
 import { normalizeLocale } from "@/lib/i18n/locales";
 import { localeNarratorVoice } from "@/lib/tts-locale";
 
@@ -16,11 +16,12 @@ export async function GET(request: Request) {
   if (!user) {
     return unauthorized();
   }
-  const backend = ttsBackend();
-  const { ids, listed } = await serverVoices(backend);
   const localeParam = new URL(request.url).searchParams.get("locale");
   const locale = normalizeLocale(localeParam);
+  const backend = backendForLocale(ttsBackend(), locale);
+  const { ids, listed } = await serverVoices(backend);
   return Response.json({
+    model: backend.model,
     provider: backend.provider,
     voices: labelVoices(localeParam ? voicesForLocale(ids, locale) : ids),
     listed,

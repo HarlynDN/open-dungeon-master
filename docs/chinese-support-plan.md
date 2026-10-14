@@ -25,6 +25,26 @@ still incomplete. Delivery follows the latest approved text scope below.
 - Defer third-party expansion prose and Chinese voice work; keep earlier speech
   evidence as historical results rather than requirements for the text milestone.
 
+## Voice scope reopened (2026-10-14)
+
+The user explicitly resumed a bounded voice task: route Chinese narration to
+Kokoro v1.1-zh and retain English v1.0; allow user voice selection with ten Chinese
+recommendations followed by the installed service list; isolate model caches;
+verify real interfaces and browser playback. This supersedes voice deferral for
+these items only. Chinese STT and multi-character Chinese casting stay deferred.
+See [deployment and migration](setup/chinese-tts.md) and the `dualModel` section
+of [runtime evidence](validation/chinese-tts-runtime.json). Text/DM acceptance
+requirements remain open and are not replaced by voice preview checks.
+
+This bounded unit now passes 587/587 full test files, lint, type check and the
+webpack production build. Real local API checks pass for both models and MP3/WAV,
+including a non-recommended Chinese voice. Browser checks cover 100 Chinese
+voices with ten recommendations, 46 English voices, saved selection after reload,
+play/replay/stop and invalid-voice recovery. Real ODM narration queue checks cover
+Chinese chunking, English generation and replay cache hits. Runtime details and
+remaining listening/persistent-deployment/full-DM boundaries are recorded once in
+the runtime evidence above.
+
 ## Latest user scope — text completion, then pause (2026-10-13)
 
 The latest text-scope instruction governs delivery and acceptance. Finish Chinese text for the game itself and the entire bundled SRD 5.1 rulebook, then pause the active task. Third-party expansion-pack translation and Chinese voice work are deferred and are no longer gates for this text milestone. Preserve their existing implementations and honest evidence, including rejected voice quality. Do not pause before the requested text scope is finished.
@@ -94,6 +114,17 @@ real interaction has passed. Do not restart a static translation campaign.
 | 4 | One complete bilingual journey | Chinese create/play/combat/rest/save/resume and rulebook reading/search, plus English switching/regression pass; perform the remaining full-suite, full lint and production build at this release boundary. Record failures and genuinely untested gates explicitly. |
 
 ## Next delivery unit and interruption checkpoint
+
+- 2026-10-14 final-suite follow-up: the completed full run had 585 passing
+  files and one failure in `test-chinese-builder-feedback.mjs`. A field-by-field
+  comparison found only 31 AC values changing from 18 to 19 after the reviewed
+  Defense fix in `9e1c73f7`; English messages, routing, purse and all other
+  sheet fields matched. The historical golden remains unchanged. The test now
+  explicitly applies only those named 18-to-19 expectations to a cloned baseline,
+  preserving strict comparison of every field. Both affected suites pass under
+  Vitest (2/2, 20.13s); direct runs also pass (11 feedback groups and bilingual
+  real-hook armor checks). This is a targeted repair, not a new full-suite pass.
+  Evidence: `/tmp/odm-builder-fix-vitest.log`. Actual deployment gates remain open.
 
 Current checkpoint: 2026-10-14. The data manifests remain the detailed inventory;
 this section records current delivery state and acceptance gaps only.

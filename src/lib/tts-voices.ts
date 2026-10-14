@@ -22,3 +22,10 @@ export const TTS_VOICES = [
 ] as const;
 
 export type TtsVoiceId = (typeof TTS_VOICES)[number]["id"];
+
+// Initial selection, not a quality ranking. The service supplies all remaining
+// installed v1.1 Chinese voices. IDs stay visible so choices are reproducible.
+export const CHINESE_TTS_VOICES = [
+  "zf_001", "zf_003", "zf_004", "zf_006", "zf_008",
+  "zm_009", "zm_010", "zm_011", "zm_012", "zm_013",
+].map(id => ({ id, label: `★ ${id} ${id.startsWith("zf_") ? "♀" : "♂"}` }));

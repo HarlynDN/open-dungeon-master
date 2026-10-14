@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { synthesizeSpeech, type TtsBackend } from "@/lib/tts-backend";
+import { backendForLocale, synthesizeSpeech, type TtsBackend } from "@/lib/tts-backend";
 import type { SpeechRequest } from "@/lib/tts-segments";
 import type { AppLocale } from "./i18n/locales.ts";
 
@@ -73,6 +73,7 @@ function clipKey(request: SpeechRequest, backend: TtsBackend): string {
 export type Synthesize = (text: string, voice: string, speed: number, backend: TtsBackend, locale?: AppLocale) => Promise<Buffer>;
 
 function renderClip(request: SpeechRequest, backend: TtsBackend, limit: number, synthesize: Synthesize): Promise<Buffer> {
+  backend = backendForLocale(backend, request.locale);
   const clips = (globalThis.__odmSpeechClips ??= { bytes: 0, byKey: new Map(), inFlight: new Map() });
   const key = clipKey(request, backend);
   const kept = clips.byKey.get(key);

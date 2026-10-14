@@ -1,0 +1,36 @@
+import assert from 'node:assert/strict';
+import './lib/enforce-world.mjs';
+import {backendForLocale,labelVoices,fallbackVoices,serverVoices} from '../src/lib/tts-backend.ts';
+import {localeNarratorVoice} from '../src/lib/tts-locale.ts';
+import {CHINESE_TTS_VOICES} from '../src/lib/tts-voices.ts';
+import {voicePreviewName} from '../src/lib/tts.ts';
+import {renderSpeech} from '../src/lib/tts-render.ts';
+const en={provider:'kokoro',v1:'http://routing.test/v1',model:'kokoro',apiKey:'',defaultVoice:'af_heart'};
+const zh=backendForLocale(en,'zh-CN');
+assert.equal(zh.model,'kokoro-v1.1-zh');assert.equal(zh.defaultVoice,'zf_001');
+assert.deepEqual(backendForLocale(en,'en'),en);
+const custom={...en,provider:'openai',model:'custom'};
+assert.equal(backendForLocale(custom,'zh-CN'),custom);
+assert.equal(localeNarratorVoice('zf_xiaobei','zh-CN'),'zf_001');
+assert.equal(localeNarratorVoice('zm_095','zh-CN'),'zm_095');
+assert.equal(CHINESE_TTS_VOICES.length,10);
+const ids=['zf_002',...CHINESE_TTS_VOICES.map(v=>v.id).reverse(),'zm_100'];
+assert.deepEqual(labelVoices(ids).slice(0,10),CHINESE_TTS_VOICES);
+assert.deepEqual(labelVoices(ids).slice(10).map(v=>v.id),['zf_002','zm_100']);
+assert.deepEqual(fallbackVoices(zh),CHINESE_TTS_VOICES.map(v=>v.id));
+assert.notEqual(voicePreviewName('zf_001',en,'zh-CN'),voicePreviewName('zf_001',zh,'zh-CN'));
+const calls=[],req={text:'Versioned cache probe',voice:'zf_001',speed:1,locale:'zh-CN'};
+const synth=async(_t,_v,_s,b)=>{calls.push(b.model);return Buffer.from(b.model)};
+await renderSpeech([req],en,()=>{},{synthesize:synth});
+await renderSpeech([req],en,()=>{},{synthesize:synth});
+await renderSpeech([req],{...zh,model:'kokoro-future'},()=>{},{synthesize:synth});
+assert.deepEqual(calls,['kokoro-v1.1-zh','kokoro-future']);
+const original=globalThis.fetch,urls=[];
+try{
+ globalThis.fetch=async url=>{urls.push(String(url));return Response.json({voices:String(url).includes('v1.1-zh')?['zf_001','zm_095']:['af_heart']})};
+ assert.deepEqual((await serverVoices(en,true)).ids,['af_heart']);
+ assert.deepEqual((await serverVoices(zh,true)).ids,['zf_001','zm_095']);
+ assert.deepEqual((await serverVoices(en)).ids,['af_heart']);
+ assert.deepEqual(urls,['http://routing.test/v1/audio/voices','http://routing.test/v1/audio/voices?model=kokoro-v1.1-zh']);
+}finally{globalThis.fetch=original}
+console.log('PASS: locale model routing, ten recommendations, full service list, explicit selection, legacy fallback and preview/clip/list model cache isolation; English request retained.');

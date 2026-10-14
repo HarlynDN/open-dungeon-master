@@ -76,3 +76,43 @@ env USE_GPU=false DEVICE_TYPE=cpu \
 启动时载入音色不等于中文生成成功。新版音色接口可返回包含 `id` 的对象，
 项目同时支持对象和字符串列表；应核对 `zf_xiaobei` 等音色实际存在，并向
 `/v1/audio/speech` 请求中文样本确认。
+
+## 双模型接入（2026-10-14）
+
+当前新增方案：中文请求 `kokoro-v1.1-zh`；英文继续请求 `kokoro`，由现有
+Kokoro-FastAPI v1.0 服务处理，保留英文音色、混音与语速行为。双模型路由器
+位于 `services/kokoro-router`，独立监听本机 8881；原英文服务保留在 8880。
+只将 ODM 的 `KOKORO_URL`（或管理员已保存的 Kokoro 地址）改为
+`http://127.0.0.1:8881`，`TTS_PROVIDER=kokoro`、`TTS_MODEL=kokoro`。
+管理员已保存的配置优先于环境变量。不能把旧的单模型服务当作双模型服务使用。
+
+在独立 Python 3.12 虚拟环境安装 `services/kokoro-router/requirements.txt`，
+设置 `KOKORO_ZH_DIR` 为持久模型目录，再执行 `download.py`。下载固定官方
+revision `01e7505bd6a7a2ac4975463114c3a7650a9f7218` 的配置、权重及 100 个中文
+音色，校验模型 SHA256。已有英文服务及权重不被替换。
+
+```sh
+# 从 services/kokoro-router 目录执行，使用该服务的独立虚拟环境。
+export KOKORO_ZH_DIR=/path/to/persistent/kokoro-zh
+.venv/bin/python download.py
+KOKORO_EN_URL=http://127.0.0.1:8880 \
+  .venv/bin/python -m uvicorn app:app --host 127.0.0.1 --port 8881
+# 另一终端，验证真实列表、模型路由、MP3/WAV 与错误输入。
+.venv/bin/python smoke.py --output /tmp/odm-kokoro-check
+```
+
+中文默认 `zf_001`；10 个初始推荐音色为 `zf_001/003/004/006/008` 和
+`zm_009/010/011/012/013`，在列表前以 ★ 标示，**不是经过听审的质量排名**。
+用户可选服务实际安装的其他编号音色，也可手填服务支持的 ID。旧中文八音色
+设置只在读取播报时回退到新默认，不写回战役；新版明确选择的音色保持不变。
+中文仍是单旁白，多角色配音不在本次范围。服务未返回列表时的十个候选不代表
+安装或合成成功。中文接口仅接受实际安装的 v1.1 编号；不静默用 v1.0 代替。
+
+音色列表与音频片段缓存区分模型，试听磁盘缓存同样包含模型 ID。试听路由
+禁止浏览器持久缓存，以确保后端切换后重新解析；已有英文缓存键保持兼容。
+历史消息已保存的音频不批量重生成，主动重生成时使用新模型与新的播放版本。
+
+中文服务为 CPU 推理，串行锁保护模型；英文转发仍由原服务调度。服务无对外
+鉴权层，默认只能绑定回环地址；跨主机部署应置于已有认证网关后。模型第一次
+使用才载入，`/health` 的 `chineseLoaded` 区分加载状态，不能只凭音色文件数量
+判定合成成功。该方案增加中文模型的常驻内存；无付费 API 或 DM 模型改动。

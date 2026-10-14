@@ -1,3 +1,4 @@
+import { backendForLocale } from "./tts-backend.ts";
 import { createHash } from "node:crypto";
 import { isPrivateBackendHost } from "@/lib/backend-host";
 import { PaidAiRefusedError, paidAiAllowedNow } from "@/lib/shared-host";
@@ -135,7 +136,7 @@ export function enqueueNarrationAudio(
       publishMediaStatus(campaignId, "tts", messageId, "generating");
       // Read once per passage, so every clip goes to the same server even
       // if the admin saves a change halfway through.
-      const backend = ttsBackend();
+      const backend = backendForLocale(ttsBackend(), locale);
       const paid = backend.provider === "openai" && backend.apiKey !== "" && !isPrivateBackendHost(backend.v1);
       const version = Date.now();
       const url = narrationAudioUrl(campaignId, messageId, version);
@@ -291,7 +292,7 @@ export function voicePreviewPath(name: string): string {
 }
 
 export function voicePreviewCached(voice: string, locale: AppLocale = DEFAULT_LOCALE): boolean {
-  return existsSync(voicePreviewPath(voicePreviewName(voice, ttsBackend(), locale)));
+  return existsSync(voicePreviewPath(voicePreviewName(voice, backendForLocale(ttsBackend(), locale), locale)));
 }
 
 // Resolves to the clip's file name under generated-audio/previews.
@@ -299,7 +300,7 @@ export function renderVoicePreview(voice: string, locale: AppLocale = DEFAULT_LO
   if (!isPreviewableVoice(voice)) {
     return Promise.reject(new Error(`Unknown voice: ${voice}`));
   }
-  const backend = ttsBackend();
+  const backend = backendForLocale(ttsBackend(), locale);
   const name = voicePreviewName(voice, backend, locale);
   const file = voicePreviewPath(name);
   if (existsSync(file)) {

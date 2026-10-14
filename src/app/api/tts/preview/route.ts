@@ -55,5 +55,9 @@ export async function GET(request: Request) {
     console.error(`[tts] voice preview "${voice}" failed:`, error);
     return Response.json({ error: describeSpeechFailure(error, backend) }, { status: 502 });
   }
-  return serveGeneratedFile("generated-audio", ["previews", name], request);
+  const response = await serveGeneratedFile("generated-audio", ["previews", name], request);
+  // This public route URL names a voice, not a model version. Always resolve
+  // the current backend; the versioned disk cache still avoids synthesis.
+  response.headers.set("Cache-Control", "private, no-store");
+  return response;
 }

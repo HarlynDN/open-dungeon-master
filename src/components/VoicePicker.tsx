@@ -8,7 +8,7 @@ import { ui } from "@/lib/ui";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { voiceDisplayLabel } from "@/lib/i18n/media-presentations";
 import { DEFAULT_LOCALE, LOCALE_DEFINITIONS, type AppLocale } from "@/lib/i18n/locales";
-import { TTS_VOICES } from "@/lib/tts-voices";
+import { CHINESE_TTS_VOICES, TTS_VOICES } from "@/lib/tts-voices";
 import { localeNarratorVoice, voiceSupportsLocale } from "@/lib/tts-locale";
 
 // The narrator voice pickers (campaign settings, the campaign creator, the
@@ -22,7 +22,7 @@ type Voice = { id: string; label: string };
 type VoiceList = { voices: Voice[]; provider: string; defaultVoice: string; listed: boolean };
 
 function shipped(locale: AppLocale): VoiceList {
-  return { voices: TTS_VOICES.filter(voice => voiceSupportsLocale(voice.id, locale)), provider: "kokoro", defaultVoice: localeNarratorVoice("af_heart", locale), listed: false };
+  return { voices: (locale === "zh-CN" ? CHINESE_TTS_VOICES : TTS_VOICES).filter(voice => voiceSupportsLocale(voice.id, locale)), provider: "kokoro", defaultVoice: localeNarratorVoice("af_heart", locale), listed: false };
 }
 const cached = new Map<AppLocale, { at: number; list: VoiceList }>();
 const inflight = new Map<AppLocale, Promise<VoiceList>>();

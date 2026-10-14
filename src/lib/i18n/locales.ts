@@ -35,7 +35,7 @@ export const LOCALE_DEFINITIONS: Record<AppLocale, LocaleDefinition> = {
     segmentationLocale: "zh-CN",
     browserLanguages: ["zh"],
     narrationSelectionMinLength: 1,
-    tts: { langCode: "z", defaultVoice: "zf_xiaobei", singleNarrator: true, voicePrefixes: ["zf_", "zm_"], firstChunkChars: 80, chunkChars: 160, previewText: "酒馆的木门缓缓打开。冒险者，请掷先攻。你恢复了七点生命值，还有两个一环法术位。" },
+    tts: { langCode: "z", defaultVoice: "zf_001", singleNarrator: true, voicePrefixes: ["zf_", "zm_"], firstChunkChars: 80, chunkChars: 160, previewText: "酒馆的木门缓缓打开。冒险者，请掷先攻。你恢复了七点生命值，还有两个一环法术位。" },
   },
 };
 

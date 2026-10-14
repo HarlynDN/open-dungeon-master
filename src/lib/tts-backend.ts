@@ -1,6 +1,6 @@
 import { configValue, getGlobalConfig } from "@/lib/app-config";
 import { openAiSpeechConfig } from "@/lib/openai-images";
-import { TTS_VOICES } from "@/lib/tts-voices";
+import { CHINESE_TTS_VOICES, TTS_VOICES } from "@/lib/tts-voices";
 import { DEFAULT_LOCALE, LOCALE_DEFINITIONS, type AppLocale } from "./i18n/locales.ts";
 import { localeNarratorVoice, voiceSupportsLocale } from "./tts-locale.ts";
 
@@ -30,6 +30,14 @@ export type TtsBackend = {
   // The voice used when a campaign names one this server does not have.
   defaultVoice: string;
 };
+
+// Resolve before hashing or sending: an unchanged server URL must not reuse v1.0 Chinese audio.
+export function backendForLocale(backend: TtsBackend, locale: AppLocale = DEFAULT_LOCALE): TtsBackend {
+  if (backend.provider !== "kokoro") return backend;
+  const model = locale === "zh-CN" && ["kokoro", "kokoro-v1.0"].includes(backend.model)
+    ? "kokoro-v1.1-zh" : backend.model;
+  return { ...backend, model, defaultVoice: localeNarratorVoice(backend.defaultVoice, locale) };
+}
 
 export const KOKORO_DEFAULT_URL = "http://127.0.0.1:8880";
 export const OPENAI_DEFAULT_URL = "https://api.openai.com/v1";
@@ -142,7 +150,7 @@ export function parseVoiceList(payload: unknown): string[] {
 // The picker's list: the curated voices this server really has first, under
 // their friendly names, then everything else it reports by id.
 export function labelVoices(ids: string[]): TtsVoice[] {
-  const curated: TtsVoice[] = TTS_VOICES.filter((voice) => ids.includes(voice.id)).map((voice) => ({ id: voice.id, label: voice.label }));
+  const curated: TtsVoice[] = [...TTS_VOICES, ...CHINESE_TTS_VOICES].filter((voice) => ids.includes(voice.id)).map((voice) => ({ id: voice.id, label: voice.label }));
   const known = new Set(curated.map((voice) => voice.id));
   return [...curated, ...ids.filter((id) => !known.has(id)).map((id) => ({ id, label: id }))];
 }
@@ -150,9 +158,9 @@ export function labelVoices(ids: string[]): TtsVoice[] {
 // What a server offers when it will not say: Kokoro's shipped voices, or
 // OpenAI's documented ones. An unknown compatible server offers nothing and
 // the picker falls back to typing a voice.
-export function fallbackVoices(backend: Pick<TtsBackend, "provider" | "v1">): string[] {
+export function fallbackVoices(backend: Pick<TtsBackend, "provider" | "v1"> & Partial<Pick<TtsBackend, "model">>): string[] {
   if (backend.provider === "kokoro") {
-    return TTS_VOICES.map((voice) => voice.id);
+    return backend.model === "kokoro-v1.1-zh" ? CHINESE_TTS_VOICES.map(voice => voice.id) : TTS_VOICES.map((voice) => voice.id);
   }
   return isOpenAiHost(backend.v1) ? OPENAI_TTS_VOICES : [];
 }
@@ -268,6 +276,7 @@ export async function synthesizeSpeech(input: string, voice: string, speed = 1, 
   if (backend.provider === "off") {
     throw new Error("Narration is switched off on this server.");
   }
+  backend = backendForLocale(backend, locale);
   const voices = backend.provider === "openai" ? await serverVoiceIds(backend) : [];
   // A local server with no default named falls back to the first voice it
   // lists, as the admin form says it will.
@@ -296,7 +305,7 @@ export async function serverVoices(backend: TtsBackend = ttsBackend(), fresh = f
     return { ids: [], listed: false };
   }
   const cache = (globalThis.__odmTtsVoices ??= new Map());
-  const key = `${backend.provider}|${backend.v1}`;
+  const key = `${backend.provider}|${backend.v1}|${backend.model}`;
   const hit = cache.get(key);
   if (!fresh && hit && Date.now() - hit.at < VOICE_CACHE_MS) {
     return { ids: hit.ids, listed: hit.listed };
@@ -306,7 +315,7 @@ export async function serverVoices(backend: TtsBackend = ttsBackend(), fresh = f
   // OpenAI itself has no such endpoint; asking only spends a round trip.
   if (!isOpenAiHost(backend.v1)) {
     try {
-      const response = await fetch(`${backend.v1}/audio/voices`, {
+      const response = await fetch(`${backend.v1}/audio/voices${backend.provider === "kokoro" && backend.model !== "kokoro" ? `?model=${encodeURIComponent(backend.model)}` : ""}`, {
         cache: "no-store",
         headers: backend.apiKey ? { Authorization: `Bearer ${backend.apiKey}` } : {},
         signal: AbortSignal.timeout(4_000),

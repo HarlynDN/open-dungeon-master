@@ -9,7 +9,6 @@ import { Tooltip } from "@/components/ui/Tooltip";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { apiErrorText, type ApiUiError } from "@/lib/i18n/api-errors";
 import { DEFAULT_LOCALE, type AppLocale } from "@/lib/i18n/locales";
-import { speechFailureText } from "@/lib/i18n/session-presentations";
 
 // Plays a short sample of a narrator voice next to the voice pickers. The
 // first play for a voice waits on the speech server rendering it (about a
@@ -23,7 +22,7 @@ export function VoicePreviewButton({ voice, className, speechLocale = DEFAULT_LO
   const [playing, setPlaying] = useState(false);
   const source = `/api/tts/preview?voice=${encodeURIComponent(voice)}${speechLocale === DEFAULT_LOCALE ? "" : `&locale=${encodeURIComponent(speechLocale)}`}`;
   const [failure, setFailure] = useState<{ source: string; data: ApiUiError } | null>(null);
-  const failed = failure?.source === source ? speechFailureText(apiErrorText(locale, failure.data, "voice.previewFailed"), locale) : "";
+  const failed = failure?.source === source ? apiErrorText(locale, failure.data, "voice.previewFailed") : "";
 
   // Stops the clip and lets the output router forget it; the next play
   // builds a fresh element, so nothing is kept between plays.

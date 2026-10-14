@@ -101,5 +101,178 @@
     "questionPresented": true,
     "userFeedback": "这个中文声音太难听了",
     "boundary": "Synthesis succeeded, but Chinese voice quality did not pass user acceptance. Do not count TTS as delivered."
+  },
+  "dualModel": {
+    "validatedAt": "2026-10-14T08:49:41.737770+00:00",
+    "status": "real-local-api-and-browser-preview-verified",
+    "scope": "Isolated production-build app at 127.0.0.1:3022; local services 8881 (router) and 8880 (original English). Temporary runtime, not persistent production deployment.",
+    "router": {
+      "version": "1.0.0",
+      "source": "services/kokoro-router/app.py",
+      "sha256": "a16b06bb14654c722401eab34d8be02c06214997f218b15475a91030a31b4985"
+    },
+    "chinese": {
+      "model": "Kokoro-82M-v1.1-zh",
+      "revision": "01e7505bd6a7a2ac4975463114c3a7650a9f7218",
+      "sha256": "b1d8410fa44dfb5c15471fd6c4225ea6b4e9ac7fa03c98e8bea47a9928476e2b",
+      "installedVoices": 100,
+      "recommendations": [
+        "zf_001",
+        "zf_003",
+        "zf_004",
+        "zf_006",
+        "zf_008",
+        "zm_009",
+        "zm_010",
+        "zm_011",
+        "zm_012",
+        "zm_013"
+      ],
+      "defaultVoice": "zf_001",
+      "device": "cpu"
+    },
+    "english": {
+      "model": "Kokoro-82M v1.0",
+      "serviceCommit": "61797914e5f8da0baf1d0b97d9d0b15c66625615",
+      "installedEnglishVoices": 46,
+      "behavior": "Existing service handles English; original ten recommended voices and custom IDs retained."
+    },
+    "dependencies": {
+      "python": "3.12.14",
+      "kokoro": "0.9.4",
+      "misaki": "0.9.4",
+      "torch": "2.8.0",
+      "fastapi": "0.143.0",
+      "uvicorn": "0.34.0",
+      "soundfile": "0.13.0"
+    },
+    "api": {
+      "health": {
+        "service": "ODM Kokoro bilingual router",
+        "version": "1.0.0",
+        "chineseModel": "kokoro-v1.1-zh",
+        "chineseModelSha256": "b1d8410fa44dfb5c15471fd6c4225ea6b4e9ac7fa03c98e8bea47a9928476e2b",
+        "chineseLoaded": true,
+        "chineseVoiceCount": 100,
+        "englishModel": "kokoro-v1.0"
+      },
+      "results": [
+        {
+          "model": "kokoro-v1.1-zh",
+          "voice": "zf_001",
+          "format": "mp3",
+          "seconds": 11.925,
+          "voiceCount": 100
+        },
+        {
+          "model": "kokoro-v1.1-zh",
+          "voice": "zf_001",
+          "format": "wav",
+          "seconds": 11.925,
+          "voiceCount": 100
+        },
+        {
+          "model": "kokoro-v1.1-zh",
+          "voice": "zm_095",
+          "format": "mp3",
+          "seconds": 6.9,
+          "voiceCount": 100
+        },
+        {
+          "model": "kokoro-v1.1-zh",
+          "voice": "zm_095",
+          "format": "wav",
+          "seconds": 6.9,
+          "voiceCount": 100
+        },
+        {
+          "model": "kokoro-v1.0",
+          "voice": "af_heart",
+          "format": "mp3",
+          "seconds": 3.792,
+          "voiceCount": 46
+        },
+        {
+          "model": "kokoro-v1.0",
+          "voice": "af_heart",
+          "format": "wav",
+          "seconds": 3.731375,
+          "voiceCount": 46
+        },
+        {
+          "model": "kokoro-v1.0",
+          "voice": "bm_fable",
+          "format": "mp3",
+          "seconds": 3.48,
+          "voiceCount": 46
+        },
+        {
+          "model": "kokoro-v1.0",
+          "voice": "bm_fable",
+          "format": "wav",
+          "seconds": 3.418458333333333,
+          "voiceCount": 46
+        }
+      ],
+      "invalidRequestsRejected": 4
+    },
+    "narrationQueue": [
+      {
+        "locale": "zh-CN",
+        "voice": "zm_095",
+        "model": "kokoro-v1.1-zh",
+        "chunks": 2,
+        "bytes": 324384,
+        "replayCacheHit": true
+      },
+      {
+        "locale": "en",
+        "voice": "bm_fable",
+        "model": "kokoro",
+        "chunks": 1,
+        "bytes": 73004,
+        "replayCacheHit": true
+      }
+    ],
+    "browser": {
+      "app": "Next.js 16.3.8 production webpack build",
+      "chineseVoiceOptions": 100,
+      "recommendedOptions": 10,
+      "additionalCustomOption": true,
+      "selectedNonRecommendedVoice": "zm_095",
+      "selectionSurvivesSaveAndReload": true,
+      "englishVoiceOptions": 46,
+      "englishPreviewVoice": "bm_fable",
+      "playReplayStop": "Observed successful HTMLAudioElement.play() completion via playing icon and stop transition for both languages. No browser console errors during successful playback.",
+      "failureRecovery": "zf_999 produced Chinese error; restoring zm_095 cleared error and entered playing state.",
+      "screenshots": [
+        "/tmp/odm-dual-tts-voices.png",
+        "/tmp/odm-dual-tts-saved.png",
+        "/tmp/odm-dual-tts-recovered.png"
+      ]
+    },
+    "checks": {
+      "targetedTestFiles": 7,
+      "fullTestFiles": 587,
+      "fullTestsSeconds": 729.99,
+      "fullTests": "passed",
+      "lint": "passed with existing warnings",
+      "typecheck": "passed",
+      "productionBuild": "passed --webpack",
+      "pythonCompile": "passed"
+    },
+    "remaining": [
+      "Human listening acceptance of v1.1 voices; recommendations are an initial selection, not a quality ranking.",
+      "Persistent service deployment and production database configuration.",
+      "Full live generated DM campaign journey and native-shell audio playback; preview and fixed-prose queue tests do not establish these."
+    ],
+    "evidenceLogs": [
+      "/tmp/odm-dual-tts-full-tests.log",
+      "/tmp/odm-dual-tts-tests-final.log",
+      "/tmp/odm-dual-tts-lint.log",
+      "/tmp/odm-dual-tts-build-final.log",
+      "/tmp/odm-dual-kokoro-final.log",
+      "/tmp/odm-dual-narration.log"
+    ]
   }
 }
