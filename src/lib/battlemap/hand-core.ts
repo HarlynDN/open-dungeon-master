@@ -178,6 +178,10 @@ export type HandTurn = {
   flurryStrikes?: number;
   // This turn's action went on an attack-roll spell, so Extra Attack is gone.
   castThisAction?: boolean;
+  // What the Attack action was made with, for the off-hand swing (issue
+  // 210). Absent from a server too old to send them.
+  lightMeleeAttack?: boolean;
+  oneHandMeleeAttack?: boolean;
   // The engine's reading of the fight, so the gates ask canAct itself.
   table?: HandTable | null;
 };
@@ -225,7 +229,8 @@ export type HandOptions = {
   trackAmmo?: boolean;
 };
 
-export const HAND_FAN_CAP = 9;
+// The fan's seats, End turn's included (src/lib/battlemap/hand-layout.ts).
+export { HAND_FAN_CAP } from "@/lib/battlemap/hand-layout";
 
 export function spellKey(name: string): string {
   return name.trim().toLowerCase().replace(/\s+/g, " ");
@@ -348,6 +353,8 @@ export function budgetOf(turn: HandTurn, sheet: Pick<CharacterSheet, "id">, allo
     ...(turn.grantedActions ? { grantedActions: turn.grantedActions } : {}),
     ...(turn.flurryStrikes ? { flurryStrikes: turn.flurryStrikes } : {}),
     ...(turn.castThisAction ? { castThisAction: true } : {}),
+    ...(turn.lightMeleeAttack ? { lightMeleeAttack: true } : {}),
+    ...(turn.oneHandMeleeAttack ? { oneHandMeleeAttack: true } : {}),
   };
 }
 

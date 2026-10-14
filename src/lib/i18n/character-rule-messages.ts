@@ -143,6 +143,7 @@ export const CHARACTER_RULE_MESSAGES = /*#__PURE__*/ defineMessages({
   "ruleProblem.featAbilityMissing": {"en": "{feat} raises one of {choices} by {amount}. Choose an eligible ability.", "zh-CN": "{feat}可使以下一项属性提高 {amount} 点：{choices}。请选择一项符合要求的属性。"},
   "ruleProblem.featPicksMissing": {"en": "{feat}: choose {choices}.", "zh-CN": "{feat}：还需要选择{choices}。"},
   "ruleProblem.featDamageOffered": {"en": "“{damage}” is not a damage type {feat} offers. Choose from {choices}.", "zh-CN": "“{damage}”不属于{feat}可选的伤害类型，请从以下类型中选择：{choices}。"},
+  "ruleProblem.featSkillRestricted": {"en": "{skill} is not a skill {feat} offers; pick from {choices}.", "zh-CN": "{feat}不授予{skill}，请选择以下技能：{choices}。"},
   "ruleProblem.featSkillUnknown": {"en": "“{skill}” is not a skill. Choose {feat}’s skill from the skill list.", "zh-CN": "“{skill}”不是规则中的技能，请从技能列表中选择{feat}授予的技能。"},
   "ruleProblem.featSkillDuplicate": {"en": "{feat} grants a new skill; the character is already proficient in {skill}.", "zh-CN": "{feat}授予一项新的技能熟练项；角色已熟练于{skill}，请选择另一项。"},
   "ruleProblem.featLanguageDuplicate": {"en": "{feat} grants new fictional languages; the character already speaks {language}.", "zh-CN": "{feat}授予新的游戏内语言；角色已会说{language}，请选择另一种。"},

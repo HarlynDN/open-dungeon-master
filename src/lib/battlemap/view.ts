@@ -1,4 +1,6 @@
+import { readiedReleaseFor } from "@/lib/dm/readied-release";
 import { getCampaignById, getFloor } from "@/lib/db/campaigns";
+import { actingSheetFor } from "@/lib/character-seat";
 import { getClock } from "@/lib/db/clock";
 import { lightRemaining } from "@/lib/dm/light-timers";
 import { breakDown } from "@/lib/dm/calendar";
@@ -10,7 +12,7 @@ import { speedFor } from "@/lib/srd";
 import { getMounts } from "@/lib/db/mounts";
 import { effectiveMaxHp, effectiveSpeed, exhaustionSpeed } from "@/lib/dm/condition-logic";
 import { budgetApplies } from "@/lib/dm/action-budget";
-import { getSheetForUser, listSheets } from "@/lib/db/sheets";
+import { listSheets } from "@/lib/db/sheets";
 import { footprintForSize, footprintIndexes, type Footprint } from "@/lib/battlemap/footprint";
 import { healthWord } from "@/lib/battlemap/health-words";
 import { orderEntryId } from "@/lib/db/encounters";
@@ -170,7 +172,9 @@ export function buildPlayerMapView(
   if (!map) {
     return null;
   }
-  const sheet = getSheetForUser(campaignId, userId);
+  // "My" token follows the character acting now: on this player's own
+  // character's turn that one, else the selected one (character-seat.ts).
+  const sheet = actingSheetFor(campaignId, userId, undefined, encounter);
   const tokens = listTokens(map.id);
   const tileCount = map.width * map.height;
   const myToken = sheet ? getTokenByRef(map.id, sheet.id) : null;
@@ -283,8 +287,13 @@ export function buildPlayerMapView(
   let reachableCost: number[] = [];
   let moves: PlayerMapView["moves"];
   let budgetLeft = 0;
-  if (!fullVision && sheet && myToken && sheet.currentHp > 0 && canMoveNow(campaignId, sheet.id)) {
-    const budget = pcMoveBudget(campaignId, encounter, map, sheet, myToken);
+  // A move the character readied lights the board off their turn, for
+  // their full speed (readied-release.ts; the move route charges it the same).
+  const readiedMove = sheet ? readiedReleaseFor(sheet, encounter, "move") : null;
+  const readiedWalk = Boolean(readiedMove && !("error" in readiedMove));
+  if (!fullVision && sheet && myToken && sheet.currentHp > 0 && (canMoveNow(campaignId, sheet.id) || readiedWalk)) {
+    const turnBudget = pcMoveBudget(campaignId, encounter, map, sheet, myToken);
+    const budget = readiedWalk ? { ...turnBudget, tiles: speedToTiles(turnBudget.speed), fullTiles: speedToTiles(turnBudget.speed) } : turnBudget;
     budgetLeft = budget.tiles;
     if (budgetLeft > 0) {
       const occupied = occupiedTiles(map, tokens, myToken, footprintLookup(enemiesById));

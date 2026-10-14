@@ -1,4 +1,5 @@
 "use client";
+import { useLocale as useSyncLocale } from "@/lib/i18n/LocaleProvider";
 
 import Link from "next/link";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
@@ -7,14 +8,13 @@ import { lobbyBlockerText } from "@/lib/i18n/lobby-presentations";
 import type { MessageKey } from "@/lib/i18n/translator";
 import { appConfirm } from "@/components/ui/ConfirmDialog";
 import { ArrowLeft } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
+import { transcribesVoice, useCapabilities } from "@/lib/use-capabilities";
 import { roomCodeRefused } from "@/lib/shell-host";
 import { useShellShare } from "@/lib/use-shell-share";
 import { ScheduleSection } from "@/components/ScheduleSection";
 import { ui } from "@/lib/ui";
-import { CompanionBuilderDialog } from "@/app/campaigns/[campaignId]/CompanionBuilderDialog";
-import { EditCampaignDialog } from "@/app/campaigns/[campaignId]/EditCampaignDialog";
 import { GameSettingsPanel } from "@/app/campaigns/[campaignId]/GameSettingsPanel";
 import { LobbyActions } from "@/app/campaigns/[campaignId]/LobbyActions";
 import { LobbyParty } from "@/app/campaigns/[campaignId]/LobbyParty";
@@ -34,6 +34,23 @@ import {
 import type { CampaignState } from "@/app/campaigns/[campaignId]/useCampaignStream";
 import { navigateTo } from "@/lib/navigation";
 import { SceneBackdrop } from "@/app/campaigns/[campaignId]/CinematicParts";
+import { StorySetupNotice } from "@/components/StorySetupNotice";
+import {
+  STORY_SETUP_WARNING,
+  STORY_SETUP_WARNING_COMING,
+  storySetupKeptKey,
+  storySetupWillRun,
+} from "@/lib/dm/story-setup-logic";
+
+// The companion builder carries the whole character builder (spells,
+// gear, the portrait cropper); it and the campaign editor load when they
+// are opened, not with the lobby.
+const CompanionBuilderDialog = lazy(() =>
+  import("@/app/campaigns/[campaignId]/CompanionBuilderDialog").then((module) => ({ default: module.CompanionBuilderDialog })),
+);
+const EditCampaignDialog = lazy(() =>
+  import("@/app/campaigns/[campaignId]/EditCampaignDialog").then((module) => ({ default: module.EditCampaignDialog })),
+);
 
 // The lobby: where the table gathers before the adventure opens. On a desktop
 // it is a table with two sides: the campaign, its party and this viewer's
@@ -45,14 +62,37 @@ import { SceneBackdrop } from "@/app/campaigns/[campaignId]/CinematicParts";
 const EMPTY_MESSAGES: never[] = [];
 
 export function Lobby({ state, refresh }: { state: CampaignState; refresh: () => void }) {
+  const { t: syncT } = useSyncLocale();
   const { locale, t } = useLocale();
   const { campaign, me, members, sheets } = state;
   const voiceSpeaking = useVoiceSpeaking();
+  // The call records and announces a transcript only where it can be written.
+  const transcribes = transcribesVoice(useCapabilities());
   const [busy, setBusy] = useState(false);
   const [editing, setEditing] = useState(false);
   const [buildingCompanion, setBuildingCompanion] = useState(false);
   const [contentImport, setContentImport] = useState<ImportSelection>(EMPTY_SELECTION);
   const [error, setError] = useState<UiRequestError | null>(null);
+  // AI Story Setup meeting an imported Storyboard (issue 249): whether this
+  // creator chose to keep it on (remembered per table on this device), and
+  // the turn-off request in flight.
+  const [storySetupKept, setStorySetupKept] = useState(false);
+  const [storySetupBusy, setStorySetupBusy] = useState(false);
+  const [storySetupError, setStorySetupError] = useState("");
+  const keptCampaignId = campaign?.id ?? "";
+  useEffect(() => {
+    if (!keptCampaignId) {
+      return;
+    }
+    let kept = false;
+    try {
+      kept = window.localStorage.getItem(storySetupKeptKey(keptCampaignId)) === "1";
+    } catch {
+      // Storage refused: the warning simply shows again.
+    }
+    const timer = window.setTimeout(() => setStorySetupKept(kept), 0);
+    return () => window.clearTimeout(timer);
+  }, [keptCampaignId]);
   const [canAssignSeats, setCanAssignSeats] = useState(false);
   // Bumped after a seat move so the canAssign answer is re-asked: handing the
   // DM seat away can revoke the mover's own right to move it again.
@@ -96,7 +136,28 @@ export function Lobby({ state, refresh }: { state: CampaignState; refresh: () =>
   }
 
   const myMember = members.find((member) => member.userId === me.id);
-  const mySheet = sheets.find((sheet) => sheet.userId === me.id);
+  const mySheet = sheets.find((sheet) => sheet.id === state.activeSheetId && sheet.userId === me.id)
+    ?? sheets.find((sheet) => sheet.userId === me.id && !sheet.isCompanion);
+  const mySheets = sheets.filter((sheet) => sheet.userId === me.id && !sheet.isCompanion);
+  async function selectCharacter(characterId: string) {
+    setBusy(true);
+    setError(null);
+    try {
+      const response = await fetch(`/api/campaigns/${campaign!.id}/sheet/switch`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ characterId }),
+      });
+      if (!response.ok) {
+        const result = await response.json().catch(() => ({}));
+        setError({ data: result, fallback: "lobby.selectCharacterError" });
+      } else refresh();
+    } catch {
+      setError({ data: {}, fallback: "lobby.networkError" });
+    } finally {
+      setBusy(false);
+    }
+  }
   // The DM runs no character, so every "create your character" prompt below
   // has to know that. The seat is on the campaign row; the mode alone is not
   // enough, because an assisted campaign can still be AI-narrated.
@@ -144,6 +205,46 @@ export function Lobby({ state, refresh }: { state: CampaignState; refresh: () =>
     resolveCompanionMode(campaign.gameSettings, partySize, humanDmTable) === "full" &&
     partyCompanions.length < campaign.gameSettings.maxCompanions;
   const showCompanions = canBuildCompanion || (steersStory && partyCompanions.length > 0);
+  // AI Story Setup meeting the table's prep (issue 249): the one-time pass
+  // is still to run at a table the AI narrates, and either an imported
+  // Storyboard already wrote the arc (state.prepArc, told only to whoever
+  // steers) or the board picked under "Bring in prep" is about to.
+  const setupWillRun =
+    steersStory &&
+    !storySetupKept &&
+    storySetupWillRun({
+      status: campaign.status,
+      dmMode: campaign.gameSettings.dmMode,
+      aiStorySetup: campaign.gameSettings.aiStorySetup,
+      outlineWritten: false,
+    });
+  async function turnOffStorySetup() {
+    setStorySetupBusy(true);
+    setStorySetupError("");
+    try {
+      const response = await fetch(`/api/campaigns/${campaign!.id}/settings`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ aiStorySetup: false }),
+      });
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        setStorySetupError(data.error || syncT("upstreamUi.68de19c37c64"));
+      }
+    } catch {
+      setStorySetupError(syncT("upstreamUi.111ff6e1879b"));
+    } finally {
+      setStorySetupBusy(false);
+    }
+  }
+  function keepStorySetup() {
+    try {
+      window.localStorage.setItem(storySetupKeptKey(campaign!.id), "1");
+    } catch {
+      // Storage refused: it is kept for this visit only.
+    }
+    setStorySetupKept(true);
+  }
   // Why the adventure cannot open yet, or "" when it can. The server's PATCH
   // asks the same function of the same seats, so the Begin button is enabled
   // exactly when the route would accept it.
@@ -384,6 +485,28 @@ export function Lobby({ state, refresh }: { state: CampaignState; refresh: () =>
           ) : null}
 
           <div className="lobby-enter order-4 mb-8" style={enter(3)}>
+            {campaign.gameSettings.multiCharacter !== "off" && mySheets.length > 1 ? (
+              <div className="mb-3 flex flex-wrap justify-center gap-2" aria-label={syncT("upstreamUi.300d052f22b0")}>
+                {mySheets.map((sheet) => (
+                  <button key={sheet.id} type="button" disabled={busy}
+                    aria-pressed={mySheet?.id === sheet.id}
+                    onClick={() => void selectCharacter(sheet.id)}
+                    className={cn(ui.btnSecondary, "px-3 py-1 text-xs", mySheet?.id === sheet.id && "border-amber-400 text-amber-200")}>
+                    {sheet.name}
+                  </button>
+                ))}
+              </div>
+            ) : null}
+            {setupWillRun && state.prepArc ? (
+              <StorySetupNotice
+                text={STORY_SETUP_WARNING}
+                busy={storySetupBusy}
+                error={storySetupError}
+                onTurnOff={() => void turnOffStorySetup()}
+                onKeep={keepStorySetup}
+                className="mb-3"
+              />
+            ) : null}
             <LobbyActions
               campaign={campaign}
               myMember={myMember}
@@ -428,6 +551,17 @@ export function Lobby({ state, refresh }: { state: CampaignState; refresh: () =>
                   selection={contentImport}
                   onChange={setContentImport}
                   onImported={refresh}
+                  storyboardNote={(arcComing) =>
+                    arcComing && setupWillRun ? (
+                      <StorySetupNotice
+                        text={STORY_SETUP_WARNING_COMING}
+                        busy={storySetupBusy}
+                        error={storySetupError}
+                        onTurnOff={() => void turnOffStorySetup()}
+                        onKeep={keepStorySetup}
+                      />
+                    ) : null
+                  }
                 />
               </div>
             ) : null}
@@ -486,9 +620,9 @@ export function Lobby({ state, refresh }: { state: CampaignState; refresh: () =>
                 meshSignal={state.voiceMeshSignal}
                 adjudicates={adjudicates}
                 steersStory={steersStory}
-                transcribe={campaign.gameSettings.voice.transcribe}
+                transcribe={campaign.gameSettings.voice.transcribe && transcribes}
               />
-              {campaign.gameSettings.voice.transcribe ? (
+              {campaign.gameSettings.voice.transcribe && transcribes ? (
                 <p className="reveal mt-2 text-xs text-amber-300/80">
                   {t("lobby.transcribed")}
                 </p>
@@ -507,6 +641,7 @@ export function Lobby({ state, refresh }: { state: CampaignState; refresh: () =>
         </div>
       </div>
 
+      <Suspense fallback={null}>
       {editing ? (
         <EditCampaignDialog campaign={campaign} onClose={() => setEditing(false)} />
       ) : null}
@@ -520,6 +655,7 @@ export function Lobby({ state, refresh }: { state: CampaignState; refresh: () =>
           onClose={() => setBuildingCompanion(false)}
         />
       ) : null}
+      </Suspense>
     </main>
   );
 }

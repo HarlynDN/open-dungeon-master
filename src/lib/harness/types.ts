@@ -10,6 +10,12 @@ export function isHarnessId(value: unknown): value is HarnessId {
   return typeof value === "string" && (HARNESS_IDS as readonly string[]).includes(value);
 }
 
+// No run of a program lives longer than this: the bridge closes every
+// session and every completion by then (src/lib/harness/bridge.ts). opencode
+// keeps its sessions in a store of its own, and one older than this cannot
+// belong to a live run (src/lib/harness/adapters/opencode.ts).
+export const HARNESS_MAX_RUN_MS = 20 * 60_000;
+
 // How far the program's own tools were taken away. "removed" means the
 // program was started with none of its built-in tools at all (proven by the
 // tool list it reports). "contained" means some remain but are boxed in: a
@@ -26,6 +32,18 @@ export type HarnessModel = {
   contextTokens?: number;
   // Good for summaries and bookkeeping: offered first as the utility model.
   cheap?: boolean;
+  // Offers a paid Fast tier on this connection (issue 255).
+  fast?: boolean;
+  // Its vendor has deprecated it (the model catalog, src/lib/model-registry).
+  deprecated?: boolean;
+  // The full model id an alias resolves to today, where the program reports
+  // it (Claude Code's "opus" stands for whichever Opus model it currently
+  // runs): what the catalog is asked about it.
+  catalogId?: string;
+  // The efforts this model offers, where the program lists them (opencode's
+  // variants); one it lacks runs at the model's own default. An empty list
+  // means it has none, and no list at all that the program does not say.
+  efforts?: string[];
 };
 
 export type HarnessAuth = {
@@ -68,6 +86,8 @@ export type HarnessConfig = {
   model: string;
   utilityModel: string;
   effort: "" | "low" | "medium" | "high" | "xhigh" | "max";
+  speed: "" | "fast";
+  utilitySpeed: "" | "fast";
   images: "off" | "native";
   imagesVerifiedAt: string;
   campaigns: "all" | "admins";
@@ -102,6 +122,9 @@ export type HarnessStartOptions = {
   system: string;
   model: string;
   effort: HarnessConfig["effort"];
+  // The Fast tier, for this run only, and which role it serves (the admin
+  // panel shows what it actually ran at). Absent = the program's default.
+  speed?: { role: "story" | "utility" };
   // Null for a plain completion: no tools of any kind.
   mcp: { url: string; token: string } | null;
   // Native image tool on, for a picture run. Everything else stays off.
@@ -130,6 +153,12 @@ export type HarnessAdapter = {
   lockdown: Lockdown;
   // Whether the program has its own image tool.
   paints: boolean;
+  // Whether the older transcript may join the system prompt in whole chunks
+  // (src/lib/harness/render.ts renderTurn): only a program that reads its
+  // system prompt from a file and caches it in blocks gains by it, and only
+  // such a program can take one that long. Off, the whole transcript goes in
+  // the opening message, as before.
+  settledTranscript?: boolean;
   probe(binary: string, env: Record<string, string>): Promise<Omit<HarnessStatus, "id" | "label" | "availability" | "checkedAt" | "path" | "installHint" | "signInHint" | "lockdown" | "lockdownProven" | "nativeImages"> & { lockdownProven?: boolean }>;
   start(options: HarnessStartOptions): Promise<HarnessSession>;
 };

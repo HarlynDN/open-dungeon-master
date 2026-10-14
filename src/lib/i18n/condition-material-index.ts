@@ -1,5 +1,4 @@
-// Canonical registry aliases only; browser consumers load translated text from
-// the scoped content resources, never the rules registry or full source catalog.
+// Canonical aliases; localized prose is loaded from scoped content resources.
 export const CONDITION_MATERIAL_INDEX = [
   {
     "id": "empty_body",
@@ -283,6 +282,12 @@ export const CONDITION_MATERIAL_INDEX = [
     "id": "absorbed_strike",
     "match": [
       "absorbed strike"
+    ]
+  },
+  {
+    "id": "superiority_strike",
+    "match": [
+      "superiority strike"
     ]
   },
   {
@@ -1403,6 +1408,73 @@ export const CONDITION_MATERIAL_INDEX = [
     "id": "dread_lord",
     "match": [
       "dread lord"
+    ]
+  },
+  {
+    "id": "eldritch_cannon",
+    "match": [
+      "eldritch cannon"
+    ]
+  },
+  {
+    "id": "target_lock",
+    "match": [
+      "target lock"
+    ]
+  },
+  {
+    "id": "hunters_brand",
+    "match": [
+      "hunter's brand",
+      "hunters brand"
+    ]
+  },
+  {
+    "id": "quarry",
+    "match": [
+      "quarry"
+    ]
+  },
+  {
+    "id": "celestial_wings",
+    "match": [
+      "celestial revelation: heavenly wings"
+    ]
+  },
+  {
+    "id": "celestial_radiance",
+    "match": [
+      "celestial revelation: inner radiance"
+    ]
+  },
+  {
+    "id": "celestial_shroud",
+    "match": [
+      "celestial revelation: necrotic shroud"
+    ]
+  },
+  {
+    "id": "ashen_hymn",
+    "match": [
+      "ashen hymn"
+    ]
+  },
+  {
+    "id": "candlelight_vigil",
+    "match": [
+      "candlelight vigil"
+    ]
+  },
+  {
+    "id": "head_of_steam",
+    "match": [
+      "head of steam"
+    ]
+  },
+  {
+    "id": "mantle_of_majesty",
+    "match": [
+      "mantle of majesty"
     ]
   },
   {

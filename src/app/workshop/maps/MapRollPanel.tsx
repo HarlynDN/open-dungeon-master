@@ -5,43 +5,44 @@ import { useState, type CSSProperties } from "react";
 import { Dices } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { MAP_THEMES, type GeneratedMap, type MapTheme } from "@/lib/battlemap/generate";
-import { Chip, FinePrint, mapInput } from "@/app/campaigns/[campaignId]/mapUi";
-import { dieSpins, forgeGenerate, freshSeed, readHint } from "@/app/workshop/maps/forge";
+import { Chip, FinePrint } from "@/app/campaigns/[campaignId]/mapUi";
+import { Select } from "@/components/ui/Select";
+import { sceneOptions } from "@/lib/ambience/catalog";
+import { dieSpins, forgeGenerate, freshSeed } from "@/app/workshop/maps/forge";
+import { sceneCueLabel } from "@/lib/i18n/map-scene-presentations";
 
-// The Roll tool's options (N on the rail): the forge's hint and theme, cut
-// down to the column, rolling the whole field of the map that is open. The
-// size stays the map's own. The new ground goes to the server as "return to
-// this terrain", the same request undo sends, so it is checked like any other
-// paint and it lands in the history: undo puts the old field back.
+// The Roll tool's options (N on the rail): the forge's kind of place and
+// theme, cut down to the column, rolling the whole field of the map that is
+// open. The size stays the map's own. The new ground goes to the server as
+// "return to this terrain", the same request undo sends, so it is checked
+// like any other paint and it lands in the history: undo puts the old field
+// back.
 
 export function MapRollPanel({
   width,
   height,
-  genre,
   busy,
   onRoll,
 }: {
   width: number;
   height: number;
-  genre: string | null | undefined;
   busy?: boolean;
   onRoll: (generated: GeneratedMap, seed: number) => Promise<unknown> | void;
 }) {
-  const { t } = useLocale();
-  const [hint, setHint] = useState("");
+  const { t, locale } = useLocale();
+  const [scene, setScene] = useState("");
   const [theme, setTheme] = useState<MapTheme | "">("");
   const [rolling, setRolling] = useState(false);
   // Counts rolls so the die starts each one from upright.
   const [rolls, setRolls] = useState(0);
   const [lastSeed, setLastSeed] = useState<number | null>(null);
-  const read = hint.trim() ? readHint(hint, genre) : null;
 
   async function roll() {
     const seed = freshSeed();
     setRolling(true);
     setRolls((count) => count + 1);
     try {
-      await onRoll(forgeGenerate({ seed, width, height, hint, theme, ambient: "" }, genre), seed);
+      await onRoll(forgeGenerate({ seed, width, height, scene, theme, ambient: "" }), seed);
       setLastSeed(seed);
     } finally {
       setRolling(false);
@@ -50,21 +51,17 @@ export function MapRollPanel({
 
   return (
     <div className="space-y-2">
-      <label className="block space-y-1">
-        <span className="font-display text-[9px] uppercase tracking-[0.18em] text-stone-500">{t("mapForgeUi.hint")}</span>
-        <input
-          value={hint}
-          maxLength={200}
-          onChange={(event) => setHint(event.target.value)}
-          placeholder={t("mapForgeUi.hintStudio")}
-          className={mapInput}
+      <div className="block space-y-1">
+        <span className="font-display text-[9px] uppercase tracking-[0.18em] text-stone-500">{t("mapForgeUi.placeKind")}</span>
+        <Select<string>
+          size="sm"
+          value={scene}
+          onChange={setScene}
+          label={t("mapForgeUi.placeKind")}
+          className="w-full"
+          options={[{ value: "", label: t("mapForgeUi.openGround") }, ...sceneOptions().map(option => ({ ...option, label: sceneCueLabel(option, locale) }))]}
         />
-      </label>
-      {read?.themeWord && !theme ? (
-        <FinePrint>
-          {t("boardOpsUi.roll.read", { word: read.themeWord, theme: t(`mapInspectUi.theme.${read.theme}`).toLowerCase() })}
-        </FinePrint>
-      ) : null}
+      </div>
       <div className="space-y-1">
         <span className="font-display text-[9px] uppercase tracking-[0.18em] text-stone-500">{t("mapForgeUi.outright")}</span>
         <div className="grid grid-cols-2 gap-1">

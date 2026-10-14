@@ -58,6 +58,8 @@ export type PublicEncounter = {
     // Thief's Reflexes: the thief's second turn in the first round, a
     // second entry with the same id (so rows are keyed by position).
     reflex?: boolean;
+    // The feature behind an extra turn taken at once (Strength before Death).
+    extra?: string;
   }>;
   enemies: Array<{
     id: string;
@@ -67,6 +69,13 @@ export type PublicEncounter = {
     cr: number;
     // SRD creature type off the snapshot, for the thumbnail.
     type: string;
+    // The stat block's slug (the SRD slug a reskin fights as, "custom" for
+    // an invented enemy, "summon:<form>" for a summon turned hostile), so the
+    // thumbnail can draw the creature's own family plate
+    // (monsterPlaceholder in src/lib/placeholders.ts). Not new information:
+    // groupKey has always been this same slug. Optional so a client talking
+    // to an older server still renders.
+    slug?: string;
     // Kept off the players' board and tracker by the DM. Only ever true in
     // the DM's own projection: a hidden enemy is absent from a player's.
     hidden: boolean;
@@ -142,6 +151,12 @@ export type PublicTurn = {
   disengaged?: boolean;
   // A levelled spell already cast this turn with this kind of action.
   castThisAction?: boolean;
+  // What the Attack action was made with, which is what opens the off-hand
+  // swing of two-weapon fighting (attack-rules.ts offHandProblem). Always
+  // sent, so a Hand can tell "not earned" from a server too old to say
+  // (issue 210).
+  lightMeleeAttack?: boolean;
+  oneHandMeleeAttack?: boolean;
 };
 
 export type PublicLastHit = {
@@ -183,6 +198,8 @@ function turnView(encounter: Encounter): { turn?: PublicTurn } {
       ...(budget.dashed ? { dashed: true } : {}),
       ...(budget.disengaged ? { disengaged: true } : {}),
       ...(budget.castThisAction ? { castThisAction: true } : {}),
+      lightMeleeAttack: Boolean(budget.lightMeleeAttack),
+      oneHandMeleeAttack: Boolean(budget.oneHandMeleeAttack ?? budget.lightMeleeAttack),
     },
   };
 }
@@ -269,6 +286,7 @@ export function publicEncounter(
             // column of it, and the tracker has never shown one.
             ...(showNumbers ? { initiative: entry.initiative } : {}),
             ...(entry.kind === "pc" && entry.reflex ? { reflex: true } : {}),
+            ...(entry.kind === "pc" && entry.extra ? { extra: entry.extra } : {}),
           }))
       : [],
     enemies: enemies
@@ -281,6 +299,7 @@ export function publicEncounter(
       status: enemy.status,
       cr: enemy.cr,
       type: creatureTypeOf(enemy.stats),
+      slug: enemy.slug,
       groupKey: enemy.slug,
       // Knocked out by a nonlethal blow (src/lib/dm/knockout.ts): alive at
       // 0 hit points, out of the fight, not dying.

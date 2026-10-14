@@ -260,8 +260,8 @@ export function MarketPanel({
         const canHaggle = Boolean(mySheet && !shop.haggledBy.includes(mySheet.id));
         const shopItems: ContextMenuItem[] = [
           ...(canHaggle ? [{ id: "haggle", label: t("marketUi.panel.14"), glyph: "skill-persuasion", disabled: Boolean(busy), onSelect: () => void counter(shop, "haggle") }] : []),
-          ...(canPrep ? [{ id: "edit", label: t("marketUi.panel.15"), glyph: "tab-shop", separated: canHaggle, onSelect: () => setEditing(shop.id) }] : []),
-          ...(canPrep ? [{ id: "close", label: t("marketUi.closeNamed", { name: shop.name }), glyph: "quest-failed", tone: "danger" as const, onSelect: () => void close(shop) }] : []),
+          ...(canPrep ? [{ id: "edit", label: t("marketUi.panel.15"), glyph: "ui-edit", separated: canHaggle, onSelect: () => setEditing(shop.id) }] : []),
+          ...(canPrep ? [{ id: "close", label: t("marketUi.closeNamed", { name: shop.name }), glyph: "ui-lock", tone: "danger" as const, onSelect: () => void close(shop) }] : []),
         ];
         if (editing === shop.id) {
           return (

@@ -430,16 +430,16 @@ export const LINEAGE_MATERIAL_MESSAGES = /*#__PURE__*/ defineMessages({
     "zh-CN": "黯蚀和光耀。"
   },
   "lineageMaterial.trait41.line": {
-    "en": "Healing Hands (heal a touched creature your level in HP, 1/long rest)",
-    "zh-CN": "治愈之手（触碰一个生物，为其恢复等于你等级的生命值；每次长休可用 1 次）"
+    "en": "Healing Hands (an action: a touched creature regains a number of d4s equal to your proficiency bonus, 1/long rest)",
+    "zh-CN": "治愈之手（用一个动作触碰一个生物，为其恢复若干 d4 的生命值，骰子数量等于你的熟练加值；每次长休可用 1 次）"
   },
   "lineageMaterial.trait41.head": {
     "en": "Healing Hands",
     "zh-CN": "治愈之手"
   },
   "lineageMaterial.trait41.body": {
-    "en": "Heal a touched creature your level in HP, 1/long rest.",
-    "zh-CN": "触碰一个生物，为其恢复等于你等级的生命值；每次长休可用 1 次。"
+    "en": "An action: a touched creature regains a number of d4s equal to your proficiency bonus, 1/long rest.",
+    "zh-CN": "用一个动作触碰一个生物，为其恢复若干 d4 的生命值，骰子数量等于你的熟练加值；每次长休可用 1 次。"
   },
   "lineageMaterial.trait42.line": {
     "en": "Light Bearer (the light cantrip)",
@@ -454,16 +454,16 @@ export const LINEAGE_MATERIAL_MESSAGES = /*#__PURE__*/ defineMessages({
     "zh-CN": "光亮术戏法。"
   },
   "lineageMaterial.trait43.line": {
-    "en": "Celestial Revelation (winged flight and radiant damage from 3rd level, 1/long rest)",
-    "zh-CN": "天界显现（从 3 级起，可获得有翼飞行和光耀伤害；每次长休可用 1 次）"
+    "en": "Celestial Revelation (from 3rd level, a bonus action: Heavenly Wings, Inner Radiance or Necrotic Shroud for a minute, with extra damage equal to your proficiency bonus once a turn, 1/long rest)",
+    "zh-CN": "天界显现（从 3 级起，可用附赠动作选择天堂之翼、内在光辉或黯蚀帷幕，持续一分钟；每回合一次额外造成等于熟练加值的伤害；每次长休可用 1 次）"
   },
   "lineageMaterial.trait43.head": {
     "en": "Celestial Revelation",
     "zh-CN": "天界显现"
   },
   "lineageMaterial.trait43.body": {
-    "en": "Winged flight and radiant damage from 3rd level, 1/long rest.",
-    "zh-CN": "从 3 级起，可获得有翼飞行和光耀伤害；每次长休可用 1 次。"
+    "en": "From 3rd level, a bonus action: Heavenly Wings, Inner Radiance or Necrotic Shroud for a minute, with extra damage equal to your proficiency bonus once a turn, 1/long rest.",
+    "zh-CN": "从 3 级起，可用附赠动作选择天堂之翼、内在光辉或黯蚀帷幕，持续一分钟；每回合一次额外造成等于熟练加值的伤害；每次长休可用 1 次。"
   },
   "lineageMaterial.trait44.line": {
     "en": "Stone's Endurance (reduce damage by 1d12 + CON, 1/short rest)",
@@ -1297,9 +1297,9 @@ export const LINEAGE_TRAIT_DISPLAY = [
     "bodyKey": "lineageMaterial.trait40.body"
   },
   {
-    "line": "Healing Hands (heal a touched creature your level in HP, 1/long rest)",
+    "line": "Healing Hands (an action: a touched creature regains a number of d4s equal to your proficiency bonus, 1/long rest)",
     "head": "Healing Hands",
-    "body": "Heal a touched creature your level in HP, 1/long rest.",
+    "body": "An action: a touched creature regains a number of d4s equal to your proficiency bonus, 1/long rest.",
     "lineKey": "lineageMaterial.trait41.line",
     "headKey": "lineageMaterial.trait41.head",
     "bodyKey": "lineageMaterial.trait41.body"
@@ -1313,9 +1313,9 @@ export const LINEAGE_TRAIT_DISPLAY = [
     "bodyKey": "lineageMaterial.trait42.body"
   },
   {
-    "line": "Celestial Revelation (winged flight and radiant damage from 3rd level, 1/long rest)",
+    "line": "Celestial Revelation (from 3rd level, a bonus action: Heavenly Wings, Inner Radiance or Necrotic Shroud for a minute, with extra damage equal to your proficiency bonus once a turn, 1/long rest)",
     "head": "Celestial Revelation",
-    "body": "Winged flight and radiant damage from 3rd level, 1/long rest.",
+    "body": "From 3rd level, a bonus action: Heavenly Wings, Inner Radiance or Necrotic Shroud for a minute, with extra damage equal to your proficiency bonus once a turn, 1/long rest.",
     "lineKey": "lineageMaterial.trait43.line",
     "headKey": "lineageMaterial.trait43.head",
     "bodyKey": "lineageMaterial.trait43.body"

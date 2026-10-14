@@ -1,4 +1,5 @@
 import { generateStoryImage, imageProducerReady } from "@/lib/image-generate";
+import { imagesAvailable } from "@/lib/capabilities";
 import {
   getCampaignMessage,
   getLatestDmMessage,
@@ -10,6 +11,7 @@ import { boundaryNegativeTerms } from "@/lib/dm/safety-logic";
 import { imageToolArgsSchema, type ImageToolArgs } from "@/lib/image-tool";
 import { publishPersisted } from "@/lib/events";
 import { enqueueMediaJob } from "@/lib/media-queue";
+import { toEnglishForImage } from "@/lib/image-english";
 import type { AspectPreset, GeneratedImage, ImageRequest, StorySettings } from "@/lib/types";
 
 // Persist progress and failures so snapshots/reconnects can distinguish a
@@ -58,11 +60,17 @@ export function fulfillMessageImage(
   return enqueueMediaJob(`image ${messageId}`, async () => {
     publishMediaStatus(campaignId, "image", messageId, "generating");
     try {
+      const campaign = getCampaignById(campaignId);
+      if (!campaign) {
+        return;
+      }
       // The table's boundary decides what the picture leaves out
       // (docs/vtt-parity-implementation-plan.md 9.1).
-      const boundaries = getCampaignById(campaignId)?.gameSettings.safety?.boundaries ?? "standard";
+      const boundaries = campaign.gameSettings.safety?.boundaries ?? "standard";
+      // The AI DM writes its prompt in English, a human DM may not.
+      const english = await toEnglishForImage(campaign, { prompt });
       const image = await generateStoryImage(settings, {
-        prompt,
+        prompt: english.prompt,
         mode: request.mode ?? settings.imageMode,
         aspect: request.aspect ?? settings.aspect,
         negative: boundaryNegativeTerms(boundaries),
@@ -72,10 +80,54 @@ export function fulfillMessageImage(
       }
       publishPersisted(campaignId, "image_ready", { messageId, image });
     } catch (error) {
-      publishMediaStatus(campaignId, "image", messageId, "failed", pictureFailureReason(error));
+      const reason = pictureFailureReason(error);
+      publishMediaStatus(campaignId, "image", messageId, "failed", reason);
+      recordImageFailure(campaignId, messageId, reason);
       throw error;
     }
   });
+}
+
+// The failure above is an ephemeral event, and the placeholder reads the
+// request: left needed, a reload or a player who joins later would watch it
+// spin forever. So the request is closed with the reason, which the passage
+// shows in the placeholder's place. Asking again writes a fresh request.
+function recordImageFailure(campaignId: string, messageId: string, reason: string) {
+  const message = getCampaignMessage(messageId);
+  if (!message?.imageRequest || message.generatedImage) {
+    return;
+  }
+  if (!setMessageImageRequest(messageId, { ...message.imageRequest, needed: false, failed: reason })) {
+    return;
+  }
+  const updated = getCampaignMessage(messageId);
+  if (updated) {
+    publishPersisted(campaignId, "message_updated", { message: updated });
+  }
+}
+
+// The picture the AI DM attaches to its own narration. Nobody at the table
+// asked for it, so on a server with no image backend running (setup's "no
+// pictures", which still falls back to ComfyUI) it is dropped rather than
+// failed: the request is marked not needed, which is what the placeholder
+// reads, so it goes away now and stays away on a reload. A ComfyUI started
+// later is picked up once the capability probe sees it.
+export async function fulfillAutoImage(
+  campaignId: string,
+  messageId: string,
+  request: ImageRequest,
+  settings: StorySettings,
+) {
+  if (await imagesAvailable(settings)) {
+    return fulfillMessageImage(campaignId, messageId, request, settings);
+  }
+  if (!setMessageImageRequest(messageId, { ...request, needed: false })) {
+    return;
+  }
+  const updated = getCampaignMessage(messageId);
+  if (updated) {
+    publishPersisted(campaignId, "message_updated", { message: updated });
+  }
 }
 
 // generate_image, as an adjudication a person can invoke.

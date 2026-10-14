@@ -27,9 +27,9 @@ export function agentSetupLine(program: AgentProgram, url: string, token: string
   }
   if (program === "opencode") {
     return {
-      text: `"mcp": { "odm": { "type": "remote", "url": "${url}", "headers": { "Authorization": "Bearer ${token}" }, "oauth": false } }`,
+      text: `"mcp": { "servers": { "odm": { "type": "remote", "url": "${url}", "headers": { "Authorization": "Bearer ${token}" }, "oauth": false } } }`,
       block: false,
-      where: "Add it inside opencode.json (in the project, or ~/.config/opencode/opencode.json), then start opencode again.",
+      where: "For opencode 2, add it inside opencode.json (in the project, or ~/.config/opencode/opencode.json), then start opencode again.",
     };
   }
   return {

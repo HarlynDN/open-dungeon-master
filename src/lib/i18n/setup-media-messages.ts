@@ -1,6 +1,13 @@
 import { defineMessages } from "./catalog.ts";
 
 export const SETUP_MEDIA_MESSAGES = /*#__PURE__*/ defineMessages({
+  "setupMedia.dictation.model": {"en": "Transcription model", "zh-CN": "语音转写模型"},
+  "setupMedia.dictation.whisperModel": {"en": "Whisper model", "zh-CN": "Whisper 模型"},
+  "setupMedia.dictation.openaiSelected": {"en": "The OpenAI key takes dictation too, with the model picked here.", "zh-CN": "此 OpenAI 密钥也用于所选模型的语音转写。"},
+  "setupMedia.dictation.whisperSelected": {"en": "A Whisper server at {host} turns speech into text, with the model picked here.", "zh-CN": "位于 {host} 的 Whisper 服务使用所选模型将语音转为文字。"},
+  "setupMedia.pictures.noNegative": {"en": "{model} does not support negative prompts, so picture exclusions cannot be enforced through negative prompts.", "zh-CN": "{model} 不支持负面提示词，因此无法通过负面提示词排除图片内容。"},
+  "setupMedia.pictures.imageModel": {"en": "Image model", "zh-CN": "图像模型"},
+  "setupMedia.pictures.checking": {"en": "Checking installed models…", "zh-CN": "正在检查已安装的模型…"},
   "setupMedia.key.saved": {"en": "•••••••• (saved, leave blank to keep it)", "zh-CN": "••••••••（已保存，留空可保留）"},
   "setupMedia.pictures.title": {"en": "Pictures", "zh-CN": "图片"},
   "setupMedia.pictures.comfyTitle": {"en": "ComfyUI on this computer", "zh-CN": "此电脑上的 ComfyUI"},

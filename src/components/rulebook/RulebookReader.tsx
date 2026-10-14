@@ -4,6 +4,7 @@ import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { referenceDisplayName } from "@/lib/i18n/references";
 import { bookText } from "@/lib/i18n/book-ui-presentations";
 
+import "@/app/styles/rulebook.css";
 import { Bookmark, ChevronLeft, ChevronRight, List } from "lucide-react";
 import { isComposingInput } from "@/lib/input-composition";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";

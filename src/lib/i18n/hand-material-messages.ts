@@ -3,6 +3,8 @@ import { defineMessages } from "./catalog.ts";
 // Source frames from hand-play/core/react/class and can-act/action-budget.
 // Numeric placeholders stay numeric; names are presentation parameters only.
 export const HAND_MATERIAL_MESSAGES = defineMessages({
+  "handMaterial.term.moveSpiritTotem": { en: "Move Spirit Totem", "zh-CN": "移动精魂图腾" },
+  "handMaterial.term.activateCannon": { en: "Activate Cannon", "zh-CN": "激活魔能炮" },
   "handMaterial.error.pending": { en: "Sent. Waiting for the DM to resolve {feature}.", "zh-CN": "已发送，正在等待 DM 处理{feature}。" },
   "handMaterial.join.or": { en: " or ", "zh-CN": "或" },
   "handMaterial.join.and": { en: " and ", "zh-CN": "、" },
@@ -144,7 +146,7 @@ export const HAND_MATERIAL_MESSAGES = defineMessages({
   "handMaterial.rules.search": { en: "Perception or Investigation to find what is hidden.", "zh-CN": "通过察觉或调查检定寻找隐藏的事物。" },
   "handMaterial.rules.escape": { en: "Athletics or Acrobatics against the grappler's Athletics.", "zh-CN": "以运动或特技检定对抗擒抱者的运动检定。" },
   "handMaterial.rules.stand": { en: "Getting up costs half your speed.", "zh-CN": "起身消耗等于速度一半的移动距离。" },
-  "handMaterial.rules.ready": { en: "Name a trigger; when it happens your reaction makes the attack.", "zh-CN": "指定触发条件；条件发生时，以反应发动攻击。" },
+  "handMaterial.rules.ready": { en: "Name a trigger and what you will do when it happens; your reaction does it then.", "zh-CN": "指定触发条件和准备执行的行动；条件发生时，用反应执行。" },
   "handMaterial.rules.grapple": { en: "Athletics against their Athletics or Acrobatics. Takes the place of one attack.", "zh-CN": "以运动检定对抗目标的运动或特技检定，替代一次攻击。" },
   "handMaterial.rules.shove": { en: "Knock them prone or push them 5 ft. Takes the place of one attack.", "zh-CN": "将目标击倒或推开 5 英尺，替代一次攻击。" },
   "handMaterial.rules.object": { en: "Drink, pull, light, throw: say what.", "zh-CN": "饮用、拉动、点燃或投掷：请说明具体操作。" },
@@ -324,6 +326,7 @@ export const HAND_MATERIAL_MESSAGES = defineMessages({
   "handMaterial.error.noBonusWeaponWho": { en: "{who}: No feature of theirs grants a bonus-action weapon attack.", "zh-CN": "{who}没有提供附赠动作武器攻击的特性。" },
   "handMaterial.error.bonusWeaponWhen": { en: "{feature}'s bonus-action weapon attack comes {when}, and that has not happened this turn.", "zh-CN": "{feature}提供的附赠动作武器攻击需满足条件：{when}；本回合尚未满足。" },
   "handMaterial.error.bonusWeaponWhenWho": { en: "{who}: {feature}'s bonus-action weapon attack comes {when}, and that has not happened this turn.", "zh-CN": "{who}使用{feature}的附赠动作武器攻击需满足条件：{when}；本回合尚未满足。" },
+  "handMaterial.bonusWhen.curving": { en: "as a reroll of an arrow that just missed, at a different target within 60 feet of the first", "zh-CN": "对刚未命中的箭矢重掷攻击，改为攻击原目标 60 尺内的另一个目标" },
   "handMaterial.bonusWhen.attack": { en: "after they take the Attack action", "zh-CN": "先采取攻击动作" },
   "handMaterial.bonusWhen.telekinesis": { en: "while they concentrate on telekinesis", "zh-CN": "维持心灵遥控的专注" },
   "handMaterial.bonusWhen.cantrip": { en: "after they cast a cantrip with their action", "zh-CN": "先用动作施放戏法" },

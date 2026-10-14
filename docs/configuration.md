@@ -21,6 +21,7 @@ falls through to the env var.
 | `OPENROUTER_API_KEY` | — | Fallback key for OpenRouter URLs (else set in-app) |
 | `OPENAI_COMPAT_API_KEY` | — | Fallback key for other connected servers |
 | `FLUX_WORKER_URL` | `http://127.0.0.1:7869` | Image worker |
+| `OPENAI_IMAGE_MODEL` | — | Picture model for the OpenAI-compatible images backend. Also picked in Admin > Image generation, which wins. Without one no picture is asked for |
 | `COMFYUI_URL` | `http://127.0.0.1:8188` | Default ComfyUI server for the ComfyUI backend |
 | `ULTRA_FAST_IMAGE_GEN_DIR` | `~/ultra-fast-image-gen` | FLUX backends repo |
 | `ULTRA_FAST_IMAGE_GEN_PYTHON` | platform venv Python | Python inside the image backend venv |
@@ -34,18 +35,22 @@ falls through to the env var.
 | Variable | Default | Purpose |
 |---|---|---|
 | `CONTENT_DB_PATH` | `data/content/open5e.sqlite` | Open5e content pack (built by `node scripts/import-open5e.mjs`) |
-| `STT_URL` | `http://127.0.0.1:8870` | Push-to-talk transcription service (odm-stt.service) |
-| `STT_MODEL` | `distil-large-v3` | faster-whisper model the STT proxy requests |
+| `STT_URL` | `http://127.0.0.1:8870` | Whisper service for push-to-talk (odm-stt.service). Also set in Admin > Speech, which wins; `off` says there is none. The voice-chat transcript uses the same service, but only at an address named there or here, never the default one |
+| `STT_MODEL` | — | Model push-to-talk and the voice-chat transcript ask the Whisper service for. Also picked in Admin > Speech, which wins. Without one, the service's only model when it lists one; otherwise the Whisper service is skipped |
+| `STT_OPENAI_MODEL` | — | OpenAI transcription model for dictation when nothing free listens. Also picked in Admin > Speech, which wins. Without one OpenAI never listens |
 | `KOKORO_URL` | `http://127.0.0.1:8880` | Kokoro-FastAPI TTS service for DM narration |
 | `TTS_PROVIDER` | `kokoro` | Kind of narration server: `kokoro`, `openai` (any server with OpenAI's `/v1/audio/speech`), or `off`. Also set in Admin > Speech, which wins |
 | `TTS_BASE_URL` | `https://api.openai.com/v1` | Address of the `openai` kind of narration server |
-| `TTS_MODEL` | `kokoro`, or `gpt-4o-mini-tts` on OpenAI | Model name sent with each narration request |
+| `TTS_MODEL` | `kokoro` on Kokoro | Model name sent with each narration request. The `openai` kind has no default: pick one from the server's list in Admin > Speech, or set it here. Without one, a server that is not OpenAI itself and lists exactly one model runs it; otherwise no passage is read aloud |
 | `TTS_API_KEY` | — | Bearer key for the narration server. Blank on OpenAI itself falls back to the key saved for pictures |
 | `TTS_VOICE` | `af_heart`, or `alloy` on OpenAI | Voice used when a campaign names one the server does not have |
 | `TTS_CONCURRENCY` | `2` | Speech requests sent to the narration server at once, across every table (1 to 8). A passage with character voices is several short requests; two at a time was the fastest on a CPU Kokoro, a hosted API can take more |
 | `ODM_UPDATE_CHECK` | on | `off` stops the server asking GitHub whether a newer release exists (one anonymous request every six hours at most; the answer is shown in the account menu's About dialog) |
+| `ODM_MODEL_CATALOG` | on | `off` stops the server fetching the model catalog from [models.dev](https://models.dev) (one anonymous request a day at most). The bundled snapshot and the cached copy still serve the model pickers; see [text-backends.md](text-backends.md#choosing-a-model-the-catalog-and-discovery) |
+| `ODM_MODEL_CATALOG_PATH` | `data/model-catalog.json` (beside the database) | Where the fetched catalog is cached |
 | `DM_DEBUG` | — | `1` logs DM model content and tool calls |
 | `DM_LEAN_TOOLS` | — | `1` removes the stat-mutation tools if the model's tool fidelity suffers |
+| `DM_MOMENT_AFTER_HISTORY` | — | `1` sends the turn-to-turn part of GAME STATE (the fight, recent rolls, retrieved lore) after the transcript instead of in the system message, so a server that caches the prompt's start (llama-server) reuses the whole history between turns. Off by default: the default local model then skipped rolls it should have asked for |
 | `DM_COMPACT_THRESHOLD` | `120` | Messages before history compaction begins (lower to test) |
 | `DM_CHAPTER_MIN` | `16` | Non-system messages (players included) a chapter must hold before beats can close it |
 | `DM_CHAPTER_BEATS` | `2` | Finished story-arc beats that close a chapter once it is past the floor |
@@ -54,6 +59,8 @@ falls through to the env var.
 | `DM_CHAPTER_MAX` | `120` | Hard cap: a chapter this long closes even with no finished beat |
 | `DB_ENCRYPTION_KEY` | required | Encrypts `data/local-roleplay.sqlite` at rest (chacha20). Belongs in `.env.server` |
 | `ODM_SETUP_CODE` | generated and printed in the server log | The one-time code that creating a fresh server's first (admin) account requires. Unset, the server mints one and prints it at every start until the first account exists. On a device world (`ODM_DEVICE_WORLD=1`) nothing is minted or printed: the app that hosts it sets this itself and sends it with the host's own account, and a device world started without it asks for no code |
+| `ODM_PORTAL_SECRET` | unset | Set only by the desktop app for the world it runs: the key its portal cookies are signed with, so that server may forward a player's data calls to the host they are visiting. Unset (every hosted server), portal cookies are ignored and nothing is ever forwarded |
+| `TRUST_PROXY_HEADERS` | `1` | Whether the login throttle reads the caller's address from `cf-connecting-ip` or the last `x-forwarded-for` entry. Set `0` on a server reached directly with no proxy in front, so a caller cannot choose their own address; every caller then shares one, and only the per-account limits apply |
 | `DISCORD_CLIENT_ID` | — | Discord OAuth application id for "Sign in with Discord" (or set in `/admin`) |
 | `DISCORD_CLIENT_SECRET` | — | Discord OAuth client secret. Belongs in `.env.server` (or set in `/admin`) |
 | `APP_PUBLIC_URL` | forwarded headers / request origin | Public URL players use (e.g. `https://dungeon.example.org`); needed for OAuth redirect URIs when the reverse proxy doesn't send `X-Forwarded-Host`/`X-Forwarded-Proto` |
@@ -285,43 +292,68 @@ browsers require a secure context for web-app installs.
 ## Ambience and music
 
 The sound library is a set of CUES (a tavern, a cave, a battle, a thunderclap)
-rather than a set of files. `src/lib/ambience/catalog.ts` names them; what is
-actually on disk lives in `public/ambience/`, is never committed, and is
-fetched on request:
+rather than a set of files. `src/lib/ambience/catalog.ts` names them; the
+files live in `public/ambience/` and ship with the project: public-domain and
+open-licensed recordings (CC0 and Public Domain Mark, and the attribution
+licences CC BY, CC BY-SA and OpenGameArt's OGA-BY), each credited by title,
+author, source and licence in `src/lib/ambience/sources.json`, in
+`public/ambience/manifest.json` and on the `/licenses` page. Nothing has to be
+installed. A cue may have several takes (`battle.mp3`, `battle-2.mp3`); the
+player moves between them so a long fight is not one loop forever, and Next
+in the sound panel skips ahead.
+
+**The sound pack.** A release may also attach `ambience-pack.zip`, the same
+library (or a newer one) as one file, for an install that wants to update
+without pulling the repository. Install it from the admin panel (Sound
+library: one button, with progress) or on the command line:
 
 ```bash
-npm run fetch-ambience              # fill every cue that has no file yet
-npm run fetch-ambience -- --dry-run # resolve and report, download nothing
-npm run fetch-ambience -- --cue tavern --skip 1   # try the next candidate
-npm run fetch-ambience -- --manifest             # rebuild the manifest only
+npm run fetch-ambience -- --pack              # this release's pack
+npm run fetch-ambience -- --pack https://...  # another pack
 ```
 
-The script reads each archive's own licence metadata and refuses anything it
-cannot positively identify. By default it accepts only public-domain
-dedications (CC0 and the Public Domain Mark). `--allow-attribution` widens
-that to CC BY and CC BY-SA, which you may use but must keep credited;
-NonCommercial and NoDerivatives are refused either way, because whether your
-install is a commercial or derivative use is not a question this script may
-answer for you. Every accepted file's credit is written into
-`public/ambience/manifest.json` and shown on the app's `/licenses` page.
+**Fetch more.** The script that resolved the library can add takes or refill
+a cue from the open sources, trying each in the order that suits the layer:
 
-Three sources are tried, in the order that suits the layer. Room tone and
-one-shot sounds go to Wikimedia Commons first, music to the Internet Archive,
-and both fall through to [Freesound](https://freesound.org/apiv2/apply), which
-is much the best source for this material and the only one needing a key:
+- OpenGameArt.org: game music, loops and effects under CC0, CC BY, CC BY-SA
+  and OGA-BY, the licence stated on every page. Room tone, stings, loops.
+- Kevin MacLeod's catalogue (incompetech.com), CC BY 4.0: every piece tagged
+  by mood and filed under collections such as Tension, Mystery, Wonder,
+  Horror and Celtic and Folk, which is where the music cues come from.
+- Wikimedia Commons: public-domain field recordings and one-shots.
+- Freesound: CC0 recordings, the one source that needs a key
+  (`FREESOUND_API_KEY`, free from freesound.org/apiv2/apply).
+- The Internet Archive: old public-domain recordings.
 
 ```bash
-FREESOUND_API_KEY=... npm run fetch-ambience
+npm run fetch-ambience                       # fill every cue that has no file yet
+npm run fetch-ambience -- --layer music --takes 2   # a second take of every mood
+npm run fetch-ambience -- --dry-run          # resolve and report, download nothing
+npm run fetch-ambience -- --cue tavern --skip 1     # try the next candidate
+npm run fetch-ambience -- --public-domain-only      # CC0 and PD Mark alone
+npm run fetch-ambience -- --manifest         # rebuild the manifest only
 ```
 
-**Curating by hand.** Freely licensed audio is thin in places, and a cue the
-searches cannot fill is simply silent. Two ways to fill one yourself:
+Where a file comes from, in order: your own pins (`data/ambience-sources.json`),
+the lock (`data/ambience-lock.json`, what this install resolved before), the
+shipped pins (`src/lib/ambience/sources.json`, the library the project
+resolved and committed, so every install gets the same tracks), and only
+then a search. The licence is read from each source's own record and never
+guessed; anything the script cannot positively identify is refused, and
+NonCommercial and NoDerivatives are refused under every setting. Every
+candidate also passes a spoken-word gate (the archives are full of correctly
+licensed audiobooks, pronunciation clips and articles read aloud, and Commons
+files them under categories that say so), a relevance gate and a length gate
+per layer (a bed or a music cue has to run at least half a minute, a sting at
+most twenty seconds).
 
-- Drop a file named after the cue into `public/ambience/` (`tavern.mp3`,
-  `cave.ogg`; `.mp3`, `.ogg`, `.opus`, `.m4a` and `.wav` all work) and run
-  `npm run fetch-ambience -- --manifest`. It is never overwritten, and it is
-  credited as locally supplied: the licence is then yours to stand behind.
-- Pin exact URLs in `data/ambience-sources.json`, which wins over any search:
+**Curating by hand.** Drop a file named after the cue into `public/ambience/`
+(`tavern.mp3`, `cave.ogg`, or `tavern-2.mp3` for a second take; `.mp3`,
+`.ogg`, `.opus`, `.m4a` and `.wav` all work) and rescan from the admin panel
+or run `npm run fetch-ambience -- --manifest`. It is never overwritten, it is
+credited as locally supplied, and it stays out of the pack: the licence is
+then yours to stand behind. Or pin exact URLs in `data/ambience-sources.json`,
+which win over everything:
 
   ```json
   {
@@ -335,17 +367,28 @@ searches cannot fill is simply silent. Two ways to fill one yourself:
   }
   ```
 
-`data/ambience-lock.json` records what each cue resolved to, so a second
-machine fetches the same files rather than whatever the search returns that
-day. Both live under `data/` and are not committed.
+**Making the pack.** `npm run pack-ambience` zips every public-domain or
+attribution-licensed track on disk with its credits (`--all` takes every
+file, `--include-generated` the takes below). `npm run fetch-ambience --
+--export-sources` writes the resolved library to the shipped pins file.
+
+**Optional: a music model.** `npm run generate-ambience` makes takes with an
+ACE-Step 1.5 server (`ACESTEP_URL`, `http://127.0.0.1:8002` by default) from
+the prompt each room and music cue carries. It is an experiment, not the
+library: generated takes are credited as such, stay out of the pack unless
+asked for, and are no substitute for a recording somebody made.
 
 **At the table.** Ambience is a per-campaign setting (Setup → Ambience), on by
-default; a table with no files fetched hears nothing and the volume control
-hides itself. "Follows the scene" lets the engine pick a bed from each new
-place and switch to combat music when initiative starts. The AI DM and a human
-DM both reach the same two engine actions, `set_ambience` and `play_sting`;
-volume and mute are per listener, in their own browser, and ambience ducks
-automatically while narration is being read aloud.
+default. "Follows the scene" lets the engine pick a room from each new place
+and switch to combat music when initiative starts. The speaker in the table
+header opens the sound panel: what is playing and which take, a level each
+for the room and the music (per listener, synced to the account like the
+other audio preferences), Next, and, for whoever steers the story (the DM, or
+the party lead at an AI table), the pickers for the room, the music and the
+sounds with a hold per layer. The AI DM, the DM console and the panel all
+reach the same two engine actions, `set_ambience` and `play_sting`. Sound
+ducks automatically while narration is being read aloud, and a cue with no
+file on the server is silence, named as such in the panel.
 
 ## Physical and Bluetooth dice
 
@@ -435,3 +478,57 @@ Players and DMs who do not run the server have per-item exports instead:
 - A campaign's story exports as HTML, ODT or DOCX from the Story tab. That is
   a reading copy; play state (messages, sheets, floor, clock) has no file
   export and moves only with the database.
+
+## Upgrading
+
+### From 0.26.4 or earlier: every model is picked
+
+No model is named in the code any more (issue #265): each model ODM sends is
+one picked from what its backend lists, in the admin panel or the guided
+setup, or named in an environment variable. Saved settings keep working
+unchanged. An install that relied on a default that is gone must now pick:
+
+- **OpenAI pictures**: the picture model, in Admin > Image generation (or
+  `OPENAI_IMAGE_MODEL`). `gpt-image-1` was the default. Until one is picked,
+  tables are not promised pictures, and the panel says a model is missing.
+- **Narration on an OpenAI-compatible server**: the model, in Admin > Speech
+  (or `TTS_MODEL`). `gpt-4o-mini-tts` and `tts-1` were the defaults. A server
+  of your own that lists exactly one model runs it without a pick; until a
+  model can be found, new campaigns start with narration off.
+- **Dictation through OpenAI**: the transcription model, under OpenAI
+  transcription in Admin > Speech (or `STT_OPENAI_MODEL`). Without one OpenAI
+  never listens: paid dictation no longer switches itself on because a key
+  exists, and with no other engine the mic buttons hide. Admin > Speech says
+  so while a key waits for a model.
+- **A Whisper service**: nothing, if it lists one model, which a blank field
+  runs. One that lists several needs its model picked in Admin > Speech or set
+  as `STT_MODEL` (a server that lists its narration and transcription models
+  together, as Speaches does, is one); until then it is skipped, and Admin >
+  Speech says so. Push-to-talk used to send
+  `distil-large-v3` and the voice-chat transcript `whisper-1`; both now send
+  the model picked, to the same address.
+- **ComfyUI in checkpoint mode**: a checkpoint, or a catalog model, in Admin >
+  Image generation. The pinned `CyberRealisticXLPlay_V6.0.safetensors` was the
+  default, so this is every server that ran on that file. Campaigns that saved
+  a checkpoint keep it; those that have none paint with the one picked.
+
+Also new in this release:
+
+- **Fast is sent for any OpenAI model that offers it.** Which models have
+  OpenAI's paid Fast tier is no longer read from their names. A Fast left set
+  in Processing speed (Admin > Text model defaults, and the utility model) on
+  a model the old list left out asked for nothing; it is now sent, and runs
+  and bills at the priority price wherever OpenAI offers it. Check both
+  settings after upgrading.
+- **The compose file names no storyteller model.** `docker-compose.yml`
+  defaulted `OPENAI_COMPAT_MODEL` to `qwen3.6-35b`; it is now blank, so the one
+  model the server lists runs. A server that lists several needs its model
+  picked, or `OPENAI_COMPAT_MODEL` set in `.env`. `.env.example` no longer
+  sets `OPENROUTER_MODEL`.
+- **GPT-6 Sol and Luna run their tools on the Responses API** with their
+  reasoning on, as their refusals ask first (they ran on Chat Completions with
+  reasoning off, chosen by name). See [text-backends.md](text-backends.md).
+- **The desktop and Android apps** pick the picture and transcription models
+  from the key's list when an OpenAI key is saved on the Story AI screen, in
+  the app release made for this server. With an older app, pick them in
+  Admin > Image generation and Admin > Speech on the device's world.

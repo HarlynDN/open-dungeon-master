@@ -1063,7 +1063,38 @@ export const DM_FIELD_COPY = {
   "Madness save DC": "dmField.copy.c1060",
   "Madness save": "dmField.copy.c1061",
   "Symptoms now": "dmField.copy.c1062",
-  "Disease: skip the incubation.": "dmField.copy.c1063"
+  "Disease: skip the incubation.": "dmField.copy.c1063",
+  "The kind of place the battle map is drawn as. Blank: the current place's.": "dmField.upstream027.0",
+  "Enemies come from": "dmField.upstream027.1",
+  "Ahead puts the front of the party's travel formation nearest them; behind, the rear. Blank: ahead.": "dmField.upstream027.2",
+  "Ahead of the travel formation": "dmField.upstream027.3",
+  "Behind it": "dmField.upstream027.4",
+  "A versatile weapon rolls its bigger die in melee. Not with a shield on the arm. Not for an off-hand attack.": "dmField.upstream027.5",
+  "Readied action": "dmField.upstream027.6",
+  "Ready only: what the trigger releases, off their turn, with their reaction. For a spell, fill Spell instead.": "dmField.upstream027.7",
+  "An attack (release with Attack)": "dmField.upstream027.8",
+  "A move up to their speed (release with Move token)": "dmField.upstream027.9",
+  "Use an item (release with Use item)": "dmField.upstream027.10",
+  "Stabilize a creature (release with Stabilize)": "dmField.upstream027.11",
+  "A class feature that takes an action": "dmField.upstream027.12",
+  "Escape a grapple": "dmField.upstream027.13",
+  "Or whoever walks": "dmField.upstream027.14",
+  "Instead of naming them: the character first or last in the party's travel formation.": "dmField.upstream027.15",
+  "At the front of the formation": "dmField.upstream027.16",
+  "At the rear of the formation": "dmField.upstream027.17",
+  "Another sum, not the one just accepted": "dmField.upstream027.18",
+  "With item offers on, the same amount again within ten minutes of an accepted offer is refused unless it is truly another from a different source.": "dmField.upstream027.19",
+  "Another one, not the one just accepted": "dmField.upstream027.20",
+  "With item offers on, the same item again within ten minutes of an accepted offer is refused unless it is truly another from a different source.": "dmField.upstream027.21",
+  "Gender": "dmField.upstream027.22",
+  "Female": "dmField.upstream027.23",
+  "Male": "dmField.upstream027.24",
+  "Nonbinary": "dmField.upstream027.25",
+  "Unknown": "dmField.upstream027.26",
+  "Kind of place": "dmField.upstream027.27",
+  "Sets the place's sound, battle map and picture. Blank keeps what it was.": "dmField.upstream027.28",
+  "Event id, beat number or title": "dmField.upstream027.29",
+  "ev3": "dmField.upstream027.30"
 } as const;
 export const DM_FIELD_IDENTITIES: Record<string, readonly { name: string; kind: string; label: string }[]> = {
   "start_encounter": [
@@ -1088,9 +1119,9 @@ export const DM_FIELD_IDENTITIES: Record<string, readonly { name: string; kind: 
       "label": "Or decide surprise"
     },
     {
-      "name": "battlefield",
-      "kind": "text",
-      "label": "Battlefield"
+      "name": "scene",
+      "kind": "select",
+      "label": "Ground"
     },
     {
       "name": "distanceFeet",
@@ -1101,6 +1132,11 @@ export const DM_FIELD_IDENTITIES: Record<string, readonly { name: string; kind: 
       "name": "lair",
       "kind": "boolean",
       "label": "In a legendary creature's lair"
+    },
+    {
+      "name": "from",
+      "kind": "select",
+      "label": "Enemies come from"
     }
   ],
   "add_enemies": [
@@ -1784,6 +1820,11 @@ export const DM_FIELD_IDENTITIES: Record<string, readonly { name: string; kind: 
       "label": "Readied trigger"
     },
     {
+      "name": "readied",
+      "kind": "select",
+      "label": "Readied action"
+    },
+    {
       "name": "spell",
       "kind": "text",
       "label": "Readied spell"
@@ -1876,6 +1917,11 @@ export const DM_FIELD_IDENTITIES: Record<string, readonly { name: string; kind: 
       "name": "characterIds",
       "kind": "characters",
       "label": "Caught in it"
+    },
+    {
+      "name": "rank",
+      "kind": "select",
+      "label": "Or whoever walks"
     },
     {
       "name": "feet",
@@ -2403,6 +2449,11 @@ export const DM_FIELD_IDENTITIES: Record<string, readonly { name: string; kind: 
       "label": "Or in coins"
     },
     {
+      "name": "additional",
+      "kind": "boolean",
+      "label": "Another sum, not the one just accepted"
+    },
+    {
       "name": "reason",
       "kind": "text",
       "label": "Reason"
@@ -2428,6 +2479,11 @@ export const DM_FIELD_IDENTITIES: Record<string, readonly { name: string; kind: 
       "name": "unidentified",
       "kind": "boolean",
       "label": "They cannot tell what it is"
+    },
+    {
+      "name": "additional",
+      "kind": "boolean",
+      "label": "Another one, not the one just accepted"
     },
     {
       "name": "reason",
@@ -2903,6 +2959,11 @@ export const DM_FIELD_IDENTITIES: Record<string, readonly { name: string; kind: 
       "label": "Race"
     },
     {
+      "name": "gender",
+      "kind": "select",
+      "label": "Gender"
+    },
+    {
       "name": "ancestry",
       "kind": "select",
       "label": "Draconic ancestry"
@@ -2960,6 +3021,11 @@ export const DM_FIELD_IDENTITIES: Record<string, readonly { name: string; kind: 
       "name": "visionClear",
       "kind": "boolean",
       "label": "They can see it"
+    },
+    {
+      "name": "scene",
+      "kind": "select",
+      "label": "Kind of place"
     }
   ],
   "update_location": [
@@ -2977,6 +3043,11 @@ export const DM_FIELD_IDENTITIES: Record<string, readonly { name: string; kind: 
       "name": "visionClear",
       "kind": "boolean",
       "label": "They can see it"
+    },
+    {
+      "name": "scene",
+      "kind": "select",
+      "label": "Kind of place"
     }
   ],
   "travel": [
@@ -3375,6 +3446,11 @@ export const DM_FIELD_IDENTITIES: Record<string, readonly { name: string; kind: 
       "label": "Found at"
     },
     {
+      "name": "gender",
+      "kind": "select",
+      "label": "Gender"
+    },
+    {
       "name": "goal",
       "kind": "text",
       "label": "Wants"
@@ -3405,6 +3481,11 @@ export const DM_FIELD_IDENTITIES: Record<string, readonly { name: string; kind: 
       "name": "location",
       "kind": "text",
       "label": "Found at"
+    },
+    {
+      "name": "gender",
+      "kind": "select",
+      "label": "Gender"
     }
   ],
   "social_check": [
@@ -3679,6 +3760,13 @@ export const DM_FIELD_IDENTITIES: Record<string, readonly { name: string; kind: 
       "name": "category",
       "kind": "text",
       "label": "Category"
+    }
+  ],
+  "read_card": [
+    {
+      "name": "ref",
+      "kind": "text",
+      "label": "Event id, beat number or title"
     }
   ],
   "generate_image": [

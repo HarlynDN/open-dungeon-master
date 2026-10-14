@@ -55,6 +55,7 @@ export const EVENT_AUDIENCE: Readonly<Record<string, Audience>> = {
   message_added: TABLE,
   message_updated: TABLE,
   dm_delta: TABLE,
+  dm_draft_reset: TABLE,
   dm_draft_seq: TABLE,
   dm_status: TABLE,
   dm_intent_queued: TABLE,
@@ -68,6 +69,9 @@ export const EVENT_AUDIENCE: Readonly<Record<string, Audience>> = {
   chapter_closed: TABLE,
   campaign_rewound: TABLE,
   campaign_updated: TABLE,
+  // Prep brought in from a workshop: a contentless ping; each seat reloads
+  // its own snapshot.
+  prep_imported: TABLE,
   // The fight: the public encounter projection, the floor, the board ping
   // (the board itself is fetched per seat), rolls that wait on someone.
   encounter_updated: TABLE,
@@ -94,6 +98,9 @@ export const EVENT_AUDIENCE: Readonly<Record<string, Audience>> = {
   // Offers and trades are party knowledge.
   item_proposal_added: TABLE,
   item_proposal_resolved: TABLE,
+  // A coordinated plan is drafted in the open, for the party to fit its
+  // moves together (issue 254); nothing in it is the DM's secret.
+  coordination_updated: TABLE,
   // A disputed ruling and its outcome: who objected and to what is the
   // table's business, and the vote is the table's.
   ruling_disputed: TABLE,
@@ -153,6 +160,9 @@ export const EVENT_AUDIENCE: Readonly<Record<string, Audience>> = {
   // Presence and the heartbeat are not game events, but they pass the same door.
   presence: TABLE,
   ping: TABLE,
+  // The stream's own word to a page too far behind to replay: reload the
+  // snapshot (planReplay, src/lib/events.ts). Carries only a seq.
+  resync: TABLE,
 };
 
 // The audience of a type, or null for one the table never declared: such an

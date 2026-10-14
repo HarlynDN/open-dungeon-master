@@ -60,6 +60,7 @@ export default function NewCharacterPage() {
         busy={busy}
         error={characterErrorText(error, locale)}
         role={{ value: role, onChange: setRole }}
+        onCancel={() => navigateTo("/characters")}
       />
     </main>
   );

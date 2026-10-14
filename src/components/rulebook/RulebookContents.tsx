@@ -3,11 +3,12 @@
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { bookText, bookFrame, bookHeader, bookChapterTitle } from "@/lib/i18n/book-ui-presentations";
 
+import "@/app/styles/rulebook.css";
 import { Bookmark, ChevronRight, Search, X } from "lucide-react";
 import { isComposingInput } from "@/lib/input-composition";
 import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import { cn } from "@/lib/cn";
-import { cjkHighlightRuns, stem } from "@/lib/rulebook/search";
+import { cjkHighlightRuns } from "@/lib/rulebook/highlight";
 import type { ContentsChapter, ContentsEntry, RulebookContents as Contents, RulebookPart, SearchHit } from "@/lib/rulebook/types";
 import { Digits } from "./RulebookPage";
 
@@ -19,18 +20,17 @@ import { Digits } from "./RulebookPage";
 
 export type OpenFromContents = (id: string, at?: string, terms?: string[]) => void;
 
-function Highlighted({ text, terms }: { text: string; terms: string[] }) {
-  if (terms.some(term => /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u.test(term))) {
-    return <>{cjkHighlightRuns(text, terms).map((run, index) => run.marked
+function Highlighted({ text, words }: { text: string; words: string[] }) {
+  if (words.some(term => /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u.test(term))) {
+    return <>{cjkHighlightRuns(text, words).map((run, index) => run.marked
       ? <mark key={index} className="rb-mark">{run.text}</mark> : run.text)}</>;
   }
-  const parts = text.split(/([A-Za-z0-9]+(?:['’][A-Za-z]+)?)/);
+  const parts = text.split(/([\p{L}\p{N}]+(?:['’-][\p{L}\p{N}]+)*)/u);
   return (
     <>
       {parts.map((part, index) => {
         if (index % 2 === 0 || !part) return part;
-        const key = stem(part);
-        return terms.some((term) => key === term || (term.length >= 3 && key.startsWith(term))) ? (
+        return words.includes(part.toLowerCase().replace(/’/g, "'")) ? (
           <mark key={index} className="rb-mark">
             {part}
           </mark>
@@ -117,7 +117,7 @@ export function RulebookContents({
 }) {
   const { locale } = useLocale();
   const [query, setQuery] = useState("");
-  const [result, setResult] = useState<{ query: string; hits: SearchHit[]; terms: string[] } | null>(null);
+  const [result, setResult] = useState<{ query: string; hits: SearchHit[] } | null>(null);
   const [searching, setSearching] = useState(false);
   const [searchFailed, setSearchFailed] = useState(false);
   const [retry, setRetry] = useState(0);
@@ -151,7 +151,7 @@ export function RulebookContents({
         const response = await fetch(`/api/rulebook/search?q=${encodeURIComponent(q)}${locale === "en" ? "" : `&locale=${encodeURIComponent(locale)}`}`);
         if (!response.ok) throw new Error(String(response.status));
         const data = await response.json();
-        if (live && asked.current === q) setResult({ query: q, hits: data.hits ?? [], terms: data.terms ?? [] });
+        if (live && asked.current === q) setResult({ query: q, hits: data.hits ?? [] });
       } catch {
         if (live && asked.current === q) { setResult(null); setSearchFailed(true); }
       } finally {
@@ -221,7 +221,7 @@ export function RulebookContents({
             }
             if (event.key === "Enter" && shown?.hits[0]) {
               const hit = shown.hits[0];
-              onOpen(hit.page, hit.at, shown.terms);
+              onOpen(hit.page, hit.at, hit.words);
             }
           }}
           placeholder={bookText("Seek a rule, a spell, a monster", locale)}
@@ -255,7 +255,7 @@ export function RulebookContents({
               <ol className="rb-hits" key={shown.query}>
                 {shown.hits.map((hit, index) => (
                   <li key={`${hit.page}-${hit.at ?? ""}`} style={{ animationDelay: `${Math.min(index, 12) * 35}ms` }}>
-                    <button type="button" className="rb-hit" data-on={hit.page === current || undefined} onClick={() => onOpen(hit.page, hit.at, shown.terms)}>
+                    <button type="button" className="rb-hit" data-on={hit.page === current || undefined} onClick={() => onOpen(hit.page, hit.at, hit.words)}>
                       <span className="rb-hit-where">
                         {hit.numeral} &middot; <Digits text={bookChapterTitle(hit.chapter, locale)} />
                       </span>
@@ -271,7 +271,7 @@ export function RulebookContents({
                         ) : null}
                       </span>
                       <span className="rb-hit-snippet">
-                        <Highlighted text={hit.snippet} terms={shown.terms} />
+                        <Highlighted text={hit.snippet} words={hit.words} />
                       </span>
                     </button>
                   </li>

@@ -37,6 +37,7 @@ import {
 } from "@/lib/srd";
 import { asiLevelsFor } from "@/lib/srd/asi";
 import { asiOwed } from "@/lib/srd/asi-ledger";
+import { subclassOwed } from "@/lib/srd/owed-choices";
 import { fixedDieValue, type HpMethod } from "@/lib/srd/hit-points";
 import {
   MULTICLASS_CAP,
@@ -73,6 +74,8 @@ import AsiFeatEditor from "@/app/characters/builder/AsiFeatEditor";
 import { useFeatDescs } from "@/app/characters/builder/useFeatDescs";
 import { authoredFeatDesc, featAbilityIncrease } from "@/lib/srd/feat-effects";
 import { featGrantSpec, featOwed, type FeatChoices, type FeatPicks } from "@/lib/srd/feat-grants";
+import { subclassGrants } from "@/lib/srd/subclass-training";
+import FeatChoicesFields from "@/app/characters/builder/FeatChoicesFields";
 import { useArchetypes } from "@/app/characters/builder/useBuilderOptions";
 import type { AsiChoice, CharacterSheet } from "@/lib/schemas/sheet";
 
@@ -141,8 +144,10 @@ export function LevelUpDialog({
   };
   const setFeatPicks = (feat: string, picks: FeatPicks) =>
     setFeatChoices((current) => ({ ...current, [feat.trim().toLowerCase()]: picks }));
-  const featPicksSent = Object.fromEntries(
-    featsPicked
+  // The feats' picks, and those of a subclass grant arriving now (both are
+  // keyed by name in featChoices).
+  const picksSentFor = (names: string[]) => Object.fromEntries(
+    names
       .map((feat) => [feat.trim().toLowerCase(), featChoices[feat.trim().toLowerCase()]] as const)
       .filter((entry): entry is readonly [string, FeatPicks] => Boolean(entry[1])),
   );
@@ -297,11 +302,7 @@ export function LevelUpDialog({
   const [optionPicks, setOptionPicks] = useState<string[]>([]);
   const subclassLevel = subclassLevelFor(classChoice);
   const entrySubclass = chosenEntry?.subclass ?? "";
-  const needsSubclass =
-    subclassLevel !== null &&
-    !entrySubclass.trim() &&
-    (chosenEntry?.level ?? 0) < subclassLevel &&
-    subclassLevel <= classLevelAfter;
+  const needsSubclass = subclassOwed({ id: classChoice, subclass: entrySubclass }, classLevelAfter);
   const builtInSubclasses = subclassNamesFor(classChoice);
   // Fetched for the class levelled either way: a workshop or pack subclass
   // the sheet already holds has its features in these rows, and the preview
@@ -370,6 +371,21 @@ export function LevelUpDialog({
   });
   const fixedGain = hpPreview.fixed;
 
+  // What a subclass trains the character in that arrives with this level
+  // (issue 251): the subclass chosen now (a Life Domain's heavy armor, a
+  // Lore bard's three skills) or a feature at the class's new level. The
+  // fixed grants are said; the picks are asked for, and the server refuses
+  // the level without them.
+  const trainingBefore = useMemo(
+    () => new Set(subclassGrants(classList).map((grant) => `${grant.classId}|${grant.name.toLowerCase()}`)),
+    [classList],
+  );
+  const freshTraining = subclassGrants(classesAfter).filter(
+    (grant) => !trainingBefore.has(`${grant.classId}|${grant.name.toLowerCase()}`),
+  );
+  const trainingOpen = freshTraining.some((grant) =>
+    featOwed(grant.name, grant.spec, featChoices[grant.name.trim().toLowerCase()]),
+  );
   const steps = [
     ...(needsClassStep ? ["class"] : []),
     "hp",
@@ -377,6 +393,7 @@ export function LevelUpDialog({
     ...(needsExpertise ? ["expertise"] : []),
     ...(needsStyle ? ["style"] : []),
     ...(needsSubclass ? ["subclass"] : []),
+    ...(freshTraining.length ? ["training"] : []),
     ...(needsOptions ? ["options"] : []),
     ...(showSpells ? ["spells"] : []),
   ];
@@ -576,7 +593,9 @@ export function LevelUpDialog({
           ...(hpMethod === "rolled" ? { hpChoice } : {}),
           ...(skillPick ? { levelUpSkill: skillPick } : {}),
           ...(choices.length ? { asiChoices: choices } : {}),
-          ...(Object.keys(featPicksSent).length ? { featChoices: featPicksSent } : {}),
+          ...(Object.keys(picksSentFor([...featsPicked, ...freshTraining.map((grant) => grant.name)])).length
+            ? { featChoices: picksSentFor([...featsPicked, ...freshTraining.map((grant) => grant.name)]) }
+            : {}),
           ...(needsSubclass && subclassChoice ? { subclass: subclassChoice } : {}),
           ...(expertisePicks.length ? { expertise: [...currentExpertise, ...expertisePicks] } : {}),
           ...(spellPicks.length || cantripPicks.length
@@ -628,10 +647,14 @@ export function LevelUpDialog({
             ? stylePicks.length < Math.min(stylesToPick, styleOptions.length)
             : step === "subclass"
               ? !subclassChoice && subclassOptions.length > 0
+              : step === "training"
+                ? trainingOpen
               : step === "options"
                 ? openSlots.some((slot) => slot.remaining > 0)
                 : false;
-  const stepReady = Boolean(classChoice);
+  // A subclass grant's picks are the one open choice the server will not
+  // take a level without, so that step holds the button until they are made.
+  const stepReady = Boolean(classChoice) && !(step === "training" && trainingOpen);
 
   function nextOrApply() {
     if (lastStep) {
@@ -1139,6 +1162,32 @@ export function LevelUpDialog({
                       </p>
                     ) : null}
                   </div>
+                </>
+              ) : null}
+
+              {step === "training" ? (
+                <>
+                  <p className="text-stone-300">
+                    {t("upstreamUi.subclassTraining", { subclass: effectiveSubclass || t("upstreamUi.theSubclass"), name: sheet.name })}
+                  </p>
+                  {freshTraining.map((grant) => (
+                    <FeatChoicesFields
+                      key={grant.name}
+                      feat={grant.name}
+                      spec={grant.spec}
+                      picks={featChoices[grant.name.trim().toLowerCase()]}
+                      known={{
+                        languages: sheet.proficiencies.languages,
+                        skills: sheet.proficiencies.skills,
+                        expertise: sheet.proficiencies.expertise ?? [],
+                        weapons: sheet.proficiencies.weapons,
+                        tools: sheet.proficiencies.tools,
+                        armor: sheet.proficiencies.armor,
+                      }}
+                      onChange={(picks) => setFeatPicks(grant.name, picks)}
+                      source="subclass"
+                    />
+                  ))}
                 </>
               ) : null}
 

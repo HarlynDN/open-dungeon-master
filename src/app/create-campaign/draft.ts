@@ -9,6 +9,7 @@ import type {
   DmModeSetting,
   GameSettings,
   Genre,
+  TableLanguage,
 } from "@/lib/schemas/game-settings";
 
 // Everything the new-campaign wizard collects, as one object. The wizard is
@@ -28,12 +29,16 @@ export type CampaignDraft = {
   campaignLength: CampaignLengthSetting;
   genre: Genre;
   customGenreText: string;
+  tableLanguage: TableLanguage;
   worldPack: string;
   // A theme or premise the person typed is never clobbered by a later pack
   // choice; one the pack filled in is fair game to replace.
   themeTouched: boolean;
   descriptionTouched: boolean;
   aiStorySetup: boolean;
+  // The creator saw the warning that AI Story Setup meets an imported
+  // Storyboard and kept it on (issue 249). Never sent to the server.
+  storySetupKept: boolean;
   dicePolicy: DicePolicy;
   ttsEnabled: boolean;
   ttsVoice: string;
@@ -76,6 +81,9 @@ export type CampaignDraft = {
   // new hero starts with (src/lib/srd/hit-points.ts, starting-wealth.ts).
   hpMethod: GameSettings["hpMethod"];
   startingWealth: GameSettings["startingWealth"];
+  // Whether rolled 4d6 stats may be thrown again here; null follows the
+  // server's rule (src/lib/srd/ability-rerolls.ts).
+  abilityRerollBelow: GameSettings["abilityRerollBelow"];
   maxCompanions: number;
   maxGuests: number;
   voiceChat: GameSettings["voice"];
@@ -93,10 +101,12 @@ export const DEFAULT_DRAFT: CampaignDraft = {
   campaignLength: "standard",
   genre: "high_fantasy",
   customGenreText: "",
+  tableLanguage: "english",
   worldPack: "",
   themeTouched: false,
   descriptionTouched: false,
   aiStorySetup: true,
+  storySetupKept: false,
   dicePolicy: "digital_only",
   ttsEnabled: true,
   ttsVoice: "af_heart",
@@ -137,6 +147,7 @@ export const DEFAULT_DRAFT: CampaignDraft = {
   companions: "auto",
   hpMethod: "average",
   startingWealth: "equipment",
+  abilityRerollBelow: null,
   maxCompanions: 2,
   maxGuests: 2,
   voiceChat: {

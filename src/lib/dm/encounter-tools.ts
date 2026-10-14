@@ -1,5 +1,11 @@
+import { normalizeLocale } from "@/lib/i18n/locales";
+import { createTranslator, type MessageKey, registerMessages } from "@/lib/i18n/translator";
+import { SYSTEM_LOG_MESSAGES } from "@/lib/i18n/system-log-messages";
+import type { SystemGlyph } from "@/lib/system-glyphs";
+import { holdsOn } from "@/lib/dm/vitals-logic";
 import { fieldedSheets } from "@/lib/dm/roster";
 import { spellAuthorsFor } from "@/lib/dm/spell-authors";
+import { sceneIds } from "@/lib/ambience/catalog";
 import { z } from "zod";
 import { initiativeRoll } from "@/lib/roll-labels";
 import {
@@ -109,6 +115,8 @@ import { damageEnemyTool, endEncounterTool, endTurnTool, enemyAttackTool, startE
 import { RUN_PREPARED_ENCOUNTER, runPreparedEncounter } from "@/lib/dm/prepared-encounter-tool";
 import { rollDeathSave } from "@/lib/dm/death";
 import { getBattleMapForEncounter, getTokenByRef, resetRoundBudgets, resetTurnBudgets } from "@/lib/db/battle-maps";
+import { tilesApart } from "@/lib/dm/board-reach";
+
 import { initLegendaryPools } from "@/lib/dm/legendary-tools";
 import { lairCountPassed } from "@/lib/dm/legendary-logic";
 import { publishTitleCard } from "@/lib/dm/scene-state";
@@ -118,7 +126,7 @@ import { handleReaperCast } from "@/lib/dm/authored-reaper";
 import { sweepSummons } from "@/lib/dm/summon-store";
 import { endConcentrationOnFadedSummons } from "@/lib/dm/concentration-upkeep";
 import { afflictionsAtCombatStart } from "@/lib/dm/afflictions";
-import { enemiesDue, enemiesOwedTurn, holdForEnemies } from "@/lib/dm/enemies-due";
+import { ENEMY_TURNS_CUE, enemiesDue, enemiesOwedTurn, holdForEnemies } from "@/lib/dm/enemies-due";
 import { approachForCompanion } from "@/lib/dm/companion-approach";
 import { dmRoll } from "@/lib/dm/roll-card";
 
@@ -183,7 +191,7 @@ const startArgsSchema = z.object({
   summary: z.string().optional(),
   surprised: z.enum(["none", "enemies", "party"]).optional(),
   ambush: z.enum(["enemies", "party"]).optional(),
-  battlefield: z.string().max(300).optional(),
+  scene: z.string().max(40).optional(),
   // Feet between the party and the nearest enemy as the fight opens. A
   // value that is no distance (null, "", 0 from a weak tool caller) is the
   // same as none given, never a reason to refuse the fight.
@@ -192,6 +200,10 @@ const startArgsSchema = z.object({
     return value !== null && Number.isFinite(feet) && feet >= 5 ? Math.min(feet, 600) : undefined;
   }, z.number().optional()),
   lair: z.boolean().optional(),
+  // Where the enemy comes from against the party's travel formation (issue
+  // 230): ahead puts its front nearest them, behind its rear. Anything else
+  // a weak caller sends reads as ahead.
+  from: z.preprocess((value) => (value === "behind" || value === "ahead" ? value : undefined), z.enum(["ahead", "behind"]).optional()),
 });
 
 // Accepts the documented {enemies:[...]} shape, or flat monster/name/count
@@ -208,13 +220,12 @@ function parseStartArgs(rawArguments: string): z.infer<typeof startArgsSchema> |
     return nested.data;
   }
   const flat = enemyRequestSchema
-    .extend({ summary: z.string().optional(), battlefield: z.string().max(300).optional() })
+    .extend({ summary: z.string().optional() })
     .safeParse(raw);
   if (flat.success) {
     return {
       enemies: [{ monster: flat.data.monster, name: flat.data.name, count: flat.data.count, cr: flat.data.cr }],
       summary: flat.data.summary,
-      battlefield: flat.data.battlefield,
     };
   }
   return null;
@@ -241,6 +252,9 @@ function handleStartEncounter(
       error:
         'Invalid start_encounter arguments. Send {"enemies":[{"monster":"goblin","count":3}],"summary":"..."}.',
     };
+  }
+  if (args.scene !== undefined && !sceneIds().includes(args.scene)) {
+    return { error: `Unknown scene "${args.scene}"; use one of: ${sceneIds().join(", ")}.` };
   }
   if (getActiveEncounter(campaign.id)) {
     return {
@@ -321,7 +335,7 @@ function handleStartEncounter(
   // plan.md 4.1), written with the fight so the tracker shows them at once.
   initLegendaryPools(encounter, enemies, args.lair === true);
   saveEncounter(encounter);
-  createBattleMapForEncounter(campaign, encounter, enemies, sheets, args.battlefield, args.distanceFeet);
+  const placed = createBattleMapForEncounter(campaign, encounter, enemies, sheets, args.distanceFeet, args.scene, args.from);
   publishEncounter(campaign.id);
   // The fight's card: the opening line in ember, "Ambush" when the party
   // was caught, with the combat sting (SceneTitle.tsx).
@@ -380,6 +394,7 @@ function handleStartEncounter(
       ? { warning: "This fight can kill characters. Telegraph the danger." }
       : {}),
     map: "A tactical battle map was generated; positions appear in GAME STATE on your next call.",
+    ...(placed ? { formation: placed.formation } : {}),
     ...(ambushLines.length ? { ambush: ambushLines.join(" ") } : {}),
     ...(surprisedNames.length
       ? {
@@ -404,7 +419,7 @@ function handleStartEncounter(
 function entryAlive(entry: OrderEntry, enemiesById: Map<string, EncounterEnemy>): boolean {
   if (entry.kind === "pc") {
     const sheet = getSheetById(entry.characterId);
-    return (sheet?.currentHp ?? 0) > 0 && !isIncapacitated(sheet?.conditions ?? []);
+    return ((sheet?.currentHp ?? 0) > 0 || Boolean(sheet && holdsOn(sheet))) && !isIncapacitated(sheet?.conditions ?? []);
   }
   if (entry.kind === "enemy") {
     return enemiesById.get(entry.enemyId)?.status === "alive";
@@ -993,7 +1008,7 @@ function handleEndTurn(
       names.length
         ? ` ${names.join(" and ")} act${names.length === 1 ? "s" : ""} before ${next?.name}${
             turn.actor === "ai"
-              ? ": take their turns now, one enemy_attack (or ability or spell) each, then narrate and stop. Any you leave act on their own after your narration."
+              ? `. ${ENEMY_TURNS_CUE}`
               : "."
           }`
         : ""
@@ -1376,11 +1391,16 @@ function advancePointer(
   }
   publishEncounter(campaign.id);
   // The pointer move is announced as a table note so the transcript can
-  // never silently disagree with the banner about whose turn it is.
+  // never silently disagree with the banner about whose turn it is. Held for
+  // the enemies due, the banner says they go first, and so does the note:
+  // it is the newest line the DM turn the pass wakes answers.
+  const landedOn = encounter.order[encounter.turnIndex];
+  const owed = enemiesOwedTurn(encounter).map((enemy) => enemy.displayName);
+  const owedNote = owed.length ? turnNotice(campaign, "playerLog.turn.owed", { actors: owed.join(normalizeLocale(campaign.gameSettings.locale) === "en" ? " and " : "、"), actor: landedOn.name }, ` ${owed.join(" and ")} act${owed.length === 1 ? "s" : ""} before ${landedOn.name}.`) : "";
   if (typeof options?.announce === "function") {
-    tableNote(campaign, options.announce(encounter.order[encounter.turnIndex]));
+    tableNote(campaign, `${options.announce(landedOn)}${owedNote}`, "cue-battle");
   } else if (options?.announce !== false) {
-    announceTurn(campaign, encounter, lairOpen(encounter) ? LAIR_NOTE : "");
+    announceTurn(campaign, encounter, `${lairOpen(encounter) ? turnNotice(campaign, "playerLog.turn.lair", {}, LAIR_NOTE) : ""}${owedNote}`);
   }
   // Downed PCs the pointer skipped make their death saves now, once per
   // pass, announced to the table as system messages and dice cards.
@@ -1458,7 +1478,11 @@ export function autoActSkippedEnemies(
     );
     const targetName = sheetsById.get(targetId)?.name ?? "a hero";
     if ("error" in result) {
-      // Out of reach or otherwise unable: the skipped turn passes quietly.
+      // Holding where it stands while a character has an action readied is
+      // worth a line; out of reach or otherwise unable passes quietly.
+      if (typeof result.heldGround === "string") {
+        notes.push(turnNotice(campaign, "playerLog.turn.held", { actor: enemy.displayName, target: result.heldGround }, `${enemy.displayName} does not close in while ${result.heldGround} holds a readied action.`));
+      }
       continue;
     }
     const swings = Array.isArray(result.swings) ? (result.swings as Array<Record<string, unknown>>) : [];
@@ -1488,6 +1512,7 @@ export function autoActSkippedEnemies(
       campaignId: campaign.id,
       seq,
       authorType: "system",
+      glyph: "cue-battle",
       content: play ? `Skipped enemy turns resolve automatically: ${notes.join(" ")}` : notes.join(" "),
     });
     publishWithSeq(campaign.id, seq, "message_added", { message });
@@ -1680,7 +1705,8 @@ function idledOut(campaign: Campaign, encounter: Encounter): boolean {
     saveEncounter(encounter);
     tableNote(
       campaign,
-      `Nobody has been able to act for ${IDLE_ROUNDS} rounds: the fight waits for the table. End Turn or the lead's skip moves it on.`,
+      turnNotice(campaign, "playerLog.turn.idle", { rounds: IDLE_ROUNDS }, `Nobody has been able to act for ${IDLE_ROUNDS} rounds: the fight waits for the table. End Turn or the lead's skip moves it on.`),
+      "cue-battle",
     );
   }
   return true;
@@ -1715,13 +1741,22 @@ function lairOpen(encounter: Encounter): boolean {
 function announceTurn(campaign: Campaign, encounter: Encounter, extra = "") {
   const current = encounter.order[encounter.turnIndex];
   if (current) {
-    tableNote(campaign, `It is now ${current.name}'s turn (round ${encounter.round}).${extra}`);
+    tableNote(campaign, turnNotice(campaign, "playerLog.turn.current", { actor: current.name, round: encounter.round }, `It is now ${current.name}'s turn (round ${encounter.round}).`) + extra, "cue-battle");
   }
 }
 
-function tableNote(campaign: Campaign, content: string) {
+// Localize only newly produced player notices. Canonical tool responses and
+// previously persisted messages are not rewritten.
+function turnNotice(campaign: Campaign, key: MessageKey, values: Record<string, string | number>, english: string) {
+  const locale = normalizeLocale(campaign.gameSettings.locale);
+  if (locale === "en") return english;
+  registerMessages(SYSTEM_LOG_MESSAGES);
+  return createTranslator(locale)(key, values);
+}
+
+function tableNote(campaign: Campaign, content: string, glyph: SystemGlyph) {
   const seq = allocateSeq(campaign.id);
-  const message = insertCampaignMessage({ campaignId: campaign.id, seq, authorType: "system", content });
+  const message = insertCampaignMessage({ campaignId: campaign.id, seq, authorType: "system", glyph, content });
   publishWithSeq(campaign.id, seq, "message_added", { message });
 }
 
@@ -1759,9 +1794,9 @@ function partyFallen(campaign: Campaign, couldRise: boolean) {
       turn.status = "done";
       saveDmTurn(turn);
     }
-    tableNote(campaign, "Every character has fallen: the fight is lost.");
+    tableNote(campaign, turnNotice(campaign, "playerLog.turn.lost", {}, "Every character has fallen: the fight is lost."), "cue-death");
   } else if (couldRise) {
-    tableNote(campaign, "Every character is down and none can rise on their own.");
+    tableNote(campaign, turnNotice(campaign, "playerLog.turn.down", {}, "Every character is down and none can rise on their own."), "cue-death");
   } else {
     return;
   }
@@ -1817,8 +1852,9 @@ function companionAutoAct(
       if (!token) {
         continue;
       }
-      const distance = Math.max(Math.abs(token.x - myToken.x), Math.abs(token.y - myToken.y));
+      const distance = tilesApart(token, myToken);
       if (distance < best) {
+
         best = distance;
         target = enemy;
       }
@@ -1849,6 +1885,7 @@ function companionAutoAct(
     campaignId: campaign.id,
     seq,
     authorType: "system",
+    glyph: "cue-battle",
     content: `${sheet.name}'s turn resolves automatically: ${note}`,
   });
   publishWithSeq(campaign.id, seq, "message_added", { message });
@@ -1878,7 +1915,7 @@ export function endOwnTurn(campaignId: string, userId: string): boolean {
   // A person moved the fight on: the rounds it may go round alone start
   // again (idledOut). The pass below saves it.
   delete encounter.legendary.idle;
-  if (!advancePointer(campaign, encounter, { announce: (next) => `${name} ends their turn. It is now ${next.name}'s turn.` })) {
+  if (!advancePointer(campaign, encounter, { announce: (next) => turnNotice(campaign, "playerLog.turn.end", { actor: name, next: next.name }, `${name} ends their turn. It is now ${next.name}'s turn.`) })) {
     return false;
   }
   // The death saves the pass rolled may have left nobody able to rise.
@@ -1925,8 +1962,33 @@ export function handOnEnemyTurns(campaign: Campaign, turn: DmTurn, play: boolean
     setFloor(campaign.id, next);
     publishPersisted(campaign.id, "floor_changed", { floor: next });
   }
+  if (due.length) {
+    deathSaveAsTurnBegins(campaign);
+  }
   publishEncounter(campaign.id);
   return null;
+}
+
+// The enemies before a character have had their turns, so the character's
+// own begins now, and one those enemies put down rolls the death save that
+// begins it (SRD 5.1: at the start of each of its turns). The pointer landed
+// on them while they stood, so the pass rolled nothing for them, and the
+// turn their owner cannot take is then ended without one (advanceAfterNarration).
+// A character already down when the pointer landed rolled as it landed;
+// that happens only when nobody in the order could act, so with another
+// character able to, the save here is this turn's first.
+function deathSaveAsTurnBegins(campaign: Campaign) {
+  const encounter = getActiveEncounter(campaign.id);
+  const current = encounter?.orderReady ? encounter.order[encounter.turnIndex] : undefined;
+  if (!encounter || current?.kind !== "pc") {
+    return;
+  }
+  const enemiesById = new Map(listEnemies(encounter.id).map((enemy) => [enemy.id, enemy]));
+  const acts = (entry: OrderEntry) => entryActs(entry, enemiesById, encounter.surprisedIds);
+  if (acts(current) || !encounter.order.some((entry) => entry.kind === "pc" && entry !== current && acts(entry))) {
+    return;
+  }
+  rollDeathSave(campaign, current.characterId);
 }
 
 // The pointer rests on an AI companion at a person's table: the server
@@ -1972,7 +2034,7 @@ export function skipCurrentTurn(campaignId: string): boolean {
   delete encounter.legendary.idle;
   if (
     !advancePointer(campaign, encounter, {
-      announce: (next) => `The party lead skipped ${skipped?.name ?? "the current"}'s turn. It is now ${next.name}'s turn.`,
+      announce: (next) => turnNotice(campaign, "playerLog.turn.skip", { actor: skipped?.name ?? "当前角色", next: next.name }, `The party lead skipped ${skipped?.name ?? "the current"}'s turn. It is now ${next.name}'s turn.`),
     })
   ) {
     return false;

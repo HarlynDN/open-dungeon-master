@@ -1,19 +1,23 @@
 import { catalogFor, createTranslator, type MessageKey } from "./translator.ts";
 import type { AppLocale } from "./locales.ts";
 import type { Skin } from "../battlemap/skins.ts";
-import { explainReadFacts, type ForgeSettings, type HintRead } from "../../app/workshop/maps/forge.ts";
+import { explainForge, forgeOutcome, type ForgeSettings } from "../../app/workshop/maps/forge.ts";
+import { sceneRough } from "../battlemap/generate.ts";
+import { cueById } from "../ambience/catalog.ts";
+import { sceneCueLabel } from "./map-scene-presentations.ts";
 
-export function mapForgeExplanation(read: HintRead, settings: Pick<ForgeSettings, "theme" | "ambient">, locale: AppLocale): string[] {
+export function mapForgeExplanation(settings: Pick<ForgeSettings, "theme" | "ambient" | "scene">, locale: AppLocale): string[] {
   const t = createTranslator(locale);
-  return explainReadFacts(read, settings).map(fact => {
-    switch (fact.kind) {
-      case "themeOverride": case "themeWord": case "setting": case "lightDefault":
-        return t(`mapForgeUi.explain.${fact.kind}`, { theme: t(`mapInspectUi.theme.${fact.theme}`).toLowerCase(), word: "word" in fact ? fact.word : "" });
-      case "field": return t("mapForgeUi.explain.field");
-      case "lightOverride": return t("mapForgeUi.explain.lightOverride", { light: t(`mapForgeUi.ambient.${fact.light}`).toLowerCase() });
-      case "lightWord": case "rough": return t(`mapForgeUi.explain.${fact.kind}`, { word: fact.word });
-    }
-  });
+  if (locale === "en") return explainForge(settings, theme => t(`mapInspectUi.theme.${theme}`), scene => cueById(scene)?.label ?? scene);
+  const { theme } = forgeOutcome(settings);
+  const label = t(`mapInspectUi.theme.${theme}`);
+  const scene = sceneCueLabel({ value: settings.scene, label: cueById(settings.scene)?.label ?? settings.scene }, locale);
+  const out = [settings.theme ? t("mapForgeUi.sceneOverride", { theme: label })
+    : settings.scene ? t("mapForgeUi.sceneTerrain", { scene, theme: label }) : t("mapForgeUi.openGround")];
+  out.push(settings.ambient ? t("mapForgeUi.explain.lightOverride", { light: t(`mapForgeUi.ambient.${settings.ambient}`) })
+    : t("mapForgeUi.explain.lightDefault", { theme: label }));
+  if (sceneRough(settings.scene)) out.push(t("mapForgeUi.sceneRough", { scene }));
+  return out;
 }
 
 export function mapSkinName(skin: Pick<Skin, "id" | "name"> | undefined, locale: AppLocale): string {

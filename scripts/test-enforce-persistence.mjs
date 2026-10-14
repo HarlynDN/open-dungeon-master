@@ -27,6 +27,9 @@ const { getParty } = await import("../src/lib/db/party.ts");
 const campaigns = await import("../src/lib/db/campaigns.ts");
 const { ensureOpenChapter } = await import("../src/lib/db/chapters.ts");
 const { captureBoundarySnapshot } = await import("../src/lib/db/snapshots.ts");
+const quests = await import("../src/lib/db/quests.ts");
+const { getSceneTracker, setSceneTracker } = await import("../src/lib/db/scene-tracker.ts");
+const { checkTracker, recordCheck } = await import("../src/lib/dm/scene-tracker-logic.ts");
 const { performRollback } = await import("../src/lib/dm/rollback.ts");
 const { listRecentAudit } = await import("../src/lib/db/sheet-audit.ts");
 const { endOwnTurn } = await import("../src/lib/dm/encounter-tools.ts");
@@ -249,6 +252,112 @@ await test("a rewind puts the sheet back whole and takes the audit trail with it
   assert.equal(listRecentAudit(world.campaignId, 20).length, 0);
 });
 
+await test("a rewind restores quest and structured-scene progress, and its safety copy keeps the newer state", async () => {
+  const { world, hero, freeze, rewind } = await chapter();
+  const quest = quests.insertQuest({
+    campaignId: world.campaignId,
+    title: "Find the hidden door",
+    status: "active",
+    objectives: [{ id: "door", text: "Find it", done: false }],
+  });
+  const checked = checkTracker({
+    kind: "chase",
+    title: "Catch the courier",
+    successesNeeded: 3,
+    failuresAllowed: 3,
+    characterIds: [hero.id],
+  });
+  assert.ok("tracker" in checked);
+  const boundaryTracker = {
+    ...checked.tracker,
+    id: "rewind-scene",
+    campaignId: world.campaignId,
+    createdAt: "2026-01-01T00:00:00.000Z",
+  };
+  setSceneTracker(world.campaignId, boundaryTracker);
+  freeze();
+
+  quests.updateQuest(quest.id, {
+    status: "done",
+    objectives: [{ id: "door", text: "Find it", done: true }],
+  });
+  const advanced = recordCheck(boundaryTracker, {
+    characterId: hero.id,
+    characterName: hero.name,
+    approach: "Run after the courier",
+    skill: "athletics",
+    dc: 12,
+    total: 16,
+    success: true,
+  });
+  assert.ok("tracker" in advanced);
+  setSceneTracker(world.campaignId, advanced.tracker);
+  const laterQuest = quests.insertQuest({ campaignId: world.campaignId, title: "A later quest" });
+
+  await rewind();
+
+  assert.deepEqual(
+    quests.listQuests(world.campaignId).map(({ id, status, objectives }) => ({ id, status, objectives })),
+    [{ id: quest.id, status: "active", objectives: [{ id: "door", text: "Find it", done: false }] }],
+  );
+  assert.equal(quests.getQuest(laterQuest.id), null);
+  assert.deepEqual(getSceneTracker(world.campaignId), boundaryTracker);
+
+  const db = getDatabase();
+  const safety = db
+    .prepare("SELECT snapshot_json FROM chapter_snapshots WHERE campaign_id = ? AND kind = 'pre_rollback'")
+    .get(world.campaignId);
+  const safetyPayload = JSON.parse(safety.snapshot_json);
+  assert.ok(safetyPayload.tables.quests.some((row) => row.id === laterQuest.id));
+  assert.equal(safetyPayload.campaign.scene_tracker_json, JSON.stringify(advanced.tracker));
+});
+
+await test("a rewind takes the shops, factions, calendar, attributes, pins and beats of the discarded timeline with it", async () => {
+  const { world, freeze, rewind } = await chapter();
+  const shops = await import("../src/lib/db/shops.ts");
+  const factions = await import("../src/lib/db/factions.ts");
+  const calendar = await import("../src/lib/db/calendar-events.ts");
+  const attributes = await import("../src/lib/db/entity-attributes.ts");
+  const pins = await import("../src/lib/db/pins.ts");
+  const beats = await import("../src/lib/db/dm-beats.ts");
+  const messages = await import("../src/lib/db/messages.ts");
+  const shelf = [{ itemName: "Rope", qty: 3, priceCp: 100, note: "" }];
+  const shop = shops.insertShop(world.campaignId, { name: "The Brass Anvil", stock: shelf });
+  const guild = factions.insertFaction(world.campaignId, { name: "Lamplighters", attitude: "neutral", power: 3 });
+  const fair = calendar.insertCalendarEvent({ campaignId: world.campaignId, atInstant: 1_000, title: "Midsummer fair" });
+  const lamp = { key: "oil", label: "Oil", type: "number", value: 4, group: "", visible: false };
+  attributes.saveAttributes(world.campaignId, "campaign", "campaign", [lamp]);
+  const keptSeq = campaigns.allocateSeq(world.campaignId);
+  const kept = messages.insertCampaignMessage({ campaignId: world.campaignId, seq: keptSeq, authorType: "dm", speech: [], content: "The fair is a week away." });
+  const keptPin = pins.createPin({ campaignId: world.campaignId, messageId: kept.id, text: kept.content, isFullMessage: true, pinnedByUserId: world.owner.id });
+  freeze();
+
+  // The discarded timeline: the party buys out the rope, offends the guild,
+  // the fair comes and goes, the oil runs low, and a later line is pinned and
+  // marked as a beat.
+  shops.updateShop(shop.id, { stock: [] });
+  factions.updateFaction(guild.id, { attitude: "hostile", power: 5 });
+  calendar.markCalendarEventFired(fair.id, 1_000, keptSeq + 1);
+  attributes.saveAttributes(world.campaignId, "campaign", "campaign", [{ ...lamp, value: 1 }]);
+  const laterSeq = campaigns.allocateSeq(world.campaignId);
+  const later = messages.insertCampaignMessage({ campaignId: world.campaignId, seq: laterSeq, authorType: "dm", speech: [], content: "The fair burns." });
+  pins.createPin({ campaignId: world.campaignId, messageId: later.id, text: later.content, isFullMessage: true, pinnedByUserId: world.owner.id });
+  beats.insertDmBeat({ campaignId: world.campaignId, seq: laterSeq, messageId: later.id, authorUserId: world.owner.id, kind: "scene", source: "typed", body: "The fair burns." });
+  shops.insertShop(world.campaignId, { name: "A later stall", stock: shelf });
+  factions.insertFaction(world.campaignId, { name: "A later cult" });
+
+  await rewind();
+
+  assert.deepEqual(shops.listShops(world.campaignId).map((row) => [row.name, row.stock.length]), [["The Brass Anvil", 1]]);
+  assert.deepEqual(factions.listFactions(world.campaignId).map((row) => [row.name, row.attitude, row.power]), [["Lamplighters", "neutral", 3]]);
+  const [event] = calendar.listCalendarEvents(world.campaignId, true);
+  assert.equal(event.id, fair.id);
+  assert.equal(event.firedAt, -1, "an event fired in the discarded timeline is due again");
+  assert.deepEqual(attributes.getAttributes(world.campaignId, "campaign", "campaign").map((row) => row.value), [4]);
+  assert.deepEqual(pins.listPins(world.campaignId).map((row) => row.id), [keptPin.id], "a pin on a deleted line goes with it");
+  assert.deepEqual(beats.listDmBeats(world.campaignId), [], "a beat past the boundary goes with its line");
+});
+
 await test("a rewind to a moment mid fight restores the fight with the sheets", async () => {
   const { world, hero, freeze, rewind } = await chapter();
   await world.beginFight([{ monster: "goblin", count: 1 }], { heroFaces: { [hero.id]: 20 } });
@@ -345,6 +454,22 @@ await test("a rewind puts back the clock's own records with it: who rested, and 
   assert.equal((await world.invoke("take_rest", { kind: "long" })).ok, true);
 });
 
+await test("A rewind to a chapter opened before the turning year's third day was renamed restores that old calendar, and it reads Midweek like any stored clock.", async () => {
+  const { SEASONS_CALENDAR, describeInstant, toInstant } = await import("../src/lib/dm/calendar.ts");
+  const { world, freeze, rewind } = await chapter();
+  const legacy = { ...SEASONS_CALENDAR, weekdays: ["Firstday", "Seconday", "Midday", "Fourthday", "Fifthday", "Restday"] };
+  const opening = toInstant(legacy, { month: 4, day: 1, hour: 9 });
+  const db = getDatabase();
+  db.prepare("UPDATE campaigns SET clock_json = ? WHERE id = ?").run(JSON.stringify({ calendar: legacy, instant: opening, weather: null }), world.campaignId);
+  freeze();
+  assert.equal((await world.invoke("pass_time", { amount: 1, unit: "days" })).ok, true);
+  await rewind();
+  const stored = JSON.parse(db.prepare("SELECT clock_json FROM campaigns WHERE id = ?").get(world.campaignId).clock_json);
+  assert.equal(stored.calendar.weekdays[2], "Midday", "the rewind did not restore the snapshot's own copy of the calendar");
+  const clock = world.campaign().clock;
+  assert.equal(describeInstant(clock.calendar, clock.instant), "Midweek, Greening 1, year 1 (09:00), morning, spring");
+});
+
 await test("a snapshot taken before the purse, the effects and the clock were kept leaves them as they stand", async () => {
   const { world, hero, freeze, rewind } = await chapter();
   freeze();
@@ -355,8 +480,10 @@ await test("a snapshot taken before the purse, the effects and the clock were ke
     .get(world.campaignId);
   const old = JSON.parse(row.snapshot_json);
   delete old.tables.active_effects;
+  delete old.tables.quests;
   delete old.campaign.party_json;
   delete old.campaign.clock_json;
+  delete old.campaign.scene_tracker_json;
   db.prepare("UPDATE chapter_snapshots SET snapshot_json = ? WHERE id = ?").run(JSON.stringify(old), row.id);
 
   assert.equal((await world.invoke("party_stash", { do: "deposit", characterId: hero.id, amount: 5 })).ok, true);
@@ -369,11 +496,23 @@ await test("a snapshot taken before the purse, the effects and the clock were ke
     duration: "manual",
   });
   assert.equal(laid.ok, true, laid.error);
+  const legacyQuest = quests.insertQuest({ campaignId: world.campaignId, title: "Legacy snapshot" });
+  const checkedLegacyTracker = checkTracker({ kind: "social", title: "Present scene" });
+  assert.ok("tracker" in checkedLegacyTracker);
+  const legacyTracker = {
+    ...checkedLegacyTracker.tracker,
+    id: "legacy-scene",
+    campaignId: world.campaignId,
+    createdAt: "2026-01-01T00:00:00.000Z",
+  };
+  setSceneTracker(world.campaignId, legacyTracker);
   const clock = world.campaign().clock.instant;
   await rewind();
   assert.equal(world.campaign().clock.instant, clock);
   assert.equal(getParty(world.campaignId).copper, 500);
   assert.deepEqual(listEffects(world.campaignId).map((effect) => effect.name), ["Shield of Faith"]);
+  assert.equal(quests.getQuest(legacyQuest.id)?.title, "Legacy snapshot");
+  assert.deepEqual(getSceneTracker(world.campaignId), legacyTracker);
 });
 
 // ---- undo ----

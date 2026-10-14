@@ -11,7 +11,7 @@ import { randomBytes } from "node:crypto";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { register } from "node:module";
+import { register, syncBuiltinESMExports } from "node:module";
 import { removeTempDir } from "./lib/remove-temp-dir.mjs";
 
 const dir = fs.mkdtempSync(path.join(os.tmpdir(), "odm-harness-pictures-"));
@@ -104,13 +104,14 @@ try {
 
   // The reported server: an agent storyteller, no ComfyUI, campaigns made
   // before the agent's pictures were switched on.
-  // An OpenAI picture key is set, so a campaign on OpenAI CAN paint and must
-  // never be moved. (A player's campaign follows the server's addresses, so
-  // a per-campaign ComfyUI address would not express "working" here.)
+  // An OpenAI picture key and model are set, so a campaign on OpenAI CAN
+  // paint and must never be moved. (A player's campaign follows the server's
+  // addresses, so a per-campaign ComfyUI address would not express "working"
+  // here.)
   saveGlobalConfig({
     harness: { id: "codex" },
     text: { provider: "harness" },
-    images: { defaultBackend: "", comfyUrl: "http://127.0.0.1:9", openaiApiKey: "sk-test-not-used" },
+    images: { defaultBackend: "", comfyUrl: "http://127.0.0.1:9", openaiApiKey: "sk-test-not-used", openaiModel: "test-painter" },
   });
   const lead = createUser("rowan", "x");
   const base = { description: "", theme: "low fantasy", maxPlayers: 4, startingLevel: 3, difficulty: "normal" };
@@ -141,6 +142,31 @@ try {
     assert.equal(byTitle["The Old Road"].canPaint, false);
     assert.equal(byTitle["Working OpenAI"].canPaint, true);
     assert.equal(result.wouldMove, 2, "the stranded campaign and workshop");
+  });
+
+  await test("a locked picture scratch folder does not discard a completed paint", async () => {
+    setScript([[{ paint: [36, 24] }, { text: "done" }]]);
+    const realRmSync = fs.rmSync;
+    let lockedFolder = "";
+    fs.rmSync = (target, options) => {
+      if (!lockedFolder && path.basename(String(target)).startsWith("odm-harness-img-")) {
+        lockedFolder = String(target);
+        const error = new Error(`EBUSY: resource busy or locked, rmdir '${target}'`);
+        error.code = "EBUSY";
+        throw error;
+      }
+      return realRmSync(target, options);
+    };
+    syncBuiltinESMExports();
+    try {
+      const result = await testHarnessPictures();
+      assert.ok(lockedFolder, "picture teardown attempted to remove its scratch folder");
+      assert.ok(result.image, result.error ?? "a cleanup lock discarded the completed picture");
+    } finally {
+      fs.rmSync = realRmSync;
+      syncBuiltinESMExports();
+      if (lockedFolder) removeTempDir(lockedFolder);
+    }
   });
 
   await test("before the agent is the default, nothing moves; after, only the stranded ones do", async () => {

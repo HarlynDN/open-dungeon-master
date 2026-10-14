@@ -1,4 +1,4 @@
-import { tokenize } from "../dm/fusion-logic.ts";
+import { CJK, segmentCjk } from "../language/cjk.ts";
 
 // The research desk's grounded answer, minus the model call.
 //
@@ -102,7 +102,7 @@ export function deskTerms(question: string): string[] {
       terms.push(word);
     }
   }
-  terms.push(...tokenize(remainder).filter(term => /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u.test(term)));
+  terms.push(...remainder.toLowerCase().split(/[^\p{L}\p{N}']+/u).filter(token => CJK.test(token)).flatMap(segmentCjk).filter(term => CJK.test(term)));
   return [...new Set(terms)];
 }
 

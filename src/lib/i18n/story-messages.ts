@@ -2,6 +2,7 @@ import { defineMessages } from "./catalog.ts";
 
 // Owned story-panel copy; recorded titles/prose and protocol payloads stay raw.
 export const STORY_MESSAGES = /*#__PURE__*/ defineMessages({
+  "storyUi.summaryLoading": {"en": "Reading this chapter’s summary…", "zh-CN": "正在读取本章摘要…"},
   "storyUi.literal.0": {
     "en": "Cancel",
     "zh-CN": "取消"

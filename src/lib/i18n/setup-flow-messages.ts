@@ -1,6 +1,7 @@
 import { defineMessages } from "./catalog.ts";
 
 export const SETUP_FLOW_MESSAGES = /*#__PURE__*/ defineMessages({
+  "setupFlow.local.modelPlaceholder": {"en": "A model the server lists", "zh-CN": "服务器列表中的模型"},
   "setupFlow.story.who": {"en": "Who tells the story", "zh-CN": "谁来讲述故事"},
   "setupFlow.story.local": {"en": "A model on this computer", "zh-CN": "此电脑上的模型"},
   "setupFlow.story.localHelp": {"en": "llama.cpp, Ollama, LM Studio, vLLM or another server you run. Free to play, private, needs a capable GPU.", "zh-CN": "使用自己运行的 llama.cpp、Ollama、LM Studio、vLLM 等服务。无需按回合付费，数据保留在本地，需要性能足够的 GPU。"},
@@ -31,7 +32,7 @@ export const SETUP_FLOW_MESSAGES = /*#__PURE__*/ defineMessages({
   "setupFlow.local.address": {"en": "Server address", "zh-CN": "服务地址"},
   "setupFlow.local.modelName": {"en": "Model name", "zh-CN": "模型名称"},
   "setupFlow.hints.start": {"en": "How do I start one?", "zh-CN": "如何启动模型服务？"},
-  "setupFlow.hints.llama": {"en": "llama.cpp with the default storyteller (Qwen3.6-35B-A3B, 64K window):", "zh-CN": "通过 llama.cpp 运行默认叙事模型（Qwen3.6-35B-A3B，64K 上下文）："},
+  "setupFlow.hints.llama": {"en": "llama.cpp with the default storyteller ({model}, 64K window):", "zh-CN": "通过 llama.cpp 运行默认叙事模型（{model}，64K 上下文）："},
   "setupFlow.hints.ollama": {"en": "Ollama, with the same settings baked in:", "zh-CN": "使用 Ollama，预设相同配置："},
   "setupFlow.local.apiKey": {"en": "The server's API key", "zh-CN": "服务的 API 密钥"},
   "setupFlow.local.apiKeyHint": {"en": "The --api-key it was started with", "zh-CN": "启动服务时设置的 --api-key"},
@@ -63,7 +64,7 @@ export const SETUP_FLOW_MESSAGES = /*#__PURE__*/ defineMessages({
   "setupFlow.speech.active.whisper": {"en": "the Whisper service", "zh-CN": "Whisper 服务"},
   "setupFlow.speech.active.builtin": {"en": "the built-in engine", "zh-CN": "内置引擎"},
   "setupFlow.speech.active.openai": {"en": "OpenAI, on this server's key", "zh-CN": "OpenAI（使用此服务器的 API 密钥）"},
-  "setupFlow.speech.active.none": {"en": "nothing yet, so the mic buttons are hidden", "zh-CN": "尚无可用引擎，因此麦克风按钮已隐藏"},
+  "setupFlow.speech.active.none": {"en": "nothing yet, so the mic buttons are hidden (the Android app uses the phone's own recognizer)", "zh-CN": "尚无可用引擎，因此麦克风按钮已隐藏（Android 应用使用手机自带的语音识别）"},
   "setupFlow.speech.title": {"en": "Built-in speech recognition", "zh-CN": "内置语音识别"},
   "setupFlow.speech.help": {"en": "Runs Whisper inside this server on the CPU, so dictation and push-to-talk work without a separate speech service. Downloads {mb} MB once. A Whisper service, when one answers, still comes first.", "zh-CN": "在此服务器的 CPU 上运行 Whisper，无需单独的语音服务即可使用语音转文字及按住说话功能。首次需下载 {mb} MB。若有可用的 Whisper 服务，仍优先使用该服务。"},
   "setupFlow.speech.installed": {"en": "Installed", "zh-CN": "已安装"},

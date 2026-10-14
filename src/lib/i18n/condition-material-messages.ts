@@ -3,6 +3,104 @@ import { defineMessages } from "./catalog.ts";
 // Original source-compared translations of all native condition-effect labels
 // and brief summaries. Rules, canonical matching terms and tool text stay English.
 export const CONDITION_MATERIAL_MESSAGES = /*#__PURE__*/ defineMessages({
+
+  "combatDetail.effect.superiority_strike.name": {
+    "en": "superiority strike",
+    "zh-CN": "卓越打击"
+  },
+  "combatDetail.effect.superiority_strike.summary": {
+    "en": "A Battle Master's Superiority Die (Riposte, Brace, Commander's Strike) rides this reaction attack: added to its damage on a hit, and spent by it.",
+    "zh-CN": "战斗大师的卓越骰（还击、迎击、指挥官打击）用于此次反应攻击：命中时加到伤害中，并由该次攻击消耗。"
+  },
+  "combatDetail.effect.eldritch_cannon.name": {
+    "en": "eldritch cannon",
+    "zh-CN": "魔能炮"
+  },
+  "combatDetail.effect.eldritch_cannon.summary": {
+    "en": "Eldritch Cannon: a bonus action activates it (use_resource \"Activate Cannon\": flamethrower or protector), or fires its Force Ballista (pc_attack weapon \"Force Ballista\", 2d8 force, a push of 5 feet on a hit).",
+    "zh-CN": "魔能炮：以附赠动作启动火焰喷射器或保护者，或发射力场弩炮，造成 2d8 力场伤害，命中时推开目标 5 英尺。"
+  },
+  "combatDetail.effect.target_lock.name": {
+    "en": "target lock",
+    "zh-CN": "目标锁定"
+  },
+  "combatDetail.effect.target_lock.summary": {
+    "en": "Target Lock: +2 damage on attacks against the marked foe.",
+    "zh-CN": "目标锁定：攻击被标记的敌人时伤害 +2。"
+  },
+  "combatDetail.effect.hunters_brand.name": {
+    "en": "hunter's brand",
+    "zh-CN": "猎手烙印"
+  },
+  "combatDetail.effect.hunters_brand.summary": {
+    "en": "Hunter's Brand: +1d6 radiant on attacks against the branded creature, until it dies or the hunter rests.",
+    "zh-CN": "猎手烙印：攻击被烙印的生物时伤害 +1d6 光耀，持续至其死亡或猎手休息。"
+  },
+  "combatDetail.effect.quarry.name": {
+    "en": "quarry",
+    "zh-CN": "猎物"
+  },
+  "combatDetail.effect.quarry.summary": {
+    "en": "Quarry: +1d6 damage on attacks against the marked creature, until it dies.",
+    "zh-CN": "猎物：攻击被标记的生物时伤害 +1d6，持续至其死亡。"
+  },
+  "combatDetail.effect.celestial_wings.name": {
+    "en": "celestial revelation: heavenly wings",
+    "zh-CN": "天界显现：天堂之翼"
+  },
+  "combatDetail.effect.celestial_wings.summary": {
+    "en": "Celestial Revelation (Heavenly Wings): a flying speed equal to the walking speed, and once a turn +proficiency bonus radiant damage on one target.",
+    "zh-CN": "天界显现（天堂之翼）：获得等于步行速度的飞行速度；每回合一次，对一个目标额外造成等于熟练加值的光耀伤害。"
+  },
+  "combatDetail.effect.celestial_radiance.name": {
+    "en": "celestial revelation: inner radiance",
+    "zh-CN": "天界显现：内在光辉"
+  },
+  "combatDetail.effect.celestial_radiance.summary": {
+    "en": "Celestial Revelation (Inner Radiance): bright light; each creature within 10 feet takes radiant damage equal to the proficiency bonus at the end of the aasimar's turns, and once a turn +proficiency bonus radiant damage on one target.",
+    "zh-CN": "天界显现（内在光辉）：发出明亮光照；阿斯莫每回合结束时，10 英尺内每个生物受到等于熟练加值的光耀伤害；每回合一次，对一个目标额外造成等于熟练加值的光耀伤害。"
+  },
+  "combatDetail.effect.celestial_shroud.name": {
+    "en": "celestial revelation: necrotic shroud",
+    "zh-CN": "天界显现：黯蚀帷幕"
+  },
+  "combatDetail.effect.celestial_shroud.summary": {
+    "en": "Celestial Revelation (Necrotic Shroud): creatures within 10 feet save (Charisma) or are frightened until the end of the aasimar's next turn, and once a turn +proficiency bonus necrotic damage on one target.",
+    "zh-CN": "天界显现（黯蚀帷幕）：10 英尺内的生物须通过魅力豁免，否则陷入恐慌，持续至阿斯莫下回合结束；每回合一次，对一个目标额外造成等于熟练加值的黯蚀伤害。"
+  },
+  "combatDetail.effect.ashen_hymn.name": {
+    "en": "ashen hymn",
+    "zh-CN": "灰烬赞歌"
+  },
+  "combatDetail.effect.ashen_hymn.summary": {
+    "en": "Ashen Hymn: enemies within 10 feet have disadvantage on their first save against fear each turn, for a minute.",
+    "zh-CN": "灰烬赞歌：10 英尺内的敌人每回合首次对抗恐惧的豁免具有劣势，持续一分钟。"
+  },
+  "combatDetail.effect.candlelight_vigil.name": {
+    "en": "candlelight vigil",
+    "zh-CN": "烛光守夜"
+  },
+  "combatDetail.effect.candlelight_vigil.summary": {
+    "en": "Candlelight Vigil: allies within 10 feet add 1d4 to saves against the supernatural, for a minute.",
+    "zh-CN": "烛光守夜：10 英尺内盟友对抗超自然力量的豁免 +1d4，持续一分钟。"
+  },
+  "combatDetail.effect.head_of_steam.name": {
+    "en": "head of steam",
+    "zh-CN": "蓄势蒸汽"
+  },
+  "combatDetail.effect.head_of_steam.summary": {
+    "en": "Head of Steam: the next Piston Strike this turn deals +2d6 instead.",
+    "zh-CN": "蓄势蒸汽：本回合下一次活塞打击的额外伤害改为 +2d6。"
+  },
+  "combatDetail.effect.mantle_of_majesty.name": {
+    "en": "mantle of majesty",
+    "zh-CN": "威仪斗篷"
+  },
+  "combatDetail.effect.mantle_of_majesty.summary": {
+    "en": "Mantle of Majesty: command is cast as a bonus action with no slot each turn for the minute, and a creature the bard charmed cannot attack them.",
+    "zh-CN": "威仪斗篷：一分钟内，每回合可用附赠动作施放命令术，无需消耗法术位；被吟游诗人魅惑的生物无法攻击该吟游诗人。"
+  }
+,
   "combatDetail.effect.empty_body.name": {
     "en": "empty body",
     "zh-CN": "空灵体"

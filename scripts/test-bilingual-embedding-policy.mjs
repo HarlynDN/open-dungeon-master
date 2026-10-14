@@ -19,7 +19,7 @@ const { setStoryArc } = await import("../src/lib/db/campaigns.ts");
 const { tickWaypointsFromCalls } = await import("../src/lib/dm/waypoint-tick.ts");
 const { lexicalMatch } = await import("../src/lib/dm/waypoint-logic.ts");
 const { insertFact, getFactById } = await import("../src/lib/db/facts.ts");
-const { dedupFactsSemantically } = await import("../src/lib/dm/memory-index.ts");
+const { embedMissingVectors } = await import("../src/lib/dm/embedding-reindex.ts");
 const { getDatabase } = await import("../src/lib/db/core.ts");
 
 await test("recorded real-model acceptance belongs to the unchanged fixed fixtures", () => {
@@ -64,7 +64,7 @@ await test("even identical stub embeddings cannot tick the wrong waypoint; exact
 await test("opposite/numeric facts retain their states after embedding and semantic maintenance", async () => {
   const world = await openWorld({ gameSettings: { locale: "zh-CN" } });
   const rows = ["队伍拥有十枚金币。", "队伍拥有二十枚金币。", "东门已经开放。", "东门尚未开放。"].map(fact => insertFact({ campaignId: world.campaignId, category: "world", subject: "", fact, source: "manual" }));
-  await dedupFactsSemantically(world.campaignId);
+  await embedMissingVectors();
   for (const row of rows) {
     assert.equal(getFactById(row.id).status, "active");
     const stored = getDatabase().prepare("SELECT length(embedding) AS n FROM world_facts WHERE id = ?").get(row.id);

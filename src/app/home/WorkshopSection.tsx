@@ -77,7 +77,7 @@ export function WorkshopSection({
               // The row's link and its one button again; both stay on the row.
               items={[
                 { id: "open", label: t("home.open"), glyph: "system-storyboard", onSelect: () => router.push(`/workshop/${workshop.id}`) },
-                { id: "duplicate", label: t("home.duplicate"), glyph: "tab-notes", disabled: cloningId === workshop.id, onSelect: () => onClone(workshop.id) },
+                { id: "duplicate", label: t("home.duplicate"), glyph: "ui-duplicate", disabled: cloningId === workshop.id, onSelect: () => onClone(workshop.id) },
               ]}
             >
               <Link href={`/workshop/${workshop.id}`} className="ts-bench-door" data-no-motion>

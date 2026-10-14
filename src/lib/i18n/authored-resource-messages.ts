@@ -3,21 +3,29 @@ import { defineMessages } from "./catalog.ts";
 // Original project-authored subclass and lineage counter wording. English
 // guidance remains the model-facing source; translations are display-only.
 export const AUTHORED_RESOURCE_MESSAGES = /*#__PURE__*/ defineMessages({
+  "sheetDialog.resourceHelp.sub_eldritch_cannon": {
+    "en": "An action creates the cannon for an hour (once a long rest; a spell slot buys another). A bonus action activates it: 'Activate Cannon' with variant flamethrower or protector, or the Force Ballista through pc_attack.",
+    "zh-CN": "用一个动作创造魔能炮，持续一小时；每次长休一次，也可消耗一个法术位再次创造。用附赠动作激活喷火器或防护炮，或发射力场弩炮。"
+  },
+  "sheetPlay.resourceName.sub_eldritch_cannon": {
+    "en": "Eldritch Cannon",
+    "zh-CN": "魔能炮"
+  },
   "sheetPlay.resourceName.sub_superiority_dice": {
     "en": "Superiority Dice",
     "zh-CN": "卓越骰"
   },
   "sheetDialog.resourceHelp.sub_superiority_dice": {
-    "en": "Spent on a maneuver attached to an attack: Trip, Disarm, Riposte, Precision, Menacing, Commander's Strike and the rest. The die is added to the damage or to the roll the maneuver names, and its save DC is 8 + proficiency + Strength or Dexterity.",
-    "zh-CN": "用于附加在攻击上的战技，如绊摔、缴械、反击、精准、恐吓、指挥官打击等。卓越骰加入伤害或该战技指定的掷骰；豁免难度为 8 + 熟练加值 + 力量或敏捷调整值。"
+    "en": "A maneuver that rides a weapon attack (Trip, Disarming, Precision, Menacing, Feinting, Quick Toss, Grappling Strike, Maneuvering and the rest) is named in pc_attack's maneuver: the die goes to the damage or the roll it names, its save DC is 8 + proficiency + Strength or Dexterity, and Feinting Attack and Quick Toss take the bonus action. Parry, Riposte and Brace are reactions: use_reaction. Rally and Commander's Strike are use_resource with variant 'rally' or 'commander's strike' and the ally's targetCharacterId (each takes the bonus action; Commander's Strike also forgoes one attack). A maneuver that rides a check or a move (Ambush, Bait and Switch, Commanding Presence, Evasive Footwork, Tactical Assessment) is a plain spend with that variant.",
+    "zh-CN": "绊摔、缴械、精准、恐吓、佯攻、快速投掷、擒抱打击和机动等战技附加于武器攻击，卓越骰加入对应伤害或掷骰；豁免难度为 8＋熟练加值＋力量或敏捷调整值。佯攻和快速投掷消耗附赠动作。招架、还击和迎击消耗反应。鼓舞和指挥官打击以盟友为目标，均消耗附赠动作；指挥官打击还须放弃一次攻击。伏击、诱敌换位、威严风度、闪避步法和战术评估等战技附加于检定或移动，直接消耗卓越骰。"
   },
   "sheetPlay.resourceName.sub_psionic_energy": {
     "en": "Psionic Energy Dice",
     "zh-CN": "灵能骰"
   },
   "sheetDialog.resourceHelp.sub_psionic_energy": {
-    "en": "The shared pool behind every psionic feature of this subclass. One die returns on a short rest; the rest on a long rest. The die size grows with level: d6, then d8 at 5th, d10 at 11th and d12 at 17th.",
-    "zh-CN": "该子职业所有灵能特性共用的骰池。短休恢复一个骰，长休恢复其余骰。骰子随等级增长：起初为 d6，5 级为 d8，11 级为 d10，17 级为 d12。"
+    "en": "The shared pool behind every psionic feature of this subclass. Name the use in variant: Telekinetic Movement and Psychic Whispers take an action, Psychic Teleportation a bonus action; Psionic Strike and Psi-Bolstered Knack ride a hit or a check already made; Protective Field is a reaction (use_reaction). One die returns on a short rest; the rest on a long rest. The die size grows with level: d6, then d8 at 5th, d10 at 11th and d12 at 17th.",
+    "zh-CN": "此子职各项灵能特性共用的骰池。念力移动和心灵低语消耗动作，心灵传送消耗附赠动作；灵能打击和灵能增能附加于已完成的命中或检定；防护力场消耗反应。短休恢复一个骰，长休恢复其余骰。骰子随等级增长：初始 d6，5 级 d8，11 级 d10，17 级 d12。"
   },
   "sheetPlay.resourceName.sub_fighting_spirit": {
     "en": "Fighting Spirit",
@@ -72,16 +80,16 @@ export const AUTHORED_RESOURCE_MESSAGES = /*#__PURE__*/ defineMessages({
     "zh-CN": "防护战技"
   },
   "sheetDialog.resourceHelp.sub_warding_maneuver": {
-    "en": "A reaction adding 1d8 to an ally's AC against one attack, halving the damage if it still hits.",
-    "zh-CN": "消耗一个反应，使盟友对一次攻击的护甲等级增加 1d8；若仍被命中，该次伤害减半。"
+    "en": "A reaction when the fighter or a creature they can see within 5 feet is hit, while wielding a melee weapon or a shield: 1d8 on the target's AC against that attack, and resistance to its damage if it still hits. Pass targetCharacterId for another creature; the server re-resolves the hit.",
+    "zh-CN": "持用近战武器或盾牌时，若自己或可见的 5 尺内生物被命中，可用反应使目标对该次攻击的护甲等级增加 1d8；若仍命中，目标对其伤害具有抗性。可以指定其他角色为目标，命中结果会重新结算。"
   },
   "sheetPlay.resourceName.sub_strength_before_death": {
     "en": "Strength before Death",
     "zh-CN": "临终之力"
   },
   "sheetDialog.resourceHelp.sub_strength_before_death": {
-    "en": "A reaction on taking damage that grants a full extra turn before the damage lands.",
-    "zh-CN": "受到伤害时消耗一个反应，在该伤害生效前获得一个完整的额外回合。"
+    "en": "A reaction as damage reduces the samurai to 0 hit points without killing them: they put off falling unconscious and take an extra turn at once. Damage at 0 during it still causes death save failures; when it ends they fall unconscious if still at 0. The server gives the turn.",
+    "zh-CN": "伤害将武士降至 0 生命值但未杀死时，可用反应暂缓昏迷，并立即进行一个额外回合。期间在 0 生命值时受到伤害仍会导致死亡豁免失败；额外回合结束时若仍为 0，则陷入昏迷。额外回合由引擎安排。"
   },
   "sheetPlay.resourceName.sub_arcane_shot": {
     "en": "Arcane Shot",
@@ -112,8 +120,8 @@ export const AUTHORED_RESOURCE_MESSAGES = /*#__PURE__*/ defineMessages({
     "zh-CN": "战争祭司"
   },
   "sheetDialog.resourceHelp.sub_war_priest": {
-    "en": "A bonus-action weapon attack after taking the Attack action. Resolve it with pc_attack.",
-    "zh-CN": "采取攻击动作后，可用一个附赠动作进行一次武器攻击。"
+    "en": "A bonus-action weapon attack after taking the Attack action, made with pc_attack (bonusAttack \"feature\"); the attack spends the use.",
+    "zh-CN": "进行攻击动作后，可用附赠动作发动一次武器攻击；使用次数随该次攻击扣除。"
   },
   "sheetPlay.resourceName.sub_eyes_of_the_grave": {
     "en": "Eyes of the Grave",
@@ -160,8 +168,8 @@ export const AUTHORED_RESOURCE_MESSAGES = /*#__PURE__*/ defineMessages({
     "zh-CN": "隐秘路径"
   },
   "sheetDialog.resourceHelp.sub_hidden_paths": {
-    "en": "A bonus action teleporting the druid 60 feet, or a willing creature they touch 30 feet.",
-    "zh-CN": "消耗一个附赠动作，将德鲁伊传送 60 英尺，或将触碰的自愿生物传送 30 英尺。"
+    "en": "A bonus action teleporting the druid 60 feet (variant 'self'), or an action teleporting a willing creature they touch 30 feet (variant 'touch').",
+    "zh-CN": "用附赠动作将德鲁伊自身传送 60 尺，或用一个动作将触碰的自愿生物传送 30 尺。"
   },
   "sheetPlay.resourceName.sub_spirit_totem": {
     "en": "Spirit Totem",
@@ -232,8 +240,8 @@ export const AUTHORED_RESOURCE_MESSAGES = /*#__PURE__*/ defineMessages({
     "zh-CN": "威严斗篷"
   },
   "sheetDialog.resourceHelp.sub_mantle_of_majesty": {
-    "en": "A bonus action granting a minute of free command castings, with listeners unable to attack the bard while charmed.",
-    "zh-CN": "消耗一个附赠动作，在 1 分钟内可免费施放命令术；听众被魅惑期间无法攻击吟游诗人。"
+    "en": "A bonus action for a minute of majesty (concentration): each turn the bard may cast command as a bonus action with no slot (the cast tools charge it that way while the mantle holds), and a creature charmed by the bard cannot attack them.",
+    "zh-CN": "用附赠动作获得一分钟的威仪，需要专注。期间每回合可用附赠动作施放命令术，无需法术位；被吟游诗人魅惑的生物无法攻击吟游诗人。"
   },
   "sheetPlay.resourceName.sub_unbreakable_majesty": {
     "en": "Unbreakable Majesty",
@@ -344,8 +352,8 @@ export const AUTHORED_RESOURCE_MESSAGES = /*#__PURE__*/ defineMessages({
     "zh-CN": "狩猎号召"
   },
   "sheetDialog.resourceHelp.sub_call_the_hunt": {
-    "en": "A bonus action when raging: up to five allies each add a weapon damage die to one hit per turn, and the barbarian gains 5 temporary hit points per ally who accepts.",
-    "zh-CN": "狂暴时消耗一个附赠动作：至多五名盟友每回合的一次命中可额外造成一个武器伤害骰的伤害；每有一名盟友接受号召，野蛮人获得 5 点临时生命值。"
+    "en": "Part of entering a rage, with no action of its own: up to five allies each add a d6 to the damage of one hit per turn, and the barbarian gains 5 temporary hit points per ally who accepts.",
+    "zh-CN": "作为进入狂暴的一部分，不额外消耗动作。至多五名盟友可在每回合一次命中时额外造成 1d6 点伤害；每有一名盟友接受，野蛮人就获得 5 点临时生命值。"
   },
   "sheetPlay.resourceName.sub_hexblades_curse": {
     "en": "Hexblade's Curse",
@@ -432,8 +440,8 @@ export const AUTHORED_RESOURCE_MESSAGES = /*#__PURE__*/ defineMessages({
     "zh-CN": "黯蚀躯壳"
   },
   "sheetDialog.resourceHelp.sub_necrotic_husk": {
-    "en": "Instead of dropping to 0 hit points, stay at 1 and deal necrotic damage equal to the warlock's level to each creature within 30 feet.",
-    "zh-CN": "生命值本应降至 0 时，改为保留 1 点，并对 30 英尺内的每个生物造成等于邪术师等级的黯蚀伤害。"
+    "en": "A reaction as damage reduces the warlock to 0 hit points: they drop to 1 hit point instead, each enemy within 30 feet takes 2d10 + the warlock level in necrotic damage, and they gain a level of exhaustion. It returns after 1d4 long rests. The server applies all of it.",
+    "zh-CN": "伤害将邪术师降至 0 生命值时，可用反应改为降至 1 生命值；30 尺内每个敌人受到 2d10＋邪术师等级的黯蚀伤害，邪术师获得一级力竭。经过 1d4 次长休后恢复。上述效果由引擎结算。"
   },
   "sheetPlay.resourceName.sub_spirit_projection": {
     "en": "Spirit Projection",
@@ -496,8 +504,8 @@ export const AUTHORED_RESOURCE_MESSAGES = /*#__PURE__*/ defineMessages({
     "zh-CN": "超凡复原"
   },
   "sheetDialog.resourceHelp.sub_unearthly_recovery": {
-    "en": "A bonus action at half hit points or less, restoring hit points equal to half the sorcerer's maximum.",
-    "zh-CN": "生命值不超过上限一半时，消耗一个附赠动作，恢复等于术士生命值上限一半的生命值。"
+    "en": "A bonus action when the sorcerer has fewer than half of their hit points left, restoring hit points equal to half their maximum. The server heals them.",
+    "zh-CN": "当术士剩余生命值低于上限的一半时，可用附赠动作恢复等于生命值上限一半的生命值，治疗由引擎结算。"
   },
   "sheetPlay.resourceName.sub_strength_of_the_grave": {
     "en": "Strength of the Grave",
@@ -664,8 +672,8 @@ export const AUTHORED_RESOURCE_MESSAGES = /*#__PURE__*/ defineMessages({
     "zh-CN": "与书合一"
   },
   "sheetDialog.resourceHelp.sub_one_with_the_word": {
-    "en": "Avoid death by destroying the book's magic, which then takes days of study to rebuild.",
-    "zh-CN": "摧毁法术书的魔力以免于死亡；之后需要数天的研习才能重建魔力。"
+    "en": "A reaction to damage while the Manifest Mind is summoned: all of that damage is prevented and the mind is dismissed; spells totalling 3d6 levels or more vanish from the spellbook until 1d6 long rests pass. The server prevents the damage and rolls the 3d6.",
+    "zh-CN": "显现心智存在期间受到伤害时，可用反应防止该次全部伤害并解除显现心智；法术书中总环阶至少为 3d6 的法术会消失，经过 1d6 次长休后恢复。伤害防止和 3d6 掷骰由引擎结算。"
   },
   "sheetPlay.resourceName.sub_hunters_sense": {
     "en": "Hunter's Sense",
@@ -712,8 +720,8 @@ export const AUTHORED_RESOURCE_MESSAGES = /*#__PURE__*/ defineMessages({
     "zh-CN": "虫群散逸"
   },
   "sheetDialog.resourceHelp.sub_swarming_dispersal": {
-    "en": "A reaction granting resistance to the damage just taken and teleporting the ranger 30 feet.",
-    "zh-CN": "消耗一个反应，对刚刚受到的伤害具有抗性，并将游侠传送 30 英尺。"
+    "en": "A reaction to damage just taken: resistance to that damage, and the ranger teleports up to 30 feet. The server gives back the resisted half.",
+    "zh-CN": "用反应对刚受到的伤害获得抗性，并将游侠传送至多 30 尺。引擎返还因抗性减免的那一半伤害。"
   },
   "sheetPlay.resourceName.sub_misty_wanderer": {
     "en": "Misty Wanderer",
@@ -816,8 +824,8 @@ export const AUTHORED_RESOURCE_MESSAGES = /*#__PURE__*/ defineMessages({
     "zh-CN": "龙之吐息"
   },
   "sheetDialog.resourceHelp.sub_breath_of_the_dragon": {
-    "en": "Replace one Attack-action attack with a 20-foot cone or 30-foot line dealing the martial arts die in the monk's chosen damage type, halved on a Dexterity save. Ki buys extra uses.",
-    "zh-CN": "用吐息替换攻击动作中的一次攻击：20 英尺锥形或 30 英尺线形，造成武僧所选类型的一个武艺骰伤害，敏捷豁免成功则减半。可消耗气点获得额外使用次数。"
+    "en": "Replace one Attack-action attack with a 20-foot cone or 30-foot line dealing the martial arts die in the monk's chosen damage type, halved on a Dexterity save. With no use left, 2 ki buys another (the server spends them).",
+    "zh-CN": "将攻击动作中的一次攻击替换为 20 尺锥形或 30 尺线形吐息，以武艺骰造成武僧选择类型的伤害；敏捷豁免成功则伤害减半。使用次数耗尽后，可花费 2 点气再次使用，气由引擎扣除。"
   },
   "sheetPlay.resourceName.sub_wings_unfurled": {
     "en": "Wings Unfurled",
@@ -856,24 +864,24 @@ export const AUTHORED_RESOURCE_MESSAGES = /*#__PURE__*/ defineMessages({
     "zh-CN": "石之坚韧"
   },
   "sheetDialog.resourceHelp.race_stones_endurance": {
-    "en": "A reaction reducing incoming damage by 1d12 + the goliath's Constitution modifier.",
-    "zh-CN": "消耗一个反应，将即将受到的伤害减少 1d12 + 歌利亚的体质调整值。"
+    "en": "A reaction to damage just taken: 1d12 + the goliath's Constitution modifier comes off it. The server rolls it and gives the hit points back.",
+    "zh-CN": "用反应将刚受到的伤害减少 1d12＋歌利亚的体质调整值。引擎负责掷骰并返还相应生命值。"
   },
   "sheetPlay.resourceName.race_healing_hands": {
     "en": "Healing Hands",
     "zh-CN": "治愈之手"
   },
   "sheetDialog.resourceHelp.race_healing_hands": {
-    "en": "Touch a creature to restore hit points equal to the aasimar's level.",
-    "zh-CN": "触碰一个生物，为其恢复等于阿斯莫等级的生命值。"
+    "en": "An action: a touched creature regains hit points equal to a number of d4s equal to the aasimar's proficiency bonus (MotM). Once a long rest.",
+    "zh-CN": "用一个动作触碰一个生物，为其恢复若干 d4 的生命值，骰子数量等于阿斯莫的熟练加值（MotM）。每次长休一次。"
   },
   "sheetPlay.resourceName.race_celestial_revelation": {
     "en": "Celestial Revelation",
     "zh-CN": "天界显现"
   },
   "sheetDialog.resourceHelp.race_celestial_revelation": {
-    "en": "A minute of transformation from 3rd level: spectral wings granting flight, and extra radiant damage once per turn.",
-    "zh-CN": "从 3 级起，可变身 1 分钟：幽灵翅膀赋予飞行能力，每回合可额外造成一次光耀伤害。"
+    "en": "A bonus action from 3rd level for a minute of transformation (MotM): pass variant heavenly wings (a flying speed equal to the walking speed), inner radiance (bright light; each creature within 10 feet takes radiant damage equal to the proficiency bonus at the end of each of the aasimar's turns) or necrotic shroud (creatures within 10 feet make a Charisma save or are frightened until the end of the aasimar's next turn). Once on each turn, one target of the aasimar's attack or spell takes extra damage equal to the proficiency bonus: radiant, or necrotic for the shroud (damage_enemy).",
+    "zh-CN": "从 3 级起，可用附赠动作变身一分钟（MotM）。天堂之翼：获得等于步行速度的飞行速度；内在光辉：发出明亮光照，在阿斯莫每个回合结束时，10 尺内每个生物受到等于熟练加值的光耀伤害；黯蚀帷幕：10 尺内生物进行魅力豁免，失败则恐慌至阿斯莫下一回合结束。每回合一次，阿斯莫的攻击或法术可对一个目标额外造成等于熟练加值的光耀伤害；选择黯蚀帷幕时改为黯蚀伤害。"
   },
   "sheetPlay.resourceName.race_hidden_step": {
     "en": "Hidden Step",
@@ -904,8 +912,8 @@ export const AUTHORED_RESOURCE_MESSAGES = /*#__PURE__*/ defineMessages({
     "zh-CN": "饥渴巨颚"
   },
   "sheetDialog.resourceHelp.race_hungry_jaws": {
-    "en": "A bonus-action bite that, on a hit, also grants temporary hit points equal to the lizardfolk's Constitution modifier.",
-    "zh-CN": "消耗一个附赠动作啮咬，命中时还获得等于蜥蜴人体质调整值的临时生命值。"
+    "en": "A bonus-action bite, made with pc_attack (weapon \"bite\", bonusAttack \"feature\"): on a hit the lizardfolk also gains temporary hit points equal to their Constitution modifier (minimum 1). The attack spends the use.",
+    "zh-CN": "用附赠动作发动一次啮咬攻击。命中时，蜥蜴人还获得等于体质调整值的临时生命值，至少为 1。使用次数随该次攻击扣除。"
   },
   "sheetPlay.resourceName.race_genasi_magic": {
     "en": "Elemental Legacy",
@@ -944,8 +952,8 @@ export const AUTHORED_RESOURCE_MESSAGES = /*#__PURE__*/ defineMessages({
     "zh-CN": "魔能炮"
   },
   "sheetDialog.resourceHelp.art_eldritch_cannon": {
-    "en": "A bonus action builds a flamethrower, force ballista or protector cannon that acts on the artificer's command. A spell slot buys extra uses.",
-    "zh-CN": "消耗一个附赠动作，建造喷火器、力场弩炮或防护炮，按奇械师的指挥行动。可消耗法术位获得额外使用次数。"
+    "en": "An action builds a flamethrower, force ballista or protector cannon, and a bonus action activates it. A spell slot buys extra uses.",
+    "zh-CN": "用一个动作建造喷火器、力场弩炮或防护炮，再用附赠动作激活。可以消耗法术位获取额外使用次数。"
   },
   "sheetPlay.resourceName.art_spell_storing_item": {
     "en": "Spell-Storing Item",
@@ -984,8 +992,8 @@ export const AUTHORED_RESOURCE_MESSAGES = /*#__PURE__*/ defineMessages({
     "zh-CN": "律法化身"
   },
   "sheetDialog.resourceHelp.sub_embodiment_of_the_law": {
-    "en": "Casting an enchantment spell of 1st level or higher as a bonus action instead of an action. Spend it with use_resource, then cast the spell with its own tool.",
-    "zh-CN": "将一个一环或更高环阶惑控学派法术的施法动作改为附赠动作。先消耗该资源，再施放法术。"
+    "en": "Casting an enchantment spell of 1st level or higher as a bonus action instead of an action. Spend it with use_resource on their turn; the next such spell they cast this turn then takes the bonus action.",
+    "zh-CN": "将原本需要一个动作的一环或更高环阶惑控法术改为附赠动作施放。在自己的回合先消耗该特性，本回合下一次符合条件的施法即改用附赠动作。"
   },
   "sheetPlay.resourceName.sub_cauterizing_flames": {
     "en": "Cauterizing Flames",
@@ -1000,8 +1008,8 @@ export const AUTHORED_RESOURCE_MESSAGES = /*#__PURE__*/ defineMessages({
     "zh-CN": "坚定印记"
   },
   "sheetDialog.resourceHelp.sub_unwavering_mark": {
-    "en": "The bonus-action attack against a marked creature that attacked someone else; the mark itself the server lays on every melee hit.",
-    "zh-CN": "对攻击过他人的受标记生物进行一次附赠动作攻击；每次近战命中都会自动施加标记。"
+    "en": "The bonus-action melee attack against a marked creature that damaged someone else, on the fighter's next turn: pc_attack bonusAttack \"feature\" at that creature, with advantage and +half the fighter level damage; the attack spends the use. The mark itself the server lays on every melee hit.",
+    "zh-CN": "被标记的生物伤害了其他目标后，战士可在自己下一回合用附赠动作对其发动一次近战攻击，具有优势，额外伤害等于战士等级的一半；使用次数随该次攻击扣除。引擎会在每次近战命中时施加标记。"
   },
   "sheetPlay.resourceName.sub_bulwark_of_force": {
     "en": "Bulwark of Force",

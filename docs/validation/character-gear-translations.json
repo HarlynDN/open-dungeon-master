@@ -16,7 +16,7 @@
     "src/lib/i18n/gear-ui-presentations.ts": "7f5e42e0c8d41b35948beefea931bff76257146f50bd2b722638b24ee182ca80",
     "src/lib/i18n/equipment-help-presentations.ts": "66e3d2a0cbb0695955ca50962f628be75ef3e70a3d5df1b155126505a221a532",
     "src/lib/i18n/reference-names.ts": "52c28086be58640c59cba14af9e9d25a5d6b7dda161bd55315e56b7fdf2fb5d6",
-    "src/lib/content/native-equipment-search.ts": "f0e147029c3449d0a76dc0d3874bcb89b828f754ee56b2e8f14f6122c57b4eb6",
+    "src/lib/content/native-equipment-search.ts": "db295ded79ac53ece95853852f9dc209fc965a36526478b602271bbc272c2840",
     "src/app/api/content/[kind]/route.ts": "2c30403c07f6a3e292dda0debed2de78715b74fc925cf6e507984c3f5d2c6b5e"
   },
   "catalogs": {
@@ -84,5 +84,10 @@
       "src/components/ui/InfoDialog.tsx": "dfbbfa75f6ecbfdf59cd1b014819c1fa7ec2017d3e677065f2e1ac4a17abae22"
     },
     "review": "Reviewed complete shared help renderer. Lazy feat fallback now requires owned document provenance, matching picker behavior; missing, external and homebrew provenance preserves raw text. Exact full-source help guard and frozen English dialog remain unchanged. Component regression explicitly checks all provenance variants in both locales; no item rules or stored source changed."
+  },
+  "upstream027Review": {
+    "upstreamCommit": "2b0b6b6ebf5e12f3e43a21ee38f80b41e5b1cd81",
+    "reviewer": "implementation agent",
+    "scope": "Reviewed source deltas: campaign-scoped ability rolls; subclass training and mandatory choices; native gender and level-floor UI; Aasimar and subclass rule text; resource action annotations; concentration flag reader; stable Unicode name ordering. Existing Chinese bindings updated where source changed. Runtime acceptance is tracked separately."
   }
 }

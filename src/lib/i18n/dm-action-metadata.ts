@@ -692,5 +692,12 @@ export const DM_ACTION_METADATA = [
     "summary": "Lays a disease, madness or poison on a character, the SRD's or one from this table's workshop: the server rolls the save and holds what follows.",
     "labelKey": "dmAction.label.afflict",
     "summaryKey": "dmAction.summary.afflict"
+  },
+  {
+    "name": "read_card",
+    "label": "Read a prep card",
+    "summary": "Opens the full storyboard card behind a story beat or a planned event.",
+    "labelKey": "dmAction.label.read_card",
+    "summaryKey": "dmAction.summary.read_card"
   }
 ] as const;

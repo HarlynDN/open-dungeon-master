@@ -32,6 +32,7 @@ import { HelpDot, MethodInfoDialog, type HpExplainerInput } from "./AbilityExpla
 import { AbilitySummary } from "./AbilitySummary";
 import { DiceDefs, DiceRow } from "./Dice";
 import { fetchOpenAbilityPool, requestAbilityPool, type AbilityPoolAnswer } from "./useTableRules";
+import { useContentCampaign } from "@/lib/content-scope";
 
 export const STANDARD_ARRAY = [15, 14, 13, 12, 10, 8];
 export type AbilityMethod = "standard" | "pointbuy" | "roll";
@@ -116,7 +117,11 @@ export default function AbilityEditor({
   // are that kept roll (null when thrown before the server kept dates).
   const [openPool, setOpenPool] = useState<AbilityPoolAnswer | null>(null);
   const [keptAt, setKeptAt] = useState<string | null | undefined>(undefined);
-  // The server's reroll rule; the bundled default until it has answered.
+  // Built at a table, the dice are rolled under that table's rule (its own,
+  // or the server's when it set none), and the words say so.
+  const campaignId = useContentCampaign();
+  // The reroll rule where the character is made; the bundled default until
+  // the server has answered.
   const [rerollBelow, setRerollBelow] = useState(REROLL_BELOW);
   function learnRule(answer: { rerollBelow: number }) {
     setRerollBelow(answer.rerollBelow);
@@ -145,7 +150,7 @@ export default function AbilityEditor({
   const openedWith = useRef({ method, pool });
   useEffect(() => {
     let cancelled = false;
-    fetchOpenAbilityPool().then((answer) => {
+    fetchOpenAbilityPool(campaignId).then((answer) => {
       if (cancelled || !answer) {
         return;
       }
@@ -201,7 +206,7 @@ export default function AbilityEditor({
     }
     setAsking(true);
     setRollError("");
-    const answer = await requestAbilityPool();
+    const answer = await requestAbilityPool(campaignId);
     setAsking(false);
     if ("error" in answer) {
       setRollError(answer.error);

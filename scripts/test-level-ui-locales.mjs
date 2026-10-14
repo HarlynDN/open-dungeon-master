@@ -1,7 +1,7 @@
 // Narrow display/choice checks: actual JSX, no model or audio calls.
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {createHash} from 'node:crypto';
+import {execFileSync} from 'node:child_process';
 import {openCombatRenderer} from './lib/combat-ui-fixtures.mjs';
 const {ALL_CLASSES}=await import('../src/lib/srd/index.ts');
 const {canMulticlassInto,multiclassGrantsFor,describeGrant,describePrereq}=await import('../src/lib/srd/multiclass.ts');
@@ -19,7 +19,7 @@ const stubs={
  '@/app/characters/builder/useBuilderOptions':url('export const useArchetypes=()=>[];'),
  '@/components/sheet/SheetParts':url('export const PortraitMedallion=({children})=>children;'),
  '@/components/ui/FxSprite':url('export const FxSprite=()=>null;'),
- '@/lib/ui':url('export const CharacterPortrait=()=>null;'),
+ '@/components/CharacterPortrait':url('export const CharacterPortrait=()=>null;'),
 };
 globalThis.__odmLevelPool=[{name:'Magic Missile',level:1,slug:'magic-missile',source:'srd',data:{school:'evocation'}},{name:'Fire Bolt',level:0,slug:'fire-bolt',source:'srd',data:{school:'evocation'}}];
 const sheet={id:'s1',campaignId:'c1',userId:'u1',name:'Mira to Someone: v2',race:'human',class:'fighter',subclass:'',level:1,classes:[],gender:'female',
@@ -48,8 +48,9 @@ for(const [name,entry]of [['short',rest],['long',{...rest,kind:'rest_long'}],['r
 for(const name of ['Longsword','Authored treasure','Longsword +2'])cases.push(['moment/loot/'+name,'LootMoment',{sheet},{queues:{[files[1]]:[{signature:'s1|',id:'s1',pack:new Map()},[{name,qty:2}]]}}]);
 for(const firstVisit of [true,false])cases.push(['moment/travel/'+firstVisit,'TravelBanner',{locations:[]},{queues:{[files[1]]:[{id:'',visited:''},{id:'location1',name:'Authored place',firstVisit}]}}]);
 const renderer=await openCombatRenderer({files,stubs});
-const golden=new URL('./fixtures/level-ui-en.json',import.meta.url);
-const hashes=JSON.parse(fs.readFileSync(golden,'utf8')).sha256;for(const [label,name,p,options]of cases)assert.equal(createHash('sha256').update(renderer.render(name,p,'en',options)).digest('hex'),hashes[label],label);
+// Compare the accepted upstream level flow, not pre-upgrade SVG hashes.
+const upstream=await openCombatRenderer({files,stubs,sourceOf:file=>files.includes(file)?execFileSync('git',['show',`2b0b6b6e:${file}`],{encoding:'utf8'}):fs.readFileSync(file,'utf8')});
+for(const [label,name,p,options]of cases)assert.equal(renderer.render(name,p,'en',options),upstream.render(name,p,'en',options),label+' upstream English');
 for(const [label,name,p,options]of cases){const zh=renderer.render(name,p,'zh-CN',options);assert.notEqual(zh,renderer.render(name,p,'en',options),label);if(name==='LevelUpDialog')assert(zh.includes('级'));}
 // Native multiclass computations are read, never translated or changed.
 for(const klass of ALL_CLASSES){const grant=multiclassGrantsFor(klass.id),before=structuredClone(grant);assert.equal(levelUpGrants(grant,'en'),describeGrant(grant));assert.notEqual(levelUpGrants(grant,'zh-CN'),describeGrant(grant));assert(!/[A-Za-z]{3,}/.test(levelUpGrants(grant,'zh-CN')),klass.id+' grant');assert.equal(levelUpPrerequisite(klass.id,'en'),describePrereq(klass.id));assert.notEqual(levelUpPrerequisite(klass.id,'zh-CN'),describePrereq(klass.id));assert.deepEqual(grant,before);const check=canMulticlassInto({...sheet,abilities:{str:8,dex:8,con:8,int:8,wis:8,cha:8}},klass.id);if(check.error)assert.notEqual(levelUpNotice(check.error,'zh-CN'),check.error);}

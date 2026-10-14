@@ -1,6 +1,14 @@
 import { defineMessages } from "./catalog.ts";
 
 export const CHARACTER_UI_MESSAGES = /*#__PURE__*/ defineMessages({
+  "characterHost.alliesHidden": {"en": "{count} DM-controlled allies are not listed here. The story authority can add them through Build a companion in the party panel.", "zh-CN": "此处不显示 {count} 名由 DM 扮演的盟友。负责故事的人可在队伍面板通过“创建伙伴”将其加入。"},
+  "library.duplicateEdit": {"en": "Duplicate and edit", "zh-CN": "复制并编辑"},
+  "library.editBuild": {"en": "Edit build", "zh-CN": "编辑构筑"},
+  "seat.joinParty": {"en": "Join the party", "zh-CN": "加入队伍"},
+  "seat.allyHint": {"en": "The table gets a copy as a party companion played by the DM, at the party level. Only the story authority can bring one in where companions are allowed. Your library copy stays unchanged.", "zh-CN": "此战役会按队伍等级创建一份角色副本，作为由 DM 扮演的队伍伙伴。只有负责故事的人能在允许伙伴的战役中带入盟友。角色库中的原件不变。"},
+  "seat.allyTitle": {"en": "Bring {name} to a campaign as an ally", "zh-CN": "将{name}作为盟友带入战役"},
+  "seat.allyAction": {"en": "Bring to a campaign", "zh-CN": "带入战役"},
+  "library.backWorkshop": {"en": "Back to the workshop", "zh-CN": "返回工坊"},
   "library.title": {
     "en": "Your characters",
     "zh-CN": "你的角色"

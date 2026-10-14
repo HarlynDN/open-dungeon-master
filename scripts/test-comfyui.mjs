@@ -20,6 +20,10 @@ process.env.DB_ENCRYPTION_KEY = randomBytes(32).toString("hex");
 register("./lib/register-alias.mjs", import.meta.url);
 
 const { comfyStatus, generateComfyImage, MAX_COMFY_IMAGE_BYTES } = await import("../src/lib/comfyui.ts");
+const { ANY_CHECKPOINT, comfyModel } = await import("../src/lib/image-models/catalog.ts");
+const { buildModelWorkflow } = await import("../src/lib/image-models/workflow.ts");
+const { getGlobalConfig, saveGlobalConfig } = await import("../src/lib/db/app-settings.ts");
+const { imageVariantsSettled } = await import("../src/lib/image-variants.ts");
 
 // Generated files land under the working directory; keep them out of the repo.
 const repoCwd = process.cwd();
@@ -50,6 +54,13 @@ function fakeComfy(overrides = {}) {
     "/system_stats": () => json({ system: {} }),
     "/object_info/CheckpointLoaderSimple": () =>
       json({ CheckpointLoaderSimple: { input: { required: { ckpt_name: [["model.safetensors"]] } } } }),
+    // ComfyUI's tutorial downloads for Z-Image Turbo, not the files the
+    // reference workflow names; the VAE kept in a subfolder.
+    "/object_info/UNETLoader": () =>
+      json({ UNETLoader: { input: { required: { unet_name: [["flux1-schnell.safetensors", "z_image_turbo_bf16.safetensors"]] } } } }),
+    "/object_info/CLIPLoader": () =>
+      json({ CLIPLoader: { input: { required: { clip_name: ["COMBO", { options: ["clip_l.safetensors", "qwen_3_4b.safetensors"] }] } } } }),
+    "/object_info/VAELoader": () => json({ VAELoader: { input: { required: { vae_name: [["flux/ae.safetensors"]] } } } }),
     "/prompt": () => json({ prompt_id: "p1" }),
     "/history/p1": () =>
       json({ p1: { status: { completed: true }, outputs: { 7: { images: [{ filename: "out.png", subfolder: "", type: "output" }] } } } }),
@@ -59,7 +70,7 @@ function fakeComfy(overrides = {}) {
   const seen = [];
   const fetchStub = async (input, init) => {
     const url = new URL(String(input));
-    seen.push({ url: url.href, redirect: init?.redirect });
+    seen.push({ url: url.href, redirect: init?.redirect, body: init?.body });
     if (url.origin !== COMFY) {
       // Only reachable if a redirect was followed.
       return new Response("AWS_SECRET_ACCESS_KEY=hunter2");
@@ -91,6 +102,56 @@ function assertNothingLeaked(seen, before) {
   assert.ok(seen.every((call) => call.redirect === "manual"), "a ComfyUI request would follow redirects");
   assert.deepEqual(generatedFiles(), before, "something was written under public/generated");
 }
+
+const zReference = JSON.parse(fs.readFileSync(new URL("./fixtures/comfy-z-turbo.json", import.meta.url), "utf8"));
+const REFERENCE_FILES = { unet: "z_image_turbo_nvfp4.safetensors", clip: "qwen_3_4b_fp8_mixed.safetensors", vae: "ae.safetensors" };
+const TUTORIAL_FILES = { unet: "z_image_turbo_bf16.safetensors", clip: "qwen_3_4b.safetensors", vae: "flux/ae.safetensors" };
+// The reference graph with another ComfyUI's files in its three loaders.
+const withFiles = (graph, files) => {
+  const copy = structuredClone(graph);
+  copy["57:28"].inputs.unet_name = files.unet;
+  copy["57:30"].inputs.clip_name = files.clip;
+  copy["57:29"].inputs.vae_name = files.vae;
+  return copy;
+};
+// A graph as the picture it paints: every node from the decode back, with
+// links replaced by the node they point at. Node ids, titles and the save
+// node's file prefix do not change the picture.
+function painted(graph) {
+  const node = (id) => {
+    const { class_type, inputs } = graph[id];
+    return {
+      class_type,
+      inputs: Object.fromEntries(
+        Object.entries(inputs)
+          .sort(([a], [b]) => a.localeCompare(b))
+          .map(([key, value]) => [key, Array.isArray(value) && graph[value[0]] ? { from: node(value[0]), output: value[1] } : value]),
+      ),
+    };
+  };
+  return node(Object.keys(graph).find((id) => graph[id].class_type === "VAEDecode"));
+}
+const zTurbo = comfyModel("z_turbo");
+assert.deepEqual(
+  painted(buildModelWorkflow(zTurbo, { prompt: "a tavern", width: 1024, height: 1024, seed: 42, files: REFERENCE_FILES })),
+  painted(zReference),
+  "Z-Image Turbo graph must match the supplied API workflow with only its prompt, size, seed and files varying",
+);
+passed += 1;
+console.log("ok - Z-Image Turbo graph matches the supplied workflow");
+
+const checkpointGraph = buildModelWorkflow(ANY_CHECKPOINT, {
+  prompt: "a tavern", width: 768, height: 768, seed: 42, negative: "no swords", files: { ckpt: "model.safetensors" },
+});
+assert.equal(checkpointGraph["1"].inputs.ckpt_name, "model.safetensors");
+assert.equal(checkpointGraph["3"].inputs.text.endsWith(", no swords"), true);
+assert.deepEqual(checkpointGraph["5"].inputs, {
+  model: ["1", 0], positive: ["2", 0], negative: ["3", 0], latent_image: ["4", 0],
+  seed: 42, steps: 25, cfg: 6, sampler_name: "euler", scheduler: "normal", denoise: 1,
+});
+assert.equal(checkpointGraph["7"].inputs.filename_prefix, "open-dungeon");
+passed += 1;
+console.log("ok - standard checkpoint workflow keeps its model, negatives, and sampler");
 
 await test("a well-behaved ComfyUI still produces a picture", fakeComfy(), async ({ seen }) => {
   const image = await generate();
@@ -209,6 +270,112 @@ await test(
   },
 );
 
+saveGlobalConfig({ images: { comfyCheckpoint: "keep-this-checkpoint.safetensors", comfyWorkflowPreset: "z_turbo" } });
+await test("Z-Image Turbo submits its graph with this ComfyUI's files, no checkpoint and no table negatives", fakeComfy(), async ({ seen }) => {
+  const image = await generateComfyImage({
+    url: COMFY, checkpoint: "", prompt: "a tavern",
+    mode: "fast", aspect: "square", seed: 42, negative: "private table boundary",
+  });
+  assert.match(image.url, /^\/generated\/.*-comfyui-a-tavern\.png$/);
+  assert.deepEqual(fs.readFileSync(path.join(dir, "public", image.url)), PNG);
+  assert.equal(JSON.stringify(JSON.parse(seen.find((call) => call.url.endsWith("/prompt")).body)).includes("CheckpointLoaderSimple"), false);
+  const sent = JSON.parse(seen.find((call) => call.url.endsWith("/prompt")).body);
+  // The files this ComfyUI lists, in the otherwise unchanged reference graph.
+  assert.deepEqual(painted(sent.prompt), painted(withFiles(zReference, TUTORIAL_FILES)));
+  assert.equal(JSON.stringify(sent).includes("private table boundary"), false);
+  assert.equal(getGlobalConfig().images.comfyCheckpoint, "keep-this-checkpoint.safetensors");
+});
+
+await test(
+  "Z-Image Turbo names the file a ComfyUI lacks instead of submitting a graph it will refuse",
+  fakeComfy({ "/object_info/CLIPLoader": () => json({ CLIPLoader: { input: { required: { clip_name: [["clip_l.safetensors"]] } } } }) }),
+  async ({ seen }) => {
+    const before = generatedFiles();
+    await assert.rejects(
+      generateComfyImage({ url: COMFY, prompt: "a tavern", mode: "fast", aspect: "square" }),
+      /missing the Qwen 3 4B text encoder \(models\/text_encoders\) for Z-Image Turbo/,
+    );
+    assert.ok(!seen.some((call) => call.url.endsWith("/prompt")), "a graph went to ComfyUI anyway");
+    assertNothingLeaked(seen, before);
+  },
+);
+
+const zReport = (status) => status.models.find((model) => model.id === "z_turbo");
+await test("the status check reports the Z-Image Turbo files it found", fakeComfy(), async () => {
+  const status = await comfyStatus(COMFY);
+  assert.deepEqual(zReport(status).files, TUTORIAL_FILES);
+  assert.deepEqual(zReport(status).missing, []);
+  // Installed models come first in the curated list.
+  assert.equal(status.models[0].missing.length, 0);
+  assert.ok(status.models.length > 30, "every catalog model is reported");
+});
+await test(
+  "the status check names the machine and leaves video models and bare diffusion models out of the checkpoints",
+  fakeComfy({
+    "/system_stats": () => json({
+      system: { comfyui_version: "0.39.2", pytorch_version: "2.14.0+rocm7.2", ram_total: 134296588288 },
+      devices: [{ name: "cuda:0 AMD Radeon 8060S Graphics : native", vram_total: 128849018880 }],
+    }),
+    "/object_info/CheckpointLoaderSimple": () =>
+      json({ CheckpointLoaderSimple: { input: { required: { ckpt_name: [["ltx-video-2b-v0.9.safetensors", "flux1-schnell.safetensors", "model.safetensors"]] } } } }),
+  }),
+  async () => {
+    const status = await comfyStatus(COMFY);
+    // flux1-schnell is also a diffusion model here: a bare model linked into
+    // models/checkpoints, which CheckpointLoaderSimple cannot load.
+    assert.deepEqual(status.checkpoints, ["model.safetensors"]);
+    assert.equal(status.device.name, "AMD Radeon 8060S Graphics");
+    assert.equal(status.device.memoryGb, 120);
+    assert.equal(status.hardware.id, "strix-halo");
+  },
+);
+await test(
+  "a ComfyUI without the Z-Image loaders still reports its checkpoints",
+  fakeComfy({ "/object_info/UNETLoader": () => new Response("no such node", { status: 404 }), "/object_info/VAELoader": () => new Response("<html>") }),
+  async () => {
+    const status = await comfyStatus(COMFY);
+    assert.equal(status.ok, true);
+    assert.deepEqual(status.checkpoints, ["model.safetensors"]);
+    assert.deepEqual(zReport(status).files, { unet: "", clip: "qwen_3_4b.safetensors", vae: "" });
+    assert.equal(status.hardware, null);
+  },
+);
+
+saveGlobalConfig({ images: { comfyWorkflowPreset: "checkpoint" } });
+await test("switching back keeps the stored checkpoint and submits the standard graph", fakeComfy(), async ({ seen }) => {
+  await generateComfyImage({ url: COMFY, checkpoint: getGlobalConfig().images.comfyCheckpoint,
+    prompt: "a tavern", mode: "fast", aspect: "square", seed: 42 });
+  const sent = JSON.parse(seen.find((call) => call.url.endsWith("/prompt")).body);
+  assert.equal(sent.prompt["1"].inputs.ckpt_name, "keep-this-checkpoint.safetensors");
+  assert.equal(sent.prompt["5"].inputs.sampler_name, "euler");
+});
+
+await test(
+  "in checkpoint mode with no checkpoint picked, a picture is refused naming the admin page, and ComfyUI is asked nothing",
+  fakeComfy(),
+  async ({ seen }) => {
+    await assert.rejects(
+      generateComfyImage({ url: COMFY, checkpoint: "", prompt: "a tavern", mode: "fast", aspect: "square" }),
+      /No ComfyUI checkpoint is picked.*Admin > Image generation/,
+    );
+    assert.deepEqual(seen, [], "no prompt, and no list to pick the first entry from");
+  },
+);
+
+await test(
+  "a picked checkpoint is used as saved when ComfyUI has several",
+  fakeComfy({
+    "/object_info/CheckpointLoaderSimple": () =>
+      json({ CheckpointLoaderSimple: { input: { required: { ckpt_name: [["first.safetensors", "picked.safetensors"]] } } } }),
+  }),
+  async ({ seen }) => {
+    await generateComfyImage({ url: COMFY, checkpoint: "picked.safetensors", prompt: "a tavern", mode: "fast", aspect: "square", seed: 7 });
+    const sent = JSON.parse(seen.find((call) => call.url.endsWith("/prompt")).body);
+    assert.equal(sent.prompt["1"].inputs.ckpt_name, "picked.safetensors");
+  },
+);
+
+await imageVariantsSettled();
 process.chdir(repoCwd);
 removeTempDir(dir);
 console.log(`test-comfyui: ${passed} passed`);

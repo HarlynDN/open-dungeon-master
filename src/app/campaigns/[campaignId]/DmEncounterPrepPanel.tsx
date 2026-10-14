@@ -148,6 +148,7 @@ export function DmEncounterPrepPanel({
             name: template.name,
             enemies: formatRoster(template.enemies),
             battlefield: template.battlefield,
+            scene: template.map.scene ?? "",
             notes: template.notes,
             mapId: template.map.mapId ?? "",
             extras: template.extras,
@@ -174,7 +175,7 @@ export function DmEncounterPrepPanel({
           enemies: draft.enemies,
           battlefield: draft.battlefield,
           notes: draft.notes,
-          map: { mapId: draft.mapId || null },
+          map: { mapId: draft.mapId || null, scene: draft.scene || null },
           extras: draft.extras,
         }),
       });
@@ -355,8 +356,8 @@ export function DmEncounterPrepPanel({
                   disabled: busy,
                   onSelect: () => void deploy(template.id, !template.cued),
                 },
-                { id: "duplicate", label: t("dmToolsUi.duplicateName", { name: template.name }), glyph: "system-homebrew", disabled: busy, onSelect: () => void duplicate(template) },
-                { id: "delete", label: t("dmToolsUi.deleteName", { name: template.name }), glyph: "quest-failed", tone: "danger", separated: true, onSelect: () => void remove(template) },
+                { id: "duplicate", label: t("dmToolsUi.duplicateName", { name: template.name }), glyph: "ui-duplicate", disabled: busy, onSelect: () => void duplicate(template) },
+                { id: "delete", label: t("dmToolsUi.deleteName", { name: template.name }), glyph: "ui-delete", tone: "danger", separated: true, onSelect: () => void remove(template) },
               ];
               return (
                 <ContextMenu key={template.id} as="li" items={items} label={template.name} className={panelRow}>

@@ -5,7 +5,7 @@ import { consoleUiText, consoleFrame } from "@/lib/i18n/dm-console-presentations
 
 import * as RadixDialog from "@radix-ui/react-dialog";
 import { isComposingInput } from "@/lib/input-composition";
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import { GameIcon } from "@/components/ui/GameIcon";
 import { cn } from "@/lib/cn";
@@ -166,7 +166,16 @@ export function CommandPalette({
                 aria-label={heading}
                 className="min-w-0 flex-1 bg-transparent text-sm text-stone-100 outline-none placeholder:text-stone-500"
               />
-              <span className="kbd-key" aria-hidden="true">{consoleUiText("Esc", locale)}</span>
+              {/* The Esc chip only means something with a keyboard. A phone,
+                  whose keyboard now covers most of the backdrop, or a Steam
+                  Deck on its trackpad, needs a button to press. */}
+              <span className="kbd-key hidden [@media(pointer:fine)]:inline" aria-hidden="true">{consoleUiText("Esc", locale)}</span>
+              <RadixDialog.Close
+                aria-label={consoleUiText("Close", locale)}
+                className="-my-1 shrink-0 rounded-md p-1.5 text-stone-400 transition-colors hover:bg-stone-800 hover:text-stone-200"
+              >
+                <X className="size-4" />
+              </RadixDialog.Close>
             </div>
             <div ref={listRef} id={listId} role="listbox" aria-label={heading} className="palette-list min-h-0 flex-1 overflow-y-auto p-1.5">
               {shown.map((command, index) => (

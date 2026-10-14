@@ -5,11 +5,13 @@ import type { RollPresentation } from "@/lib/roll-presentation";
 
 import { useCallback, useEffect, useMemo, useReducer, useRef } from "react";
 import type { CampaignMember, SessionUser } from "@/lib/campaign-types";
+import type { CoordinationPhase } from "@/lib/dm/coordination-logic";
 import { coalesceRefresh } from "@/app/campaigns/[campaignId]/coalesce";
 import { createStreamWatchdog } from "@/app/campaigns/[campaignId]/streamWatchdog";
 import {
   appendDmDraft,
   clearDmDraft,
+  replaceDmDraft,
   setDmDraftSeq,
   resetLiveStores,
   setVoiceSpeaking,
@@ -110,6 +112,8 @@ export type ItemProposal = {
   reason: string;
   status: string;
   createdAt: string;
+  // How settling it went (issue 239): what applying it did, or why not.
+  outcome?: string;
   // A trade's other side and its offer (11.2).
   toCharacterId?: string;
   offer?: { toCharacterId: string; give: Array<{ name: string; qty: number }>; giveCp: number; want: Array<{ name: string; qty: number }>; wantCp: number } | null;
@@ -136,6 +140,10 @@ export type CampaignLocation = {
   visited: boolean;
   isCurrent: boolean;
   mapImage: { url: string } | null;
+  // Why its last map render failed, while it has none (src/lib/db/locations.ts).
+  mapFailed?: string | null;
+  // The place's ambience bed and music, which name its kind of scene.
+  ambience: { bed: string; music: string } | null;
   updatedAt: string;
 };
 
@@ -148,6 +156,11 @@ export type CampaignState = {
   // asked rather than leaving the player to guess which world replied.
   answeredBy: string;
   campaign: Campaign | null;
+  // The plan the party is coordinating, while it drafts (issue 254).
+  coordination: CoordinationPhase | null;
+    // The table holds a story arc AI Story Setup has not built on yet (the
+  // lobby's warning, issue 249); false for anyone who does not steer.
+  prepArc: boolean;
   // What this seat may see and do, decided by the server
   // (src/lib/dm/viewer.ts). The client never re-derives it from ids, so a
   // control the server would refuse is never rendered in the first place.
@@ -299,6 +312,8 @@ const initialState: CampaignState = {
   error: "",
   answeredBy: "",
   campaign: null,
+  prepArc: false,
+  coordination: null,
   // A plain player until the snapshot says otherwise: the safe default is
   // the one that shows the fewest controls and no secrets.
   caps: capsForRole("player", "ai"),
@@ -661,7 +676,7 @@ export function campaignReducer(state: CampaignState, action: Action): CampaignS
         case "location_map_ready":
           next.locations = state.locations.map((location) =>
             location.id === payload.locationId
-              ? { ...location, mapImage: payload.image as CampaignLocation["mapImage"] }
+              ? { ...location, mapImage: payload.image as CampaignLocation["mapImage"], mapFailed: null }
               : location,
           );
           next.mediaStatus = withoutKey(state.mediaStatus, String(payload.locationId ?? ""));
@@ -678,6 +693,7 @@ export function campaignReducer(state: CampaignState, action: Action): CampaignS
           next.questsVersion = state.questsVersion + 1;
           return next;
         case "roster_updated":
+          next.members = state.members.map((member) => member.userId === payload.userId ? { ...member, activeCharacterId: String(payload.activeSheetId ?? "") } : member);
           if (String(payload.userId ?? "") === state.me?.id) {
             next.activeSheetId = String(payload.activeSheetId ?? "");
           }
@@ -731,6 +747,7 @@ export function campaignReducer(state: CampaignState, action: Action): CampaignS
             holdRolls: false,
             muted: false,
             activeCharacterId: "",
+            partyOrder: [],
             joinedAt: new Date().toISOString(),
           };
           next.members = upsertBy(state.members, member, (entry) => entry.userId);
@@ -750,12 +767,12 @@ export function campaignReducer(state: CampaignState, action: Action): CampaignS
           return next;
         case "sheet_updated": {
           const sheet = payload.sheet as CharacterSheet;
-          // One sheet per user per campaign: a lobby switch changes the
-          // sheet id, so any other sheet of the same user is stale.
-          const pruned = state.sheets.filter(
-            (entry) => entry.id === sheet.id || entry.userId !== sheet.userId,
-          );
-          next.sheets = upsertBy(pruned, sheet, (entry) => entry.id);
+          // By id and nothing else. A table that allows several characters
+          // each has one player owning two sheets, and an update to one used
+          // to drop the other from this list until the next snapshot (issue
+          // 193). A sheet leaves only on sheet_deleted, which every
+          // replacement path publishes before its sheet_updated.
+          next.sheets = upsertBy(state.sheets, sheet, (entry) => entry.id);
           // A completed level-up clears its notice.
           next.levelUps = state.levelUps.filter(
             (notice) => !(notice.characterId === sheet.id && sheet.level >= notice.level),
@@ -818,6 +835,14 @@ export function campaignReducer(state: CampaignState, action: Action): CampaignS
             ? { ...state.campaign, ...(payload as Partial<Campaign>) }
             : state.campaign;
           return next;
+        // The party record (purse, pack, travel formation): live for every
+        // seat, not only after a reload (issue 230).
+        case "party_updated":
+          next.campaign =
+            state.campaign && payload.party
+              ? { ...state.campaign, party: payload.party as Campaign["party"] }
+              : state.campaign;
+          return next;
         case "item_proposal_added": {
           const proposal = payload.proposal as ItemProposal | undefined;
           if (proposal) {
@@ -865,6 +890,9 @@ export function campaignReducer(state: CampaignState, action: Action): CampaignS
               seq: Number(payload.seq ?? 0),
             },
           ];
+          return next;
+        case "coordination_updated":
+          next.coordination = (payload.phase as CoordinationPhase | null) ?? null;
           return next;
         case "floor_changed":
           next.campaign = state.campaign
@@ -955,6 +983,7 @@ function endsDmTurn(message: CampaignMessage): boolean {
 
 const PERSISTED_EVENTS = [
   "message_added",
+  "coordination_updated",
   "message_updated",
   "roll_result",
   "roll_pending",
@@ -1002,6 +1031,14 @@ const PERSISTED_EVENTS = [
   "handout_dismissed",
   "x_card",
   "safety_resumed",
+  // Each of these has a case above and was published for the table, but was
+  // never listened for, so it only showed after a reload: the party record
+  // (purse, pack, travel formation), a painted NPC portrait, the Director's
+  // arm (cleared when a turn spends the one-shot), and the DM's beat list.
+  "party_updated",
+  "npc_updated",
+  "director_armed",
+  "beat_recorded",
 ];
 const EPHEMERAL_EVENTS = [
   // A visual effect planned from a resolved outcome. Worthless after the
@@ -1015,6 +1052,8 @@ const EPHEMERAL_EVENTS = [
   "dm_status",
   "utility_calls",
   "dm_delta",
+  // The turn withheld text it had streamed: the draft shows what it kept.
+  "dm_draft_reset",
   // A player answered the streaming passage: where it will be written.
   "dm_draft_seq",
   "media_status",
@@ -1046,8 +1085,14 @@ const EPHEMERAL_EVENTS = [
   // Who has the campaign open right now. Worthless after the fact, like the
   // voice roster, so it is never replayed.
   "presence",
+  // Prep came in from a workshop mid-campaign. Contentless: the handler
+  // reloads the snapshot, and a reconnect resyncs anyway.
+  "prep_imported",
 ];
 const EPHEMERAL_EVENT_SET = new Set(EPHEMERAL_EVENTS);
+// Every type the stream listens for; an event outside it never reaches the
+// reducer, whatever case it has (scripts/test-campaign-reducer.mjs).
+export const STREAMED_EVENTS: readonly string[] = [...PERSISTED_EVENTS, ...EPHEMERAL_EVENTS];
 
 // The origin a reply really came from. Patched fetch inside the apps sends
 // root-relative calls to the host, so this is the world that answered, not
@@ -1076,6 +1121,26 @@ const STREAM_PROBE_MS = 8_000;
 
 export const INITIAL_CAMPAIGN_STATE: CampaignState = initialState;
 
+// The events after which this seat fetches its fogged board again.
+// encounter_updated too: the map exists the moment start_encounter lands,
+// before any battle_map_updated ping. floor_changed as well: the reachable
+// tiles and "your turn" on the board follow the floor, and went stale
+// without this. roster_updated: Play as changes whose token is "mine", whose
+// reach the board draws and whose turn it shows; the projection is built per
+// active character on the server (view.ts). sheet_updated while a board is
+// up: the reach is the sheet's speed, which a dropped pack, a condition or
+// exhaustion changes, and the board kept the old reach until a reload
+// (issue #214). With no board there is nothing to redraw.
+export function refreshesBattleMap(eventType: string, boardUp: boolean): boolean {
+  return (
+    eventType === "battle_map_updated" ||
+    eventType === "encounter_updated" ||
+    eventType === "floor_changed" ||
+    eventType === "roster_updated" ||
+    (eventType === "sheet_updated" && boardUp)
+  );
+}
+
 export function useCampaignStream(campaignId: string) {
   const [state, dispatch] = useReducer(campaignReducer, initialState);
   // The SSE handlers are registered once, so they cannot close over `state`.
@@ -1091,6 +1156,11 @@ export function useCampaignStream(campaignId: string) {
   useEffect(() => {
     lastSeqRef.current = state.lastSeq;
   }, [state.lastSeq]);
+  // Whether a board is up, for the handlers (refreshesBattleMap).
+  const boardUpRef = useRef(Boolean(state.battleMap));
+  useEffect(() => {
+    boardUpRef.current = Boolean(state.battleMap);
+  }, [state.battleMap]);
 
   // Loads the snapshot and returns its latestSeq so the event stream can
   // start exactly where the snapshot left off. `quiet` is the stream probe:
@@ -1123,6 +1193,8 @@ export function useCampaignStream(campaignId: string) {
         payload: {
           answeredBy,
           campaign: data.campaign,
+          prepArc: Boolean(data.prepArc),
+          coordination: (data.coordination as CoordinationPhase | null) ?? null,
           caps: data.caps ?? capsForRole("player", "ai"),
           me: data.me,
           members: data.members,
@@ -1176,34 +1248,34 @@ export function useCampaignStream(campaignId: string) {
 
   // Re-fetches just the caller's visible notes. Suggestion events carry no
   // content (privacy), so clients pull their own filtered list instead.
-  const refreshNotes = useCallback(async () => {
-    try {
-      const response = await fetch(`/api/campaigns/${campaignId}/notes`);
-      if (!response.ok) {
-        return;
-      }
-      const data = await response.json();
-      dispatch({ type: "notes", notes: data.notes ?? [] });
-    } catch {
-      // transient; the next snapshot refresh catches up
-    }
-  }, [campaignId]);
+  const refreshNotes = useMemo(
+    () =>
+      coalesceRefresh(
+        () => fetchBody(`/api/campaigns/${campaignId}/notes`),
+        (body) => {
+          const data = JSON.parse(body);
+          dispatch({ type: "notes", notes: data.notes ?? [] });
+        },
+        { skipSame: false },
+      ),
+    [campaignId],
+  );
 
   // Side-chat threads follow the same privacy pattern, one step stricter:
   // the side_activity event is ephemeral and empty, and each member pulls
   // only their own threads.
-  const refreshSideChat = useCallback(async () => {
-    try {
-      const response = await fetch(`/api/campaigns/${campaignId}/side-chat`);
-      if (!response.ok) {
-        return;
-      }
-      const data = await response.json();
-      dispatch({ type: "sideThreads", sideThreads: data.threads ?? [] });
-    } catch {
-      // transient; the next side_activity event retries
-    }
-  }, [campaignId]);
+  const refreshSideChat = useMemo(
+    () =>
+      coalesceRefresh(
+        () => fetchBody(`/api/campaigns/${campaignId}/side-chat`),
+        (body) => {
+          const data = JSON.parse(body);
+          dispatch({ type: "sideThreads", sideThreads: data.threads ?? [] });
+        },
+        { skipSame: false },
+      ),
+    [campaignId],
+  );
 
   // The battle map is per-character fogged, so even token positions never
   // ride the shared stream; the ping-and-self-fetch pattern applies. Pings
@@ -1234,64 +1306,64 @@ export function useCampaignStream(campaignId: string) {
   // stripped, because the stream is one payload for every seat. Whoever is
   // allowed to read it pulls their own copy, the same way the DM pulls their
   // own enemy numbers.
-  const refreshRolls = useCallback(async () => {
-    try {
-      const response = await fetch(`/api/campaigns/${campaignId}/rolls`);
-      if (!response.ok) {
-        return;
-      }
-      const data = await response.json();
-      dispatch({ type: "rolls", rolls: data.rolls ?? [] });
-    } catch {
-      // transient; the next roll retries
-    }
-  }, [campaignId]);
+  const refreshRolls = useMemo(
+    () =>
+      coalesceRefresh(
+        () => fetchBody(`/api/campaigns/${campaignId}/rolls`),
+        (body) => {
+          const data = JSON.parse(body);
+          dispatch({ type: "rolls", rolls: data.rolls ?? [] });
+        },
+        { skipSame: false },
+      ),
+    [campaignId],
+  );
 
   // DM whispers follow the side-chat privacy pattern: the whisper_activity
   // event is ephemeral and empty; each member pulls only their own rows.
-  const refreshWhispers = useCallback(async () => {
-    try {
-      const response = await fetch(`/api/campaigns/${campaignId}/whispers`);
-      if (!response.ok) {
-        return;
-      }
-      const data = await response.json();
-      dispatch({ type: "whispers", whispers: data.whispers ?? [], unread: data.unread ?? 0, inbox: data.inbox ?? [] });
-    } catch {
-      // transient; the next whisper_activity event retries
-    }
-  }, [campaignId]);
+  const refreshWhispers = useMemo(
+    () =>
+      coalesceRefresh(
+        () => fetchBody(`/api/campaigns/${campaignId}/whispers`),
+        (body) => {
+          const data = JSON.parse(body);
+          dispatch({ type: "whispers", whispers: data.whispers ?? [], unread: data.unread ?? 0, inbox: data.inbox ?? [] });
+        },
+        { skipSame: false },
+      ),
+    [campaignId],
+  );
 
   // Ask uses the same privacy pattern: ask_activity is contentless and
   // fires only for table-visible asks; each member pulls the rows they may
   // read (their own, plus anything shared with the table).
-  const refreshAsks = useCallback(async () => {
-    try {
-      const response = await fetch(`/api/campaigns/${campaignId}/ask`);
-      if (!response.ok) {
-        return;
-      }
-      const data = await response.json();
-      dispatch({ type: "asks", asks: data.asks ?? [] });
-    } catch {
-      // transient; the next ask_activity event retries
-    }
-  }, [campaignId]);
+  const refreshAsks = useMemo(
+    () =>
+      coalesceRefresh(
+        () => fetchBody(`/api/campaigns/${campaignId}/ask`),
+        (body) => {
+          const data = JSON.parse(body);
+          dispatch({ type: "asks", asks: data.asks ?? [] });
+        },
+        { skipSame: false },
+      ),
+    [campaignId],
+  );
 
   // World facts follow the same privacy pattern: facts_updated is
   // contentless and each member fetches their own known_by-scoped view.
-  const refreshFacts = useCallback(async () => {
-    try {
-      const response = await fetch(`/api/campaigns/${campaignId}/facts`);
-      if (!response.ok) {
-        return;
-      }
-      const data = await response.json();
-      dispatch({ type: "facts", facts: data.facts ?? [] });
-    } catch {
-      // transient; the next facts_updated event retries
-    }
-  }, [campaignId]);
+  const refreshFacts = useMemo(
+    () =>
+      coalesceRefresh(
+        () => fetchBody(`/api/campaigns/${campaignId}/facts`),
+        (body) => {
+          const data = JSON.parse(body);
+          dispatch({ type: "facts", facts: data.facts ?? [] });
+        },
+        { skipSame: false },
+      ),
+    [campaignId],
+  );
 
   useEffect(() => {
     let source: EventSource | null = null;
@@ -1345,6 +1417,9 @@ export function useCampaignStream(campaignId: string) {
       source.addEventListener("ping", () => watchdog.pinged());
       // Both the browser's EventSource and the apps' fetch-backed one
       // (client src/renderer/game/runtime.ts) dispatch open and error.
+      // Set when this open already reloaded everything, so the server's
+      // resync that may follow it does not reload it a second time.
+      let resyncedOnOpen = false;
       source.addEventListener("open", () => {
         watchdog.heard();
         if (probe !== null) {
@@ -1353,8 +1428,19 @@ export function useCampaignStream(campaignId: string) {
         }
         if (dropped) {
           dropped = false;
+          resyncedOnOpen = true;
           resync();
         }
+      });
+      // The server skipped the replay (this tab was too far behind, or its
+      // cursor was no cursor) and the snapshot is the way back in.
+      source.addEventListener("resync", () => {
+        watchdog.heard();
+        if (resyncedOnOpen) {
+          resyncedOnOpen = false;
+          return;
+        }
+        resync();
       });
       source.addEventListener("error", () => {
         dropped = true;
@@ -1390,6 +1476,8 @@ export function useCampaignStream(campaignId: string) {
           // the draft bubble and the voice dock alone (liveStore.ts).
           if (eventType === "dm_delta") {
             appendDmDraft(String(payload.text ?? ""));
+          } else if (eventType === "dm_draft_reset") {
+            replaceDmDraft(String(payload.text ?? ""));
           } else if (eventType === "dm_draft_seq") {
             setDmDraftSeq(typeof payload.seq === "number" ? payload.seq : null);
           } else if (eventType === "voice_speaking") {
@@ -1406,6 +1494,10 @@ export function useCampaignStream(campaignId: string) {
           if (eventType === "campaign_rewound") {
             resync();
           }
+          // Imported prep lands in a dozen tables at once; the same reload.
+          if (eventType === "prep_imported") {
+            resync();
+          }
           if (eventType === "side_activity") {
             void refreshSideChat();
           }
@@ -1418,17 +1510,10 @@ export function useCampaignStream(campaignId: string) {
           if (eventType === "facts_updated") {
             void refreshFacts();
           }
-          // encounter_updated too: the map exists the moment
-          // start_encounter lands, before any battle_map_updated ping.
-          // floor_changed as well: the reachable tiles and "your turn" on
-          // the board follow the floor, and went stale without this.
-          if (
-            eventType === "battle_map_updated" ||
-            eventType === "encounter_updated" ||
-            eventType === "floor_changed"
-          ) {
+          if (refreshesBattleMap(eventType, boardUpRef.current)) {
             void refreshBattleMap();
           }
+
           if (eventType === "map_ping") {
             const ping = payload as unknown as MapPing;
             if (typeof ping?.x === "number" && typeof ping?.y === "number") {

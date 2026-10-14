@@ -5,7 +5,7 @@
   "provenance": "Original Chinese prose drafted against current repository English gates, option labels, style names and class/world casting labels. No proprietary Chinese rulebook translation used.",
   "review": "Implementation agent compared numeric/count/method/filing semantics, unchanged source English and catalog names with their repository sources. Not human or external approval.",
   "sources": {
-    "src/app/characters/builder/submit.ts": "dc5846e2077e9565c5194a72a51a0a2d0a48f4d52c81df1149a2836f23551b56",
+    "src/app/characters/builder/submit.ts": "db4dfc62d26be827fcf27467b50ec60efa1c3a168ae24b6a146bddf378e95da3",
     "src/app/characters/builder/reconcile.ts": "809d7b82512f778e6a2bf5cc34902e6fdd6a30154e722369ffd67ffecb349ea7",
     "src/lib/srd/options.json": "282c28e994ebab973231ced19e6caeea7a3ae102338a04309fc26e3103919a9d",
     "src/lib/srd/feature-effects.ts": "0a7f3b483608a2207bfd8af110edc36e8f4c96b7e0a5fc51e1e874e979a1b95e",
@@ -20,7 +20,7 @@
     "src/lib/classes/mystery.json": "0a63a7296002b19ea650b2483b6af511c3c731b37d895fd25eae4453a5aa8b73",
     "src/lib/classes/post-apocalyptic-features.json": "82ff0381a8e9f98ece335a1d3c16d9a303539fdcaa14a3a43aa27bb35aa98591",
     "src/lib/classes/post-apocalyptic.json": "4fef630fa7bed7fb48b5191977ab9bfa25b75abfbcbea89f09d965d98d2170ef",
-    "src/lib/classes/resources.json": "d50bca1b6efecb6abc30de5ef3f0d9f2b3e35ae45783a497e47762bc848cf5a9",
+    "src/lib/classes/resources.json": "3298e3b4d7610c896d4120af578398131154abaab7eca75c472849fbc91e27e3",
     "src/lib/classes/steampunk-features.json": "7793dd7b5280309f798868bd685e63e7df237e921bc035fc34f2f94ef5c52221",
     "src/lib/classes/steampunk.json": "8713ba8905dfdedbab59c34ac0d18668033a52f3bdd7040c184b138afeb831d7",
     "src/lib/worlds/bundled/saltmarch.json": "e4583a2f5a97a89b7b8b59993ce4d6e23882d314f57e8f484cef46e1f506f4a8",
@@ -34,5 +34,10 @@
     "previousHashes": {
       "src/lib/i18n/builder-messages.ts": "3afa36215f042dfcde361ed43c9183a6e94ed1f317f029d20374e9dab377af46"
     }
+  },
+  "upstream027Review": {
+    "upstreamCommit": "2b0b6b6ebf5e12f3e43a21ee38f80b41e5b1cd81",
+    "reviewer": "implementation agent",
+    "scope": "Reviewed source deltas: campaign-scoped ability rolls; subclass training and mandatory choices; native gender and level-floor UI; Aasimar and subclass rule text; resource action annotations; concentration flag reader; stable Unicode name ordering. Existing Chinese bindings updated where source changed. Runtime acceptance is tracked separately."
   }
 }

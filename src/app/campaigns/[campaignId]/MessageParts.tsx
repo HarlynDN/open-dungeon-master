@@ -8,9 +8,11 @@ import { GameIcon } from "@/components/ui/GameIcon";
 import { ContextMenu } from "@/components/ui/ContextMenu";
 import { SectionHead } from "@/components/ui/SectionHead";
 import { PortraitMedallion } from "@/components/sheet/SheetParts";
+import { useFaceChain } from "@/app/campaigns/[campaignId]/useFaceChain";
+import { useFaceSize } from "@/app/campaigns/[campaignId]/useFaceSize";
 import { cn } from "@/lib/cn";
-import { avatarPlaceholder, characterPlaceholder } from "@/lib/placeholders";
-import { JOIN_NOTE_PREFIX, LEAD_NOTE_PREFIX, type CampaignMember } from "@/lib/campaign-types";
+import { playerFaces } from "@/lib/speaker-faces";
+import { JOIN_NOTE_PREFIX, LEAD_NOTE_PREFIX, systemNoteWords, type CampaignMember } from "@/lib/campaign-types";
 import type { CampaignMessage } from "@/lib/db/messages";
 import type { CharacterSheet } from "@/lib/schemas/sheet";
 import {
@@ -19,7 +21,7 @@ import {
   type MessageAction,
 } from "@/app/campaigns/[campaignId]/MessageActions";
 import { systemEventGlyph, type SystemEvent } from "@/lib/system-events";
-import { systemLineGlyph } from "@/app/campaigns/[campaignId]/sessionGlyphs";
+import type { SystemGlyph } from "@/lib/system-glyphs";
 
 // The transcript's smaller voices: the table's own notices and what the
 // players say. The DM's passage, the hero of the screen, is MessageItem.tsx.
@@ -31,7 +33,7 @@ export function copyAction(message: CampaignMessage, locale: AppLocale = DEFAULT
     name: t("passageUi.copy.name"),
     label: t("passageUi.copy.label"),
     hint: t("passageUi.copy.hint"),
-    glyph: "tab-notes",
+    glyph: "ui-duplicate",
     icon: <Copy className="size-3.5" />,
     onSelect: () => {
       void navigator.clipboard?.writeText(message.content).catch(() => {});
@@ -72,7 +74,7 @@ export function reportAction(message: CampaignMessage, onReport: (message: Campa
 
 // A notice that is not a halted turn: the lead's public direction as a card,
 // a joiner, or a plain line with the painting its words call for.
-export function SystemMessage({ content, systemEvent }: { content: string; systemEvent?: SystemEvent }) {
+export function SystemMessage({ content, systemEvent, glyph }: { content: string; systemEvent?: SystemEvent; glyph?: SystemGlyph }) {
   const { t } = useLocale();
   if (content.startsWith(LEAD_NOTE_PREFIX)) {
     return (
@@ -83,10 +85,11 @@ export function SystemMessage({ content, systemEvent }: { content: string; syste
     );
   }
   const join = content.startsWith(JOIN_NOTE_PREFIX);
-  const text = join ? content.slice(JOIN_NOTE_PREFIX.length) : content;
+  // The markers the DM reads (a joiner, a settled offer) come off.
+  const text = systemNoteWords(content);
   return (
     <p className="session-sysline">
-      <GameIcon icon={{ kind: "glyph", key: join ? "system-party" : systemEventGlyph(systemEvent) ?? systemLineGlyph(text) }} size="size-6" />
+      <GameIcon icon={{ kind: "glyph", key: join ? "system-party" : glyph ?? systemEventGlyph(systemEvent) ?? "cue-bell" }} size="size-6" />
       <span className="min-w-0">{text}</span>
     </p>
   );
@@ -123,24 +126,20 @@ export function PlayerMessage({
   const sheet =
     (message.characterId ? sheetsById.get(message.characterId) : undefined) ??
     (message.userId ? sheets.find((candidate) => candidate.userId === message.userId) : undefined);
-  // Character portrait first, then the player's own avatar, then a stand-in:
-  // the plate for the character's class or race, or the sigil the player's
-  // id hashes to when there is no sheet to draw from.
-  const portraitUrl =
-    sheet?.portrait?.url ??
-    (message.userId ? membersById.get(message.userId)?.avatar?.url : undefined) ??
-    (sheet
-      ? characterPlaceholder({ race: sheet.race, class: sheet.class, gender: sheet.gender })
-      : message.userId
-        ? avatarPlaceholder(message.userId)
-        : undefined);
+  // Character portrait first, then the player's own avatar, then a stand-in
+  // (playerFaces); one that fails to load gives way to the next.
+  const [portraitUrl, onFaceError] = useFaceChain(
+    playerFaces({ sheet, avatarUrl: message.userId ? membersById.get(message.userId)?.avatar?.url : undefined, userId: message.userId }),
+  );
   const actions: MessageAction[] = [copyAction(message, locale)];
   if (onReport && !mine && message.userId) {
     actions.push(reportAction(message, onReport, false, locale));
   }
   // eslint-disable-next-line @next/next/no-img-element
-  const face = portraitUrl ? <img src={portraitUrl} alt="" /> : null;
+  const face = portraitUrl ? <img src={portraitUrl} alt="" onError={onFaceError} /> : null;
   const ooc = message.content.startsWith("(ooc)");
+  // The portrait as tall as the name and bubble beside it (useFaceSize).
+  const [faceStyle, textColumn] = useFaceSize<HTMLDivElement>();
   return (
     <ContextMenu
       items={toContextItems(actions)}
@@ -149,16 +148,16 @@ export function PlayerMessage({
     >
       {face ? (
         sheet ? (
-          <PortraitMedallion classId={sheet.class} className="session-medallion">
+          <PortraitMedallion classId={sheet.class} className="session-medallion" style={faceStyle}>
             {face}
           </PortraitMedallion>
         ) : (
-          <div className="sheet-medallion session-medallion">
+          <div className="sheet-medallion session-medallion" style={faceStyle}>
             <div className="sheet-medallion-face">{face}</div>
           </div>
         )
       ) : null}
-      <div className="min-w-0">
+      <div ref={textColumn} className="min-w-0">
         <p className="mb-1 flex items-center justify-end gap-1.5 text-right">
           <MessageActions actions={actions} menuLabel={t("passageUi.playerActions", { name: sheet?.name ?? t("passageUi.player") })} quiet />
           <span className="session-speaker truncate">{sheet?.name ?? t("passageUi.player")}</span>

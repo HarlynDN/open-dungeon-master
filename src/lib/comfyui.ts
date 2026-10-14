@@ -3,23 +3,34 @@ import path from "node:path";
 import { configValue, getGlobalConfig } from "@/lib/app-config";
 import { sniffImage } from "@/lib/image-format";
 import { scheduleImageVariants } from "@/lib/image-variants";
+import { ANY_CHECKPOINT, CHECKPOINT_PRESET, comfyModel } from "@/lib/image-models/catalog";
+import {
+  checkpointModel,
+  curateModels,
+  hardwareProfile,
+  isPictureCheckpoint,
+  readComfyDevice,
+  type ComfyDevice,
+  type ComfyLists,
+  type VerifiedRow,
+} from "@/lib/image-models/curate";
+import { FOLDER_LOADER, type ComfyFolder, type ComfyModel, type ModelFiles } from "@/lib/image-models/types";
+import { VERIFIED_ROWS } from "@/lib/image-models/verified";
+import { buildModelWorkflow, modelDimensions } from "@/lib/image-models/workflow";
+import { readComfyFiles } from "@/lib/setup/discovery-logic";
 import type { AspectPreset, GeneratedImage, ImageMode } from "@/lib/types";
+import { recordMediaFile } from "@/lib/media-access";
 
-// First-party ComfyUI backend: the app submits a plain text-to-image workflow
-// over ComfyUI's HTTP API and saves the result exactly like the FLUX worker
-// does. Any running ComfyUI instance works — the user picks the checkpoint.
+// First-party ComfyUI backend: the app submits a text-to-image workflow over
+// ComfyUI's HTTP API and saves the result exactly like the FLUX worker does.
+// Any running ComfyUI instance works: the admin picks a checkpoint, or one of
+// the catalog's models (src/lib/image-models), whose files are found in that
+// ComfyUI's own lists and whose graph and settings come from the catalog.
 
 const DEFAULT_COMFY_URL = "http://127.0.0.1:8188";
 const STATUS_TIMEOUT_MS = 4_000;
 const GENERATE_TIMEOUT_MS = 10 * 60 * 1000;
 const POLL_INTERVAL_MS = 750;
-const STEPS = 25;
-const CFG = 6.0;
-const NEGATIVE_PROMPT =
-  "text, watermark, signature, low quality, jpeg artifacts, deformed hands, extra fingers";
-// Checkpoint-friendly ceiling: SDXL models train at 1024 and degrade past
-// ~1.5K on the long side, unlike the FLUX backends' 2048 slow mode.
-const LONG_SIDE = { fast: 1024, slow: 1344 } as const;
 // Ceilings on what the server reads back. A 1344px PNG is a few MB; the
 // JSON answers (status, checkpoint list, history) are kilobytes.
 export const MAX_COMFY_IMAGE_BYTES = 32 * 1024 * 1024;
@@ -94,121 +105,110 @@ async function readJson<T>(response: Response): Promise<T> {
   return JSON.parse((await readCapped(response, MAX_COMFY_JSON_BYTES)).toString("utf8")) as T;
 }
 
+// A catalog model as one ComfyUI sees it, in the curated order: the files it
+// has, what it still lacks and where those download from, and what this
+// hardware made of the model when it was measured.
+export type ComfyModelReport = {
+  id: string;
+  files: ModelFiles;
+  missing: Array<{ what: string; name: string; folder: ComfyFolder; url: string; sizeGb: number }>;
+  downloadGb: number;
+  verified: VerifiedRow | null;
+  needGb: number | null;
+  fits: boolean | null;
+};
+
 export type ComfyStatus = {
   ok: boolean;
   error?: string;
+  // The picture checkpoints; video models and upscalers are left out.
   checkpoints: string[];
+  models: ComfyModelReport[];
+  device: ComfyDevice | null;
+  hardware: { id: string; label: string } | null;
 };
 
-// One call powers the Images panel: reachability plus the checkpoint list
-// from CheckpointLoaderSimple's declared inputs.
+const unreachable = (error: string): ComfyStatus => ({ ok: false, error, checkpoints: [], models: [], device: null, hardware: null });
+
+// A loader's file list, or none when ComfyUI does not know the node or its
+// answer is not JSON. A redirect or a flood still refuses the whole check.
+async function readFileList(response: Response, node: string, input: string): Promise<string[]> {
+  if (!response.ok) {
+    await response.body?.cancel().catch(() => {});
+    return [];
+  }
+  try {
+    return readComfyFiles(await readJson<unknown>(response), node, input);
+  } catch (error) {
+    if (error instanceof ComfyRefusal) {
+      throw error;
+    }
+    return [];
+  }
+}
+
+const FOLDERS = Object.keys(FOLDER_LOADER) as ComfyFolder[];
+const fileName = (name: string) => name.split(/[\\/]/).pop() ?? name;
+
+// One call powers the Images panel and the setup wizard: reachability, the
+// machine ComfyUI runs on, every loader's file list, and from those the
+// catalog curated for this ComfyUI and its hardware.
 export async function comfyStatus(rawUrl: string | undefined): Promise<ComfyStatus> {
   const url = resolveComfyUrl(rawUrl);
   const timeout = timeoutSignal(STATUS_TIMEOUT_MS);
 
   try {
-    const [stats, objectInfo] = await Promise.all([
+    const [stats, ...loaders] = await Promise.all([
       comfyFetch(`${url}/system_stats`, { cache: "no-store", signal: timeout.signal }),
-      comfyFetch(`${url}/object_info/CheckpointLoaderSimple`, {
-        cache: "no-store",
-        signal: timeout.signal,
-      }),
+      ...FOLDERS.map((folder) =>
+        comfyFetch(`${url}/object_info/${FOLDER_LOADER[folder].node}`, { cache: "no-store", signal: timeout.signal }),
+      ),
     ]);
 
     if (!stats.ok) {
-      await objectInfo.body?.cancel().catch(() => {});
-      return { ok: false, error: `ComfyUI answered ${stats.status}.`, checkpoints: [] };
+      await Promise.all(loaders.map((response) => response.body?.cancel().catch(() => {})));
+      return unreachable(`ComfyUI answered ${stats.status}.`);
     }
 
-    let checkpoints: string[] = [];
-    if (objectInfo.ok) {
-      const info = await readJson<{
-        CheckpointLoaderSimple?: { input?: { required?: { ckpt_name?: unknown[] } } };
-      }>(objectInfo);
-      const names = info.CheckpointLoaderSimple?.input?.required?.ckpt_name?.[0];
-      if (Array.isArray(names)) {
-        checkpoints = names.filter((name): name is string => typeof name === "string");
-      }
-    }
+    const [device, ...found] = await Promise.all([
+      readJson<unknown>(stats).then(readComfyDevice).catch((error) => {
+        if (error instanceof ComfyRefusal) throw error;
+        return null;
+      }),
+      ...FOLDERS.map((folder, index) => readFileList(loaders[index], FOLDER_LOADER[folder].node, FOLDER_LOADER[folder].input)),
+    ]);
+    const lists: ComfyLists = Object.fromEntries(FOLDERS.map((folder, index) => [folder, found[index]]));
+    const hardware = hardwareProfile(device);
+    const models = curateModels({ lists, device, rows: VERIFIED_ROWS }).map(
+      (entry): ComfyModelReport => ({
+        id: entry.model.id,
+        files: entry.files,
+        missing: entry.missing.map((file) => ({ what: file.what, name: file.names[0], folder: file.folder, url: file.url, sizeGb: file.sizeGb })),
+        downloadGb: entry.downloadGb,
+        verified: entry.verified,
+        needGb: entry.needGb,
+        fits: entry.fits,
+      }),
+    );
 
-    return { ok: true, checkpoints };
+    // A "checkpoint" also listed as a diffusion model is a bare model linked
+    // into models/checkpoints: it has no text encoder or VAE to load.
+    const bare = new Set((lists.diffusion_models ?? []).map(fileName));
+    return {
+      ok: true,
+      checkpoints: (lists.checkpoints ?? []).filter((name) => isPictureCheckpoint(name) && !bare.has(fileName(name))),
+      models,
+      device,
+      hardware: hardware && { id: hardware.id, label: hardware.label },
+    };
   } catch (error) {
     if (error instanceof ComfyRefusal) {
-      return { ok: false, error: error.message, checkpoints: [] };
+      return unreachable(error.message);
     }
-    return {
-      ok: false,
-      error: `Could not reach ComfyUI at ${url}. Start ComfyUI and check the URL.`,
-      checkpoints: [],
-    };
+    return unreachable(`Could not reach ComfyUI at ${url}. Start ComfyUI and check the URL.`);
   } finally {
     timeout.clear();
   }
-}
-
-function comfyDimensions(mode: ImageMode, aspect: AspectPreset) {
-  const longSide = LONG_SIDE[mode];
-  const shortSide = Math.round((longSide * 0.75) / 8) * 8;
-
-  if (aspect === "portrait") {
-    return { width: shortSide, height: longSide };
-  }
-  if (aspect === "landscape") {
-    return { width: longSide, height: shortSide };
-  }
-  return { width: longSide, height: longSide };
-}
-
-function buildWorkflow(options: {
-  checkpoint: string;
-  prompt: string;
-  width: number;
-  height: number;
-  seed: number;
-  // Extra negatives from the table's boundary (safety-logic.ts).
-  negative?: string;
-}) {
-  return {
-    "1": {
-      class_type: "CheckpointLoaderSimple",
-      inputs: { ckpt_name: options.checkpoint },
-    },
-    "2": {
-      class_type: "CLIPTextEncode",
-      inputs: { text: options.prompt, clip: ["1", 1] },
-    },
-    "3": {
-      class_type: "CLIPTextEncode",
-      inputs: { text: options.negative ? `${NEGATIVE_PROMPT}, ${options.negative}` : NEGATIVE_PROMPT, clip: ["1", 1] },
-    },
-    "4": {
-      class_type: "EmptyLatentImage",
-      inputs: { width: options.width, height: options.height, batch_size: 1 },
-    },
-    "5": {
-      class_type: "KSampler",
-      inputs: {
-        model: ["1", 0],
-        positive: ["2", 0],
-        negative: ["3", 0],
-        latent_image: ["4", 0],
-        seed: options.seed,
-        steps: STEPS,
-        cfg: CFG,
-        sampler_name: "euler",
-        scheduler: "normal",
-        denoise: 1,
-      },
-    },
-    "6": {
-      class_type: "VAEDecode",
-      inputs: { samples: ["5", 0], vae: ["1", 2] },
-    },
-    "7": {
-      class_type: "SaveImage",
-      inputs: { images: ["6", 0], filename_prefix: "open-dungeon" },
-    },
-  };
 }
 
 type HistoryEntry = {
@@ -226,6 +226,24 @@ function promptSlug(prompt: string) {
   );
 }
 
+// The catalog model chosen in Admin > Images, which paints every campaign's
+// pictures; undefined in checkpoint mode, where each campaign's checkpoint
+// does.
+function chosenComfyModel(): ComfyModel | undefined {
+  const preset = getGlobalConfig().images.comfyWorkflowPreset;
+  return preset === CHECKPOINT_PRESET ? undefined : comfyModel(preset);
+}
+
+// Whether ComfyUI has something to paint with: a catalog model, or (in
+// checkpoint mode) the campaign's checkpoint. No file is named in code and
+// none is taken from ComfyUI's list, so with neither generateComfyImage
+// refuses; the readiness checks (src/lib/image-generate.ts,
+// src/lib/capabilities.ts, the stranded-campaign rescue) ask this first, so
+// a table is not promised pictures that all fail.
+export function comfyModelPicked(checkpoint: string | undefined): boolean {
+  return Boolean(chosenComfyModel()) || Boolean((checkpoint ?? "").trim());
+}
+
 export async function generateComfyImage(options: {
   url?: string;
   checkpoint?: string;
@@ -240,23 +258,42 @@ export async function generateComfyImage(options: {
   const startedAt = Date.now();
   const deadline = startedAt + GENERATE_TIMEOUT_MS;
 
-  let checkpoint = (options.checkpoint || "").trim();
-  if (!checkpoint) {
+  // A catalog model paints every campaign's pictures; otherwise each
+  // campaign's checkpoint does, with the catalog's settings for it when the
+  // catalog knows that checkpoint.
+  const presetModel = chosenComfyModel();
+  const checkpoint = (options.checkpoint || "").trim();
+  let model: ComfyModel = ANY_CHECKPOINT;
+  let files: ModelFiles = {};
+  if (!comfyModelPicked(checkpoint)) {
+    throw new Error("No ComfyUI checkpoint is picked. Choose one, or a model from the catalog, in Admin > Image generation.");
+  }
+  if (presetModel) {
     const status = await comfyStatus(url);
     if (!status.ok) {
       throw new Error(status.error || `Could not reach ComfyUI at ${url}.`);
     }
-    checkpoint = status.checkpoints[0] || "";
-    if (!checkpoint) {
-      throw new Error(
-        "ComfyUI has no checkpoints installed. Put a model in ComfyUI/models/checkpoints and refresh.",
-      );
+    // The files this ComfyUI has, whatever precision it downloaded; a
+    // missing one is named here rather than in ComfyUI's validation error.
+    const report = status.models.find((entry) => entry.id === presetModel.id);
+    if (!report || report.missing.length) {
+      const missing = report?.missing.map((file) => file.what) ?? [];
+      throw new Error(`ComfyUI is missing ${missing.join(", ")} for ${presetModel.label}. Add it, or pick another model in Admin > Images.`);
     }
+    model = presetModel;
+    files = report.files;
+  }
+  if (!presetModel) {
+    model = checkpointModel(checkpoint) ?? ANY_CHECKPOINT;
+    files = { [(model.graph.load as { checkpoint: string }).checkpoint]: checkpoint };
   }
 
   const seed = options.seed ?? Math.floor(Math.random() * 2_147_483_647);
-  const { width, height } = comfyDimensions(options.mode, options.aspect);
-  const workflow = buildWorkflow({ checkpoint, prompt: options.prompt, width, height, seed, negative: options.negative });
+  const { width, height } = modelDimensions(model, options.mode, options.aspect);
+  // A model that runs without a negative prompt has nowhere to put a table
+  // boundary's picture negatives, and they are not folded into the prompt:
+  // "Leave out: blood, wounds" in a positive prompt paints blood and wounds.
+  const workflow = buildModelWorkflow(model, { prompt: options.prompt, negative: options.negative, width, height, seed, files });
 
   const submitTimeout = timeoutSignal(STATUS_TIMEOUT_MS * 2);
   let promptId = "";
@@ -323,7 +360,7 @@ export async function generateComfyImage(options: {
     }
     if (entry.status?.status_str === "error") {
       throw new Error(
-        "ComfyUI failed to run the workflow. Check the ComfyUI console — usually a missing checkpoint or out-of-memory.",
+        "ComfyUI failed to run the workflow. Check the ComfyUI console: it is usually a missing model file or out-of-memory.",
       );
     }
     const images = Object.values(entry.outputs || {}).flatMap((output) => output.images || []);
@@ -363,15 +400,16 @@ export async function generateComfyImage(options: {
     throw new Error("ComfyUI returned something that is not a PNG, JPEG or WebP image.");
   }
 
-  const generatedDir = path.join(process.cwd(), "public", "generated");
+  const generatedDir = path.join(/*turbopackIgnore: true*/ process.cwd(), "public", "generated");
   mkdirSync(generatedDir, { recursive: true });
   const filename = `${Date.now()}-${seed}-comfyui-${promptSlug(options.prompt)}.${kind.ext}`;
-  const saved = path.join(generatedDir, filename);
+  const saved = path.join(/*turbopackIgnore: true*/ generatedDir, filename);
   writeFileSync(saved, bytes);
   // The smaller WebP copies the table draws, written after the fact; the
   // original is what the campaign stores and what a client without them gets.
   scheduleImageVariants(saved);
 
+  recordMediaFile(`/generated/${filename}`);
   return {
     id: crypto.randomUUID(),
     url: `/generated/${filename}`,

@@ -17,6 +17,7 @@ import { Select } from "@/components/ui/Select";
 import { Switch } from "@/components/ui/Switch";
 import { AgentConnectLines } from "@/components/AgentConnectLines";
 import { AssistantLink } from "@/components/AssistantLink";
+import { PlayerReceiverSetup, type ReceiverInfo } from "@/app/settings/PlayerReceiverSetup";
 
 type Grant = {
   id: string;
@@ -30,7 +31,7 @@ type Grant = {
 
 type Campaign = { id: string; title: string };
 
-// Connected agents (docs/harness-mcp-plan.md 7): your own Claude Code, Codex
+// Connected agents (docs/archive/harness-mcp-plan.md 7): your own Claude Code, Codex
 // or other MCP client acting as you on this server, with exactly what your
 // account can do in the browser and nothing more. The token is shown once.
 export function ConnectedAgentsSection() {
@@ -51,12 +52,12 @@ export function ConnectedAgentsSection() {
   const [error, setError] = useState<UiRequestError | null>(null);
   const [campaignError, setCampaignError] = useState<UiRequestError | null>(null);
   const [revoking, setRevoking] = useState<string | null>(null);
-  const [fresh, setFresh] = useState<{ id: string; token: string; name: string } | null>(null);
+  const [fresh, setFresh] = useState<{ id: string; token: string; name: string; receiver: ReceiverInfo | null } | null>(null);
   const [leaving, setLeaving] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
-    readLoad<{ grants?: Grant[]; mcpUrl?: string; assistantUrl?: string }>(fetch("/api/profile/agents"), "The connected agents").then((outcome) => {
+    readLoad<{ grants?: Grant[]; mcpUrl?: string; assistantUrl?: string; receiver?: ReceiverInfo | null }>(fetch("/api/profile/agents"), "The connected agents").then((outcome) => {
       if (cancelled) return;
       if (outcome.payload && (!Array.isArray(outcome.payload.grants) || typeof outcome.payload.mcpUrl !== "string")) {
         settle({ payload: null, error: "The connected agents did not load. The server’s answer could not be read." }); return;
@@ -83,7 +84,7 @@ export function ConnectedAgentsSection() {
     setBusy(true);
     setError(null);
     try {
-      const data = await readUiResponse<{ grant: Grant; token: string; mcpUrl?: string; assistantUrl?: string }>(fetch("/api/profile/agents", {
+      const data = await readUiResponse<{ grant: Grant; token: string; mcpUrl?: string; assistantUrl?: string; receiver?: ReceiverInfo | null }>(fetch("/api/profile/agents", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: name.trim(), scopes, campaignId: campaignId || null }),
       }), "agents.createError");
@@ -91,7 +92,7 @@ export function ConnectedAgentsSection() {
       setGrants((current) => [data.grant, ...(current ?? [])]);
       setMcpUrl(data.mcpUrl ?? mcpUrl);
       setAssistantUrl(data.assistantUrl ?? assistantUrl);
-      setFresh({ id: data.grant.id, token: data.token, name: data.grant.name });
+      setFresh({ id: data.grant.id, token: data.token, name: data.grant.name, receiver: data.receiver ?? null });
       setCreating(false);
       setName("");
     } catch (cause) { setError(accountRequestError(cause, "agents.createError")); } finally {
@@ -127,6 +128,7 @@ export function ConnectedAgentsSection() {
           </p>
           <AssistantLink base={assistantUrl} token={fresh.token} />
           <AgentConnectLines grantId={fresh.id} token={fresh.token} mcpUrl={mcpUrl} />
+          {fresh.receiver ? <PlayerReceiverSetup receiver={fresh.receiver} mcpUrl={mcpUrl} /> : null}
           <button type="button" className={ui.btnSmall} onClick={() => setFresh(null)}>
             {t("agents.copied")}
           </button>

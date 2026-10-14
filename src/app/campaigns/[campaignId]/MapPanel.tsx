@@ -172,13 +172,13 @@ export function MapPanel({
   const mapItems: ContextMenuItem[] =
     shown && steersStory
       ? [
-          { id: "upload", label: shown.mapImage ? t("mapSceneUi.area.replace") : t("mapSceneUi.area.upload"), glyph: "tab-handout", disabled: uploading || regenerating, onSelect: () => fileRef.current?.click() },
-          ...(canPaint ? [{ id: "redraw", label: t("mapSceneUi.area.redraw"), glyph: "system-maps", disabled: regenerating || uploading, onSelect: () => void regenerate() }] : []),
-          ...(shown.mapImage ? [{ id: "clear", label: t("mapSceneUi.area.placeholder"), glyph: "quest-hidden", disabled: uploading || regenerating, onSelect: () => void clearToPlaceholder() }] : []),
+          { id: "upload", label: shown.mapImage ? t("mapSceneUi.area.replace") : t("mapSceneUi.area.upload"), glyph: "ui-upload", disabled: uploading || regenerating, onSelect: () => fileRef.current?.click() },
+          ...(canPaint ? [{ id: "redraw", label: t("mapSceneUi.area.redraw"), glyph: "ui-paint", disabled: regenerating || uploading, onSelect: () => void regenerate() }] : []),
+          ...(shown.mapImage ? [{ id: "clear", label: t("mapSceneUi.area.placeholder"), glyph: "ui-placeholder", disabled: uploading || regenerating, onSelect: () => void clearToPlaceholder() }] : []),
           { id: "populate", label: t("mapSceneUi.area.populate"), glyph: "system-party", separated: true, disabled: populating, onSelect: () => void populate(shown.id) },
         ]
       : shown?.mapImage
-        ? [{ id: "enlarge", label: t("mapSceneUi.area.enlarge"), glyph: "tab-map", onSelect: () => setEnlarged(true) }]
+        ? [{ id: "enlarge", label: t("mapSceneUi.area.enlarge"), glyph: "ui-zoom", onSelect: () => setEnlarged(true) }]
         : [];
 
   return (
@@ -285,7 +285,7 @@ export function MapPanel({
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={mapPlaceholder(
-                  { name: shown.name, description: shown.layoutDescription, genre },
+                  { scene: shown.ambience?.bed, genre },
                   shown.id,
                 )}
                 alt=""

@@ -4,6 +4,7 @@
 // (src/lib/dm/invoke.ts). The board's entries (pets, tokens, legendary
 // creatures) live in catalog-board.ts and are spread in at the end.
 import type { CatalogEntry } from "@/lib/dm/catalog-types";
+import { sceneOptions } from "@/lib/ambience/catalog";
 import { BOARD_ADJUDICATIONS } from "@/lib/dm/catalog-board";
 import { summonFormNames } from "@/lib/srd/summon-forms";
 import { familiarFormNames } from "@/lib/srd/familiar-forms";
@@ -84,7 +85,13 @@ export const COMBAT_ADJUDICATIONS: CatalogEntry[] = [
         ],
         help: "Overrides the ambush roll for a whole side.",
       },
-      { name: "battlefield", label: "Battlefield", kind: "text" },
+      {
+        name: "scene",
+        label: "Ground",
+        kind: "select",
+        options: sceneOptions(),
+        help: "The kind of place the battle map is drawn as. Blank: the current place's.",
+      },
       {
         name: "distanceFeet",
         label: "Opening distance (feet)",
@@ -98,6 +105,16 @@ export const COMBAT_ADJUDICATIONS: CatalogEntry[] = [
         label: "In a legendary creature's lair",
         kind: "boolean",
         help: "The lair acts on initiative 20 each round (Lair action).",
+      },
+      {
+        name: "from",
+        label: "Enemies come from",
+        kind: "select",
+        options: [
+          { value: "ahead", label: "Ahead of the travel formation" },
+          { value: "behind", label: "Behind it" },
+        ],
+        help: "Ahead puts the front of the party's travel formation nearest them; behind, the rear. Blank: ahead.",
       },
     ],
   },
@@ -133,7 +150,7 @@ export const COMBAT_ADJUDICATIONS: CatalogEntry[] = [
       damageTypeField("damageType", "Spell damage type"),
       { name: "level", label: "Spell slot level", kind: "number", min: 1, max: 9, help: "An attack spell of 1st level or higher: the slot cast from. Empty uses the spell's own level." },
       ...advantageFields(),
-      { name: "twoHanded", label: "In both hands", kind: "boolean", help: "A versatile weapon rolls its bigger die. Not with a shield on the arm." },
+      { name: "twoHanded", label: "In both hands", kind: "boolean", help: "A versatile weapon rolls its bigger die in melee. Not with a shield on the arm. Not for an off-hand attack." },
       { name: "offHand", label: "Off-hand attack", kind: "boolean", help: "The bonus action of two-weapon fighting, after an attack with a light weapon." },
       { name: "smite", label: "Divine Smite slot", kind: "number", min: 1, max: 9, help: "Paladin only. The slot is spent if the attack hits." },
       { name: "maneuver", label: "Maneuver", kind: "text", help: "Battle Master only. The Superiority Die is spent on a hit (on the roll for Precision Attack)." },
@@ -398,6 +415,29 @@ export const COMBAT_ADJUDICATIONS: CatalogEntry[] = [
       { name: "targetEnemyId", label: "Enemy", kind: "enemy" },
       { name: "targetCharacterId", label: "Ally", kind: "character" },
       { name: "trigger", label: "Readied trigger", kind: "text", placeholder: "when the ogre comes through the door" },
+      {
+        name: "readied",
+        label: "Readied action",
+        kind: "select",
+        help: "Ready only: what the trigger releases, off their turn, with their reaction. For a spell, fill Spell instead.",
+        options: [
+          { value: "attack", label: "An attack (release with Attack)" },
+          { value: "move", label: "A move up to their speed (release with Move token)" },
+          { value: "help", label: "Help" },
+          { value: "hide", label: "Hide" },
+          { value: "search", label: "Search" },
+          { value: "use_object", label: "Use an Object" },
+          { value: "item", label: "Use an item (release with Use item)" },
+          { value: "stabilize", label: "Stabilize a creature (release with Stabilize)" },
+          { value: "feature", label: "A class feature that takes an action" },
+          { value: "grapple", label: "Grapple" },
+          { value: "shove", label: "Shove" },
+          { value: "dodge", label: "Dodge" },
+          { value: "dash", label: "Dash" },
+          { value: "disengage", label: "Disengage" },
+          { value: "escape", label: "Escape a grapple" },
+        ],
+      },
       { name: "spell", label: "Readied spell", kind: "text", placeholder: "Fire Bolt", help: "Ready only: a one-action spell cast now (slot and concentration) and released with the reaction when the trigger comes." },
       { name: "level", label: "Readied spell's slot", kind: "number", min: 1, max: 9, help: "Empty for the spell's own level." },
       {
@@ -470,7 +510,17 @@ export const COMBAT_ADJUDICATIONS: CatalogEntry[] = [
           { value: "extreme_heat", label: "Extreme heat" },
         ],
       },
-      { name: "characterIds", label: "Caught in it", kind: "characters", required: true },
+      { name: "characterIds", label: "Caught in it", kind: "characters", requiredUnless: "rank" },
+      {
+        name: "rank",
+        label: "Or whoever walks",
+        kind: "select",
+        options: [
+          { value: "front", label: "At the front of the formation" },
+          { value: "rear", label: "At the rear of the formation" },
+        ],
+        help: "Instead of naming them: the character first or last in the party's travel formation.",
+      },
       { name: "feet", label: "Feet fallen", kind: "number", min: 0, max: 1000 },
       { name: "severity", label: "Trap severity", kind: "select", options: TRAP_SEVERITY_OPTIONS, help: "Sets the save DC and the damage for each victim's level." },
       {

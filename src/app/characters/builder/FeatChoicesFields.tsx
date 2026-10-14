@@ -67,6 +67,7 @@ export default function FeatChoicesFields({
   known,
   onChange,
   desc,
+  source = "feat",
 }: {
   feat: string;
   spec: FeatGrantSpec;
@@ -75,6 +76,9 @@ export default function FeatChoicesFields({
   onChange: (picks: FeatPicks) => void;
   // The feat's text, for the ability point it names (what the table applies).
   desc?: string;
+  // A subclass feature's training (src/lib/srd/subclass-training.ts) reads
+  // the same, but is applied whole: it has no "rest" the DM runs.
+  source?: "feat" | "subclass";
 }) {
   const { locale, t } = useLocale();
   const featName = featTermLabel("feat", feat, locale);
@@ -130,7 +134,7 @@ export default function FeatChoicesFields({
   const expertiseFrom = [...new Set([...known.skills, ...mine.skills])].filter((skill) => !heldExpertise.has(lower(skill)));
   const hasPicks = spec.languages + spec.skills + spec.expertise + spec.weapons + spec.tools + spec.any + spec.damageTypes.length > 0;
   const fixed = [
-    ...spec.fixedSkills.map(skillDisplay),
+    ...spec.fixedSkills.map(skill => spec.fixedExpertise.includes(skill) ? `${skillDisplay(skill)} (${t("callingUi.expertiseWord")})` : skillDisplay(skill)),
     ...spec.fixedLanguages.map(language => trainingLabel("language", language, locale)),
     ...spec.armor.map(armorDisplay),
     ...spec.fixedWeapons.map(weapon => referenceDisplayName("equipment", weapon, locale)),
@@ -157,7 +161,7 @@ export default function FeatChoicesFields({
     ...(spec.damageTypes.length ? [t("callingUi.featChoice.applied.damage")] : []),
     ...(engineTag ? [t("callingUi.featChoice.applied.combat", { tag: featEngineLabel(engineTag, locale) })] : []),
   ];
-  const coverage = applied.length
+  const coverage = source === "subclass" ? t("callingUi.featChoice.subclassCoverage") : applied.length
     ? t("callingUi.featChoice.coverage", { applied: applied.join(listSeparator) })
     : t("callingUi.featChoice.noCoverage");
   if (!hasPicks && !teaches && !fixed.length) {
@@ -224,7 +228,7 @@ export default function FeatChoicesFields({
     });
   return (
     <div className="mt-2 space-y-2 rounded-lg border border-amber-900/40 bg-amber-950/10 p-2.5" data-feat-choices={feat}>
-      <p className="text-xs text-amber-200/90">{t("callingUi.featChoice.choices", { feat: featName })}</p>
+      <p className="text-xs text-amber-200/90">{hasPicks || teaches ? t("callingUi.featChoice.choices", { feat: featName }) : featName}</p>
       {spec.any > 0 ? (
         <p className="text-[11px] text-stone-400" data-feat-shared={feat}>
           {t("callingUi.featChoice.shared", { count: spec.any, kinds: spec.anyKinds.map(choiceKind).join(listSeparator) })}
@@ -256,10 +260,10 @@ export default function FeatChoicesFields({
       {slots("skills") > 0 ? (
         <div>
           <span className="mb-1 block text-[11px] text-stone-400">
-            {t("callingUi.featChoice.skill", { limit: spec.anyKinds.includes("skills") ? t("callingUi.featChoice.upTo", { count: slots("skills") }) : t("callingUi.featChoice.yourChoice", { count: spec.skills }) })}{mine.skills.length < spec.skills ? <span className="text-amber-300">{t("callingUi.featChoice.left", { count: spec.skills - mine.skills.length })}</span> : null}
+            {t("callingUi.featChoice.skill", { limit: spec.anyKinds.includes("skills") ? t("callingUi.featChoice.upTo", { count: slots("skills") }) : t("callingUi.featChoice.yourChoice", { count: spec.skills }) })}{spec.pickedExpertise ? ` (${t("callingUi.expertiseWord")})` : ""}{mine.skills.length < spec.skills ? <span className="text-amber-300">{t("callingUi.featChoice.left", { count: spec.skills - mine.skills.length })}</span> : null}
           </span>
           <div className="flex flex-wrap gap-1.5">
-            {SRD_SKILLS.filter((skill) => !heldSkills.has(skill.id)).map((skill) => (
+            {SRD_SKILLS.filter((skill) => !heldSkills.has(skill.id) && (!spec.skillsFrom.length || spec.skillsFrom.includes(skill.id))).map((skill) => (
               <PickPill
                 key={skill.id}
                 label={skillDisplay(skill.id)}

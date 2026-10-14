@@ -1,4 +1,5 @@
 "use client";
+import { useLocale as useSyncLocale } from "@/lib/i18n/LocaleProvider";
 
 import { npcGoalLabel, npcRoleInput, npcRoleFromInput, npcRoleOptionLabel } from "@/lib/i18n/npc-editor-presentations";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
@@ -21,6 +22,7 @@ import {
   type RelationGraph,
 } from "@/lib/npcs/forge";
 import { npcRoleOptions } from "@/lib/placeholders";
+import { GENDERS, type Gender } from "@/lib/gender";
 import {
   GOAL_FIELDS,
   PersonalitySliders,
@@ -66,6 +68,7 @@ export function NpcEditorFields({
   // The world's factions, for the membership picker.
   factions?: ReadonlyArray<{ id: string; name: string }>;
 }) {
+  const { t: syncT } = useSyncLocale();
   const { locale, t } = useLocale();
   const roleListId = useId();
   const placeListId = useId();
@@ -118,6 +121,14 @@ export function NpcEditorFields({
                 key: attitude === "hostile" ? "attitude-hostile" : attitude === "friendly" ? "attitude-friendly" : "attitude-neutral",
               },
             }))}
+          />
+          </span>
+          <span className="w-full sm:w-40">
+          <Select<Gender>
+            label={syncT("upstreamUi.a04630ef8bc3")}
+            value={draft.gender}
+            onChange={(gender) => onChange({ ...draft, gender })}
+            options={[{ value: "", label: syncT("upstreamUi.5b8aa0bf3c59") }, ...GENDERS.map((gender) => ({ value: gender, label: gender }))]}
           />
           </span>
         </div>

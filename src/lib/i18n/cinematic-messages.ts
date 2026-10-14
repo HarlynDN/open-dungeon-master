@@ -1,5 +1,7 @@
 import { defineMessages } from './catalog.ts';
 export const CINEMATIC_MESSAGES = /*#__PURE__*/ defineMessages({
+  "cinematic.lastEntries": {"en": "The last {count} entries; the story holds the rest.", "zh-CN": "最近 {count} 条记录；其余内容保存在故事中。"},
+  "cinematic.earlier": {"en": "{count} earlier entries: read them in the story", "zh-CN": "还有 {count} 条较早记录，可在故事中查看"},
  'cinematic.orderAria': {en:'Round {round}, turn order','zh-CN':'第 {round} 轮，行动顺序'},
  'cinematic.turn': {en:'{name}, their turn','zh-CN':'{name}，当前回合'},
  'cinematic.party': {en:'The party','zh-CN':'冒险队伍'},

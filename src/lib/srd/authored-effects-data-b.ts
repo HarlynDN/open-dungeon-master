@@ -86,6 +86,25 @@ export const AUTHORED_DATA_A2: Record<string, AuthoredEntry> = {
       },
     ],
   },
+  // XGtE: a bonus action to teleport the druid, an action to teleport a
+  // willing creature they touch.
+  "druid::Hidden Paths": {
+    subclass: "Circle of Dreams",
+    counter: "sub_hidden_paths",
+    spends: [
+      {
+        name: "Hidden Paths",
+        pool: { id: "sub_hidden_paths" },
+        does: {
+          kind: "variants",
+          options: {
+            self: { does: { kind: "teleport", feet: 60 }, action: "bonus" },
+            touch: { does: { kind: "teleport", feet: 30, touched: true }, action: "action" },
+          },
+        },
+      },
+    ],
+  },
 
   // ---- fighter ----
   "fighter::Know Your Enemy": {
@@ -108,9 +127,12 @@ export const AUTHORED_DATA_A2: Record<string, AuthoredEntry> = {
     subclass: "Eldritch Knight",
     effects: [{ kind: "mark", condition: "eldritch strike", effect: "save_disadv" }],
   },
+  // Curving Shot (XGtE): "When you make an attack roll with a magic arrow and
+  // miss, you can use a bonus action to reroll the attack roll against a
+  // different target within 60 feet of the original target" (issue 233).
   "fighter::Curving Shot": {
     subclass: "Arcane Archer",
-    effects: [{ kind: "bonus_attack", after: "attack", note: "The engine lets the bonus attack follow any attack this turn." }],
+    effects: [{ kind: "bonus_attack", after: "missed_arrow" }],
   },
   "fighter::Ever-Ready Shot": {
     subclass: "Arcane Archer",

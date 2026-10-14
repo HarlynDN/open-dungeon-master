@@ -41,8 +41,8 @@ function PinItem({ pin, onUnpin }: { pin: PinRow; onUnpin: (id: string) => void 
   };
   const items: ContextMenuItem[] = [
     { id: "jump", label: t("memoryUi.pin.jump"), glyph: "tab-log", onSelect: jump },
-    ...(long ? [{ id: "expand", label: expanded ? t("memoryUi.pin.less") : t("memoryUi.pin.more"), glyph: "tab-notes", onSelect: () => setExpanded((value) => !value) }] : []),
-    { id: "unpin", label: t("memoryUi.pin.unpin"), glyph: "quest-failed", tone: "danger", separated: true, onSelect: () => onUnpin(pin.id) },
+    ...(long ? [{ id: "expand", label: expanded ? t("memoryUi.pin.less") : t("memoryUi.pin.more"), glyph: "ui-zoom", onSelect: () => setExpanded((value) => !value) }] : []),
+    { id: "unpin", label: t("memoryUi.pin.unpin"), glyph: "ui-pin", tone: "danger", separated: true, onSelect: () => onUnpin(pin.id) },
   ];
 
   return (

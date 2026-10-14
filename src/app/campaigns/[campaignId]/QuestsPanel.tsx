@@ -206,7 +206,7 @@ function QuestRow({
           onSelect: () => onPatch({ status }),
         })),
         ...(quest.source === "dm"
-          ? [{ id: "remove", label: t("recordUi.quest.remove"), glyph: "quest-failed", tone: "danger" as const, separated: true, onSelect: onRemove }]
+          ? [{ id: "remove", label: t("recordUi.quest.remove"), glyph: "ui-delete", tone: "danger" as const, separated: true, onSelect: onRemove }]
           : []),
       ]
     : [];

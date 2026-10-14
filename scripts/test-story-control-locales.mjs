@@ -1,12 +1,12 @@
 // Local JSX and fake transport; never merges live NPCs or changes real models.
-import assert from 'node:assert/strict';import fs from 'node:fs';import {createHash} from 'node:crypto';import {z} from 'zod';
+import assert from 'node:assert/strict';import fs from 'node:fs';import {execFileSync} from 'node:child_process';import {z} from 'zod';
 import {controlRenderer,controlCases,npcFile,aiFile,npcs,suggestions,npcQueue,aiQueue,settings,drafts,kept} from './lib/story-control-ui-fixtures.mjs';
 const {controlText}=await import('../src/lib/i18n/story-control-presentations.ts');
 const {planMerge,planRename}=await import('../src/lib/dm/entity-review-logic.ts');
-const renderer=await controlRenderer();const hash=html=>createHash('sha256').update(html).digest('hex');
-const golden=JSON.parse(fs.readFileSync(new URL('./fixtures/story-control-en.json',import.meta.url),'utf8')).sha256;
+const renderer=await controlRenderer();
+const upstream=await controlRenderer(file=>[npcFile,aiFile].includes(file)?execFileSync('git',['show',`2b0b6b6e:${file}`],{encoding:'utf8'}):fs.readFileSync(file,'utf8'));
 for(const row of controlCases()){
- assert.equal(hash(renderer.render(row.component,row.props,'en',row.options)),golden[row.name],row.name+' English');
+ assert.equal(renderer.render(row.component,row.props,'en',row.options),upstream.render(row.component,row.props,'en',row.options),row.name+' upstream English');
  const original=renderer.elements().filter(e=>e.props.options).map(e=>({value:e.props.value,options:e.props.options.map(row=>row.value)}));
  const zh=renderer.render(row.component,row.props,'zh-CN',row.options);
  assert.deepEqual(renderer.elements().filter(e=>e.props.options).map(e=>({value:e.props.value,options:e.props.options.map(row=>row.value)})),original,'canonical '+row.name);
@@ -71,7 +71,7 @@ try{
  modelInput.onKeyDown({key:'Enter',nativeEvent:{isComposing:true},currentTarget:{blur:()=>blurred++}});assert.equal(blurred,0);
  modelInput.onKeyDown({key:'Enter',nativeEvent:{isComposing:false},currentTarget:{blur:()=>blurred++}});assert.equal(blurred,1);
  modelInput.onBlur();await tick();assert.deepEqual(calls.pop().body,{customModel:'模型-id'});
- renderer.elements().find(e=>e.type==='input'&&e.props.type==='password'&&e.props.value==='synthetic-only').props.onBlur();await tick();assert.deepEqual(calls.pop().body,{customApiKey:'synthetic-only'});assert(renderer.updates().some(u=>u.at===9&&typeof u.value==='function'&&u.value(drafts).customApiKey===kept));
+ renderer.elements().find(e=>e.type==='input'&&e.props.type==='password'&&e.props.value==='synthetic-only').props.onBlur();await tick();assert.deepEqual(calls.pop().body,{customApiKey:'synthetic-only'});assert(renderer.updates().some(u=>u.at===11&&typeof u.value==='function'&&u.value(drafts).customApiKey===kept));
  mode='refuse';error='That change was not saved.';renderer.render('StoryAiPanel',aiProps,'zh-CN',aq({}));await choose('旁白长度').onChange('huge');assert(renderer.updates().some(u=>u.at===1&&u.value===error));
 }finally{globalThis.fetch=oldFetch;}
 console.log('PASS: 20 English roster/settings states, canonical selector values and NPC/model PATCH data, masked-key preservation, IME handling, native validation/refusals and load/retry without false-empty or data loss (mock transport only).');

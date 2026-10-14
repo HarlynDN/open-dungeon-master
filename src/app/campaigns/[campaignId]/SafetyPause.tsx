@@ -1,6 +1,8 @@
 "use client";
+import { useLocale as useSyncLocale } from "@/lib/i18n/LocaleProvider";
 
 import { useLocale } from "@/lib/i18n/LocaleProvider";
+import Link from "next/link";
 import { Hand } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/cn";
@@ -9,7 +11,10 @@ import { cn } from "@/lib/cn";
 // Every player sees a calm gold scrim, "The table is taking a breath",
 // with nobody named. The seat that runs the story sees the same words and
 // three ways on: rewind the last passage, write it again around the
-// subject, or continue.
+// subject, or continue. The scrim covers the header and the bottom bar, so
+// a player who cannot lift it is still offered a way out of the table: an
+// installed app has no browser back button, and the seat that can lift it
+// may have stepped away.
 
 export function SafetyPause({
   campaignId,
@@ -20,6 +25,7 @@ export function SafetyPause({
   paused: boolean;
   steersStory: boolean;
 }) {
+  const { t: syncT } = useSyncLocale();
   const { t } = useLocale();
   const [busy, setBusy] = useState<string | null>(null);
   if (!paused) {
@@ -68,7 +74,15 @@ export function SafetyPause({
               </button>
             ))}
           </div>
-        ) : null}
+        ) : (
+          <div className="reveal mt-4 flex justify-center">
+            <Link
+              href="/"
+              className="rounded-md border border-stone-700 px-3 py-1.5 text-xs text-stone-300 hover:bg-stone-900"
+            >
+              {syncT("upstreamUi.1f0e4e359dac")}</Link>
+          </div>
+        )}
       </div>
     </div>
   );

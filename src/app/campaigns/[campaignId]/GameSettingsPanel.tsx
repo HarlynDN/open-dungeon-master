@@ -1,4 +1,6 @@
 "use client";
+import { tableRerollDescription } from "@/lib/i18n/reroll-presentations";
+import { useLocale as useSyncLocale } from "@/lib/i18n/LocaleProvider";
 
 import { gameSettingsSummary, hpMethodLabel, wealthLabel } from "@/lib/i18n/game-settings-presentations";
 import { genreLabel } from "@/lib/i18n/settings";
@@ -25,17 +27,26 @@ import { CharacterVoices } from "@/app/campaigns/[campaignId]/CharacterVoices";
 import { VoicePreviewButton } from "@/components/VoicePreviewButton";
 import { SafetyToneFields } from "@/components/SafetyToneFields";
 import type { GameSettings } from "@/lib/schemas/game-settings";
-import { LocalePicker } from "@/components/LocalePicker";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
-import { LOCALE_DEFINITIONS } from "@/lib/i18n/locales";
+import {
+  REROLL_LOW_DEFAULT,
+  rerollBelowFor,
+  rerollChoiceOf,
+  type RerollChoice,
+} from "@/lib/srd/ability-rerolls";
+import { useServerRerollBelow } from "@/app/characters/builder/useTableRules";
+import { transcribesVoice, useCapabilities } from "@/lib/use-capabilities";
 import {
   CAMPAIGN_LENGTHS,
   COMPANION_LABELS,
   HP_METHODS,
   STARTING_WEALTH,
+  TABLE_LANGUAGE_LABELS,
+  TABLE_LANGUAGES,
   type CampaignLengthSetting,
   type DicePolicy,
   type Genre,
+  type TableLanguage,
 } from "@/lib/schemas/game-settings-options";
 
 // Lobby game-settings section: the party lead edits live (PATCHes propagate to
@@ -49,9 +60,21 @@ export function GameSettingsPanel({
   settings: GameSettings;
   steersStory: boolean;
 }) {
+  const { t: syncT } = useSyncLocale();
   const { locale, t } = useLocale();
   const [busy, setBusy] = useState(false);
   const voices = useTtsVoices(settings.locale);
+  // Narration switched off server-wide (Admin > Speech, or setup's text
+  // only): the row reads Off and its switch is held, whatever the table's
+  // own switch says, since nothing would be read aloud. A fresh install's
+  // first table said "Narration on" with a voice picked, over a note that
+  // the server had no narration (issue 275). The stored value is kept, so
+  // a server that gains a speech engine later brings the table's choice
+  // back. A speech server that is named but not answering is one switch
+  // away, and the note under the row says so; only off holds the switch.
+  const capabilities = useCapabilities();
+  const narrationOff = capabilities?.tts?.provider === "off";
+  const narrating = settings.ttsEnabled && !narrationOff;
   // Every control here renders the server's settings, so a refused PATCH
   // changes nothing on screen; without this line it changes nothing silently.
   const [error, setError] = useState<UiRequestError | null>(null);
@@ -62,6 +85,15 @@ export function GameSettingsPanel({
   // powers the hint on the Ambience row. Defaults to true so the hint never
   // flashes on installs that are fine while the answer is in flight.
   const [ambienceInstalled, setAmbienceInstalled] = useState(true);
+  const [ambienceCounts, setAmbienceCounts] = useState<Record<"bed" | "music" | "sting", { installed: number; total: number }> | null>(null);
+  // What "the server's rule" for rolled stats is, so neither the lead's
+  // choice nor a player's summary leaves it unnamed.
+  const serverRerollBelow = useServerRerollBelow();
+  // A server that cannot transcribe holds the Transcription switch off; the
+  // table's stored choice is kept, so transcription added later brings it
+  // back.
+  const transcribes = transcribesVoice(capabilities);
+  const serverRerollLabel = tableRerollDescription(null, serverRerollBelow, locale).toLowerCase();
 
   // Installed world packs, so the lead can switch worlds after creation. An
   // empty list simply hides the row.
@@ -93,6 +125,7 @@ export function GameSettingsPanel({
       .then((data) => {
         if (!cancelled) {
           setAmbienceInstalled(Object.keys(data.tracks ?? {}).length > 0);
+          setAmbienceCounts(data.counts ?? null);
         }
       })
       .catch(() => undefined);
@@ -143,7 +176,7 @@ export function GameSettingsPanel({
       <section className="panel mb-6 rounded-xl p-4">
         <SectionHead title={t("panel.title")} glyph="tab-settings" level="h2" />
         <div className="stagger flex flex-wrap gap-x-5 gap-y-1.5 text-xs text-stone-300">
-          <span>{t("locale.campaign")}: {LOCALE_DEFINITIONS[settings.locale].nativeName}</span>
+          <span>{t("locale.campaign")}: {TABLE_LANGUAGE_LABELS[settings.tableLanguage]}</span>
           <span className="flex items-center gap-1.5">
             <GameIcon icon={{ kind: "glyph", key: "system-region" }} size="size-5" />
             {summary.world}
@@ -154,7 +187,7 @@ export function GameSettingsPanel({
           </span>
           <span className="flex items-center gap-1.5">
             <GameIcon icon={{ kind: "glyph", key: "cue-bell" }} size="size-5" />
-            {summary.narration}
+            {narrationOff ? t("panel.narrationServerOff") : summary.narration}
           </span>
           <span className="flex items-center gap-1.5">
             <GameIcon icon={{ kind: "glyph", key: "tab-ambience" }} size="size-5" />
@@ -175,6 +208,10 @@ export function GameSettingsPanel({
           <span className="flex items-center gap-1.5">
             <GameIcon icon={{ kind: "glyph", key: "coin-gp" }} size="size-5" />
             {summary.wealth}
+          </span>
+          <span className="flex items-center gap-1.5">
+            <GameIcon icon={{ kind: "glyph", key: "die-d6" }} size="size-5" />
+            {syncT("upstreamUi.737eb9506295")}{" "}{tableRerollDescription(settings.abilityRerollBelow, serverRerollBelow, locale).toLowerCase()}
           </span>
           <span className="flex items-center gap-1.5">
             <GameIcon icon={{ kind: "glyph", key: "tab-friends" }} size="size-5" />
@@ -201,7 +238,7 @@ export function GameSettingsPanel({
             {summary.companions}
           </span>
         </div>
-        {settings.ttsEnabled ? <CharacterVoices campaignId={campaignId} settings={settings} steersStory={false} /> : null}
+        {narrating ? <CharacterVoices campaignId={campaignId} settings={settings} steersStory={false} /> : null}
       </section>
     );
   }
@@ -211,11 +248,6 @@ export function GameSettingsPanel({
       <SectionHead title={t("panel.title")} glyph="tab-settings" level="h2" />
       {error ? <PanelError className="mb-2">{requestErrorText(locale, error)}</PanelError> : null}
       <div className={cn("space-y-3 text-xs", busy && "opacity-70")}>
-        <div className="space-y-1">
-          <span className="pk-rowlabel">{t("locale.campaign")}</span>
-          <LocalePicker campaign value={settings.locale} onChange={(locale) => void patch({ locale })} disabled={busy} />
-          <p className="text-stone-500">{t("locale.campaignHint")}</p>
-        </div>
         {settings.dmMode === "assisted" ? (
           // Only in the middle setting. A table the AI runs has nothing to
           // delegate and a table running itself has chosen not to, so showing
@@ -301,6 +333,18 @@ export function GameSettingsPanel({
             />
           </div>
         ) : null}
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="pk-rowlabel">{t("locale.campaign")}</span>
+          <Select<TableLanguage>
+            size="sm"
+            label={t("locale.campaign")}
+            value={settings.tableLanguage}
+            onChange={(tableLanguage) => patch({ tableLanguage })}
+            options={TABLE_LANGUAGES.map((value) => ({ value, label: TABLE_LANGUAGE_LABELS[value] }))}
+            className={selectClass}
+          />
+          <span className="text-stone-500">{t("panel.tableLanguageHelp")}</span>
+        </div>
         {aiNarrates ? (
         <div className="reveal flex flex-wrap items-center gap-2">
           <span className="pk-rowlabel">{t("panel.length")}</span>
@@ -338,10 +382,10 @@ export function GameSettingsPanel({
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <span className="pk-rowlabel">{t("panel.narration")}</span>
-          <SettingToggle label={t("panel.narration")} on={settings.ttsEnabled} onToggle={() => patch({ ttsEnabled: !settings.ttsEnabled })}>
-            {settings.ttsEnabled ? t("panel.on") : t("panel.off")}
+          <SettingToggle label={t("panel.narration")} on={narrating} disabled={narrationOff} onToggle={() => patch({ ttsEnabled: !settings.ttsEnabled })}>
+            {narrating ? t("panel.on") : narrationOff ? t("panel.serverOff") : t("panel.off")}
           </SettingToggle>
-          {settings.ttsEnabled ? (
+          {narrating ? (
             <>
               <VoicePicker
                 speechLocale={settings.locale}
@@ -354,10 +398,10 @@ export function GameSettingsPanel({
             </>
           ) : null}
         </div>
-        {settings.ttsEnabled ? (
+        {narrating ? (
           <CharacterVoices campaignId={campaignId} settings={settings} steersStory patch={patch} />
         ) : null}
-        {settings.ttsEnabled ? <NarrationNote /> : null}
+        {narrating || narrationOff ? <NarrationNote /> : null}
         <div className="flex flex-wrap items-center gap-2">
           <span className="pk-rowlabel">{t("panel.faces")}</span>
           <Tooltip content={t("panel.theatreTip")}>
@@ -394,6 +438,8 @@ export function GameSettingsPanel({
             // it is being switched on rather than letting the table wonder.
             <span className="text-stone-500">
               {t("panel.ambienceMissing")}</span>
+          ) : settings.ambienceEnabled && ambienceCounts ? (
+            <span className="text-stone-500">{t("panel.ambienceCounts", { beds: ambienceCounts.bed.installed, bedsTotal: ambienceCounts.bed.total, music: ambienceCounts.music.installed, musicTotal: ambienceCounts.music.total, stings: ambienceCounts.sting.installed, stingsTotal: ambienceCounts.sting.total })}</span>
           ) : null}
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -444,6 +490,30 @@ export function GameSettingsPanel({
                 value={settings.startingWealth ?? "equipment"}
                 onChange={(value) => patch({ startingWealth: value as GameSettings["startingWealth"] })}
                 options={STARTING_WEALTH.map((method) => ({ value: method, label: wealthLabel(method, locale) }))}
+                className={selectClass}
+              />
+            </span>
+          </Tooltip>
+          <Tooltip content={syncT("upstreamUi.88db1243f93b")}>
+            <span className="inline-flex min-w-0 max-w-full">
+              <Select
+                size="sm"
+                label={syncT("upstreamUi.98903bb2fd86")}
+                value={settings.abilityRerollBelow == null ? "server" : rerollChoiceOf(settings.abilityRerollBelow)}
+                onChange={(value) =>
+                  patch({
+                    abilityRerollBelow:
+                      value === "server"
+                        ? null
+                        : rerollBelowFor(value as RerollChoice, settings.abilityRerollBelow ?? REROLL_LOW_DEFAULT),
+                  })
+                }
+                options={[
+                  { value: "server", label: t("upstreamUi.statsRule", { rule: serverRerollLabel }) },
+                  { value: "keep", label: syncT("upstreamUi.43824354fbdc") },
+                  { value: "low", label: t("upstreamUi.statsLow", { value: rerollBelowFor("low", settings.abilityRerollBelow ?? REROLL_LOW_DEFAULT) }) },
+                  { value: "free", label: syncT("upstreamUi.4b284c253f2b") },
+                ]}
                 className={selectClass}
               />
             </span>
@@ -603,9 +673,9 @@ export function GameSettingsPanel({
                   />
                 </span>
               </Tooltip>
-              <Tooltip content={t("panel.transcriptionTip")}>
-                <SettingToggle on={settings.voice.transcribe} onToggle={() => patch({ voice: { ...settings.voice, transcribe: !settings.voice.transcribe } })}>
-                  {t(settings.voice.transcribe ? "panel.transcribeOn" : "panel.transcribeOff")}
+              <Tooltip content={t(transcribes ? "panel.transcriptionTip" : "panel.transcriptionUnavailable")}>
+                <SettingToggle on={settings.voice.transcribe && transcribes} disabled={!transcribes} onToggle={() => patch({ voice: { ...settings.voice, transcribe: !settings.voice.transcribe } })}>
+                  {t(!transcribes ? "panel.serverOff" : settings.voice.transcribe ? "panel.transcribeOn" : "panel.transcribeOff")}
                 </SettingToggle>
               </Tooltip>
               <Tooltip content={t("panel.proximityTip")}>
@@ -700,8 +770,8 @@ export function GameSettingsPanel({
                 : t("panel.romanceHintOff")}
           </span>
         </div>
-        {aiNarrates ? (
-        <div className="reveal flex flex-wrap items-center gap-2">
+        {aiNarrates || settings.companions === "off" || settings.companions === "guests" ? (
+        <div data-settings-row="allies" className="reveal flex flex-wrap items-center gap-2">
           <span className="pk-rowlabel">{t("panel.allies")}</span>
           <Tooltip content={t("panel.companionsTip")}>
             <span className="inline-flex min-w-0 max-w-full">

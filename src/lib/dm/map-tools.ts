@@ -1,3 +1,4 @@
+import { readiedHeld } from "@/lib/dm/readied-kinds";
 import { carriedLight, lightPlacement } from "@/lib/dm/light-timers";
 import { getClock } from "@/lib/db/clock";
 import type { Campaign } from "@/lib/db/campaigns";
@@ -26,9 +27,11 @@ import { generateBattleMap, fnv1a } from "@/lib/battlemap/generate";
 import { findPath, speedToTiles, squeezedAt, walkPathWithBudget } from "@/lib/battlemap/movement";
 import { coverBetween, hasLineOfSight } from "@/lib/battlemap/los";
 import { footprintLookup, occupiedTiles } from "@/lib/battlemap/view";
+import { nearestSquares, tilesApart } from "@/lib/dm/board-reach";
+
 import {
   blocksMove,
-  chebyshev,
+
   tileAt,
   tileIndex,
   TILE_FEET,
@@ -36,6 +39,8 @@ import {
   type BattleToken,
 } from "@/lib/battlemap/types";
 import { getCurrentLocation } from "@/lib/db/locations";
+import { getParty } from "@/lib/db/party";
+import { placeByFormation } from "@/lib/dm/formation-logic";
 import { getSheetById } from "@/lib/db/sheets";
 import { publishEphemeral } from "@/lib/events";
 import { resolveSheetRef } from "@/lib/dm/rolls";
@@ -88,18 +93,19 @@ export function createBattleMapForEncounter(
   encounter: Encounter,
   enemies: EncounterEnemy[],
   sheets: CharacterSheet[],
-  battlefield: string | undefined,
   // How far the nearest enemy stands as the fight opens, when the story
   // said (start_encounter's distanceFeet); a tile is five feet.
   distanceFeet?: number,
-): BattleMap | null {
+  // The ground the fight is on when it is not the place's own
+  // (start_encounter's scene).
+  scene?: string,
+  // Where the enemy comes from against the travel formation (issue 230).
+  from: "ahead" | "behind" = "ahead",
+): { map: BattleMap; formation: string } | null {
   const location = getCurrentLocation(campaign.id);
   const generated = generateBattleMap({
     seed: fnv1a(encounter.id),
-    genre: campaign.gameSettings.genre,
-    locationName: location?.name,
-    layoutDescription: location?.layoutDescription,
-    hint: battlefield,
+    scene: scene ?? location?.ambience?.bed ?? null,
     pcCount: sheets.length,
     enemyCount: enemies.length,
     enemyDistanceTiles: distanceFeet ? Math.max(1, Math.round(distanceFeet / 5)) : undefined,
@@ -115,12 +121,15 @@ export function createBattleMapForEncounter(
     lights: generated.lights,
     seed: fnv1a(encounter.id),
   });
+  // The party stands by its travel formation: the front of it nearest the
+  // enemy, or the rear when they came from behind (formation-logic.ts).
+  const formation = placeByFormation(sheets, generated.pcSpawns, generated.enemySpawns, getParty(campaign.id).marchingOrder, from);
   placeTokens(map.id, campaign.id, [
-    ...sheets.map((sheet, index) => ({
+    ...sheets.map((sheet) => ({
       kind: "pc" as const,
       refId: sheet.id,
       name: sheet.name,
-      spot: generated.pcSpawns[index] ?? generated.pcSpawns[0],
+      spot: formation.spots.get(sheet.id) ?? generated.pcSpawns[0],
       ...carriedLightFields(campaign.id, sheet),
     })),
     ...enemies.map((enemy, index) => ({
@@ -131,7 +140,7 @@ export function createBattleMapForEncounter(
     })),
   ]);
   publishBattleMapUpdate(campaign.id);
-  return map;
+  return { map, formation: formation.line };
 }
 
 // ---- teleport_token and set_movement tools ----
@@ -141,20 +150,20 @@ export const teleportTokenTool: ToolDef = {
   function: {
     name: "teleport_token",
     description:
-      "Move a combatant to a tile WITHOUT walking: Misty Step, Dimension Door, Thunder Step, a trap door, a portal. It is the spell or the hazard that does it: pass spell with casterId for a character's spell (the server casts it, spending the slot and the casting time, and refuses a jump past the spell's range) or with casterEnemyId for a spell or ability on the enemy's block, or cause 'hazard' for a trap door or a portal. A teleport with none of these is refused. The tile must be open floor with nobody on it.",
+      "Move a combatant to a tile WITHOUT walking: Misty Step, Dimension Door, Thunder Step, a trap door, a portal. It is the spell or the hazard that does it: pass spell with casterId for a character's spell (the server casts it, spending the slot and the casting time, and refuses a jump past the spell's range) or with casterEnemyId for a spell or ability on the enemy's block, or cause 'hazard'. A teleport with none of these is refused. The tile must be open floor with nobody on it.",
     parameters: {
       type: "object",
       additionalProperties: false,
       properties: {
         tokenName: {
           type: "string",
-          description: "Character or enemy name or id, exactly as shown on the battle map.",
+          description: "Character or enemy name or id, exactly as shown on the battle map in GAME STATE.",
         },
         x: { type: "integer", description: "Destination column." },
         y: { type: "integer", description: "Destination row." },
-        spell: { type: "string", description: "The teleport spell or ability, e.g. Misty Step." },
-        casterId: { type: "string", description: "The character casting it (characterId)." },
-        casterEnemyId: { type: "string", description: "The enemy using it (enemyId)." },
+        spell: { type: "string", description: "The teleport spell or ability (Misty Step)." },
+        casterId: { type: "string", description: "The character casting it: exact characterId from GAME STATE." },
+        casterEnemyId: { type: "string", description: "The enemy using it: exact enemyId from GAME STATE." },
         cause: {
           type: "string",
           enum: ["hazard"],
@@ -183,7 +192,7 @@ export const setMovementTool: ToolDef = {
       type: "object",
       additionalProperties: false,
       properties: {
-        tokenName: { type: "string", description: "Character or enemy name or id." },
+        tokenName: { type: "string", description: "Character or enemy name or id, exactly as shown on the battle map in GAME STATE." },
         movement: { type: "string", enum: ["walk", "fly", "burrow"] },
         reason: { type: "string" },
       },
@@ -376,7 +385,7 @@ export const moveTokenTool: ToolDef = {
         tokenName: {
           type: "string",
           description:
-            "Enemy name or enemyId, or character name or characterId, exactly as shown on the battle map in GAME STATE.",
+            "Character or enemy name or id, exactly as shown on the battle map in GAME STATE.",
         },
         x: { type: "integer", description: "Destination column." },
         y: { type: "integer", description: "Destination row." },
@@ -478,6 +487,11 @@ export function handleMoveToken(
     const current = encounter.orderReady ? encounter.order[encounter.turnIndex] : undefined;
     const declared = fresh && turn.actor === "ai" && declaredThisTurn(campaign.id, fresh.id);
     if (fresh && (fresh.isCompanion || declared) && current?.kind === "pc" && current.characterId === fresh.id) {
+      return walkCharacter(campaign, encounter, map, fresh, resolved.token, { x: args.x, y: args.y }, { drag: args.drag });
+    }
+    // The move a character readied releases off their turn, by whoever runs
+    // the table (readied-release.ts: their reaction, up to their speed).
+    if (fresh && readiedHeld(fresh)?.holds === "move" && !(current?.kind === "pc" && current.characterId === fresh.id)) {
       return walkCharacter(campaign, encounter, map, fresh, resolved.token, { x: args.x, y: args.y }, { drag: args.drag });
     }
     return {
@@ -725,7 +739,8 @@ export function allyAdjacentToEnemy(
     (token) =>
       token.kind === "pc" &&
       token.refId !== attackerCharacterId &&
-      chebyshev(token.x, token.y, target.x, target.y) <= 1 &&
+      tilesApart(token, target) <= 1 &&
+
       allyCanThreaten(token.refId),
   );
 }
@@ -771,10 +786,15 @@ export function pcAttackSpatials(
   if (!attacker || !target) {
     return none;
   }
-  const distance = chebyshev(attacker.x, attacker.y, target.x, target.y);
+  // Nearest square to nearest square: a Large target's space is four
+  // squares, and the sight and cover lines go to the one the attacker faces
+  // (src/lib/dm/board-reach.ts).
+  const distance = tilesApart(attacker, target);
+  const line = nearestSquares(attacker, target);
   return {
     // Blade Barrier's three-quarters cover counts as a wall's (zone-rules.ts).
-    cover: Math.max(coverBetween(map.terrain, map.width, map.height, attacker.x, attacker.y, target.x, target.y), zoneCoverBetween(encounterId, characterId, enemyId)) as 0 | 2 | 5,
+    cover: Math.max(coverBetween(map.terrain, map.width, map.height, line.from.x, line.from.y, line.to.x, line.to.y), zoneCoverBetween(encounterId, characterId, enemyId)) as 0 | 2 | 5,
+
     // Past the weapon's normal range but inside its long range: the SRD
     // penalty is disadvantage, and checkPcAttackRange allows up to double.
     longRange: (options.ranged || options.thrown) && distance > options.rangeTiles,
@@ -807,17 +827,19 @@ export function checkPcAttackRange(
   if (!attacker || !target) {
     return null;
   }
-  const distance = chebyshev(attacker.x, attacker.y, target.x, target.y);
+  const distance = tilesApart(attacker, target);
+  const line = nearestSquares(attacker, target);
   const maxTiles = options.longRangeTiles ?? options.rangeTiles * 2;
   const sighted = hasLineOfSight(
     map.terrain,
     map.width,
     map.height,
-    attacker.x,
-    attacker.y,
-    target.x,
-    target.y,
+    line.from.x,
+    line.from.y,
+    line.to.x,
+    line.to.y,
   );
+
   if (!options.ranged && distance <= options.reachTiles) {
     // In reach. Toe to toe nothing can stand between; a reach weapon at 10
     // feet does not strike through the wall square in the middle.

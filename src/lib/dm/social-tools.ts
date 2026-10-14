@@ -11,13 +11,14 @@ import { renderWitnessNote } from "@/lib/dm/witness-logic";
 import {
   getNpcByName,
   listNpcs,
+  nearestNpcName,
   patchNpcAgency,
   setNpcAttitude,
   upsertNpc,
   type Attitude,
   type Npc,
 } from "@/lib/db/npcs";
-import { agencyFragment, derivePersonality, driftPersonality } from "@/lib/dm/npc-logic";
+import { agencyFragment, derivePersonality, driftPersonality, nearestNpcHint } from "@/lib/dm/npc-logic";
 import { ensureRelationship, patchRelationship } from "@/lib/db/relationships";
 import {
   applyApproval,
@@ -28,6 +29,7 @@ import {
 } from "@/lib/dm/relationship-logic";
 import { publishRelationshipsUpdated } from "@/lib/dm/relationship-tools";
 import type { DmTurn } from "@/lib/db/dm-turns";
+import { TOLD_GENDER_HELP, TOLD_GENDERS, toldGender } from "@/lib/gender";
 import { rollExpression } from "@/lib/dice";
 import { publishWithSeq } from "@/lib/events";
 import {
@@ -40,6 +42,7 @@ import { resolveRollExpression, resolveSheetRef } from "@/lib/dm/rolls";
 import { rollExtrasFor, spendRollCarriers } from "@/lib/dm/forced-save";
 import type { RollArgs } from "@/lib/dm/rolls";
 import type { CharacterSheet } from "@/lib/schemas/sheet";
+import { waypointProperty } from "@/lib/dm/waypoint-logic";
 
 // The social-interaction engine: NPC disposition was pure narration with no
 // state, so a shopkeeper the party bullied yesterday greeted them warmly today
@@ -64,22 +67,28 @@ export const socialTools: ToolDef[] = [
     function: {
       name: "set_npc",
       description:
-        "Register or update a named NPC the party is dealing with, so the server tracks who they are and how they feel about the party across the whole campaign. Call this the first time a NpC matters to a scene (a quest-giver, a guard, a merchant), and again when the story itself (not a check) changes how they feel. attitude is the 5e scale: hostile, indifferent, or friendly. Do NOT use this to record an attitude change won by a Charisma check; social_check does that.",
+        "Register or update a named NPC the party is dealing with, so the server tracks who they are and how they feel about the party across the whole campaign; call it again when the story itself (not a check) changes how they feel.",
       parameters: {
         type: "object",
         additionalProperties: false,
         properties: {
+          ...waypointProperty,
           name: { type: "string", description: "The NPC's name, unique within the campaign." },
           attitude: {
             type: "string",
             enum: [...ATTITUDE_ENUM],
-            description: "How they currently feel about the party. Defaults to indifferent.",
+            description: "How they currently feel about the party. Default 'indifferent'.",
           },
           trait: {
             type: "string",
             description: "A short note on their personality, bond, or goal, for your own recall.",
           },
           location: { type: "string", description: "Where they are usually found." },
+          gender: {
+            type: "string",
+            enum: [...TOLD_GENDERS],
+            description: `${TOLD_GENDER_HELP} Give it when you register someone new; leave it out on later calls.`,
+          },
           goal: {
             type: "string",
             description:
@@ -99,21 +108,23 @@ export const socialTools: ToolDef[] = [
     function: {
       name: "npc_reaction",
       description:
-        "Roll a first-meeting reaction for a new NPC when it is genuinely uncertain how they take the party. The server rolls 2d6 (plus any modifier for the party's approach or reputation) and turns it into a starting attitude (hostile, indifferent, or friendly), registering the NPC with it. Use this instead of simply deciding how a stranger feels. Skip it when the story already fixes the NPC's stance (a sworn enemy, a hired ally).",
+        "Roll a first-meeting reaction for a new NPC when it is genuinely uncertain how they take the party. The server rolls 2d6 (plus any modifier for the party's approach or reputation) and turns it into a starting attitude (hostile, indifferent, or friendly), registering the NPC with it. Call it instead of simply deciding how a stranger feels. Skip it when the story already fixes the NPC's stance (a sworn enemy, a hired ally).",
       parameters: {
         type: "object",
         additionalProperties: false,
         properties: {
+          ...waypointProperty,
           name: { type: "string", description: "The new NPC's name." },
           modifier: {
             type: "integer",
             description:
               "A small +/- for the situation (a good first impression, a fearsome reputation). Usually -2 to +2.",
           },
-          trait: { type: "string", description: "Optional short personality note." },
-          location: { type: "string", description: "Optional where they are found." },
+          trait: { type: "string", description: "Short personality note." },
+          location: { type: "string", description: "Where they are found." },
+          gender: { type: "string", enum: [...TOLD_GENDERS], description: TOLD_GENDER_HELP },
         },
-        required: ["name"],
+        required: ["name", "gender"],
       },
     },
   },
@@ -122,12 +133,13 @@ export const socialTools: ToolDef[] = [
     function: {
       name: "social_check",
       description:
-        "Resolve one character trying to sway a tracked NPC with words. The server rolls that character's Persuasion, Deception, or Intimidation from their real sheet against a DC set by the NPC's current attitude (friendly is easy, hostile is hard), reports success or failure, and shifts the NPC one step friendlier or more hostile on a decisive result, at most once per exchange. Call this BEFORE narrating how the NPC responds, and narrate exactly what it reports. The NPC must already exist (set_npc or npc_reaction first).",
+        "Resolve one character trying to sway a tracked NPC with words: friendly is easy, hostile is hard, and the attitude shifts at most once per exchange. Call it BEFORE narrating how the NPC responds; narrate exactly what it reports. The NPC must already exist (set_npc or npc_reaction first).",
       parameters: {
         type: "object",
         additionalProperties: false,
         properties: {
-          characterId: { type: "string", description: "The character making the appeal." },
+          ...waypointProperty,
+          characterId: { type: "string", description: "The character making the appeal: exact characterId from GAME STATE." },
           npc: { type: "string", description: "The exact name of the tracked NPC." },
           approach: {
             type: "string",
@@ -201,6 +213,7 @@ const setNpcSchema = z.object({
   attitude: z.enum(["hostile", "indifferent", "friendly"]).optional(),
   trait: z.string().max(300).optional(),
   location: z.string().max(120).optional(),
+  gender: z.enum(TOLD_GENDERS).optional(),
   goal: z.string().max(300).optional(),
   ambition: z.string().max(300).optional(),
 });
@@ -212,6 +225,9 @@ export function handleSetNpc(campaign: Campaign, rawArguments: string): Record<s
   } catch {
     return { error: "Invalid arguments: set_npc needs at least a name." };
   }
+  // gender is optional so an update need not restate it, which leaves a
+  // registration free to forget it: the result then asks, never refuses.
+  const untold = !args.gender && !getNpcByName(campaign.id, args.name);
   const npc = bootstrapAgency(
     campaign,
     upsertNpc({
@@ -220,6 +236,7 @@ export function handleSetNpc(campaign: Campaign, rawArguments: string): Record<s
       attitude: args.attitude,
       trait: args.trait,
       location: args.location,
+      gender: toldGender(args.gender),
     }),
     { goal: args.goal, ambition: args.ambition },
   );
@@ -228,7 +245,9 @@ export function handleSetNpc(campaign: Campaign, rawArguments: string): Record<s
     npc: npc.name,
     attitude: npc.attitude,
     ...(npc.agency.goals.session ? { goal: npc.agency.goals.session.text } : {}),
-    note: `${npc.name} is tracked as ${npc.attitude}. Their attitude persists until the story or a social_check changes it.`,
+    note: `${npc.name} is tracked as ${npc.attitude}. Their attitude persists until the story or a social_check changes it.${
+      untold ? " Their gender is not recorded: pass gender on a set_npc for them (Unknown if the story has not shown it)." : ""
+    }`,
   };
 }
 
@@ -239,6 +258,7 @@ const reactionSchema = z.object({
   modifier: z.coerce.number().int().min(-10).max(10).optional(),
   trait: z.string().max(300).optional(),
   location: z.string().max(120).optional(),
+  gender: z.enum(TOLD_GENDERS),
 });
 
 export function handleNpcReaction(
@@ -250,7 +270,7 @@ export function handleNpcReaction(
   try {
     args = reactionSchema.parse(JSON.parse(rawArguments || "{}"));
   } catch {
-    return { error: "Invalid arguments: npc_reaction needs a name." };
+    return { error: "Invalid arguments: npc_reaction needs a name and a gender (Female, Male, Nonbinary or Unknown)." };
   }
   const modifier = args.modifier ?? 0;
   // A penalty is written as 2d6-3, never 2d6+-3, which no dice parser reads.
@@ -276,6 +296,7 @@ export function handleNpcReaction(
       attitude,
       trait: args.trait,
       location: args.location,
+      gender: toldGender(args.gender),
     }),
     {},
   );
@@ -318,7 +339,7 @@ export function handleSocialCheck(
   const npc = getNpcByName(campaign.id, args.npc);
   if (!npc) {
     return {
-      error: `No tracked NPC named "${args.npc}". Register them with set_npc or npc_reaction first.`,
+      error: `No tracked NPC named "${args.npc}".${nearestNpcHint(nearestNpcName(campaign.id, args.npc))} Register them with set_npc or npc_reaction first.`,
     };
   }
   const skill = approachSkill(args.approach);

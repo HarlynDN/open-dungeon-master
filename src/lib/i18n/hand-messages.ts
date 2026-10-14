@@ -1,6 +1,11 @@
 import { defineMessages } from "./catalog.ts";
 
 export const HAND_MESSAGES = /*#__PURE__*/ defineMessages({
+  "handUi.displaced": {"en": "{urgent} temporarily took a seat; {displaced} wait here until no longer needed. Your arrangement is kept.", "zh-CN": "{urgent}临时占用了位置；{displaced}暂时放在这里，待临时卡牌不再需要时恢复。你的排列已保留。"},
+  "handUi.new": {"en": "New", "zh-CN": "新增"},
+  "handUi.keptConcentration": {"en": "Kept your current spell; nothing was spent.", "zh-CN": "保留当前法术；未消耗任何资源。"},
+  "handUi.customizeHint": {"en": "Choose which cards stay in this character’s hand.", "zh-CN": "选择哪些卡牌保留在此角色的手牌中。"},
+  "handUi.customize": {"en": "Customize your hand", "zh-CN": "自定义手牌"},
   "handUi.unit.ki": { en: "ki", "zh-CN": "点气" },
   "handUi.cost.bonusFull": { en: "Bonus action", "zh-CN": "附赠动作" },
   "handUi.ui.title": { en: "Your hand", "zh-CN": "你的手牌" },

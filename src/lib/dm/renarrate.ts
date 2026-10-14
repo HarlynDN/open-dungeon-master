@@ -1,23 +1,27 @@
 import { getCampaignById, type Campaign } from "@/lib/db/campaigns";
 import { getDmTurn } from "@/lib/db/dm-turns";
+import { listSheets } from "@/lib/db/sheets";
 import {
   getCampaignMessage,
   setMessageVariants,
   type CampaignMessage,
 } from "@/lib/db/messages";
+import { withoutAsides } from "@/lib/dm/claims-logic";
+import { readAsides } from "@/lib/dm/claims";
 import { enqueueDmJob } from "@/lib/dm/queue";
 import { requestDmMessage } from "@/lib/dm/model";
 import { setDmStatus } from "@/lib/dm/status";
 import { stripToolText } from "@/lib/dm/tool-text";
 import { enqueueNarrationAudio } from "@/lib/tts";
+import { mergeLines } from "@/lib/dm/speech";
+import { modelLines } from "@/lib/dm/speech-lines";
 import { extractStoryText } from "@/lib/story-prompt";
 import { checkNarration } from "@/lib/dm/engine-boundary";
 import { combatNarrationContent, combatNarrationPrompt, combatFallback, COMBAT_PRESENTATIONS } from "@/lib/dm/combat-narration";
 import { normalizeLocale } from "@/lib/i18n/locales";
 import { resolveNarration } from "@/lib/dm/narration-policy";
-import { lineViolations } from "@/lib/dm/safety-logic";
+import { lineViolations } from "@/lib/dm/safety-lines-logic";
 import { getEnemy } from "@/lib/db/encounters";
-import { listSheets } from "@/lib/db/sheets";
 import {
   appendVariant,
   assembleVariantContent,
@@ -53,6 +57,7 @@ function refreshNarrationAudio(campaign: Campaign, message: CampaignMessage) {
     campaign.id,
     message.id,
     message.content,
+    message.speech,
     campaign.gameSettings,
     message.speaker ?? null,
   );
@@ -139,6 +144,13 @@ export async function runRenarrate(input: {
   if (failure) {
     return { error: failure, status: 502 };
   }
+  // The narrator's asides ("I'll set the hour first.") are cut as the turn
+  // loop cuts them from its final call (src/lib/dm/turn.ts): only the
+  // sentences the reader quotes, and a take that was only the model's plan
+  // is no take at all.
+  if (narration) {
+    narration = withoutAsides(narration, await readAsides(campaign, listSheets(campaign.id), turn, narration));
+  }
   if (!narration) {
     return { error: "The DM returned nothing; try again.", status: 502 };
   }
@@ -147,7 +159,7 @@ export async function runRenarrate(input: {
   const lines = campaign.gameSettings.safety?.lines ?? [];
   const checked = await resolveNarration({
     narration: assembled,
-    valid: text => !lineViolations(text, lines).length && (!campaign.gameSettings.narrationGuard || !checkNarration({
+    valid: text => !lineViolations(text, lines, campaign.gameSettings.tableLanguage).length && (!campaign.gameSettings.narrationGuard || !checkNarration({
       conversation: turn.conversation, narration: text, locale: campaign.gameSettings.locale, partyNames: sheets.map(sheet => sheet.name),
     }).length),
     // An alternative take already used its one text-only call. Never replay
@@ -155,12 +167,13 @@ export async function runRenarrate(input: {
     rewrite: async () => null,
     fallback: () => {
       const fallback = combatFallback(turn.conversation, campaign.gameSettings.locale, factOptions);
-      return lineViolations(fallback, lines).length ? COMBAT_PRESENTATIONS[normalizeLocale(campaign.gameSettings.locale)].fallback : fallback;
+      return lineViolations(fallback, lines, campaign.gameSettings.tableLanguage).length ? COMBAT_PRESENTATIONS[normalizeLocale(campaign.gameSettings.locale)].fallback : fallback;
     },
   });
   const content = combatNarrationContent(checked.status === "fallback"
     ? assembleVariantContent([], turn.rollIds, checked.narration) : checked.narration,
-    turn.conversation, campaign.gameSettings.locale, { ...factOptions, allowText: text => !lineViolations(text, lines).length });
+    turn.conversation, campaign.gameSettings.locale, { ...factOptions, allowText: text => !lineViolations(text, lines, campaign.gameSettings.tableLanguage).length });
+  const spoken = checked.status === "fallback" ? [] : await modelLines(campaign, checked.narration, `renarrate ${input.messageId}`);
   // Re-read after the model call: the message may have moved on while the
   // model was working (a lore-check rewrite, or a double-tapped reroll).
   const current = getCampaignMessage(input.messageId);
@@ -171,7 +184,7 @@ export async function runRenarrate(input: {
   if (appended.capped) {
     return { error: `That is all ${MAX_VARIANTS} takes; pick one.`, status: 409 };
   }
-  const updated = setMessageVariants(input.messageId, appended.variants, appended.index);
+  const updated = setMessageVariants(input.messageId, appended.variants, appended.index, mergeLines(current.speech, spoken));
   if (!updated) {
     return { error: "Could not store the new take.", status: 500 };
   }
@@ -199,7 +212,7 @@ export function selectRenarrateVariant(input: {
   if (index < 0) {
     return { error: "No such take.", status: 400 };
   }
-  const updated = setMessageVariants(input.messageId, variants, index);
+  const updated = setMessageVariants(input.messageId, variants, index, message.speech);
   if (!updated) {
     return { error: "Could not select that take.", status: 500 };
   }

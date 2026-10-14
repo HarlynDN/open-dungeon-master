@@ -3,6 +3,7 @@
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { bookText, bookNotice, bookCrosswalk, BOOK_NOTICES } from "@/lib/i18n/book-ui-presentations";
 
+import "@/app/styles/rulebook.css";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Hammer, Loader2 } from "lucide-react";

@@ -5,7 +5,7 @@
   "provenance": "Original Chinese translation of repository UI and six source fighting-style descriptions, with original source license declarations retained. No proprietary Chinese rulebook translation used.",
   "review": "Implementation-agent source comparison of full copied English captions, counts and locked-subclass levels, 49 pre-migration class-card facts and six original style records. Callbacks, canonical names used by grantingTrait, class/subclass/style/option selection values and stored feature fields remain original. Rich messages interpolate once, keep authored braces literal and permit different node order in future locales. Not independent human or external approval. Actual LocalizedText and LocaleProvider are JSX-transpiled from source and server-rendered together in English/Chinese to exercise the complete template path; strict plain-string parameter checks are retained. Native class/subclass brief help is now separately source-compared in character-calling-material-translations.json; only display calls change, with exact English projection and canonical selection regression retained. 2026-10-11 combat UI continuation: re-reviewed the messages.ts entrypoint after adding the combatUi namespace; every existing English and Chinese resource key/value remains unchanged, only 183 new combat UI keys were appended. The entrypoint fingerprint is refreshed; original English goldens and calling source/catalog hashes stay intact.",
   "sources": {
-    "src/app/characters/builder/steps/CallingStep.tsx": "9f5b4431d56ecb3a9503afc5d0e87dcb1c1cf4be40245e97ead7bc5d0cea4476",
+    "src/app/characters/builder/steps/CallingStep.tsx": "2d85614f558ffddf552f9d6ca1b2776d4e902fecef5b558439349228a845bd94",
     "src/app/characters/builder/steps/ClassChoices.tsx": "cc5e92bcc75058b68c113e0a425de94fa753633aeaedef94b5609bceb3114e41",
     "src/lib/i18n/calling-presentations.ts": "ade448880d3d3f8f9df1565840bcf6af20236154c68a6b04f0f392d26463d170",
     "src/lib/i18n/LocalizedText.tsx": "fab7c8c6447d08ee06c7e3ff0f43e3c8a95af40d18e248eb0e038bdcbad9118f",
@@ -15,7 +15,7 @@
     "src/lib/i18n/builder-picker-presentations.ts": "66939a0bff47a5e1c3ff8271bef1db90660c3c2267845067440ba70026796545"
   },
   "catalogs": {
-    "src/lib/i18n/calling-ui-messages.ts": "6ee79c641a5e39a5240764e9c90d68718c8d7b822a72e46d1776391177444280"
+    "src/lib/i18n/calling-ui-messages.ts": "547f6049916816356352ac4b47d55b7a6a5b0cef06426e9e7033060070033de9"
   },
   "abilityCatalogIntegration": "Shared catalog fingerprint refreshed for a separate ability UI corpus; the original review scope is unchanged.",
   "catalogMaintenance": "Shared messages.ts only gains independent equipment UI/name/help catalogs; original calling catalog values and the reviewed calling scope are unchanged. Fingerprint refreshed for these additions, not an expanded review.",
@@ -101,5 +101,10 @@
         "sha256": "63934438a1bba8f4d05c5c3271163772beade80e594337e416bc2e26a361e7cc"
       }
     }
+  },
+  "upstream027Review": {
+    "upstreamCommit": "2b0b6b6ebf5e12f3e43a21ee38f80b41e5b1cd81",
+    "reviewer": "implementation agent",
+    "scope": "Reviewed source deltas: campaign-scoped ability rolls; subclass training and mandatory choices; native gender and level-floor UI; Aasimar and subclass rule text; resource action annotations; concentration flag reader; stable Unicode name ordering. Existing Chinese bindings updated where source changed. Runtime acceptance is tracked separately."
   }
 }

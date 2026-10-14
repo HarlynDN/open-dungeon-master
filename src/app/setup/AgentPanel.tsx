@@ -11,6 +11,7 @@ import { CopyLine } from "@/components/CopyLine";
 import { shellHost } from "@/lib/shell-host";
 import type { Draft } from "@/app/setup/draft";
 import { ModelPicker } from "@/app/setup/SetupParts";
+import { BLANK } from "@/app/admin/model-blanks";
 import type { HarnessId, HarnessStatus } from "@/lib/harness/types";
 
 type Update = (change: (draft: Draft) => Draft) => void;

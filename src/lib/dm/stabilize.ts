@@ -31,6 +31,7 @@ import { findCarriedItem } from "@/lib/dm/item-logic";
 import { resolveRollExpression } from "@/lib/dm/rolls";
 import { rollExtrasFor, spendRollCarriers } from "@/lib/dm/forced-save";
 import { attacksAllowedFor, budgetFor, storeBudget } from "@/lib/dm/turn-budget";
+import { readiedReleaseFor } from "@/lib/dm/readied-release";
 import { STABILIZE_DC, SUFFOCATING, stabilizeMethod } from "@/lib/dm/vitals-logic";
 
 // A healer's kit holds ten uses (SRD 5.1, Adventuring Gear). The count lives
@@ -126,11 +127,20 @@ export function handleStabilize(
   if (healer.id === sheet.id) {
     return { error: `${sheet.name} is unconscious and cannot tend to themselves; name another character as healerId.` };
   }
-  // The healer spends their action on it, so they must have one to spend.
+  // The healer spends their action on it, so they must have one to spend;
+  // Field Surgeon and Triage make it a bonus action (issue 233).
+  const quick = ["Field Surgeon", "Triage"].find((name) => healer.features.some((feature) => feature.name.trim().toLowerCase() === name.toLowerCase())) ?? null;
   const encounter = getActiveEncounter(campaign.id);
-  const able = canAct({ sheet: healer, encounter, kind: "action" });
-  if (!able.ok) {
-    return { error: able.error };
+  // Off their turn, a healer who readied this: their reaction (readied-release.ts).
+  const readied = readiedReleaseFor(healer, encounter, "stabilize");
+  if (readied && "error" in readied) {
+    return { error: readied.error };
+  }
+  if (!readied) {
+    const able = canAct({ sheet: healer, encounter, kind: quick ? "bonus" : "action" });
+    if (!able.ok) {
+      return { error: able.error };
+    }
   }
   const far = outOfTouch(encounter?.id, healer, sheet);
   if (far) {
@@ -162,10 +172,10 @@ export function handleStabilize(
     }
     how = `${healer.name} casts Spare the Dying`;
   }
-  const budget = encounter
+  const budget = encounter && !readied
     ? budgetFor(encounter, healer.id, attacksAllowedFor(healer))
     : null;
-  const spent = budget ? spendAction(budget, "action", "Stabilizing a creature", healer.name) : null;
+  const spent = budget ? spendAction(budget, quick ? "bonus" : "action", quick ? `Stabilizing a creature (${quick})` : "Stabilizing a creature", healer.name) : null;
   if (spent && !spent.ok) {
     return { error: spent.error };
   }
@@ -195,6 +205,7 @@ export function handleStabilize(
     if (encounter && spent?.ok) {
       storeBudget(encounter, spent.budget);
     }
+    readied?.release();
     const outcome = rollExpression(resolved.expression);
     const roll = insertRoll({
       campaignId: campaign.id,
@@ -221,6 +232,8 @@ export function handleStabilize(
     how = `${healer.name}'s Medicine check (${outcome.total}) meets DC ${STABILIZE_DC}`;
   } else if (encounter && spent?.ok) {
     storeBudget(encounter, spent.budget);
+  } else if (readied) {
+    readied.release();
   }
 
   if (kitPatch) {

@@ -1,3 +1,4 @@
+import { compareNames } from "../language/text-logic";
 import type { AppLocale } from "../i18n/locales.ts";
 import { referenceSearchNames } from "../i18n/reference-search.ts";
 import type { ReferenceKind } from "../i18n/reference-names.ts";
@@ -20,6 +21,6 @@ export function localizedReferenceSearch<T extends { slug: string; name: string;
   }
   const result = [...rows.values()];
   const homebrew = input.offset === 0 ? result.filter(row => row.source === "homebrew") : [];
-  const pack = result.filter(row => row.source !== "homebrew").sort((a, b) => a.name.localeCompare(b.name, "en") || a.slug.localeCompare(b.slug, "en"));
+  const pack = result.filter(row => row.source !== "homebrew").sort((a, b) => compareNames(a.name, b.name) || compareNames(a.slug, b.slug));
   return [...homebrew, ...pack.slice(input.offset, input.offset + input.limit)];
 }

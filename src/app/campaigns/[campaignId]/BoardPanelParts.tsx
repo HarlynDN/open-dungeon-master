@@ -1,4 +1,5 @@
 "use client";
+import { useLocale as useSyncLocale } from "@/lib/i18n/LocaleProvider";
 
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { createTranslator, type MessageKey } from "@/lib/i18n/translator";
@@ -10,6 +11,8 @@ import { useState } from "react";
 import { Dialog } from "@/components/ui/Dialog";
 import { cn } from "@/lib/cn";
 import { TILE_FEET } from "@/lib/battlemap/types";
+import { playingSheet } from "@/lib/battlemap/hand-table";
+
 import { TokenFace, type FaceLookup } from "@/app/campaigns/[campaignId]/BoardChrome";
 import { DmInitiativePanel } from "@/app/campaigns/[campaignId]/DmInitiativePanel";
 import type { PublicEncounter } from "@/lib/db/encounter-view";
@@ -232,7 +235,7 @@ export function BoardOrderDialog({
                 enemy={entry.kind === "enemy"}
                 className="size-7 rounded-full border border-stone-700"
               />
-              <span className="min-w-0 flex-1 truncate">{combatName(entry.name, entry.kind, locale)}{entry.reflex ? <sup className="motion-pop ml-0.5 text-[9px] text-amber-300" title={t("boardUi.order.reflexTip")}>{t("boardUi.order.second")}</sup> : null}</span>
+              <span className="min-w-0 flex-1 truncate">{combatName(entry.name, entry.kind, locale)}{entry.reflex ? <sup className="motion-pop ml-0.5 text-[9px] text-amber-300" title={entry.extra ? t("combatUi.order.extraHint", { feature: entry.extra }) : t("boardUi.order.reflexTip")}>{t(entry.extra ? "combatUi.order.extra" : "boardUi.order.second")}</sup> : null}</span>
               {index === encounter.turnIndex ? (
                 <span className="text-[10px] uppercase tracking-wide text-amber-300">{t("boardUi.order.now")}</span>
               ) : null}
@@ -319,9 +322,78 @@ export function BoardOrderStrip({ encounter, faceOf }: { encounter: PublicEncoun
           />
           {combatName(entry.name, entry.kind, locale)}
           {entry.hidden ? t("boardUi.order.hidden") : ""}
-          {entry.reflex ? <sup className="motion-pop ml-0.5 text-[9px] text-amber-300" title={t("boardUi.order.reflexTip")}>{t("boardUi.order.second")}</sup> : null}
+          {entry.reflex ? <sup className="motion-pop ml-0.5 text-[9px] text-amber-300" title={entry.extra ? t("combatUi.order.extraHint", { feature: entry.extra }) : t("boardUi.order.reflexTip")}>{t(entry.extra ? "combatUi.order.extra" : "boardUi.order.second")}</sup> : null}
         </li>
       ))}
     </ol>
+  );
+}
+
+// Which of their characters a player runs, for the enlarged tabletop: the
+// dialog covers the Party panel's Play as, so the choice is offered here too
+// (issue #189). Nothing for a player with one character, or a table that
+// seats one each. The switch is the same request the Party panel sends; the
+// stream's roster_updated moves the Hand, the HUD and the board after it.
+export function PlayAsStrip({
+  campaignId,
+  sheets,
+  meUserId,
+  activeSheetId,
+  multiCharacter,
+}: {
+  campaignId: string;
+  sheets: Array<{ id: string; name: string; userId: string; isCompanion?: boolean }>;
+  meUserId: string;
+  activeSheetId: string;
+  multiCharacter: string;
+}) {
+  const { t: syncT } = useSyncLocale();
+  const [switching, setSwitching] = useState("");
+  const own = sheets.filter((sheet) => sheet.userId === meUserId && !sheet.isCompanion);
+  if (!meUserId || multiCharacter === "off" || own.length < 2) {
+    return null;
+  }
+  const playing = playingSheet(sheets, meUserId, activeSheetId);
+  async function playAs(sheetId: string) {
+    setSwitching(sheetId);
+    try {
+      await fetch(`/api/campaigns/${campaignId}/sheet/switch`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ characterId: sheetId }),
+      });
+    } finally {
+      setSwitching("");
+    }
+  }
+  return (
+    <div role="radiogroup" aria-label={syncT("upstreamUi.38ae74823bc4")} data-pill-group="" className="flex items-center gap-1">
+      <span className="eyebrow mr-1 text-[9px] text-stone-400">{syncT("upstreamUi.38ae74823bc4")}</span>
+      {own.map((sheet) => {
+        const current = playing?.id === sheet.id;
+        return (
+          <button
+            key={sheet.id}
+            type="button"
+            role="radio"
+            aria-checked={current}
+            aria-disabled={switching === sheet.id}
+            data-on={current ? "" : undefined}
+            onClick={() => {
+              if (!current && switching !== sheet.id) void playAs(sheet.id);
+            }}
+            className={cn(
+              "motion-press rounded-full border px-2 py-0.5 text-[11px] transition-colors duration-[var(--dur-quick,150ms)]",
+              current
+                ? "border-amber-500/60 bg-amber-400/10 text-amber-200"
+                : "border-stone-700 text-stone-300 hover:border-amber-500/60 hover:text-amber-200",
+              switching === sheet.id && "opacity-50",
+            )}
+          >
+            {sheet.name}
+          </button>
+        );
+      })}
+    </div>
   );
 }

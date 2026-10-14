@@ -5,31 +5,19 @@
   "provenance": "Original Chinese terminology/translations based on repository-owned prose and name/metadata checklist; no external Chinese publisher text copied. Existing SRD attribution preserved.",
   "review": "38 English actual JSX snapshots; canonical actions, names, cap counts, granted/known/book/prepared states, long-rest timing, original response/audit preservation, unknown authored names/diagnostics and reskins, all stated manual-note numbers and HP branch inputs compared. Implementation-agent review, not independent or human approval.",
   "sources": {
-    "src/components/sheet/SpellBook.tsx": "60e9b309292c4314ce2c4ad57ead5c2e50dcca9e4ad9d0b8fe5f0789c0c3a93a",
+    "src/components/sheet/SpellBook.tsx": "2708ae093e15e962562980a171c1ef4e74d9c2278ff85898d0033e4ae441c3f0",
     "src/components/sheet/SheetSpells.tsx": "cc2fce11dad14ebc37d4e8daef0750b2210f9f9b4833a480ac74278d4deb1f18",
     "src/app/characters/builder/steps/SpellsGearStep.tsx": "846cd847b44c626a5c4a8cb84ee99d3eb43d1d3ad5943b999ef5cccbede3ded7",
     "src/app/characters/builder/steps/FinishStep.tsx": "c21709faab972c02f4a3233114d8eb867ce3118802a664a48448fbab9431245a",
     "src/lib/i18n/spell-ui-presentations.ts": "5898823a42c78f685b418376f71a7b780369b6e313eb735165371228a3949c19",
     "src/lib/i18n/finish-ui-presentations.ts": "98d109c684bdd35fd25929c3de3c161250cd3f7fb1f55fba65a535f6a368d9df",
     "src/lib/i18n/reference-names.ts": "52c28086be58640c59cba14af9e9d25a5d6b7dda161bd55315e56b7fdf2fb5d6",
-    "src/components/sheet/useSpellPool.ts": "9ec6dbcf393842be1c4293d20f2a9312a61c4347474ef7273ad4b5373d1dadc0"
+    "src/components/sheet/useSpellPool.ts": "1b50916d6c116b0e55c49a1d333390a4a392498980904afd5e18a1aafc72f337"
   },
   "catalogs": {
     "src/lib/i18n/spell-ui-messages.ts": "1594352f4ed3790eab70100b83163a34075ad25e3ba249179f401d1a2bf9f6b7",
     "src/lib/i18n/spell-name-messages.ts": "1d9cf7d51948be7b4e0b33b889f062db75aa2c07ceb0b0d52562772d1a857f8a",
     "src/lib/i18n/spell-material-messages.ts": "c5f5ae9a3541293480278f6efcdbce497fb1dc6ba574aacd95aa2adac410e9e3"
-  },
-  "unchangedMechanics": {
-    "src/lib/srd/spell-prep.ts": "2c1413672bbfc87fd609960b35a2d3b4cd3f807a64389f4d65f80593904e5738",
-    "src/lib/srd/spell-support.ts": "7e7a7c81e8ebd438a58cdf0cbbf9c814427c8ae0af229f0ae661024769d9e57a",
-    "src/lib/srd/spell-lists.ts": "ba01ae6624e55dcfb745c2f10e203688aaae47ccad8df8a4faae989917726e5a",
-    "src/lib/srd/third-caster.ts": "9f94203471cb11848a7dc706228113852fa50f2e9bd917e56a2c8cdaecfe9c69",
-    "src/lib/help/starter-spells.json": "3847ecf57425d19dbc413c90106f999bb8aabf5492d39cd63ca0e322c8a37959",
-    "src/lib/srd/manifest/spells.json": "bb4394ff03455353eaf7dec77007bd7ac4a5311c35c0fe7925933b38de0417c4",
-    "src/lib/srd/manifest/spell-mech.json": "3847839bfea546135dbeabe6d02a8ca3affe1ac184a592c36d76eef8b29eb181",
-    "src/app/characters/builder/derivedReasons.ts": "de0ab553b9856820dc024e8ad3d170a95a6a8392b9304bf7fdd90eec98a8998e",
-    "src/components/sheet/useSpellPool.ts": "151a9f818dbcc3469ca099d0afbf2afa8329ced614ee1c47d123a233a20520f9",
-    "src/app/api/campaigns/[campaignId]/sheet/spells/route.ts": "65d02f3a2d701dd62708ea7276741abb0076319c75561ccd999113dc0af337eb"
   },
   "reviewRepair": "2026-10-11: browser imports now use scoped resource runtime; co-located catalog construction marked pure. All English/Chinese templates independently compared equal to the pre-repair archive; original golden bytes preserved. See localization-review-repairs.md.",
   "terminologyRepair": {
@@ -64,5 +52,22 @@
     ],
     "reason": "Actual no-pack artificer creation failed: recommendation-only spells absent from the accepted class list were injected into choices and submitted. Recommendations now use the available pool or shared canonical checklist; fallback pool uses the same supplemented lists as legality. Existing authored/pack selections and server verdicts remain unchanged.",
     "validation": "Existing actual picker workflow covers no-pack recommendation filtering and manual valid selection in both locales. Immutable English fixtures retained."
+  },
+  "upstream027Review": {
+    "upstreamCommit": "2b0b6b6ebf5e12f3e43a21ee38f80b41e5b1cd81",
+    "reviewer": "implementation agent",
+    "scope": "Reviewed source deltas: campaign-scoped ability rolls; subclass training and mandatory choices; native gender and level-floor UI; Aasimar and subclass rule text; resource action annotations; concentration flag reader; stable Unicode name ordering. Existing Chinese bindings updated where source changed. Runtime acceptance is tracked separately."
+  },
+  "reviewedMechanics": {
+    "src/lib/srd/spell-prep.ts": "2c1413672bbfc87fd609960b35a2d3b4cd3f807a64389f4d65f80593904e5738",
+    "src/lib/srd/spell-support.ts": "7e7a7c81e8ebd438a58cdf0cbbf9c814427c8ae0af229f0ae661024769d9e57a",
+    "src/lib/srd/spell-lists.ts": "ba01ae6624e55dcfb745c2f10e203688aaae47ccad8df8a4faae989917726e5a",
+    "src/lib/srd/third-caster.ts": "9f94203471cb11848a7dc706228113852fa50f2e9bd917e56a2c8cdaecfe9c69",
+    "src/lib/help/starter-spells.json": "3847ecf57425d19dbc413c90106f999bb8aabf5492d39cd63ca0e322c8a37959",
+    "src/lib/srd/manifest/spells.json": "bb4394ff03455353eaf7dec77007bd7ac4a5311c35c0fe7925933b38de0417c4",
+    "src/lib/srd/manifest/spell-mech.json": "3847839bfea546135dbeabe6d02a8ca3affe1ac184a592c36d76eef8b29eb181",
+    "src/app/characters/builder/derivedReasons.ts": "de0ab553b9856820dc024e8ad3d170a95a6a8392b9304bf7fdd90eec98a8998e",
+    "src/components/sheet/useSpellPool.ts": "1b50916d6c116b0e55c49a1d333390a4a392498980904afd5e18a1aafc72f337",
+    "src/app/api/campaigns/[campaignId]/sheet/spells/route.ts": "65d02f3a2d701dd62708ea7276741abb0076319c75561ccd999113dc0af337eb"
   }
 }

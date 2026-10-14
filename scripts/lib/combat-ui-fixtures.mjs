@@ -14,7 +14,11 @@ const url=source=>'data:text/javascript;base64,'+Buffer.from(source).toString('b
 // state exercises failures and editable panels without issuing mutations.
 export async function openCombatRenderer({sourceOf=file=>fs.readFileSync(path.join(root,file),'utf8'),
   files=['RollCard','PendingRollCard','SkillCheckCard','EncounterPanel','DmInitiativePanel','BoardChrome','CinematicParts'].map(name=>`src/app/campaigns/[campaignId]/${name}.tsx`),
-  stubs={}}={}) {
+  stubs={}, preloadCatalogs=true}={}) {
+  // Data-URL JSX runs in Node's module graph, separate from Vitest's graph.
+  // Load the real catalogs there before synchronous render/callback checks.
+  const nativeCatalogs = await import(url(`export { loadLocaleMessages } from ${JSON.stringify(pathToFileURL(path.join(root,'src/lib/i18n/client-catalogs.ts')).href)};`));
+  if (preloadCatalogs) await Promise.all(['en','zh-CN'].flatMap(locale => ['ui','content','help'].map(scope => nativeCatalogs.loadLocaleMessages(locale,scope))));
   const state={queues:{},diceSources:{},pixels:[],elements:[],confirmations:[],confirmReplies:[],updates:[],cursors:{}};
   const token='odm-combat-ui-'+Math.random();globalThis[token]=state;
   const shells=url(`export const GameIcon=()=>null;export const appConfirm=async(...args)=>{const s=globalThis[${JSON.stringify(token)}];s.confirmations.push(args);return s.confirmReplies.shift()??false;};`);
@@ -40,7 +44,7 @@ export async function openCombatRenderer({sourceOf=file=>fs.readFileSync(path.jo
         const at=s.cursors[file]??0;s.cursors[file]=at+1;const [value,set]=realUseState(queue?.length?queue.shift():initial);
         return [value,next=>{s.updates.push({file,at,value:next});set(next);}];}`);
     const compiled=ts.transpileModule(sourceOf(file),{compilerOptions:{module:ts.ModuleKind.ESNext,jsx:ts.JsxEmit.ReactJSX,target:ts.ScriptTarget.ES2022}}).outputText;
-    const linked=url(compiled.replace(/from (["'])([^"']+)\1/g,(_all,_quote,spec)=>{
+    const linked=url(compiled.replace(/import ["'][^"']+\.css["'];?/g, "").replace(/from (["'])([^"']+)\1/g,(_all,_quote,spec)=>{
       let target=aliases[spec]??(spec==='react'?react:null);
       if(!target){
         if(spec.startsWith('.')||spec.startsWith('@/')){

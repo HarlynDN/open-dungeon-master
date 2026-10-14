@@ -22,19 +22,21 @@
 // So nothing the program does reaches the game except through the loop's own
 // tool handling, and there is no second copy of the rules to drift.
 
+import { agentSpeedEligibility } from "@/lib/speed-tier";
 import { randomBytes, createHash } from "node:crypto";
 import { mkdtempSync, rmSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import type { ChatMessage, ChatRequestOptions, UpstreamResult } from "@/lib/model-client";
+import { createStreamRepetitionGuard, firstCopyOf, streamRepetitionResponse } from "@/lib/stream-repetition";
 import { buildChildEnv, leaksServerSecret } from "./child-env.ts";
 import { childPath } from "./discover.ts";
 import { renderCompletion, renderFollowUp, renderTurn, toMcpTools, toolNames } from "./render.ts";
-import { adapterFor, harnessConfig, resolveHarnessBinary } from "./status.ts";
+import { adapterFor, harnessConfig, probeHarness, resolveHarnessBinary } from "./status.ts";
 import { harnessOfferFor } from "./policy.ts";
 import { getCampaignById } from "@/lib/db/campaigns";
 import type { HarnessErrorKind, HarnessEvent, HarnessSession, McpToolDefinition } from "./types.ts";
-import { isHarnessId } from "./types.ts";
+import { HARNESS_MAX_RUN_MS, isHarnessId } from "./types.ts";
 
 // A burst of parallel calls from one model reply arrives as separate HTTP
 // requests a few milliseconds apart; they are gathered into one round, as a
@@ -44,7 +46,6 @@ const ROUND_GATHER_MS = 180;
 // anything else it started gets this long between calls before it is reaped.
 const IDLE_MS_TURN = 10 * 60_000;
 const IDLE_MS_OTHER = 90_000;
-const MAX_LIFETIME_MS = 20 * 60_000;
 
 const NO_MORE_TOOLS =
   "No more tools are available this turn. Stop calling tools and write the narration for the players now.";
@@ -92,6 +93,9 @@ export class BridgeSession {
   private queue: PendingCall[] = [];
   private inflight = new Map<string, PendingCall>();
   private text = "";
+  // Reads `text` for a loop, as a model's stream is read
+  // (src/lib/stream-repetition.ts); started again whenever `text` empties.
+  private loop = createStreamRepetitionGuard();
   // What the program wrote before its last call refused for narration only:
   // the message if it writes nothing after the refusal (refuseToNarrate).
   private draft = "";
@@ -124,12 +128,25 @@ export class BridgeSession {
     this.catalogue = options.catalogue;
     this.allowed = options.allowed;
     this.isTurn = options.isTurn;
-    this.lifeTimer = setTimeout(() => this.close(), MAX_LIFETIME_MS);
+    this.lifeTimer = setTimeout(() => this.close(), HARNESS_MAX_RUN_MS);
     this.lifeTimer.unref?.();
   }
 
-  attach(program: HarnessSession) {
+  // A program that finishes starting after its session was closed (the
+  // turn timed out while it started) is closed at once and never sent the
+  // prompt: close() ran while there was no program to close, and nothing
+  // would ever close it later.
+  attach(program: HarnessSession): boolean {
+    if (this.closed) {
+      try {
+        program.close();
+      } catch {
+        // Already gone.
+      }
+      return false;
+    }
     this.program = program;
+    return true;
   }
 
   send(text: string) {
@@ -152,6 +169,10 @@ export class BridgeSession {
     }
     if (event.type === "delta") {
       this.text += event.text;
+      if (this.loop.push(event.text)) {
+        this.stopRepeating();
+        return;
+      }
       this.waiter?.onDelta?.(event.text);
       return;
     }
@@ -159,7 +180,7 @@ export class BridgeSession {
       this.finished = true;
       this.lastUsage = event.usage;
       const content = (this.text.trim() ? this.text : this.draft || event.text).trim();
-      this.text = "";
+      this.clearText();
       this.draft = "";
       // Calls still queued when the program says it is done can only be
       // strays; they are answered and dropped.
@@ -236,8 +257,29 @@ export class BridgeSession {
     if (this.text.trim()) {
       this.draft = this.text;
     }
-    this.text = "";
+    this.clearText();
     return NARRATE_NOW;
+  }
+
+  private clearText() {
+    this.text = "";
+    this.loop = createStreamRepetitionGuard();
+  }
+
+  // The program began repeating itself, so it is stopped as a model's stream
+  // would be. An ask that may only narrate has no calls to lose, and gets the
+  // text up to the end of the first copy; any other gets the halted-turn
+  // error, since its prose without the calls it never made could narrate
+  // outcomes nothing resolved.
+  private stopRepeating() {
+    const kept = firstCopyOf(this.text, this.loop.firstCopyEnd);
+    const content = kept === null ? "" : kept.trim() || this.draft.trim();
+    this.deliver(
+      this.narrateOnly && content
+        ? { message: { content }, finishReason: "repetition" }
+        : { error: streamRepetitionResponse() },
+    );
+    this.close();
   }
 
   private scheduleGather() {
@@ -257,7 +299,7 @@ export class BridgeSession {
       this.inflight.set(call.id, call);
     }
     const content = this.text.trim();
-    this.text = "";
+    this.clearText();
     this.deliver({
       message: {
         content,
@@ -543,6 +585,8 @@ export function harnessError(message: string, kind: HarnessErrorKind = "crash"):
 export type HarnessRequestContext = {
   // "story" narrates; "utility" does bookkeeping on the cheaper model.
   role: "story" | "utility";
+  // Original array before output-language projection, for prompt-safe cleanup.
+  conversation?: object;
   campaignId?: string;
   // Every tool this kind of call could offer, for the program's tool list.
   // A program reads its tool list once, when it starts, so a tool that
@@ -578,6 +622,7 @@ export async function requestHarnessMessage(
   const live = findSession(messages);
   if (live) {
     state().byConversation.set(messages as object, live);
+    if (context.conversation) state().byConversation.set(context.conversation, live);
     return live.next(messages, options, timeoutMs);
   }
   if (!options.tools?.length || options.toolChoice === "none") {
@@ -604,7 +649,20 @@ async function prepareRun(context: HarnessRequestContext) {
   }
   const model =
     context.role === "utility" ? config.utilityModel || config.model : config.model;
-  return { config, binary, cwd, env, model, adapter: adapterFor(config.id) } as const;
+  // The Fast tier the admin chose for this role (issue 255); the adapter
+  // asks for it only where its connection has one (src/lib/speed-tier.ts).
+  const role = context.role === "utility" ? "utility" : "story";
+  const wantsFast = (role === "utility" ? config.utilitySpeed : config.speed) === "fast";
+  // Codex and Claude Code say per model whether this sign-in offers Fast
+  // (their model lists, cached by the probe); a model without it is run at
+  // its default.
+  const fastModels =
+    wantsFast && (config.id === "codex" || config.id === "claude")
+      ? ((await probeHarness(config.id).catch(() => null))?.models ?? [])
+      : [];
+  const speed =
+    wantsFast && agentSpeedEligibility({ harnessId: config.id, model, models: fastModels }).ok ? ({ role } as const) : undefined;
+  return { config, binary, cwd, env, model, speed, adapter: adapterFor(config.id) } as const;
 }
 
 async function startSession(
@@ -617,7 +675,7 @@ async function startSession(
   if ("error" in prepared) {
     return prepared;
   }
-  const { config, binary, cwd, env, model, adapter } = prepared;
+  const { config, binary, cwd, env, model, speed, adapter } = prepared;
   const kind = context.turn ? "turn" : "other";
   if (!(await acquireSlot(kind, config.maxConcurrent, timeoutMs))) {
     removeRunDir(cwd);
@@ -641,9 +699,10 @@ async function startSession(
   );
   state().byToken.set(session.tokenHash, session);
   state().byConversation.set(messages as object, session);
+  if (context.conversation) state().byConversation.set(context.conversation, session);
   session.seen = [...messages];
 
-  const rendered = renderTurn(messages);
+  const rendered = renderTurn(messages, { settledTranscript: adapter.settledTranscript === true });
   const result = session.next(messages, options, timeoutMs);
   try {
     const program = await adapter.start({
@@ -651,13 +710,15 @@ async function startSession(
       system: rendered.system,
       model,
       effort: config.effort,
+      ...(speed ? { speed } : {}),
       mcp: { url: harnessMcpUrl(), token },
       cwd,
       env,
       onEvent: session.onEvent,
     });
-    session.attach(program);
-    session.send(rendered.prompt);
+    if (session.attach(program)) {
+      session.send(rendered.prompt);
+    }
   } catch (error) {
     session.onEvent({
       type: "error",
@@ -680,7 +741,7 @@ async function completeWithHarness(
   if ("error" in prepared) {
     return prepared;
   }
-  const { config, binary, cwd, env, model, adapter } = prepared;
+  const { config, binary, cwd, env, model, speed, adapter } = prepared;
   if (!(await acquireSlot("other", config.maxConcurrent, timeoutMs))) {
     removeRunDir(cwd);
     return { error: harnessError("Every agent slot is busy; try again in a moment.", "timeout") };
@@ -688,6 +749,10 @@ async function completeWithHarness(
   const rendered = renderCompletion(messages);
   let program: HarnessSession | null = null;
   let text = "";
+  // A streamed or narration-only answer is read for a loop as a model's is.
+  // A completion has no tools, so one that begins repeating is settled with
+  // its first copy, and the program is stopped below like a finished one.
+  const loop = options.onDelta || options.toolChoice === "none" ? createStreamRepetitionGuard() : null;
   let outcome: UpstreamResult;
   try {
     outcome = await new Promise<UpstreamResult>((resolve) => {
@@ -699,9 +764,12 @@ async function completeWithHarness(
         resolve(result);
       }
     };
+    // A summary may be given up to ARC_TEXT_TIMEOUT_MS (30 minutes at most),
+    // but no run outlives HARNESS_MAX_RUN_MS, the bound opencode's sweep
+    // relies on.
     const timer = setTimeout(
       () => settle({ error: harnessError("The agent program took too long to answer.", "timeout") }),
-      timeoutMs,
+      Math.min(timeoutMs, HARNESS_MAX_RUN_MS),
     );
     adapter
       .start({
@@ -709,12 +777,22 @@ async function completeWithHarness(
         system: rendered.system,
         model,
         effort: config.effort,
+        ...(speed ? { speed } : {}),
         mcp: null,
         cwd,
         env,
         onEvent: (event) => {
           if (event.type === "delta") {
             text += event.text;
+            if (loop?.push(event.text)) {
+              const kept = firstCopyOf(text, loop.firstCopyEnd);
+              settle(
+                kept === null
+                  ? { error: streamRepetitionResponse() }
+                  : { message: { content: kept.trim() }, finishReason: "repetition" },
+              );
+              return;
+            }
             options.onDelta?.(event.text);
           } else if (event.type === "turn_end") {
             settle({ message: { content: (text.trim() ? text : event.text).trim() } });

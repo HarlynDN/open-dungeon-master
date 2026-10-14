@@ -18,11 +18,17 @@ export function generationLocaleRule(locale: AppLocale): string {
 // message to retain the single-system-message shape used by Ask and agents.
 // Do not mutate the stored conversation; retry/fallback must be idempotent.
 type LocaleSystemMessage = { role: "system"; content: string };
+// Harness continuations compare message identity. Reuse only an identical
+// projection of the same source object; edited text or locale gets a new one.
+const systemProjections = new WeakMap<object, Map<string, { source: string; message: LocaleSystemMessage }>>();
 
 export function withGenerationLocale<T extends { role: string; content?: unknown }>(
   messages: T[],
   locale: AppLocale,
 ): Array<T | LocaleSystemMessage> {
+  // Upstream prose calls can request languages beyond the UI catalog.
+  // A fallback UI locale must not override that explicit table directive.
+  if (locale === "en" && messages.some(message => message.role === "system" && typeof message.content === "string" && message.content.includes("TABLE LANGUAGE: The players read "))) return messages;
   const rule = generationLocaleRule(locale);
   const marker = rule.split("\n", 1)[0];
   const systemIndex = messages.findIndex((message) => message.role === "system");
@@ -37,7 +43,13 @@ export function withGenerationLocale<T extends { role: string; content?: unknown
   const priorRules = APP_LOCALES.filter(previous => previous !== locale).map(generationLocaleRule);
   if (systemContent.includes(marker) && !priorRules.some(rule => systemContent.includes(rule))) return messages;
   const content = [...priorRules, rule].reduce((text, previous) => text.replace(previous, ""), systemContent).trim();
-  return messages.map((message, index) => index === systemIndex
-    ? { ...message, content: `${content}\n\n${rule}` }
-    : message);
+  const projected = `${content}\n\n${rule}`;
+  const cached = systemProjections.get(system) ?? new Map();
+  let entry = cached.get(locale);
+  if (!entry || entry.source !== systemContent || entry.message.content !== projected) {
+    entry = { source: systemContent, message: { ...system, role: "system", content: projected } };
+    cached.set(locale, entry);
+    systemProjections.set(system, cached);
+  }
+  return messages.map((message, index) => index === systemIndex ? entry.message : message);
 }

@@ -29,15 +29,15 @@ const stubs={
  '@/app/campaigns/[campaignId]/DmInitiativePanel':shells(['DmInitiativePanel']),
  '@/components/SkyLayer':shells(['SkyLayer']),
 };
-const r=await openCombatRenderer({files,stubs}),before=await openCombatRenderer({files,stubs,sourceOf:file=>files.includes(file)?execFileSync('git',['show',`0ee12ef8:${file}`],{encoding:'utf8'}):fs.readFileSync(file,'utf8')});
+const r=await openCombatRenderer({files,stubs}),before=await openCombatRenderer({files,stubs,sourceOf:file=>files.includes(file)?execFileSync('git',['show',`2b0b6b6e:${file}`],{encoding:'utf8'}):fs.readFileSync(file,'utf8')});
 const pc={id:'p',refId:'p',name:'Authored {name}',kind:'pc',x:1,y:1},view={mapId:'map',board:'combat',width:10,height:10,terrain:'.'.repeat(100),tokens:[pc],myTokenId:'p',reachable:[11],budgetLeft:6,tokenFootprint:{},tokenHealth:{},tokenConditions:{},turn:{tokenId:'p',round:2},currentTurnName:pc.name,round:2};
 const queues=()=>[false,false,'',false,null,null,null,'handle',null,'npc','','sphere',20,null,null,null,null,null,null,true,null,null,false,false,'p:2',null,false,'stroke','gold',false,null,null];
 let refreshed=0;const props={campaignId:'c',view,encounter:null,sheets:[],canDirect:true,refreshBattleMap:async()=>refreshed++};
 const conditionQ=queues();conditionQ[18]={kind:'condition',tokenId:'p'};
 let renders=0;
 for(const state of [queues(),conditionQ]){const options={queues:{[main]:state}};assert.equal(r.render('BattleMapPanel',props,'en',options),before.render('BattleMapPanel',props,'en',options));renders++;}
-for(const state of [['','',false,0,null],['a flooded crypt','',false,1,123],['a cave','forest',true,2,123]]){const options={queues:{[roll]:state}};const p={width:20,height:15,genre:null,onRoll:()=>{}};assert.equal(r.render('MapRollPanel',p,'en',options),before.render('MapRollPanel',p,'en',options));renders++;}
-assert(r.render('MapRollPanel',{width:20,height:15,genre:null,onRoll:()=>{}},'zh-CN',{queues:{[roll]:['黑暗森林','',false,1,123]}}).includes('“森林”'));
+for(const state of [['','',false,0,null],['dungeon','',false,1,123],['cave','forest',true,2,123]]){const options={queues:{[roll]:state}};const p={width:20,height:15,genre:null,onRoll:()=>{}};assert.equal(r.render('MapRollPanel',p,'en',options),before.render('MapRollPanel',p,'en',options));renders++;}
+assert(r.render('MapRollPanel',{width:20,height:15,genre:null,onRoll:()=>{}},'zh-CN',{queues:{[roll]:['forest','',false,1,123]}}).includes('森林'));
 const originalFetch=globalThis.fetch,calls=[];const drain=()=>new Promise(resolve=>setImmediate(resolve));
 const renderPrompt=()=>{r.render('BattleMapPanel',props,'zh-CN',{queues:{[main]:conditionQ}});return r.elements().find(e=>e.props.label==='状态（中文译名、英文原名或自定义名称）');};
 try{

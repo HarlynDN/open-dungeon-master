@@ -93,13 +93,17 @@ export function canonicalizeToolReferences(name: string, sentArguments: string, 
     if (typeof term === "string" && term.trim()) {
       const found = resolveResourceReference(term, heldResourceDefinitions(fresh), locale);
       if (found.kind === "matched") put(args, field, resourceEngineName(found.entry));
-      else if (found.kind === "ambiguous") {
+      else if (found.kind === "ambiguous" && !found.choices.some(entry =>
+        [entry.name, ...(entry.aliases ?? [])].some(value => value.trim().toLowerCase() === term.trim().toLowerCase()))) {
+        // Preserve the engine's existing canonical-name dispatch (some
+        // upstream counters share a name). Only localized ambiguity asks
+        // the caller to choose an ID; never invent a Chinese tie-breaker.
         failure = {
           error: `Ambiguous resource reference "${term}"; choose a resource ID from this character's Resources list.`,
           retry: true,
           choices: found.choices.map(({ id, name, displayName }) => ({ id, name, displayName })),
         };
-      } else if (resolveResourceReference(term, RESOURCE_DEFS, locale).kind !== "unknown") {
+      } else if (found.kind === "unknown" && resolveResourceReference(term, RESOURCE_DEFS, locale).kind !== "unknown") {
         failure = { error: `"${term}" is not a tracked resource available to this character. Use a canonical name or ID from their Resources list.`, retry: true };
       }
       // Untracked named feature spends still enter their dedicated handlers.

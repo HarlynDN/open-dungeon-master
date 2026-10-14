@@ -21,7 +21,7 @@ export function checkCinematicFixtures(renderer,locale='en'){
  add('quest/empty','QuestGlance',{quests:[],onOpen:()=>{}});
  add('order','TabletopOrder',{encounter:CINE_ENCOUNTER,faceOf:()=>[],children:'Authored child'});
  add('order/wait','TabletopOrder',{encounter:null,faceOf:()=>[]});
- const base={campaignId:'c',messages:[],rolls:[],sheets:CINE_SHEETS,members:[{userId:'u',username:'Mira'}],isDm:false,steersStory:true,kind:'do',onKindChange:()=>{},input:'挥剑',setInput:()=>{},sending:false,inputBlocked:false,placeholder:'Authored placeholder',onSubmit:()=>{}};
+ const base={campaignId:'c',messages:[],rolls:[],sheets:CINE_SHEETS,members:[{userId:'u',username:'Mira'}],isDm:false,steersStory:true,kind:'do',onKindChange:()=>{},maxChars:2000,input:'挥剑',setInput:()=>{},sending:false,inputBlocked:false,placeholder:'Authored placeholder',onSubmit:()=>{}};
  add('chronicle/empty','TabletopChronicle',base);
  add('chronicle/dm','TabletopChronicle',{...base,isDm:true,inputBlocked:true,sending:true});
  add('chronicle/no-composer','TabletopChronicle',{...base,composer:false});

@@ -1,16 +1,15 @@
 // Focused owned-help rendering/actions and independently loaded language scopes.
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {createHash} from 'node:crypto';
 import {execFileSync} from 'node:child_process';
 import {helpRenderer,helpCases,helpFile,partsFile} from './lib/help-ui-fixtures.mjs';
 import {HELP_TOPICS,HELP_TOURS} from '../src/lib/i18n/app-help-metadata.ts';
 import {MESSAGE_CATALOGS} from '../src/lib/i18n/messages.ts';
 const {helpTourView}=await import('../src/lib/i18n/app-help-presentations.ts');
 const renderer=await helpRenderer();
-const golden=JSON.parse(fs.readFileSync(new URL('./fixtures/help-ui-en.json',import.meta.url),'utf8')).sha256;
-const hash=html=>createHash('sha256').update(html).digest('hex');
-for(const row of helpCases())assert.equal(hash(renderer.render('HelpDialog',row.props,'en',row.options)),golden[row.name],row.name+' English');
+// Pin English behavior to the accepted upstream UI (including Lucide upgrade).
+const upstream=await helpRenderer(file=>[helpFile,partsFile].includes(file)?execFileSync('git',['show',`2b0b6b6e:${file}`],{encoding:'utf8'}):fs.readFileSync(file,'utf8'));
+for(const row of helpCases())assert.equal(renderer.render('HelpDialog',row.props,'en',row.options),upstream.render('HelpDialog',row.props,'en',row.options),row.name+' upstream English');
 const close=[];
 const start=[];
 const tours=HELP_TOURS.map((row,index)=>({...row,onStart:()=>start.push(index)}));

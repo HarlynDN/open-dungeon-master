@@ -62,6 +62,7 @@ function rows(input: {
         ? { key: "pictures", title: t("setupGuide.ready.pictures"), tone: waitingTone, text: waitingText, step: steps.pictures }
         : caps.images.configured && caps.images.reachable
           ? { key: "pictures", title: t("setupGuide.ready.pictures"), tone: "ok", text: draft.pictures === "comfyui" ? t("setupGuide.ready.comfy") : draft.pictures === "openai" ? t("setupGuide.ready.openaiPictures") : t("setupGuide.ready.agentPictures"), step: steps.pictures }
+          : caps.images.needsModel ? { key: "pictures", title: t("setupGuide.ready.pictures"), tone: "warn", text: t("setupGuide.ready.picturesModelMissing"), step: steps.pictures }
           : { key: "pictures", title: t("setupGuide.ready.pictures"), tone: "warn", text: t("setupGuide.ready.picturesWaiting"), step: steps.pictures };
   const narration: Row =
     draft.narration === "off"
@@ -70,6 +71,7 @@ function rows(input: {
         ? { key: "narration", title: t("setupGuide.ready.narration"), tone: waitingTone, text: waitingText, step: steps.voice }
         : caps.tts.configured && caps.tts.reachable
           ? { key: "narration", title: t("setupGuide.ready.narration"), tone: "ok", text: draft.narration === "kokoro" ? t("setupGuide.ready.kokoro") : t("setupGuide.ready.openaiVoice"), step: steps.voice }
+          : caps.tts.needsModel ? { key: "narration", title: t("setupGuide.ready.narration"), tone: "warn", text: t("setupGuide.ready.voiceModelMissing"), step: steps.voice }
           : { key: "narration", title: t("setupGuide.ready.narration"), tone: "warn", text: t("setupGuide.ready.waiting"), step: steps.voice };
   const dictation: Row = wait
     ? { key: "dictation", title: t("setupGuide.ready.dictation"), tone: waitingTone, text: waitingText, step: steps.voice }

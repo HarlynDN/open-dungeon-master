@@ -31,11 +31,17 @@ const messages = [{ role: "system", content: "Return JSON with title and quote. 
 const original = structuredClone(messages);
 const upstreamFetch = globalThis.fetch;
 const calls = [];
+const readerCalls = [];
 let failUtility = false;
 let replyContent = '{"title":"城门","quote":"The gate is locked."}';
 let replyTools;
 globalThis.fetch = async (url, options) => {
-  const body = JSON.parse(options.body);
+  const body = JSON.parse(options?.body ?? "{}");
+  if (!body.messages) return Response.json({ models: [], capabilities: ["completion", "tools"] });
+  if (body.messages[0]?.content?.startsWith("You read one passage of a tabletop RPG")) {
+    readerCalls.push(body);
+    return Response.json({ choices: [{ message: { content: '{"claims":[]}' }, finish_reason: "stop" }] });
+  }
   calls.push({ url: String(url), body });
   if (failUtility && body.model === "test-utility") return new Response("Model unavailable", { status: 503 });
   const message = { content: replyContent, ...(replyTools ? { tool_calls: replyTools } : {}) };
@@ -105,6 +111,8 @@ try {
     const before = structuredClone({ rollIds: turn.rollIds, mutationCount: turn.mutationCount, conversation: turn.conversation });
     await enforceEngineBoundary(campaign, turn, []);
     assert.equal(calls.length, 1);
+    assert.equal(readerCalls.length, 2, "initial and rewritten narration are checked by the utility reader");
+    readerCalls.forEach(body => assert.equal(body.model, "test-utility"));
     assert.ok(calls[0].body.tool_choice === undefined || calls[0].body.tool_choice === "none");
     assert.ok(!calls[0].body.tools?.length);
     assert.match(calls[0].body.messages.at(-1).content, /不要重复执行动作/);
@@ -112,8 +120,8 @@ try {
     assert.equal(turn.callIndex, 1);
     assert.deepEqual({ rollIds: turn.rollIds, mutationCount: turn.mutationCount, conversation: turn.conversation }, before);
     replyTools = undefined;
-    const { agentNarrationProblem } = await import("../src/lib/dm/agent-turn.ts");
-    assert.match(agentNarrationProblem(campaign, "战斗开始！"), /start_encounter/);
+    const { readAgentNarration } = await import("../src/lib/dm/agent-turn.ts");
+    assert.match((await readAgentNarration(campaign, "战斗开始！")).problem, /start_encounter/);
   });
   console.log(`test-chinese-model-routing: ${passed} passed`);
 } finally {

@@ -1,4 +1,5 @@
-import { getCampaignById, getCampaignSummaryState } from "@/lib/db/campaigns";
+import { withLanguage } from "@/lib/dm/table-language-logic";
+import { campaignLanguage, getCampaignById, getCampaignSummaryState } from "@/lib/db/campaigns";
 import { listRecentAsksForThread } from "@/lib/db/asks";
 import { listChapters } from "@/lib/db/chapters";
 import { listFactsVisibleTo } from "@/lib/db/facts";
@@ -8,22 +9,30 @@ import { listNpcs } from "@/lib/db/npcs";
 import { listRuleChunks } from "@/lib/db/rules";
 import { listRollsVisibleTo } from "@/lib/db/rolls";
 import { getSheetForUser, listSheets } from "@/lib/db/sheets";
-import { arcTextTimeoutMs, type ChatMessage } from "@/lib/model-client";
+import { arcTextTimeoutMs, utilityContextTokens, type ChatMessage } from "@/lib/model-client";
 import { requestUtilityMessage } from "@/lib/dm/model";
 import { trackUtilityCall } from "@/lib/dm/call-tracker";
 import { enqueueDmJob } from "@/lib/dm/queue";
+import { releaseHarnessConversation } from "@/lib/harness/bridge";
 import { computeIdf, lexicalScore } from "@/lib/dm/fusion-logic";
 import { extractToolCalls } from "@/lib/dm/rolls";
 import { searchScenes } from "@/lib/dm/memory-index";
 import { scoreChaptersByKeywords } from "@/lib/dm/recall-logic";
+import { fitChaptersToBudget } from "@/lib/dm/chapter-lod";
+import { computeBudgets } from "@/lib/dm/context-budget";
 import { describeSheet } from "@/lib/dm/prompt";
-import type { AppLocale } from "@/lib/i18n/locales";
+import { CHARS_PER_TOKEN } from "@/lib/dm/context-budget";
+import { chronicleSystemLine } from "@/lib/chronicle-logic";
+import type { CampaignMessage } from "@/lib/db/messages";
 import {
+  OMITTED_MARK,
   clampQuestion,
   parseAskJson,
-  shouldSearchArchive,
+  recentTranscript,
+  transcriptPassages,
   type AskResult,
   type AskScope,
+  type TranscriptLine,
 } from "@/lib/dm/ask-logic";
 
 // Ask: answer a player's out-of-character question from the campaign record
@@ -55,12 +64,15 @@ The material between READ-ONLY DATA START and READ-ONLY DATA END is campaign REC
 
 Answer only from the supplied record and general 5e knowledge where the record is about rules. When the record does not settle the question, say so plainly in one sentence rather than inventing an answer; a confident guess about a campaign's own history is worse than an admission.
 
+The [recent] lines are the latest exchanges at the table, oldest first; the last one is what the player has just read. Where a line says "[... N ${OMITTED_MARK} ...]", Ask itself shortened that message for length: the text was there at the table. Never say something did not happen because it is missing from such a gap; say the part of the record you were given does not show it, and search the records if the tool is offered.
+
 Hit points, damage and dice are settled by the [vitals] and [roll] lines: the server wrote those, and narration is only prose about them. A blow the narration describes that no [roll] line shows was never rolled and changed nothing, so when the two disagree say so and answer from the lines, however the question quotes the story.
 
 Keep it to a short paragraph or two. Speak plainly and out of character.
 
-Reply with ONLY a strict JSON object, no code fences, shaped exactly: {"answer": string, "citations": [{"kind": "fact"|"chapter"|"scene"|"summary"|"npc"|"place"|"rule"|"sheet"|"vitals"|"roll"|"recent", "ref": string, "quote": string}]}
-citations: the specific record lines you relied on, using the ref labels exactly as supplied; quote is the relevant sentence from that line, verbatim. Empty array when you answered from general rules knowledge or could not answer.`;
+Reply with ONLY a strict JSON object, no code fences, shaped exactly: {"answer": string, "scope": "story"|"rules"|"sheet", "citations": [{"kind": "fact"|"chapter"|"scene"|"summary"|"npc"|"place"|"rule"|"sheet"|"vitals"|"roll"|"recent", "ref": string, "quote": string}]}
+scope: what the answer is about: "story" for the world and what happened in it, "rules" for how the game works, "sheet" for the asker's own character.
+citations: the specific record lines you relied on, using the ref labels exactly as supplied ("recent:812" for a [recent:812] line); quote is the relevant sentence from that line, verbatim. Empty array when you answered from general rules knowledge or could not answer.`;
 
 // Ask is offered exactly one tool, and it only reads.
 //
@@ -74,7 +86,7 @@ const ASK_SEARCH_TOOL = {
   function: {
     name: "search_campaign_records",
     description:
-      "Search the campaign's past chapters and recorded scenes when the supplied record does not answer the question. Read-only.",
+      "Search the campaign's past chapters, its recorded scenes and the full text of the latest exchanges when the supplied record does not answer the question. Read-only.",
     parameters: {
       type: "object",
       additionalProperties: false,
@@ -93,10 +105,43 @@ export type AskRequest = {
   campaignId: string;
   userId: string;
   question: string;
-  scope: AskScope;
+  // "auto" gathers every kind of evidence and lets the model say which it
+  // answered from.
+  scope: AskScope | "auto";
 };
 
-const RECENT_MESSAGES = 24;
+const ASK_THREAD_ANSWER_CLIP = 1_200;
+// The latest exchanges offered to the record: as many as the budget below
+// holds, newest first (recentTranscript). The search hop reads further back.
+const RECENT_MESSAGES = 40;
+const SEARCHED_MESSAGES = 120;
+// The recent transcript's share of the utility model's window, in
+// characters, within these bounds: a 16K window gives it about 14,000.
+const RECENT_SHARE = 0.22;
+const RECENT_MIN_CHARS = 3_000;
+const RECENT_MAX_CHARS = 24_000;
+
+export function recentBudgetChars(contextTokens: number): number {
+  return Math.round(Math.min(RECENT_MAX_CHARS, Math.max(RECENT_MIN_CHARS, contextTokens * CHARS_PER_TOKEN * RECENT_SHARE)));
+}
+
+// A transcript message as the record names it: the DM (and who it speaks
+// as), the character a player acted as, or the table's own note.
+function transcriptLines(campaignId: string, messages: CampaignMessage[]): TranscriptLine[] {
+  const names = new Map(listSheets(campaignId).map((sheet) => [sheet.id, sheet.name]));
+  return messages.map((message) => ({
+    seq: message.seq,
+    who:
+      message.authorType === "dm"
+        ? message.speaker && message.speaker.kind !== "narrator" && message.speaker.name
+          ? `DM (as ${message.speaker.name})`
+          : "DM"
+        : message.authorType === "system"
+          ? "Table note"
+          : (message.characterId && names.get(message.characterId)) || "Player",
+    content: message.authorType === "system" ? chronicleSystemLine(message.content) : message.content,
+  }));
+}
 const RECENT_ROLLS = 30;
 const SCENE_CLIP = 700;
 
@@ -143,8 +188,18 @@ function mechanicalRecord(campaignId: string, ownedCharacterIds: string[]): stri
 // Closed chapters and verbatim scenes matching a query. Shared by the
 // up-front evidence pass and the tool hop, so the model's own follow-up
 // search reads exactly the same archive the first pass did.
-async function retrieveArchive(campaignId: string, query: string): Promise<string[]> {
+async function retrieveArchive(campaignId: string, query: string, chapterBudget: number): Promise<string[]> {
   const evidence: string[] = [];
+  // The exchange in progress is in no chapter and no recorded scene yet, so
+  // a search for something the narration just said reads the transcript
+  // itself, whole, where the up-front record had to shorten it (issue 250).
+  const passages = transcriptPassages(
+    transcriptLines(campaignId, listRecentMessages(campaignId, SEARCHED_MESSAGES)),
+    query,
+  );
+  if (passages.length) {
+    evidence.push(`The latest exchanges that mention it, in full where they fit:\n${passages.join("\n\n")}`);
+  }
   let sceneLines: string[] = [];
   let chapterIndexes: number[] = [];
   try {
@@ -154,14 +209,15 @@ async function retrieveArchive(campaignId: string, query: string): Promise<strin
         `[scene:ch${scene.chapterIndex}@${scene.seqStart}] ${scene.text.slice(0, SCENE_CLIP)}`,
     );
     chapterIndexes = [...new Set(scenes.map((scene) => scene.chapterIndex))];
-  } catch {
+  } catch (error) {
     // Embedder unavailable; the chapter summaries below still anchor it.
+    console.error("[ask] scene search failed", error);
   }
   const closed = listChapters(campaignId).filter((chapter) => chapter.status === "closed");
   const relevantChapters = chapterIndexes.length
     ? closed.filter((chapter) => chapterIndexes.includes(chapter.index))
-    : scoreChaptersByKeywords(closed, query).slice(0, 2);
-  for (const chapter of relevantChapters.slice(0, 3)) {
+    : scoreChaptersByKeywords(closed, query, campaignLanguage(campaignId)).slice(0, 2);
+  for (const chapter of fitChaptersToBudget(relevantChapters.slice(0, 3), chapterBudget)) {
     evidence.push(
       `[chapter:${chapter.index}] "${chapter.title}": ${chapter.summary}${
         chapter.highlights.length ? `\nHighlights: ${chapter.highlights.join(" | ")}` : ""
@@ -169,7 +225,8 @@ async function retrieveArchive(campaignId: string, query: string): Promise<strin
     );
   }
   if (sceneLines.length) {
-    evidence.push(`Verbatim past scenes, which are the actual play:\n${sceneLines.join("\n\n")}`);
+    // Retrieval has no relevance cut-off (fusion-logic.ts).
+    evidence.push(`Verbatim past scenes, which are the actual play, nearest to the question first; some may not bear on it:\n${sceneLines.join("\n\n")}`);
   }
   return evidence;
 }
@@ -179,12 +236,12 @@ async function retrieveArchive(campaignId: string, query: string): Promise<strin
 async function assembleEvidence(
   request: AskRequest,
   ownedCharacterIds: string[],
-  locale: AppLocale,
+  recentBudget: number,
 ): Promise<string[]> {
   const { campaignId, question, scope } = request;
   const evidence: string[] = [];
 
-  if (scope === "sheet") {
+  if (scope === "sheet" || scope === "auto") {
     const sheet = getSheetForUser(campaignId, request.userId);
     if (sheet) {
       const campaign = getCampaignById(campaignId);
@@ -196,17 +253,18 @@ async function assembleEvidence(
     }
   }
 
-  if (scope === "rules" || scope === "sheet") {
+  if (scope === "rules" || scope === "sheet" || scope === "auto") {
     // House rules and variants the table actually plays with. The SRD itself
     // is general knowledge the model already has; what it cannot know is
     // which optional rules this table turned on.
     const chunks = listRuleChunks(campaignId).filter((chunk) => chunk.enabled);
     if (chunks.length) {
-      const idf = computeIdf(chunks.map((chunk) => `${chunk.heading} ${chunk.text}`));
+      const language = campaignLanguage(campaignId);
+      const idf = computeIdf(chunks.map((chunk) => `${chunk.heading} ${chunk.text}`), language);
       const relevant = chunks
         .map((chunk) => ({
           chunk,
-          score: lexicalScore(question, `${chunk.heading} ${chunk.text}`, idf),
+          score: lexicalScore(question, `${chunk.heading} ${chunk.text}`, idf, language),
         }))
         .filter((entry) => entry.chunk.pinned || entry.score > 0)
         .sort((a, b) => b.score - a.score)
@@ -221,11 +279,11 @@ async function assembleEvidence(
     }
   }
 
-  if (scope === "story" || scope === "sheet") {
+  if (scope === "story" || scope === "sheet" || scope === "auto") {
     evidence.push(...mechanicalRecord(campaignId, ownedCharacterIds));
   }
 
-  if (scope === "story") {
+  if (scope === "story" || scope === "auto") {
     // listFactsVisibleTo, NOT listActiveFacts: the third argument is
     // includeDmSecrets and must stay false. DM-only facts are off-screen
     // developments the party has not learned.
@@ -273,21 +331,18 @@ async function assembleEvidence(
       evidence.push(`[summary] The story so far:\n${summary}`);
     }
 
-    // Archive retrieval is the expensive part, so it is gated: a question
-    // with no recall hint and no proper noun has nothing to find back there.
-    if (shouldSearchArchive(question, false, locale)) {
-      evidence.push(...(await retrieveArchive(campaignId, question)));
-    }
-
-    const recent = listRecentMessages(campaignId, RECENT_MESSAGES);
-    if (recent.length) {
+    // The newest message first and whole where it fits, older ones sharing
+    // the rest; a long one keeps its opening and its end (issue 250: the
+    // first 300 characters of each lost the event the narration ended on).
+    const recent = recentTranscript(
+      transcriptLines(campaignId, listRecentMessages(campaignId, RECENT_MESSAGES)),
+      recentBudget,
+    );
+    if (recent.lines.length) {
       evidence.push(
-        `[recent] The last few exchanges:\n${recent
-          .map(
-            (message) =>
-              `${message.authorType === "dm" ? "DM" : "Player"}: ${message.content.slice(0, 300)}`,
-          )
-          .join("\n")}`,
+        `The latest exchanges, oldest first; the last is what the table just read${
+          recent.dropped ? ` (${recent.dropped} earlier ${recent.dropped === 1 ? "message" : "messages"} left out for length)` : ""
+        }:\n${recent.lines.join("\n")}`,
       );
     }
   }
@@ -297,11 +352,16 @@ async function assembleEvidence(
 
 // The asker's own recent Ask thread, as ordinary chat turns, so follow-ups
 // resolve. Never persisted into the story and never shown to the DM turn.
+// Each question goes back whole: it was stored within the question limit,
+// and a follow-up ("and if she lied?") leans on all of it. Clipping it to
+// 1,200 would have quietly dropped the end of a question the route took
+// (issue 207). The answers keep their clip; the model wrote them and the
+// question it answers is what a follow-up turns on.
 function threadMessages(campaignId: string, userId: string): ChatMessage[] {
   const messages: ChatMessage[] = [];
   for (const ask of listRecentAsksForThread(campaignId, userId)) {
-    messages.push({ role: "user", content: ask.question.slice(0, 1_200) });
-    messages.push({ role: "assistant", content: ask.answer.slice(0, 1_200) });
+    messages.push({ role: "user", content: clampQuestion(ask.question) });
+    messages.push({ role: "assistant", content: ask.answer.slice(0, ASK_THREAD_ANSWER_CLIP) });
   }
   return messages;
 }
@@ -310,12 +370,13 @@ function threadMessages(campaignId: string, userId: string): ChatMessage[] {
 // server itself made (the shared-host policy, src/lib/shared-host.ts) is
 // said in its own words, since retrying would not change it.
 async function modelFailure(error: Response): Promise<string> {
-  if (error.status === 403) {
-    const payload = (await error.json().catch(() => null)) as { error?: string } | null;
-    if (payload?.error) {
-      return payload.error;
-    }
+  const payload = (await error.json().catch(() => null)) as { error?: string } | null;
+  if (error.status === 403 && payload?.error) {
+    return payload.error;
   }
+  // The table reads one line; the log keeps what the backend actually
+  // said, so a blip can be told from a server that is down.
+  console.error(`[ask] the model call failed (${error.status}): ${payload?.error ?? "no detail"}`);
   return "The model is unavailable; try again shortly.";
 }
 
@@ -332,17 +393,12 @@ export async function runAsk(
   }
 
   const sheet = getSheetForUser(request.campaignId, request.userId);
-  const evidence = await assembleEvidence(
-    { ...request, question },
-    sheet ? [sheet.id] : [],
-    campaign.gameSettings.locale,
-  );
-  // Mirrors the gate inside assembleEvidence; decides whether the model is
-  // offered a follow-up search below.
-  const searchedArchive = request.scope === "story" && shouldSearchArchive(question, false, campaign.gameSettings.locale);
+  const contextTokens = await utilityContextTokens(campaign.settings);
+  const chapterBudget = computeBudgets(contextTokens).chapters;
+  const evidence = await assembleEvidence({ ...request, question }, sheet ? [sheet.id] : [], recentBudgetChars(contextTokens));
 
   const messages: ChatMessage[] = [
-    { role: "system", content: ASK_SYSTEM },
+    { role: "system", content: withLanguage(ASK_SYSTEM, campaign.gameSettings.tableLanguage) },
     ...threadMessages(request.campaignId, request.userId),
     {
       role: "user",
@@ -359,18 +415,10 @@ export async function runAsk(
   let result: AskResult | { error: string } = {
     error: "The DM did not answer; try again.",
   };
-  // Queued behind any live narration so the model server never interleaves
-  // two jobs for this campaign.
-  //
-  // Tracked as ONE call rather than per model request: an Ask may take a
-  // search hop and make two, and a chip that vanishes and reappears mid-answer
-  // reads as a failure rather than as progress.
-  await enqueueDmJob(request.campaignId, () =>
-    trackUtilityCall(request.campaignId, "ask", async () => {
-    // The tool is offered only when the up-front pass did NOT already search
-    // the archive. Having just retrieved against this question, a second
-    // search over the same text would cost a model call to learn nothing.
-    const offerSearch = !searchedArchive;
+  const answer = async () => {
+    // The archive is searched only when the model asks for it, never guessed
+    // from the question's words. A rules or sheet question has no archive.
+    const offerSearch = request.scope === "story" || request.scope === "auto";
     const first = await requestUtilityMessage(campaign.settings, messages, {
       locale: campaign.gameSettings.locale,
       timeoutMs: arcTextTimeoutMs(),
@@ -387,6 +435,7 @@ export async function runAsk(
     if (!searchCall) {
       const parsed = parseAskJson(
         typeof first.message?.content === "string" ? first.message.content : "",
+        request.scope,
       );
       result = parsed ?? { error: "The answer came back unusable; try again." };
       return;
@@ -403,7 +452,7 @@ export async function runAsk(
     } catch {
       // bounded fallback
     }
-    const found = await retrieveArchive(request.campaignId, searchQuery);
+    const found = await retrieveArchive(request.campaignId, searchQuery, chapterBudget);
 
     const second = await requestUtilityMessage(
       campaign.settings,
@@ -433,9 +482,25 @@ export async function runAsk(
     }
     const parsed = parseAskJson(
       typeof second.message?.content === "string" ? second.message.content : "",
+      request.scope,
     );
     result = parsed ?? { error: "The answer came back unusable; try again." };
-    }),
+  };
+  // Queued behind any live narration so the model server never interleaves
+  // two jobs for this campaign.
+  //
+  // Tracked as ONE call rather than per model request: an Ask may take a
+  // search hop and make two, and a chip that vanishes and reappears mid-answer
+  // reads as a failure rather than as progress.
+  //
+  // A call offering the search tool holds one of the agent program's few
+  // sessions (src/lib/harness/bridge.ts) until released or idle for 90
+  // seconds, so a third Ask in a row waited for the first. Released here as
+  // the DM turn releases its own; a no-op for every other provider.
+  await enqueueDmJob(request.campaignId, () =>
+    trackUtilityCall(request.campaignId, "ask", () =>
+      answer().finally(() => releaseHarnessConversation(messages)),
+    ),
   );
   return result;
 }

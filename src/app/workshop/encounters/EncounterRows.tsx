@@ -188,8 +188,8 @@ export function EncounterRows({
           const items: ContextMenuItem[] = [
             { id: "open", label: t("encounterPrep.open"), glyph: "system-encounters", onSelect: () => onOpen(encounter) },
             { id: "deploy", label: t("encounterPrep.deploy"), glyph: "tab-battle", disabled: busy, onSelect: () => onDeploy(encounter) },
-            { id: "duplicate", label: t("encounterPrep.duplicate"), glyph: "tab-notes", disabled: busy, onSelect: () => onDuplicate(encounter) },
-            { id: "delete", label: t("encounterPrep.delete"), glyph: "quest-failed", tone: "danger", separated: true, onSelect: () => onDelete(encounter) },
+            { id: "duplicate", label: t("encounterPrep.duplicate"), glyph: "ui-duplicate", disabled: busy, onSelect: () => onDuplicate(encounter) },
+            { id: "delete", label: t("encounterPrep.delete"), glyph: "ui-delete", tone: "danger", separated: true, onSelect: () => onDelete(encounter) },
           ];
           return (
             <ContextMenu as="li" key={encounter.id} label={encounter.name} items={items} className={cn(ui.cardHover, "flex min-w-0 flex-col gap-2 p-3")}>

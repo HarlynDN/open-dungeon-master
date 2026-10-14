@@ -1,6 +1,8 @@
 import { defineMessages } from "./catalog.ts";
 
 export const COMBAT_UI_MESSAGES = /*#__PURE__*/ defineMessages({
+  "combatUi.order.extraHint": { en: "{feature}: an extra turn, taken now", "zh-CN": "{feature}：立即执行的额外回合" },
+  "combatUi.order.extra": { en: "extra turn", "zh-CN": "额外回合" },
   // Dice notation is a rule identifier, identical in each display locale.
   "combatUi.roll.die": { en: "d{sides}", "zh-CN": "d{sides}" },
   "combatUi.pending.pixelDie": { en: "{name}, d{sides}", "zh-CN": "{name}，d{sides}" },

@@ -1,4 +1,5 @@
 "use client";
+import { useLocale as useSyncLocale } from "@/lib/i18n/LocaleProvider";
 
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { createTranslator } from "@/lib/i18n/translator";
@@ -38,6 +39,7 @@ const KIND_COLOR: Record<BlockKind, string> = {
 };
 
 export function ContextPanel({ campaignId }: { campaignId: string }) {
+  const { t: syncT } = useSyncLocale();
   const { locale, t } = useLocale();
   const [trace, setTrace] = useState<ContextTrace | null>(null);
   const [at, setAt] = useState<string>("");
@@ -125,6 +127,58 @@ export function ContextPanel({ campaignId }: { campaignId: string }) {
               />
             </div>
           </div>
+
+          {trace.arc ? (
+            <div className="panel rounded-lg px-2.5 py-1.5 text-xs" data-testid="arc-trace">
+              <div className="flex flex-wrap items-baseline justify-between gap-x-2">
+                <span className="whitespace-nowrap font-medium text-amber-200">{syncT("upstreamUi.97fd65ddb4a9")}</span>
+                <span className="shrink-0 font-mono text-[11px] text-stone-400">
+                  {t("upstreamUi.arcBudget", { shown: trace.arc.beats.shown, total: trace.arc.beats.total, chars: trace.arc.chars.toLocaleString(), budget: trace.arc.budgetChars.toLocaleString() })}
+                </span>
+              </div>
+              {trace.arc.events.length ? (
+                <ul className="mt-1 space-y-0.5">
+                  {trace.arc.events.map((pick) => (
+                    <li key={pick.id} className={cn("text-[11px]", pick.included ? "text-stone-400" : "text-red-300/90")}>
+                      <span className="font-mono text-stone-500">{pick.id}</span> {pick.name}
+                      <span className="text-stone-500">: {pick.included ? contextReasonText(pick.reason, locale) : t("upstreamUi.heldBack", { reason: contextReasonText(pick.reason.replace(/^held back: /, ""), locale) })}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="mt-0.5 text-[11px] text-stone-500">{syncT("upstreamUi.509cf3e5bed6")}</p>
+              )}
+            </div>
+          ) : null}
+
+          {trace.lore ? (
+            <div className="panel rounded-lg px-2.5 py-1.5 text-xs" data-testid="lore-trace">
+              <div className="flex flex-wrap items-baseline justify-between gap-x-2">
+                <span className="whitespace-nowrap font-medium text-amber-200">{syncT("upstreamUi.d6b818f31875")}</span>
+                <span className="shrink-0 font-mono text-[11px] text-stone-400">
+                  {t("upstreamUi.loreBudget", { shown: trace.lore.picks.filter((pick) => pick.included).length, total: trace.lore.picks.filter((pick) => !pick.weak).length, chars: trace.lore.chars.toLocaleString(), budget: trace.lore.budgetChars.toLocaleString() })}
+                </span>
+              </div>
+              {trace.lore.picks.length ? (
+                <ul className="mt-1 space-y-0.5">
+                  {trace.lore.picks.map((pick) => (
+                    <li
+                      key={pick.id}
+                      title={pick.id}
+                      data-lore-pick={pick.included ? "kept" : pick.weak ? "near" : "held"}
+                      className={cn("text-[11px]", pick.included ? "text-stone-400" : pick.weak ? "text-stone-500" : "text-red-300/90")}
+                    >
+                      {pick.title}
+                      {pick.secret ? <span className="text-ember-300"> {syncT("upstreamUi.e29aa97e1f8e")}</span> : null}
+                      <span className="text-stone-500">: {pick.reason}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="mt-0.5 text-[11px] text-stone-500">{syncT("upstreamUi.3bb965d7e1ee")}</p>
+              )}
+            </div>
+          ) : null}
 
           <ul className="stagger space-y-1">
             {trace.blocks.map((block) => (

@@ -84,9 +84,9 @@ test("Chinese token budgets trim history and chapters instead of counting four c
 });
 
 test("Chinese short terms, mixed English references and proper names survive lexical retrieval", () => {
-  assert.deepEqual(tokenize("The party was in the vault"), ["party", "vault"]);
+  assert.deepEqual(tokenize("The party was in the vault"), ["parti", "vault"]);
   const terms = tokenize("法师施放法术，掷骰子。Kara 使用 Fireball。");
-  for (const term of ["法术", "骰子", "kara", "fireball"]) assert.ok(terms.includes(term), term);
+  for (const term of ["法术", "骰子", "kara", ...tokenize("Fireball")]) assert.ok(terms.includes(term), term);
   const corpus = ["他们在城门等待守卫。", "法师研究法术，准备掷骰子。", "Kara 使用 Fireball。"];
   const idf = computeIdf(corpus);
   assert.ok(lexicalScore("法术", corpus[1], idf) > lexicalScore("法术", corpus[0], idf));

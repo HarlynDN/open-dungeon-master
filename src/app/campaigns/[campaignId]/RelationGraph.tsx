@@ -83,6 +83,8 @@ export function RelationGraph({
       <defs>
         {graph.nodes.map((node) => {
           const face = portraits.get(node.name);
+          // Encode every Unicode code point; a lossy ASCII slug would give
+          // different Chinese names the same portrait ID.
           return face ? (
             <pattern key={node.name} id={faceId(node.name)} patternUnits="objectBoundingBox" width="1" height="1">
               <HostSvgImage href={face} width={RADIUS * 2} height={RADIUS * 2} preserveAspectRatio="xMidYMid slice" />

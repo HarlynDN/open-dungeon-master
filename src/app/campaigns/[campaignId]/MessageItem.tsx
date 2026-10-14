@@ -43,6 +43,7 @@ import {
   copyAction,
   reportAction, disputeAction } from "@/app/campaigns/[campaignId]/MessageParts";
 import type { CampaignLocation, MediaStatus } from "@/app/campaigns/[campaignId]/useCampaignStream";
+import { locationMapSlot, scenePictureSlot } from "@/app/campaigns/[campaignId]/mediaSlot";
 
 // A right-click on the prose opens the passage's menu, but a long press must
 // stay the phone's way to select text: pinning and lore checks act on the
@@ -201,7 +202,7 @@ export const MessageItem = memo(function MessageItem({
         />
       );
     }
-    return <SystemMessage content={message.content} systemEvent={message.systemEvent} />;
+    return <SystemMessage content={message.content} systemEvent={message.systemEvent} glyph={message.glyph} />;
   }
   if (message.authorType === "dm") {
     const actions: MessageAction[] = [];
@@ -222,7 +223,7 @@ export const MessageItem = memo(function MessageItem({
         name: t("passageUi.continue.name"),
         label: t("passageUi.continue.label"),
         hint: t("passageUi.continue.hint"),
-        glyph: "pace-fast",
+        glyph: "ui-skip",
         icon: <FastForward className="size-3.5" />,
         onSelect: () => onContinueScene(message),
       });
@@ -244,7 +245,7 @@ export const MessageItem = memo(function MessageItem({
         name: t("passageUi.remember.name"),
         label: t("passageUi.remember.label"),
         hint: t("passageUi.remember.hint"),
-        glyph: "tab-journal",
+        glyph: "ui-pin",
         icon: <Bookmark className="size-3.5" />,
         onSelect: () => onPinMemory(message),
       });
@@ -319,6 +320,8 @@ export const MessageItem = memo(function MessageItem({
         action.onSelect();
       },
     }));
+    // The picture on its way, or the reason it never came.
+    const pictureSlot = scenePictureSlot(message, mediaStatus[message.id]);
     // Reroll takes: the counter only appears once a second one exists.
     const variants = message.variants ?? [];
     const variantIndex = message.variantIndex ?? 0;
@@ -430,7 +433,7 @@ export const MessageItem = memo(function MessageItem({
               }}
             />
           ) : (
-            <DmContent content={message.content} rollsById={rollsById} sheetsById={sheetsById} cast={cast} speaker={message.speaker} />
+            <DmContent content={message.content} rollsById={rollsById} sheetsById={sheetsById} cast={cast} lines={message.speech} speaker={message.speaker} />
           )}
           {message.generatedImage ? (
             <ImageLightbox
@@ -439,10 +442,10 @@ export const MessageItem = memo(function MessageItem({
               className="ken-burns max-h-96 rounded-xl border border-stone-800"
               frameClassName="mt-3 overflow-hidden rounded-xl"
             />
-          ) : message.imageRequest?.needed ? (
+          ) : pictureSlot ? (
             <MediaPlaceholder
               label={t("passageUi.illustrating")}
-              status={mediaStatus[message.id]}
+              status={pictureSlot.status}
               fallbackStartedAt={message.createdAt}
             />
           ) : null}
@@ -497,13 +500,16 @@ export const MessageItem = memo(function MessageItem({
                 </figure>
               );
             }
-            return (
+            // Still charting, or why it could not be (kept on the place, so
+            // a reload does not wait for a map that is not coming).
+            const slot = locationMapSlot(location, message.createdAt, mediaStatus[location.id]);
+            return slot ? (
               <MediaPlaceholder
                 label={t("passageUi.charting")}
-                status={mediaStatus[location.id]}
+                status={slot.status}
                 fallbackStartedAt={message.createdAt}
               />
-            );
+            ) : null;
           })()}
         </div>
       </div>

@@ -19,6 +19,7 @@ import { GameIcon } from "@/components/ui/GameIcon";
 import { Ribbon } from "@/components/ui/Ribbon";
 import { cn } from "@/lib/cn";
 import { CharacterPortrait, ui } from "@/lib/ui";
+import { navigateTo } from "@/lib/navigation";
 
 // Where a character is playing. A library character is a template and each
 // campaign holds its own copy, so one entry can be at several tables at once
@@ -111,11 +112,12 @@ export default function CharactersPage() {
 
   // A second copy under a numbered name, sheet and portrait verbatim. The
   // copy belongs to no campaign, which is why it starts with no assignments.
-  async function duplicate(id: string) {
+  async function duplicate(id: string, edit = false) {
     setCloningId(id); setActionError(null);
     try {
       const data = await readCharacterResponse<{ character: LibraryCharacter }>(fetch(`/api/characters/${id}/clone`, { method: "POST" }), "library.cloneError");
       const copy = requireCharacter(data);
+      if (edit) { navigateTo(`/characters/${copy.id}/edit?copyOf=${id}`); return; }
       setCharacters((current) => [copy, ...current]);
     } catch (cause) { setActionError(characterRequestError(cause, "library.cloneError")); }
     finally { setCloningId(""); }
@@ -254,6 +256,7 @@ export default function CharactersPage() {
                 onDelete={() => remove(character.id, character.name)}
                 onUploadPortrait={() => setCroppingId(character.id)}
                 onDuplicate={() => duplicate(character.id)}
+                onDuplicateEdit={() => duplicate(character.id, true)}
               />
             ))}
           </ul>
@@ -282,12 +285,14 @@ function CharacterCard({
   onDelete,
   onUploadPortrait,
   onDuplicate,
+  onDuplicateEdit,
 }: {
   character: LibraryCharacter;
   cloning: boolean;
   onDelete: () => void;
   onUploadPortrait: () => void;
   onDuplicate: () => void;
+  onDuplicateEdit: () => void;
 }) {
   const router = useRouter();
   const { locale, t } = useLocale();
@@ -295,8 +300,10 @@ function CharacterCard({
   // and a long press all raise this list.
   const menu: ContextMenuItem[] = [
     { id: "open", label: t("library.open"), glyph: "tab-characters", onSelect: () => router.push(`/characters/${character.id}`) },
-    { id: "portrait", label: t("library.upload"), glyph: "tab-handout", onSelect: onUploadPortrait },
-    { id: "duplicate", label: t("library.duplicate"), glyph: "tab-notes", disabled: cloning, onSelect: onDuplicate },
+    { id: "edit", label: t("library.editBuild"), glyph: "ui-edit", onSelect: () => router.push(`/characters/${character.id}/edit`) },
+    { id: "portrait", label: t("library.upload"), glyph: "ui-upload", onSelect: onUploadPortrait },
+    { id: "duplicate", label: t("library.duplicate"), glyph: "ui-duplicate", disabled: cloning, onSelect: onDuplicate },
+    { id: "duplicate-edit", label: t("library.duplicateEdit"), glyph: "ui-duplicate", disabled: cloning, onSelect: onDuplicateEdit },
     ...(character.campaigns ?? []).map((assignment, index) => ({
       id: `go-${assignment.campaignId}`,
       label: t("library.goTo", { title: assignment.title }),
@@ -307,7 +314,7 @@ function CharacterCard({
           assignment.kind === "workshop" ? `/workshop/${assignment.campaignId}` : `/campaigns/${assignment.campaignId}`,
         ),
     })),
-    { id: "delete", label: t("library.delete"), glyph: "quest-failed", tone: "danger", separated: true, onSelect: onDelete },
+    { id: "delete", label: t("library.delete"), glyph: "ui-delete", tone: "danger", separated: true, onSelect: onDelete },
   ];
   return (
     <ContextMenu as="li" items={menu} label={character.name} className={cn("group relative", ui.cardHover, "p-4")}>

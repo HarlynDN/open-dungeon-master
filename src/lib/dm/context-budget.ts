@@ -1,3 +1,5 @@
+import type { ArcTrace } from "./arc-relevance.ts";
+import type { LoreTrace } from "./world-lore-logic.ts";
 // Pure logic for the DM prompt's context budget.
 //
 // What this replaces: a single HISTORY_CHAR_BUDGET that trimmed history by
@@ -117,6 +119,14 @@ export type ContextTrace = {
   limitTokens: number;
   promptTokens: number;
   blocks: BlockTrace[];
+  // What the story arc render chose this turn (issue #301): the planned
+  // events shown or held back, with reasons, and the beat window. Absent on
+  // turns taken before it was recorded and on campaigns without an arc.
+  arc?: ArcTrace;
+  // The world lore entries this turn kept and held back, with the reason
+  // for each and the block's measured budget (issue #305). Absent on turns
+  // taken before it was recorded and on campaigns without lore.
+  lore?: LoreTrace;
 };
 
 // Allocation ported from NarrativeEngine-P's computeBudgets
@@ -322,6 +332,26 @@ export type HistoryFit = {
   dropped: number;
   tokens: number;
 };
+
+// The transcript a summary already covers is left out before the budget
+// applies: a closed chapter is owned by its summary in GAME STATE
+// (src/lib/dm/chapter-close.ts), and the open chapter's compacted start by
+// the rolling summary (src/lib/dm/compaction.ts), so sending those messages
+// too only says the same thing twice. recall_story still finds their scenes.
+// The newest covered messages stay: three exchanges carry the scene across
+// the seam, so the turn after a chapter closes still reads what it answers.
+export const SUMMARY_SEAM_FLOOR = 6;
+
+// Entries in ascending seq order; coveredSeq is the newest message a summary
+// covers, or null when none does.
+export function cutCoveredHistory<T extends { seq: number }>(
+  entries: readonly T[],
+  coveredSeq: number | null,
+): { kept: T[]; cut: number } {
+  const covered = coveredSeq === null ? 0 : entries.filter((entry) => entry.seq <= coveredSeq).length;
+  const cut = Math.max(0, covered - SUMMARY_SEAM_FLOOR);
+  return { kept: entries.slice(cut), cut };
+}
 
 export function fitHistory(entries: HistoryEntry[], allowanceTokens: number): HistoryFit {
   const kept: HistoryEntry[] = [];

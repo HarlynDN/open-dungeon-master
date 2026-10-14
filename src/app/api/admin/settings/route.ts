@@ -1,7 +1,9 @@
 import { z } from "zod";
 import { isErrorResponse, requireAdmin } from "@/lib/admin-api";
+import { speedStatus } from "@/lib/speed-status";
 import { getGlobalConfig, saveGlobalConfig } from "@/lib/db/app-settings";
 import { isDeviceWorld, serverEnv } from "@/lib/server-env";
+import { isComfyPreset } from "@/lib/image-models/catalog";
 import { resolveSignupMode, type GlobalConfig } from "@/lib/schemas/global-config";
 import { announcedAddressFor, isUnroutableAddress, voiceConfig } from "@/lib/voice/config";
 import { forgetHarnessStatus } from "@/lib/harness/status";
@@ -35,11 +37,14 @@ function maskedConfig(config: GlobalConfig) {
       utilityModel: config.text.utilityModel,
       utilityBaseUrl: config.text.utilityBaseUrl,
       hasUtilityApiKey: config.text.utilityApiKey !== "",
+      speed: config.text.speed,
+      utilitySpeed: config.text.utilitySpeed,
     },
     images: {
       defaultBackend: config.images.defaultBackend,
       comfyUrl: config.images.comfyUrl,
       comfyCheckpoint: config.images.comfyCheckpoint,
+      comfyWorkflowPreset: config.images.comfyWorkflowPreset,
       fluxWorkerUrl: config.images.fluxWorkerUrl,
       openaiBaseUrl: config.images.openaiBaseUrl,
       openaiModel: config.images.openaiModel,
@@ -53,6 +58,8 @@ function maskedConfig(config: GlobalConfig) {
       hasTtsApiKey: config.speech.ttsApiKey !== "",
       ttsVoice: config.speech.ttsVoice,
       sttUrl: config.speech.sttUrl,
+      sttModel: config.speech.sttModel,
+      sttOpenaiModel: config.speech.sttOpenaiModel,
     },
     voiceChat: config.voiceChat,
     discord: {
@@ -70,18 +77,23 @@ function envDefaults() {
   return {
     customBaseUrl: serverEnv("OPENAI_COMPAT_BASE_URL"),
     customModel: serverEnv("OPENAI_COMPAT_MODEL"),
+    localTextModel: serverEnv("LOCAL_TEXT_MODEL"),
     hasCustomApiKey: serverEnv("OPENAI_COMPAT_API_KEY") !== "" || serverEnv("OPENROUTER_API_KEY") !== "",
     comfyUrl: serverEnv("COMFYUI_URL", "http://127.0.0.1:8188"),
     fluxWorkerUrl: serverEnv("FLUX_WORKER_URL", "http://127.0.0.1:7869"),
     imageBackend: serverEnv("DEFAULT_IMAGE_BACKEND"),
     hasOpenaiImageApiKey:
       serverEnv("OPENAI_IMAGE_API_KEY") !== "" || serverEnv("OPENAI_API_KEY") !== "",
+    openaiImageModel: serverEnv("OPENAI_IMAGE_MODEL"),
+    openaiImageBaseUrl: serverEnv("OPENAI_IMAGE_BASE_URL"),
     kokoroUrl: serverEnv("KOKORO_URL", "http://127.0.0.1:8880"),
     ttsProvider: serverEnv("TTS_PROVIDER"),
     ttsBaseUrl: serverEnv("TTS_BASE_URL"),
     ttsModel: serverEnv("TTS_MODEL"),
     hasTtsApiKey: serverEnv("TTS_API_KEY") !== "",
     sttUrl: serverEnv("STT_URL", "http://127.0.0.1:8870"),
+    sttModel: serverEnv("STT_MODEL"),
+    sttOpenaiModel: serverEnv("STT_OPENAI_MODEL"),
     discordClientId: serverEnv("DISCORD_CLIENT_ID"),
     hasDiscordClientSecret: serverEnv("DISCORD_CLIENT_SECRET") !== "",
     publicUrl: serverEnv("APP_PUBLIC_URL"),
@@ -119,6 +131,8 @@ export async function GET() {
     envDefaults: envDefaults(),
     voiceAnnounceUnroutable: voiceAnnounceUnroutable(),
     deviceWorld: deviceWorld(),
+    // What the last Fast calls actually ran at (issue 255).
+    speedStatus: speedStatus(),
   });
 }
 
@@ -143,6 +157,8 @@ const patchSchema = z.object({
       utilityModel: z.string().trim().max(200).optional(),
       utilityBaseUrl: z.string().trim().max(500).optional(),
       utilityApiKey: z.string().trim().max(400).optional(),
+      speed: z.enum(["", "fast"]).optional(),
+      utilitySpeed: z.enum(["", "fast"]).optional(),
     })
     .optional(),
   images: z
@@ -150,6 +166,7 @@ const patchSchema = z.object({
       defaultBackend: z.enum(["", "comfyui", "openai", "mflux-hs", "sdnq-hs", "harness"]).optional(),
       comfyUrl: z.string().trim().max(500).optional(),
       comfyCheckpoint: z.string().trim().max(300).optional(),
+      comfyWorkflowPreset: z.string().trim().max(80).refine(isComfyPreset, "Not a known image model.").optional(),
       fluxWorkerUrl: z.string().trim().max(500).optional(),
       openaiBaseUrl: z.string().trim().max(500).optional(),
       openaiModel: z.string().trim().max(200).optional(),
@@ -165,6 +182,8 @@ const patchSchema = z.object({
       ttsApiKey: z.string().trim().max(400).optional(),
       ttsVoice: z.string().trim().max(120).optional(),
       sttUrl: z.string().trim().max(500).optional(),
+      sttModel: z.string().trim().max(200).optional(),
+      sttOpenaiModel: z.string().trim().max(200).optional(),
     })
     .optional(),
   voiceChat: z
@@ -197,6 +216,8 @@ const patchSchema = z.object({
       model: z.string().trim().max(200).optional(),
       utilityModel: z.string().trim().max(200).optional(),
       effort: z.enum(["", "low", "medium", "high", "xhigh", "max"]).optional(),
+      speed: z.enum(["", "fast"]).optional(),
+      utilitySpeed: z.enum(["", "fast"]).optional(),
       images: z.enum(["off", "native"]).optional(),
       campaigns: z.enum(["all", "admins"]).optional(),
       maxConcurrent: z.number().int().min(1).max(8).optional(),
@@ -226,8 +247,16 @@ export async function PATCH(request: Request) {
     harnessPatch &&
     ((harnessPatch.id !== undefined && harnessPatch.id !== before.id) ||
       (harnessPatch.binaryPath !== undefined && harnessPatch.binaryPath !== before.binaryPath));
+  // A save that names a checkpoint and no workflow means that checkpoint:
+  // the desktop app's local AI installer sends only the file it installed,
+  // and a catalog model left standing would paint every picture without it.
+  const images =
+    parsed.data.images?.comfyCheckpoint !== undefined && parsed.data.images.comfyWorkflowPreset === undefined
+      ? { ...parsed.data.images, comfyWorkflowPreset: "checkpoint" as const }
+      : parsed.data.images;
   const saved = saveGlobalConfig({
     ...parsed.data,
+    ...(images ? { images } : {}),
     ...(harnessPatch ? { harness: { ...harnessPatch, ...(moved ? { imagesVerifiedAt: "", images: "off" as const } : {}) } } : {}),
   });
   if (moved) {

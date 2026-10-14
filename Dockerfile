@@ -74,10 +74,13 @@ RUN DOCKER_BUILD=1 ODM_BUILD_COMMIT="$ODM_BUILD_COMMIT" ODM_BUILD_DESCRIBE="$ODM
 # arm64 for an image built on an arm64 host, issue #39). The GPU providers
 # exist only in the x64 build, so on arm64 that line finds nothing. The build
 # stops here if the binding is missing, before the runner stage embeds with it.
-# File tracing also drags in whole directories whenever it sees a
-# path.join(process.cwd(), ...), which is how data/, models/ and the repo docs
-# end up here; the runner stage re-adds the parts that are actually needed, at
-# paths a volume cannot hide.
+# File tracing also copies what the server reads from the tree itself: the
+# bundled world packs, which bring most of src/lib along. The runner stage
+# copies src/ and public/ whole, so a traced copy would only sit a second
+# time in the layer below; it goes here. Run-time state (data/, models/, the
+# uploads) is kept out of the trace where its paths are built, and stays on
+# this list as a guard with the docs older builds swept in; the runner
+# re-adds what is needed at paths a volume cannot hide.
 RUN cd .next/standalone \
   && keep="node_modules/onnxruntime-node/bin/napi-v6/linux/$(node -p process.arch)" \
   && test -f "$keep/onnxruntime_binding.node" \
@@ -87,7 +90,7 @@ RUN cd .next/standalone \
      done \
   && rm -f  "$keep/libonnxruntime_providers_cuda.so" \
             "$keep/libonnxruntime_providers_tensorrt.so" \
-  && rm -rf data models docs package-lock.json tsconfig.tsbuildinfo \
+  && rm -rf data models docs public src package-lock.json tsconfig.tsbuildinfo \
             README.md CLAUDE.md AGENTS.md eslint.config.mjs postcss.config.mjs
 
 # -------------------------------------------------------------------- runner
@@ -104,8 +107,9 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 
 # Agent programs to bake into the image, as npm package names separated by
-# spaces: "@openai/codex", "@anthropic-ai/claude-code", "opencode-ai". Empty
-# by default. A program installed here is found and run by the server
+# spaces: "@openai/codex", "@anthropic-ai/claude-code", "@opencode/cli"
+# (opencode 2; "opencode-ai" is 1.x, which ODM does not drive). Empty by
+# default. A program installed here is found and run by the server
 # (src/lib/harness/status.ts); its sign-in lives in /home/node, which
 # docker-compose.yml keeps on a volume. See docs/agent-harness.md.
 ARG AGENT_PROGRAMS=""

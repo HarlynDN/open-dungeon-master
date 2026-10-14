@@ -24,8 +24,9 @@ import { DEFAULT_TARGET_PARTY } from "@/lib/workshop/kind";
 import { ImportBundleButton } from "@/app/workshop/ImportBundleButton";
 import { WorkshopHelpDialog } from "@/components/WorkshopHelpDialog";
 import { GuidedTour } from "@/components/ui/GuidedTour";
-import { markTourSeen, tourSeen } from "@/lib/tours/logic";
+import type { TourEnd } from "@/lib/tours/account-logic";
 import { SHELF_TOUR, SHELF_TOUR_ID } from "@/lib/tours/workshop";
+import { finishTour, useTourFinished } from "@/lib/tours/tour-store";
 import type { WorkshopSummary } from "@/app/workshop/types";
 import { navigateTo } from "@/lib/navigation";
 
@@ -56,15 +57,16 @@ export default function WorkshopListPage() {
   const [helpOpen, setHelpOpen] = useState(false);
   const [touring, setTouring] = useState(false);
 
-  // The shelf's tour runs once, the first time the shelf is seen with its
-  // list drawn. Help replays it.
+  // The shelf's tour runs once per account, the first time the shelf is
+  // seen with its list drawn (issue #306). Help replays it.
+  const shelfTourFinished = useTourFinished(SHELF_TOUR_ID);
   useEffect(() => {
-    if (loading || tourSeen(window.localStorage, SHELF_TOUR_ID)) return;
+    if (loading || shelfTourFinished !== false) return;
     const timer = window.setTimeout(() => setTouring(true), 900);
     return () => clearTimeout(timer);
-  }, [loading]);
-  function closeTour() {
-    markTourSeen(window.localStorage, SHELF_TOUR_ID);
+  }, [loading, shelfTourFinished]);
+  function closeTour(how: TourEnd) {
+    finishTour(SHELF_TOUR_ID, how);
     setTouring(false);
   }
 
@@ -266,8 +268,8 @@ export default function WorkshopListPage() {
               // The tile's link and its two buttons again; both stay on the tile.
               items={[
                 { id: "open", label: entryText("Open", locale), glyph: "system-storyboard", onSelect: () => navigateTo(`/workshop/${workshop.id}`) },
-                { id: "duplicate", label: entryText("Duplicate", locale), glyph: "tab-notes", disabled: cloningId === workshop.id, onSelect: () => void clone(workshop) },
-                { id: "delete", label: entryText("Delete", locale), glyph: "quest-failed", tone: "danger", separated: true, onSelect: () => void remove(workshop) },
+                { id: "duplicate", label: entryText("Duplicate", locale), glyph: "ui-duplicate", disabled: cloningId === workshop.id, onSelect: () => void clone(workshop) },
+                { id: "delete", label: entryText("Delete", locale), glyph: "ui-delete", tone: "danger", separated: true, onSelect: () => void remove(workshop) },
               ]}
             >
               <Link

@@ -62,4 +62,13 @@ test("an empty roster and a lone node both lay out", () => {
   assert.equal(one.length, 1);
 });
 
+// Render two distinct CJK names: each must reference its own portrait pattern.
+const {openCombatRenderer}=await import('./lib/combat-ui-fixtures.mjs');
+const renderer=await openCombatRenderer({files:['src/app/campaigns/[campaignId]/RelationGraph.tsx']});
+const names=['阿明','阿澜','名字: \"<>&'];
+const html=renderer.render('RelationGraph',{graph:{nodes:names.map(name=>({name,known:true})),edges:[]},portraits:new Map(names.map((name,i)=>[name,`/portrait-${i}.png`])),onOpen:()=>{}},'zh-CN');
+const ids=[...html.matchAll(/<pattern[^>]+id="([^"]+)"/g)].map(m=>m[1]);
+const refs=[...html.matchAll(/fill="url\(#([^"]+)\)"/g)].map(m=>m[1]);
+assert.equal(ids.length,names.length);assert.equal(new Set(ids).size,names.length);assert.deepEqual(refs,ids);
+
 console.log(`test-graph-layout: ${passed} passed`);

@@ -1,3 +1,4 @@
+import { UPSTREAM_UI_MESSAGES } from "./upstream-ui-messages.ts";
 import { SYSTEM_LOG_MESSAGES } from "./system-log-messages.ts";
 import { PICKER_FLOW_MESSAGES } from "./picker-flow-messages.ts";
 import { SURFACE_MESSAGES } from "./surface-messages.ts";
@@ -128,6 +129,7 @@ import { PROPOSAL_MESSAGES } from "./proposal-messages.ts";
 import { PLAY_EDIT_MESSAGES } from "./play-edit-messages.ts";
 
 const en = {
+  ...UPSTREAM_UI_MESSAGES.en,
   ...PROPOSAL_MESSAGES.en,
     ...LEVEL_UP_MESSAGES.en,
     ...CLASS_OPTION_MESSAGES.en,
@@ -282,6 +284,7 @@ export type MessageKey = keyof typeof en;
 type Messages = Record<MessageKey, string>;
 
 const zhCN: Messages = {
+  ...UPSTREAM_UI_MESSAGES["zh-CN"],
   ...PROPOSAL_MESSAGES["zh-CN"],
     ...LEVEL_UP_MESSAGES["zh-CN"],
     ...CLASS_OPTION_MESSAGES["zh-CN"],

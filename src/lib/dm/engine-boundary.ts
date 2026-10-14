@@ -15,7 +15,22 @@ import { normalizeLocale, type AppLocale } from "../i18n/locales.ts";
 import { referenceAliases, type ReferenceKind } from "../i18n/reference-names.ts";
 import { localizedReferenceAliases } from "../i18n/references.ts";
 import { NARRATION_LOCALE_ADAPTERS } from "./narration-locales.ts";
-import { GUARD_MESSAGES } from "../i18n/guard-messages.ts";
+import { GUARD_MESSAGES } from "../i18n/guard-messages.ts";// The engine boundary: one authoritative statement of which facts the server
+// owns, plus the deterministic guard that rules on what the DM's finished
+// prose claims against the outcomes the turn's tools actually resolved. The
+// prose itself is read by a model, in the table's language
+// (dm/claims-logic.ts, dm/claims.ts); the ruling is here.
+//
+// Pure by design: no "@/" imports and no I/O, so scripts/test-engine-boundary.mjs
+// can import it directly. The DB/model rim lives in dm/narration-guard.ts.
+//
+// The guard exists because ODM already owns the ground truth (every hit, every
+// damage number, every HP total came from a tool result in this same turn) and
+// used to throw it away the moment the narration was assembled. Nothing here
+// mutates mechanical state; a detection at most costs one corrective model call.
+
+import type { NarrationClaim } from "./claims-logic.ts";
+import { THIS_MOMENT_HEADING } from "../prompt-boundary.ts";
 
 // ---------------------------------------------------------------------------
 // Part 1: the contract block
@@ -114,6 +129,11 @@ export type ResolvedOutcomes = {
   // Spells the turn actually accounted for: a slot spent, a ritual declared, a
   // cantrip acknowledged, a resource burned.
   spells: Set<string>;
+  // Every call that resolved for a character this turn, by what it names
+  // (spentName): what a spell the reader saw in the prose may really have
+  // been (a feature, a potion, an action), when the reader ties the cast to
+  // one (dm/claims-logic.ts checkClaims).
+  spends: Array<{ characterId: string; name: string }>;
   toolResultCount: number;
 };
 
@@ -198,7 +218,7 @@ export function normalizeSpellName(raw: string): string {
     .toLowerCase()
     .replace(/[‘’]/g, "'")
     .replace(/\([^)]*\)/g, " ")
-    .replace(/[^\p{L}\p{N}' ]+/gu, " ")
+    .replace(/[^\p{L}' ]+/gu, " ")
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -252,17 +272,13 @@ function walkNumbers(value: unknown, numbers: Set<number>, damage: number[], key
   }
 }
 
-function checkableName(name: string): boolean {
-  return name.length >= 3 || (name.length >= 2 && /\p{Script=Han}/u.test(name));
-}
-
 function recordCreature(
   creatures: Map<string, CreatureFact>,
   display: string,
   update: { hp?: number | null; maxHp?: number | null; dead?: boolean; downed?: boolean },
 ) {
   const key = normalizeCreatureName(display);
-  if (!checkableName(key)) {
+  if (key.length < 3 && !/\p{Script=Han}/u.test(key)) {
     return;
   }
   const existing = creatures.get(key);
@@ -306,29 +322,29 @@ function walkCreatures(value: unknown, creatures: Map<string, CreatureFact>) {
   }
   const record = value as Record<string, unknown>;
   const dead = record.dead === true || record.slain === true;
-  const downed = record.dropped === true || record.downed === true || record.down === true || record.knockedOut === true;
+  const downed = record.dropped === true || record.downed === true || record.knockedOut === true;
   const name = typeof record.name === "string" ? record.name : "";
   const target = typeof record.target === "string" ? record.target : "";
   const ownHp = hpPair(record.hp);
   // aoe_damage writes one row per victim as { target, hp, dead }, so a bare
   // `hp` belongs to the target when the row names nobody else.
-  const targetHp = hpPair(record.targetHp) ?? (name ? null : hpPair(record.hp));
+  const targetHp = hpPair(record.targetHp) ?? (name && name != target ? null : hpPair(record.hp));
 
-  if (name && (ownHp || dead || downed)) {
+  if (name && (ownHp || dead || (downed && !target))) {
     recordCreature(creatures, name, {
       hp: ownHp?.hp ?? null,
       maxHp: ownHp?.maxHp ?? null,
       dead,
       // A `dropped` flag next to a `name` belongs to that name only when no
       // separate target is named in the same payload.
-      downed: downed && !target,
+      downed: downed && (!target || target === name),
     });
   }
   if (target && (targetHp || downed)) {
     recordCreature(creatures, target, {
       hp: targetHp?.hp ?? null,
       maxHp: targetHp?.maxHp ?? null,
-      dead: dead && !name,
+      dead: dead && (!name || target === name),
       downed,
     });
   }
@@ -351,6 +367,17 @@ const SPELL_ACCOUNTING_TOOLS = new Set([
   "use_item",
 ]);
 
+// What a call spent, as the claims reader is shown it, the same way for
+// every tool: the words its arguments name ("Hexblade's Curse", "Wild Shape /
+// dire wolf", "hide"). Ids, numbers and flags name nothing, and the reason is
+// the model's own prose; a long value is cut, since it is only there to say
+// what was spent.
+function spentName(args: Record<string, unknown>): string {
+  return Object.entries(args)
+    .flatMap(([key, value]) => (typeof value === "string" && value.trim() && !/Ids?$/.test(key) && key !== "reason" ? [value.trim().slice(0, 80)] : []))
+    .join(" / ");
+}
+
 // Tools whose refusal means a blow never landed on the enemy they named.
 const ATTACK_TOOLS = new Set(["pc_attack", "cast_at_enemy", "pet_attack"]);
 
@@ -363,12 +390,13 @@ export function resolveOutcomes(
   const numbers = new Set<number>();
   const damageNumbers: number[] = [];
   const spells = new Set<string>();
+  const spends: ResolvedOutcomes["spends"] = [];
   const refusedTargets: string[] = [];
   let toolResultCount = 0;
 
   for (const exchange of exchanges) {
+    const args = parseJsonObject(exchange.arguments);
     if (ATTACK_TOOLS.has(exchange.name) && exchange.result && "error" in exchange.result) {
-      const args = parseJsonObject(exchange.arguments);
       if (typeof args?.targetEnemyId === "string") {
         refusedTargets.push(args.targetEnemyId);
       }
@@ -376,9 +404,13 @@ export function resolveOutcomes(
     // A named spell counts as accounted for the moment its tool ran without an
     // error, whether that spent a slot, a pact slot, a resource, or nothing at
     // all (rituals and cantrips legitimately spend nothing).
-    if (SPELL_ACCOUNTING_TOOLS.has(exchange.name)) {
-      const args = parseJsonObject(exchange.arguments);
-      const named = typeof args?.spell === "string" ? normalizeSpellName(args.spell) : "";
+    // use_reaction names the reaction spell it casts (Shield, Hellish Rebuke)
+    // as its feature, and the server spends that slot; its spell argument is
+    // the enemy's spell a Counterspell answers, never the party's.
+    const spellArg = exchange.name === "use_reaction" ? "feature" : SPELL_ACCOUNTING_TOOLS.has(exchange.name) ? "spell" : null;
+    if (spellArg) {
+      const value = args?.[spellArg];
+      const named = typeof value === "string" ? normalizeSpellName(value) : "";
       if (named && !(exchange.result && "error" in exchange.result)) {
         spells.add(named);
       }
@@ -388,6 +420,10 @@ export function resolveOutcomes(
       continue;
     }
     toolResultCount += 1;
+    const spent = args ? spentName(args) : "";
+    if (typeof args?.characterId === "string" && spent) {
+      spends.push({ characterId: args.characterId, name: spent });
+    }
     walkNumbers(result, numbers, damageNumbers);
     walkCreatures(result, creatures);
 
@@ -399,7 +435,7 @@ export function resolveOutcomes(
             ? result.name
             : "";
       const key = normalizeCreatureName(display);
-      if (checkableName(key)) {
+      if ((key.length >= 3 || /\p{Script=Han}/u.test(key))) {
         // A Multiattack routine resolves several swings inside one call; when
         // they disagree, no single clause about "the blow" can be checked.
         const swings = Array.isArray(result.swings) ? result.swings : [];
@@ -440,7 +476,7 @@ export function resolveOutcomes(
     for (const id of refusedTargets) {
       const enemy = live.enemies.find((entry) => entry.id === id);
       const key = enemy ? normalizeCreatureName(enemy.name) : "";
-      if (enemy && checkableName(key) && !attacks.has(key)) {
+      if (enemy && (key.length >= 3 || /\p{Script=Han}/u.test(key)) && !attacks.has(key)) {
         attacks.set(key, { display: enemy.name, hit: false, ambiguous: (perKey.get(key) ?? 0) > 1 });
       }
     }
@@ -481,8 +517,219 @@ export function resolveOutcomes(
     numbers,
     damageNumbers,
     spells,
+    spends,
     toolResultCount,
   };
+}
+
+// ---------------------------------------------------------------------------
+// Part 3: ruling on what the narration claims
+// ---------------------------------------------------------------------------
+
+// The claims arrive already checked against the narration and the engine's
+// refs (dm/claims-logic.ts); what follows decides, from the engine's own
+// state alone, which of them contradict it.
+
+export type Contradiction = {
+  kind: "hit" | "miss" | "death" | "number" | "spell";
+  detail: string;
+  clause: string;
+};
+
+// Every subset sum of the turn's damage numbers, so prose that adds two hits
+// into one figure ("nine damage in all") is never called a contradiction.
+function allowedNumbers(outcomes: ResolvedOutcomes): Set<number> {
+  const allowed = new Set(outcomes.numbers);
+  const damage = outcomes.damageNumbers.slice(0, 6);
+  for (let mask = 1; mask < 1 << damage.length; mask += 1) {
+    let sum = 0;
+    for (let index = 0; index < damage.length; index += 1) {
+      if (mask & (1 << index)) {
+        sum += damage[index];
+      }
+    }
+    allowed.add(sum);
+  }
+  return allowed;
+}
+
+export function ruleClaims(claims: readonly NarrationClaim[], outcomes: ResolvedOutcomes): Contradiction[] {
+  const found: Contradiction[] = [];
+  const seen = new Set<string>();
+  const add = (contradiction: Contradiction) => {
+    const key = `${contradiction.kind}|${contradiction.detail}`;
+    if (!seen.has(key)) {
+      seen.add(key);
+      found.push(contradiction);
+    }
+  };
+  // A figure is only checked when the turn produced numbers or a fight is
+  // running: with no ground truth there is nothing to contradict, and in a
+  // fight a figure no roll produced is invented whether or not a tool ran.
+  const allowed = outcomes.numbers.size || outcomes.liveFight ? allowedNumbers(outcomes) : null;
+
+  for (const claim of claims) {
+    switch (claim.kind) {
+      // 1. A hit claimed on a resolved miss, a miss claimed on a resolved hit.
+      case "hit":
+      case "miss": {
+        const attack = outcomes.attacks.get(claim.target);
+        if (!attack || attack.ambiguous) {
+          break;
+        }
+        if (claim.kind === "hit" && !attack.hit) {
+          add({ kind: "hit", detail: `the attack on ${attack.display} MISSED, but the narration lands it`, clause: claim.quote });
+        }
+        if (claim.kind === "miss" && attack.hit) {
+          add({ kind: "miss", detail: `the attack on ${attack.display} HIT, but the narration has it miss`, clause: claim.quote });
+        }
+        break;
+      }
+      // 2. A death or a drop claimed against live, resolved hit points.
+      case "dies":
+      case "downed": {
+        const creature = outcomes.creatures.get(claim.target);
+        if (!creature || creature.ambiguous || creature.dead || creature.downed) {
+          break;
+        }
+        if (creature.hp === null || creature.hp <= 0) {
+          break;
+        }
+        const hpLabel = `${creature.hp}${creature.maxHp === null ? "" : `/${creature.maxHp}`}`;
+        add({
+          kind: "death",
+          detail:
+            claim.kind === "dies"
+              ? `${creature.display} is alive at ${hpLabel} HP, but the narration kills it`
+              : `${creature.display} is still up at ${hpLabel} HP, but the narration drops it`,
+          clause: claim.quote,
+        });
+        break;
+      }
+      // 3. A stated damage or healing figure the engine never produced.
+      case "amount":
+        if (allowed && !allowed.has(claim.value)) {
+          add({
+            kind: "number",
+            detail: `the narration states ${claim.value} ${claim.of}, which no roll this turn produced`,
+            clause: claim.quote,
+          });
+        }
+        break;
+      // 4. A party character casting a leveled spell the turn never
+      // accounted for. Enemy casters are never claims (their spells run
+      // through other tools and spend nothing).
+      case "cast":
+        if (!outcomes.spells.has(claim.spell)) {
+          add({
+            kind: "spell",
+            detail: `${claim.caster} casts ${claim.spell}, but no spell slot or resource was spent for it this turn`,
+            clause: claim.quote,
+          });
+        }
+        break;
+      case "fight_start":
+      case "roll_ask":
+        break;
+    }
+  }
+  return found;
+}
+
+// The ground truth the claims are ruled against: the turn's tool exchanges
+// and the encounter as it stands.
+export function guardOutcomes(conversation: readonly GuardMessage[], live: LiveState | null): ResolvedOutcomes {
+  return resolveOutcomes(collectExchanges(conversation), live);
+}
+
+// The correction the model is asked to make. Kept here so the wording is
+// testable without a model call.
+export function buildCorrectionPrompt(contradictions: readonly Contradiction[], locale: AppLocale = "en"): string {
+  const lines = contradictions
+    .slice(0, 6)
+    .map((entry) => `- ${entry.detail}. You wrote: "${entry.clause}"`)
+    .join("\n");
+  return GUARD_MESSAGES[normalizeLocale(locale)].correction.replace("{lines}", () => lines);
+}
+
+// ---------------------------------------------------------------------------
+// Part 4: fights announced in prose alone
+// ---------------------------------------------------------------------------
+
+// The model sometimes writes the encounter it was supposed to start:
+// "**Start Encounter: Ward Construct (CR 1/4)** **Enemies:** 1x ..." with no
+// start_encounter call behind it. Nothing exists behind that text: no
+// enemies, no initiative order, no HP, and the next player action has nothing
+// to swing at. The reader reports it as a fight_start claim: an announcement,
+// a call for initiative, or a stat-block style roster; never mere talk of
+// fighting.
+export function fightAnnounced(claims: readonly NarrationClaim[]): boolean {
+  return claims.some((claim) => claim.kind === "fight_start");
+}
+
+// What the turn loop sends back when a fight was announced with no
+// start_encounter behind it. Kept beside the other correction text so the
+// wording is testable without a model call.
+export const FAKE_ENCOUNTER_PROMPT = GUARD_MESSAGES.en.encounter;
+
+// ---------------------------------------------------------------------------
+// Part 5: blows landed in prose alone
+// ---------------------------------------------------------------------------
+
+// A whole number standing on its own, never a piece of an id or of dice
+// notation ("2d6", "a8b1-...").
+const BARE_NUMBER = /(?<![\w.-])\d{1,3}(?![\w-])/g;
+
+// The model sometimes resolves a blow it was supposed to ask for: "The
+// Resonance Weaver attacks Alden with Resonance Blast. Hit! 8 damage." with
+// no attack call behind it (issue 91). Nothing happened: the sheet keeps its
+// hit points, and the fight that follows contradicts its own opening. The
+// ruling above is no help outside a fight, where it has no ground truth to
+// hold the figure against. This is narrower and comes earlier: a damage or
+// healing figure on a turn whose tools rolled none, that nothing the model
+// was shown carries either (a table note for a blow the server dealt itself,
+// an earlier line being recalled). Returns the claim's quote, or null.
+export function unrolledFigure(claims: readonly NarrationClaim[], conversation: readonly GuardMessage[]): string | null {
+  const outcomes = resolveOutcomes(collectExchanges(conversation));
+  // The turn rolled damage: a figure that misquotes it is the rewrite's to
+  // fix, and sending the model back to the tools would land the blow twice.
+  if (outcomes.damageNumbers.length) {
+    return null;
+  }
+  const shown = new Set(outcomes.numbers);
+  for (const message of conversation) {
+    // The game state is no table note: its numbers (hit points, the last
+    // rolls) are not figures the turn dealt, wherever a chat model reads it
+    // (src/lib/dm/prompt.ts momentAfterHistory).
+    if (
+      message.role === "system" ||
+      typeof message.content !== "string" ||
+      message.content.startsWith(THIS_MOMENT_HEADING)
+    ) {
+      continue;
+    }
+    for (const match of message.content.matchAll(BARE_NUMBER)) {
+      shown.add(Number(match[0]));
+    }
+  }
+  for (const claim of claims) {
+    if (claim.kind === "amount" && !shown.has(claim.value)) {
+      return claim.quote;
+    }
+  }
+  return null;
+}
+
+// What the turn loop sends back for it. Kept beside the other correction
+// text so the wording is testable without a model call.
+export function unrolledDamagePrompt(clause: string, locale: AppLocale = "en"): string {
+  return GUARD_MESSAGES[normalizeLocale(locale)].unrolled.replace("{clause}", () => clause);
+}
+// Deterministic locale checks also cover utility-reader failures and legacy callers.
+
+
+function checkableName(name: string): boolean {
+  return name.length >= 3 || (name.length >= 2 && /\p{Script=Han}/u.test(name));
 }
 
 // ---------------------------------------------------------------------------
@@ -540,12 +787,6 @@ function escapeRegExp(raw: string): string {
 function namePattern(name: string): string {
   return escapeRegExp(name).replace(/\s+/g, "\\s+");
 }
-
-export type Contradiction = {
-  kind: "hit" | "miss" | "death" | "number" | "spell";
-  detail: string;
-  clause: string;
-};
 
 // A hit verb must take the target as its object. "strikes AT the goblin" and
 // "swings toward the goblin" are attempts, not outcomes, so the lookahead
@@ -635,23 +876,6 @@ const NUMBER_CLAIM = /(?<![\dd])(\d{1,3})\s+(?:points?\s+of\s+)?(damage|healing)
 // Only leveled SRD spells whose casting genuinely costs a slot
 // (src/lib/dm/leveled-spells.ts), normalized as the guard compares them.
 const LEVELED_SPELLS = LEVELED_SPELL_NAMES.map(normalizeSpellName);
-
-// Every subset sum of the turn's damage numbers, so prose that adds two hits
-// into one figure ("nine damage in all") is never called a contradiction.
-function allowedNumbers(outcomes: ResolvedOutcomes): Set<number> {
-  const allowed = new Set(outcomes.numbers);
-  const damage = outcomes.damageNumbers.slice(0, 6);
-  for (let mask = 1; mask < 1 << damage.length; mask += 1) {
-    let sum = 0;
-    for (let index = 0; index < damage.length; index += 1) {
-      if (mask & (1 << index)) {
-        sum += damage[index];
-      }
-    }
-    allowed.add(sum);
-  }
-  return allowed;
-}
 
 // ---------------------------------------------------------------------------
 // Part 4: the matchers
@@ -847,16 +1071,6 @@ export function checkNarration(input: {
   );
 }
 
-// The correction the model is asked to make. Kept here so the wording is
-// testable without a model call.
-export function buildCorrectionPrompt(contradictions: readonly Contradiction[], locale: AppLocale = "en"): string {
-  const lines = contradictions
-    .slice(0, 6)
-    .map((entry) => `- ${entry.detail}. You wrote: "${entry.clause}"`)
-    .join("\n");
-  return GUARD_MESSAGES[normalizeLocale(locale)].correction.replace("{lines}", () => lines);
-}
-
 // ---------------------------------------------------------------------------
 // Part 5: fights announced in prose alone
 // ---------------------------------------------------------------------------
@@ -883,22 +1097,9 @@ export function announcesEncounterStart(narration: string, locale: AppLocale = "
   return (roster && /\bCR\s*\d|\(\s*CR\b|\**surprise\**\s*:|\binitiative\b/i.test(text)) || Boolean(adapter?.encounter(text, clauses));
 }
 
-// What the turn loop sends back when a fight was announced with no
-// start_encounter behind it. Kept beside the other correction text so the
-// wording is testable without a model call.
-export const FAKE_ENCOUNTER_PROMPT = GUARD_MESSAGES.en.encounter;
-
 export function fakeEncounterPrompt(locale: AppLocale): string {
   return GUARD_MESSAGES[normalizeLocale(locale)].encounter;
 }
-
-// ---------------------------------------------------------------------------
-// Part 6: blows landed in prose alone
-// ---------------------------------------------------------------------------
-
-// A whole number standing on its own, never a piece of an id or of dice
-// notation ("2d6", "a8b1-...").
-const BARE_NUMBER = /(?<![\w.-])\d{1,3}(?![\w-])/g;
 
 // The model sometimes resolves a blow it was supposed to ask for: "The
 // Resonance Weaver attacks Alden with Resonance Blast. Hit! 8 damage." with
@@ -939,10 +1140,4 @@ export function statesUnrolledDamage(narration: string, conversation: readonly G
     if ((adapter?.numbers(clause) ?? []).some(claim => !shown.has(claim.value))) return clause;
   }
   return null;
-}
-
-// What the turn loop sends back for it. Kept beside the other correction
-// text so the wording is testable without a model call.
-export function unrolledDamagePrompt(clause: string, locale: AppLocale = "en"): string {
-  return GUARD_MESSAGES[normalizeLocale(locale)].unrolled.replace("{clause}", () => clause);
 }

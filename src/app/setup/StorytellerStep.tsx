@@ -25,6 +25,7 @@ import {
 const STORY_EXAMPLES = { address: "http://192.168.1.20:8080", model: "qwen3.6-35b", provider: "https://api.example.com/v1" } as const;
 
 const MODEL_COMMANDS = {
+  modelId: "Qwen3.6-35B-A3B",
   llama: "llama-server -m Qwen3.6-35B-A3B-Q8_0.gguf -c 65536 --jinja --flash-attn on --cache-type-k q8_0 --cache-type-v q8_0 --temp 0.7 --top-p 0.95 --top-k 20 --min-p 0.0 --port 8001 --alias qwen3.6-35b",
   container: " --host 0.0.0.0",
   ollama: "ollama pull qwen3.6:35b-a3b-q8_0 && ollama create qwen3.6-dm -f models/qwen3.6-dm.Modelfile",
@@ -87,7 +88,7 @@ export function StorytellerStep({
         <ChoiceCard
           picked={draft.story === "local"}
           onPick={() => pick("local")}
-          glyph="system-lore"
+          glyph="ui-ai"
           title={t("setupFlow.story.local")}
           sub={t("setupFlow.story.localHelp")}
           badge={scanning ? { text: t("setupFlow.local.looking"), tone: "off" } : found.length ? { text: t("setupFlow.local.foundCount", { count: found.length }), tone: "ready" } : null}
@@ -295,7 +296,7 @@ function LocalPanel({
       ) : local.typed || local.baseUrl ? (
         <label className="reveal block">
           <span className="mb-1 block text-xs font-medium text-stone-400">{t("setupFlow.local.modelName")}</span>
-          <input className={ui.input} value={local.model} onChange={(event) => setLocal({ model: event.target.value })} placeholder={STORY_EXAMPLES.model} />
+          <input className={ui.input} value={local.model} onChange={(event) => setLocal({ model: event.target.value })} placeholder={t("setupFlow.local.modelPlaceholder")} />
           <span className="mt-1 block text-[11px] text-stone-500">{t("setupFlow.local.nameHelp")}</span>
         </label>
       ) : null}
@@ -320,7 +321,7 @@ function StartHints({ inContainer }: { inContainer: boolean }) {
           </p>
         ) : null}
         <div>
-          <span className="mb-1 block">{t("setupFlow.hints.llama")}</span>
+          <span className="mb-1 block">{t("setupFlow.hints.llama", { model: MODEL_COMMANDS.modelId })}</span>
           <CopyLine
             text={MODEL_COMMANDS.llama + (inContainer ? MODEL_COMMANDS.container : "")}
             label={t("setupFlow.hints.llamaCommand")}

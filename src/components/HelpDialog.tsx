@@ -1,4 +1,6 @@
 "use client";
+import { LocalizedText } from "@/lib/i18n/LocalizedText";
+import { useLocale as useSyncLocale } from "@/lib/i18n/LocaleProvider";
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -48,6 +50,7 @@ function HelpBody({
   // and can be replayed at will. Other pages pass nothing.
   tours?: { label: string; detail: string; onStart: () => void }[];
 }) {
+  const { t: syncT } = useSyncLocale();
   const { locale, t } = useLocale();
   return (
     <Dialog
@@ -163,6 +166,9 @@ function HelpBody({
           <li>
             <span className="text-stone-300">{t("appHelp.fragment.81")}</span>{t("appHelp.fragment.82")}</li>
         </ul>
+        <p>
+          <LocalizedText message="upstreamUi.helpLayout" values={{layout: <span className="text-stone-300">{t("upstreamUi.helpLabel.layout")}</span>, arrange: <span className="text-stone-300">{t("upstreamUi.helpLabel.arrange")}</span>, lock: <span className="text-stone-300">{t("upstreamUi.helpLabel.lock")}</span>, reset: <span className="text-stone-300">{t("upstreamUi.helpLabel.reset")}</span>}} />
+        </p>
       </Section>
 
       <Section icon={Dices} title={t("appHelp.fragment.83")} anchor={"Dice"}>
@@ -174,6 +180,7 @@ function HelpBody({
 
       <Section icon={Volume2} title={t("appHelp.fragment.94")} anchor={"Voice and narration"}>
         <p>{t("appHelp.fragment.95")}</p>
+        <p><LocalizedText message="appHelp.dictationKey" values={{key: <span className="text-stone-300">{t("upstreamUi.helpLabel.dictation")}</span>}} /></p>
       </Section>
 
       <Section icon={Mic} title={t("appHelp.fragment.96")} anchor={"Live voice chat"}>
@@ -186,6 +193,7 @@ function HelpBody({
       <Section icon={Music} title={t("appHelp.fragment.105")} anchor={"Ambience and music"}>
         <p>{t("appHelp.fragment.106")}</p>
         <p>{t("appHelp.fragment.107")}</p>
+        <p>{t("appHelp.soundLibrary")}</p>
       </Section>
 
       <Section icon={Gavel} title={t("appHelp.fragment.108")} anchor={"Playing with a human DM"}>

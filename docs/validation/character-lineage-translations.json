@@ -5,22 +5,22 @@
   "provenance": "Original Chinese translation from repository source. SRD-derived rows retain the attribution and CC-BY-4.0 declaration in src/lib/srd/races.json and docs/LICENSES.md; expanded/authored rows retain the source declarations. No proprietary Chinese rulebook translation used.",
   "review": "Implementation agent compared every trait heading/body with original text, numeric/dice/distance/rest mechanics and established term names; 31 frozen native projections plus 1552 original language-help combinations remain unchanged in English. Source comparison is not independent human or external approval. Racial skill help now uses the separately source-compared game-help presentation corpus; canonical choice values and default English remain original. Native search names now include every registered locale, preserving Chinese/English queries across interface switches; original names/IDs and mechanics remain unchanged.",
   "sources": {
-    "src/lib/srd/races.json": "a3661913715291b4ca72cc730f4d261b4da98cd6d9240490bbf5fa0550e6871e",
+    "src/lib/srd/races.json": "a33ca25b9fe53162cf072fd09e02a4cc60efbe7be4873a347c84c3033cef8607",
     "src/lib/srd/racial-grants.ts": "616e2e333bdf3ee48a8ea070e5531cab2e04686cb515fea5e96aed108be095ac",
-    "src/app/characters/builder/lineage.ts": "fbb0199825c6582e8405d661c4d22adf0ea4fb8946d3196f82acef0816e67169",
+    "src/app/characters/builder/lineage.ts": "a6997f19670bf6516329084a306b1a6ba508672701b61d44bc022faaf687c68c",
     "src/app/characters/builder/steps/AncestryStep.tsx": "0c8618fd8b354a36a2f85f710f542fc0afb2e5e0c8db24021298f1ab52270625",
     "src/app/characters/builder/LineageCarousel.tsx": "6ac6a4980e58da73573833bbca3797eccbd96d873ff8481c789672606dac897b",
     "src/app/characters/builder/OptionCardGrid.tsx": "e77b970222d0368ac74330bdcaaf26a64f4590893384ea6ff7abcddd259c2386",
     "src/app/characters/builder/RacialChoicesSection.tsx": "bf2db286b025eed1b7b05758fd1c6f3f1c6aaa9edf08853e579286ac797a68a6",
     "src/lib/characters/options.ts": "63934438a1bba8f4d05c5c3271163772beade80e594337e416bc2e26a361e7cc",
-    "src/lib/help/index.ts": "7ff4f4cd962f23f301d09902fcd8fba024f1f5956ddca7c5a99d9105ab4c7dbd",
+    "src/lib/help/index.ts": "d713cd97b4210766e44d39675eba03a2c9a409bea389520e87223b7ee8d3f149",
     "src/lib/i18n/lineage-presentations.ts": "57e5eafa4ad8c16610026ffdb959b02eea50bb6c89ed6f4030d43b0489cbede9",
     "src/lib/i18n/racial-presentations.ts": "6dfcacdffbb4c3e35110b24ed972a12dd87092bbfa4ae51b22688440558c9b27",
     "src/lib/i18n/builder-picker-presentations.ts": "66939a0bff47a5e1c3ff8271bef1db90660c3c2267845067440ba70026796545"
   },
   "catalogs": {
     "src/lib/i18n/lineage-ui-messages.ts": "7e7e9477291558288c1ca424d20e76fc371ae1fe9c4cca38f44a5bd518e64945",
-    "src/lib/i18n/lineage-material-messages.ts": "e549e7deeddab6c0236fd3e454ad950b843b50a029d58f3e7c70317cc4e7c3e3",
+    "src/lib/i18n/lineage-material-messages.ts": "335cc102c639663f8aa46655b80ac84662a6641a65351661288c95935c311ccd",
     "src/lib/i18n/racial-ui-messages.ts": "ee73b38a9c0980d72c0fe3d66d4a3827f87d372cc1bcf3e5af4d5f18a7df67a2"
   },
   "reviewRepair": "2026-10-11: browser imports now use scoped resource runtime; co-located catalog construction marked pure. All English/Chinese templates independently compared equal to the pre-repair archive; original golden bytes preserved. See localization-review-repairs.md.",
@@ -60,5 +60,10 @@
         "sha256": "63934438a1bba8f4d05c5c3271163772beade80e594337e416bc2e26a361e7cc"
       }
     }
+  },
+  "upstream027Review": {
+    "upstreamCommit": "2b0b6b6ebf5e12f3e43a21ee38f80b41e5b1cd81",
+    "reviewer": "implementation agent",
+    "scope": "Reviewed source deltas: campaign-scoped ability rolls; subclass training and mandatory choices; native gender and level-floor UI; Aasimar and subclass rule text; resource action annotations; concentration flag reader; stable Unicode name ordering. Existing Chinese bindings updated where source changed. Runtime acceptance is tracked separately."
   }
 }

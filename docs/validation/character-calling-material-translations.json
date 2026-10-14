@@ -22,12 +22,12 @@
     "src/lib/srd/class-features.json": "81d5ca1c44046f8df09d347ac1af1ce3e580e5e6572cfb92dd4fc269f36714ac",
     "src/lib/srd/classes.json": "f0de0db010ca49668953488018d510917444f582fb58587a88a1b3bdf83e5371",
     "src/lib/srd/features.ts": "1251dbd9e5a05fbf052ef5cafb0ef458ffa6a48e914d1f6b86bb444d8ebac84f",
-    "src/lib/srd/subclasses.json": "94f65f85c8e39d4b2c15979a74ec835967d620dff69013284f14fe64764230cb",
-    "src/lib/help/index.ts": "7ff4f4cd962f23f301d09902fcd8fba024f1f5956ddca7c5a99d9105ab4c7dbd",
+    "src/lib/srd/subclasses.json": "0a13cbe6d22754e1f7e1cee4b997139fcc2a861e4cfa43e48566a4ff182abafe",
+    "src/lib/help/index.ts": "d713cd97b4210766e44d39675eba03a2c9a409bea389520e87223b7ee8d3f149",
     "src/lib/i18n/calling-material-presentations.ts": "e2de53d82ef18d0c0ae00dee5af7ff65e059f58be3e6178abdbef26168edb604",
     "src/app/characters/builder/usePickerGroups.ts": "649ed670bb4cf630809f26ab83d0e0f26283d53d69a7876205af9bf9709667eb",
-    "src/app/characters/builder/steps/CallingStep.tsx": "9f5b4431d56ecb3a9503afc5d0e87dcb1c1cf4be40245e97ead7bc5d0cea4476",
-    "src/app/campaigns/[campaignId]/LevelUpDialog.tsx": "943360ce5d65e9a6cfdc7bca0786cc2462da3a42848d6ab93d1ec4ae5f8bf73f"
+    "src/app/characters/builder/steps/CallingStep.tsx": "2d85614f558ffddf552f9d6ca1b2776d4e902fecef5b558439349228a845bd94",
+    "src/app/campaigns/[campaignId]/LevelUpDialog.tsx": "e28621cb64999c14ebb74c09b58669ba91535444a26208d358ea58621fa67c6e"
   },
   "catalogs": {
     "src/lib/i18n/calling-material-messages.ts": "972ae94c032471ccbbf5000c5d1011952181de1b1d13a69895d4fca635000b29"
@@ -133,5 +133,10 @@
         "sha256": "e2de53d82ef18d0c0ae00dee5af7ff65e059f58be3e6178abdbef26168edb604"
       }
     }
+  },
+  "upstream027Review": {
+    "upstreamCommit": "2b0b6b6ebf5e12f3e43a21ee38f80b41e5b1cd81",
+    "reviewer": "implementation agent",
+    "scope": "Reviewed source deltas: campaign-scoped ability rolls; subclass training and mandatory choices; native gender and level-floor UI; Aasimar and subclass rule text; resource action annotations; concentration flag reader; stable Unicode name ordering. Existing Chinese bindings updated where source changed. Runtime acceptance is tracked separately."
   }
 }

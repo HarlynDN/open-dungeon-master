@@ -4,7 +4,6 @@ import { cueById, cueIds } from "@/lib/ambience/catalog";
 import {
   applyAuto,
   describeAmbience,
-  inferBedCue,
   setCue,
   type AmbienceState,
 } from "@/lib/ambience/logic";
@@ -44,7 +43,7 @@ export const ambienceTools: ToolDef[] = [
     function: {
       name: "set_ambience",
       description:
-        "Change what the table is hearing. The bed is the place (a tavern, a cave, rain); the music is what the scene is doing to them (tension, triumph, sorrow). Call this when the party arrives somewhere that sounds different or the mood of the scene turns, not every reply. Leave a layer out to keep it as it is, or send \"none\" to silence it.",
+        "Change what the table is hearing. The bed is the place (a tavern, a cave, rain); the music is what the scene is doing to them (tension, triumph, sorrow). Call it when the party arrives somewhere that sounds different or the mood of the scene turns, not every reply. Leave a layer out to keep it as it is, or send \"none\" to silence it.",
       parameters: {
         type: "object",
         additionalProperties: false,
@@ -73,7 +72,7 @@ export const ambienceTools: ToolDef[] = [
     function: {
       name: "play_sting",
       description:
-        "One sound, once, over whatever is already playing: a thunderclap, a door slamming, a roar out of the dark. Use it for a single beat you want the table to flinch at. It changes nothing about the scene's ambience.",
+        "Play one sound, once, over whatever is already playing: a thunderclap, a door slamming, a roar out of the dark. Call it for a single beat you want the table to flinch at. It changes nothing about the scene's ambience.",
       parameters: {
         type: "object",
         additionalProperties: false,
@@ -197,18 +196,19 @@ export function handlePlaySting(
 
 // ---- the automatic half ----
 
-// The party arrived somewhere. Reads the place for a bed and takes it,
-// unless the table turned scene-following off or is holding the layer.
-// Called from handleLocationCall, so it fires for the AI DM, for a human
-// DM's console form and for anything else that moves the party.
-export function followSceneAmbience(campaign: Campaign, placeText: string) {
+// The party arrived somewhere. Takes the place's own bed (its kind of
+// place, set by move_party or the console), unless the table turned
+// scene-following off or is holding the layer. Called from
+// handleLocationCall, so it fires for the AI DM, for a human DM's console
+// form and for anything else that moves the party.
+export function followSceneAmbience(campaign: Campaign, placeBed: string | null) {
   if (!enabled(campaign) || !campaign.gameSettings.ambienceAuto) {
     return;
   }
-  // The table's tone stands in when the description says nothing about
-  // sound and no bed is playing yet (docs/vtt-parity-implementation-plan.md
-  // 9.2); an unnamed room otherwise keeps the dungeon's drip.
-  const bed = inferBedCue(placeText) ?? (getAmbience(campaign.id).bed ? null : toneBedBias(campaign.gameSettings.gm?.tone ?? []));
+  // The table's tone stands in when the place has no kind and no bed is
+  // playing yet (docs/vtt-parity-implementation-plan.md 9.2); a place with
+  // no kind otherwise keeps what is playing.
+  const bed = placeBed ?? (getAmbience(campaign.id).bed ? null : toneBedBias(campaign.gameSettings.gm?.tone ?? []));
   if (!bed) {
     return;
   }

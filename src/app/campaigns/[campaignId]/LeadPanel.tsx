@@ -273,7 +273,10 @@ export function LeadPanel({
   isLead,
   encounter,
   directorArm,
+  coordinating = false,
 }: {
+  // The party is coordinating a plan now (issue 254).
+  coordinating?: boolean;
   campaignId: string;
   campaign: LeadCampaign;
   floor: Floor;
@@ -325,6 +328,8 @@ export function LeadPanel({
           floor={floor}
           sheets={sheets}
           encounter={encounter}
+          aiNarrates={mode === "ai" || (mode === "assisted" && !campaign.dmUserId)}
+          coordinating={coordinating}
         />
       ) : null}
 

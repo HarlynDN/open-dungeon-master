@@ -4,13 +4,14 @@
 // from what is running on it). Saving turns each step's slice into an admin
 // settings patch (src/lib/setup/patches.ts).
 import {
-  DEFAULT_LOCAL_MODEL,
   KEY_PROVIDERS,
   normalizeBaseUrl,
   storySourceForUrl,
   type KeyProviderId,
   type ListedModel,
 } from "@/lib/setup/discovery-logic";
+import { CHECKPOINT_PRESET } from "@/lib/image-models/catalog";
+import { obviousComfyChoice } from "@/lib/image-models/curate";
 import type { ScanResult } from "@/lib/setup/discovery";
 import type { MaskedConfig } from "@/app/admin/AdminSettingsFields";
 import type { HarnessChoiceId } from "@/lib/setup/patches";
@@ -27,6 +28,8 @@ export type ModelList = {
 
 export const NO_LIST: ModelList = { state: "idle", models: [], recommended: "", error: "", needsKey: false };
 
+export type ModelField = "pictures" | "narration" | "whisper" | "transcription";
+
 export type Draft = {
   serverName: string;
   story: StoryKind | "";
@@ -34,11 +37,20 @@ export type Draft = {
   key: { provider: KeyProviderId; baseUrl: string; apiKey: string; model: string; list: ModelList };
   agent: { id: HarnessChoiceId | ""; model: string; utilityModel: string };
   pictures: "comfyui" | "openai" | "agent" | "none" | "";
-  comfy: { url: string; checkpoint: string };
+  // preset: "checkpoint", or the catalog model (src/lib/image-models) that
+  // paints every picture.
+  comfy: { url: string; checkpoint: string; preset: string };
   picturesKey: string;
+  picturesModel: string;
   narration: "kokoro" | "openai" | "off" | "";
   kokoro: { url: string; voice: string };
   narrationKey: string;
+  narrationModel: string;
+  // The models dictation sends: the Whisper service's and OpenAI's.
+  dictation: { whisperModel: string; openaiModel: string };
+  // The model fields the admin has answered (or seen filled) on this run,
+  // so going back to a step never fills a None they chose.
+  answered: ModelField[];
   signupMode: "open" | "invite" | "closed";
   publicUrl: string;
 };
@@ -75,7 +87,7 @@ export function draftFromConfig(config: MaskedConfig, firstRun: boolean): Draft 
           : story === "local" && base
             ? normalizeBaseUrl(base)
             : "",
-      model: text.provider === "local" ? text.localTextModel : story === "local" ? text.customModel || (base ? "" : DEFAULT_LOCAL_MODEL) : "",
+      model: text.provider === "local" ? text.localTextModel : story === "local" ? text.customModel : "",
       apiKey: "",
       list: NO_LIST,
       typed: false,
@@ -102,8 +114,9 @@ export function draftFromConfig(config: MaskedConfig, firstRun: boolean): Draft 
             : firstRun
               ? ""
               : "none",
-    comfy: { url: images.comfyUrl, checkpoint: images.comfyCheckpoint },
+    comfy: { url: images.comfyUrl, checkpoint: images.comfyCheckpoint, preset: images.comfyWorkflowPreset },
     picturesKey: "",
+    picturesModel: images.openaiModel,
     narration:
       config.speech.ttsProvider === "kokoro" && config.speech.kokoroUrl
         ? "kokoro"
@@ -114,6 +127,9 @@ export function draftFromConfig(config: MaskedConfig, firstRun: boolean): Draft 
             : "",
     kokoro: { url: config.speech.kokoroUrl, voice: config.speech.ttsVoice },
     narrationKey: "",
+    narrationModel: config.speech.ttsModel,
+    dictation: { whisperModel: config.speech.sttModel, openaiModel: config.speech.sttOpenaiModel },
+    answered: [],
     signupMode: config.signupMode,
     publicUrl: config.publicUrl,
   };
@@ -121,6 +137,45 @@ export function draftFromConfig(config: MaskedConfig, firstRun: boolean): Draft 
 
 // The scan's findings fill whatever the saved settings left open. Nothing
 // the admin already chose (or saved) is overwritten.
+// The ComfyUI the scan found, filling what the draft left open. A catalog
+// model already chosen stays while this ComfyUI has its files. A fresh draft
+// takes the obvious choice when there is one (obviousComfyChoice): the model
+// this hardware was measured recommending, or the one thing it can paint
+// with. Otherwise the admin picks.
+export function comfyFromScan(current: Draft["comfy"], found: NonNullable<ScanResult["comfyui"]>): Draft["comfy"] {
+  const kept = found.models.find((model) => model.id === current.preset && model.missing.length === 0);
+  if (kept) return { url: found.url, checkpoint: current.checkpoint, preset: kept.id };
+  const fresh = !current.checkpoint && current.preset === "checkpoint";
+  const obvious = fresh ? obviousComfyChoice(found) : null;
+  return obvious ? { url: found.url, ...obvious } : { url: found.url, checkpoint: current.checkpoint, preset: "checkpoint" };
+}
+
+// Why Continue is held on the pictures step, said beside the button, or
+// null. A model left blank paints nothing (none is named in code), so
+// OpenAI needs its picture model, and ComfyUI in checkpoint mode needs a
+// checkpoint whenever the one at the draft's address offered something to
+// pick (`comfyOffers`, from PicturesStep); one that offers nothing, or has
+// not answered, is left to the admin panel later.
+export function picturesBlocker(
+  draft: Draft,
+  input: { agentVerified: boolean; storyIsOpenAi: boolean; openaiKeySaved: boolean; envImageModel: string; comfyOffers: boolean },
+): string | null {
+  if (draft.pictures === "agent" && !input.agentVerified) {
+    return "Paint a test map first: the tables only get a painter that works.";
+  }
+  if (draft.pictures === "comfyui") {
+    if (!draft.comfy.url.trim()) return "Type where ComfyUI runs, or choose another answer.";
+    if (draft.comfy.preset === CHECKPOINT_PRESET && !draft.comfy.checkpoint.trim() && input.comfyOffers) {
+      return "Pick the image model, or choose another answer.";
+    }
+  }
+  if (draft.pictures === "openai") {
+    if (!input.storyIsOpenAi && !draft.picturesKey.trim() && !input.openaiKeySaved) return "Paste an OpenAI key, or choose another answer.";
+    if (!draft.picturesModel.trim() && !input.envImageModel) return "Pick the picture model, or choose another answer.";
+  }
+  return null;
+}
+
 export function draftWithScan(draft: Draft, scan: ScanResult, storyIsOpenAi: boolean): Draft {
   const next = { ...draft };
   const firstText = scan.text.find((found) => !found.needsKey && found.models.length) ?? scan.text[0];
@@ -150,7 +205,7 @@ export function draftWithScan(draft: Draft, scan: ScanResult, storyIsOpenAi: boo
     next.pictures = scan.comfyui ? "comfyui" : storyIsOpenAi ? "openai" : "none";
   }
   if (next.pictures === "comfyui" && !next.comfy.url && scan.comfyui) {
-    next.comfy = { url: scan.comfyui.url, checkpoint: next.comfy.checkpoint || scan.comfyui.checkpoints[0] || "" };
+    next.comfy = comfyFromScan(next.comfy, scan.comfyui);
   }
   if (!next.narration) {
     // Narration reads every passage, so a paid voice is never switched on

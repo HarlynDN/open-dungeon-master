@@ -4,22 +4,28 @@ import { useLocale } from "@/lib/i18n/LocaleProvider";
 import type { AppLocale } from "@/lib/i18n/locales";
 import { handSentence, handCardName, handCurrentActorName, handBoardTargetId } from "@/lib/i18n/hand-presentations";
 import { handRefusalText, HAND_SEND_FAILURE, HAND_NETWORK_FAILURE } from "@/lib/i18n/hand-material-presentations";
-import { ChevronDown, CircleHelp } from "lucide-react";
+import { ChevronDown, CircleHelp, SlidersHorizontal } from "lucide-react";
 import { isComposingInput } from "@/lib/input-composition";
+import { selectedCharacter, initiativeCharacter } from "@/lib/player-characters";
 import { memo, useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import type { CSSProperties, Dispatch, RefObject, SetStateAction } from "react";
 import { cn } from "@/lib/cn";
 import { Tooltip } from "@/components/ui/Tooltip";
+import { askConcentrationSwap, isConcentrationQuestion } from "@/components/concentration-prompt";
+import type { ConcentrationSwap } from "@/lib/dm/concentration-confirm-logic";
 import { HandAimBar, type HandTargetChip } from "@/app/campaigns/[campaignId]/HandAimBar";
 import { HandCardFace, HandPlayedCard } from "@/app/campaigns/[campaignId]/HandCardFace";
+import { HandArrange } from "@/app/campaigns/[campaignId]/HandArrange";
 import { HandMoreSheet } from "@/app/campaigns/[campaignId]/HandMoreSheet";
+import { useHandLayout } from "@/app/campaigns/[campaignId]/useHandLayout";
 import { HAND_TUTORIAL_ID, HandTutorial } from "@/app/campaigns/[campaignId]/HandTutorial";
 import { useHandSpells } from "@/app/campaigns/[campaignId]/HandSpells";
 import { HandReactPrompt } from "@/app/campaigns/[campaignId]/HandReactPrompt";
 import { HandPips } from "@/app/campaigns/[campaignId]/HandPips";
 import { handTargets } from "@/app/campaigns/[campaignId]/handTargets";
 import { holdPendingCards, useHandChoices, useHandPending } from "@/app/campaigns/[campaignId]/useHandChoices";
-import { deriveHand, splitHand, waitingHand, type HandCard } from "@/lib/battlemap/hand";
+import { deriveHand, waitingHand, type HandCard } from "@/lib/battlemap/hand";
+import { arrangeHand, isUrgentCard, seatPicked, startingLayout } from "@/lib/battlemap/hand-layout";
 import {
   HAND_TARGET_EVENT,
   intentBody,
@@ -28,9 +34,10 @@ import {
 } from "@/lib/battlemap/hand-play";
 import { reactionAim, reactionCards, withReactions } from "@/lib/battlemap/hand-react";
 import { turnFromEncounter, turnPips, turnSignature } from "@/lib/battlemap/hand-table";
+
 import type { TargetEdge } from "@/lib/battlemap/view-tactics";
 import { replayAnimation } from "@/lib/motion/replay";
-import { markTourSeen, tourSeen } from "@/lib/tours/logic";
+import { finishTour, useTourFinished } from "@/lib/tours/tour-store";
 import type { InputKind } from "@/lib/campaign-types";
 import type { Floor } from "@/lib/db/campaigns";
 import type { PublicEncounter } from "@/lib/db/encounter-view";
@@ -81,6 +88,7 @@ function HandInner({
   campaignLocale = "en",
   sheets,
   meUserId,
+  activeSheetId,
   encounter,
   floor,
   inputBlocked,
@@ -97,6 +105,7 @@ function HandInner({
   campaignLocale?: AppLocale;
   sheets: CharacterSheet[];
   meUserId: string;
+  activeSheetId?: string;
   encounter: PublicEncounter;
   floor: Floor;
   inputBlocked: boolean;
@@ -115,8 +124,8 @@ function HandInner({
 }) {
   const { locale, t } = useLocale();
   const sheet = useMemo(
-    () => sheets.find((entry) => entry.userId === meUserId && !entry.isCompanion) ?? null,
-    [sheets, meUserId],
+    () => initiativeCharacter(sheets, meUserId, encounter.acting?.id) ?? selectedCharacter(sheets, meUserId, activeSheetId),
+    [sheets, meUserId, activeSheetId, encounter.acting?.id],
   );
   const floorTurn = floor.mode === "initiative" ? floor.userIds.includes(meUserId) : !inputBlocked;
   const floorName = floor.mode === "initiative" ? floor.currentName : undefined;
@@ -146,6 +155,12 @@ function HandInner({
     return holdPendingCards(withReactions(reactions, deriveHand(sheet, turn, { spells, trackAmmo })), waiting);
   }, [sheet, turn, reactions, spells, trackAmmo, waiting]);
 
+  // Where each card sits, the fan or "more": the player's own arrangement
+  // for this character when they have made one (issue 231).
+  const { layout, save: saveLayout } = useHandLayout(campaignId, sheet);
+  const arrangement = useMemo(() => arrangeHand(cards, layout), [cards, layout]);
+  const [arranging, setArranging] = useState(false);
+
   const [pickedId, setPickedId] = useState<string | null>(null);
   const [targetId, setTargetId] = useState<string | null>(null);
   const [riderIds, setRiderIds] = useState<string[]>([]);
@@ -158,9 +173,11 @@ function HandInner({
   const noticeRef = useRef<HTMLParagraphElement>(null);
 
   const collapsed = useSyncExternalStore(subscribeStore, () => readFlag(COLLAPSED_KEY), () => false);
-  const tutorialSeen = useSyncExternalStore(subscribeStore, () => tourSeen(window.localStorage, HAND_TUTORIAL_ID), () => true);
+  // Once per account, like the tours (issue #306): only a definite "not
+  // finished" from the account shows it unasked.
+  const tutorialFinished = useTourFinished(HAND_TUTORIAL_ID);
   const [tutorialAsked, setTutorialAsked] = useState(false);
-  const showTutorial = !collapsed && (tutorialAsked || (!tutorialSeen && myTurn));
+  const showTutorial = !collapsed && (tutorialAsked || (tutorialFinished === false && myTurn));
 
   // A card that stopped being playable (the turn moved on) drops out of aim.
   const picked = cards.find((card) => card.id === pickedId && !card.disabled) ?? null;
@@ -283,19 +300,43 @@ function HandInner({
       const ending = picked.intent.card === "basic" && picked.intent.action === "end-turn";
       // End turn is the floor banner's own route; everything else is the
       // composer's POST with the card riding along as an optional field.
-      const response = ending
-        ? await fetch(`/api/campaigns/${campaignId}/encounter/end-turn`, { method: "POST" })
-        : await fetch(`/api/campaigns/${campaignId}/actions`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ content: sentence, kind: "do", intent: intentBody(picked, aim, attachedRiders, choices) }),
-          });
+      const post = (concentrationAck?: ConcentrationSwap) =>
+        ending
+          ? fetch(`/api/campaigns/${campaignId}/encounter/end-turn`, { method: "POST" })
+          : fetch(`/api/campaigns/${campaignId}/actions`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                content: sentence,
+                kind: "do",
+                characterId: sheet?.id,
+                intent: intentBody(picked, aim, attachedRiders, choices),
+                ...(concentrationAck ? { concentrationAck } : {}),
+              }),
+            });
+      let response = await post();
       if (!response.ok) {
         // The engine's own reason (the actions route asks canAct and the
         // cast guard before anything is posted); the card stays playable.
         const data = (await response.json().catch(() => ({}))) as { error?: string };
-        say(data.error || HAND_SEND_FAILURE);
-        return;
+        // A cast that ends the spell held now is asked about first (issue
+        // 252); a no keeps it, spending nothing.
+        if (isConcentrationQuestion(response.status, data)) {
+          const ack = await askConcentrationSwap(data, locale);
+          if (!ack) {
+            say(t("handUi.keptConcentration"));
+            return;
+          }
+          response = await post(ack);
+          if (!response.ok) {
+            const again = (await response.json().catch(() => ({}))) as { error?: string };
+            say(again.error || HAND_SEND_FAILURE);
+            return;
+          }
+        } else {
+          say(data.error || HAND_SEND_FAILURE);
+          return;
+        }
       }
       // Nothing is marked spent: the engine's count arrives with the
       // encounter. Until it moves, the same cost waits on this card.
@@ -320,7 +361,7 @@ function HandInner({
     } finally {
       setSending(false);
     }
-  }, [picked, sheet, sending, sentence, campaignId, aim, attachedRiders, choices, signature, setPending, boardTargetId, setInput, clearAim, say, toComposer]);
+  }, [picked, sheet, sending, sentence, campaignId, aim, attachedRiders, choices, signature, setPending, boardTargetId, setInput, clearAim, say, toComposer, locale, t]);
 
   if (!sheet || !turn) return null;
 
@@ -331,9 +372,11 @@ function HandInner({
   const waitingOn = waitingHand(sheet, turn);
   const isWaiting = (card: HandCard) => card.disabled !== null && Boolean(waitingOn?.sentences.has(card.disabled));
 
-  const { fan, more } = splitHand(cards);
-  // A card chosen from behind the spine takes the last seat before End turn.
-  const shown = picked && more.includes(picked) ? [...fan.slice(0, -2), picked, fan[fan.length - 1]] : fan;
+  const { fan, more, displaced, fresh } = arrangement;
+  const urgent = fan.filter(isUrgentCard);
+  // A card chosen from behind the spine takes a seat for the moment: a free
+  // one, else the last before End turn. The arrangement is not changed by it.
+  const shown = seatPicked(fan, picked && more.includes(picked) ? picked : null);
   const middle = (shown.length - 1) / 2;
   // The mockup's 4.4 degrees between neighbours, eased off as the hand fills
   // so nine cards lean no further than five did.
@@ -382,6 +425,21 @@ function HandInner({
               <CircleHelp className="size-4" />
             </button>
           </Tooltip>
+          <Tooltip content={t("handUi.customizeHint")}>
+            <button
+              type="button"
+              onClick={() => {
+                if (collapsed) writeFlag(COLLAPSED_KEY, false);
+                clearAim();
+                setArranging(true);
+                setMoreOpen(true);
+              }}
+              aria-label={t("handUi.customize")}
+              className="flex size-9 items-center justify-center rounded-lg text-stone-500 hover:text-amber-200 sm:size-7"
+            >
+              <SlidersHorizontal className="size-4" />
+            </button>
+          </Tooltip>
           <Tooltip content={t(collapsed ? "handUi.ui.show" : "handUi.ui.hideHint")}>
             <button
               type="button"
@@ -412,9 +470,8 @@ function HandInner({
 
       {showTutorial ? (
         <HandTutorial
-          onDismiss={() => {
-            markTourSeen(window.localStorage, HAND_TUTORIAL_ID);
-            window.dispatchEvent(new Event(STORE_EVENT));
+          onDismiss={(how) => {
+            finishTour(HAND_TUTORIAL_ID, how);
             setTutorialAsked(false);
           }}
         />
@@ -514,7 +571,33 @@ function HandInner({
       <HandMoreSheet
         turnContext={encounter}
         open={moreOpen}
-        onOpenChange={setMoreOpen}
+        onOpenChange={(open) => {
+          setMoreOpen(open);
+          if (!open) setArranging(false);
+        }}
+        arranging={arranging}
+        onArrange={setArranging}
+        displaced={displaced}
+        urgent={urgent}
+        fresh={fresh}
+        arrange={
+          arranging ? (
+            <HandArrange
+              cards={cards}
+              working={startingLayout(cards, layout)}
+              arranged={arrangement.arranged}
+              urgent={urgent}
+              displaced={displaced}
+              fresh={fresh}
+              onChange={saveLayout}
+              onReset={() => saveLayout(null)}
+              onDone={() => {
+                setArranging(false);
+                if (!more.length) setMoreOpen(false);
+              }}
+            />
+          ) : null
+        }
         cards={more}
         onPick={pick}
         waitingNote={waitingOn?.note ?? null}

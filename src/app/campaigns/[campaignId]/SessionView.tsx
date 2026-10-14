@@ -1,17 +1,21 @@
 "use client";
+import { useLocale as useSyncLocale } from "@/lib/i18n/LocaleProvider";
 
 import { reviewText, tableTourView, REVIEW_NOTICES } from "@/lib/i18n/play-review-presentations";
 import { HELP_TOURS } from "@/lib/i18n/app-help-metadata";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 
+import { initiativeCharacter, selectedCharacter } from "@/lib/player-characters";
 import { LevelUpMoment, LootMoment, MomentVeil, RestMoment, TravelBanner } from "@/app/campaigns/[campaignId]/Moments";
+import { CoordinationPanel } from "@/app/campaigns/[campaignId]/CoordinationPanel";
 import { haptic, useEffectsRoot, useTurnChime } from "@/lib/effects-mode";
 import { levelForXp } from "@/lib/srd";
+import { transcribesVoice, useCapabilities } from "@/lib/use-capabilities";
 import { SceneTitle } from "@/components/SceneTitle";
+import { askConcentrationSwap, isConcentrationQuestion } from "@/components/concentration-prompt";
 import { HandoutStage } from "@/components/HandoutStage";
 import { SafetyPause } from "@/app/campaigns/[campaignId]/SafetyPause";
 import type { Speaker } from "@/lib/dm/speech";
-import { LabelSheet } from "@/app/campaigns/[campaignId]/LabelSheet";
 import type { MapLabel } from "@/lib/battlemap/scene";
 
 const NOOP = () => {};
@@ -34,24 +38,20 @@ import {
   useSyncExternalStore,
 } from "react";
 import { JOIN_NOTE_PREFIX, latestUnintroducedJoin } from "@/lib/campaign-types";
-import { markTourSeen, tourSeen } from "@/lib/tours/logic";
+import { composerLimit, textLength } from "@/lib/text-limits";
+import type { TourEnd } from "@/lib/tours/account-logic";
 import { DM_TOUR, DM_TOUR_ID, PLAYER_TOUR, PLAYER_TOUR_ID } from "@/lib/tours/table";
-import { HelpDialog } from "@/components/HelpDialog";
-import { GuidedTour } from "@/components/ui/GuidedTour";
-import { CharacterGate } from "@/app/campaigns/[campaignId]/CharacterGate";
+import { finishTour, useTourFinished } from "@/lib/tours/tour-store";
 import { Composer, type InputKind } from "@/app/campaigns/[campaignId]/Composer";
 import { composerGate } from "@/app/campaigns/[campaignId]/composerGate";
 import { DiceOverlay } from "@/app/campaigns/[campaignId]/DiceOverlay";
-import { DiceLookDialog } from "@/components/DiceLookEditor";
-import { DiceTrayDialog, secretAudience } from "@/app/campaigns/[campaignId]/DiceTrayDialog";
+import { secretAudience } from "@/lib/dice/secret-audience";
 import {
   requestMotionAccess,
   supportsShake,
   useShakeToRoll,
   writeShakeToRoll,
 } from "@/lib/dice/shake-to-roll";
-import { LoreCheckDialog } from "@/app/campaigns/[campaignId]/LoreCheckDialog";
-import { RenarrateDialog } from "@/app/campaigns/[campaignId]/RenarrateDialog";
 import type { CampaignMessage } from "@/lib/db/messages";
 import {
   beatCadence,
@@ -67,19 +67,31 @@ import {
 } from "@/app/campaigns/[campaignId]/SessionTabs";
 import { SessionChatColumn } from "@/app/campaigns/[campaignId]/SessionChatColumn";
 import { SessionHeader } from "@/app/campaigns/[campaignId]/SessionHeader";
+import { SessionBanner, bannerButtonClass } from "@/app/campaigns/[campaignId]/SessionBanner";
+import { isPrimaryDm } from "@/lib/dm/viewer";
+import Link from "next/link";
 import { SidePanel } from "@/app/campaigns/[campaignId]/SidePanel";
 import { useChatChime } from "@/app/campaigns/[campaignId]/useChatChime";
 import { useTableAudio } from "@/app/campaigns/[campaignId]/useTableAudio";
+import type { SoundSteering } from "@/app/campaigns/[campaignId]/SoundPanel";
 import type { CampaignState } from "@/app/campaigns/[campaignId]/useCampaignStream";
 import { InitiativeRibbon, PartyRail, QuestGlance, RollToast, SceneBackdrop, TabletopChronicle } from "@/app/campaigns/[campaignId]/CinematicParts";
-import { BattleMapPanel } from "@/app/campaigns/[campaignId]/BattleMapPanel";
 import {
   NarrationFailureBanner,
   useNarrationReplay,
   useNarrationStatus,
 } from "@/app/campaigns/[campaignId]/NarrationFailureBanner";
 import { turnFromEncounter, turnHudBudget } from "@/lib/battlemap/hand-table";
-import { useDocked } from "@/app/campaigns/[campaignId]/SidePanel";
+
+import { TabPane, useDocked } from "@/app/campaigns/[campaignId]/SidePanel";
+import type { SidePanelRouterProps } from "@/app/campaigns/[campaignId]/SidePanelRouter";
+import { TableRow } from "@/app/campaigns/[campaignId]/TableLayout";
+import { ChronicleSplitter } from "@/app/campaigns/[campaignId]/TableLayoutParts";
+import { useWideTable } from "@/app/campaigns/[campaignId]/table-layout-context";
+import { revealPane, useTableLayout, type LayoutSeat } from "@/app/campaigns/[campaignId]/table-layout-store";
+import { poppedTabs, tabPane } from "@/lib/table-layout";
+import { PanelLoading, panels, preloadSidePanels } from "@/app/campaigns/[campaignId]/side-panel-loaders";
+import { preloadable } from "@/lib/preloadable";
 
 // The level-up dialog carries the class feature and resource tables of the
 // whole SRD; it loads the first time a character actually levels rather
@@ -89,6 +101,54 @@ const LevelUpDialog = lazy(() =>
     default: module.LevelUpDialog,
   })),
 );
+
+// What a table only needs when someone reaches for it: the dialogs, the
+// tours, the character gate and the board. Each is its own download,
+// fetched when the browser is idle after the table is up (with the side
+// panels, side-panel-loaders.ts), so it is already here when it is opened.
+// The dialogs that animate closed mount on first open and then stay
+// mounted (useOpenedOnce), so their exit animation still plays.
+const tablePieces = {
+  HelpDialog: preloadable(() => import("@/components/HelpDialog").then((module) => module.HelpDialog)),
+  GuidedTour: preloadable(() => import("@/components/ui/GuidedTour").then((module) => module.GuidedTour)),
+  CharacterGate: preloadable(() => import("@/app/campaigns/[campaignId]/CharacterGate").then((module) => module.CharacterGate)),
+  DiceLookDialog: preloadable(() => import("@/components/DiceLookEditor").then((module) => module.DiceLookDialog)),
+  DiceTrayDialog: preloadable(() => import("@/app/campaigns/[campaignId]/DiceTrayDialog").then((module) => module.DiceTrayDialog)),
+  LoreCheckDialog: preloadable(() => import("@/app/campaigns/[campaignId]/LoreCheckDialog").then((module) => module.LoreCheckDialog)),
+  RenarrateDialog: preloadable(() => import("@/app/campaigns/[campaignId]/RenarrateDialog").then((module) => module.RenarrateDialog)),
+  LabelSheet: preloadable(() => import("@/app/campaigns/[campaignId]/LabelSheet").then((module) => module.LabelSheet)),
+};
+const { HelpDialog, GuidedTour, CharacterGate, DiceLookDialog, DiceTrayDialog, LoreCheckDialog, RenarrateDialog, LabelSheet } = tablePieces;
+const { BattleMapPanel } = panels;
+
+// True from the first time `open` is true: a dialog mounts then and stays.
+function useOpenedOnce(open: boolean): boolean {
+  const [opened, setOpened] = useState(open);
+  if (open && !opened) {
+    setOpened(true);
+  }
+  return opened || open;
+}
+
+// Once the table is drawn and the browser has a moment, fetch what it may
+// reach for next.
+function usePreloadTable() {
+  useEffect(() => {
+    const preload = () => {
+      preloadSidePanels();
+      for (const piece of Object.values(tablePieces)) {
+        void piece.preload().catch(() => undefined);
+      }
+    };
+    const idle = typeof window.requestIdleCallback === "function"
+      ? window.requestIdleCallback(preload, { timeout: 3000 })
+      : window.setTimeout(preload, 1500);
+    return () => {
+      if (typeof window.cancelIdleCallback === "function") window.cancelIdleCallback(idle as number);
+      window.clearTimeout(idle as number);
+    };
+  }, []);
+}
 
 // The localStorage-backed preferences below are read as external stores.
 // Each keeps its last answer and forgets it only when its own event says
@@ -111,30 +171,6 @@ function subscribeDicePref(callback: () => void) {
   };
   window.addEventListener(DICE3D_EVENT, listener);
   return () => window.removeEventListener(DICE3D_EVENT, listener);
-}
-
-// The once-only flag of each table tour, read the way the dice preference
-// is: from localStorage as an external store, so finishing a tour in one
-// tab is known to every other.
-const TOUR_SEEN_EVENT = "odm-tour-seen";
-const tourSeenCache = new Map<string, boolean>();
-
-function readTourSeen(tourId: string): boolean {
-  let seen = tourSeenCache.get(tourId);
-  if (seen === undefined) {
-    seen = tourSeen(window.localStorage, tourId);
-    tourSeenCache.set(tourId, seen);
-  }
-  return seen;
-}
-
-function subscribeTourSeen(callback: () => void) {
-  const listener = () => {
-    tourSeenCache.clear();
-    callback();
-  };
-  window.addEventListener(TOUR_SEEN_EVENT, listener);
-  return () => window.removeEventListener(TOUR_SEEN_EVENT, listener);
 }
 
 // The play table. Header, the story column, the docked context column and
@@ -168,6 +204,7 @@ export function SessionView({
   markTitleCardShown?: (id: string) => void;
   playSting?: (cue: string) => void;
 }) {
+  const { t: syncT } = useSyncLocale();
   const { locale, t } = useLocale();
   // The effects mode rides on <html data-effects> for CSS-only consumers.
   useEffectsRoot();
@@ -224,6 +261,11 @@ export function SessionView({
   const openDiceTray = useCallback(() => setDiceTrayOpen(true), []);
   const [helpOpen, setHelpOpen] = useState(false);
   const openHelp = useCallback(() => setHelpOpen(true), []);
+  usePreloadTable();
+  const helpMounted = useOpenedOnce(helpOpen);
+  const diceLookMounted = useOpenedOnce(diceLookOpen);
+  const diceTrayMounted = useOpenedOnce(diceTrayOpen);
+  const tourMounted = useOpenedOnce(tour !== null);
 
   // Shake to roll is a device preference; while it is on here, this
   // member's rolls are held at the campaign so the phone can release them.
@@ -317,7 +359,18 @@ export function SessionView({
   // Everything below runs on every dm_delta while the DM narrates, so the
   // values handed to the memoized panels are stabilized with useMemo and
   // useCallback. All hooks must stay above the null guard further down.
-  const mySheet = useMemo(() => sheets.find((sheet) => sheet.userId === me?.id), [sheets, me?.id]);
+  // Three "my character"s for a player fielding several
+  // (src/lib/player-characters.ts): the selected one (Play as, in the party
+  // panel), the one whose turn it is, and the one that acts: the turn's
+  // character while it lasts, else the selected one. The Hand, the HUD and
+  // the composer follow actingSheet; OOC stays with the selected one.
+  // A seat that only has companions falls back to any sheet of theirs.
+  const mySheet = useMemo(
+    () => selectedCharacter(sheets, me?.id ?? "", state.activeSheetId) ?? sheets.find((sheet) => sheet.userId === me?.id) ?? null,
+    [sheets, me?.id, state.activeSheetId],
+  );
+  const turnSheet = initiativeCharacter(sheets, me?.id ?? "", state.encounter?.acting?.id);
+  const actingSheet = turnSheet ?? mySheet;
   // The server's notice opens the level-up dialog once, when the experience
   // lands. Closing it only puts it off: the sheet's experience still earns
   // the level, so the party card offers a Level up button until it is done.
@@ -340,19 +393,26 @@ export function SessionView({
   const floor = useMemo(() => campaign?.floor ?? { mode: "open" as const }, [campaign?.floor]);
   const isDm = caps.role === "dm";
   const steersStory = caps.steersStory;
+  // Who may change what the table hears, for the header's sound panel.
+  const sound = useMemo<SoundSteering>(
+    () => ({
+      campaignId: campaign?.id ?? "",
+      canSteer: steersStory,
+      auto: Boolean(campaign?.gameSettings?.ambienceAuto),
+      isAdmin: Boolean((me as { isAdmin?: boolean } | null)?.isAdmin),
+    }),
+    [campaign?.id, campaign?.gameSettings?.ambienceAuto, steersStory, me],
+  );
   if (isDm && !seenDmSeat) {
     setSeenDmSeat(true);
     setKind("narrate");
   }
 
-  // The tour for this seat runs once, the first time the table is sat at,
-  // after the layout has had a moment to settle. Help replays it.
+  // The tour for this seat runs once per account, the first time the table
+  // is sat at, after the layout has had a moment to settle; only a definite
+  // "not finished" from the account opens it (issue #306). Help replays it.
   const tourId = isDm ? DM_TOUR_ID : PLAYER_TOUR_ID;
-  const tourAlreadySeen = useSyncExternalStore(
-    subscribeTourSeen,
-    () => readTourSeen(tourId),
-    () => true,
-  );
+  const seatTourFinished = useTourFinished(tourId);
   // A phone starts the tour on the chat column: which steps apply is read
   // off the page before any step's prepare runs, and a fight with a map
   // opens the phone on the board, which would drop every composer step.
@@ -364,15 +424,19 @@ export function SessionView({
     [setMobileView],
   );
   useEffect(() => {
-    if (tourAlreadySeen) return;
+    if (seatTourFinished !== false) return;
     const timer = window.setTimeout(() => startTour(isDm ? "dm" : "player"), 1200);
     return () => clearTimeout(timer);
-  }, [tourAlreadySeen, isDm, startTour]);
-  const closeTour = useCallback(() => {
-    markTourSeen(window.localStorage, tourId);
-    window.dispatchEvent(new Event(TOUR_SEEN_EVENT));
-    setTour(null);
-  }, [tourId]);
+  }, [seatTourFinished, isDm, startTour]);
+  // The tour that was on screen is the one finished: Help can replay the
+  // other seat's, and the seat can change while a tour is open.
+  const closeTour = useCallback(
+    (how: TourEnd) => {
+      if (tour) finishTour(tour === "dm" ? DM_TOUR_ID : PLAYER_TOUR_ID, how);
+      setTour(null);
+    },
+    [tour],
+  );
   // The campaign's opening narration gets everyone's full attention: while
   // it plays for this user, do/say/lead input waits (OOC stays open).
   const firstDmMessageId = messages.find((message) => message.authorType === "dm")?.id;
@@ -380,11 +444,18 @@ export function SessionView({
     Boolean(firstDmMessageId) &&
     narration.playingMessageId === firstDmMessageId &&
     messages.filter((message) => message.authorType === "dm").length === 1;
-  const myName = mySheet?.name ?? reviewText("your character", locale);
+  const myName = actingSheet?.name ?? reviewText("your character", locale);
   const meId = me?.id ?? "";
   // Muted by the party lead: the server refuses the send, so the box says
   // so instead of letting the player type into a wall.
   const muted = Boolean(state.members.find((member) => member.userId === meId)?.muted);
+  // An ended campaign refuses every new action (the actions route), so the
+  // box says so the same way, and the story above it stays to be read.
+  const ended = campaign?.status === "ended";
+  const silenced = muted || ended;
+  const silencedPlaceholder = ended
+    ? t("composeUi.placeholder.ended")
+    : t("composeUi.placeholder.muted");
   const enemyTurns = state.encounter?.enemyTurns === true;
   const gate = useMemo(
     () =>
@@ -409,6 +480,47 @@ export function SessionView({
       }, locale),
     [state.battleMap, campaign, caps.secretStory, caps.adjudicates, isLead, locale],
   );
+  // The table's arrangement for this seat (client issue 46,
+  // src/lib/table-layout.ts): which side-panel tabs have a pane of their
+  // own, on a window wide enough for an arrangement at all. A tab with a
+  // pane leaves the rail, so no panel is ever drawn twice; a phone keeps
+  // every tab behind its bottom bar.
+  const layoutSeat: LayoutSeat = isDm ? "dm" : "player";
+  const tableLayout = useTableLayout(layoutSeat);
+  const arranged = useWideTable();
+  const popped = useMemo(() => (arranged ? poppedTabs(tableLayout) : []), [arranged, tableLayout]);
+  const railTabs = useMemo(
+    () => (popped.length ? panelTabs.filter(([id]) => !popped.includes(id)) : panelTabs),
+    [panelTabs, popped],
+  );
+  const railTab = railTabs.some(([id]) => id === panelTab) ? panelTab : (railTabs[0]?.[0] ?? panelTab);
+  // A Battle pane holds the board, so the fight stage leaves the table
+  // column to the story and the header's switch has nothing to switch.
+  const battlePane = popped.includes("battle");
+  // Opens a tab wherever it lives: in the rail's panel, or in its own pane,
+  // shown again and lit if it was set aside.
+  const openTab = useCallback(
+    (tab: PanelTab) => {
+      if (popped.includes(tab)) {
+        revealPane(layoutSeat, tabPane(tab));
+      } else {
+        setPanelTab(tab);
+      }
+    },
+    [popped, layoutSeat, setPanelTab],
+  );
+  // A fight starting or a party card's Message picks a tab by itself
+  // (useSessionTabs); when that tab has a pane, the pane is what is shown.
+  const lastPanelTab = useRef(panelTab);
+  useEffect(() => {
+    if (lastPanelTab.current === panelTab) {
+      return;
+    }
+    lastPanelTab.current = panelTab;
+    if (popped.includes(panelTab)) {
+      revealPane(layoutSeat, tabPane(panelTab));
+    }
+  }, [panelTab, popped, layoutSeat]);
   // Gates the Bonds sub-tab inside the Party panel.
   const relationshipsEnabled = campaign?.gameSettings?.relationships !== "off";
 
@@ -423,7 +535,9 @@ export function SessionView({
   const voiceSettings = campaign?.gameSettings?.voice;
   const turnEnforcement = voiceSettings?.turnEnforcement ?? "soft";
   const sayRangeRule = Boolean(voiceSettings?.rules?.sayRange);
-  const transcribe = Boolean(voiceSettings?.transcribe);
+  // Nothing records or announces a transcript the server cannot write.
+  const capabilities = useCapabilities();
+  const transcribe = Boolean(voiceSettings?.transcribe) && transcribesVoice(capabilities);
   const floorUserIds =
     floor.mode === "spotlight" || floor.mode === "initiative" ? floor.userIds : EMPTY_IDS;
   const voice = useMemo(
@@ -465,7 +579,8 @@ export function SessionView({
     async (event: FormEvent) => {
       event.preventDefault();
       const content = input.trim();
-      if (!content || sending || gate.inputBlocked || muted) {
+      // Over the mode's limit the box says so and keeps the draft (issue 207).
+      if (!content || sending || gate.inputBlocked || silenced || textLength(content) > composerLimit(kind, leadPrivate)) {
         return;
       }
       setSending(true);
@@ -482,16 +597,33 @@ export function SessionView({
               ? leadPrivate
                 ? ["director", { oneShot: null, absoluteCommand: content }]
                 : ["lead-note", { content }]
-              : ["actions", { content, kind }];
-        const response = await fetch(`/api/campaigns/${campaignId}/${route}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-        });
+              : ["actions", { content, kind, characterId: (kind === "ooc" ? mySheet : actingSheet)?.id }];
+        const send = (extra: Record<string, unknown> = {}) =>
+          fetch(`/api/campaigns/${campaignId}/${route}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ ...body, ...extra }),
+          });
+        let response = await send();
         if (!response.ok) {
           const data = await response.json().catch(() => ({}));
-          setError(data.error || REVIEW_NOTICES.action);
-          return;
+          // A typed cast that ends the spell held now is asked about first
+          // (issue 252); a no keeps the draft and spends nothing.
+          if (route === "actions" && isConcentrationQuestion(response.status, data)) {
+            const concentrationAck = await askConcentrationSwap(data, locale);
+            if (!concentrationAck) {
+              return;
+            }
+            response = await send({ concentrationAck });
+            if (!response.ok) {
+              const again = await response.json().catch(() => ({}));
+              setError(again.error || REVIEW_NOTICES.action);
+              return;
+            }
+          } else {
+            setError(data.error || REVIEW_NOTICES.action);
+            return;
+          }
         }
         setInput("");
       } catch {
@@ -500,7 +632,7 @@ export function SessionView({
         setSending(false);
       }
     },
-    [campaignId, input, sending, gate.inputBlocked, muted, kind, leadPrivate, speaker],
+    [campaignId, input, sending, gate.inputBlocked, silenced, kind, leadPrivate, speaker, mySheet, actingSheet, locale],
   );
 
   const clearChatTarget = useCallback(() => setChatTarget(null), []);
@@ -557,14 +689,15 @@ export function SessionView({
   }, [turnTokenId, myTokenId, turnRound, turnChime, playSting]);
   // A pinned label on the board opens what it points at in a sheet.
   const [openedLabel, setOpenedLabel] = useState<MapLabel | null>(null);
+  const labelMounted = useOpenedOnce(openedLabel !== null);
   const openLabel = setOpenedLabel;
   const selectChatView = useCallback(() => setMobileView("chat"), [setMobileView]);
   const selectPanelView = useCallback(
     (tab: PanelTab) => {
-      setPanelTab(tab);
+      openTab(tab);
       setMobileView("panel");
     },
-    [setPanelTab, setMobileView],
+    [openTab, setMobileView],
   );
   const bumpPins = useCallback(() => setPinsVersion((count) => count + 1), []);
   const openLoreCheck = useCallback(
@@ -597,7 +730,8 @@ export function SessionView({
   // stage holds the board, the Battle tab shows the party, so the maps
   // step opens the Map tab instead.
   const hasBattleMap = Boolean(state.battleMap);
-  const boardInTab = hasBattleMap && !(docked && stageView === "board");
+  const boardStaged = docked && stageView === "board" && hasBattleMap && !battlePane;
+  const boardInTab = hasBattleMap && !boardStaged;
   const prepareTourStep = useCallback(
     (name: string) => {
       switch (name) {
@@ -658,7 +792,7 @@ export function SessionView({
   }
 
   const storyDue = storyCadence.level !== "quiet";
-  const fightStaged = docked && stageView === "board" && Boolean(state.battleMap);
+  const fightStaged = boardStaged;
   // Two copies of the scroll: the fight stage's has no composer (the desk
   // is right under the board); the enlarged board's keeps it (the dialog
   // covers the desk).
@@ -675,14 +809,98 @@ export function SessionView({
       input={input}
       setInput={setInput}
       sending={sending}
-      inputBlocked={gate.inputBlocked || muted}
-      placeholder={muted ? t("composeUi.placeholder.muted") : gate.placeholder}
+      inputBlocked={gate.inputBlocked || silenced}
+      placeholder={silenced ? silencedPlaceholder : gate.placeholder}
       onSubmit={submit}
+      maxChars={composerLimit(kind, leadPrivate)}
+      // The stage's copy opens the story for what its window leaves out;
+      // the enlarged board's dialog covers the story, so it only says so.
+      onShowStory={composer ? undefined : toggleStage}
       composer={composer}
     />
   );
   const chronicle = chronicleFor(false);
   const chronicleDesk = chronicleFor(true);
+
+  // Everything a side-panel tab's content needs, shared by the side panel
+  // and by any tab with a pane of its own (TabPane).
+  const routerProps = {
+    levelUpLevel: myLevelUp && !levelUpShown ? myLevelUp.level : null,
+    onLevelUp: () => setLevelUpByHand(true),
+    pinsVersion,
+    campaignId: campaign.id,
+    sheets,
+    members: state.members,
+    meUserId: me.id,
+    steersStory,
+    adjudicates: caps.adjudicates,
+    dmCover: campaign.dmCover,
+    messages: state.messages,
+    dmIntents: state.dmIntents,
+    floor,
+    directorArm: state.directorArm,
+    coordinating: Boolean(state.coordination),
+    isLead,
+    leadUserId: campaign.leadUserId,
+    canTransferLead: isLead || campaign.ownerUserId === me.id,
+    // The same pair the PATCH route lets end it: the owner, or the DM proper.
+    canEndCampaign:
+      campaign.ownerUserId === me.id ||
+      isPrimaryDm(
+        {
+          dmMode: campaign.gameSettings?.dmMode ?? "ai",
+          humanDmUserId: campaign.dmUserId,
+          assistantDmUserId: campaign.assistantDmUserId,
+        },
+        me.id,
+      ),
+    spotlightUserIds: floor.mode === "spotlight" ? floor.userIds : EMPTY_IDS,
+    onlineUserIds: state.online,
+    auditLog,
+    locations,
+    chapters: state.chapters,
+    notes: state.notes,
+    facts: state.facts,
+    characterEvents: state.characterEvents,
+    refreshNotes,
+    refreshFacts,
+    sideThreads: state.sideThreads,
+    refreshSideChat,
+    whispers: state.whispers,
+    whisperUnread: state.whisperUnread,
+    dmInbox: state.dmInbox,
+    refreshWhispers,
+    chatTarget,
+    onChatTargetHandled: clearChatTarget,
+    onMessageUser: setChatTarget,
+    mediaStatus: state.mediaStatus,
+    inviteCode: campaign.inviteCode,
+    midGameJoinOpen: campaign.gameSettings?.midGameJoinOpen ?? false,
+    campaign,
+    encounter: state.encounter,
+    battleMap: state.battleMap,
+    mapPing: state.mapPing,
+    fx: state.fx,
+    onFxPlayed: markFxPlayed,
+    camera: state.camera,
+    onCameraDone: markCameraDone,
+    onCompose: composeFromBoard,
+    scene: state.scene,
+    canDraw: caps.adjudicates || campaign.gameSettings?.boardDrawing !== false,
+    onOpenLabel: openLabel,
+    refreshBattleMap,
+    relationshipsVersion: state.relationshipsVersion,
+    factionsVersion: state.factionsVersion,
+    shopsVersion: state.shopsVersion,
+    coins: state.coins,
+    activeSheetId: state.activeSheetId,
+    questsVersion: state.questsVersion,
+    cast: state.cast,
+    relationshipsEnabled,
+    beats: state.beats,
+    tabletopChronicle: chronicleDesk ?? undefined,
+    stageBoard: fightStaged,
+  } satisfies Omit<SidePanelRouterProps, "tab" | "visible" | "onOpenTab">;
 
   return (
     <main className="cine-stage flex h-dvh flex-col">
@@ -710,211 +928,204 @@ export function SessionView({
         narration={narration}
         ambienceEnabled={Boolean(campaign.gameSettings?.ambienceEnabled)}
         ambience={ambience}
+        sound={sound}
         onHelp={openHelp}
-        stage={state.battleMap && docked ? { on: stageView === "board", onToggle: toggleStage } : undefined}
+        stage={state.battleMap && docked && !battlePane ? { on: stageView === "board", onToggle: toggleStage } : undefined}
+        layoutSeat={layoutSeat}
         ribbon={
           state.encounter?.status === "active" ? (
             <InitiativeRibbon
               encounter={state.encounter}
               sheets={sheets}
               genre={campaign.genre}
-              onOpen={() => setPanelTab("party")}
+              onOpen={() => openTab("party")}
             />
           ) : null
         }
       />
 
-      <div className="cine-row flex min-h-0 flex-1">
-        {fightStaged ? null : (
-          <PartyRail
-            sheets={sheets}
-            meUserId={me.id}
-            encounter={state.encounter}
-            genre={campaign.genre}
-            onOpen={() => setPanelTab("party")}
-          />
-        )}
-        <SessionChatColumn
-          stage={
-            fightStaged && state.battleMap ? (
-              <div className="cine-fight">
-                {chronicle}
-                <div className="cine-fight-board cine-board-frame">
-                  <BattleMapPanel
-                    campaignId={campaign.id}
-                    view={state.battleMap}
-                    intents={state.battleMap.intents}
-                    genre={campaign.gameSettings?.genre ?? null}
-                    turnBudget={
-                      // The engine's count, the one the Hand reads
-                      // (src/lib/battlemap/hand-table.ts): a spent reaction
-                      // lives in reactionsUsed, not the turn budget.
-                      mySheet && !mySheet.isCompanion && state.encounter
-                        ? turnHudBudget(
-                            turnFromEncounter(state.encounter, mySheet, {
-                              myTurn: state.encounter.turn?.ownerId === mySheet.id,
-                            }),
-                          )
-                        : null
-                    }
-                    canDirect={caps.adjudicates}
-                    canFocusPing={steersStory}
-                    ping={state.mapPing ?? null}
-                    fx={state.fx}
-                    onFxPlayed={markFxPlayed}
-                    camera={state.camera ?? null}
-                    onCameraDone={markCameraDone}
-                    onCompose={composeFromBoard}
-                    sky={state.scene ?? null}
-                    canDraw={caps.adjudicates || campaign.gameSettings?.boardDrawing !== false}
-                    onOpenLabel={openLabel}
-                    encounter={state.encounter ?? null}
-                    sheets={sheets}
-                    refreshBattleMap={refreshBattleMap}
-                    chronicle={chronicleDesk}
-                    visible
-                  />
-                </div>
-              </div>
-            ) : undefined
-          }
-          state={state}
-          campaignId={campaign.id}
-          meUserId={me.id}
-          steersStory={steersStory}
-          narrationStatus={narrationStatus}
-          onReplayAudio={replayNarration}
-          visible={mobileView === "chat"}
-          askOpen={askOpen}
-          onAskOpenChange={setAskOpen}
-          refreshAsks={refreshAsks}
-          refreshFacts={refreshFacts}
-          onError={setError}
-          onLoreCheck={openLoreCheck}
-          onRenarrate={setRenarrate}
-          onPinned={bumpPins}
-        >
-          {needsCharacter ? (
-            <CharacterGate campaignId={campaign.id} />
-          ) : (
-            <Composer
-              campaignId={campaign.id}
-              campaignLocale={campaign.gameSettings.locale}
-              trackAmmo={campaign.gameSettings?.variantRules?.ammunition ?? false}
-              edges={state.battleMap?.edges}
-              sheets={sheets}
-              meUserId={me.id}
-              steersStory={steersStory}
-              isDm={isDm}
-              kind={kind}
-              onKindChange={setKind}
-              input={input}
-              setInput={setInput}
-              sending={sending}
-              error={error}
-              inputBlocked={gate.inputBlocked || muted}
-              placeholder={muted ? t("composeUi.placeholder.muted") : gate.placeholder}
-              dmStatus={dmStatus}
-              pendingRolls={pendingRolls}
-              members={state.members}
-              floor={floor}
-              spotlighted={gate.spotlighted}
-              heldSpotlightNames={gate.heldSpotlightNames}
-              encounter={state.encounter}
-              onReleaseFloor={releaseFloor}
-              joinBanner={joinBanner}
-              notice={narrationNotice}
-              composerRef={composerRef}
-              highlight={composerPulse}
-              directorArm={state.directorArm}
-              leadPrivate={leadPrivate}
-              onLeadPrivateChange={setLeadPrivate}
-              speaker={speaker}
-              onSpeakerChange={setSpeaker}
-              cast={state.cast}
-              onXCard={campaign.gameSettings?.safety?.xCard ? raiseXCard : undefined}
-              storyCadence={storyCadence}
-              onCaptureStory={openStoryCapture}
-              onSnoozeStory={snoozeStory}
-              onSubmit={submit}
-            />
-          )}
-        </SessionChatColumn>
+      <TableRow
+        seat={layoutSeat}
+        active={arranged}
+        tabs={panelTabs}
+        panes={[
+          {
+            id: "rail",
+            node: fightStaged ? null : (
+              <PartyRail
+                sheets={sheets}
+                meUserId={me.id}
+                encounter={state.encounter}
+                genre={campaign.genre}
+                onOpen={() => openTab("party")}
+              />
+            ),
+          },
+          {
+            id: "table",
+            node: (
+              <SessionChatColumn
+                stage={
+                  fightStaged && state.battleMap ? (
+                    <div className="cine-fight">
+                      {chronicle}
+                      {chronicle ? <ChronicleSplitter /> : null}
+                      <div className="cine-fight-board cine-board-frame">
+                        <Suspense fallback={<PanelLoading />}>
+                        <BattleMapPanel
+                          campaignId={campaign.id}
+                          meUserId={me.id}
+                          activeSheetId={state.activeSheetId}
+                          multiCharacter={campaign.gameSettings?.multiCharacter ?? "off"}
+                          view={state.battleMap}
 
-        <SidePanel
-          levelUpLevel={myLevelUp && !levelUpShown ? myLevelUp.level : null}
-          onLevelUp={() => setLevelUpByHand(true)}
-          pinsVersion={pinsVersion}
-          campaignId={campaign.id}
-          sheets={sheets}
-          members={state.members}
-          meUserId={me.id}
-          steersStory={steersStory}
-          adjudicates={caps.adjudicates}
-          dmCover={campaign.dmCover}
-          messages={state.messages}
-          dmIntents={state.dmIntents}
-          floor={floor}
-          directorArm={state.directorArm}
-          isLead={isLead}
-          leadUserId={campaign.leadUserId}
-          canTransferLead={isLead || campaign.ownerUserId === me.id}
-          spotlightUserIds={floor.mode === "spotlight" ? floor.userIds : EMPTY_IDS}
-          onlineUserIds={state.online}
-          auditLog={auditLog}
-          locations={locations}
-          chapters={state.chapters}
-          notes={state.notes}
-          facts={state.facts}
-          characterEvents={state.characterEvents}
-          refreshNotes={refreshNotes}
-          refreshFacts={refreshFacts}
-          sideThreads={state.sideThreads}
-          refreshSideChat={refreshSideChat}
-          whispers={state.whispers}
-          whisperUnread={state.whisperUnread}
-          dmInbox={state.dmInbox}
-          refreshWhispers={refreshWhispers}
-          chatTarget={chatTarget}
-          onChatTargetHandled={clearChatTarget}
-          onMessageUser={setChatTarget}
-          mediaStatus={state.mediaStatus}
-          inviteCode={campaign.inviteCode}
-          midGameJoinOpen={campaign.gameSettings?.midGameJoinOpen ?? false}
-          campaign={campaign}
-          encounter={state.encounter}
-          battleMap={state.battleMap}
-          mapPing={state.mapPing}
-          fx={state.fx}
-          onFxPlayed={markFxPlayed}
-          camera={state.camera}
-          onCameraDone={markCameraDone}
-          onCompose={composeFromBoard}
-          scene={state.scene}
-          canDraw={caps.adjudicates || campaign.gameSettings?.boardDrawing !== false}
-          onOpenLabel={openLabel}
-          refreshBattleMap={refreshBattleMap}
-          tabs={panelTabs}
-          tab={panelTab}
-          onTabChange={setPanelTab}
-          pendingCount={pendingNoteCount}
-          chatUnread={chatUnreadTotal}
-          mobileVisible={mobileView === "panel"}
-          relationshipsVersion={state.relationshipsVersion}
-          factionsVersion={state.factionsVersion}
-          shopsVersion={state.shopsVersion}
-          coins={state.coins}
-          activeSheetId={state.activeSheetId}
-          questsVersion={state.questsVersion}
-          cast={state.cast}
-          relationshipsEnabled={relationshipsEnabled}
-          beats={state.beats}
-          storyDue={storyDue}
-          glance={<QuestGlance quests={campaign.questLog ?? []} onOpen={() => setPanelTab("story")} />}
-          tabletopChronicle={chronicleDesk ?? undefined}
-          stageBoard={fightStaged}
-        />
-      </div>
+                          intents={state.battleMap.intents}
+                          genre={campaign.gameSettings?.genre ?? null}
+                          turnBudget={
+                            // The engine's count, the one the Hand reads
+                            // (src/lib/battlemap/hand-table.ts): a spent reaction
+                            // lives in reactionsUsed, not the turn budget.
+                            actingSheet && !actingSheet.isCompanion && state.encounter
+                              ? turnHudBudget(
+                                  turnFromEncounter(state.encounter, actingSheet, {
+                                    myTurn: state.encounter.turn?.ownerId === actingSheet.id,
+                                  }),
+                                )
+                              : null
+                          }
+                          canDirect={caps.adjudicates}
+                          canFocusPing={steersStory}
+                          ping={state.mapPing ?? null}
+                          fx={state.fx}
+                          onFxPlayed={markFxPlayed}
+                          camera={state.camera ?? null}
+                          onCameraDone={markCameraDone}
+                          onCompose={composeFromBoard}
+                          sky={state.scene ?? null}
+                          canDraw={caps.adjudicates || campaign.gameSettings?.boardDrawing !== false}
+                          onOpenLabel={openLabel}
+                          encounter={state.encounter ?? null}
+                          sheets={sheets}
+                          refreshBattleMap={refreshBattleMap}
+                          chronicle={chronicleDesk}
+                          visible
+                        />
+                        </Suspense>
+                      </div>
+                    </div>
+                  ) : undefined
+                }
+                state={state}
+                campaignId={campaign.id}
+                meUserId={me.id}
+                steersStory={steersStory}
+                narrationStatus={narrationStatus}
+                onReplayAudio={replayNarration}
+                visible={mobileView === "chat"}
+                askOpen={askOpen}
+                onAskOpenChange={setAskOpen}
+                refreshAsks={refreshAsks}
+                refreshFacts={refreshFacts}
+                onError={setError}
+                onLoreCheck={openLoreCheck}
+                onRenarrate={setRenarrate}
+                onPinned={bumpPins}
+              >
+                {needsCharacter ? (
+                  <Suspense fallback={<PanelLoading />}>
+                    <CharacterGate campaignId={campaign.id} />
+                  </Suspense>
+                ) : (
+                  <>
+                  {ended ? (
+                    <SessionBanner
+                      glyph="tab-campaigns"
+                      tone="quiet"
+                      className="campaign-ended-banner"
+                      title={syncT("upstreamUi.4ed111e75262")}
+                      actions={
+                        <Link href="/" className={bannerButtonClass(true)}>
+                          {syncT("upstreamUi.ffdb9c4496d2")}</Link>
+                      }
+                    >
+                      {syncT("upstreamUi.40cd0376b71a")}</SessionBanner>
+                  ) : null}
+                  {/* The plan the party is coordinating (issue 254), above the
+                      box its players would otherwise type their moves into. */}
+                  {state.coordination ? (
+                    <CoordinationPanel campaignId={campaign.id} phase={state.coordination} meUserId={me.id} steersStory={steersStory} />
+                  ) : null}
+                  <Composer
+                    campaignLocale={campaign.gameSettings.locale}
+                    campaignId={campaign.id}
+                    trackAmmo={campaign.gameSettings?.variantRules?.ammunition ?? false}
+                    edges={state.battleMap?.edges}
+                    sheets={sheets}
+                    meUserId={me.id}
+                    activeSheetId={state.activeSheetId}
+                    steersStory={steersStory}
+                    isDm={isDm}
+                    kind={kind}
+                    onKindChange={setKind}
+                    input={input}
+                    setInput={setInput}
+                    sending={sending}
+                    error={error}
+                    inputBlocked={gate.inputBlocked || silenced}
+                    placeholder={silenced ? silencedPlaceholder : gate.placeholder}
+                    dmStatus={dmStatus}
+                    pendingRolls={pendingRolls}
+                    members={state.members}
+                    floor={floor}
+                    spotlighted={gate.spotlighted}
+                    heldSpotlightNames={gate.heldSpotlightNames}
+                    encounter={state.encounter}
+                    onReleaseFloor={releaseFloor}
+                    joinBanner={joinBanner}
+                    notice={narrationNotice}
+                    composerRef={composerRef}
+                    highlight={composerPulse}
+                    directorArm={state.directorArm}
+                    leadPrivate={leadPrivate}
+                    onLeadPrivateChange={setLeadPrivate}
+                    speaker={speaker}
+                    onSpeakerChange={setSpeaker}
+                    cast={state.cast}
+                    onXCard={campaign.gameSettings?.safety?.xCard ? raiseXCard : undefined}
+                    storyCadence={storyCadence}
+                    onCaptureStory={openStoryCapture}
+                    onSnoozeStory={snoozeStory}
+                    onSubmit={submit}
+                  />
+                  </>
+                )}
+              </SessionChatColumn>
+            ),
+          },
+          {
+            id: "panel",
+            node: (
+              <SidePanel
+                {...routerProps}
+                tabs={railTabs}
+                tab={railTab}
+                onTabChange={openTab}
+                pendingCount={pendingNoteCount}
+                chatUnread={chatUnreadTotal}
+                mobileVisible={mobileView === "panel"}
+                storyDue={storyDue}
+                glance={<QuestGlance quests={campaign.questLog ?? []} onOpen={() => openTab("story")} />}
+              />
+            ),
+          },
+          ...popped.flatMap((tab) => {
+            const def = panelTabs.find(([id]) => id === tab);
+            return def
+              ? [{ id: tabPane(tab), node: <TabPane {...routerProps} paneTab={tab} paneLabel={def[1]} onOpenTab={openTab} /> }]
+              : [];
+          }),
+        ]}
+      />
 
       <RollToast latestRoll={state.latestRoll} sheets={sheets} />
 
@@ -947,8 +1158,12 @@ export function SessionView({
           });
         }}
       />
-      <LabelSheet campaignId={campaign.id} label={openedLabel} onClose={() => setOpenedLabel(null)} />
-      <DiceLookDialog open={diceLookOpen} onOpenChange={setDiceLookOpen} />
+      <Suspense fallback={null}>
+      {labelMounted ? (
+        <LabelSheet campaignId={campaign.id} label={openedLabel} onClose={() => setOpenedLabel(null)} />
+      ) : null}
+      {diceLookMounted ? <DiceLookDialog open={diceLookOpen} onOpenChange={setDiceLookOpen} /> : null}
+      {diceTrayMounted ? (
       <DiceTrayDialog
         open={diceTrayOpen}
         onOpenChange={setDiceTrayOpen}
@@ -959,7 +1174,9 @@ export function SessionView({
           aiTable: campaign.gameSettings?.dmMode === "ai" || campaign.gameSettings?.dmMode === "steered",
         })}
       />
+      ) : null}
 
+      {helpMounted ? (
       <HelpDialog
         open={helpOpen}
         onOpenChange={setHelpOpen}
@@ -978,13 +1195,16 @@ export function SessionView({
             : []),
         ]}
       />
+      ) : null}
 
+      {tourMounted ? (
       <GuidedTour
         open={tour !== null}
         steps={tourSteps}
         onPrepare={prepareTourStep}
         onClose={closeTour}
       />
+      ) : null}
 
       {loreCheck ? (
         <LoreCheckDialog
@@ -1007,6 +1227,7 @@ export function SessionView({
           onClose={() => setRenarrate(null)}
         />
       ) : null}
+      </Suspense>
 
       <RestMoment auditLog={auditLog} sheets={sheets} />
       <LootMoment sheet={mySheet} />

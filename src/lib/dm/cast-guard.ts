@@ -26,7 +26,7 @@ import { enemyCounterspell } from "@/lib/dm/enemy-reactions";
 import { endInvisibilityOnCast } from "@/lib/dm/attack-marks";
 import { endSanctuaryOnHarm } from "@/lib/dm/spell-defenses";
 import type { Campaign } from "@/lib/db/campaigns";
-import { getActiveEncounter, saveEncounter, type Encounter } from "@/lib/db/encounters";
+import { getActiveEncounter, type Encounter } from "@/lib/db/encounters";
 import { patchSheet } from "@/lib/db/sheets";
 import { advanceClock } from "@/lib/db/clock";
 import type { CharacterSheet, FullPatchSheetInput } from "@/lib/schemas/sheet";
@@ -38,7 +38,7 @@ import { describeCastingTime, type SpellFacts } from "@/lib/srd/spell-facts";
 import { conditionExtraActions } from "@/lib/srd/condition-effects";
 import { canAct } from "@/lib/dm/can-act";
 import { incapacitatedBy } from "@/lib/dm/condition-logic";
-import { attacksAllowedFor, budgetFor, storeBudget } from "@/lib/dm/turn-budget";
+import { attacksAllowedFor, budgetFor, markReactionUsed, storeBudget } from "@/lib/dm/turn-budget";
 import { spellAuthorsFor } from "@/lib/dm/spell-authors";
 import { clearSpellConditionsByName, setConcentration } from "@/lib/dm/concentration";
 import { repeatSpell } from "@/lib/dm/cast-repeat";
@@ -56,10 +56,15 @@ import {
   reactionSpellOnOwnTurn,
   turnCharge,
   withOpenCast,
+  bonusCastOf,
+  MANTLE_OF_MAJESTY,
+  type BonusCast,
   type SlotPlan,
 } from "@/lib/dm/cast-rules";
 import type { TurnBudget } from "@/lib/dm/action-budget";
 import { paidByManualTick } from "@/lib/dm/manual-ticks";
+import { reactionRefusal } from "@/lib/dm/reaction-gate";
+import { reactionTimingOf } from "@/lib/dm/reaction-kinds";
 import { readiedRelease, releaseReadied } from "@/lib/dm/readied-spell";
 import { antimagicProblem, silenceProblem } from "@/lib/dm/zone-rules";
 import { placeSpellZone } from "@/lib/dm/zone-cast";
@@ -171,6 +176,12 @@ type TurnPlan =
   // use_reaction spent the reaction; the cast only marks the caster's own turn.
   | { kind: "mark"; budget: TurnBudget };
 
+// The feature that lets this one-action spell take the bonus action
+// (cast-rules.ts bonusCastOf), with the spell's school from the pack.
+function bonusCastFor(sheet: CharacterSheet, facts: SpellFacts | null, spell: string): BonusCast | null {
+  return bonusCastOf(sheet, facts, facts ? spellSchoolFor(facts.runsAs ?? facts.name ?? spell) : null);
+}
+
 function planTurn(
   sheet: CharacterSheet,
   encounter: Encounter | null,
@@ -215,6 +226,7 @@ function planTurn(
     inFight: true,
     budget,
     reactionSpent: false,
+    bonusCast: bonusCastFor(sheet, facts, spell),
   });
   if ("error" in charge) {
     return charge;
@@ -299,9 +311,20 @@ export function castSpell(
   }
 
   // ---- refusals, in the order a person would give them ----
-  const able = canAct({ sheet, encounter, kind: reactionTime ? "reaction" : "cast" });
-  if (!able.ok) {
-    return { error: able.error };
+  // A reaction spell is asked through the one reaction gate, with the
+  // spell's own timing (src/lib/dm/reaction-kinds.ts, issue 233): Shield cast
+  // as the hit that dropped the caster lands is judged as they stood before
+  // it, whichever tool casts it; Hellish Rebuke is not.
+  if (reactionTime) {
+    const refused = reactionRefusal(campaign.id, sheet, encounter, name, reactionTimingOf(engine));
+    if (refused) {
+      return { error: refused };
+    }
+  } else {
+    const able = canAct({ sheet, encounter, kind: "cast" });
+    if (!able.ok) {
+      return { error: able.error };
+    }
   }
   const held = spellHeldProblem(sheet, spell, facts, {
     ritual: input.ritual,
@@ -367,12 +390,18 @@ export function castSpell(
   // spends its once-a-day counter instead of a slot while one is left
   // (src/lib/srd/feat-spells.ts); with the counter spent, a slot pays.
   const freeCast = input.ritual || signature ? null : freeCastCounter(sheet, spell, facts, input.level);
+  // Mantle of Majesty's Command costs no slot while the mantle holds.
+  const mantled =
+    !input.ritual && !signature && !freeCast && /^command$/i.test(engine.trim()) &&
+    sheet.conditions.some((entry) => entry.trim().toLowerCase().startsWith(MANTLE_OF_MAJESTY));
   const slot: SlotPlan | { error: string } = input.ritual
     ? { kind: "none", note: `${name} cast as a ritual: no slot spent.` }
     : signature
       ? { kind: "none", note: `${name} is a Signature Spell: cast at 3rd level with no slot, once until a short rest.` }
       : freeCast
         ? { kind: "none", note: `${name} is cast without a slot (a feat's free cast): once until a long rest.` }
+        : mantled
+          ? { kind: "none", note: `${name} is cast through Mantle of Majesty: no slot spent.` }
         : // A slot the player marked spent by hand for this cast pays for it.
           paidByManualTick(sheet, slotPlan(sheet, spell, facts, input.level), input.level ?? facts?.level, facts?.level, Boolean(input.dryRun));
   if ("error" in slot) {
@@ -449,11 +478,10 @@ export function castSpell(
       result.costNote = turn.note;
     }
   } else if (turn.kind === "reaction" && encounter) {
-    encounter.reactionsUsed = [...encounter.reactionsUsed, sheet.id];
     if (turn.budget) {
       encounter.turnBudget = turn.budget;
     }
-    saveEncounter(encounter);
+    markReactionUsed(encounter, sheet.id);
     result.cost = "their reaction";
   } else if (turn.kind === "mark" && encounter) {
     storeBudget(encounter, turn.budget);

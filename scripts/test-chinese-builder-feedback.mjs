@@ -206,7 +206,8 @@ await test("identity tool counts preserve original English grammar, actual choic
   const custom = [{ count: 3, label: "Authored {tools}\nWorkbench", from: ["Cloud tool"] }];
   assert.ok(builderToolChoicesText(custom, "zh-CN").includes(custom[0].label));
   const identity = fs.readFileSync(path.join(root, "src/app/characters/builder/steps/IdentityStep.tsx"), "utf8");
-  assert.match(identity, /const GENDERS = \["Female", "Male", "Nonbinary"\]/);
+  assert.match(identity, /import \{ GENDERS, type Gender \} from "@\/lib\/gender"/);
+  assert.deepEqual((await import("../src/lib/gender.ts")).GENDERS, ["Female", "Male", "Nonbinary"]);
   assert.match(identity, /GENDERS\.map\(\(value\) => \(\{ value, label:/); assert.match(identity, /value: "pc"/); assert.match(identity, /value: "companion"/);
   const review = readValidationJson(path.join(root, "docs/validation/character-builder-identity-translations.json"));
   for (const [file, hash] of Object.entries({ ...review.sources, ...review.catalogs })) assert.equal(createHash("sha256").update(fs.readFileSync(path.join(root, file))).digest("hex"), hash, file);

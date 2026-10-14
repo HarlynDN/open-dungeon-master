@@ -1,6 +1,16 @@
 import { defineMessages } from "./catalog.ts";
 
 export const MAP_FORGE_MESSAGES = /*#__PURE__*/ defineMessages({
+  "mapForgeUi.sceneRough": {"en": "{scene} scatters rough ground.", "zh-CN": "{scene}会分布一些困难地形。"},
+  "mapForgeUi.sceneTerrain": {"en": "{scene} uses {theme} terrain.", "zh-CN": "{scene}使用{theme}地形。"},
+  "mapForgeUi.sceneHelp": {"en": "The kind of place picks the terrain and the light. What you say outright overrules it.", "zh-CN": "场所类型决定地形和光照；手动选择的设置优先。"},
+  "mapForgeUi.auto": {"en": "Auto", "zh-CN": "自动"},
+  "mapForgeUi.sceneLight": {"en": "Light from the kind of place", "zh-CN": "根据场所类型确定光照"},
+  "mapForgeUi.sceneOverride": {"en": "Always {theme}, whatever the kind of place", "zh-CN": "无论场所类型如何，始终使用{theme}"},
+  "mapForgeUi.sceneAgain": {"en": "Press again to follow the kind of place", "zh-CN": "再次点击以跟随场所类型"},
+  "mapForgeUi.decided": {"en": "What it decided", "zh-CN": "生成结果说明"},
+  "mapForgeUi.openGround": {"en": "Not set: open ground", "zh-CN": "未设置：开阔地面"},
+  "mapForgeUi.placeKind": {"en": "Kind of place", "zh-CN": "场所类型"},
   "mapForgeUi.heading.library": {"en": "The map drawer", "zh-CN": "地图库"},
   "mapForgeUi.heading.studio": {"en": "Roll the board", "zh-CN": "生成地图"},
   "mapForgeUi.theme": { "en": "Theme", "zh-CN": "地形" },

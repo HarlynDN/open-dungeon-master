@@ -1,17 +1,22 @@
 // Owned display and actual selection callbacks, without model/audio/network calls.
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {createHash} from 'node:crypto';
+import {execFileSync} from 'node:child_process';
 import {choiceRenderer,choiceCases,labelCases} from './lib/feat-choice-ui-fixtures.mjs';
 const {campaignEntryError} = await import('../src/lib/i18n/campaign-entry-presentations.ts');
 const renderer = await choiceRenderer();
 const cases = choiceCases();
 const labels = labelCases();
 const golden = JSON.parse(fs.readFileSync(new URL('./fixtures/feat-choice-en.json',import.meta.url),'utf8'));
-const hash = rows => createHash('sha256').update(JSON.stringify(rows)).digest('hex');
+// Compare the accepted v0.27 UI directly: it adds fixed-only grants and
+// restricted skill/expertise choices. Keep the historical fixture intact.
+const upstreamFiles = new Set(['src/app/characters/builder/FeatChoicesFields.tsx','src/app/campaigns/[campaignId]/LabelSheet.tsx']);
+const upstream = await choiceRenderer(file => upstreamFiles.has(file)
+  ? execFileSync('git', ['show', `2b0b6b6e:${file}`], {encoding:'utf8'})
+  : fs.readFileSync(file,'utf8'));
 assert.equal(cases.length,golden.choiceStates);
-assert.equal(hash(cases.map(row=>[row.name,renderer.render('default',row.props,'en')])),golden.sha256.choices,'English choices');
-assert.equal(hash(labels.map(row=>[row.name,renderer.render('LabelSheet',row.props,'en',row.options)])),golden.sha256.labels,'English map labels');
+for(const row of cases) assert.equal(renderer.render('default',row.props,'en'),upstream.render('default',row.props,'en'),`Upstream English choices: ${row.name}`);
+for(const row of labels) assert.equal(renderer.render('LabelSheet',row.props,'en',row.options),upstream.render('LabelSheet',row.props,'en',row.options),`Upstream English map label: ${row.name}`);
 const rowFor = name => cases.find(row=>row.name===name).props;
 const changed = [];
 function show(name,picks) {

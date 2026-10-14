@@ -340,7 +340,6 @@ export function MapEditor({
               <MapRollPanel
                 width={selected.width}
                 height={selected.height}
-                genre={state.genre}
                 busy={busy}
                 onRoll={async (generated) => {
                   const ok = await painter.edit({ replaceTerrain: generated.terrain });

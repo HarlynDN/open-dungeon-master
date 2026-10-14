@@ -433,8 +433,8 @@ export function DmTablesPanel({
               // live in the row's menu under the words they always carried.
               const items: ContextMenuItem[] = [
                 { id: "roll", label: t("dmToolsUi.tables.roll"), glyph: dieGlyph(sides), disabled: busy === table.id, onSelect: () => void roll(table) },
-                { id: "duplicate", label: t("dmToolsUi.duplicateName", { name: table.name }), glyph: "system-homebrew", disabled: busy === `copy-${table.id}`, onSelect: () => void duplicate(table) },
-                { id: "delete", label: t("dmToolsUi.tables.delete"), glyph: "quest-failed", tone: "danger", separated: true, onSelect: () => void remove(table) },
+                { id: "duplicate", label: t("dmToolsUi.duplicateName", { name: table.name }), glyph: "ui-duplicate", disabled: busy === `copy-${table.id}`, onSelect: () => void duplicate(table) },
+                { id: "delete", label: t("dmToolsUi.tables.delete"), glyph: "ui-delete", tone: "danger", separated: true, onSelect: () => void remove(table) },
               ];
               return (
                 <ContextMenu key={table.id} as="li" items={items} label={table.name} className={panelRow}>

@@ -1,6 +1,7 @@
 "use client";
 
 import type { BuilderValidation } from "@/lib/characters/builder-feedback";
+import type { Gender } from "@/lib/gender";
 import { authoredFeatDesc } from "@/lib/srd/feat-effects";
 import { toolChoiceOf } from "@/lib/srd/tool-choices";
 import { useEffect, useRef, useState } from "react";
@@ -10,7 +11,7 @@ import type {
   CreateSheetInput,
   SheetAttachment,
 } from "@/lib/schemas/sheet";
-import { removeAsiChoices } from "@/lib/srd/asi";
+import { earnedAsiCount, removeAsiChoices } from "@/lib/srd/asi";
 import { halfFeatPicks, halfFeatPoints } from "@/lib/srd/legality/half-feats";
 import { withoutFeatPicks, type FeatChoices, type FeatPicks } from "@/lib/srd/feat-grants";
 import { racialFeatCount } from "@/lib/srd/race-id";
@@ -65,9 +66,11 @@ export function useBuilderState({
   classes: ClassOption[];
   backgrounds: BackgroundOption[];
 }) {
+  const { storedLevel, levelFloor, levelLocked } = storedLevelRange(initial, initialLevel);
   const [name, setName] = useState(initial?.name ?? "");
   const [alignment, setAlignment] = useState(initial?.alignment ?? "N");
-  const [level, setLevel] = useState(fixedLevel ?? 1);
+  // A stored character opens at its own level, never at 1.
+  const [level, setLevel] = useState(fixedLevel ?? (initial ? storedLevel : 1));
   const [raceId, setRaceId] = useState(initial?.race ?? "");
   const [classId, setClassId] = useState(initial?.class ?? "");
   const [subclass, setSubclass] = useState(initial?.subclass ?? "");
@@ -211,7 +214,7 @@ export function useBuilderState({
   // One-shot acknowledgement for the "caster with no spells" warning.
   const [spellWarningAck, setSpellWarningAck] = useState(false);
   const [backstory, setBackstory] = useState(initial?.backstory ?? "");
-  const [gender, setGender] = useState(initial?.gender ?? "");
+  const [gender, setGender] = useState<Gender>(initial?.gender ?? "");
   const [appearance, setAppearance] = useState(initial?.appearance ?? "");
   // An uploaded photo here means the creation routes skip the ComfyUI render
   // entirely (they only queue one when the sheet arrives without a portrait).
@@ -497,6 +500,8 @@ export function useBuilderState({
 
   return {
     keepsStoredGear,
+    levelFloor,
+    levelLocked,
     asiRecorded,
     asiReachedLevel,
     primalChampionHeld: initialHoldsPrimalChampion(initial, initialLevel),
@@ -575,4 +580,22 @@ function initialHoldsPrimalChampion(initial: CreateSheetInput | undefined, initi
     reachesPrimalChampion({ class: initial.class, classes: initial.classes, level }) &&
     holdsFeature(initial, "primal champion")
   );
+}
+
+// The level a stored character reached, and how far an edit outside a table
+// may move it (issue 229). Improvements taken in play sit in its scores with
+// no recorded pick to give back, so it may not go below the level it earned
+// them at; a split between classes is play's to change, so a character
+// holding more than one keeps its level. A new character ranges freely.
+export function storedLevelRange(
+  initial: CreateSheetInput | undefined,
+  initialLevel: number | undefined,
+): { storedLevel: number; levelFloor: number; levelLocked: boolean } {
+  if (!initial) {
+    return { storedLevel: 1, levelFloor: 1, levelLocked: false };
+  }
+  const storedLevel = Math.max(1, Math.min(20, initialLevel ?? initial.hitDice?.total ?? 1));
+  const levelLocked = (initial.classes ?? []).length > 1;
+  const takenInPlay = earnedAsiCount(storedLevel, initial.class) > (initial.asiChoices?.length ?? 0);
+  return { storedLevel, levelFloor: levelLocked || takenInPlay ? storedLevel : 1, levelLocked };
 }

@@ -102,10 +102,7 @@ export const IMPORT_FLOW_MESSAGES = /*#__PURE__*/ defineMessages({
     "en": "{count} of the board's beats are already in the arc and are not added twice.",
     "zh-CN": "主线中已有 {count} 个相同的剧情节点，不会重复添加。"
   },
-  "importFlow.arcRoom": {
-    "en": "The arc has room for {room} more beats; the last {lost} of the board's are left out.",
-    "zh-CN": "主线还可容纳 {room} 个剧情节点；故事板最后的 {lost} 个节点不会导入。"
-  },
+  "importFlow.arcRoom": {"en": "The arc has room for {room} more beats; the last {lost} cannot join it. Their full text is kept as prep cards, but the party will not be steered to them.", "zh-CN": "主线还可容纳 {room} 个剧情节点；最后 {lost} 个无法加入主线，但会保留完整正文作为备团卡片，不会引导队伍前往这些节点。"},
   "importFlow.arcAppend": {
     "en": "{count} beats arrive as act {act}, after the {oldCount} already in the arc. Played and skipped beats, and the acts already recapped, are untouched.",
     "zh-CN": "将追加 {count} 个剧情节点作为第 {act} 幕，排在已有的 {oldCount} 个节点之后。已完成或跳过的节点，以及已有的幕总结均会保留。"

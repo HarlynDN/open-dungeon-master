@@ -28,7 +28,7 @@ export const arc={acts:1,premise:'Authored premise.',stakes:'Authored stakes.',a
  {act:1,text:'Authored played beat.',status:'done'},
  {act:1,text:'Authored skipped beat.',status:'skipped'},
  ],subArcs:[{id:'sa1',name:'Authored thread',goal:'Authored goal',status:'active'}],cast:[{id:'n1',name:'Authored NPC',role:'Authored role',agenda:'Authored agenda.',status:'active'}],events:[{id:'event1',name:'Authored event',kind:'npc_encounter',trigger:'Authored trigger',status:'pending'}],saga:{sagaIndex:2,title:'Authored saga',plannedActs:3,sketches:[{act:2,status:'sketch',milestone:'Authored milestone.',boss:{name:'Authored boss'},allies:[{name:'Authored ally'}]},{act:3,status:'sketch',milestone:'Authored next milestone.',allies:[{},{}]}],priorSagas:[{title:'Authored prior saga',resolution:'Authored resolution.'}],finaleBoss:{name:'Authored finale boss'}}};
-export const arcQueue=(patch={})=>[patch.expanded??true,patch.loading??false,patch.regenerating??false,'arc' in patch?patch.arc:arc,patch.outline??'',patch.editingBeat??null,patch.addingToAct??null,patch.draft??'',patch.beatBusy??false,patch.beatError??''];
+export const arcQueue=(patch={})=>[patch.expanded??true,patch.loading??false,patch.regenerating??false,{campaignId:'c',arc:'arc' in patch?patch.arc:arc,dmOutline:patch.outline??''},0,patch.editingBeat??null,patch.addingToAct??null,patch.draft??'',patch.beatBusy??false,patch.beatError??''];
 export const parentQueue=(patch={})=>[false,[1,2],0,patch.target??null,false,patch.reading??false,[{act:1,sagaIndex:1,title:'Authored act',recap:'Authored recap.'}]];
 export function storyCases() {
  const q=values=>({queues:{[storyFile]:values}});

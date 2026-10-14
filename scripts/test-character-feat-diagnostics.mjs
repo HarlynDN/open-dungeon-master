@@ -40,7 +40,7 @@ await test("all 128 pre-migration feat, feature, half-feat and grant verdicts re
   }
 });
 
-await test("all 19 new codes occur in actual refusals and stock explanations render in Chinese", () => {
+await test("all 20 codes occur in actual refusals and stock explanations render in Chinese", () => {
   const seen = new Set();
   for (const run of runs) {
     for (const detail of run.reported) seen.add(detail.code);
@@ -48,7 +48,17 @@ await test("all 19 new codes occur in actual refusals and stock explanations ren
     if (!run.name.startsWith("pack-")) assert.ok(!text.includes("中文翻译待补"), run.name);
     assert.ok(!/\{(?:feat|choices|count|room|requirement|source|damage|weapon|armor|skill|language|tool)\}/.test(text.replaceAll("未知{feat}", "未知专长")), run.name);
   }
-  assert.equal(seen.size, 19);
+  const details = [];
+  const spec = {...featGrantSpec(''), skills: 1, skillsFrom: ['arcana','history']};
+  const input = {proficiencies:{skills:[],expertise:[],tools:[],weapons:[],armor:[],languages:[]}, feats:[{name:'Authored training',desc:'',spec}],choices:{'Authored training':{skills:['stealth']}},strict:true};
+  const result = applyFeatGrants({...input,onProblem:detail=>details.push(detail)});
+  assert.deepEqual(result.proficiencies.skills, []);
+  assert.deepEqual(details.map(detail=>detail.english),result.problems);
+  assert.equal(characterRuleProblems({problems:result.problems,problemDetails:details},'en'), 'stealth is not a skill Authored training offers; pick from arcana, history.');
+  assert.match(characterRuleProblems({problems:result.problems,problemDetails:details},'zh-CN'), /Authored training.*隐匿.*奥秘.*历史/);
+  assert.deepEqual(applyFeatGrants({...input,strict:false}).problems, []);
+  details.forEach(detail=>seen.add(detail.code));
+  assert.equal(seen.size, 20);
   assert.deepEqual([...seen].sort(), CHARACTER_RULE_CODES.filter(code => (code.startsWith("ruleProblem.feat") && !code.startsWith("ruleProblem.featSpell")) || code === "ruleProblem.featureUnearned").sort());
 });
 

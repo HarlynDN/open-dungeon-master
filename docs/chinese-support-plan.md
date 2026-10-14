@@ -4,6 +4,20 @@ This is the active delivery plan. Implementation history remains in Git and the
 linked validation reports; it is not repeated here. The full playable flow is
 still incomplete. Delivery follows the latest approved text scope below.
 
+## Latest integration checkpoint (2026-10-15)
+
+Upstream v0.27.0 at `2b0b6b6e` is integrated with the Chinese locale contracts
+and English/Chinese Kokoro routing retained. The current model configuration
+remains unchanged. Validation is recorded once in
+[the integration evidence](validation/upstream-027-sync.json): 700 test files,
+lint and production build; real Chinese DM/utility and English DM calls;
+fresh offline bilingual embedding calibration; dual-model speech APIs and
+bounded browser playback/settings checks. The current UI manifest contains
+468 covered owners, zero pending literal sites and two deferred owners.
+The older counts below are milestone history, not current integration totals.
+This checkpoint does not close the broader real-play, native-shell or
+subjective voice-quality acceptance gaps.
+
 ## Approved scope and boundaries
 
 - Simplified Chinese (`zh-CN`) with an English switch, extensible locale registry.

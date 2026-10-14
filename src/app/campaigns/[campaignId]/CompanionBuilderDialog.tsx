@@ -155,6 +155,7 @@ export function CompanionBuilderDialog({
             onSubmit={submit}
             busy={busy}
             error={entryCharacterError(error, locale)}
+            onCancel={onClose}
           />
         </Dialog.Content>
       </Dialog.Portal>

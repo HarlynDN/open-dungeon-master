@@ -10,7 +10,6 @@ import {
 import {
   describeEndpoint,
   endpointKind,
-  openAiToolRoute,
   profileById,
   resolveSampling,
   toolRouteFromError,
@@ -26,15 +25,25 @@ import {
 import {
   buildPropsUrl,
   contextCacheKey,
-  openAiContextWindow,
+  OPENAI_CONTEXT_TOKENS,
   readContextWindow,
 } from "@/lib/dm/context-probe-logic";
 import { serverEnv } from "@/lib/server-env";
 import { isPrivateBackendHost } from "@/lib/backend-host";
 import { chatUsage, ollamaUsage, type TokenUsage } from "@/lib/usage/parse";
-import { localModelContextWindow } from "@/lib/text-models";
-import { harnessContextTokens } from "@/lib/harness/status";
+import { apiSpeedEligibility } from "@/lib/speed-tier";
+import { noteSpeed } from "@/lib/speed-status";
+import { DEFAULT_LOCAL_CONTEXT_TOKENS, knownLocalContextWindow } from "@/lib/text-models";
+import { catalogContextWindow, hostedContextWindow } from "@/lib/model-registry/catalog";
+import { ollamaModelInfo, soleListedModel } from "@/lib/model-registry/discovery";
+import { harnessConfig, harnessContextTokens } from "@/lib/harness/status";
 import { onWindows } from "@/lib/host-platform";
+import {
+  createStreamRepetitionGuard,
+  cutRepetition,
+  firstCopyOf,
+  streamRepetitionResponse,
+} from "@/lib/stream-repetition";
 
 // Shared chat-completion client for both providers:
 // - custom: any OpenAI-compatible /chat/completions (llama.cpp, LM Studio,
@@ -89,7 +98,9 @@ export type UpstreamResult = {
   // The backend's finish_reason for the first choice, when it sent one:
   // "stop", "tool_calls", or "length" for a reply cut at the output cap.
   // Read by the DM turn loop to tell a model that ran out of room from one
-  // that chose to say nothing (issue #120).
+  // that chose to say nothing (issue #120). "repetition" is this client's
+  // own: a narration-only reply that began looping, cut after its first copy
+  // (src/lib/stream-repetition.ts).
   finishReason?: string;
   // What the backend said the call cost, for the usage ledger
   // (src/lib/usage/ledger.ts); absent when it said nothing.
@@ -120,12 +131,23 @@ export type ChatRequestOptions = {
   // llama.cpp and vLLM honor chat_template_kwargs, and OpenRouter ignores
   // the unknown field. OpenAI answers 400 for it, so describeEndpoint keeps
   // it off that backend entirely. Reasoning deltas never reach onDelta: the
-  // stream parser forwards only delta.content.
+  // stream parser forwards only delta.content, and reads the reasoning only
+  // to stop a loop in it. `false` is sent too, not left to the server:
+  // Qwen's and Gemma's chat templates reason by default, so a call that
+  // wants none (the final narration) would think anyway. Left unset, the
+  // server's default stands.
   thinking?: boolean;
   // Body fields a previous attempt was rejected for, omitted on the retry.
   // Set only by requestCustomMessage's own unsupported-parameter path; no
   // caller outside this module should populate it.
   dropParams?: readonly string[];
+  // The tool routes this call has already been refused on, so two refusals
+  // that each name the other route cannot send it back and forth. Set only
+  // by requestCustomMessage's own route switch, like dropParams.
+  refusedRoutes?: readonly OpenAiToolRoute[];
+  // Which of the server's two models this call is for: the admin's Fast
+  // setting is per role (issue 255). Unset reads as the story model.
+  role?: "story" | "utility";
   // Only read by the "harness" provider (src/lib/harness/bridge.ts). An agent
   // program reads its tool list once, when it starts, so the DM loop hands
   // over every tool the turn could offer; the bridge still refuses a call
@@ -161,9 +183,11 @@ export function localMaxOutputTokens() {
 // Defaults to the model's full native window: Gemma 4's sliding-window
 // attention keeps the KV cache small even at 256K, so memory is not the
 // limiting factor. LOCAL_TEXT_CONTEXT can cap it to bound worst-case
-// prefill time on very long stories.
+// prefill time on very long stories. The window comes from the documented
+// table, then what Ollama said of the model, then the catalog's row for the
+// same weights, then the 128K most current models share.
 export function localContextTokens(model: string) {
-  const native = localModelContextWindow(model);
+  const native = knownLocalContextWindow(model) ?? catalogContextWindow(model) ?? DEFAULT_LOCAL_CONTEXT_TOKENS;
   const raw = serverEnv("LOCAL_TEXT_CONTEXT");
   const parsed = Number.parseInt(raw, 10);
 
@@ -207,20 +231,33 @@ export function storyContextTokens(settings: {
   if (Number.isFinite(raw) && raw > 0) {
     return Math.max(2_048, raw);
   }
-  // OpenAI has nothing to probe, so its window comes from the model's name
-  // (src/lib/dm/context-probe-logic.ts). A blank campaign model resolves the
-  // way requestCustomMessage resolves it.
+  // OpenAI has nothing to probe, so its window comes from the catalog's
+  // row, capped at the shared floor (src/lib/dm/context-probe-logic.ts): the
+  // retired small-window models keep their real size, a model the catalog
+  // has never heard of packs against the floor. A blank campaign model
+  // resolves the way requestCustomMessage resolves it.
   if (endpointKind(settings.customBaseUrl ?? "") === "openai") {
-    return openAiContextWindow(
-      (settings.customModel ?? "").trim() ||
-        getGlobalConfig().text.customModel ||
-        serverEnv("OPENAI_COMPAT_MODEL"),
+    return openAiWindow(
+      settings.customBaseUrl ?? "",
+      (settings.customModel ?? "").trim() || getGlobalConfig().text.customModel || serverEnv("OPENAI_COMPAT_MODEL"),
     );
   }
   const probed = probedContextWindows.get(
     contextCacheKey(settings.customBaseUrl ?? "", settings.customModel ?? ""),
   );
-  return probed ? Math.max(2_048, probed) : DEFAULT_CUSTOM_CONTEXT_TOKENS;
+  if (probed) {
+    return Math.max(2_048, probed);
+  }
+  // A hosted provider (OpenRouter, DeepSeek, Groq and the rest) answers no
+  // /props, but the catalog knows its models' windows. Capped where OpenAI
+  // is, and for the same reason: the prompt is billed by the token.
+  const hosted = hostedContextWindow(settings.customBaseUrl ?? "", settings.customModel ?? "");
+  return hosted ? Math.min(Math.max(2_048, hosted), OPENAI_CONTEXT_TOKENS) : DEFAULT_CUSTOM_CONTEXT_TOKENS;
+}
+
+function openAiWindow(baseUrl: string, model: string): number {
+  const known = hostedContextWindow(baseUrl, model);
+  return known ? Math.min(Math.max(2_048, known), OPENAI_CONTEXT_TOKENS) : OPENAI_CONTEXT_TOKENS;
 }
 
 // Windows learned from an endpoint's own /props, keyed by base URL. Probed
@@ -281,6 +318,42 @@ export async function probeCustomContextWindow(
   }
 }
 
+// The context window of the model a utility call (Ask, the lore check) runs
+// on, resolved the way requestUtilityMessage (src/lib/dm/model.ts) routes it.
+// A local or custom utility model that fails is retried on the story model
+// with the same messages, so those two routes answer the smaller of the two
+// windows: what is sized for the utility model must still fit the story
+// model it may land on. A custom endpoint is probed once, as the turn probes
+// the story endpoint (src/lib/dm/context-retrieval.ts).
+export async function utilityContextTokens(settings: {
+  textProvider: string;
+  localTextModel: string;
+  customBaseUrl?: string;
+  customModel?: string;
+  utilityProvider: string;
+  utilityModel: string;
+  utilityBaseUrl: string;
+  utilityApiKey: string;
+}): Promise<number> {
+  const model = settings.utilityModel.trim();
+  if (settings.utilityProvider === "harness" || (settings.textProvider === "harness" && !model)) {
+    const config = harnessConfig();
+    return harnessContextTokens({ ...config, model: config.utilityModel || config.model });
+  }
+  const story = storyContextTokens(settings);
+  if (!model) {
+    return story;
+  }
+  if (settings.utilityProvider === "local") {
+    return Math.min(localContextTokens(model), story);
+  }
+  if (endpointKind(settings.utilityBaseUrl) === "openai") {
+    return Math.min(openAiWindow(settings.utilityBaseUrl, model), story);
+  }
+  const probed = await probeCustomContextWindow(settings.utilityBaseUrl, settings.utilityApiKey, model);
+  return Math.min(probed ? Math.max(2_048, probed) : DEFAULT_CUSTOM_CONTEXT_TOKENS, story);
+}
+
 export function resolveTextTimeoutMs(
   explicit: number | undefined,
   envKey: string,
@@ -325,7 +398,88 @@ function createRequestTimeout(ms: number) {
     clear: () => clearTimeout(timeoutId),
     timedOut: () => timedOut,
     abortNow,
+    cancel: () => controller.abort(),
   };
+}
+
+// Thrown from inside a stream reader to stop a reply that began repeating.
+// firstCopy is the reply up to the end of the loop's first copy, or null
+// when there is no reply to keep: a loop in the reasoning channel, or one
+// whose first copy ends inside reasoning the server left in the reply.
+class StreamRepetitionError extends Error {
+  readonly firstCopy: string | null;
+
+  constructor(firstCopy: string | null) {
+    super("The model began repeating itself.");
+    this.firstCopy = firstCopy;
+  }
+}
+
+// A call that may only narrate (toolChoice "none": the turn's forced last
+// call, its tools-closed rescue, a continue, a reroll) loses nothing a table
+// needs when its reply is cut after the loop's first copy, so that copy is
+// the reply. A call that could still choose tools fails instead: its prose
+// without the calls the stream never finished would narrate outcomes nothing
+// resolved.
+function narratesOnly(options: ChatRequestOptions) {
+  return options.toolChoice === "none";
+}
+
+function repeatedStreamResult(error: StreamRepetitionError, options: ChatRequestOptions): UpstreamResult {
+  if (error.firstCopy !== null && narratesOnly(options)) {
+    console.warn("[model] the narration began repeating one passage; its first copy is the reply");
+    return { message: { content: error.firstCopy }, finishReason: "repetition" };
+  }
+  return { error: streamRepetitionResponse() };
+}
+
+function guardStreamDelta(onDelta: StreamDeltaHandler | undefined, cancel: () => void) {
+  if (!onDelta) return undefined;
+  const guard = createStreamRepetitionGuard();
+  let streamed = "";
+  return (text: string) => {
+    streamed += text;
+    if (guard.push(text)) {
+      cancel();
+      throw new StreamRepetitionError(firstCopyOf(streamed, guard.firstCopyEnd));
+    }
+    onDelta(text);
+  };
+}
+
+// The reasoning channel loops too, and on a server with no reasoning budget
+// it runs to the output cap before any story text. Read only for that; it
+// never reaches the table.
+function guardReasoningDelta(streaming: boolean, cancel: () => void) {
+  if (!streaming) return undefined;
+  const guard = createStreamRepetitionGuard();
+  return (text: string) => {
+    if (guard.push(text)) {
+      cancel();
+      throw new StreamRepetitionError(null);
+    }
+  };
+}
+
+// A reply that arrived whole cannot be stopped early, but one that may only
+// narrate is cut after a loop's first copy before a continue, a reroll, an
+// expansion, the guard's rewrite or a recap keeps it. A loop inside reasoning
+// the server left in the reply has no copy worth keeping and fails as a
+// streamed one does.
+function cutWholeReply(result: UpstreamResult, options: ChatRequestOptions): UpstreamResult {
+  const content = result.message?.content;
+  if (!narratesOnly(options) || typeof content !== "string") {
+    return result;
+  }
+  const cut = cutRepetition(content);
+  if (cut === undefined) {
+    return result;
+  }
+  if (cut === null) {
+    return { error: streamRepetitionResponse() };
+  }
+  console.warn("[model] the narration repeated one passage; its first copy is the reply");
+  return { ...result, message: { ...result.message, content: cut }, finishReason: "repetition" };
 }
 
 type OllamaChatMessage = {
@@ -500,31 +654,32 @@ export async function requestCustomMessage(
   // releases the server's OPENROUTER_API_KEY, and a campaign controls the
   // URL, so https://evil.test/.openrouter.ai must not read as OpenRouter.
   const isOpenRouter = caps.kind === "openrouter";
+  // Nothing is named in code: a blank setting runs the one chat model the
+  // server lists, when it lists exactly one (src/lib/model-registry).
   const resolvedModel =
     (model || "").trim() ||
     globalText.customModel ||
     serverEnv("OPENAI_COMPAT_MODEL") ||
-    (isOpenRouter ? serverEnv("OPENROUTER_MODEL", "google/gemini-3.5-flash") : "");
+    (isOpenRouter ? serverEnv("OPENROUTER_MODEL") : "") ||
+    (await soleListedModel({ provider: "custom", baseUrl: trimmedBase, apiKey: resolveCustomKey(trimmedBase, apiKey, customChatEndpoint(trimmedBase)).resolvedKey }));
 
   if (!resolvedModel) {
     return {
       error: Response.json(
         {
           error:
-            "No model name set. Enter the model your server serves in Text Model settings.",
+            "No model name set, and the server lists more than one. Pick the model in Text Model settings.",
         },
         { status: 400 },
       ),
     };
   }
 
-  // How this model runs its tools: what its name says on OpenAI's own host,
-  // overridden by what its first refusal taught (issue #129). The Responses
-  // route is a different endpoint on the same base.
+  // How this model runs its tools: Chat Completions until its first refusal
+  // names another route (issue #129), then that route for the life of the
+  // process. The Responses route is a different endpoint on the same base.
   const routeKey = contextCacheKey(trimmedBase, resolvedModel);
-  const route: OpenAiToolRoute =
-    learnedToolRoutes.get(routeKey) ??
-    (caps.kind === "openai" ? openAiToolRoute(resolvedModel) : "chat");
+  const route: OpenAiToolRoute = learnedToolRoutes.get(routeKey) ?? "chat";
   const viaResponses = route === "responses";
   const dropped = new Set([
     ...(rememberedDrops.get(routeKey) ?? []),
@@ -532,7 +687,18 @@ export async function requestCustomMessage(
   ]);
   const chatEndpoint = customChatEndpoint(trimmedBase);
   const endpoint = viaResponses ? customResponsesEndpoint(trimmedBase) : chatEndpoint;
-  const { isUtilityBackend, resolvedKey } = resolveCustomKey(trimmedBase, apiKey, endpoint);
+  const { isGlobalBackend, isUtilityBackend, resolvedKey } = resolveCustomKey(trimmedBase, apiKey, endpoint);
+  // The Fast tier (issue 255): asked for only on the server's own backend
+  // for this role (a campaign's own key is never spent at a premium on the
+  // admin's word), on OpenAI's API, for any model: one without the tier
+  // refuses the field, and the drop below runs it at standard speed.
+  // Anywhere else nothing is sent, so a local or third-party server never
+  // sees the field.
+  const role = options.role ?? "story";
+  const speedWanted =
+    (role === "utility" ? globalText.utilitySpeed : globalText.speed) === "fast" &&
+    (role === "utility" ? isUtilityBackend : isGlobalBackend) &&
+    apiSpeedEligibility({ endpointKind: caps.kind, model: resolvedModel }).ok;
   // Thinking runs cooler per Qwen guidance; 0.9 there makes the thought
   // ramble past the point of ever emitting the tool call.
   // Per-role sampling, resolved from the admin config
@@ -573,8 +739,8 @@ export async function requestCustomMessage(
         // it from config. Skipped on backends with no preset to override, where
         // 0 is already the default and reasoning models reject the field.
         ...(caps.sendZeroPresencePenalty ? { presence_penalty: 0 } : {}),
-        ...(caps.allowTemplateKwargs && options.thinking
-          ? { chat_template_kwargs: { enable_thinking: true } }
+        ...(caps.allowTemplateKwargs && options.thinking !== undefined
+          ? { chat_template_kwargs: { enable_thinking: options.thinking } }
           : {}),
         // The last chunk of a stream carries the token counts only when
         // asked (OpenAI, llama-server, vLLM, LM Studio and OpenRouter all
@@ -598,18 +764,25 @@ export async function requestCustomMessage(
     if (tools?.length) {
       requestPayload.tools = tools;
       requestPayload.tool_choice = toolChoice ?? "auto";
-      // GPT-6 Sol and Luna reason by default, and Chat Completions cannot
-      // carry function tools alongside reasoning; "none" is what lets their
-      // tools run there (issue #129). Off this route the field is never
-      // sent: gpt-4.1 and the like 400 on it.
+      // A model whose refusal asked for reasoning off: Chat Completions
+      // cannot carry function tools alongside reasoning (issue #129). Off
+      // this route the field is never sent: gpt-4.1 and the like 400 on it.
       if (route === "chat-no-reasoning") {
         requestPayload.reasoning_effort = "none";
       }
     }
   }
 
+  if (speedWanted) {
+    requestPayload.service_tier = "fast";
+  }
   for (const field of dropped) {
     delete requestPayload[field];
+  }
+  // A Fast request the provider refused (the drop below): said once, in
+  // the panel, as the standard-speed call it became.
+  if (speedWanted && dropped.has("service_tier")) {
+    noteSpeed(role, { model: resolvedModel, refused: "The provider refused the Fast tier for this model or account; calls run at standard speed." });
   }
 
   const timeoutMs = resolveTextTimeoutMs(
@@ -618,6 +791,8 @@ export async function requestCustomMessage(
     DEFAULT_CUSTOM_TEXT_TIMEOUT_MS,
   );
   const requestTimeout = createRequestTimeout(timeoutMs);
+  const guardedDelta = guardStreamDelta(onDelta, requestTimeout.cancel);
+  const guardedReasoning = guardReasoningDelta(Boolean(onDelta), requestTimeout.cancel);
   let upstream: Response;
   try {
     upstream = await fetchBackend(endpoint, {
@@ -685,13 +860,17 @@ export async function requestCustomMessage(
     // tools at the bottom would otherwise match "Function tools ... not
     // supported" and hand the table a narrator with no request_roll and no
     // engines, in silence.
+    // Never back to a route this call was already refused on: there are
+    // three routes, so a backend whose refusals contradict each other costs
+    // at most two switches, and the last refusal is the answer.
     const askedRoute = toolRouteFromError(text);
-    if (tools?.length && askedRoute && askedRoute !== route) {
+    const refusedRoutes = [...(options.refusedRoutes ?? []), route];
+    if (tools?.length && askedRoute && askedRoute !== route && !refusedRoutes.includes(askedRoute)) {
       console.warn(
         `[model] ${endpoint} refused tools for ${resolvedModel}; switching to the "${askedRoute}" route`,
       );
       learnedToolRoutes.set(routeKey, askedRoute);
-      return requestCustomMessage(trimmedBase, resolvedModel, apiKey, messages, options);
+      return requestCustomMessage(trimmedBase, resolvedModel, apiKey, messages, { ...options, refusedRoutes });
     }
 
     // A strict backend rejected one named body field. Drop that field and
@@ -779,7 +958,8 @@ export async function requestCustomMessage(
   if (viaResponses) {
     try {
       const reply = await readResponsesReply(upstream, {
-        onDelta,
+        onDelta: guardedDelta,
+        onReasoningDelta: guardedReasoning,
         idleMs: timeoutMs,
         onIdleAbort: requestTimeout.abortNow,
       });
@@ -791,12 +971,17 @@ export async function requestCustomMessage(
           ),
         };
       }
-      return {
+      if (speedWanted && !dropped.has("service_tier")) {
+        noteSpeed(role, { model: resolvedModel, reported: reply.serviceTier ?? null });
+      }
+      const result: UpstreamResult = {
         message: reply.message,
         ...(reply.finishReason ? { finishReason: reply.finishReason } : {}),
         ...tagged(reply.usage ?? null),
       };
+      return onDelta ? result : cutWholeReply(result, options);
     } catch (error) {
+      if (error instanceof StreamRepetitionError) return repeatedStreamResult(error, options);
       return readFailure(error);
     }
   }
@@ -805,6 +990,7 @@ export async function requestCustomMessage(
     // OpenAI-compatible SSE: "data: {...}" lines carrying content and
     // tool-call fragments, terminated by "data: [DONE]".
     let streamUsage = null as TokenUsage | null;
+    let serviceTier = "";
     const contentParts: string[] = [];
     const toolCalls: Array<StreamedToolCall | undefined> = [];
     let upstreamError = "";
@@ -826,9 +1012,16 @@ export async function requestCustomMessage(
           return;
         }
         const record = parsed as {
-          choices?: Array<{ delta?: { content?: unknown; tool_calls?: unknown }; finish_reason?: unknown }>;
+          choices?: Array<{
+            delta?: { content?: unknown; tool_calls?: unknown; reasoning_content?: unknown; reasoning?: unknown };
+            finish_reason?: unknown;
+          }>;
           error?: { message?: string } | string;
+          service_tier?: unknown;
         };
+        if (typeof record.service_tier === "string" && record.service_tier) {
+          serviceTier = record.service_tier;
+        }
         if (record.error) {
           upstreamError =
             typeof record.error === "string"
@@ -842,9 +1035,21 @@ export async function requestCustomMessage(
         }
         streamUsage = chatUsage(record) ?? streamUsage;
         const delta = record.choices?.[0]?.delta;
+        // llama.cpp and DeepSeek name the reasoning reasoning_content;
+        // OpenRouter and newer vLLM name it reasoning. One of them, so a
+        // server that sends both is not read twice.
+        const thought =
+          typeof delta?.reasoning_content === "string"
+            ? delta.reasoning_content
+            : typeof delta?.reasoning === "string"
+              ? delta.reasoning
+              : "";
+        if (thought) {
+          guardedReasoning?.(thought);
+        }
         if (typeof delta?.content === "string" && delta.content) {
           contentParts.push(delta.content);
-          onDelta(delta.content);
+          guardedDelta?.(delta.content);
         }
         if (Array.isArray(delta?.tool_calls)) {
           for (const call of delta.tool_calls) {
@@ -871,6 +1076,7 @@ export async function requestCustomMessage(
         }
       });
     } catch (error) {
+      if (error instanceof StreamRepetitionError) return repeatedStreamResult(error, options);
       return readFailure(error);
     }
 
@@ -887,6 +1093,9 @@ export async function requestCustomMessage(
     }
 
     const completedToolCalls = toolCalls.filter(Boolean) as StreamedToolCall[];
+    if (speedWanted && !dropped.has("service_tier")) {
+      noteSpeed(role, { model: resolvedModel, reported: serviceTier || null });
+    }
     return {
       message: {
         content: contentParts.join(""),
@@ -897,7 +1106,7 @@ export async function requestCustomMessage(
     };
   }
 
-  let data: { choices?: Array<{ message?: UpstreamChatMessage; finish_reason?: unknown }> };
+  let data: { choices?: Array<{ message?: UpstreamChatMessage; finish_reason?: unknown }>; service_tier?: unknown };
   try {
     const body = await readBody(upstream, MAX_BACKEND_BODY_BYTES);
     if (!body.complete) {
@@ -914,21 +1123,39 @@ export async function requestCustomMessage(
   }
 
   const finishReason = data?.choices?.[0]?.finish_reason;
-  return {
-    message: data?.choices?.[0]?.message,
-    ...(typeof finishReason === "string" && finishReason ? { finishReason } : {}),
-    ...tagged(chatUsage(data)),
-  };
+  if (speedWanted && !dropped.has("service_tier")) {
+    noteSpeed(role, { model: resolvedModel, reported: typeof data?.service_tier === "string" ? data.service_tier : null });
+  }
+  return cutWholeReply(
+    {
+      message: data?.choices?.[0]?.message,
+      ...(typeof finishReason === "string" && finishReason ? { finishReason } : {}),
+      ...tagged(chatUsage(data)),
+    },
+    options,
+  );
 }
 
 export async function requestLocalMessage(
-  model: string,
+  requestedModel: string,
   messages: ChatMessage[],
   options: ChatRequestOptions & { disableThinking?: boolean } = {},
 ): Promise<UpstreamResult> {
   const { tools, temperature, onDelta } = options;
   const disableThinking = options.disableThinking ?? true;
   const baseUrl = serverEnv("OLLAMA_BASE_URL", "http://127.0.0.1:11434").replace(/\/$/, "");
+  // A blank setting runs the one chat model Ollama has, when it has exactly
+  // one; the model's own window is learned before the prompt is packed.
+  const model = requestedModel.trim() || (await soleListedModel({ provider: "local", baseUrl }));
+  if (!model) {
+    return {
+      error: Response.json(
+        { error: "No local model is set, and Ollama lists more than one. Pick the model in Admin > Text model defaults." },
+        { status: 400 },
+      ),
+    };
+  }
+  await ollamaModelInfo(model, baseUrl);
   const requestPayload: Record<string, unknown> = {
     model,
     messages: toOllamaMessages(messages),
@@ -958,9 +1185,11 @@ export async function requestLocalMessage(
     DEFAULT_LOCAL_TEXT_TIMEOUT_MS,
   );
   const requestTimeout = createRequestTimeout(timeoutMs);
+  const guardedDelta = guardStreamDelta(onDelta, requestTimeout.cancel);
+  const guardedReasoning = guardReasoningDelta(Boolean(onDelta), requestTimeout.cancel);
   let upstream: Response;
   try {
-    upstream = await fetch(`${baseUrl}/api/chat`, {
+    upstream = await fetchBackend(`${baseUrl}/api/chat`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(requestPayload),
@@ -1034,23 +1263,27 @@ export async function requestLocalMessage(
           return;
         }
         const record = parsed as {
-          message?: { content?: unknown; tool_calls?: unknown };
+          message?: { content?: unknown; tool_calls?: unknown; thinking?: unknown };
           error?: unknown;
         };
         if (record.error) {
           upstreamError = String(record.error);
           return;
         }
+        if (typeof record.message?.thinking === "string" && record.message.thinking) {
+          guardedReasoning?.(record.message.thinking);
+        }
         if (typeof record.message?.content === "string" && record.message.content) {
           contentParts.push(record.message.content);
-          onDelta(record.message.content);
+          guardedDelta?.(record.message.content);
         }
         if (Array.isArray(record.message?.tool_calls)) {
           toolCalls.push(...record.message.tool_calls);
         }
         localUsage = ollamaUsage(record) ?? localUsage;
       });
-    } catch {
+    } catch (error) {
+      if (error instanceof StreamRepetitionError) return repeatedStreamResult(error, options);
       return {
         error: Response.json(
           {
@@ -1096,5 +1329,8 @@ export async function requestLocalMessage(
     };
   }
   const usage = ollamaUsage(data);
-  return { message: data?.message, ...(usage ? { usage: { ...usage, model, backend: "local" as const, keyed: false, paid: false } } : {}) };
+  return cutWholeReply(
+    { message: data?.message, ...(usage ? { usage: { ...usage, model, backend: "local" as const, keyed: false, paid: false } } : {}) },
+    options,
+  );
 }

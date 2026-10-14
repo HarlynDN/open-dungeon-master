@@ -6,10 +6,17 @@
   "review": "Separate source comparison by the implementation agent: every stock feat name/prerequisite, complete AND/OR prerequisite structure, numeric limits, shared skill/tool pick budgets and specific training choices. Uncheckable pack prerequisite source remains explicitly marked as pending rather than being omitted. Not external or human approval.",
   "sources": {
     "src/lib/srd/authored-feats.json": "8662c971767a46120e4c2465e6bdd4fd421b65611575706812afcaa0f265399d",
-    "src/lib/srd/feat-grant-text.ts": "25ba28960ee0d982df26663d1490d6aa19fabdd3ca286ac4423c1caee93cd575",
+    "src/lib/srd/feat-grant-text.ts": "69016c4b57c97f378af8a0fa214135365626bb28d3b3076b8729216555bab606",
     "src/lib/srd/legality/features.ts": "f05f22417ea00f966e094905b0c37f3045a2ff97c3e67677263345c4cf261780",
-    "src/lib/srd/feat-effects.ts": "7aca41d9d82fbbae1d4176d45a83a09ab20971babbebdc51d33335dad6667185"
+    "src/lib/srd/feat-effects.ts": "7aca41d9d82fbbae1d4176d45a83a09ab20971babbebdc51d33335dad6667185",
+    "src/lib/srd/feat-grants.ts": "032c7163723dc06477c93b853dd89bbe9852d9c082a5ec6f761d1f27fc5c4488"
   },
   "catalog": "src/lib/i18n/character-feat-name-messages.ts",
-  "catalogSha256": "d07f024aff52df1bb57fa1b3fd8431699216265a1142c3e4f7e6c09f31efa26a"
+  "catalogSha256": "d07f024aff52df1bb57fa1b3fd8431699216265a1142c3e4f7e6c09f31efa26a",
+  "upstream027Review": {
+    "upstreamCommit": "2b0b6b6ebf5e12f3e43a21ee38f80b41e5b1cd81",
+    "reviewer": "implementation agent",
+    "scope": "Reviewed source deltas: campaign-scoped ability rolls; subclass training and mandatory choices; native gender and level-floor UI; Aasimar and subclass rule text; resource action annotations; concentration flag reader; stable Unicode name ordering. Existing Chinese bindings updated where source changed. Runtime acceptance is tracked separately.",
+    "restrictedSkillDiagnostic": "Upstream restricted skill validation retains exact English refusal and rule outcome; add structured featSkillRestricted metadata and Chinese display."
+  }
 }

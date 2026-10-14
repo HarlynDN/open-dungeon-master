@@ -1,6 +1,8 @@
 import { defineMessages } from "./catalog.ts";
 
 export const DM_ACTION_MESSAGES = /*#__PURE__*/ defineMessages({
+ "dmAction.label.read_card": {"en":"Read a prep card","zh-CN":"阅读准备卡"},
+ "dmAction.summary.read_card": {"en":"Opens the full storyboard card behind a story beat or a planned event.","zh-CN":"打开剧情节点或计划事件对应的完整故事板卡片。"},
   "dmAction.label.start_encounter": {"en": "Start a fight", "zh-CN": "开始战斗"},
   "dmAction.summary.start_encounter": {"en": "Rolls initiative for everyone and opens the encounter.", "zh-CN": "为所有参与者掷先攻，并开启遭遇。"},
   "dmAction.label.add_enemies": {"en": "Reinforcements", "zh-CN": "增援"},

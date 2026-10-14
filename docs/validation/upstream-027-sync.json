@@ -1,0 +1,223 @@
+{
+  "recordedAt": "2026-10-14T17:28:52.603786+00:00",
+  "scope": "Upstream v0.27.0 integration; preserve Chinese support, English switching and dual Kokoro models. Not full localization milestone acceptance.",
+  "baseCommit": "5ba7fd868e7d281dc7aa5aa23263f265f63b03b0",
+  "upstreamCommit": "2b0b6b6ebf5e12f3e43a21ee38f80b41e5b1cd81",
+  "runtime": {
+    "node": "22.23.3",
+    "next": "16.4.0",
+    "react": "19.3.0",
+    "transformers": "4.3.1",
+    "codexCli": "0.162.1",
+    "dmAndUtilityModel": "gpt-6-astra",
+    "reasoningEffort": "low",
+    "auth": "Existing Codex subscription; production model settings unchanged"
+  },
+  "automated": {
+    "testFiles": {
+      "passed": 700,
+      "failed": 0
+    },
+    "lint": {
+      "status": "passed",
+      "eslintErrors": 0,
+      "eslintWarnings": 61,
+      "terminologyErrors": 0,
+      "terminologyContextWarnings": 427
+    },
+    "productionBuild": "passed, including TypeScript",
+    "uiCoverage": {
+      "covered": 468,
+      "pendingLiteralSites": 0,
+      "deferredOwners": 2,
+      "boundary": "Source/AST coverage does not establish all browser journeys"
+    },
+    "englishRegression": "Immutable original baselines retained; upstream rendering changes reviewed in versioned goldens and source-review manifests"
+  },
+  "liveModel": {
+    "environment": "Disposable encrypted databases; actual Codex harness/MCP",
+    "chineseDm": {
+      "turns": 2,
+      "serverRolls": 2,
+      "status": "passed",
+      "tools": [
+        "social_check",
+        "set_npc",
+        "update_location",
+        "move_party",
+        "request_roll",
+        "table_check"
+      ]
+    },
+    "chineseUtility": {
+      "status": "passed",
+      "streamed": true,
+      "durationMs": 13208,
+      "validated": [
+        "Chinese summary",
+        "canonical characterId",
+        "numeric hp",
+        "boolean needsHelp",
+        "session release"
+      ]
+    },
+    "englishDm": {
+      "turns": 1,
+      "serverRolls": 1,
+      "status": "passed",
+      "tools": [
+        "request_roll",
+        "table_check"
+      ]
+    }
+  },
+  "embedding": {
+    "status": "passed",
+    "report": "bilingual-embeddings.json",
+    "execution": "Fresh offline ONNX inference with current Transformers runtime; both fixed-fixture vector sets recomputed in an isolated temporary cache",
+    "models": [
+      "Xenova/all-MiniLM-L6-v2@fp32",
+      "Xenova/paraphrase-multilingual-MiniLM-L12-v2@q8"
+    ],
+    "holdoutRecall8": {
+      "englishBaseline": 1,
+      "multilingualEnglish": 1,
+      "chineseToEnglish": 1,
+      "chineseToChinese": 1
+    },
+    "semanticMutationShortcuts": "disabled",
+    "matchedBatchMaxVectorDeltaVersusPreviousCache": 0.0,
+    "boundary": "Bounded synthetic corpus; no universal retrieval-quality guarantee. The initial two-sample quantized smoke differed from the stored 16-sample batches; recomputing the same full fixture batches matched previous vectors exactly. Cached-vector-only acceptance is superseded by fresh inference."
+  },
+  "tts": {
+    "routerVersion": "1.0.0",
+    "englishService": "Kokoro-FastAPI 0.9.1-rc1",
+    "englishServiceCommit": "61797914e5f8da0baf1d0b97d9d0b15c66625615",
+    "python": "3.12.14",
+    "packages": {
+      "torch": "2.8.0",
+      "kokoro": "0.9.4",
+      "misaki": "0.9.4",
+      "fastapi": "0.143.0",
+      "uvicorn": "0.34.0",
+      "soundfile": "0.13.0"
+    },
+    "models": {
+      "zh-CN": "kokoro-v1.1-zh",
+      "en": "kokoro-v1.0"
+    },
+    "chineseModelSha256": "b1d8410fa44dfb5c15471fd6c4225ea6b4e9ac7fa03c98e8bea47a9928476e2b",
+    "apiCases": [
+      {
+        "model": "kokoro-v1.1-zh",
+        "voice": "zf_001",
+        "format": "mp3",
+        "seconds": 11.925,
+        "voiceCount": 100
+      },
+      {
+        "model": "kokoro-v1.1-zh",
+        "voice": "zf_001",
+        "format": "wav",
+        "seconds": 11.925,
+        "voiceCount": 100
+      },
+      {
+        "model": "kokoro-v1.1-zh",
+        "voice": "zm_095",
+        "format": "mp3",
+        "seconds": 6.9,
+        "voiceCount": 100
+      },
+      {
+        "model": "kokoro-v1.1-zh",
+        "voice": "zm_095",
+        "format": "wav",
+        "seconds": 6.9,
+        "voiceCount": 100
+      },
+      {
+        "model": "kokoro-v1.0",
+        "voice": "af_heart",
+        "format": "mp3",
+        "seconds": 3.792,
+        "voiceCount": 46
+      },
+      {
+        "model": "kokoro-v1.0",
+        "voice": "af_heart",
+        "format": "wav",
+        "seconds": 3.7312916666666665,
+        "voiceCount": 46
+      },
+      {
+        "model": "kokoro-v1.0",
+        "voice": "bm_fable",
+        "format": "mp3",
+        "seconds": 3.48,
+        "voiceCount": 46
+      },
+      {
+        "model": "kokoro-v1.0",
+        "voice": "bm_fable",
+        "format": "wav",
+        "seconds": 3.4183333333333334,
+        "voiceCount": 46
+      }
+    ],
+    "invalidInput": "HTTP 400 verified",
+    "modelRouting": "Response model header, decoded duration and waveform checked"
+  },
+  "browser": {
+    "url": "http://127.0.0.1:3023",
+    "database": "Disposable fixture; existing user campaigns not modified",
+    "passed": [
+      "Chinese narration play/replay and mute state",
+      "10 recommended Chinese voices plus full 100-voice service list",
+      "Non-recommended zm_095 preview, save and reload",
+      "Personal UI switched to English while campaign stayed zh-CN and retained voice",
+      "English af_heart narration and voice preview",
+      "No captured console errors"
+    ],
+    "proofBoundary": "Observed UI loading/playing/completion plus real speech HTTP success and audio decoding. No physical-speaker listening or subjective voice-quality claim. Fixture narration seeded; actual AI tested separately. Browser used same media code; final changes after initial build were catalog wording and a party network-error projection."
+  },
+  "remaining": [
+    "No full upstream browser scenario matrix, native desktop/mobile shell, or multi-user coordinated-action browser acceptance in this unit",
+    "No subjective voice-quality approval or persistent speech-service installation",
+    "Existing localization-plan broader real-play acceptance gaps remain; source coverage is not full end-to-end completion"
+  ],
+  "evidence": [
+    {
+      "localLog": "/tmp/odm-full-node22-frozen.log",
+      "sha256": "267e56581122563eacfc49de23a28f09a90fe19d4f48ae216c132fdaca74b8be"
+    },
+    {
+      "localLog": "/tmp/odm-lint-frozen.log",
+      "sha256": "db083f3e9e9d9ff3521aff0d36c43c1bb076ebc4940d112ebe8df6bcde12dd21"
+    },
+    {
+      "localLog": "/tmp/odm-build-frozen.log",
+      "sha256": "c15937cf85486047bd24c0e842dede5c7f571c260510598e3dfb8e99d0f9a043"
+    },
+    {
+      "localLog": "/tmp/odm-sync-live-dm.log",
+      "sha256": "d8a2927ce99d54659e0b652573c07a6cf6b89e1956ebe641602501a0d1ba5c0f"
+    },
+    {
+      "localLog": "/tmp/odm-sync-live-utility.log",
+      "sha256": "7b9c4821d6d34c2efc15eab2123e6faa2c9c3ce391416394448d7b25b3ddba4c"
+    },
+    {
+      "localLog": "/tmp/odm-sync-live-english.log",
+      "sha256": "ae33ed824ba5953ac62ffbf31d0abd9f77316c880df41c07a78da3689b4c8673"
+    },
+    {
+      "localLog": "/tmp/odm-sync-fresh-calibration.log",
+      "sha256": "19eae62294308200b34e2b65c4eb6027d8b31f174d691a271ab4a5a63cd8d39c"
+    },
+    {
+      "localLog": "/tmp/odm-sync-tts-smoke.log",
+      "sha256": "4e4108fe57564152337f7a5f7984fc3d0e68fc9a45d418c39c726a9db563fa4b"
+    }
+  ]
+}

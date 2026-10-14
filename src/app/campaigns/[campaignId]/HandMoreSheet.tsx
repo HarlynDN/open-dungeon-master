@@ -3,7 +3,7 @@
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { handCardName, handCostLabel, type HandTurnContext } from "@/lib/i18n/hand-presentations";
 import { handCardMaterial, handRefusalText } from "@/lib/i18n/hand-material-presentations";
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { GameIcon } from "@/components/ui/GameIcon";
 import { Sheet } from "@/components/ui/Sheet";
 import { cn } from "@/lib/cn";
@@ -30,6 +30,12 @@ export function HandMoreSheet({
   isWaiting,
   aim,
   conditions,
+  arranging,
+  onArrange,
+  arrange,
+  displaced,
+  urgent,
+  fresh,
 }: {
   turnContext?: HandTurnContext;
   open: boolean;
@@ -45,64 +51,96 @@ export function HandMoreSheet({
   // holding the hand: what the fan's hover previews use.
   aim: HandAim | null;
   conditions: string[];
+  // Customize Hand (issue 231): the arrange view in place of the list.
+  arranging: boolean;
+  onArrange: (on: boolean) => void;
+  arrange: ReactNode;
+  // Chosen cards an urgent one has pushed here for now, the urgent cards
+  // that did it, and cards gained since the hand was arranged.
+  displaced: HandCard[];
+  urgent: HandCard[];
+  fresh: HandCard[];
 }) {
   const { locale, t } = useLocale();
+  const freshIds = new Set(fresh.map((card) => card.id));
   return (
-    <Sheet open={open} onOpenChange={onOpenChange} title={t("handUi.more.title")}>
-      {waitingNote ? (
-        <p role="status" className="reveal mb-3 rounded-lg border border-amber-500/25 bg-amber-500/5 px-3 py-2 text-sm text-amber-100/90">
-          {handRefusalText(waitingNote, locale, turnContext)}{t("handUi.more.wait")}
-        </p>
+    <Sheet open={open} onOpenChange={onOpenChange} title={t(arranging ? "handUi.customize" : "handUi.more.title")}>
+      {arranging ? (
+        arrange
       ) : (
-        <p className="mb-3 text-sm text-stone-400">{t("handUi.more.pick")}</p>
+        <>
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+            <span className="text-xs text-stone-400">{t("handUi.customizeHint")}</span>
+            <button type="button" onClick={() => onArrange(true)} className="hand-arrange-move motion-press">
+              {t("handUi.customize")}
+            </button>
+          </div>
+          {displaced.length ? (
+            <p role="status" className="reveal mb-3 rounded-lg border border-amber-500/25 bg-amber-500/5 px-3 py-2 text-sm text-amber-100/90">
+              {t("handUi.displaced", { urgent: urgent.map(card => handCardName(card, locale)).join("、"), displaced: displaced.map(card => handCardName(card, locale)).join("、") })}
+            </p>
+          ) : null}
+          {waitingNote ? (
+            <p role="status" className="reveal mb-3 rounded-lg border border-amber-500/25 bg-amber-500/5 px-3 py-2 text-sm text-amber-100/90">
+              {handRefusalText(waitingNote, locale, turnContext)}{t("handUi.more.wait")}
+            </p>
+          ) : (
+            <p className="mb-3 text-sm text-stone-400">{t("handUi.more.pick")}</p>
+          )}
+          <ul className="-mx-1 flex min-h-0 flex-col gap-1.5 overflow-y-auto px-1 pb-1">
+            {cards.map((card, index) => {
+              // Held only by the turn: readable at full strength, and its own
+              // line is not spent repeating what the note above already said.
+              const waiting = isWaiting(card);
+              const rows = previewRows(card, card.intent.card === "reaction" ? null : aim, conditions);
+              const material = handCardMaterial(card, locale, turnContext);
+              const facts = [material.dice, material.roll, material.range].filter(Boolean).join(" · ");
+              return (
+                <li key={card.id} className="hand-more-row" style={{ "--i": index } as CSSProperties}>
+                  <button
+                    type="button"
+                    onClick={() => onPick(card)}
+                    aria-disabled={card.disabled ? "true" : undefined}
+                    className={cn(
+                      "motion-press flex min-h-14 w-full items-start gap-3 rounded-xl border border-stone-700/60 bg-stone-900/50 px-3 py-2 text-left hover:border-amber-500/40",
+                      card.disabled && !waiting && "opacity-60",
+                    )}
+                  >
+                    <GameIcon icon={card.icon} size="size-10" className="mt-0.5" />
+                    <span className="min-w-0 flex-1">
+                      <span className="flex items-baseline gap-2">
+                        <span className="truncate font-display text-sm font-semibold text-stone-100">{handCardName(card, locale)}</span>
+                        <span className="shrink-0 text-[10px] uppercase tracking-wider text-stone-500">{typeLabel(card.type, locale)}</span>
+                        {freshIds.has(card.id) ? (
+                          <span className="shrink-0 rounded-full border border-emerald-400/50 bg-emerald-400/10 px-1.5 py-px text-[10px] uppercase tracking-wider text-emerald-200">
+                            {t("handUi.new")}
+                          </span>
+                        ) : null}
+                        <span className="ml-auto shrink-0 text-right font-mono text-[10px] uppercase tracking-wider text-amber-200/90">
+                          {handCostLabel(card.cost, locale)}
+                        </span>
+                      </span>
+                      {facts ? <span className="block font-mono text-[11px] text-stone-400">{facts}</span> : null}
+                      {card.rules ? <span className="mt-1 block text-xs leading-snug text-stone-300">{material.rules}</span> : null}
+                      {card.resource || card.condition ? (
+                        <span className="mt-0.5 block text-[11px] text-stone-500">
+                          {[material.resource, material.condition].filter(Boolean).join(" · ")}
+                        </span>
+                      ) : null}
+                      {rows.length ? (
+                        <span className="hand-rows-box mt-1.5 block">
+                          <HandPreviewRows rows={rows} />
+                        </span>
+                      ) : null}
+                      {card.disabled && !waiting ? <span className="mt-1 block text-xs text-amber-300/90">{material.disabled}</span> : null}
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </>
       )}
-      <ul className="-mx-1 flex min-h-0 flex-col gap-1.5 overflow-y-auto px-1 pb-1">
-        {cards.map((card, index) => {
-          // Held only by the turn: readable at full strength, and its own
-          // line is not spent repeating what the note above already said.
-          const waiting = isWaiting(card);
-          const rows = previewRows(card, card.intent.card === "reaction" ? null : aim, conditions);
-          const material = handCardMaterial(card, locale, turnContext);
-          const facts = [material.dice, material.roll, material.range].filter(Boolean).join(" · ");
-          return (
-            <li key={card.id} className="hand-more-row" style={{ "--i": index } as CSSProperties}>
-              <button
-                type="button"
-                onClick={() => onPick(card)}
-                aria-disabled={card.disabled ? "true" : undefined}
-                className={cn(
-                  "motion-press flex min-h-14 w-full items-start gap-3 rounded-xl border border-stone-700/60 bg-stone-900/50 px-3 py-2 text-left hover:border-amber-500/40",
-                  card.disabled && !waiting && "opacity-60",
-                )}
-              >
-                <GameIcon icon={card.icon} size="size-10" className="mt-0.5" />
-                <span className="min-w-0 flex-1">
-                  <span className="flex items-baseline gap-2">
-                    <span className="truncate font-display text-sm font-semibold text-stone-100">{handCardName(card, locale)}</span>
-                    <span className="shrink-0 text-[10px] uppercase tracking-wider text-stone-500">{typeLabel(card.type, locale)}</span>
-                    <span className="ml-auto shrink-0 text-right font-mono text-[10px] uppercase tracking-wider text-amber-200/90">
-                      {handCostLabel(card.cost, locale)}
-                    </span>
-                  </span>
-                  {facts ? <span className="block font-mono text-[11px] text-stone-400">{facts}</span> : null}
-                  {card.rules ? <span className="mt-1 block text-xs leading-snug text-stone-300">{material.rules}</span> : null}
-                  {card.resource || card.condition ? (
-                    <span className="mt-0.5 block text-[11px] text-stone-500">
-                      {[material.resource, material.condition].filter(Boolean).join(" · ")}
-                    </span>
-                  ) : null}
-                  {rows.length ? (
-                    <span className="hand-rows-box mt-1.5 block">
-                      <HandPreviewRows rows={rows} />
-                    </span>
-                  ) : null}
-                  {card.disabled && !waiting ? <span className="mt-1 block text-xs text-amber-300/90">{material.disabled}</span> : null}
-                </span>
-              </button>
-            </li>
-          );
-        })}
-      </ul>
     </Sheet>
   );
 }

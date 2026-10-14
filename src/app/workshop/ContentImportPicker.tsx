@@ -6,7 +6,7 @@ import { AlertTriangle, Hammer, Info, Loader2 } from "lucide-react";
 import { Select } from "@/components/ui/Select";
 import { Switch } from "@/components/ui/Switch";
 import { FieldLabel } from "@/app/workshop/kit";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { ui } from "@/lib/ui";
 import {
   IMPORT_KINDS,
@@ -24,7 +24,8 @@ import type { ImportSourceSummary } from "@/app/workshop/types";
 // decides which ones this person may copy out of
 // (src/lib/db/import-sources.ts).
 //
-// Used in two places with one difference. In the lobby a campaign already
+// Used in two places with one difference. In the lobby (and the table's
+// Setup tab, once play has begun) a campaign already
 // exists, so the picker asks the server what the import WOULD do and shows
 // the collisions and overwrites. At campaign creation there is no campaign
 // yet, so there is nothing to collide with: a fresh table is empty, and the
@@ -55,6 +56,7 @@ export function ContentImportPicker({
   selection,
   onChange,
   onImported,
+  storyboardNote,
 }: {
   // Omitted at campaign creation, where the target does not exist yet.
   campaignId?: string;
@@ -62,6 +64,9 @@ export function ContentImportPicker({
   onChange: (selection: ImportSelection) => void;
   // Only meaningful with a campaignId: importing happens immediately.
   onImported?: (copied: number) => void;
+  // Drawn under the choices when the board being brought in will write the
+  // table's story arc (the AI Story Setup warning, issue 249).
+  storyboardNote?: (arcComing: boolean) => ReactNode;
 }) {
   const [sources, setSources] = useState<ImportSourceSummary[]>([]);
   const { t, locale } = useLocale();
@@ -110,6 +115,10 @@ export function ContentImportPicker({
   const available = chosen
     ? IMPORT_KINDS.filter((kind) => (chosen.contents?.[kind] ?? 0) > 0)
     : [];
+  // The board writes the table's arc: it compiles into one, it is ticked,
+  // and the table has none it would be left out of (the plan says so once a
+  // campaign exists to plan against).
+
 
   // A matching request key prevents a previous source's warnings from
   // flashing on the next selection before the effect starts. Aborting keeps
@@ -121,6 +130,8 @@ export function ContentImportPicker({
   const planKey = `${planUrl}#${planRetry}`;
   const currentPlan = planState?.key === planKey ? planState : null;
   const plan = currentPlan?.plan ?? null;
+  const arcComing =
+    Boolean(chosen?.boardArc) && selection.select.includes("storyboard") && !plan?.board?.targetHasArc;
   const planning = Boolean(planUrl) && (!currentPlan || currentPlan.pending);
   const planError = currentPlan?.error ?? "";
 
@@ -294,6 +305,8 @@ export function ContentImportPicker({
                 />
               </div>
             ) : null}
+
+            {storyboardNote?.(arcComing)}
 
             {plan?.kept || selection.again === "copy" ? (
               <div className="reveal block">

@@ -1,4 +1,5 @@
 "use client";
+import { useLocale as useSyncLocale } from "@/lib/i18n/LocaleProvider";
 
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { createTranslator } from "@/lib/i18n/translator";
@@ -13,7 +14,7 @@ import { ContextMenu, type ContextMenuItem } from "@/components/ui/ContextMenu";
 import { GameIcon } from "@/components/ui/GameIcon";
 import { SectionHead } from "@/components/ui/SectionHead";
 import { KitButton, LoadFailed, PanelError, panelField, PanelLoading, RowMenu } from "./PanelKit";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import { cn } from "@/lib/cn";
 import { ui } from "@/lib/ui";
 import type { Chapter } from "@/lib/db/chapters";
@@ -24,6 +25,7 @@ import { ExportMenu } from "./ExportMenu";
 import { NpcReviewPanel } from "./NpcReviewPanel";
 import { DictateField } from "@/components/DictateField";
 import { appendDictation } from "@/lib/dictation";
+import { storyPanelArcForCampaign, visibleStoryChapters } from "@/lib/dm/story-panel-logic";
 
 // Confirmation for a chapter rewind (the server answered 409 with the
 // consequences). Rewinds are destructive: everything after the boundary is
@@ -110,6 +112,7 @@ function ChapterCard({
   steersStory: boolean;
   onRewind?: () => void;
 }) {
+  const { t: syncT } = useSyncLocale();
   const { t } = useLocale();
   const [expanded, setExpanded] = useState(false);
   const [editing, setEditing] = useState(false);
@@ -163,7 +166,9 @@ function ChapterCard({
       ) : null}
       {expanded && !editing ? (
         <div className="reveal mt-2 space-y-1.5 pl-5">
-          {chapter.summary ? (
+          {chapter.abridged ? (
+            <div className="skeleton-block h-10 rounded-md" role="status" aria-label={syncT("upstreamUi.f1c953c6bae6")} />
+          ) : chapter.summary ? (
             <p className="reveal whitespace-pre-wrap font-serif text-xs leading-5 text-stone-300">
               {chapter.summary}
             </p>
@@ -172,8 +177,21 @@ function ChapterCard({
           )}
           {steersStory ? (
             <div className="reveal flex flex-wrap items-center gap-1.5">
-              <KitButton onClick={() => setEditing(true)}>
-                <Pencil className="size-3" />{t("storyUi.literal.3")}</KitButton>
+              <KitButton
+                // The draft starts from the chapter as it is now, not as it
+                // was when the card first drew: an older chapter's summary
+                // arrives after the card (StoryPanel's own fetch), and an
+                // edit from elsewhere may have landed since.
+                onClick={() => {
+                  setTitle(chapter.title);
+                  setSummary(chapter.summary);
+                  setEditing(true);
+                }}
+                disabled={chapter.abridged}
+                title={chapter.abridged ? t("storyUi.summaryLoading") : undefined}
+              >
+                <Pencil className="size-3" />{t("storyUi.literal.3")}
+              </KitButton>
               {onRewind ? (
                 <KitButton tone="danger" onClick={onRewind} title={t("storyUi.literal.4")}>
                   <Rewind className="size-3" />{t("storyUi.literal.5")}</KitButton>
@@ -262,10 +280,18 @@ function NpcReviewCard({ campaignId }: { campaignId: string }) {
 function ArcCard({ campaignId }: { campaignId: string }) {
   const { locale, t } = useLocale();
   const [expanded, setExpanded] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loadingRequest, setLoadingRequest] = useState(false);
   const [regenerating, setRegenerating] = useState(false);
-  const [arc, setArc] = useState<StoryArc | null>(null);
-  const [outline, setOutline] = useState("");
+  const [loadedArc, setLoadedArc] = useState<{
+    campaignId: string;
+    arc: StoryArc | null;
+    dmOutline: string;
+  } | null>(null);
+  const [reloadArc, setReloadArc] = useState(0);
+  const currentArc = storyPanelArcForCampaign(loadedArc, campaignId);
+  const arc = currentArc?.arc ?? null;
+  const outline = currentArc?.dmOutline ?? "";
+  const loading = expanded && (loadingRequest || !currentArc);
   // 1-based beat number being renamed, or an act number being added to.
   const [editingBeat, setEditingBeat] = useState<number | null>(null);
   const [addingToAct, setAddingToAct] = useState<number | null>(null);
@@ -275,6 +301,33 @@ function ArcCard({ campaignId }: { campaignId: string }) {
   // Plotting an arc is the story model's work; with none configured the
   // button and the promise that one gets written both go.
   const canPlot = offersStoryModel(useCapabilities());
+
+  useEffect(() => {
+    if (!expanded) {
+      return;
+    }
+
+    let current = true;
+    void fetch(`/api/campaigns/${campaignId}/arc`)
+      .then(async (response) => {
+        if (!response.ok) {
+          if (current) setLoadedArc({ campaignId, arc: null, dmOutline: "" });
+          return;
+        }
+        const data = (await response.json()) as { arc: StoryArc | null; dmOutline: string };
+        if (current) setLoadedArc({ campaignId, arc: data.arc, dmOutline: data.dmOutline });
+      })
+      .catch(() => {
+        if (current) setLoadedArc({ campaignId, arc: null, dmOutline: "" });
+      })
+      .finally(() => {
+        if (current) setLoadingRequest(false);
+      });
+
+    return () => {
+      current = false;
+    };
+  }, [campaignId, expanded, reloadArc]);
 
   async function editBeat(edit: BeatEdit) {
     setBeatBusy(true);
@@ -290,7 +343,7 @@ function ArcCard({ campaignId }: { campaignId: string }) {
         setBeatError(data.error ?? createTranslator("en")("storyUi.error.editFailed"));
         return false;
       }
-      setArc(data.arc);
+      setLoadedArc({ campaignId, arc: data.arc, dmOutline: outline });
       return true;
     } catch {
       setBeatError(createTranslator("en")("storyUi.error.editFailed"));
@@ -321,30 +374,16 @@ function ArcCard({ campaignId }: { campaignId: string }) {
     }
   }
 
-  async function load() {
-    setLoading(true);
-    try {
-      const response = await fetch(`/api/campaigns/${campaignId}/arc`);
-      if (response.ok) {
-        const data = (await response.json()) as { arc: StoryArc | null; dmOutline: string };
-        setArc(data.arc);
-        setOutline(data.dmOutline);
-      }
-    } finally {
-      setLoading(false);
-    }
-  }
-
   function toggle() {
     const next = !expanded;
+    if (next) setLoadingRequest(true);
     setExpanded(next);
-    if (next) {
-      void load();
-    }
   }
 
   async function regenerate() {
     setRegenerating(true);
+    setLoadedArc(null);
+    setLoadingRequest(true);
     try {
       await fetch(`/api/campaigns/${campaignId}/arc`, { method: "POST" });
     } finally {
@@ -352,7 +391,7 @@ function ArcCard({ campaignId }: { campaignId: string }) {
       // double-submits, then the view refetches.
       setTimeout(() => {
         setRegenerating(false);
-        void load();
+        setReloadArc((current) => current + 1);
       }, 6_000);
     }
   }
@@ -463,12 +502,12 @@ function ArcCard({ campaignId }: { campaignId: string }) {
                             ...(beat.status === "active"
                               ? []
                               : [{ id: "now", label: t("storyUi.literal.19"), glyph: "quest-active", disabled: beatBusy, onSelect: () => void editBeat({ op: "setNow", beat: number }) }]),
-                            { id: "up", label: t("storyUi.literal.20"), glyph: "pace-fast", disabled: beatBusy, onSelect: () => void editBeat({ op: "move", beat: number, direction: "up" }) },
-                            { id: "down", label: t("storyUi.literal.21"), glyph: "pace-slow", disabled: beatBusy, onSelect: () => void editBeat({ op: "move", beat: number, direction: "down" }) },
+                            { id: "up", label: t("storyUi.literal.20"), glyph: "ui-up", disabled: beatBusy, onSelect: () => void editBeat({ op: "move", beat: number, direction: "up" }) },
+                            { id: "down", label: t("storyUi.literal.21"), glyph: "ui-down", disabled: beatBusy, onSelect: () => void editBeat({ op: "move", beat: number, direction: "down" }) },
                             {
                               id: "reword",
                               label: t("storyUi.literal.22"),
-                              glyph: "tab-notes",
+                              glyph: "ui-edit",
                               disabled: beatBusy,
                               onSelect: () => {
                                 closeEditor();
@@ -476,7 +515,7 @@ function ArcCard({ campaignId }: { campaignId: string }) {
                                 setDraft(beat.text);
                               },
                             },
-                            { id: "skip", label: t("storyUi.literal.23"), glyph: "quest-failed", separated: true, disabled: beatBusy, onSelect: () => void editBeat({ op: "skip", beat: number }) },
+                            { id: "skip", label: t("storyUi.literal.23"), glyph: "ui-skip", separated: true, disabled: beatBusy, onSelect: () => void editBeat({ op: "skip", beat: number }) },
                           ];
                       return (
                         <ContextMenu
@@ -758,7 +797,7 @@ function ArcCard({ campaignId }: { campaignId: string }) {
 
 export function StoryPanel({
   campaignId,
-  chapters,
+  chapters: tableChapters,
   steersStory,
 }: {
   campaignId: string;
@@ -781,6 +820,15 @@ export function StoryPanel({
   // The acts the table has been told about: names and recaps for the
   // headings between chapters (issue #31). Player-safe by construction.
   const [acts, setActs] = useState<PublicAct[]>([]);
+  // The whole list as /chapters answers it. It can also include Chapter 1
+  // when the first campaign snapshot landed before the queued chapter setup.
+  // Snapshot and stream copies win for live state; this list fills in older
+  // summaries omitted from the snapshot.
+  const [fullChapters, setFullChapters] = useState<Map<string, Chapter>>(() => new Map());
+  const chapters = useMemo(
+    () => visibleStoryChapters(tableChapters, [...fullChapters.values()]),
+    [tableChapters, fullChapters],
+  );
   const closed = chapters.filter((chapter) => chapter.status === "closed");
   const open = chapters.find((chapter) => chapter.status === "open");
 
@@ -788,7 +836,7 @@ export function StoryPanel({
   // rewind to is lead-only UI and only arrives for the lead.
   useEffect(() => {
     let cancelled = false;
-    readLoad<{ acts?: unknown; rewindableChapters?: unknown }>(fetch(`/api/campaigns/${campaignId}/chapters`), "The chapters").then((outcome) => {
+    readLoad<{ acts?: unknown; rewindableChapters?: unknown; chapters?: unknown }>(fetch(`/api/campaigns/${campaignId}/chapters`), "The chapters").then((outcome) => {
       if (cancelled) {
         return;
       }
@@ -800,6 +848,9 @@ export function StoryPanel({
       if (Array.isArray(data.acts)) {
         setActs(data.acts as PublicAct[]);
       }
+      if (Array.isArray(data.chapters)) {
+        setFullChapters(new Map((data.chapters as Chapter[]).map((chapter) => [chapter.id, chapter])));
+      }
       if (steersStory && Array.isArray(data.rewindableChapters)) {
         setRewindable(data.rewindableChapters as number[]);
       }
@@ -807,7 +858,7 @@ export function StoryPanel({
     return () => {
       cancelled = true;
     };
-  }, [campaignId, steersStory, chapters.length, reloads, settle]);
+  }, [campaignId, steersStory, tableChapters.length, reloads, settle]);
 
   async function postRewind(chapterIndex: number, confirm: boolean) {
     setRewindBusy(true);
@@ -849,7 +900,7 @@ export function StoryPanel({
       <div className="space-y-2">
         {steersStory ? <ArcCard campaignId={campaignId} /> : null}
         {steersStory ? <NpcReviewCard campaignId={campaignId} /> : null}
-        {loadError ? <LoadFailed error={storyText(loadError, locale)} onRetry={() => setReloads((current) => current + 1)} /> : loaded ? <EmptyState art="scrolls" size="sm" title={t("storyUi.literal.40")} hint={t("storyUi.literal.41")} /> : null}
+        {loadError ? <LoadFailed error={storyText(loadError, locale)} onRetry={() => setReloads((current) => current + 1)} /> : loaded ? <EmptyState art="scrolls" size="sm" title={t("storyUi.literal.40")} hint={t("storyUi.literal.41")} action={<KitButton onClick={() => setReloads(current => current + 1)}><RefreshCw className="size-3" />{t("storyControl.retry")}</KitButton>} /> : null}
       </div>
     );
   }

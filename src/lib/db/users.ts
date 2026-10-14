@@ -1,6 +1,9 @@
 import { getDatabase, nowIso, parseJson } from "@/lib/db/core";
 import type { DiceLook } from "@/lib/dice/dice-look";
 import type { AppLocale } from "@/lib/i18n/locales";
+import { closeStreamsForSession, closeStreamsForUser } from "@/lib/live-streams";
+import { mergeLedgers, parseLedger, type TourLedger } from "@/lib/tours/account-logic";
+import { isTourId } from "@/lib/tours/registry";
 
 export type UserAvatar = {
   url: string;
@@ -139,10 +142,16 @@ export type UserSettings = {
   narrationMuted?: boolean;
   ambienceVolume?: number;
   ambienceMuted?: boolean;
+  ambienceBedLevel?: number;
+  ambienceMusicLevel?: number;
   chimeMuted?: boolean;
   // The player's virtual dice (src/lib/dice/dice-look.ts); absent means
   // the tray's original look.
   diceLook?: DiceLook;
+  // The walkthroughs finished, by tour id (src/lib/tours/account-logic.ts).
+  // Written only through recordFinishedTours, which merges per tour: the
+  // profile PATCH replaces a key whole and does not accept this one.
+  tours?: TourLedger;
 };
 
 export function getUserSettings(userId: string): UserSettings {
@@ -158,6 +167,20 @@ export function updateUserSettings(userId: string, patch: UserSettings): UserSet
     .prepare(`UPDATE users SET settings_json = ? WHERE id = ?`)
     .run(JSON.stringify(merged), userId);
   return merged;
+}
+
+export function finishedTours(userId: string): TourLedger {
+  return parseLedger(getUserSettings(userId).tours, isTourId);
+}
+
+// Adds finished tours to the account's record, tour by tour, keeping the
+// higher version of each: two devices finishing different tours at once
+// both land, and a page still on an older version of a tour cannot lower
+// what a newer one recorded.
+export function recordFinishedTours(userId: string, finishedNow: TourLedger): TourLedger {
+  const tours = mergeLedgers(finishedTours(userId), parseLedger(finishedNow, isTourId));
+  updateUserSettings(userId, { tours });
+  return tours;
 }
 
 export function countUsers(): number {
@@ -256,9 +279,12 @@ export function insertSession(tokenHash: string, userId: string, expiresAt: stri
     .run(tokenHash, userId, nowIso(), expiresAt);
 }
 
+// Read on every signed-in request (pages, the API, each private picture),
+// so it only reads: an expired row is refused here by its date and swept
+// later by pruneExpiredSessions on the job tick. It used to delete every
+// expired row first, a full scan and a write on the one writer per request.
 export function getSessionUser(tokenHash: string): User | null {
   const db = getDatabase();
-  db.prepare(`DELETE FROM sessions WHERE expires_at < ?`).run(nowIso());
   const row = db
     .prepare(
       `
@@ -273,8 +299,29 @@ export function getSessionUser(tokenHash: string): User | null {
   return row ? mapUser(row) : null;
 }
 
+// Whose session this still is, or null once it has ended or expired. The
+// live streams ask on every heartbeat (src/lib/live-streams.ts); one primary
+// key lookup, no user row.
+export function sessionHolder(tokenHash: string): string | null {
+  const row = getDatabase()
+    .prepare(`SELECT user_id FROM sessions WHERE token_hash = ? AND expires_at >= ?`)
+    .get(tokenHash, nowIso()) as { user_id: string } | undefined;
+  return row?.user_id ?? null;
+}
+
+// Expired rows, a bounded batch at a time so one tick never holds the writer
+// for long on a server with years of them. Returns how many went.
+export function pruneExpiredSessions(now = nowIso(), limit = 1000): number {
+  return getDatabase()
+    .prepare(
+      `DELETE FROM sessions WHERE token_hash IN (SELECT token_hash FROM sessions WHERE expires_at < ? LIMIT ?)`,
+    )
+    .run(now, limit).changes;
+}
+
 export function deleteSession(tokenHash: string) {
   getDatabase().prepare(`DELETE FROM sessions WHERE token_hash = ?`).run(tokenHash);
+  closeStreamsForSession(tokenHash);
 }
 
 export function deleteSessionsForUser(userId: string, exceptTokenHash?: string) {
@@ -291,6 +338,9 @@ export function deleteSessionsForUser(userId: string, exceptTokenHash?: string) 
   } else {
     getDatabase().prepare(`DELETE FROM sessions WHERE user_id = ?`).run(userId);
   }
+  // A stream opened with one of those sessions stops now, not at its next
+  // request (src/lib/live-streams.ts).
+  closeStreamsForUser(userId, exceptTokenHash);
 }
 
 // The deletion clock. Both stamps are set together and cleared together;

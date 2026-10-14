@@ -7,6 +7,7 @@ import { ChevronRight, X } from "lucide-react";
 import { isComposingInput } from "@/lib/input-composition";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
+import type { TourEnd } from "@/lib/tours/account-logic";
 import { placeCard, resolveSteps, skipVanished, type ResolvedStep, type TourStep } from "@/lib/tours/logic";
 import { ui } from "@/lib/ui";
 
@@ -15,7 +16,11 @@ import { ui } from "@/lib/ui";
 // carrying data-tour="name"; steps whose target is not on screen are
 // skipped. The host decides when it opens (first visit, or Help) and does
 // the side effects a step asks for (opening the right tab) through
-// onPrepare. The pure decisions live in src/lib/tours/logic.ts.
+// onPrepare. onClose says how it closed: "done" past the last step, "ended"
+// for End the tour, Escape (which the apps' back gesture and a controller's
+// B send) or a tap outside the card; the host records either on the account
+// (src/lib/tours/tour-store.ts). The pure decisions live in
+// src/lib/tours/logic.ts.
 
 const SPOT_PAD = 6;
 
@@ -40,7 +45,7 @@ export function GuidedTour({
   open: boolean;
   steps: readonly TourStep[];
   onPrepare?: (name: string) => void;
-  onClose: () => void;
+  onClose: (how: TourEnd) => void;
 }) {
   const { locale } = useLocale();
   const [resolved, setResolved] = useState<ResolvedStep[] | null>(null);
@@ -110,7 +115,7 @@ export function GuidedTour({
       window.setTimeout(() => {
         if (delay === 260 && current.anchor && !current.step.lazy && !findAnchor(current.anchor)) {
           const next = skipVanished(index, direction.current, total);
-          if (next < 0) onClose();
+          if (next < 0) onClose("done");
           else setIndex(next);
           return;
         }
@@ -143,7 +148,7 @@ export function GuidedTour({
       direction.current = delta < 0 ? -1 : 1;
       const next = index + delta;
       if (next >= total) {
-        onClose();
+        onClose("done");
         return;
       }
       setIndex(Math.max(0, next));
@@ -157,7 +162,7 @@ export function GuidedTour({
       if (isComposingInput(event)) return;
       if (event.key === "Escape") {
         event.preventDefault();
-        onClose();
+        onClose("ended");
       } else if (event.key === "ArrowRight" || event.key === "Enter") {
         event.preventDefault();
         step(1);
@@ -180,7 +185,7 @@ export function GuidedTour({
       <div
         data-guided-tour
         className={cn("fixed inset-0 z-[80]", !spot && "bg-[#05030d]/75")}
-        onClick={onClose}
+        onClick={() => onClose("ended")}
         aria-hidden
       />
       {spot ? (
@@ -204,7 +209,7 @@ export function GuidedTour({
           </span>
           <button
             type="button"
-            onClick={onClose}
+            onClick={() => onClose("ended")}
             aria-label={entryText("End the tour", locale)}
             className="rounded-md p-1 text-stone-500 transition-colors hover:bg-stone-800 hover:text-stone-200"
           >

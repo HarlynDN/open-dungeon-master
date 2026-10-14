@@ -1,4 +1,5 @@
 "use client";
+import { useLocale as useSyncLocale } from "@/lib/i18n/LocaleProvider";
 
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { characterKindLabel } from "@/lib/i18n/lobby-presentations";
@@ -109,6 +110,7 @@ export function LobbyParty({
   companionsClassName?: string;
   companionsStyle?: CSSProperties;
 }) {
+  const { t: syncT } = useSyncLocale();
   const { locale, t } = useLocale();
   const playerCount = partySlotCount({
     dmMode: humanDmTable ? "human" : "ai",
@@ -117,7 +119,7 @@ export function LobbyParty({
   }, members.map(member => member.userId));
   const openSeats = campaign.maxPlayers - playerCount;
   const summary = (sheet: CharacterSheet) => t("lobby.characterSummary", {
-    race: characterKindLabel("race", sheet.race, locale),
+    race: sheet.race.startsWith("homebrew:") && sheet.raceLabel ? sheet.raceLabel : characterKindLabel("race", sheet.race, locale),
     class: characterKindLabel("class", sheet.class, locale),
     level: sheet.level,
   });
@@ -134,7 +136,8 @@ export function LobbyParty({
         </div>
         <ul className="stagger space-y-2">
           {members.map((member, index) => {
-            const sheet = sheets.find((entry) => entry.userId === member.userId);
+            const owned = sheets.filter((entry) => entry.userId === member.userId && !entry.isCompanion);
+            const sheet = owned.find((entry) => entry.id === member.activeCharacterId) ?? owned[0];
             return (
               <li
                 key={member.userId}
@@ -268,6 +271,11 @@ export function LobbyParty({
                     </div>
                   );
                 })()}
+                {owned.length > 1 ? (
+                  <p className="mt-2 text-xs text-stone-400">
+                    {syncT("upstreamUi.84c6ca51dcc7")}{" "}{owned.map((entry) => entry.name).join(", ")}
+                  </p>
+                ) : null}
               </li>
             );
           })}

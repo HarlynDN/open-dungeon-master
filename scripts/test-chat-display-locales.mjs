@@ -25,7 +25,7 @@ for(const locale of ['en','zh-CN']){
 assert.equal(JSON.stringify(serviceFailure),originalFailure);
 html=r.render('MediaPlaceholder',{label:'label',fallbackStartedAt:'2020-01-01T00:00:00Z',status:{state:'failed',reason:'Not found.'}},'zh-CN');assert(!html.includes('找不到该聊天'),'media errors must not acquire side-chat semantics');
 const id='aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',roll={id,detail:'Canonical detail'};
-html=r.render('DmContent',{content:`阿明说：“**原文**不应被改写。” [roll:${id}] 后续。`,rollsById:new Map([[id,roll]]),sheetsById:new Map(),cast:[]},'zh-CN');assert(html.includes('<strong')&&html.includes('原文')&&html.includes(`data-roll-id="${id}"`)&&html.includes('后续。'));
+html=r.render('DmContent',{lines:[],content:`阿明说：“**原文**不应被改写。” [roll:${id}] 后续。`,rollsById:new Map([[id,roll]]),sheetsById:new Map(),cast:[]},'zh-CN');assert(html.includes('<strong')&&html.includes('原文')&&html.includes(`data-roll-id="${id}"`)&&html.includes('后续。'));
 html=r.render('SpeechLine',{speaker:{kind:'pc',id:'pc',name:'𠮷明'},cast:[],children:'自定台词'},'zh-CN');assert(html.includes('𠮷明')&&html.includes('自定台词'));
 const members=[{userId:'me',username:'本人'},{userId:'other',username:'自定 {成员}'},{userId:'third',username:'Authored third'}];
 const thread={id:'thread',kind:'group',title:'自定 {群聊}',memberUserIds:['me','other','third'],lastSeq:0,unread:0};

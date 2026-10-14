@@ -1,6 +1,7 @@
 "use client";
 
 import { Check, Loader2 } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { shellHost } from "@/lib/shell-host";
 import { ui } from "@/lib/ui";
@@ -8,13 +9,25 @@ import { PageSection } from "@/components/PageShell";
 import { PageSkeleton } from "@/components/PageSkeleton";
 import { GameIcon } from "@/components/ui/GameIcon";
 import { NumberStepper } from "@/components/ui/NumberStepper";
+import { Select } from "@/components/ui/Select";
+import { REROLL_LOW_DEFAULT, rerollBelowFor, rerollChoiceOf } from "@/lib/srd/ability-rerolls";
 import { AdminInvitesSection } from "@/app/admin/AdminInvitesSection";
+import { SpeedField } from "@/app/admin/SpeedField";
+import { apiSpeedEligibility } from "@/lib/speed-tier";
+import { describeEndpoint } from "@/lib/dm/sampling-logic";
+import type { SpeedChannel, SpeedNote } from "@/lib/speed-status";
 import { AdminNetworkSections } from "@/app/admin/AdminNetworkSections";
+import { AdminPlayerAgentsSection } from "@/app/admin/AdminPlayerAgentsSection";
 import { AdminBackupSection } from "@/app/admin/AdminBackupSection";
+import { AdminStorageSection } from "@/app/admin/AdminStorageSection";
 import { BackendProbe } from "@/app/admin/BackendProbe";
+import { ModelChoiceField } from "@/app/admin/ModelChoice";
+import { BLANK, fromEnv } from "@/app/admin/model-blanks";
 import { AdminImagesSection } from "@/app/admin/AdminImagesSection";
 import { AdminSpeechSection } from "@/app/admin/AdminSpeechSection";
+import { AmbienceLibraryCard } from "@/app/admin/AmbienceLibraryCard";
 import { AdminHarnessSection } from "@/app/admin/AdminHarnessSection";
+import { mergeAdminConfigDraft } from "@/app/admin/merge-config-draft";
 import {
   Field,
   SECRET_KEPT,
@@ -28,15 +41,18 @@ import {
 // world hides the section itself.
 const STOPS: Array<{ id: string; label: string; glyph: string; server?: boolean }> = [
   { id: "admin-server", label: "Server", glyph: "tab-settings", server: true },
-  { id: "admin-accounts", label: "Accounts", glyph: "tab-characters", server: true },
-  { id: "admin-text", label: "Text model", glyph: "system-lore" },
-  { id: "admin-harness", label: "Agent", glyph: "system-lore" },
-  { id: "admin-utility", label: "Utility model", glyph: "tab-log" },
-  { id: "admin-images", label: "Images", glyph: "sense-truesight" },
-  { id: "admin-speech", label: "Speech", glyph: "tab-ambience" },
-  { id: "admin-voice", label: "Voice chat", glyph: "cue-horn", server: true },
+  { id: "admin-accounts", label: "Accounts", glyph: "ui-accounts", server: true },
+  { id: "admin-text", label: "Text model", glyph: "ui-ai" },
+  { id: "admin-harness", label: "Agent", glyph: "ui-agent" },
+  { id: "admin-utility", label: "Utility model", glyph: "ui-utility" },
+  { id: "admin-images", label: "Images", glyph: "ui-paint" },
+  { id: "admin-speech", label: "Speech", glyph: "ui-speech" },
+  { id: "admin-ambience", label: "Sound library", glyph: "tab-ambience" },
+  { id: "admin-voice", label: "Voice chat", glyph: "ui-voice", server: true },
   { id: "admin-discord", label: "Discord", glyph: "system-share", server: true },
-  { id: "admin-backup", label: "Backup", glyph: "tab-handout", server: true },
+  { id: "admin-player-agents", label: "Player agents", glyph: "ui-agent", server: true },
+  { id: "admin-backup", label: "Backup", glyph: "ui-backup", server: true },
+  { id: "admin-storage", label: "Storage", glyph: "ui-storage" },
 ];
 
 function jumpTo(id: string) {
@@ -46,6 +62,7 @@ function jumpTo(id: string) {
 
 // Global server settings. Each string setting overrides its env var; a blank
 // field falls back to the env value shown as the placeholder/hint.
+
 export function AdminSettingsPanel() {
   const [config, setConfig] = useState<MaskedConfig | null>(null);
   const [env, setEnv] = useState<EnvDefaults | null>(null);
@@ -67,6 +84,8 @@ export function AdminSettingsPanel() {
   // public address, sign-up mode, voice transport and there is no usable
   // Discord redirect, so those sections disappear and only AI settings stay.
   const [deviceWorld, setDeviceWorld] = useState(false);
+  // What the last Fast calls ran at, per role (issue 255).
+  const [speedNotes, setSpeedNotes] = useState<Partial<Record<SpeedChannel, SpeedNote>>>({});
   // A phone cannot run Ollama or a local ComfyUI install; the desktop shell
   // can, so the PC keeps the local-AI fields.
   const phoneWorld = deviceWorld && shellHost()?.platform === "android";
@@ -80,9 +99,32 @@ export function AdminSettingsPanel() {
           setEnv(data.envDefaults);
           setVoiceUnroutable(Boolean(data.voiceAnnounceUnroutable));
           setDeviceWorld(Boolean(data.deviceWorld));
+          setSpeedNotes(data.speedStatus ?? {});
         }
       });
   }, []);
+
+  // A link from elsewhere can name one section (Settings > Connected agents
+  // sends an admin to ?section=admin-player-agents): it is brought into view
+  // once the sections are drawn. A query rather than a #hash, which the
+  // apps' router does not carry.
+  const section = useSearchParams().get("section");
+  const drawn = Boolean(config && env);
+  useEffect(() => {
+    if (!drawn || !section || !STOPS.some((stop) => stop.id === section)) return;
+    // The sections above fetch their own state and grow after the first
+    // paint, so the section is put back in view as they settle, until the
+    // reader scrolls for themselves.
+    const place = () => document.getElementById(section)?.scrollIntoView({ block: "start" });
+    const timers = [0, 300, 800, 1600].map((delay) => window.setTimeout(place, delay));
+    const stop = () => timers.forEach((timer) => window.clearTimeout(timer));
+    const events = ["wheel", "touchstart", "keydown"] as const;
+    events.forEach((name) => window.addEventListener(name, stop, { once: true, passive: true }));
+    return () => {
+      stop();
+      events.forEach((name) => window.removeEventListener(name, stop));
+    };
+  }, [drawn, section]);
 
   if (!config || !env) {
     return <PageSkeleton kind="flat" className="px-0 py-2" />;
@@ -127,11 +169,14 @@ export function AdminSettingsPanel() {
             utilityModel: config.text.utilityModel,
             utilityBaseUrl: config.text.utilityBaseUrl,
             ...(utilityApiKey === SECRET_KEPT ? {} : { utilityApiKey }),
+            speed: config.text.speed,
+            utilitySpeed: config.text.utilitySpeed,
           },
           images: {
             defaultBackend: config.images.defaultBackend,
             comfyUrl: config.images.comfyUrl,
             comfyCheckpoint: config.images.comfyCheckpoint,
+            comfyWorkflowPreset: config.images.comfyWorkflowPreset,
             fluxWorkerUrl: config.images.fluxWorkerUrl,
             openaiBaseUrl: config.images.openaiBaseUrl,
             openaiModel: config.images.openaiModel,
@@ -144,6 +189,8 @@ export function AdminSettingsPanel() {
             ttsModel: config.speech.ttsModel,
             ttsVoice: config.speech.ttsVoice,
             sttUrl: config.speech.sttUrl,
+            sttModel: config.speech.sttModel,
+            sttOpenaiModel: config.speech.sttOpenaiModel,
             ...(ttsApiKey === SECRET_KEPT ? {} : { ttsApiKey }),
           },
         }),
@@ -220,7 +267,7 @@ export function AdminSettingsPanel() {
       )}
 
       {deviceWorld ? null : (
-        <PageSection id="admin-accounts" heading="Accounts" glyph="tab-characters">
+        <PageSection id="admin-accounts" heading="Accounts" glyph="ui-accounts">
           <SelectField
             label="New account sign-ups"
             value={config.signupMode}
@@ -284,30 +331,44 @@ export function AdminSettingsPanel() {
               />
             </Field>
             <Field
-              label="Reroll the 4d6 ability dice under a total of"
-              hint="The server throws and keeps a player's six 4d6 totals; they may throw again only while the six add up to less than this. 0 allows no reroll; 108 lets anything be rethrown. The book names no rule; 70 is the default."
+              label="Rolled 4d6 stats"
+              hint="The server throws and keeps a player's six 4d6 totals. Choose whether they may throw again: never, only when the six add up to less than a total you set (70 is the default; the book names no rule), or as often as they like. This is the rule in the library and at every table that follows the server, where a player has one six for all of them. A table can set its own rule in its settings and then keeps a separate six for each player; a character made there still joins its player's library like any other, and a library character or a file brought to a table is only checked against what the dice could give."
             >
-              <NumberStepper
-                label="Reroll the 4d6 ability dice under a total of"
-                min={0}
-                max={108}
-                step={1}
-                suffix={config.abilityRerollBelow === 0 ? "no rerolls" : "total"}
-                value={config.abilityRerollBelow}
-                onChange={(next) => {
-                  const below = Math.round(Number(next));
-                  setConfig({
-                    ...config,
-                    abilityRerollBelow: Number.isFinite(below) ? Math.min(108, Math.max(0, below)) : 70,
-                  });
-                }}
+              <Select
+                label="Rolled 4d6 stats"
+                value={rerollChoiceOf(config.abilityRerollBelow)}
+                onChange={(choice) =>
+                  setConfig({ ...config, abilityRerollBelow: rerollBelowFor(choice, config.abilityRerollBelow) })
+                }
+                options={[
+                  { value: "keep", label: "The first roll stands" },
+                  { value: "low", label: "Reroll a low roll" },
+                  { value: "free", label: "Reroll as often as they like" },
+                ]}
               />
+              {rerollChoiceOf(config.abilityRerollBelow) === "low" ? (
+                <NumberStepper
+                  label="Reroll when the six add up to less than"
+                  min={1}
+                  max={107}
+                  step={1}
+                  suffix="total"
+                  value={config.abilityRerollBelow}
+                  onChange={(next) => {
+                    const below = Math.round(Number(next));
+                    setConfig({
+                      ...config,
+                      abilityRerollBelow: Number.isFinite(below) ? Math.min(107, Math.max(1, below)) : REROLL_LOW_DEFAULT,
+                    });
+                  }}
+                />
+              ) : null}
             </Field>
           </div>
         </PageSection>
       )}
 
-      <PageSection id="admin-text" heading="Text model defaults" glyph="system-lore">
+      <PageSection id="admin-text" heading="Text model defaults" glyph="ui-ai">
         <p className="mb-3 text-xs text-stone-500">
           The backend every player&apos;s campaign runs on. A campaign can still pick its model,
           but only an admin&apos;s own campaigns can point at another address or key.
@@ -326,19 +387,15 @@ export function AdminSettingsPanel() {
             ]}
           />
           {phoneWorld ? null : (
-            <Field label="Local model (Ollama native)">
-              <input
-                className={ui.input}
-                value={config.text.localTextModel}
-                onChange={(event) =>
-                  setConfig({
-                    ...config,
-                    text: { ...config.text, localTextModel: event.target.value },
-                  })
-                }
-                placeholder="gemma4:31b-it-qat"
-              />
-            </Field>
+            <ModelChoiceField
+              label="Local model (Ollama native)"
+              hint="What this machine's Ollama has pulled; any tag it serves can be typed."
+              role="story"
+              provider="local"
+              value={config.text.localTextModel}
+              onChange={(localTextModel) => setConfig({ ...config, text: { ...config.text, localTextModel } })}
+              blankLabel={env.localTextModel ? fromEnv(env.localTextModel, "LOCAL_TEXT_MODEL") : BLANK.story}
+            />
           )}
           <Field label="Backend base URL" hint={env.customBaseUrl ? `Env: ${env.customBaseUrl}` : undefined}>
             <input
@@ -350,16 +407,16 @@ export function AdminSettingsPanel() {
               placeholder={env.customBaseUrl || "http://127.0.0.1:11434/v1"}
             />
           </Field>
-          <Field label="Model name" hint={env.customModel ? `Env: ${env.customModel}` : undefined}>
-            <input
-              className={ui.input}
-              value={config.text.customModel}
-              onChange={(event) =>
-                setConfig({ ...config, text: { ...config.text, customModel: event.target.value } })
-              }
-              placeholder={env.customModel || "qwen3.6-dm"}
-            />
-          </Field>
+          <ModelChoiceField
+            label="Model name"
+            role="story"
+            provider="custom"
+            baseUrl={config.text.customBaseUrl || env.customBaseUrl}
+            apiKey={apiKey === SECRET_KEPT ? "" : apiKey}
+            value={config.text.customModel}
+            onChange={(customModel) => setConfig({ ...config, text: { ...config.text, customModel } })}
+            blankLabel={env.customModel ? fromEnv(env.customModel, "OPENAI_COMPAT_MODEL") : BLANK.story}
+          />
         </div>
         <div className="mt-3">
           <SecretField
@@ -378,6 +435,20 @@ export function AdminSettingsPanel() {
             continuation, so a backend is proven before a campaign learns it
             the hard way. Uses the field values as typed, saved values and
             env as fallbacks. */}
+        {config.text.provider === "" || config.text.provider === "custom" ? (
+          <div className="mt-3 sm:w-1/2">
+            <SpeedField
+              label="Processing speed"
+              value={config.text.speed}
+              onChange={(speed) => setConfig({ ...config, text: { ...config.text, speed } })}
+              eligibility={apiSpeedEligibility({
+                endpointKind: describeEndpoint(config.text.customBaseUrl || env.customBaseUrl || "").kind,
+                model: config.text.customModel || env.customModel || "",
+              })}
+              note={speedNotes.story}
+            />
+          </div>
+        ) : null}
         <BackendProbe
           which="story"
           baseUrl={config.text.customBaseUrl}
@@ -387,10 +458,17 @@ export function AdminSettingsPanel() {
       </PageSection>
 
       {phoneWorld ? null : (
-        <AdminHarnessSection textProvider={config.text.provider} imagesBackend={config.images.defaultBackend} onConfig={setConfig} />
+        <AdminHarnessSection
+          textProvider={config.text.provider}
+          imagesBackend={config.images.defaultBackend}
+          onConfig={(patch) =>
+            setConfig((current) => (current ? mergeAdminConfigDraft(current, patch) : current))
+          }
+          speedNotes={speedNotes}
+        />
       )}
 
-      <PageSection id="admin-utility" heading="Utility model (optional)" glyph="tab-log">
+      <PageSection id="admin-utility" heading="Utility model (optional)" glyph="ui-utility">
         <p className="mb-3 text-xs text-stone-500">
           A second, smaller model for the mechanical work: history compaction, chapter summaries
           and fact extraction, world-arc ticks, lore checks, and Ask answers. None of it is
@@ -410,19 +488,17 @@ export function AdminSettingsPanel() {
               { value: "custom" as const, label: "OpenAI-compatible server" },
             ]}
           />
-          <Field
+          <ModelChoiceField
             label="Model name"
-            hint="Blank = off. Anything in the 4B-8B class is plenty; e.g. gemma4:e4b-it-qat."
-          >
-            <input
-              className={ui.input}
-              value={config.text.utilityModel}
-              onChange={(event) =>
-                setConfig({ ...config, text: { ...config.text, utilityModel: event.target.value } })
-              }
-              placeholder="Off"
-            />
-          </Field>
+            hint="Anything in the 4B-8B class is plenty."
+            role="utility"
+            provider={config.text.utilityProvider === "custom" ? "custom" : "local"}
+            baseUrl={config.text.utilityProvider === "custom" ? config.text.utilityBaseUrl : ""}
+            apiKey={utilityApiKey === SECRET_KEPT ? "" : utilityApiKey}
+            value={config.text.utilityModel}
+            onChange={(utilityModel) => setConfig({ ...config, text: { ...config.text, utilityModel } })}
+            blankLabel={BLANK.utility}
+          />
           <Field
             label="Backend base URL"
             hint="Only for an OpenAI-compatible utility server. Blank uses the Ollama endpoint."
@@ -446,6 +522,18 @@ export function AdminSettingsPanel() {
             onChange={setUtilityApiKey}
             hint="Most local servers need none."
           />
+          {config.text.utilityProvider === "custom" && config.text.utilityModel.trim() ? (
+            <SpeedField
+              label="Processing speed"
+              value={config.text.utilitySpeed}
+              onChange={(utilitySpeed) => setConfig({ ...config, text: { ...config.text, utilitySpeed } })}
+              eligibility={apiSpeedEligibility({
+                endpointKind: describeEndpoint(config.text.utilityBaseUrl).kind,
+                model: config.text.utilityModel,
+              })}
+              note={speedNotes.utility}
+            />
+          ) : null}
         </div>
         <BackendProbe
           which="utility"
@@ -469,9 +557,12 @@ export function AdminSettingsPanel() {
         speech={config.speech}
         env={env}
         apiKey={ttsApiKey}
+        openaiSpeechBaseUrl={config.images.openaiBaseUrl || env.openaiImageBaseUrl || "https://api.openai.com/v1"}
         onSpeech={(speech) => setConfig({ ...config, speech })}
         onApiKey={setTtsApiKey}
       />
+
+      <AmbienceLibraryCard />
 
       {deviceWorld ? null : (
         <AdminNetworkSections
@@ -485,10 +576,20 @@ export function AdminSettingsPanel() {
       )}
 
       {deviceWorld ? null : (
-        <PageSection id="admin-backup" heading="Backup & restore" glyph="tab-handout">
+        <PageSection id="admin-player-agents" heading="Player agents" glyph="ui-agent">
+          <AdminPlayerAgentsSection />
+        </PageSection>
+      )}
+
+      {deviceWorld ? null : (
+        <PageSection id="admin-backup" heading="Backup & restore" glyph="ui-backup">
           <AdminBackupSection />
         </PageSection>
       )}
+
+      <PageSection id="admin-storage" heading="Storage" glyph="ui-storage">
+        <AdminStorageSection />
+      </PageSection>
 
       <div className="flex flex-wrap items-center gap-3">
         <button type="button" onClick={save} disabled={saving} aria-busy={saving} className={ui.btnPrimary}>

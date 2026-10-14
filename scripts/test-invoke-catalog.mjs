@@ -76,6 +76,7 @@ const TOOL_SOURCES = [
   "src/lib/dm/prompt.ts",
   "src/lib/dm/note-tools.ts",
   "src/lib/dm/lore-search.ts",
+  "src/lib/dm/prep-card-tool.ts",
   "src/lib/dm/binder-tools.ts",
   "src/lib/dm/faction-tools.ts",
   "src/lib/dm/shop-tools.ts",
@@ -411,7 +412,7 @@ const COMBAT_NAMES = new Set(COMBAT_ADJUDICATIONS.map((entry) => entry.name));
 
 test("the property scan reads the tools it is pointed at", () => {
   assert.deepEqual(toolProperties("take_action").keys.sort(), [
-    "action", "bonus", "characterId", "enemyId", "item", "level", "reason", "shove", "skill",
+    "action", "bonus", "characterId", "enemyId", "item", "level", "readied", "reason", "shove", "skill",
     "spell", "targetCharacterId", "targetEnemyId", "trigger",
   ]);
   assert.ok(toolProperties("apply_damage").keys.includes("amount"));
@@ -595,10 +596,14 @@ function formOmissions(entry) {
     cast_at_enemy: { targetEnemyId: "enemyIds" },
     cast_at_player: { characterId: "characterIds" },
   };
+  // waypoint tags the AI DM's call with the [NOW] step it accomplishes; a
+  // person's console call never ticks a step (src/lib/dm/waypoint-tick.ts),
+  // the arc panel does, so no form offers it.
   return found.keys.filter(
     (key) =>
       key !== "..." &&
       key !== "reason" &&
+      key !== "waypoint" &&
       !offered.has(key) &&
       !offered.has(aliases[entry.name]?.[key] ?? "") &&
       !(allowed ?? []).includes(key),

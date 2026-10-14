@@ -1,0 +1,476 @@
+{
+  "upstreamCommit": "2b0b6b6ebf5e12f3e43a21ee38f80b41e5b1cd81",
+  "records": [
+    {
+      "manifest": "docs/validation/character-calling-translations.json",
+      "changes": [
+        {
+          "path": "src/app/characters/builder/steps/CallingStep.tsx",
+          "before": "9f5b4431d56ecb3a9503afc5d0e87dcb1c1cf4be40245e97ead7bc5d0cea4476",
+          "after": "2d85614f558ffddf552f9d6ca1b2776d4e902fecef5b558439349228a845bd94"
+        },
+        {
+          "path": "src/lib/i18n/calling-ui-messages.ts",
+          "before": "6ee79c641a5e39a5240764e9c90d68718c8d7b822a72e46d1776391177444280",
+          "after": "547f6049916816356352ac4b47d55b7a6a5b0cef06426e9e7033060070033de9"
+        }
+      ]
+    },
+    {
+      "manifest": "docs/validation/character-gear-translations.json",
+      "changes": [
+        {
+          "path": "src/lib/content/native-equipment-search.ts",
+          "before": "f0e147029c3449d0a76dc0d3874bcb89b828f754ee56b2e8f14f6122c57b4eb6",
+          "after": "db295ded79ac53ece95853852f9dc209fc965a36526478b602271bbc272c2840"
+        }
+      ]
+    },
+    {
+      "manifest": "docs/validation/character-calling-material-translations.json",
+      "changes": [
+        {
+          "path": "src/lib/srd/subclasses.json",
+          "before": "94f65f85c8e39d4b2c15979a74ec835967d620dff69013284f14fe64764230cb",
+          "after": "0a13cbe6d22754e1f7e1cee4b997139fcc2a861e4cfa43e48566a4ff182abafe"
+        },
+        {
+          "path": "src/lib/help/index.ts",
+          "before": "7ff4f4cd962f23f301d09902fcd8fba024f1f5956ddca7c5a99d9105ab4c7dbd",
+          "after": "d713cd97b4210766e44d39675eba03a2c9a409bea389520e87223b7ee8d3f149"
+        },
+        {
+          "path": "src/app/characters/builder/steps/CallingStep.tsx",
+          "before": "9f5b4431d56ecb3a9503afc5d0e87dcb1c1cf4be40245e97ead7bc5d0cea4476",
+          "after": "2d85614f558ffddf552f9d6ca1b2776d4e902fecef5b558439349228a845bd94"
+        },
+        {
+          "path": "src/app/campaigns/[campaignId]/LevelUpDialog.tsx",
+          "before": "943360ce5d65e9a6cfdc7bca0786cc2462da3a42848d6ab93d1ec4ae5f8bf73f",
+          "after": "e28621cb64999c14ebb74c09b58669ba91535444a26208d358ea58621fa67c6e"
+        }
+      ]
+    },
+    {
+      "manifest": "docs/validation/character-builder-identity-translations.json",
+      "changes": [
+        {
+          "path": "src/app/characters/builder/steps/IdentityStep.tsx",
+          "before": "9e63ff51dbb733e50dae011bddec3009aaee81d955a3d3a88a91871c521a0ae5",
+          "after": "58a0b66d926db01f0b357c5b963af762ada9beb0c04aefe53e47c225de292151"
+        },
+        {
+          "path": "src/lib/srd/races.json",
+          "before": "a3661913715291b4ca72cc730f4d261b4da98cd6d9240490bbf5fa0550e6871e",
+          "after": "a33ca25b9fe53162cf072fd09e02a4cc60efbe7be4873a347c84c3033cef8607"
+        },
+        {
+          "path": "src/lib/srd/subclasses.json",
+          "before": "94f65f85c8e39d4b2c15979a74ec835967d620dff69013284f14fe64764230cb",
+          "after": "0a13cbe6d22754e1f7e1cee4b997139fcc2a861e4cfa43e48566a4ff182abafe"
+        },
+        {
+          "path": "src/lib/i18n/builder-identity-messages.ts",
+          "before": "f7c9035a41d2b79a5d1fabe54e654f539241e07fc53c5a79757cb04b3da3d008",
+          "after": "37bb574334d87643876d7eeb8f8a7863db2229499ed00f35bacc36378edff250"
+        }
+      ]
+    },
+    {
+      "manifest": "docs/validation/character-lineage-translations.json",
+      "changes": [
+        {
+          "path": "src/lib/srd/races.json",
+          "before": "a3661913715291b4ca72cc730f4d261b4da98cd6d9240490bbf5fa0550e6871e",
+          "after": "a33ca25b9fe53162cf072fd09e02a4cc60efbe7be4873a347c84c3033cef8607"
+        },
+        {
+          "path": "src/app/characters/builder/lineage.ts",
+          "before": "fbb0199825c6582e8405d661c4d22adf0ea4fb8946d3196f82acef0816e67169",
+          "after": "a6997f19670bf6516329084a306b1a6ba508672701b61d44bc022faaf687c68c"
+        },
+        {
+          "path": "src/lib/help/index.ts",
+          "before": "7ff4f4cd962f23f301d09902fcd8fba024f1f5956ddca7c5a99d9105ab4c7dbd",
+          "after": "d713cd97b4210766e44d39675eba03a2c9a409bea389520e87223b7ee8d3f149"
+        },
+        {
+          "path": "src/lib/i18n/lineage-material-messages.ts",
+          "before": "e549e7deeddab6c0236fd3e454ad950b843b50a029d58f3e7c70317cc4e7c3e3",
+          "after": "335cc102c639663f8aa46655b80ac84662a6641a65351661288c95935c311ccd"
+        }
+      ]
+    },
+    {
+      "manifest": "docs/validation/character-feat-translations.json",
+      "changes": [
+        {
+          "path": "src/lib/srd/feat-grant-text.ts",
+          "before": "25ba28960ee0d982df26663d1490d6aa19fabdd3ca286ac4423c1caee93cd575",
+          "after": "69016c4b57c97f378af8a0fa214135365626bb28d3b3076b8729216555bab606"
+        }
+      ]
+    },
+    {
+      "manifest": "docs/validation/character-builder-feedback-translations.json",
+      "changes": [
+        {
+          "path": "src/app/characters/builder/submit.ts",
+          "before": "dc5846e2077e9565c5194a72a51a0a2d0a48f4d52c81df1149a2836f23551b56",
+          "after": "db4dfc62d26be827fcf27467b50ec60efa1c3a168ae24b6a146bddf378e95da3"
+        },
+        {
+          "path": "src/lib/classes/resources.json",
+          "before": "d50bca1b6efecb6abc30de5ef3f0d9f2b3e35ae45783a497e47762bc848cf5a9",
+          "after": "3298e3b4d7610c896d4120af578398131154abaab7eca75c472849fbc91e27e3"
+        }
+      ]
+    },
+    {
+      "manifest": "docs/validation/character-ability-translations.json",
+      "changes": [
+        {
+          "path": "src/app/characters/builder/AbilityEditor.tsx",
+          "before": "b6fe29aaa026e1cbfab18ae22482c7825b111c6ffde54cc4aa75a8dbf3082db1",
+          "after": "058a3dd8c1e52cae3cd1a756be1983c2df641b99c1ee31c5d80a479a0284b050"
+        },
+        {
+          "path": "src/app/characters/builder/abilityDice.ts",
+          "before": "2274f564b6a0516d8ef6940acd4074711a4809654d21ea14420d59375c148aec",
+          "after": "307c75def1a44ccd2b5227a274f7d0757a80dfe4e9d4abea1eb50352a69a08f6"
+        },
+        {
+          "path": "src/app/characters/builder/useTableRules.ts",
+          "before": "5a28340d296f579ac16db524bd59394d596bbdfe05ab95793dba5956b95324c0",
+          "after": "13be6e14a22dd0e6c13448058d472e03e28ebba49b0e070b6714fe333d1ec028"
+        },
+        {
+          "path": "src/app/api/characters/rolls/route.ts",
+          "before": "8ada7f9282076e5204a93dbc35e811a903d9564598ffbee9666a888ae7217c3a",
+          "after": "46c3164a7185762c20c4cd349bb9a2a3e64a0445f50ebb6fb723e780e945f2f7"
+        }
+      ]
+    },
+    {
+      "manifest": "docs/validation/game-help-translations.json",
+      "changes": [
+        {
+          "path": "src/lib/help/index.ts",
+          "before": "7ff4f4cd962f23f301d09902fcd8fba024f1f5956ddca7c5a99d9105ab4c7dbd",
+          "after": "d713cd97b4210766e44d39675eba03a2c9a409bea389520e87223b7ee8d3f149"
+        },
+        {
+          "path": "src/app/characters/builder/steps/IdentityStep.tsx",
+          "before": "9e63ff51dbb733e50dae011bddec3009aaee81d955a3d3a88a91871c521a0ae5",
+          "after": "58a0b66d926db01f0b357c5b963af762ada9beb0c04aefe53e47c225de292151"
+        },
+        {
+          "path": "src/app/characters/builder/steps/CallingStep.tsx",
+          "before": "9f5b4431d56ecb3a9503afc5d0e87dcb1c1cf4be40245e97ead7bc5d0cea4476",
+          "after": "2d85614f558ffddf552f9d6ca1b2776d4e902fecef5b558439349228a845bd94"
+        },
+        {
+          "path": "src/app/characters/builder/FeatChoicesFields.tsx",
+          "before": "1533004ac6b9209849c42a1b2d95a9945cc8a86c998999642aa2b9be43847516",
+          "after": "c783433800793c1fcdd1a05382c24c74fbab22283f692bf24566bfe23083dd10"
+        },
+        {
+          "path": "src/app/campaigns/[campaignId]/LevelUpDialog.tsx",
+          "before": "943360ce5d65e9a6cfdc7bca0786cc2462da3a42848d6ab93d1ec4ae5f8bf73f",
+          "after": "e28621cb64999c14ebb74c09b58669ba91535444a26208d358ea58621fa67c6e"
+        }
+      ]
+    },
+    {
+      "manifest": "docs/validation/character-spell-ui-translations.json",
+      "changes": [
+        {
+          "path": "src/components/sheet/SpellBook.tsx",
+          "before": "60e9b309292c4314ce2c4ad57ead5c2e50dcca9e4ad9d0b8fe5f0789c0c3a93a",
+          "after": "2708ae093e15e962562980a171c1ef4e74d9c2278ff85898d0033e4ae441c3f0"
+        },
+        {
+          "path": "src/components/sheet/useSpellPool.ts",
+          "before": "9ec6dbcf393842be1c4293d20f2a9312a61c4347474ef7273ad4b5373d1dadc0",
+          "after": "1b50916d6c116b0e55c49a1d333390a4a392498980904afd5e18a1aafc72f337"
+        }
+      ]
+    },
+    {
+      "manifest": "docs/validation/check-cinematic-translations.json",
+      "changes": [
+        {
+          "path": "src/lib/dm/check-tools.ts",
+          "before": "1935afc8e407b17b2162f89e6feba6b0e5702e2d5a7d846d26dcf8a4975629e3",
+          "after": "1d1aebd046ab8a2a6006aa354a08900b4149de10963699071faffe649e9d5404"
+        },
+        {
+          "path": "src/lib/dm/cast-at-player.ts",
+          "before": "5d0358b37da01cf9a2888f43cb8ed92002dd5a93db84136cd527b5eee73d0bb6",
+          "after": "0216890fc7b201ccf668d5047bffadfbf26b09f49706118e84d6cd9e913577c8"
+        },
+        {
+          "path": "src/app/campaigns/[campaignId]/CinematicParts.tsx",
+          "before": "44263fc4f3eceb8e1421c5b46cdd7480f653b0437b148235883d8f2c45cdcc27",
+          "after": "b19c36c297db2753d1b6feb3e2565aa0c4923fdd05f5bf8815924163c4eb3e4d"
+        },
+        {
+          "path": "src/lib/dm/grapple.ts",
+          "before": "99c3a81f827276c95da67ad0a8c01fb207f3f0a105dc1a3ff06fd47e178ecd6a",
+          "after": "dd24ee6b1f88327348b35fdfeb8327e4c894010dcbe296f83eb02d941f6c903d"
+        },
+        {
+          "path": "src/lib/i18n/cinematic-messages.ts",
+          "before": "a667bae07e2befe43a5d5d5696b205113515fd85fc10246eda43a7f714bb50fd",
+          "after": "83ad0a1edaf7e386307529b44108bb4c71dc116cd864c9d6a5d9a15fa7874e10"
+        }
+      ],
+      "review": "Reviewed upstream mechanics and tool schema changes, preserved structured roll presentations and English tool responses; reviewed cinematic scroll/length controls, multi-character sheet identity, accessible load dialog, and new localized turn notices. Focused semantic and English regressions remain required."
+    },
+    {
+      "manifest": "docs/validation/initiative-social-translations.json",
+      "changes": [
+        {
+          "path": "src/lib/dm/encounter-tools.ts",
+          "before": "8ccbab350721a8a3f445b2be3e3f11cb28eac0ae64a53239fdabba5908375518",
+          "after": "c2671555676e7b3ff423f999e8d73f878dd4233e5b42d832193da45caba7e2c7"
+        },
+        {
+          "path": "src/lib/dm/encounter-spawn.ts",
+          "before": "72a92b48759726dfb81273bf940d4ebe8f76f16d1baedb9c632941ab3ca0fb2a",
+          "after": "25af2877fb94e53cf4df03a32e30daf2f0993c2a600e3fb49bae391a9206a9eb"
+        },
+        {
+          "path": "src/lib/dm/initiative.ts",
+          "before": "09a543ef772db05ce912f16f10950f6be2c432d3c4d9399348c651c9c7d4aee7",
+          "after": "b67dbe554c22288297aa22bd278691b801834638f4f5d006d545d07ac5a75c10"
+        },
+        {
+          "path": "src/lib/dm/companion-tools.ts",
+          "before": "4fc568bff8ecb94bab7aec45117fe1cce6bf38c2b946ee751ce8968be5fca5e0",
+          "after": "dac676c9f45ea1a005c3511f4f69688c5dbc2ecf4f63d670986121a23a0dc8ba"
+        },
+        {
+          "path": "src/lib/dm/social-tools.ts",
+          "before": "1b3352d035d09570bb9da470d1bf24e8f0f510929d63485768668a1c452c903a",
+          "after": "100b616235248a118902bb981891cc64b768c8d547aa8cc35dd9ff36d3a5505b"
+        },
+        {
+          "path": "src/lib/dm/relationship-tools.ts",
+          "before": "ec31fde6dd549b4d17e15fcec8f4131831c8ea7f4904b4e53bc360126df777b9",
+          "after": "42c36aa0e18c31e63ebad7647cd37f2eaf3ca3260ef809d672efe5a64682c275"
+        },
+        {
+          "path": "src/lib/dm/shop-tools.ts",
+          "before": "4a846e47e4360681824f695cff17c574dc906a048ee40e3cc26afe034984df73",
+          "after": "fdef9a285f444fc6a8c17d884c346e3b74926d43915f579fe9c12eb3fa84f428"
+        },
+        {
+          "path": "src/lib/dm/authored-spend-effects.ts",
+          "before": "a8c3c617362e3bfd26db54d780b5db10ac72bb390da5c084f73a5ca17ec9b544",
+          "after": "3079f381c16c72491a96ac02d50106cdd5a6e39771fa98cc8259b7564ed23f8d"
+        }
+      ],
+      "review": "Reviewed upstream mechanics and tool schema changes, preserved structured roll presentations and English tool responses; reviewed cinematic scroll/length controls, multi-character sheet identity, accessible load dialog, and new localized turn notices. Focused semantic and English regressions remain required."
+    },
+    {
+      "manifest": "docs/validation/roll-presentation-translations.json",
+      "changes": [
+        {
+          "path": "src/lib/dm/death.ts",
+          "before": "97628cd5ba7113de678c5d62415124542008bc3acd5eb5db8a9a3718a7653b8f",
+          "after": "10931b7f886471f433b4305c1e99e8b84800060ffd9fb705cdd38427a2f97cb6"
+        },
+        {
+          "path": "src/lib/dm/rolls.ts",
+          "before": "65de00926f0c77a90958ca16686d5c850aea5f1e5e833139eee8375ca4a06770",
+          "after": "221edc7e35e11446a610785fd01b70104a5c2c34fc741a73ff752dc8c5597fc3"
+        },
+        {
+          "path": "src/lib/srd/condition-effects.ts",
+          "before": "10ec0186225be52c36e64ead35454c160b3aca372955779c29487ecfac31a2ac",
+          "after": "64878ba9515c1731a690dbca6567b450c317312895901adac6d4643431022e1c"
+        },
+        {
+          "path": "src/lib/dm/condition-logic.ts",
+          "before": "cd14ca107d7c4acdb34b0105c5eaf45556a0713158cdf7c602e5720997a16771",
+          "after": "78496fab21a5dca061a75130568f3d5f5bfec94baa74357c977dee0d95d4adc7"
+        }
+      ],
+      "review": "Reviewed upstream mechanics and tool schema changes, preserved structured roll presentations and English tool responses; reviewed cinematic scroll/length controls, multi-character sheet identity, accessible load dialog, and new localized turn notices. Focused semantic and English regressions remain required."
+    },
+    {
+      "manifest": "docs/validation/save-caption-translations.json",
+      "changes": [
+        {
+          "path": "src/lib/dm/ai-gate.ts",
+          "before": "c9bba93f192475ca31682e982d201a6ac20e06f40192cdc5eb99f45cc699965d",
+          "after": "aeeb055289e58198b1be806d0344829ee5607d03617593093dcf0fd1b0b5abca"
+        },
+        {
+          "path": "src/lib/dm/authored-reactions.ts",
+          "before": "2c7e9a8ee8283f4c0c178b393ef0a0c2f2c69e41932a33c55426e40e6df6d119",
+          "after": "18077955d5198f6cfee15ca91e427afe81a97573d0331536194974594895a6c9"
+        },
+        {
+          "path": "src/lib/dm/authored-spend-effects.ts",
+          "before": "a8c3c617362e3bfd26db54d780b5db10ac72bb390da5c084f73a5ca17ec9b544",
+          "after": "3079f381c16c72491a96ac02d50106cdd5a6e39771fa98cc8259b7564ed23f8d"
+        },
+        {
+          "path": "src/lib/dm/cast-at-enemy.ts",
+          "before": "d4c7413db511f85bab3ef2c1cda842ceb06da2f7f70b4462871b4aab6900be00",
+          "after": "93cda8a457aab78a19d32177a5016679316d8755b246d58e5261a4e7d0b57cdd"
+        },
+        {
+          "path": "src/lib/dm/condition-tick.ts",
+          "before": "5c76705f537b151f92a8c50f0f0b3b05b25e63cfdfcfada9d821d2374fefa5f2",
+          "after": "d5f208e63ec15c46311059db26e4924e911bf42cd67426c5e893eea55e72618e"
+        },
+        {
+          "path": "src/lib/dm/encounter-tools-extra.ts",
+          "before": "d33e9d24ad70fe8916cff4b6cd8c4a1ced7d52168350c0369964ef6db81d9c12",
+          "after": "b057ac8f615bdd077a0c5e0f3e8b8b5531a4d04d70ba409ff037573608c4c91a"
+        },
+        {
+          "path": "src/lib/dm/feature-spends.ts",
+          "before": "4739301b4652fdb50ba1d3354a37bcdcb8a2b1f72093ebeaf5e809929720dc6b",
+          "after": "1bdb2d25885e09585c419ce374a5ea4f4724e677aac07580828500bb5a0e6c4c"
+        },
+        {
+          "path": "src/lib/dm/mount-tools.ts",
+          "before": "20614f2b87ad7d4a0e0e5b72ee5099e25bb0b56aaee02aa188ebbce77ac8f6be",
+          "after": "12239ba4814559d473a71bb904e4f88e940ce6dfa5692d7731d01588b53a5d28"
+        }
+      ],
+      "review": "Reviewed upstream mechanics and tool schema changes, preserved structured roll presentations and English tool responses; reviewed cinematic scroll/length controls, multi-character sheet identity, accessible load dialog, and new localized turn notices. Focused semantic and English regressions remain required."
+    },
+    {
+      "manifest": "docs/validation/sheet-party-translations.json",
+      "changes": [
+        {
+          "path": "scripts/lib/combat-ui-fixtures.mjs",
+          "before": "c30d098937f9b7b4abc82b696b792f46d23c13639c8faa76acbe6406467f7a7b",
+          "after": "6be5a2b0532d1c6ee9e0eeb5d257a2327da218d516b742c4173d00b633eab2b4"
+        },
+        {
+          "path": "src/app/api/campaigns/[campaignId]/sheet/route.ts",
+          "before": "f38e06d5e7120fbe65521fdd8ca2dc8ebd4b37e09d0ee91f5641df6bf4e71c43",
+          "after": "6c748989fe03d368c64c8072da5aee9192ecc0b8a486d9ac272ea90f1a873539"
+        },
+        {
+          "path": "src/app/campaigns/[campaignId]/CharacterSheetDialog.tsx",
+          "before": "bed59758b734b19478b91259d2c15e5bcfe1606a56d2fd75850498e253c5ff33",
+          "after": "5c9cf63821ea54dbdcf21658774e546db11b1d3099a0ed5c8c117756aef5a3a2"
+        },
+        {
+          "path": "src/app/campaigns/[campaignId]/PartyPanel.tsx",
+          "before": "2bb148a325e0661352856dbf50ec0972d422275f3bdaad0f3abe97c1b1abd726",
+          "after": "2f64698d7704834e942aeb597d481ba52457fa114963fecbbed7d84f31ee508f"
+        },
+        {
+          "path": "src/components/sheet/SheetParts.tsx",
+          "before": "27b34f19c33d4b42f6a0cd5f42fa3b4a2567950ca24becb08cc209da8c5dbfce",
+          "after": "f921dae5349b6c8d32dd1965fb673b0aac326d351b7981bedba4ee75fe0e7296"
+        },
+        {
+          "path": "src/components/sheet/SheetState.tsx",
+          "before": "d664ff1c154de748ef0605e2dc44a05ae5b534b4c071070d6cc6a3da2621906b",
+          "after": "cc262cdec625ad3691a45b5131ad3944d810b2a8f1442b2fdc16ba4b6ad021dd"
+        }
+      ],
+      "review": "Reviewed upstream mechanics and tool schema changes, preserved structured roll presentations and English tool responses; reviewed cinematic scroll/length controls, multi-character sheet identity, accessible load dialog, and new localized turn notices. Focused semantic and English regressions remain required."
+    },
+    {
+      "manifest": "docs/validation/special-caption-translations.json",
+      "changes": [
+        {
+          "path": "src/lib/dm/affliction-poisons.ts",
+          "before": "b94496dc1e013064c6ba5fc19b1b17bda7b2d126a46d4a3dc844d8bcb938ce51",
+          "after": "e3e91e93ebe4d838f613d6c0802be450fd2181076b3c9f4f67416cc3b30954f9"
+        },
+        {
+          "path": "src/lib/dm/afflictions.ts",
+          "before": "786b02ccd13fc0128dd04b221c9eafa24729421bd778b71cfb677ca86d9ae3e8",
+          "after": "6490d2a92875cdb2f7a5428e07c342e03bccae074120e0e4b236c98fec2125af"
+        },
+        {
+          "path": "src/lib/dm/authored-reactions.ts",
+          "before": "2c7e9a8ee8283f4c0c178b393ef0a0c2f2c69e41932a33c55426e40e6df6d119",
+          "after": "18077955d5198f6cfee15ca91e427afe81a97573d0331536194974594895a6c9"
+        },
+        {
+          "path": "src/lib/dm/authored-spend-effects.ts",
+          "before": "a8c3c617362e3bfd26db54d780b5db10ac72bb390da5c084f73a5ca17ec9b544",
+          "after": "3079f381c16c72491a96ac02d50106cdd5a6e39771fa98cc8259b7564ed23f8d"
+        },
+        {
+          "path": "src/lib/dm/between-io.ts",
+          "before": "c768657a92a5937954d3156393b9a410a36c9e19a6f4aaad8fa7f7367c04db1a",
+          "after": "9cbc5e0bdd8c396f1275335325cc0705cd50f87edb13f56edd74b61261f94127"
+        },
+        {
+          "path": "src/lib/dm/cast-buff.ts",
+          "before": "e236fe799281b432927f647433ea58d435fc6450b6c83181794faf30b6fdf565",
+          "after": "2252971bf30027c38e0030191b49f846d92c991f4d7d639ece2d2f4edfa8ab10"
+        },
+        {
+          "path": "src/lib/dm/combat-features.ts",
+          "before": "3d2c9be751c559cca27a8f889f880a096078f344a2d6144307b317c4e930ff32",
+          "after": "827dadc855cab5aef3092e8fe1415d7a361bd501531d9966f916ecb4286387d9"
+        },
+        {
+          "path": "src/lib/dm/hazard-tools.ts",
+          "before": "706bfd9573e921d916e73323dd701badcb5819db40d0fe344d7952033856cf2d",
+          "after": "fcb08d89b516a7f99a85173214906ad084589b5767158c7d1af02a5255eb7821"
+        },
+        {
+          "path": "src/lib/dm/item-use.ts",
+          "before": "01502d19a51aacf8c1d29efaa57a0068a316ef666405740b75ae5243d9845c9d",
+          "after": "e59258cf09fb88fda8ff2882413d9cd7f897a69c1bed20131c0a629f74da7380"
+        },
+        {
+          "path": "src/lib/dm/legendary-tools.ts",
+          "before": "d0c6d5a203524e274f3a339162400b968b6541d8f97c3086f5992eb4b1ee4914",
+          "after": "048f84d64b0da36829104eb19db5525c2fbac7ec74f32bd12b581969212cbb1d"
+        },
+        {
+          "path": "src/lib/dm/mutations.ts",
+          "before": "692bd20c0b5b7251f1ccdf8916833ad343972c9dcac943545f47193624ce2fba",
+          "after": "4d6c053d03865142ddd27b7e83953afa8f18ea7a06010309179d6495ca82778b"
+        },
+        {
+          "path": "src/lib/dm/pc-attack-resolve.ts",
+          "before": "742da61935babe651b9e747e11e639f47ae69a774b5e7b6f268381f49aefcea8",
+          "after": "762219a1a4f48441d10e6e64da35610871526571b749eb1042bd9bc51b1b0a16"
+        },
+        {
+          "path": "src/lib/dm/reaction-tools.ts",
+          "before": "26c2757847d12896d9b574ae1e98734ee4d93f318a4c8c17663c06800ccf70df",
+          "after": "2be695d1ecd15bfe52e8a6e1434c5c33043f0fd8616b25d37a57cd0af8d0d7a4"
+        },
+        {
+          "path": "src/lib/dm/resource-tools.ts",
+          "before": "0c9967e16dbcaaf7d722c1565e0ea224ea299275c51d30bf6709bb9811c238c4",
+          "after": "47f5422dfccf5db7d62e00477a1e83ea71fbf0395e18bb24915f02f50b0b694e"
+        },
+        {
+          "path": "src/lib/dm/social-tools.ts",
+          "before": "1b3352d035d09570bb9da470d1bf24e8f0f510929d63485768668a1c452c903a",
+          "after": "100b616235248a118902bb981891cc64b768c8d547aa8cc35dd9ff36d3a5505b"
+        },
+        {
+          "path": "src/lib/dm/stabilize.ts",
+          "before": "111bb63f987512b892581bf240803633f1082ff218e4bb1341f0f1246c106f92",
+          "after": "19680b5387ac90d25035cb9c22cbfddd545a75c7f4c2d122e42784a9020fced8"
+        },
+        {
+          "path": "src/lib/dm/world-tools.ts",
+          "before": "a193468f124d31c49319fbbb26bd594607ff923b2ea66b92ee1f90e5f3c19d3f",
+          "after": "054001e76fb03fd3c5524cfdba82bc52155399a1417b38c35890e44b45fbd5b3"
+        }
+      ],
+      "review": "Reviewed upstream mechanics and tool schema changes, preserved structured roll presentations and English tool responses; reviewed cinematic scroll/length controls, multi-character sheet identity, accessible load dialog, and new localized turn notices. Focused semantic and English regressions remain required."
+    }
+  ]
+}

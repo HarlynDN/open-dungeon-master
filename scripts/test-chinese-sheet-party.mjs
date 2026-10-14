@@ -126,7 +126,7 @@ await test('actual hit-die button submits one die, heals once on the real route 
   globalThis.fetch = async (url, options) => {calls.push({url, ...options}); return route.POST(new Request('http://odm.test/hit-dice', options), {params: Promise.resolve({campaignId: world.campaignId})});};
   try {button.props.onClick(); await new Promise(resolve => setImmediate(resolve)); await new Promise(resolve => setImmediate(resolve));}
   finally {globalThis.fetch = realFetch; leave();}
-  assert.equal(world.clearDice(), 0); assert.equal(calls.length, 1); assert.deepEqual(JSON.parse(calls[0].body), {dice: 1});
+  assert.equal(world.clearDice(), 0); assert.equal(calls.length, 1); assert.deepEqual(JSON.parse(calls[0].body), {characterId: hero.id, dice: 1});
   assert.equal(calls[0].url, `/api/campaigns/${world.campaignId}/sheet/hit-dice`); assert.equal(calls[0].method, 'POST');
   assert.equal(world.sheet(hero.id).currentHp, 19); assert.equal(world.sheet(hero.id).hitDice.spent, 1);
   assert.equal(listRecentRolls(world.campaignId, 100).length, before + 1);

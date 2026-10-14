@@ -66,7 +66,7 @@ export function CreateCampaignDialog({
   const { locale: uiLocale, t } = useLocale();
   // The default genre's preset writes the first theme, exactly as picking any
   // other portal would; typing in the field takes it over for good.
-  const [draft, setDraft] = useState<CampaignDraft>(() => presetTheme({ ...DEFAULT_DRAFT, locale: uiLocale }));
+  const [draft, setDraft] = useState<CampaignDraft>(() => presetTheme({ ...DEFAULT_DRAFT, locale: uiLocale, tableLanguage: uiLocale === "zh-CN" ? "chinese" : "english" }));
   const [localeTouched, setLocaleTouched] = useState(false);
   // The wizard's step is held here so each step can be told when it is the
   // one on screen: every step is mounted at once, and an entrance should play
@@ -81,7 +81,7 @@ export function CreateCampaignDialog({
       // The dialog can mount hidden before login/preferences finish loading.
       // Follow the current UI locale on opening until the creator makes an
       // explicit campaign choice; preserve that choice across closing.
-      if (!localeTouched) setDraft((current) => presetTheme({ ...current, locale: uiLocale }));
+      if (!localeTouched) setDraft((current) => presetTheme({ ...current, locale: uiLocale, tableLanguage: uiLocale === "zh-CN" ? "chinese" : "english" }));
     }
   }
   const [packs, setPacks] = useState<WorldPackSummary[]>([]);
@@ -91,7 +91,9 @@ export function CreateCampaignDialog({
   const [busy, setBusy] = useState(false);
 
   const patch = (changes: Partial<CampaignDraft>) => {
-    if (changes.locale !== undefined) setLocaleTouched(true);
+    if (changes.locale !== undefined || changes.tableLanguage !== undefined) setLocaleTouched(true);
+    if (changes.tableLanguage !== undefined) changes = { ...changes, locale: changes.tableLanguage === "chinese" ? "zh-CN" : "en" };
+    else if (changes.locale !== undefined) changes = { ...changes, tableLanguage: changes.locale === "zh-CN" ? "chinese" : "english" };
     setDraft((current) => changes.locale !== undefined ? presetTheme({ ...current, ...changes }) : { ...current, ...changes });
   };
 
@@ -196,6 +198,7 @@ export function CreateCampaignDialog({
       dmMode,
       genre,
       customGenreText,
+      tableLanguage,
       aiStorySetup,
       campaignLength,
       dicePolicy,
@@ -225,6 +228,7 @@ export function CreateCampaignDialog({
       companions,
       hpMethod,
       startingWealth,
+      abilityRerollBelow,
       maxCompanions,
       maxGuests,
       worldPack,
@@ -252,6 +256,7 @@ export function CreateCampaignDialog({
             dmMode,
             genre,
             customGenreText: customGenreText.trim(),
+            tableLanguage,
             aiStorySetup: aiNarrates && aiStorySetup,
             campaignLength,
             dicePolicy,
@@ -282,6 +287,7 @@ export function CreateCampaignDialog({
             companions: aiNarrates ? companions : "off",
             hpMethod,
             startingWealth,
+            abilityRerollBelow,
             maxCompanions,
             maxGuests,
             worldPack,

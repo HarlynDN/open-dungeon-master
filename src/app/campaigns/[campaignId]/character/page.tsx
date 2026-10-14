@@ -21,6 +21,9 @@ import { characterLabel, subclassLabel, characterCreationData, readCharacterResp
 type LibraryCharacter = {
   id: string;
   name: string;
+  // A character somebody plays, or an ally the DM plays; only the former
+  // takes a player's seat (issue 192).
+  role?: "pc" | "companion";
   race: string;
   class: string;
   subclass: string;
@@ -46,6 +49,9 @@ function CampaignCharacterPageInner({ campaignId, requested }: { campaignId: str
   const [genre, setGenre] = useState<Genre | undefined>(undefined);
   const [worldPackId, setWorldPackId] = useState("");
   const [library, setLibrary] = useState<LibraryCharacter[]>([]);
+  // How many of the library's entries are allies the DM plays: they are not
+  // offered here, and the page says where they go instead.
+  const [companionCount, setCompanionCount] = useState(0);
   const [mode, setMode] = useState<"choose" | "create">(
     flow === "edit" ? "create" : "choose",
   );
@@ -66,8 +72,9 @@ function CampaignCharacterPageInner({ campaignId, requested }: { campaignId: str
       if (cancelled) return;
       const data = characterCreationData(campaignData, charactersData, sheetData);
       setLevel(data.level); setGenre(data.genre); setWorldPackId(data.worldPackId);
-      setLibrary(data.library); setCurrentLibraryId(data.currentLibraryId); setLibraryLevel(data.libraryLevel);
-      if (!data.library.length) setMode("create");
+      const characters = data.library.filter(character => character.role !== "companion");
+      setLibrary(characters); setCompanionCount(data.library.length - characters.length); setCurrentLibraryId(data.currentLibraryId); setLibraryLevel(data.libraryLevel);
+      if (!characters.length) setMode("create");
     }).catch((cause) => { if (!cancelled) setLoadError(characterRequestError(cause, "characterHost.loadError")); });
     return () => {
       cancelled = true;
@@ -150,6 +157,7 @@ function CampaignCharacterPageInner({ campaignId, requested }: { campaignId: str
       {mode === "choose" ? (
         <section className="reveal space-y-4">
           <SectionHead title={t("characterHost.fromLibrary")} glyph="tab-characters" level="h2" aside={<span className="text-xs text-stone-400">{library.length}</span>} />
+          {companionCount > 0 ? <p className="reveal text-xs text-stone-400">{t("characterHost.alliesHidden", { count: companionCount })}</p> : null}
           <ul className="stagger-up grid grid-cols-1 gap-3 sm:grid-cols-2">
             {library.map((character) => (
               <li key={character.id}>
@@ -229,6 +237,7 @@ function CampaignCharacterPageInner({ campaignId, requested }: { campaignId: str
             onSubmit={submitNew}
             busy={busy}
             error={characterErrorText(error, locale)}
+            onCancel={() => navigateTo(`/campaigns/${campaignId}`)}
           />
         </>
       )}

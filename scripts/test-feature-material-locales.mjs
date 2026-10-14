@@ -229,7 +229,7 @@ for (const [classId, featureName, chinese, subclass = ''] of [
   const feature = {name: featureName, source: 'class', level: 1};
   const klass = srdClassOptions().find(row => row.id === classId);
   const props = {state: {subclass, gender: '', chosenSkills: [], racialSkills: [], backgroundSkills: []},
-    derived: {effectiveLevel: 1, grantedFeatures: [feature]}, actions: {}, klass, pack: null,
+    derived: {subclassTraining: [], effectiveLevel: 1, grantedFeatures: [feature]}, actions: {}, klass, pack: null,
     classes: [], classGroups: [], subclassGroups: [], offersSubclass: false, subclassLockedAt: null, chosenArchetype: null};
   const before = JSON.stringify(feature);
   for (const locale of ['en', 'zh-CN']) {
@@ -258,7 +258,7 @@ for (const [classId, featureName, chinese, subclass = ''] of [
 const archetypeEntry=authoredSubclasses.artificer.find(row=>row.name==='Alchemist');
 const archetype={id:'artificer-alchemist',name:archetypeEntry.name,desc:authoredArchetypeDescription(archetypeEntry),source:'open5e',documentSlug:'odm-expanded'};
 const archetypeProps={state:{subclass:archetype.name,gender:'',chosenSkills:[],racialSkills:[],backgroundSkills:[]},
- derived:{effectiveLevel:3,grantedFeatures:[]},actions:{},klass:srdClassOptions().find(row=>row.id==='artificer'),pack:null,
+ derived:{subclassTraining:[],effectiveLevel:3,grantedFeatures:[]},actions:{},klass:srdClassOptions().find(row=>row.id==='artificer'),pack:null,
  classes:[],classGroups:[],subclassGroups:[],offersSubclass:true,subclassLockedAt:null,chosenArchetype:archetype};
 const archetypeInfo={open:true,onOpenChange:()=>{},title:archetype.name,reference:{kind:'archetypes',name:archetype.name,slug:archetype.id}};
 for(const locale of ['zh-CN','en']){
@@ -282,7 +282,7 @@ for(const classId of themeClassIds){
  const source=themedSource.filter(row=>row.classId===classId);
  const features=source.map(row=>({name:row.n,source:'class',classId,level:1}));
  const props={state:{subclass:source[0].subclass,gender:'',chosenSkills:[],racialSkills:[],backgroundSkills:[]},
-  derived:{effectiveLevel:20,grantedFeatures:features},actions:{},klass,pack:null,
+  derived:{subclassTraining:[],effectiveLevel:20,grantedFeatures:features},actions:{},klass,pack:null,
   classes:[],classGroups:[],subclassGroups:[],offersSubclass:false,subclassLockedAt:null,chosenArchetype:null};
  for(const locale of ['zh-CN','en']){
   calling.render('CallingStep',props,locale);

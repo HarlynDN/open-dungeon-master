@@ -7,7 +7,6 @@ import { DM_MODES } from "@/lib/schemas/game-settings-options";
 import type { FranchiseGroup, WorldPackSummary } from "@/lib/worlds/types";
 import { FieldLabel, inputClass, ToggleCard } from "@/app/create-campaign/fields";
 import type { StepProps } from "@/app/create-campaign/draft";
-import { LocalePicker } from "@/components/LocalePicker";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 // Step 1: the name, who holds the DM seat, and an optional pre-built world.
@@ -54,11 +53,6 @@ export function PremiseStep({
   );
   return (
     <div className="space-y-4 text-sm">
-      <div>
-        <FieldLabel>{t("locale.campaign")}</FieldLabel>
-        <LocalePicker campaign value={draft.locale} onChange={(locale) => patch({ locale })} />
-        <p className="mt-1 text-xs text-stone-500">{t("locale.campaignHint")}</p>
-      </div>
       <label className="block">
         <FieldLabel>{t("create.title")}</FieldLabel>
         <input

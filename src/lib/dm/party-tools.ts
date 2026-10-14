@@ -1,6 +1,7 @@
 import { normalizeLocale } from "@/lib/i18n/locales";
 import { systemEventText } from "@/lib/i18n/system-event-presentations";
 import type { SystemEventData } from "@/lib/system-events";
+import type { SystemGlyph } from "@/lib/system-glyphs";
 import { z } from "zod";
 import { allocateSeq, type Campaign } from "@/lib/db/campaigns";
 import { getParty, updateParty } from "@/lib/db/party";
@@ -42,7 +43,7 @@ export const partyTools: ToolDef[] = [
     function: {
       name: "party_stash",
       description:
-        "Move an item or money between one character and the party's shared pack and common purse. stow/take move an item (name, qty); deposit/withdraw move money (coins like '3 gp 4 sp', or amount in whole gold). The party's pack and purse are shared property: use them for the rope nobody wants to carry and the coin the party banked together, not for a character's own kit.",
+        "Move an item or money between one character and the party's shared pack and common purse. The party's pack and purse are shared property: use them for the rope nobody wants to carry and the coin the party banked together, not for a character's own kit.",
       parameters: {
         type: "object",
         additionalProperties: false,
@@ -50,12 +51,12 @@ export const partyTools: ToolDef[] = [
           do: {
             type: "string",
             enum: ["stow", "take", "deposit", "withdraw"],
-            description: "stow/take an item, deposit/withdraw money.",
+            description: "stow/take an item (name, qty); deposit/withdraw money (coins, or amount in whole gold).",
           },
-          characterId: { type: "string", description: "Whose hands it comes from or goes to." },
+          characterId: { type: "string", description: "Whose hands it comes from or goes to: exact characterId from GAME STATE." },
           name: { type: "string", description: "Item name, for stow and take." },
           qty: { type: "integer", minimum: 1, maximum: 999 },
-          coins: { type: "string", description: "Money in denominations, e.g. '3 gp 4 sp'." },
+          coins: { type: "string", description: "Money in denominations ('3 gp 4 sp')." },
           amount: { type: "integer", minimum: 0, description: "Money in whole gold, if coins is not used." },
           reason: { type: "string", description: "Short in-fiction cause." },
         },
@@ -65,7 +66,7 @@ export const partyTools: ToolDef[] = [
   },
 ];
 
-function tableNote(campaign: Campaign, data: SystemEventData) {
+function tableNote(campaign: Campaign, data: SystemEventData, glyph: SystemGlyph) {
   const systemEvent = { ...data, locale: normalizeLocale(campaign.gameSettings.locale) };
   const content = systemEventText(systemEvent);
   const seq = allocateSeq(campaign.id);
@@ -73,6 +74,7 @@ function tableNote(campaign: Campaign, data: SystemEventData) {
     campaignId: campaign.id,
     seq,
     authorType: "system",
+    glyph,
     content,
     systemEvent,
   });
@@ -142,7 +144,7 @@ export function handlePartyStash(
       patchSheet(fresh.id, { equipment: taken.equipment });
       const party = updateParty(campaign.id, (current) => ({ ...current, inventory: added.inventory }));
       publishParty(campaign.id, party);
-      tableNote(campaign, { kind: "partyItem", direction: "stow", actor: fresh.name, item: name, qty: taken.removed });
+      tableNote(campaign, { kind: "partyItem", direction: "stow", actor: fresh.name, item: name, qty: taken.removed }, "cue-bell");
       return { ok: true, stowed: name, qty: taken.removed };
     }
 
@@ -157,7 +159,7 @@ export function handlePartyStash(
     patchSheet(fresh.id, { equipment: granted.equipment });
     const next = updateParty(campaign.id, (current) => ({ ...current, inventory: taken.inventory }));
     publishParty(campaign.id, next);
-    tableNote(campaign, { kind: "partyItem", direction: "take", actor: fresh.name, item: name, qty: taken.removed });
+    tableNote(campaign, { kind: "partyItem", direction: "take", actor: fresh.name, item: name, qty: taken.removed }, "cue-bell");
     return { ok: true, took: name, qty: taken.removed };
   }
 
@@ -182,7 +184,7 @@ export function handlePartyStash(
       copper: current.copper + copper,
     }));
     publishParty(campaign.id, party);
-    tableNote(campaign, { kind: "partyCoins", direction: "deposit", actor: fresh.name, copper });
+    tableNote(campaign, { kind: "partyCoins", direction: "deposit", actor: fresh.name, copper }, "cue-coin");
     return { ok: true, deposited: formatCopper(copper), purse: formatCopper(party.copper) };
   }
 
@@ -197,7 +199,7 @@ export function handlePartyStash(
     copper: Math.max(0, current.copper - copper),
   }));
   publishParty(campaign.id, next);
-  tableNote(campaign, { kind: "partyCoins", direction: "withdraw", actor: fresh.name, copper });
+  tableNote(campaign, { kind: "partyCoins", direction: "withdraw", actor: fresh.name, copper }, "cue-coin");
   return { ok: true, withdrew: formatCopper(copper), purse: formatCopper(next.copper) };
 }
 
@@ -225,6 +227,7 @@ export function payOutBankedXp(
   tableNote(
     campaign,
     { kind: "partyXp", spent: split.spent, names: targets.map(sheet => sheet.name) },
+    "cue-bell",
   );
   return { each: split.each[0], paid: targets.map((sheet) => sheet.name) };
 }

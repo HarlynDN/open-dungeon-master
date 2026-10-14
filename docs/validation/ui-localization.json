@@ -45,7 +45,9 @@
     "chrome://flags/#enable-web-bluetooth",
     "CC-BY-4.0",
     "esc",
-    "Open DM"
+    "Open DM",
+    "https://api.openai.com/v1",
+    "https://my-pc.example.ts.net:8443"
   ],
   "files": [
     {
@@ -74,6 +76,11 @@
       "review": "Own fields, category display and counts localized; submitted lore categories remain canonical and authored rules/lore remain verbatim. Scratch browser creation read these values back."
     },
     {
+      "path": "src/app/admin/AdminImagesSection.tsx",
+      "state": "covered",
+      "review": "Reviewed model/preset labels, measured hints, status frames and controls. Model IDs, filenames, URLs and unknown service errors retain their identity; English preset persistence regression exercised. Implementation review and AST coverage only; not a claim of full browser end-to-end acceptance."
+    },
+    {
       "path": "src/app/admin/AdminInvitesSection.tsx",
       "state": "covered",
       "review": "Grouped setup-flow localization: viewer uiLocale for entry notices, wizard steps/blockers/saves, discovery recap, joining choices, invite controls/confirmation/counts and personal-agent permissions. Reuses existing scope translations. Draft/settings patches, step navigation, signup modes, scope IDs, URLs, commands, secrets, raw diagnostics and authored names/notes remain native; own agent default name is localized once on draft creation. Known owned errors project at render time; unknown external/schema diagnostics remain literal. No service calls/downloads/auth or Chinese STT acceptance."
@@ -94,6 +101,11 @@
       "review": "Grouped setup-flow localization: viewer uiLocale for owned choices, labels, stage/route descriptions, count frames and known native failure/status frames. Native defaults, provider/stage IDs, commands, URLs, keys, model/voice names, raw responses, authored campaign titles, external diagnostics and request/decision callbacks preserved. Provider-switch notice stores provider identity and renders in current locale. Built-in speech card translates existing recognition controls only; no Chinese STT or real service acceptance claim."
     },
     {
+      "path": "src/app/admin/ComfyModelCatalog.tsx",
+      "state": "covered",
+      "review": "Reviewed model picker chrome and all 44 catalog blurbs plus 42 unique upstream measurement notes against source; measurements and license qualifications retained. Source-binding test requires every paragraph to translate. Implementation review and AST coverage only; not a claim of full browser end-to-end acceptance."
+    },
+    {
       "path": "src/app/admin/HarnessPictureTest.tsx",
       "state": "covered",
       "review": "Grouped setup-flow localization: viewer uiLocale for owned choices, labels, stage/route descriptions, count frames and known native failure/status frames. Native defaults, provider/stage IDs, commands, URLs, keys, model/voice names, raw responses, authored campaign titles, external diagnostics and request/decision callbacks preserved. Provider-switch notice stores provider identity and renders in current locale. Built-in speech card translates existing recognition controls only; no Chinese STT or real service acceptance claim."
@@ -102,6 +114,21 @@
       "path": "src/app/admin/HarnessTestPanel.tsx",
       "state": "covered",
       "review": "Grouped setup-flow localization: viewer uiLocale for owned choices, labels, stage/route descriptions, count frames and known native failure/status frames. Native defaults, provider/stage IDs, commands, URLs, keys, model/voice names, raw responses, authored campaign titles, external diagnostics and request/decision callbacks preserved. Provider-switch notice stores provider identity and renders in current locale. Built-in speech card translates existing recognition controls only; no Chinese STT or real service acceptance claim."
+    },
+    {
+      "path": "src/app/admin/ModelChoice.tsx",
+      "state": "covered",
+      "review": "Reviewed provider-owned choices, blank defaults, capability/warning frames, filters and refresh controls. Unknown model/service diagnostics remain verbatim; provider payload IDs remain canonical. Implementation review and AST coverage only; not a claim of full browser end-to-end acceptance."
+    },
+    {
+      "path": "src/app/admin/model-blanks.ts",
+      "state": "covered",
+      "review": "Canonical English blank-description producers; rendered through whole-frame locale projection in ModelChoice and model picker. Model and environment variable identifiers preserved. Implementation review and AST coverage only; not a claim of full browser end-to-end acceptance."
+    },
+    {
+      "path": "src/app/admin/useAmbienceInstall.ts",
+      "state": "covered",
+      "review": "Network/state hook retains canonical transport diagnostics; in-scope SoundPanel projects owned error frames and preserves unknown external diagnostics. Native-shell-only library card remains outside web scope. Implementation review and AST coverage only; not a claim of full browser end-to-end acceptance."
     },
     {
       "path": "src/app/campaigns/[campaignId]/AskPanel.tsx",
@@ -237,6 +264,11 @@
       "path": "src/app/campaigns/[campaignId]/ContextPanel.tsx",
       "state": "covered",
       "review": "Owned facts/categories/editor/secrets, pin controls/budget and context-trace headings/native reasons localized. Authored facts, excerpts, subjects and diagnostic IDs stay raw; enum/ID/request protocol and budgets unchanged. Failed edits/unpins retain content, later pin-load failures expose retry, and open secret lists explicitly refetch after editing. Dictation/shared child owners retain independent scope; focused UI/callback check uses mock transport only."
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/CoordinationPanel.tsx",
+      "state": "covered",
+      "review": "Reviewed plan controls, dynamic sequence positions, authored plans and actor names; owned API refusals projected without altering tool protocol. Implementation review and AST coverage only; not a claim of full browser end-to-end acceptance."
     },
     {
       "path": "src/app/campaigns/[campaignId]/DiceOverlay.tsx",
@@ -432,6 +464,11 @@
       "path": "src/app/campaigns/[campaignId]/HandAimBar.tsx",
       "state": "covered",
       "review": "Whole-owner review: localized target/area/options/choice/rider/preview and blocked/send controls; known rules/facts use source-aware adapters, authored sentence/trigger remain literal. Canonical choice/target/option callbacks are preserved. Actual component regression verifies composition and Safari 229 Enter never commit, plus sending/blocked/empty-trigger gates in both locales. Parent sentence production and deployed combat acceptance remain separate."
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/HandArrange.tsx",
+      "state": "covered",
+      "review": "Card labels, costs, complete move accessibility captions and native refusal frames localized; saved hand/card IDs retain canonical values."
     },
     {
       "path": "src/app/campaigns/[campaignId]/HandCardFace.tsx",
@@ -704,6 +741,11 @@
       "review": "Reviewed own action-menu accessibility and retry copy. Caller-provided labels and errors require caller coverage; no inference from an empty literal scan."
     },
     {
+      "path": "src/app/campaigns/[campaignId]/PartyOrder.tsx",
+      "state": "covered",
+      "review": "Reviewed drag/move accessibility labels and saved/network errors; canonical error state is projected at render so UI language switching works. Implementation review and AST coverage only; not a claim of full browser end-to-end acceptance."
+    },
+    {
       "path": "src/app/campaigns/[campaignId]/PartyPanel.tsx",
       "state": "covered",
       "review": "Reviewed party roster, death/save/shape/condition/resource stats, torch time and character/library/companion controls. Display uses existing character/reference/condition/resource adapters; authored pet names/notes, native stats, IDs and asset lookups stay literal. Child material/help owners remain independently tracked."
@@ -774,6 +816,11 @@
       "review": "Owned pause explanation, dialog accessibility and resume actions localized. Anonymous pause, authority visibility, canonical resume actions and callbacks unchanged."
     },
     {
+      "path": "src/app/campaigns/[campaignId]/SequenceEditor.tsx",
+      "state": "covered",
+      "review": "Reviewed step/group/order controls and accessibility; authored actor names and canonical IDs preserved. Implementation review and AST coverage only; not a claim of full browser end-to-end acceptance."
+    },
+    {
       "path": "src/app/campaigns/[campaignId]/SessionBanner.tsx",
       "state": "covered",
       "review": "Shared banner frame/CSS helper adds no natural-language default; title, children, lead and action nodes are owned by callers with independent reviews. Native glyph/tone and button classes unchanged; no runtime/caption rewrite."
@@ -829,6 +876,11 @@
       "review": "Owned die notation and modifier accessibility are localized; geometry, dice expressions, animation and caller-owned captions/verdicts stay unchanged. Actual English render baseline and bilingual quantities/control checks pass."
     },
     {
+      "path": "src/app/campaigns/[campaignId]/SoundPanel.tsx",
+      "state": "covered",
+      "review": "Reviewed all native cue names and blurbs, playback/mixer/install controls, track counts and errors; authored or external names remain original. Implementation review and AST coverage only; not a claim of full browser end-to-end acceptance."
+    },
+    {
       "path": "src/app/campaigns/[campaignId]/SpeakerPicker.tsx",
       "state": "covered",
       "review": "Owned narrator/group/field labels localized. Monster display uses existing reference resolver; proper cast names, selected speaker name/ID and wire values retained."
@@ -859,6 +911,16 @@
       "review": "Owned chapter/chronicle/secret-arc chrome, labels, 6 waypoint and 7 event kinds, native edit refusals and rollback consequence summaries localized at render time. Recorded/authored narrative, IDs, protocol strings and mutation payloads stay raw. 17 frozen English states plus actual Chinese PATCH/IME/confirmation/retry callbacks checked with mocked requests. Empty-state JSX corruption fixed; failed reload keeps chapters visible with retry. NpcReviewPanel, Book and other child owners retain independent coverage; full external prose not claimed."
     },
     {
+      "path": "src/app/campaigns/[campaignId]/TableLayout.tsx",
+      "state": "covered",
+      "review": "Pane keys, arrangement controls and dynamic accessibility strings localized; layout persistence and keyboard operations retain upstream IDs."
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/TableLayoutParts.tsx",
+      "state": "covered",
+      "review": "Reviewed pane controls, docking, resizing, maximizing, hiding and restoring labels; caller-owned pane names remain localized by owners. Implementation review and AST coverage only; not a claim of full browser end-to-end acceptance."
+    },
+    {
       "path": "src/app/campaigns/[campaignId]/TerrainCanvas.tsx",
       "state": "covered",
       "review": "Shared renderer owns zoom in/out/fit captions only; localized with viewer locale. Authored map labels/props and original geometry/ground/tile IDs, bitmap paths, pointer/wheel/pinch behavior and canvas drawing are unchanged. Field labels/tools/helper rules owned by their separately tracked callers."
@@ -882,6 +944,11 @@
       "path": "src/app/campaigns/[campaignId]/TradeDialog.tsx",
       "state": "covered",
       "review": "Trade form/display already uses sessionUi and equipment reference presentation; quantity glyph now preserves x in English and uses × in Chinese. Canonical item names, quantities, gold and target IDs, acceptance/request bodies and author names unchanged."
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/TravelFormation.tsx",
+      "state": "covered",
+      "review": "Reviewed front/middle/rear and owner roles, formation consent/requests and native API refusals; character names remain unchanged. Implementation review and AST coverage only; not a claim of full browser end-to-end acceptance."
     },
     {
       "path": "src/app/campaigns/[campaignId]/UtilityCallStrip.tsx",
@@ -974,6 +1041,11 @@
       "review": "Pass-through panel/choice/range captions and accessibility audited. Parents supply localized labels/readouts; authored children remain literal. Style tokens, brush characters, skin IDs/assets and numeric callbacks stay native; grouped bilingual actual control render/callback checks pass."
     },
     {
+      "path": "src/app/campaigns/[campaignId]/mediaSlot.ts",
+      "state": "covered",
+      "review": "Reviewed v0.27 control/state hook: no authored UI copy; media IDs, layout geometry, picture URLs and keyboard event protocols remain canonical. Consumer UI has its own coverage entry. IME composition is excluded from hold-to-dictate activation."
+    },
+    {
       "path": "src/app/campaigns/[campaignId]/overworldDraw.ts",
       "state": "covered",
       "review": "Canvas paths/pins/place names are authored scene data and remain literal. Terrain palettes, native coordinates/route IDs/party marker and PNG filename are language-independent. Original export failure maps through the existing regionErrorText; grouped failed-export and literal-preservation checks pass. Rendering geometry remains unchanged."
@@ -989,9 +1061,24 @@
       "review": "Whole 82-line module reviewed: returns asset IDs for tabs, input modes and legacy system-line patterns only, never UI prose. MessageParts prioritizes structured systemEventGlyph before this legacy text fallback. Canonical source text, existing English matching and neutral bell fallback stay unchanged; no historical message translation or persistent-log acceptance is implied."
     },
     {
+      "path": "src/app/campaigns/[campaignId]/side-panel-loaders.tsx",
+      "state": "covered",
+      "review": "Lazy panel modules retain routing and preload behavior; loading accessibility text uses viewer locale."
+    },
+    {
       "path": "src/app/campaigns/[campaignId]/streamWatchdog.ts",
       "state": "covered",
       "review": "Ping/silence timer and liveness callbacks only; no displayed text or locale-sensitive payload. Stream health descriptions belong to reviewed connection banners. No timing/reconnect behavior changed."
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/table-layout-context.ts",
+      "state": "covered",
+      "review": "Reviewed v0.27 control/state hook: no authored UI copy; media IDs, layout geometry, picture URLs and keyboard event protocols remain canonical. Consumer UI has its own coverage entry. IME composition is excluded from hold-to-dictate activation."
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/table-layout-store.ts",
+      "state": "covered",
+      "review": "Reviewed v0.27 control/state hook: no authored UI copy; media IDs, layout geometry, picture URLs and keyboard event protocols remain canonical. Consumer UI has its own coverage entry. IME composition is excluded from hold-to-dictate activation."
     },
     {
       "path": "src/app/campaigns/[campaignId]/table/page.tsx",
@@ -1034,9 +1121,29 @@
       "review": "Reviewed complete hook and SessionView/SideChatPanel consumers: only unread counts, boolean preferences and oscillator timing/frequency; no prose emitted. SideChatPanel renders mute accessibility/title through chatUi.chime keys. Audio playback runtime acceptance remains separate."
     },
     {
+      "path": "src/app/campaigns/[campaignId]/useFaceChain.ts",
+      "state": "covered",
+      "review": "Reviewed v0.27 control/state hook: no authored UI copy; media IDs, layout geometry, picture URLs and keyboard event protocols remain canonical. Consumer UI has its own coverage entry. IME composition is excluded from hold-to-dictate activation."
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/useFaceSize.ts",
+      "state": "covered",
+      "review": "Reviewed v0.27 control/state hook: no authored UI copy; media IDs, layout geometry, picture URLs and keyboard event protocols remain canonical. Consumer UI has its own coverage entry. IME composition is excluded from hold-to-dictate activation."
+    },
+    {
       "path": "src/app/campaigns/[campaignId]/useHandChoices.ts",
       "state": "covered",
       "review": "Reviewed choice/area/pending hook and typed board events: IDs/options/picks/triggers stay native. Pending source sentence now has a reviewed whole-frame translation at the display boundary, including stock resource label; unknown names preserved."
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/useHandLayout.ts",
+      "state": "covered",
+      "review": "State/transport hook returns canonical diagnostics; in-scope HandArrange performs locale projection including no-character, save and network failures. Implementation review and AST coverage only; not a claim of full browser end-to-end acceptance."
+    },
+    {
+      "path": "src/app/campaigns/[campaignId]/useHoldToDictate.ts",
+      "state": "covered",
+      "review": "Reviewed v0.27 control/state hook: no authored UI copy; media IDs, layout geometry, picture URLs and keyboard event protocols remain canonical. Consumer UI has its own coverage entry. IME composition is excluded from hold-to-dictate activation."
     },
     {
       "path": "src/app/campaigns/[campaignId]/useLingeringEncounter.ts",
@@ -1274,6 +1381,11 @@
       "review": "All identity/ancestry/calling/score/spell/equipment gates already pair native English with typed BuilderPresentation or RuleProblem details; footer/jump paths render builderFeedbackText with viewer locale. Source-bind final score/roll/name gates and no-spells confirmation without changing block targets, reconciliation, payloads, stored character data, canonical IDs, rules or names. Original English returns retained for pure consumers."
     },
     {
+      "path": "src/app/characters/builder/unoffered.ts",
+      "state": "covered",
+      "review": "Whole blocked-choice explanation uses viewer locale with stock class/race/background display names; custom names and offered canonical IDs remain unchanged."
+    },
+    {
       "path": "src/app/characters/builder/useBuilderDerived.ts",
       "state": "covered",
       "review": "Full owner review: locale-neutral rule/selection data, no owned rendered text. Equipment names/AC notes are projected by EquipmentSection, rule problems by typed detail consumers, and castingLabel by submit builderGate presentation. Ability/HP/proficiency/spell/wealth derivation and canonical action helpers remain untranslated. Real-hook armor regression verifies Defense and baseline AC in both locales; gear/background regressions cover localized consumers and canonical selections."
@@ -1484,6 +1596,11 @@
       "review": "Grouped social/reference-browse/desk/about checkpoint. Owned chrome, notices, glossary IDs and registered source-gated names/summaries project to viewer uiLocale; native query/category/slug/identity/icon keys, raw results, author names/house rules/quotes and unknown diagnostics stay literal. Open glossary/content dialogs retain source identity and rerender on locale switch. Badge IDs/tones and pure calculation/protocol remain independent. Reference requests opt in to stable alias paging. About clipboard report stays English for bug reports; Chinese dates use viewer locale. Compare/calculator child owners remain independently pending; extended rulebook/third-party prose is deferred. CategoryRail repositions on changed translated tabs."
     },
     {
+      "path": "src/app/reference/layout.tsx",
+      "state": "covered",
+      "review": "Server route boundary supplies existing selected/English content resources to reference browsing; viewer uiLocale unchanged, no whole catalogs in root UI."
+    },
+    {
       "path": "src/app/reference/page.tsx",
       "state": "covered",
       "review": "Grouped social/reference-browse/desk/about checkpoint. Owned chrome, notices, glossary IDs and registered source-gated names/summaries project to viewer uiLocale; native query/category/slug/identity/icon keys, raw results, author names/house rules/quotes and unknown diagnostics stay literal. Open glossary/content dialogs retain source identity and rerender on locale switch. Badge IDs/tones and pure calculation/protocol remain independent. Reference requests opt in to stable alias paging. About clipboard report stays English for bug reports; Chinese dates use viewer locale. Compare/calculator child owners remain independently pending; extended rulebook/third-party prose is deferred. CategoryRail repositions on changed translated tabs."
@@ -1512,6 +1629,16 @@
     {
       "path": "src/app/settings/DeleteAccountDialog.tsx",
       "state": "covered"
+    },
+    {
+      "path": "src/app/settings/DictationShortcutSection.tsx",
+      "state": "covered",
+      "review": "Account heading and introductory guidance use shared catalog keys; device-level shortcut semantics unchanged. Implementation review and AST coverage only; not a claim of full browser end-to-end acceptance."
+    },
+    {
+      "path": "src/app/settings/PlayerReceiverSetup.tsx",
+      "state": "covered",
+      "review": "Instructions, network errors, buttons and command labels localized; hostname, URLs, ports and copied commands are unchanged."
     },
     {
       "path": "src/app/settings/page.tsx",
@@ -1854,6 +1981,11 @@
       "review": "Dictation chrome, default/custom field accessible labels, timers/chunk progress and known native hint/partial-retention errors localized. Transcript/partial text, recording/transcribe/native states and callbacks remain original. Chinese STT/backend/recognizer-language changes are deferred; this owner only claims UI localization."
     },
     {
+      "path": "src/components/DictationShortcutField.tsx",
+      "state": "covered",
+      "review": "Reviewed capture controls, platform key names and every chordProblem refusal frame; unknown physical key labels remain canonical. Chinese STT remains outside acceptance. Implementation review and AST coverage only; not a claim of full browser end-to-end acceptance."
+    },
+    {
       "path": "src/components/EmptyState.tsx",
       "state": "covered",
       "review": "No own display prose; all titles/hints/actions follow callers tracked separately."
@@ -1892,6 +2024,11 @@
       "path": "src/components/LocalePicker.tsx",
       "state": "covered",
       "review": "Static prose and accessibility audited; auth responses use stable codes, brand and user-supplied names preserved. Imported child files have their own coverage state."
+    },
+    {
+      "path": "src/components/ModelNote.tsx",
+      "state": "covered",
+      "review": "Repository-owned whole warning frames and summary pieces project at display time. Unknown service output, model IDs and hardware names remain untouched; source binding tested in test-upstream-owned-locales."
     },
     {
       "path": "src/components/NotificationBell.tsx",
@@ -1938,6 +2075,11 @@
       "review": "Decorative aria-hidden weather/sky layer; all string constants are weather/day-part/placement IDs or CSS gradients. No text caption or locale-dependent data interpretation. Source ambience and intensity numbers remain native; future translated weather captions belong to their UI owners."
     },
     {
+      "path": "src/components/StorySetupNotice.tsx",
+      "state": "covered",
+      "review": "Owned wizard/lobby story-overwrite warnings and both decision buttons localized; caller error is already localized or raw external diagnostic. No automatic change to AI Story Setup."
+    },
+    {
       "path": "src/components/TranslatedText.tsx",
       "state": "covered",
       "review": "Static prose and accessibility audited; auth responses use stable codes, brand and user-supplied names preserved. Imported child files have their own coverage state."
@@ -1968,6 +2110,11 @@
       "review": "Reviewed own Places/Factions labels; pack-authored names, URLs and artwork are preserved, with world-pack material translation tracked separately."
     },
     {
+      "path": "src/components/concentration-prompt.ts",
+      "state": "covered",
+      "review": "Confirmation localizes whole prompt and known spell labels, retaining canonical spell names and character ID in accepted payload. Rejection sends no action."
+    },
+    {
       "path": "src/components/rulebook/PagePrep.tsx",
       "state": "covered",
       "review": "Rulebook/book reading workflow chrome, navigation headers, quick links, counters, known native crosswalk/support/family explanations, loading/search/retry/bookmarks/copy controls localized. SRD Markdown/entry titles/meta/snippets, authored story entries and unknown overrides remain original under full-rulebook-text deferral. Page/anchor IDs, original xrefs, folios, book storage keys and editor URLs preserved. Chinese opt-in searches expand registered names/terms; legacy English search stays native. Failed search is distinct from no results, failed navigation retains current page with retry, workshop read refusal is distinct from an empty account."
@@ -1991,6 +2138,11 @@
       "path": "src/components/rulebook/RulebookReader.tsx",
       "state": "covered",
       "review": "Page and directory requests include viewer locale. Async directory completion rejects stale locales and cancelled effect responses; page cache remains locale keyed. Current region aria-label uses matching localized title. Browser verified Chinese directory/page and English switch on isolated production instance; canonical URLs and saved page IDs remain unchanged."
+    },
+    {
+      "path": "src/components/sheet/LoadBreakdown.tsx",
+      "state": "covered",
+      "review": "Carried/equipped/coins totals and whole weight descriptions localized, equipment display names projected; lb unit and all calculations remain native."
     },
     {
       "path": "src/components/sheet/SheetBetween.tsx",
@@ -2138,6 +2290,11 @@
       "review": "Full owner review: loading/failure/retry, item statistics/rules, inline/block/preview rendering and caller-owned labels inspected. Lazy source-bound help retains raw text, provenance and locale/request identity. Feat fallback now requires owned document provenance; missing/external/homebrew/changed prose regression preserves originals. Existing item/spell/archetype and server-display adapters preserve source equality and English. Feature and gear regressions cover lazy help and frozen English item cards; deployment/browser evidence remains separate."
     },
     {
+      "path": "src/components/ui/LengthNote.tsx",
+      "state": "covered",
+      "review": "Maximum and overflow captions use message parameters; numeric counter and caller-provided idle text remain intact. No input truncation or posting changes."
+    },
+    {
       "path": "src/components/ui/ListControls.tsx",
       "state": "covered",
       "review": "Default name-search hint and sort-button titles follow global viewer uiLocale. Caller-provided hints and authored tags stay literal; query/tag/sort IDs and the native list filtering/order algorithm unchanged. Explicit empty hint remains supported."
@@ -2231,11 +2388,6 @@
       "path": "src/lib/i18n/LocalizedText.tsx",
       "state": "covered",
       "review": "Copy-free rich message owner: typed catalog keys, complete locale templates and single-pass node interpolation. Actual component and provider render in both locales; browser creation flow verifies interactive glossary links. Authored values are rendered as React text, with no HTML parsing or rule-ID mutation."
-    },
-    {
-      "path": "src/app/reference/layout.tsx",
-      "state": "covered",
-      "review": "Server route boundary supplies existing selected/English content resources to reference browsing; viewer uiLocale unchanged, no whole catalogs in root UI."
     }
   ],
   "deferredOwners": [

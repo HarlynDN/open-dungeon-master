@@ -1,16 +1,21 @@
 import { getCampaignById, type Campaign } from "@/lib/db/campaigns";
 import { getDmTurn } from "@/lib/db/dm-turns";
+import { listSheets } from "@/lib/db/sheets";
 import {
   getCampaignMessage,
   getLatestDmMessage,
   setMessageVariants,
   type CampaignMessage,
 } from "@/lib/db/messages";
+import { withoutAsides } from "@/lib/dm/claims-logic";
+import { readAsides } from "@/lib/dm/claims";
 import { enqueueDmJob } from "@/lib/dm/queue";
 import { requestDmMessage } from "@/lib/dm/model";
 import { setDmStatus } from "@/lib/dm/status";
 import { stripToolText } from "@/lib/dm/tool-text";
 import { enqueueNarrationAudio } from "@/lib/tts";
+import { mergeLines } from "@/lib/dm/speech";
+import { modelLines } from "@/lib/dm/speech-lines";
 import { extractStoryText } from "@/lib/story-prompt";
 import {
   assembleVariantContent,
@@ -43,6 +48,7 @@ function refreshNarrationAudio(campaign: Campaign, message: CampaignMessage) {
     campaign.id,
     message.id,
     message.content,
+    message.speech,
     campaign.gameSettings,
     message.speaker ?? null,
   );
@@ -111,9 +117,16 @@ export async function runContinueScene(input: {
   if (failure) {
     return { error: failure, status: 502 };
   }
+  // The narrator's asides are cut as the turn loop cuts them from its final
+  // call (src/lib/dm/turn.ts); a continuation that was only the model's plan
+  // adds nothing.
+  if (continuation) {
+    continuation = withoutAsides(continuation, await readAsides(campaign, listSheets(campaign.id), turn, continuation));
+  }
   if (!continuation) {
     return { error: "The DM returned nothing; try again.", status: 502 };
   }
+  const spoken = await modelLines(campaign, continuation, `continue ${input.messageId}`);
 
   // Re-read after the model call: the message may have moved on while the
   // model was working (a reroll, a lore-check rewrite, a double-tapped
@@ -138,6 +151,7 @@ export async function runContinueScene(input: {
     input.messageId,
     replaceSelectedVariant(variants, index, content),
     index,
+    mergeLines(current.speech, spoken),
   );
   if (!updated) {
     return { error: "Could not store the continuation.", status: 500 };

@@ -1,10 +1,14 @@
 "use client";
+import { useLocale as useSyncLocale } from "@/lib/i18n/LocaleProvider";
 
 import { Check, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/cn";
 import { SectionHead } from "@/components/ui/SectionHead";
+import { Switch } from "@/components/ui/Switch";
 import { PanelError, kitButtonClass, panelField } from "./PanelKit";
+import { SequenceEditor } from "./SequenceEditor";
+import { fitSequence, type PlanSequence } from "@/lib/dm/plan-order";
 import type { Floor } from "@/lib/db/campaigns";
 import type { PublicEncounter } from "@/lib/db/encounter-view";
 import { orderRowKey } from "@/lib/battlemap/initiative-rows";
@@ -39,12 +43,19 @@ export function LeadFloorControl({
   floor,
   sheets,
   encounter,
+  aiNarrates = false,
+  coordinating = false,
 }: {
   campaignId: string;
   floor: Floor;
   sheets: CharacterSheet[];
   encounter?: PublicEncounter | null;
+  // Coordinate actions (issue 254) is offered at a table the AI narrates,
+  // outside a fight, when no plan is being drafted already.
+  aiNarrates?: boolean;
+  coordinating?: boolean;
 }) {
+  const { t: syncT } = useSyncLocale();
   const { t, locale } = useLocale();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<UiRequestError | null>(null);
@@ -53,6 +64,18 @@ export function LeadFloorControl({
   // players behind them and drops companions itself.
   const [picked, setPicked] = useState<string[]>([]);
   const [prompt, setPrompt] = useState("");
+  // Coordinate actions: the characters in the plan (companions too, who act
+  // in it without holding it up), the whole party when none are picked.
+  const [planned, setPlanned] = useState<string[]>([]);
+  const [planPrompt, setPlanPrompt] = useState("");
+  // The order they act in (issue 292), when the lead sets one: steps of
+  // character ids, kept to whoever is in the plan as the picks change.
+  const [inOrder, setInOrder] = useState(false);
+  const [orderDraft, setOrderDraft] = useState<PlanSequence>([]);
+  const participants = planned.length
+    ? planned.flatMap((id) => sheets.filter((sheet) => sheet.id === id))
+    : sheets;
+  const planSequence = fitSequence(orderDraft, participants.map((sheet) => sheet.id));
 
   // Companions have no player to wait on, so they cannot hold the floor.
   const players = sheets.filter((sheet) => !sheet.isCompanion);
@@ -91,7 +114,37 @@ export function LeadFloorControl({
     }
   }
 
-  function togglePick(id: string) {
+  async function coordinate() {
+    setBusy(true);
+    setError(null);
+    try {
+      const response = await fetch(`/api/campaigns/${campaignId}/coordination`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "open",
+          characterIds: planned,
+          prompt: planPrompt.trim(),
+          sequence: inOrder && planSequence.length > 1 ? planSequence : null,
+        }),
+      });
+      if (!response.ok) {
+        const data = (await response.json().catch(() => ({}))) as { error?: string };
+        setError({ data, fallback: "turnUi.error.floor" });
+        return;
+      }
+      setPlanned([]);
+      setPlanPrompt("");
+      setInOrder(false);
+      setOrderDraft([]);
+    } catch {
+      setError({ data: {}, fallback: "turnUi.error.table" });
+    } finally {
+      setBusy(false);
+    }
+  }
+
+    function togglePick(id: string) {
     setPicked((prev) => (prev.includes(id) ? prev.filter((p) => p !== id) : [...prev, id]));
   }
 
@@ -111,7 +164,7 @@ export function LeadFloorControl({
                   // Keyed by position: a thief's second round-1 turn repeats the id.
                   <span
                     key={orderRowKey(entry, index)}
-                    title={entry.reflex ? t("turnUi.reflex") : undefined}
+                    title={entry.reflex ? (entry.extra ? t("combatUi.order.extraHint", { feature: entry.extra }) : t("turnUi.reflex")) : undefined}
                     className={cn(
                       "transition-colors duration-200",
                       index === encounter.turnIndex ? "font-medium text-amber-200" : undefined,
@@ -119,7 +172,7 @@ export function LeadFloorControl({
                   >
                     {index > 0 ? " > " : ""}
                     {combatName(entry.name, entry.kind, locale)}
-                    {entry.reflex ? <sup className="motion-pop ml-0.5 text-[9px] text-amber-300">{t("turnUi.second")}</sup> : null}
+                    {entry.reflex ? <sup className="motion-pop ml-0.5 text-[9px] text-amber-300">{t(entry.extra ? "combatUi.order.extra" : "turnUi.second")}</sup> : null}
                   </span>
                 ))}
               </>
@@ -272,6 +325,87 @@ export function LeadFloorControl({
           </div>
         </>
       )}
+
+      {aiNarrates && floor.mode !== "initiative" && !coordinating ? (
+        <div className="mt-3" data-coordinate-open>
+          <SectionHead
+            title={syncT("upstreamUi.40bff90a21a7")}
+            glyph="tab-party"
+            level="h4"
+            aside={planned.length ? `${planned.length} picked` : "whole party"}
+          />
+          <p className="mb-1.5 text-xs text-stone-500">
+            {syncT("upstreamUi.4a0923a1c2df")}</p>
+          <div className="flex flex-wrap gap-1.5">
+            {sheets.map((sheet) => {
+              const on = planned.includes(sheet.id);
+              return (
+                <button
+                  key={sheet.id}
+                  type="button"
+                  disabled={busy}
+                  onClick={() => setPlanned((prev) => (prev.includes(sheet.id) ? prev.filter((id) => id !== sheet.id) : [...prev, sheet.id]))}
+                  aria-pressed={on}
+                  data-on={on ? "" : undefined}
+                  className="pk-pill pk-tap motion-press py-0.5"
+                >
+                  {sheet.name}
+                  {sheet.isCompanion ? <span className="text-[10px] text-stone-500"> {syncT("upstreamUi.c989edf18246")}</span> : null}
+                </button>
+              );
+            })}
+          </div>
+          <div className="mt-2 flex items-center justify-between gap-2 text-xs text-stone-300">
+            <span>{syncT("upstreamUi.736c88b52c61")}{inOrder ? "" : syncT("upstreamUi.6fd785aaa71b")}</span>
+            <Switch
+              on={inOrder}
+              onChange={(on) => {
+                setInOrder(on);
+                if (on && !orderDraft.length) {
+                  setOrderDraft(participants.map((sheet) => [sheet.id]));
+                }
+              }}
+              label={syncT("upstreamUi.82e93bc52aa2")}
+            />
+          </div>
+          {inOrder && participants.length > 1 ? (
+            <div className="reveal mt-1.5" data-coordinate-order>
+              <SequenceEditor
+                items={participants.map((sheet) => ({ id: sheet.id, name: sheet.name, companion: Boolean(sheet.isCompanion) }))}
+                sequence={planSequence}
+                onChange={setOrderDraft}
+                disabled={busy}
+                label={syncT("upstreamUi.dda7ee33137e")}
+              />
+            </div>
+          ) : null}
+          <div className="mt-1.5 flex gap-1.5">
+            <input
+              value={planPrompt}
+              onChange={(event) => setPlanPrompt(event.target.value)}
+              maxLength={300}
+              placeholder={syncT("upstreamUi.e5f41a01933d")}
+              aria-label={syncT("upstreamUi.e5f41a01933d")}
+              className={cn(panelField, "w-auto min-w-0 flex-1")}
+            />
+            <button
+              type="button"
+              disabled={busy || !sheets.some((sheet) => !sheet.isCompanion)}
+              onClick={() => void coordinate()}
+              title={syncT("upstreamUi.52bedcf09092")}
+              className={kitButtonClass("primary", "shrink-0")}
+              data-coordinate-start
+            >
+              {busy ? <Loader2 className="size-3.5 animate-spin" /> : null}
+              {syncT("upstreamUi.bdc10f09365d")}</button>
+          </div>
+        </div>
+      ) : coordinating ? (
+        // The plan itself is drawn above the composer for every seat; on a
+        // phone that is the Table view, not this panel.
+        <p className="motion-pop mt-3 rounded-md border border-amber-500/30 bg-amber-950/20 px-2.5 py-1.5 text-xs text-amber-100/90" data-coordinating-note>
+          {syncT("upstreamUi.d1bc03d6aeb0")}</p>
+      ) : null}
 
       {errorText ? <PanelError className="mt-1.5">{errorText}</PanelError> : null}
     </div>

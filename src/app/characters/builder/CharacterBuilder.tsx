@@ -34,7 +34,8 @@ import {
 } from "./submit";
 import { builderActions, useBuilderDerived } from "./useBuilderDerived";
 import { useArchetypes, useBuilderOptions, useWorldPack } from "./useBuilderOptions";
-import { findRace, useBuilderState } from "./useBuilderState";
+import { listWords, unofferedPicks } from "./unoffered";
+import { findRace, useBuilderState, type DroppedNotice } from "./useBuilderState";
 import { useFeatDescs } from "./useFeatDescs";
 import { usePickerGroups } from "./usePickerGroups";
 import { useTableRules } from "./useTableRules";
@@ -99,6 +100,7 @@ function CharacterBuilderForm({
   busy,
   error,
   role,
+  onCancel,
   className,
 }: {
   // The table the character is made for: its hit point method and starting
@@ -127,6 +129,9 @@ function CharacterBuilderForm({
   // Player character or DM-played ally; only the library page asks, since a
   // campaign already knows which door the character comes through.
   role?: { value: BuilderRole; onChange: (role: BuilderRole) => void };
+  // Where the first step's back arrow leads (the page or dialog it opened
+  // from), as every other wizard's does; later steps step back as before.
+  onCancel?: () => void;
   className?: string;
 }) {
   const { locale, t } = useLocale();
@@ -135,6 +140,7 @@ function CharacterBuilderForm({
     classes: rawClasses,
     backgrounds: rawBackgrounds,
     packInstalled,
+    loaded,
   } = useBuilderOptions(initial?.race);
   const pack = useWorldPack(worldPackId);
   // Display overlay only. applyIdReskins rewrites `name`, never `id`, so
@@ -221,7 +227,19 @@ function CharacterBuilderForm({
     onBlocked: blocked ? () => locate(blocked.target) : undefined,
   });
 
+  // A stored race, class or background these lists do not hold would be
+  // replaced by the list's first row on save; the save waits until the
+  // player picks on purpose (issue 229).
+  const unoffered = initial && loaded ? unofferedPicks(initial, state, races, classes, backgrounds, locale) : [];
+  const unofferedText = unoffered.length
+    ? locale !== "en" ? t("upstreamUi.unoffered", { name: initial?.name || t("upstreamUi.unoffered.character"), what: unoffered.map(entry => entry.what).join("、"), standIn: unoffered.map(entry => entry.standIn).join("、") }) : `This builder does not offer ${initial?.name || "this character"}'s ${listWords(unoffered.map((entry) => entry.what))}: a table's own content, or a row this server no longer has. Saving here would put ${listWords(unoffered.map((entry) => entry.standIn))} in ${unoffered.length === 1 ? "its" : "their"} place, so the save waits until you pick on purpose. Leave without saving to keep ${initial?.name || "them"} as stored.`
+    : "";
+
   function submit() {
+    if (unofferedText) {
+      state.setLocalError({ kind: "error", message: unofferedText });
+      return;
+    }
     const input = { state, derived, race, klass, background, initial };
     const problem = validateBuilder(input);
     if (problem) {
@@ -394,6 +412,11 @@ function CharacterBuilderForm({
     // A bounded height so each step scrolls on its own and the Continue
     // button stays put; the fallback keeps a usable pane on a short phone.
     <div data-builder-root={rootId} className={cn("flex h-[max(30rem,calc(100dvh-14rem))] flex-col text-sm", className)}>
+      {unofferedText ? (
+        <p role="alert" className="reveal mb-3 shrink-0 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs text-amber-100">
+          {unofferedText}
+        </p>
+      ) : null}
       <Wizard
         title={state.name.trim() || t("builder.newCharacter")}
         variant="diamonds"
@@ -406,6 +429,7 @@ function CharacterBuilderForm({
             : undefined
         }
         steps={steps}
+        onCancel={onCancel}
         onDone={submit}
         doneLabel={
           busy ? (

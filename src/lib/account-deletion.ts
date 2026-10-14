@@ -11,6 +11,7 @@ import {
   markDeletionRequested,
 } from "@/lib/db/users";
 import { campaignFilePaths, removeUnreferencedFiles } from "@/lib/image-files";
+import { closeStreamsForUser } from "@/lib/live-streams";
 import { isUploadedImagePath } from "@/lib/uploads";
 
 // Self-service account deletion, in two steps. The request stamps a due
@@ -136,14 +137,19 @@ export function purgeAccount(userId: string) {
     db.prepare(`UPDATE campaign_messages SET user_id = NULL WHERE user_id = ?`).run(userId);
     // The usage ledger too: counts stay, the name goes.
     forgetUsageFor(userId);
+    // And the record of who made each stored file (src/lib/media-access.ts).
+    db.prepare(`UPDATE media_files SET user_id = NULL WHERE user_id = ?`).run(userId);
 
-    // Things only this person could act on.
+    // Things only this person could act on, the dice they were owed while
+    // building a character among them (creation_rolls, which has no foreign
+    // key to cascade from).
     for (const table of [
       "pending_rolls",
       "item_proposals",
       "campaign_asks",
       "ask_briefs",
       "session_rsvps",
+      "creation_rolls",
     ]) {
       db.prepare(`DELETE FROM ${table} WHERE user_id = ?`).run(userId);
     }
@@ -169,6 +175,9 @@ export function purgeAccount(userId: string) {
     // account invites.
     db.prepare(`DELETE FROM users WHERE id = ?`).run(userId);
   })();
+  // The cascade took the sessions without passing deleteSessionsForUser, so
+  // the account's open streams are closed here (src/lib/live-streams.ts).
+  closeStreamsForUser(userId);
 
   removeUnreferencedFiles(files);
   for (const { id } of owned) {

@@ -26,6 +26,7 @@ export function narrationNote(tts: ClientCapabilities["tts"] | undefined, locale
   const server = t(tts.provider === "kokoro" ? "media.speech.kokoro" : "media.speech.openai");
   const local = tts.place === "local";
   const where = local ? t("media.local") : tts.place ? t("media.remote", { place: tts.place }) : t("media.unknown");
+  if (tts.needsModel) return { warning: true, text: t("media.speech.needsModel", { server, where }) };
   if (!tts.reachable) return { warning: true, text: t("media.speech.unreachable", { server, where }) };
   return { warning: false, text: t("media.speech.reachable", { server, where }) + (local ? t("media.speech.local") : "") + t("media.speech.settings") };
 }

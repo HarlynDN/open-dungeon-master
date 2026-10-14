@@ -5,6 +5,7 @@
 import type { CatalogEntry } from "@/lib/dm/catalog-types";
 import { UPDATE_SHEET_FIELDS } from "@/lib/dm/update-sheet-args";
 import { DRACONIC_ANCESTRIES } from "@/lib/srd/racial-grants";
+import { GENDER_FIELD } from "@/lib/dm/catalog-world";
 import {
   ABILITY_OPTIONS as ABILITIES,
   AREA_PLACEMENT_FIELDS,
@@ -137,6 +138,12 @@ export const PARTY_ADJUDICATIONS: CatalogEntry[] = [
         placeholder: "340 silver",
         help: "Overrides the amount above; the sign of the change still says gain or spend.",
       },
+      {
+        name: "additional",
+        label: "Another sum, not the one just accepted",
+        kind: "boolean",
+        help: "With item offers on, the same amount again within ten minutes of an accepted offer is refused unless it is truly another from a different source.",
+      },
       REASON,
     ],
   },
@@ -154,6 +161,12 @@ export const PARTY_ADJUDICATIONS: CatalogEntry[] = [
         label: "They cannot tell what it is",
         kind: "boolean",
         help: "Type the description they would use, not the real name. Reveal it later with Name a mystery item.",
+      },
+      {
+        name: "additional",
+        label: "Another one, not the one just accepted",
+        kind: "boolean",
+        help: "With item offers on, the same item again within ten minutes of an accepted offer is refused unless it is truly another from a different source.",
       },
       REASON,
     ],
@@ -457,6 +470,7 @@ export const PARTY_ADJUDICATIONS: CatalogEntry[] = [
       { name: "name", label: "Name", kind: "text", required: true },
       { name: "class", label: "Class", kind: "text", required: true },
       { name: "race", label: "Race", kind: "text" },
+      { ...GENDER_FIELD, required: true },
       {
         name: "ancestry",
         label: "Draconic ancestry",

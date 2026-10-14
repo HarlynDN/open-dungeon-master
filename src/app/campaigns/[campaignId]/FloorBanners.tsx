@@ -107,7 +107,7 @@ export function FloorBanners({
                     return (
                       <span
                         key={orderRowKey(entry, index)}
-                        title={entry.reflex ? t("turnUi.reflex") : undefined}
+                        title={entry.reflex ? (entry.extra ? t("combatUi.order.extraHint", { feature: entry.extra }) : t("turnUi.reflex")) : undefined}
                         className={cn(
                           "transition-opacity duration-200",
                           current ? "font-semibold" : "opacity-60",
@@ -115,7 +115,7 @@ export function FloorBanners({
                       >
                         {index > 0 ? " > " : ""}
                         {combatName(entry.name, entry.kind, locale)}
-                        {entry.reflex ? <sup className="motion-pop ml-0.5 text-[9px] text-amber-300">{t("turnUi.second")}</sup> : null}
+                        {entry.reflex ? <sup className="motion-pop ml-0.5 text-[9px] text-amber-300">{t(entry.extra ? "combatUi.order.extra" : "turnUi.second")}</sup> : null}
                       </span>
                     );
                   })}

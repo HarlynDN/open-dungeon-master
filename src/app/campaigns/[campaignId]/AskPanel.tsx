@@ -5,7 +5,7 @@ import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { askCitationLabel, composeErrorText } from "@/lib/i18n/compose-presentations";
 import { messageTemplate } from "@/lib/i18n/translator";
 import { isComposingInput } from "@/lib/input-composition";
-import { memo, useCallback, useState } from "react";
+import { memo, useCallback, useId, useState } from "react";
 import type { FormEvent } from "react";
 import { cn } from "@/lib/cn";
 import { EmptyState } from "@/components/EmptyState";
@@ -14,8 +14,9 @@ import { SectionHead } from "@/components/ui/SectionHead";
 import { PanelError, PanelLoading, panelRow } from "./PanelKit";
 import { Prose } from "./Prose";
 import { Tooltip } from "@/components/ui/Tooltip";
+import { LengthNote } from "@/components/ui/LengthNote";
 import type { CampaignAsk } from "@/lib/db/asks";
-import type { AskScope, AskVisibility } from "@/lib/dm/ask-logic";
+import { QUESTION_MAX_CHARS, questionLength, type AskScope, type AskVisibility } from "@/lib/dm/ask-logic";
 import { ui } from "@/lib/ui";
 
 // The Ask thread: out-of-character questions to the DM and their grounded
@@ -121,6 +122,12 @@ function AskDockInner({
   // rather than in the transcript and a local model can take a while; without
   // it the box just empties and nothing visibly happens.
   const [pendingQuestion, setPendingQuestion] = useState("");
+  // The limit is said under the box from the first keystroke, and a draft
+  // over it stays in the box, marked, instead of earning a bare refusal
+  // after the send (issue 207). The route counts the same way.
+  const noteId = useId();
+  const length = questionLength(question);
+  const tooLong = length > QUESTION_MAX_CHARS;
 
   // No floor gating anywhere in here, by design. Asking never consumes the
   // floor and /ask runs no floor check (ask/route.ts), so this stays usable
@@ -130,7 +137,7 @@ function AskDockInner({
     async (event: FormEvent) => {
       event.preventDefault();
       const text = question.trim();
-      if (!text || sending) {
+      if (!text || sending || questionLength(text) > QUESTION_MAX_CHARS) {
         return;
       }
       setSending(true);
@@ -268,11 +275,14 @@ function AskDockInner({
               rows={2}
               placeholder={t("composeUi.ask.placeholder")}
               aria-label={t("composeUi.ask.placeholder")}
-              className={cn(ui.input, "resize-none text-xs leading-5")}
+              className={cn(ui.input, "resize-none text-xs leading-5", tooLong && "border-red-500/60")}
+            aria-describedby={noteId}
+            aria-invalid={tooLong || undefined}
             />
             <button
               type="submit"
-              disabled={!question.trim() || sending}
+              disabled={!question.trim() || sending || tooLong}
+              title={tooLong ? t("upstreamUi.questionLimit", { max: QUESTION_MAX_CHARS.toLocaleString("en-US") }) : undefined}
               className={cn(ui.btnPrimary, "pk-tap pk-display h-9 shrink-0 px-3 text-[12px]")}
             >
               {sending ? (
@@ -283,7 +293,14 @@ function AskDockInner({
               {t("composeUi.ask.submit")}
             </button>
           </div>
-          {error ? <PanelError className="mt-1.5">{composeErrorText(error, locale, "composeUi.error.ask")}</PanelError> : null}
+          <LengthNote
+            id={noteId}
+            length={length}
+            max={QUESTION_MAX_CHARS}
+            idle={t("composeUi.ask.limit", { count: QUESTION_MAX_CHARS })}
+            className="mt-1"
+          />
+            {error ? <PanelError className="mt-1.5">{composeErrorText(error, locale, "composeUi.error.ask")}</PanelError> : null}
         </form>
       </div>
     </div>

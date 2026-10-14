@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import {openSheetDialogRenderer, dialogSheet} from './sheet-dialog-fixtures.mjs';
 import {messageScope} from '../../src/lib/i18n/resource-scope.ts';
 import {catalogFor} from '../../src/lib/i18n/translator.ts';
-const renderer=await openSheetDialogRenderer();
+const renderer=await openSheetDialogRenderer({preloadCatalogs:false});
 const catalogs=globalThis.__odmLocaleResources.catalogs;
 catalogs['zh-CN']=Object.fromEntries(Object.entries(catalogs['zh-CN']).filter(([key])=>messageScope(key)==='ui'));
 assert.equal(catalogFor('zh-CN')['sheetDialog.choice.action'],undefined);

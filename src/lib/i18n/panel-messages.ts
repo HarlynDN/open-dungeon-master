@@ -1,6 +1,11 @@
 import { defineMessages } from "./catalog.ts";
 
 export const PANEL_MESSAGES = /*#__PURE__*/ defineMessages({
+  "panel.ambienceCounts": {"en": "Audio for {beds}/{bedsTotal} rooms, {music}/{musicTotal} moods and {stings}/{stingsTotal} sounds. Open the sound panel from the table header speaker.", "zh-CN": "声音库：场景 {beds}/{bedsTotal}、音乐 {music}/{musicTotal}、音效 {stings}/{stingsTotal}。点击桌面顶部的扬声器打开声音面板。"},
+  "panel.tableLanguageHelp": {"en": "The DM writes the story in this language. Your interface language is a personal setting. Non-English retrieval needs a multilingual embedding model on the server.", "zh-CN": "DM 使用此语言撰写故事。界面语言由每位玩家自行设置。非英语检索需要服务器部署多语言 embedding 模型。"},
+  "panel.transcriptionUnavailable": {"en": "This server has no transcription service. An admin can configure a Whisper service in Admin > Speech.", "zh-CN": "此服务器没有语音转写服务。管理员可在“管理 > 语音”中配置 Whisper 服务。"},
+  "panel.serverOff": {"en": "Off on this server", "zh-CN": "此服务器未启用"},
+  "panel.narrationServerOff": {"en": "Narration off on this server", "zh-CN": "此服务器已关闭语音旁白"},
   // These are backend identifiers/blend syntax, rather than prose to translate.
   "voicePicker.exampleOpenai": { en: "alloy", "zh-CN": "alloy" },
   "voicePicker.exampleKokoro": { en: "af_heart(30)+af_bella(70)", "zh-CN": "af_heart(30)+af_bella(70)" },

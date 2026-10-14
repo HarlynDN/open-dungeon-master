@@ -3,7 +3,7 @@
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import Link from "next/link";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { Check } from "lucide-react";
+import { ArrowLeft, Check } from "lucide-react";
 import { memo, useState, type ComponentProps, type ReactNode } from "react";
 import { HeaderGlyph } from "@/app/campaigns/[campaignId]/SessionGlyph";
 import { GameIcon } from "@/components/ui/GameIcon";
@@ -14,9 +14,13 @@ import { cn } from "@/lib/cn";
 import { ui } from "@/lib/ui";
 import { headerButtonClass } from "@/app/campaigns/[campaignId]/headerButton";
 import { VoiceDock } from "@/app/campaigns/[campaignId]/VoiceDock";
+import { useCapabilities } from "@/lib/use-capabilities";
 import { RulebookDialog } from "@/components/rulebook/RulebookDialog";
 import type { NarrationAudio } from "@/app/campaigns/[campaignId]/useNarrationAudio";
 import type { AmbienceAudio } from "@/app/campaigns/[campaignId]/useAmbienceAudio";
+import { SoundControl, type SoundSteering } from "@/app/campaigns/[campaignId]/SoundPanel";
+import { LayoutMenu } from "@/app/campaigns/[campaignId]/TableLayoutParts";
+import type { LayoutSeat } from "@/app/campaigns/[campaignId]/table-layout-store";
 
 // One audio group in the header: narration or ambience. On sm+ it is the
 // familiar icon button with an inline slider. Below sm the header has no
@@ -137,9 +141,11 @@ export const SessionHeader = memo(function SessionHeader({
   narration,
   ambienceEnabled,
   ambience,
+  sound,
   onHelp,
   ribbon,
   stage,
+  layoutSeat,
 }: {
   title: string;
   scene: string;
@@ -157,9 +163,13 @@ export const SessionHeader = memo(function SessionHeader({
   // withheld, not disabled, when it is off.
   ttsEnabled: boolean;
   narration: NarrationAudio;
-  // Likewise ambience: on in settings and the pack installed on this server.
+  // Likewise ambience: on in settings. The library may still be empty; the
+  // sound panel says so rather than hiding, because "where is the sound"
+  // had no answer when the button simply was not there.
   ambienceEnabled: boolean;
   ambience: AmbienceAudio;
+  // Who may change what plays, and where to send it (SoundPanel.tsx).
+  sound: SoundSteering;
   onHelp: () => void;
   // The initiative ribbon during a fight (CinematicParts.tsx), laid along
   // the middle of the bar from md up; the phone keeps the banner above the
@@ -168,11 +178,30 @@ export const SessionHeader = memo(function SessionHeader({
   // The fight stage switch, shown while a board is on the table: the board
   // in the main column or the story there, with the board in its tab.
   stage?: { on: boolean; onToggle: () => void };
+  // Whose arrangement the layout menu edits (TableLayoutParts.tsx): the
+  // DM seat keeps one, every player seat another.
+  layoutSeat?: LayoutSeat;
 }) {
   const { t } = useLocale();
+  // Narration switched off server-wide: no passage is read aloud, so the
+  // narration volume would steer nothing (issue 275; the lobby's own row
+  // reads Off for the same reason).
+  const capabilities = useCapabilities();
+  const narrates = ttsEnabled && capabilities?.tts?.provider !== "off";
   const diceItem = "session-menu-row";
   return (
     <header className="glass session-header cine-header z-10 flex items-center gap-2 border-b border-stone-700/40 px-3 pb-2 pt-[calc(0.5rem+env(safe-area-inset-top))] sm:gap-3 sm:px-4">
+      {/* The way out on a phone. From sm up the All campaigns button below
+          is it; under sm that button has no room, and a door behind the
+          avatar menu is not one a newcomer, or an installed app with no
+          browser back button, finds. The title gives up the width. */}
+      <Link
+        href="/"
+        aria-label={t("upstreamUi.allCampaigns")}
+        className="-ml-1.5 flex size-10 shrink-0 items-center justify-center rounded-md text-stone-400 transition-colors hover:text-amber-200 sm:hidden"
+      >
+        <ArrowLeft className="size-5" />
+      </Link>
       <div className="min-w-0 flex-1">
         <h1 className="gold-title session-title font-display">{title}</h1>
         <p key={scene} className="live-in truncate font-serif text-xs italic text-stone-400">
@@ -245,7 +274,7 @@ export const SessionHeader = memo(function SessionHeader({
             </DropdownMenu.Content>
           </DropdownMenu.Portal>
         </DropdownMenu.Root>
-        {ttsEnabled ? (
+        {narrates ? (
           <HeaderAudioControl
             onLabel={t("sessionUi.header.muteNarration")}
             offLabel={t("sessionUi.header.unmuteNarration")}
@@ -259,26 +288,10 @@ export const SessionHeader = memo(function SessionHeader({
               narration.setMuted(!narration.muted);
             }}
             onVolume={(value) => narration.setVolume(value)}
-            glyph="cue-horn"
+            glyph="ui-speech"
           />
         ) : null}
-        {ambienceEnabled && ambience.installed ? (
-          <HeaderAudioControl
-            onLabel={t("sessionUi.header.muteAmbience")}
-            offLabel={t("sessionUi.header.unmuteAmbience")}
-            enableLabel={t("sessionUi.header.enableAmbience")}
-            volumeLabel={t("sessionUi.header.ambienceVolume")}
-            unlocked={ambience.unlocked}
-            muted={ambience.muted}
-            volume={ambience.volume}
-            onToggle={() => {
-              ambience.unlock();
-              ambience.setMuted(!ambience.muted);
-            }}
-            onVolume={(value) => ambience.setVolume(value)}
-            glyph="tab-ambience"
-          />
-        ) : null}
+        {ambienceEnabled ? <SoundControl ambience={ambience} steering={sound} /> : null}
         {stage ? (
           <Tooltip content={t(stage.on ? "sessionUi.header.storyHint" : "sessionUi.header.boardHint")} side="bottom">
             <button
@@ -293,6 +306,7 @@ export const SessionHeader = memo(function SessionHeader({
             </button>
           </Tooltip>
         ) : null}
+        {layoutSeat ? <LayoutMenu seat={layoutSeat} /> : null}
         <RulebookButton />
         <Tooltip content={t("sessionUi.header.helpHint")} side="bottom">
           <button

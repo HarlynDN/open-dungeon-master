@@ -1,6 +1,132 @@
 import { defineMessages } from "./catalog.ts";
 
 export const DM_FIELD_MESSAGES = /*#__PURE__*/ defineMessages({
+
+  "dmField.upstream027.0": {
+    "en": "The kind of place the battle map is drawn as. Blank: the current place's.",
+    "zh-CN": "战斗地图所呈现的场所类型。留空时使用当前场所的类型。"
+  },
+  "dmField.upstream027.1": {
+    "en": "Enemies come from",
+    "zh-CN": "敌人来自"
+  },
+  "dmField.upstream027.2": {
+    "en": "Ahead puts the front of the party's travel formation nearest them; behind, the rear. Blank: ahead.",
+    "zh-CN": "前方会让行进队形的前排最靠近敌人；后方则为后排。留空默认为前方。"
+  },
+  "dmField.upstream027.3": {
+    "en": "Ahead of the travel formation",
+    "zh-CN": "行进队形前方"
+  },
+  "dmField.upstream027.4": {
+    "en": "Behind it",
+    "zh-CN": "行进队形后方"
+  },
+  "dmField.upstream027.5": {
+    "en": "A versatile weapon rolls its bigger die in melee. Not with a shield on the arm. Not for an off-hand attack.",
+    "zh-CN": "两用武器在近战中使用较大的伤害骰。手臂上装备盾牌时不可用；副手攻击也不可用。"
+  },
+  "dmField.upstream027.6": {
+    "en": "Readied action",
+    "zh-CN": "预备的动作"
+  },
+  "dmField.upstream027.7": {
+    "en": "Ready only: what the trigger releases, off their turn, with their reaction. For a spell, fill Spell instead.",
+    "zh-CN": "仅用于预备动作：在自己的回合外，用反应执行触发的动作。若是法术，请改填“法术”。"
+  },
+  "dmField.upstream027.8": {
+    "en": "An attack (release with Attack)",
+    "zh-CN": "一次攻击（通过“攻击”执行）"
+  },
+  "dmField.upstream027.9": {
+    "en": "A move up to their speed (release with Move token)",
+    "zh-CN": "移动至多等于速度的距离（通过“移动棋子”执行）"
+  },
+  "dmField.upstream027.10": {
+    "en": "Use an item (release with Use item)",
+    "zh-CN": "使用物品（通过“使用物品”执行）"
+  },
+  "dmField.upstream027.11": {
+    "en": "Stabilize a creature (release with Stabilize)",
+    "zh-CN": "稳定生物伤势（通过“稳定伤势”执行）"
+  },
+  "dmField.upstream027.12": {
+    "en": "A class feature that takes an action",
+    "zh-CN": "需要一个动作的职业特性"
+  },
+  "dmField.upstream027.13": {
+    "en": "Escape a grapple",
+    "zh-CN": "挣脱擒抱"
+  },
+  "dmField.upstream027.14": {
+    "en": "Or whoever walks",
+    "zh-CN": "或按行进位置选择"
+  },
+  "dmField.upstream027.15": {
+    "en": "Instead of naming them: the character first or last in the party's travel formation.",
+    "zh-CN": "无需指定姓名：选择队伍行进队形最前方或最后方的角色。"
+  },
+  "dmField.upstream027.16": {
+    "en": "At the front of the formation",
+    "zh-CN": "队形最前方"
+  },
+  "dmField.upstream027.17": {
+    "en": "At the rear of the formation",
+    "zh-CN": "队形最后方"
+  },
+  "dmField.upstream027.18": {
+    "en": "Another sum, not the one just accepted",
+    "zh-CN": "另一笔金额，并非刚接受的那笔"
+  },
+  "dmField.upstream027.19": {
+    "en": "With item offers on, the same amount again within ten minutes of an accepted offer is refused unless it is truly another from a different source.",
+    "zh-CN": "开启物品提议时，接受提议后十分钟内再次给予同额金额会被拒绝，除非确实是来自不同来源的另一笔。"
+  },
+  "dmField.upstream027.20": {
+    "en": "Another one, not the one just accepted",
+    "zh-CN": "另一个物品，并非刚接受的那个"
+  },
+  "dmField.upstream027.21": {
+    "en": "With item offers on, the same item again within ten minutes of an accepted offer is refused unless it is truly another from a different source.",
+    "zh-CN": "开启物品提议时，接受提议后十分钟内再次给予相同物品会被拒绝，除非确实是来自不同来源的另一个。"
+  },
+  "dmField.upstream027.22": {
+    "en": "Gender",
+    "zh-CN": "性别"
+  },
+  "dmField.upstream027.23": {
+    "en": "Female",
+    "zh-CN": "女性"
+  },
+  "dmField.upstream027.24": {
+    "en": "Male",
+    "zh-CN": "男性"
+  },
+  "dmField.upstream027.25": {
+    "en": "Nonbinary",
+    "zh-CN": "非二元性别"
+  },
+  "dmField.upstream027.26": {
+    "en": "Unknown",
+    "zh-CN": "未知"
+  },
+  "dmField.upstream027.27": {
+    "en": "Kind of place",
+    "zh-CN": "场所类型"
+  },
+  "dmField.upstream027.28": {
+    "en": "Sets the place's sound, battle map and picture. Blank keeps what it was.",
+    "zh-CN": "设置场所的声音、战斗地图和图片。留空保持原样。"
+  },
+  "dmField.upstream027.29": {
+    "en": "Event id, beat number or title",
+    "zh-CN": "事件 ID、剧情节点编号或标题"
+  },
+  "dmField.upstream027.30": {
+    "en": "ev3",
+    "zh-CN": "ev3"
+  }
+,
   "dmField.listSeparator": {"en": ", ", "zh-CN": "、"},
   "dmField.copy.c0000": {
     "en": "Enemies",

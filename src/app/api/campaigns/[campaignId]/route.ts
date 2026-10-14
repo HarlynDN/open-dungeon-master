@@ -14,12 +14,13 @@ import {
   setCampaignStatus,
   updateCampaignInfo,
 } from "@/lib/db/campaigns";
-import { ensureOpenChapter, listChapters } from "@/lib/db/chapters";
+import { ensureOpenChapter, listChaptersForSnapshot } from "@/lib/db/chapters";
 import { publicCast } from "@/lib/dm/cast";
+import { currentCoordination } from "@/lib/dm/coordination";
 import { getAmbience } from "@/lib/db/ambience";
 import { captureBoundarySnapshot } from "@/lib/db/snapshots";
 import { listRecentCampaignEvents } from "@/lib/db/character-events";
-import { syncProgressToLibrary } from "@/lib/db/characters";
+import { libraryRolesFor, syncProgressToLibrary } from "@/lib/db/characters";
 import { activePublicEncounter } from "@/lib/db/encounter-view";
 import { listNotesVisibleTo } from "@/lib/db/notes";
 import { listOpenPendingRolls, publicPendingRoll } from "@/lib/db/dm-turns";
@@ -47,7 +48,7 @@ import { listBlockedUserIds } from "@/lib/db/moderation";
 import { xCardRaised } from "@/lib/dm/safety";
 import { latestMediaStatuses, latestEventOfType, publishPersisted, publishWithSeq } from "@/lib/events";
 import type { HandoutShown, TitleCard } from "@/lib/scene/state";
-import { listNarrationAudio } from "@/lib/tts";
+import { narrationAudioFor } from "@/lib/tts";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -95,15 +96,26 @@ export async function GET(
   const { campaign, user } = context;
   const caps = capsFor(context);
   const sheets = listSheets(campaignId);
-  const messages = listRecentMessages(campaignId, 100);
   const locations = listLocations(campaignId);
   // Their own characters, for the rolls only they and the DM may read.
   const ownedCharacterIds = sheets
     .filter((sheet) => sheet.userId === user.id)
     .map((sheet) => sheet.id);
+  // The role each seated copy's library row is filed under: a player sheet
+  // whose row says companion came in through the wrong door (issue 192),
+  // and the party panel offers whoever runs the story the repair for it.
+  const libraryRoles = libraryRolesFor(sheets.map((sheet) => sheet.libraryCharacterId ?? ""));
+  const messages = listRecentMessages(campaignId, 100);
   return Response.json({
     campaign: publicCampaign(campaign),
+    // Whether the table already holds a story arc that AI Story Setup has
+    // not yet built on (a Workshop Storyboard brought in before the start,
+    // issue 249). Told to whoever steers the story, who is warned by it;
+    // the arc itself never leaves the server.
+    prepArc: caps.steersStory && campaign.status === "lobby" && Boolean(campaign.storyArc) && !campaign.dmOutline,
     me: { id: user.id, username: user.username, avatar: user.avatar },
+    // The plan the party is coordinating, when it is (issue 254).
+    coordination: currentCoordination(campaignId),
     members: listMembers(campaignId),
     // Names and faces of the cast, for the transcript's speech lines.
     cast: publicCast(campaignId),
@@ -111,7 +123,10 @@ export async function GET(
     blockedUserIds: listBlockedUserIds(user.id),
     // A player's notes are theirs: every other seat but the DM's is sent
     // the sheet without them (src/lib/dm/sheet-view.ts).
-    sheets: sheets.map((sheet) => sheetForViewer(sheet, campaignSeats(campaign), user.id)),
+    sheets: sheets.map((sheet) => ({
+      ...sheetForViewer(sheet, campaignSeats(campaign), user.id),
+      libraryRole: sheet.libraryCharacterId ? libraryRoles.get(sheet.libraryCharacterId) : undefined,
+    })),
     // The pack and workshop species at the table, read by id in the browser
     // as on the server (size, Dwarven Toughness; src/lib/srd/race-id.ts).
     species: speciesAtTable(sheets.map((sheet) => sheet.race)),
@@ -128,7 +143,7 @@ export async function GET(
     pendingRolls: listOpenPendingRolls(campaignId).map(publicPendingRoll),
     auditLog: listRecentAudit(campaignId, 50),
     locations,
-    chapters: listChapters(campaignId),
+    chapters: listChaptersForSnapshot(campaignId),
     notes: listNotesVisibleTo(campaignId, user.id, caps.steersStory),
     characterEvents: listRecentCampaignEvents(campaignId, 30),
     encounter: activePublicEncounter(campaignId, { enemyNumbers: caps.enemyNumbers }),
@@ -141,7 +156,7 @@ export async function GET(
     latestSeq: latestSeq(campaignId),
     // Which messages already have narration on disk, so read-aloud plays them
     // straight from a fresh load instead of rendering a second take.
-    narrationAudio: listNarrationAudio(campaignId),
+    narrationAudio: narrationAudioFor(campaignId, messages.map((message) => message.id)),
     // What is playing. The ambience_changed event keeps it live from here;
     // without the snapshot a reload mid-scene would sit in silence until the
     // next place or fight changed it.
@@ -284,6 +299,7 @@ export async function PATCH(
       campaignId,
       seq,
       authorType: "system",
+      glyph: "cue-bell",
       content: systemEventText(systemEvent),
       systemEvent,
     });

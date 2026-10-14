@@ -8,13 +8,15 @@ import {
 } from "@/lib/agents/grants";
 import { recentAgentActivity } from "@/lib/agents/activity";
 import { assistantRelayUrl } from "@/lib/agents/assistant-relay";
+import { playerWebhooksEnabled } from "@/lib/agents/webhooks";
 import { getCampaignForUser } from "@/lib/db/campaigns";
+import { getSheetForUser } from "@/lib/db/sheets";
 import { publicOrigin } from "@/lib/discord-oauth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-// Connected agents (docs/harness-mcp-plan.md 7): a player's own Claude Code,
+// Connected agents (docs/archive/harness-mcp-plan.md 7): a player's own Claude Code,
 // Codex or other MCP client acting as them on this server. The token is
 // shown once, at creation, and never again.
 
@@ -84,5 +86,19 @@ export async function POST(request: Request) {
     token: created.token,
     mcpUrl: `${publicOrigin(request)}/api/mcp`,
     assistantUrl: assistantRelayUrl(),
+    receiver: receiverFor(created.grant, user.id),
   });
+}
+
+// A connection that can play one campaign can wake a player receiver for
+// the character its owner plays there: what Settings needs to fill in the
+// receiver's file (src/lib/agents/receiver-config.ts).
+function receiverFor(grant: ConnectionGrant, userId: string) {
+  if (!grant.campaignId || !grant.scopes.includes("read") || !grant.scopes.includes("play")) return null;
+  const sheet = getSheetForUser(grant.campaignId, userId);
+  return {
+    campaignId: grant.campaignId,
+    character: sheet ? { id: sheet.id, name: sheet.name } : null,
+    webhooksEnabled: playerWebhooksEnabled(),
+  };
 }

@@ -1,13 +1,14 @@
 "use client";
 
 import { X } from "lucide-react";
+import type { TourEnd } from "@/lib/tours/account-logic";
 import { ui } from "@/lib/ui";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 // The first fight's two-row card (docs/visual-overhaul-plan.md 5.7): play a
-// card, or type your move. Shown once per browser through the tours' own
-// once-only flag, and brought back by the Hand's question mark.
-export const HAND_TUTORIAL_ID = "battle-hand-intro";
+// card, or type your move. Shown once per account through the tours' record
+// (src/lib/tours/tour-store.ts), and brought back by the Hand's question mark.
+export { HAND_TUTORIAL_ID } from "@/lib/tours/registry";
 
 const ROWS = [
   {
@@ -26,13 +27,13 @@ const ROWS = [
   },
 ] as const;
 
-export function HandTutorial({ onDismiss }: { onDismiss: () => void }) {
+export function HandTutorial({ onDismiss }: { onDismiss: (how: TourEnd) => void }) {
   const { t } = useLocale();
   return (
     <div className="mb-2 animate-fade-up rounded-xl border border-stone-700/60 bg-stone-950/80 p-2.5" role="note" aria-label={t("turnUi.tutorial.label")}>
       <div className="mb-2 flex items-center justify-between gap-2">
         <span className="font-display text-xs uppercase tracking-[0.18em] text-amber-200/90">{t("turnUi.tutorial.title")}</span>
-        <button type="button" onClick={onDismiss} aria-label={t("turnUi.tutorial.close")} className="flex size-9 items-center justify-center rounded-lg text-stone-500 hover:text-amber-200">
+        <button type="button" onClick={() => onDismiss("ended")} aria-label={t("turnUi.tutorial.close")} className="flex size-9 items-center justify-center rounded-lg text-stone-500 hover:text-amber-200">
           <X className="size-4" />
         </button>
       </div>
@@ -50,7 +51,7 @@ export function HandTutorial({ onDismiss }: { onDismiss: () => void }) {
         ))}
       </div>
       <div className="mt-2 flex justify-end">
-        <button type="button" onClick={onDismiss} className={ui.btnSmall}>
+        <button type="button" onClick={() => onDismiss("done")} className={ui.btnSmall}>
           {t("turnUi.tutorial.gotIt")}
         </button>
       </div>

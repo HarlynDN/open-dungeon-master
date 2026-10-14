@@ -29,7 +29,7 @@ const runs = rows.map(row => {
 });
 const chinese = name => { const run = runs.find(row => row.name === name); assert.ok(run); return characterRuleProblems({ problems: run.result.problems, problemDetails: run.details }, "zh-CN"); };
 
-await test("all 33 original training verdicts and derived proficiencies remain byte-equivalent", () => {
+await test("all 33 reviewed training verdicts and derived proficiencies remain byte-equivalent", () => {
   assert.equal(runs.length, 33); assert.equal(before.fixtures.length, runs.length);
   for (const run of runs) {
     assert.deepEqual(run.result, before.fixtures.find(row => row.name === run.name)?.result, run.name);

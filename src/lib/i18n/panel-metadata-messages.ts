@@ -2,6 +2,7 @@ import { defineMessages } from "./catalog.ts";
 
 // Engine-owned metadata is compared with its English source by the UI check.
 export const PANEL_METADATA_MESSAGES = /*#__PURE__*/ defineMessages({
+  "media.speech.needsModel": {"en": "Narration is on, but {server} {where} has no model selected. An admin can select one in Admin > Speech.", "zh-CN": "语音旁白已开启，但{where}的{server}尚未选择模型。管理员可在“管理面板 > 语音合成”中选择。"},
   "stage.compaction.label": { en: "History compaction", "zh-CN": "历史压缩" },
   "stage.compaction.description": { en: "Folds the oldest messages into a rolling summary once the transcript passes its threshold.", "zh-CN": "对话记录超过阈值后，将最早的消息合并为持续更新的摘要。" },
   "stage.compaction.cost": { en: "Off, long campaigns lose their early history entirely once it falls out of the budget.", "zh-CN": "关闭后，长战役的早期历史一旦超出上下文预算，就会完全丢失。" },

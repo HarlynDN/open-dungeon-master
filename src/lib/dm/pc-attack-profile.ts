@@ -21,12 +21,13 @@ import {
   weaponAttackProfile,
   type AttackProfile,
 } from "@/lib/dm/attack-logic";
-import { handsRuling, otherHandArmed } from "@/lib/dm/attack-rules";
+import { handsRuling, otherHandArmed, thrownAtRange } from "@/lib/dm/attack-rules";
 import { martialArtsApplies } from "@/lib/dm/pc-attack-options";
 import { shillelaghSwing } from "@/lib/dm/attack-features";
 import { combatRiders, type CombatRiders } from "@/lib/srd/feature-effects";
 import { grantedAttackDice, grantedAttackFor } from "@/lib/srd/granted-attacks";
 import { authoredNaturalWeapon, authoredReachBonus, naturalWeaponGated } from "@/lib/srd/authored-effects-more";
+import { racialNaturalWeapon } from "@/lib/srd/racial-weapons";
 import { allSpellNames } from "@/lib/srd/spell-lists";
 import { SPECIAL_WEAPONS } from "@/lib/srd/weapons";
 import type { CharacterSheet } from "@/lib/schemas/sheet";
@@ -44,6 +45,8 @@ export type BuiltAttack = {
   scalingNote: string | null;
   // An attack a condition grants that rides a bonus action.
   grantedBonusAction: boolean;
+  // The granted attack that may ride its activation's bonus action, by name.
+  grantedWithActivation: string | null;
   kind: AttackKind;
   // The two SRD weapons with a rule of their own.
   special: "net" | "lance" | null;
@@ -60,6 +63,9 @@ export function buildAttackProfile(
     twoHanded?: boolean;
     offHand?: boolean;
   },
+  // How many tiles lie between the attacker and the target, when the board
+  // knows (a thrown weapon past its reach is a ranged attack).
+  target: { apart: number | null } = { apart: null },
 ): BuiltAttack | { error: string } {
   const derived = computeSheetDerived(sheet);
   const riders = combatRiders(sheet);
@@ -72,7 +78,10 @@ export function buildAttackProfile(
   const grantedTerm = [args.weapon, args.spell].filter(Boolean).join(" ").trim();
   const granted = grantedTerm ? grantedAttackFor(sheet.conditions, grantedTerm) : null;
   let grantedBonusAction = false;
+  let grantedWithActivation: string | null = null;
   const natural = !granted && !args.spell?.trim() ? authoredNaturalWeapon(sheet, args.weapon, derived.abilityMods) : null;
+  // A lineage's bite or claws (src/lib/srd/racial-weapons.ts).
+  const racial = !granted && !natural && !args.spell?.trim() && !sheet.wildShape ? racialNaturalWeapon(sheet.features, args.weapon) : null;
   if (granted) {
     if (derived.spellAttack === null) {
       return { error: `${sheet.name} has no spell attack bonus for ${granted.attack.name}.` };
@@ -112,6 +121,11 @@ export function buildAttackProfile(
       ],
     };
     grantedBonusAction = granted.attack.bonusAction;
+    // The attack that comes with the activation (its condition still at its
+    // full duration, so laid this turn) rides the activation's own bonus
+    // action; pc-attack-spend.ts decides once it sees the turn.
+    const whole = granted.attack.withActivation;
+    grantedWithActivation = whole && ((sheet.conditionMeta as ConditionMetaMap)[granted.condition]?.rounds ?? 0) >= whole ? granted.attack.name : null;
     kind = "granted";
   } else if (args.spell?.trim()) {
     const spellName = args.spell.trim();
@@ -202,6 +216,13 @@ export function buildAttackProfile(
     }
     profile = summoned;
     kind = "natural";
+  } else if (racial) {
+    profile = weaponAttackProfile(derived, [...sheet.proficiencies.weapons, "simple", racial.srd.name.toLowerCase()], { displayName: racial.srd.name, srd: racial.srd, unarmed: false, carried: true }, {
+      riders,
+      martialArts: false,
+    });
+    profile = { ...profile, proficient: true, riderNotes: [...profile.riderNotes, `${racial.feature}: ${racial.srd.damage}`] };
+    kind = "weapon";
   } else if (!sheet.wildShape?.attacks?.length && (natural || naturalWeaponGated(sheet, args.weapon))) {
     // A weapon a subclass feature is (Form of the Beast's claws, the
     // Soulknife's psychic blade, Radiant Sun Bolt): a proficient weapon of
@@ -255,7 +276,8 @@ export function buildAttackProfile(
         error: `${sheet.name} carries no ${resolved.displayName}. They attack with a weapon from their equipment, with an unarmed strike, or with something they pick up (an improvised weapon, named for what it is).`,
       };
     }
-    // Hands: a shield on the arm leaves one free.
+    // Hands: a shield on the arm leaves one free, and the off-hand swing
+    // has the other weapon in the other hand.
     const properties = resolved.srd?.properties ?? [];
     const shieldName = acBreakdownFor(sheet).shieldName;
     const lance = resolved.srd?.name === SPECIAL_WEAPONS.lance;
@@ -267,6 +289,7 @@ export function buildAttackProfile(
       mounted: Boolean(getMounts(campaignId)[sheet.id]),
       twoHandedAsked: args.twoHanded === true,
       shieldName,
+      offHand: args.offHand === true,
     });
     if ("error" in hands) {
       return hands;
@@ -274,20 +297,34 @@ export function buildAttackProfile(
     // Shillelagh: a club or quarterstaff swings with the spellcasting
     // ability and a d8, and is magical (src/lib/dm/attack-features.ts).
     const shillelagh = shillelaghSwing(sheet, resolved, derived);
-    profile = weaponAttackProfile(shillelagh?.derived ?? derived, sheet.proficiencies.weapons, shillelagh?.resolved ?? resolved, {
-      riders,
-      martialArts: martialArtsApplies(sheet),
-      brawler: brawlerUnarmed(sheet),
-      twoHanded: hands.twoHanded,
-      offHand: args.offHand,
-      otherWeaponInHand: otherHandArmed({
-        equipment: sheet.equipment,
-        weapon: resolved.displayName,
-        shieldName,
-      }),
-    });
-    if (hands.note) {
-      profile = { ...profile, riderNotes: [...profile.riderNotes, hands.note] };
+    const swing = (twoHanded: boolean) =>
+      weaponAttackProfile(shillelagh?.derived ?? derived, sheet.proficiencies.weapons, shillelagh?.resolved ?? resolved, {
+        riders,
+        martialArts: martialArtsApplies(sheet),
+        brawler: brawlerUnarmed(sheet),
+        twoHanded,
+        offHand: args.offHand,
+        otherWeaponInHand: otherHandArmed({
+          equipment: sheet.equipment,
+          weapon: resolved.displayName,
+          shieldName,
+        }),
+      });
+    profile = swing(hands.twoHanded);
+    let handsNote = hands.note;
+    // SRD 5.1 Versatile: the bigger die is for a melee attack. A spear thrown
+    // past its reach (counting the reach Demiurgic Colossus adds below) is a
+    // ranged attack, as attackGeometry will find, so it rolls the one-handed
+    // die and gives Great Weapon Fighting nothing to reroll.
+    if (profile.twoHanded && profile.thrown && !profile.ranged && !properties.includes("two-handed")) {
+      const reachTiles = profile.reachTiles + (authoredReachBonus(sheet)?.tiles ?? 0);
+      if (thrownAtRange({ thrown: true, reachTiles }, target.apart)) {
+        profile = swing(false);
+        handsNote = `${resolved.displayName} is thrown: one-handed die`;
+      }
+    }
+    if (handsNote) {
+      profile = { ...profile, riderNotes: [...profile.riderNotes, handsNote] };
     }
     if (shillelagh) {
       profile = { ...profile, magicWeapon: true, riderNotes: [...profile.riderNotes, shillelagh.note] };
@@ -300,5 +337,5 @@ export function buildAttackProfile(
   if (reach) {
     profile = { ...profile, reachTiles: profile.reachTiles + reach.tiles, riderNotes: [...profile.riderNotes, `${reach.feature}: ${reach.tiles * 5} more feet of reach`] };
   }
-  return { profile, derived, riders, scalingNote, grantedBonusAction, kind, special };
+  return { profile, derived, riders, scalingNote, grantedBonusAction, grantedWithActivation, kind, special };
 }

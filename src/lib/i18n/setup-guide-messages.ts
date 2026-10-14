@@ -1,6 +1,8 @@
 import { defineMessages } from "./catalog.ts";
 
 export const SETUP_GUIDE_MESSAGES = /*#__PURE__*/ defineMessages({
+  "setupGuide.ready.voiceModelMissing": {"en": "Saved, but no model is selected. Choose a model before reading aloud.", "zh-CN": "已保存，但尚未选择模型。选择模型后才能朗读。"},
+  "setupGuide.ready.picturesModelMissing": {"en": "Saved, but no model is selected. Choose a model before generating pictures.", "zh-CN": "已保存，但尚未选择模型。选择模型后才能生成图片。"},
   "setupGuide.model.context": { "en": " · {count}K", "zh-CN": " · {count}K" },
   "setupGuide.agent.version": { "en": "v{version}", "zh-CN": "版本 {version}" },
   "setupGuide.model.recommended": {"en": " (recommended)", "zh-CN": "（推荐）"},

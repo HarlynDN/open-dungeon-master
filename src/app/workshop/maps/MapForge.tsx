@@ -21,13 +21,15 @@ import {
   createBodyFor,
   dieSpins,
   floodTotalMs,
+  forgeOutcome,
   freshSeed,
   pushHistory,
-  readHint,
   type ForgeRoll,
   type ForgeSettings,
 } from "@/app/workshop/maps/forge";
 import { type LibraryState, type PreparedMap } from "@/app/workshop/maps/types";
+import { sceneOptions } from "@/lib/ambience/catalog";
+import { sceneCueLabel } from "@/lib/i18n/map-scene-presentations";
 
 // The Map Forge (docs/visual-overhaul-plan.md 4.1): one component for both
 // places a map is rolled. In the library it names a map, rolls it, shows it
@@ -37,8 +39,9 @@ import { type LibraryState, type PreparedMap } from "@/app/workshop/maps/types";
 //
 // What is previewed is what is saved: the library's preview runs the very
 // generator the server creates the map with, from the same seed and the same
-// words (forge.ts, held to it by scripts/test-map-forge.mjs). The studio's
-// preview comes from the server, which knows how many are at the table.
+// kind of place (forge.ts, held to it by scripts/test-map-forge.mjs). The
+// studio's preview comes from the server, which knows how many are at the
+// table.
 
 type Entry = { roll: ForgeRoll; map: ForgeMap };
 
@@ -158,10 +161,8 @@ export function MapForge({
 
   const named = name.trim().length > 0;
   const canRoll = !busy && !rolling && (!library || named);
-  const read = useMemo(() => readHint(settings.hint, genre), [settings.hint, genre]);
-  const theme = settings.theme || read.theme;
-  const ambient = settings.ambient || read.ambient;
-  const sentences = mapForgeExplanation(read, settings, locale);
+  const { theme, ambient } = forgeOutcome(settings);
+  const sentences = mapForgeExplanation(settings, locale);
   const skinGroups = useMemo(() => skinChoices(genre), [genre]);
 
   async function show(roll: ForgeRoll, stretch: number) {
@@ -191,7 +192,7 @@ export function MapForge({
 
   const rollOne = () => show({ ...settings, ...clampSize(settings.width, settings.height), seed: freshSeed() }, 1);
   function restore(entry: Entry) {
-    setSettings({ width: entry.roll.width, height: entry.roll.height, theme: entry.roll.theme, ambient: entry.roll.ambient, hint: entry.roll.hint });
+    setSettings({ width: entry.roll.width, height: entry.roll.height, theme: entry.roll.theme, ambient: entry.roll.ambient, scene: entry.roll.scene });
     void show(entry.roll, Math.max(1, RESTORE_MS / floodTotalMs(entry.roll.width, entry.roll.height)));
   }
 
@@ -231,44 +232,28 @@ export function MapForge({
               />
             </label>
           ) : null}
-          <label className="block space-y-1">
+          <div className="block space-y-1">
             <span className="flex items-baseline justify-between">
-              <span className="font-display text-[9px] uppercase tracking-[0.18em] text-stone-500">{t("mapForgeUi.hint")}</span>
+              <span className="font-display text-[9px] uppercase tracking-[0.18em] text-stone-500">{t("mapForgeUi.placeKind")}</span>
               <span className="font-mono text-[9px] text-stone-600">{t("mapForgeUi.steers")}</span>
             </span>
-            <input
-              value={settings.hint}
-              maxLength={200}
-              onChange={(event) => setSettings({ ...settings, hint: event.target.value })}
-              placeholder={t(library ? "mapForgeUi.hintLibrary" : "mapForgeUi.hintStudio")}
-              className={cn(mapInput, "map-read py-2 text-sm", read.themeWord && "border-amber-500/55")}
+            <Select<string>
+              value={settings.scene}
+              onChange={(scene) => setSettings({ ...settings, scene })}
+              label={t("mapForgeUi.placeKind")}
+              className="w-full"
+              options={[{ value: "", label: t("mapForgeUi.openGround") }, ...sceneOptions().map(option => ({ ...option, label: sceneCueLabel(option, locale) }))]}
             />
-          </label>
+          </div>
 
-          {/* What it read */}
+          {/* What it decided */}
           <div
             className={cn(
               "map-read space-y-1.5 rounded-lg border p-2.5",
-              read.themeWord ? "border-amber-500/35 bg-amber-400/[0.06]" : "border-stone-700/60 bg-stone-950/40",
+              settings.scene ? "border-amber-500/35 bg-amber-400/[0.06]" : "border-stone-700/60 bg-stone-950/40",
             )}
           >
-            <p className="font-display text-[9px] uppercase tracking-[0.18em] text-amber-400/80">{t("mapForgeUi.read")}</p>
-            {read.words.length ? (
-              <p className="flex flex-wrap gap-x-1 gap-y-0.5 font-mono text-[11px] text-stone-500">
-                {read.words.map((word, index) => (
-                  <span
-                    key={`${index}-${word.text}-${word.hit ?? ""}`}
-                    className={cn("rounded px-1", word.hit && "map-word-hit bg-amber-400/15 text-amber-100")}
-                    // The words light in the order they are read.
-                    style={word.hit ? { animationDelay: `${index * 40}ms` } : undefined}
-                  >
-                    {word.text}
-                  </span>
-                ))}
-              </p>
-            ) : (
-              <FinePrint>{t("mapForgeUi.readHelp")}</FinePrint>
-            )}
+            <p className="font-display text-[9px] uppercase tracking-[0.18em] text-amber-400/80">{t("mapForgeUi.decided")}</p>
             <div className="flex flex-wrap gap-1.5">
               <FactChip name={t("mapForgeUi.theme")} claim={theme}>
                 {t(`mapInspectUi.theme.${theme}`)}
@@ -288,7 +273,7 @@ export function MapForge({
                   key={option}
                   type="button"
                   aria-pressed={settings.theme === option}
-                  title={settings.theme === option ? t("mapForgeUi.wordsTip") : t("mapForgeUi.fixedTheme", { theme: t(`mapInspectUi.theme.${option}`).toLowerCase() })}
+                  title={settings.theme === option ? t("mapForgeUi.sceneAgain") : t("mapForgeUi.sceneOverride", { theme: locale === "en" ? t(`mapInspectUi.theme.${option}`).toLowerCase() : t(`mapInspectUi.theme.${option}`) })}
                   onClick={() => setSettings({ ...settings, theme: settings.theme === option ? "" : option })}
                   className={cn(
                     "flex flex-col items-center gap-1 rounded-lg border px-1 py-2 motion-press",
@@ -303,8 +288,8 @@ export function MapForge({
               ))}
             </div>
             <div className="grid grid-cols-4 gap-1">
-              <Chip active={settings.ambient === ""} onClick={() => setSettings({ ...settings, ambient: "" })} title={t("mapForgeUi.lightWords")}>
-                {t("mapForgeUi.words")}
+              <Chip active={settings.ambient === ""} onClick={() => setSettings({ ...settings, ambient: "" })} title={t("mapForgeUi.sceneLight")}>
+                {t("mapForgeUi.auto")}
               </Chip>
               {(["bright", "dim", "dark"] as AmbientLight[]).map((option) => (
                 <Chip key={option} active={settings.ambient === option} onClick={() => setSettings({ ...settings, ambient: option })}>
@@ -435,7 +420,7 @@ export function MapForge({
             </div>
           ) : null}
           <FinePrint>
-            {t(library ? named ? "mapForgeUi.safeNamed" : "mapForgeUi.safeUnnamed" : "mapForgeUi.helpStudio")}
+            {t(library ? named ? "mapForgeUi.safeNamed" : "mapForgeUi.safeUnnamed" : "mapForgeUi.sceneHelp")}
           </FinePrint>
         </div>
 
@@ -504,7 +489,7 @@ export function MapForge({
               <div className="flex gap-1.5 overflow-x-auto pb-1">
                 {history.map((entry) => (
                   <HistoryTile
-                    key={`${entry.roll.seed}-${entry.roll.width}x${entry.roll.height}-${entry.roll.theme}-${entry.roll.ambient}-${entry.roll.hint}`}
+                    key={`${entry.roll.seed}-${entry.roll.width}x${entry.roll.height}-${entry.roll.theme}-${entry.roll.ambient}-${entry.roll.scene}`}
                     entry={entry}
                     genre={genre}
                     skin={library ? skin : null}

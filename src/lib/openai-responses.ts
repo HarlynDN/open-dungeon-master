@@ -210,7 +210,9 @@ export function responsesPayload(input: {
 // "max_output_tokens"), the same word the Chat Completions reader reports,
 // so the turn's empty-reply warning (issue #120) names it on both routes.
 export type ResponsesReply =
-  | { message: UpstreamChatMessage; finishReason?: string; usage?: TokenUsage }
+  // serviceTier: the tier the backend says ran the call ("priority",
+  // "default"), where it says one (issue 255).
+  | { message: UpstreamChatMessage; finishReason?: string; usage?: TokenUsage; serviceTier?: string }
   | { failure: string };
 
 const cutByOutputCap = (response: { status?: unknown; incomplete_details?: { reason?: unknown } | null } | null | undefined) =>
@@ -223,10 +225,17 @@ const cutByOutputCap = (response: { status?: unknown; incomplete_details?: { rea
 // output_item.done items stand in if the stream ends without it. A
 // response.failed or error event is the backend's own failure. Transport
 // trouble (a cut stream, a flood) throws, as the Chat Completions reader's
-// does, for the caller to word.
+// does, for the caller to word. Reasoning text (the raw reasoning an
+// open-weight model streams, or a hosted model's summary of it) goes to
+// onReasoningDelta alone, which may throw to stop the stream.
 export async function readResponsesReply(
   upstream: Response,
-  options: { onDelta?: StreamDeltaHandler; idleMs: number; onIdleAbort: () => void },
+  options: {
+    onDelta?: StreamDeltaHandler;
+    onReasoningDelta?: StreamDeltaHandler;
+    idleMs: number;
+    onIdleAbort: () => void;
+  },
 ): Promise<ResponsesReply> {
   const { onDelta } = options;
   if (onDelta && upstream.body) {
@@ -236,6 +245,7 @@ export async function readResponsesReply(
     let failure = "";
     let finishReason = "";
     let usage: TokenUsage | null = null;
+    let serviceTier = "";
     await forEachStreamLine(upstream, options.idleMs, options.onIdleAbort, (line) => {
       if (!line.startsWith("data:")) return;
       const payload = line.slice(5).trim();
@@ -258,6 +268,7 @@ export async function readResponsesReply(
           error?: { message?: unknown } | null;
           status?: unknown;
           incomplete_details?: { reason?: unknown } | null;
+          service_tier?: unknown;
         } | null;
       };
       switch (event.type) {
@@ -265,6 +276,12 @@ export async function readResponsesReply(
           if (typeof event.delta === "string" && event.delta) {
             deltas.push(event.delta);
             onDelta(event.delta);
+          }
+          break;
+        case "response.reasoning_text.delta":
+        case "response.reasoning_summary_text.delta":
+          if (typeof event.delta === "string" && event.delta) {
+            options.onReasoningDelta?.(event.delta);
           }
           break;
         case "response.output_item.done":
@@ -277,6 +294,9 @@ export async function readResponsesReply(
         case "response.incomplete":
           output = event.response?.output ?? null;
           usage = responsesUsage(event.response) ?? usage;
+          if (typeof event.response?.service_tier === "string") {
+            serviceTier = event.response.service_tier;
+          }
           if (cutByOutputCap(event.response)) {
             finishReason = "length";
           }
@@ -305,7 +325,12 @@ export async function readResponsesReply(
     if (!message.content && deltas.length) {
       message.content = deltas.join("");
     }
-    return { message, ...(finishReason ? { finishReason } : {}), ...(usage ? { usage } : {}) };
+    return {
+      message,
+      ...(finishReason ? { finishReason } : {}),
+      ...(usage ? { usage } : {}),
+      ...(serviceTier ? { serviceTier } : {}),
+    };
   }
 
   const body = await readBody(upstream, MAX_BACKEND_BODY_BYTES);
@@ -317,6 +342,7 @@ export async function readResponsesReply(
     error?: { message?: unknown } | null;
     status?: unknown;
     incomplete_details?: { reason?: unknown } | null;
+    service_tier?: unknown;
   };
   try {
     data = JSON.parse(body.text) as typeof data;
@@ -335,5 +361,6 @@ export async function readResponsesReply(
     message: fromResponsesOutput(data?.output),
     ...(cutByOutputCap(data) ? { finishReason: "length" } : {}),
     ...(usage ? { usage } : {}),
+    ...(typeof data?.service_tier === "string" ? { serviceTier: data.service_tier } : {}),
   };
 }

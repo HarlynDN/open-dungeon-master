@@ -30,7 +30,7 @@ await test('30 original English component renders remain byte-for-byte equal to 
 });
 await test('composer mode values, submission, dictation and IME Enter behavior stay canonical',()=>{
  let mode=null,submitted=0,text='';
- const props={messages:[],rolls:[],sheets:[],members:[],isDm:false,steersStory:true,kind:'do',onKindChange:value=>mode=value,input:'先前文字',setInput:value=>text=value,sending:false,inputBlocked:false,placeholder:'Authored placeholder',onSubmit:()=>submitted++};
+ const props={messages:[],rolls:[],sheets:[],members:[],isDm:false,steersStory:true,kind:'do',onKindChange:value=>mode=value,maxChars:2000,input:'先前文字',setInput:value=>text=value,sending:false,inputBlocked:false,placeholder:'Authored placeholder',onSubmit:()=>submitted++};
  renderer.render('TabletopChronicle',props,'zh-CN');
  const elems=renderer.elements(),buttons=elems.filter(e=>e.type==='button'&&e.props['data-mode']);
  assert.deepEqual(buttons.map(e=>e.props['data-mode']),['do','say','ooc','lead']);buttons[1].props.onClick();assert.equal(mode,'say');
@@ -83,7 +83,7 @@ await test('actual grapple producers keep the action outcome and typed attacker/
 await test('the cinematic toast omits concealed results and the chronicle uses a hidden-roll caption',()=>{
  const hidden={...BASE_ROLL,total:null,success:null,breakdown:null,dc:null,hidden:true,visibility:'dm',id:'00000000-0000-0000-0000-000000000001'};
  const file='src/app/campaigns/[campaignId]/CinematicParts.tsx';assert.equal(renderer.render('RollToast',{latestRoll:{roll:hidden,seq:2},sheets:[]},'zh-CN',{queues:{[file]:[null,1]}}),'');
- const props={messages:[{id:'m',authorType:'dm',content:'[roll:'+hidden.id+']'}],rolls:[hidden],sheets:[],members:[],isDm:false,steersStory:false,kind:'do',onKindChange:()=>{},input:'',setInput:()=>{},sending:false,inputBlocked:false,placeholder:'',onSubmit:()=>{},composer:false};
+ const props={messages:[{id:'m',authorType:'dm',content:'[roll:'+hidden.id+']'}],rolls:[hidden],sheets:[],members:[],isDm:false,steersStory:false,kind:'do',onKindChange:()=>{},maxChars:2000,input:'',setInput:()=>{},sending:false,inputBlocked:false,placeholder:'',onSubmit:()=>{},composer:false};
  for(const locale of ['en','zh-CN']){const html=renderer.render('TabletopChronicle',props,locale);assert.doesNotMatch(html,/ = |null|Natural|天然/);assert.match(html,locale==='en'?/rolled behind the screen/:/在屏幕后掷骰/);}
 });
 await test('reviewed caption/UI source and catalog fingerprints match',()=>{

@@ -1,4 +1,5 @@
 "use client";
+import { useLocale as useSyncLocale } from "@/lib/i18n/LocaleProvider";
 
 import { LoadFailed } from "@/app/campaigns/[campaignId]/PanelKit";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
@@ -20,7 +21,7 @@ import type { CreateSheetInput } from "@/lib/schemas/sheet";
 import { CharacterPortrait, ui } from "@/lib/ui";
 import { offersImages, useCapabilities } from "@/lib/use-capabilities";
 import { SheetSections, StorySoFar, type CharacterEvent } from "./SheetSections";
-import { navigateTo } from "@/lib/navigation";
+import { currentQuery, navigateTo, workshopReturnPath } from "@/lib/navigation";
 import { UseInCampaignDialog } from "./UseInCampaignDialog";
 
 // Where this character is playing; see src/lib/db/characters.ts.
@@ -34,6 +35,8 @@ type CharacterAssignment = {
 type LibraryCharacter = {
   id: string;
   name: string;
+  // A character somebody plays, or an ally the DM plays.
+  role?: "pc" | "companion";
   race: string;
   class: string;
   subclass: string;
@@ -55,6 +58,7 @@ export default function CharacterDetailPage({ params }: { params: Promise<{ char
   return <CharacterDetailInner key={characterId} characterId={characterId} />;
 }
 function CharacterDetailInner({ characterId }: { characterId: string }) {
+  const { t: syncT } = useSyncLocale();
   const { locale, t } = useLocale();
   const [loadError, setLoadError] = useState<CharacterUiError | null>(null);
   const [actionError, setActionError] = useState<CharacterUiError | null>(null);
@@ -149,11 +153,11 @@ function CharacterDetailInner({ characterId }: { characterId: string }) {
 
   // A second copy under a numbered name, sheet and portrait verbatim. The
   // roster is where copies live, so that is where this lands.
-  async function handleDuplicate() {
+  async function handleDuplicate(edit = false) {
     setCloning(true); setActionError(null);
     try {
       const data = await readCharacterResponse<{ character: LibraryCharacter }>(fetch(`/api/characters/${characterId}/clone`, { method: "POST" }), "library.cloneError");
-      requireCharacter(data); navigateTo("/characters");
+      requireCharacter(data); navigateTo(edit ? `/characters/${data.character.id}/edit?copyOf=${characterId}` : "/characters");
     } catch (cause) { setActionError(characterRequestError(cause, "library.cloneError")); }
     finally { setCloning(false); }
   }
@@ -221,7 +225,7 @@ function CharacterDetailInner({ characterId }: { characterId: string }) {
       id: "pdf",
       label: pdfBusy ? t("characterActions.pdfBusy") : t("characterActions.pdf"),
       hint: t("characterActions.pdfHint"),
-      glyph: "tab-journal",
+      glyph: "ui-export",
       disabled: pdfBusy,
       onSelect: () => void handleDownloadPdf(),
     },
@@ -234,18 +238,33 @@ function CharacterDetailInner({ characterId }: { characterId: string }) {
       onSelect: () => void handleExport(),
     },
     {
+      id: "edit",
+      label: syncT("upstreamUi.087ff4b27d5d"),
+      hint: syncT("upstreamUi.1578114b6645"),
+      glyph: "ui-edit",
+      onSelect: () => navigateTo(`/characters/${characterId}/edit`),
+    },
+    {
       id: "duplicate",
       label: cloning ? t("characterActions.copyBusy") : t("library.duplicate"),
       hint: t("characterActions.copyHint"),
-      glyph: "tab-notes",
+      glyph: "ui-duplicate",
       disabled: cloning,
       onSelect: () => void handleDuplicate(),
+    },
+    {
+      id: "duplicate-edit",
+      label: syncT("upstreamUi.cef1d2d07ff4"),
+      hint: syncT("upstreamUi.096a9cf641e8"),
+      glyph: "ui-duplicate",
+      disabled: cloning,
+      onSelect: () => void handleDuplicate(true),
     },
     {
       id: "portrait",
       label: sheet.portrait ? t("characterActions.replacePortrait") : t("library.upload"),
       hint: sheet.portrait ? t("characterActions.replaceHint") : t("characterActions.uploadHint"),
-      glyph: "tab-handout",
+      glyph: "ui-upload",
       separated: true, disabled: portraitSaving,
       onSelect: () => setCropping(true),
     },
@@ -255,7 +274,7 @@ function CharacterDetailInner({ characterId }: { characterId: string }) {
             id: "paint",
             label: portraitPending ? t("characterActions.paintBusy") : t("characterActions.paint"),
             hint: t("characterActions.paintHint"),
-            glyph: "sense-truesight",
+            glyph: "ui-paint",
             disabled: painting || portraitPending || portraitSaving,
             onSelect: () => void paintPortrait(),
           },
@@ -267,7 +286,7 @@ function CharacterDetailInner({ characterId }: { characterId: string }) {
             id: "placeholder",
             label: t("characterActions.placeholder"),
             hint: t("characterActions.placeholderHint"),
-            glyph: "quest-hidden",
+            glyph: "ui-placeholder",
             disabled: portraitSaving,
             onSelect: () => void clearToPlaceholder(),
           },
@@ -275,13 +294,14 @@ function CharacterDetailInner({ characterId }: { characterId: string }) {
       : []),
   ];
   const working = pdfBusy || exporting || cloning || painting || portraitSaving;
+  const backTo = workshopReturnPath(currentQuery().get("from"));
 
   return (
     <main className="mx-auto w-full max-w-3xl flex-1 p-4 sm:p-6">
       <AppHeader />
       <ContextMenu items={actions} label={character.name} className={cn(ui.card, "ornate texture-noise mb-4 p-4 sm:p-5")}>
-        <Link href="/characters" className="-my-1 inline-flex min-h-10 items-center gap-1.5 text-sm text-stone-400 hover:text-amber-200">
-          <ArrowLeft className="size-4" /> {t("library.back")}
+        <Link href={backTo ?? "/characters"} className="-my-1 inline-flex min-h-10 items-center gap-1.5 text-sm text-stone-400 hover:text-amber-200">
+          <ArrowLeft className="size-4" /> {t(backTo ? "library.backWorkshop" : "library.back")}
         </Link>
         <div className="mt-2 flex items-start gap-4">
           <span className="relative shrink-0">
@@ -360,8 +380,10 @@ function CharacterDetailInner({ characterId }: { characterId: string }) {
         </div>
         <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-amber-500/15 pt-3">
           <button type="button" onClick={() => setSeating(true)} className={cn(ui.btnPrimary, "min-w-0 flex-1 sm:flex-none")}>
-            <GameIcon icon={{ kind: "glyph", key: "tab-campaigns" }} size="size-6" /> {t("seat.action")}
+            <GameIcon icon={{ kind: "glyph", key: "tab-campaigns" }} size="size-6" /> {t(character.role === "companion" ? "seat.allyAction" : "seat.action")}
           </button>
+          <Link href={`/characters/${characterId}/edit`} className={cn(ui.btnSecondary, "min-w-0 flex-1 sm:flex-none")}>
+            <GameIcon icon={{ kind: "glyph", key: "rest-level-up" }} size="size-6" /> {syncT("upstreamUi.087ff4b27d5d")}</Link>
           <KebabMenu
             items={actions}
             label={t("library.moreActions", { name: character.name })}
@@ -398,6 +420,7 @@ function CharacterDetailInner({ characterId }: { characterId: string }) {
           characterId={characterId}
           characterName={character.name}
           characterLevel={character.level}
+          role={character.role}
           seatedIn={(character.campaigns ?? []).map((assignment) => assignment.campaignId)}
           onClose={() => setSeating(false)}
         />

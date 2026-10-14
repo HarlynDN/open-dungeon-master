@@ -1,4 +1,5 @@
 "use client";
+import { useLocale as useSyncLocale } from "@/lib/i18n/LocaleProvider";
 
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { createTranslator } from "@/lib/i18n/translator";
@@ -8,6 +9,7 @@ import { isComposingInput } from "@/lib/input-composition";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
 import { ImagesNote } from "@/app/campaigns/[campaignId]/NarrationNote";
+import { ModelNote } from "@/components/ModelNote";
 import { Select } from "@/components/ui/Select";
 import type { MaskedStorySettings } from "@/lib/db/settings";
 import type { HarnessOffer } from "@/lib/harness/policy";
@@ -38,6 +40,7 @@ export function StoryAiPanel({
   settings: StorySettings;
   steersStory: boolean;
 }) {
+  const { t: syncT } = useSyncLocale();
   const { locale, t } = useLocale();
   const [busy, setBusy] = useState(false);
   // Every control renders the server's settings, so a refused PATCH changes
@@ -51,6 +54,10 @@ export function StoryAiPanel({
   // This campaign's own backend, which for a table on its own OpenAI key is
   // ready even when the server has no image backend of its own.
   const [imagesReady, setImagesReady] = useState(true);
+  // Its backend is there but has no model picked, so it paints nothing
+  // (src/lib/db/settings.ts); the server's own ComfyUI said the same.
+  const [imagesNeedModel, setImagesNeedModel] = useState(false);
+  const [serverImagesNeedModel, setServerImagesNeedModel] = useState(false);
   // A world an app hosts: the backend is chosen once for the device and every
   // campaign follows it, so this panel shows it instead of editing it. null
   // until the answer lands, so the editable rows never flash on a device.
@@ -85,6 +92,7 @@ export function StoryAiPanel({
           setHasCustomKey(data.settings.hasCustomApiKey);
           setHasUtilityKey(data.settings.hasUtilityApiKey);
           setImagesReady(data.settings.imagesReady);
+          setImagesNeedModel(data.settings.imagesNeedModel === true);
           setServerManaged(data.settings.serverManaged === true);
         }
         if (!cancelled && data?.harness) {
@@ -102,9 +110,10 @@ export function StoryAiPanel({
       });
     void fetch("/api/capabilities")
       .then((response) => (response.ok ? response.json() : null))
-      .then((data: { images?: { configured?: boolean } } | null) => {
+      .then((data: { images?: { configured?: boolean; needsModel?: boolean } } | null) => {
         if (!cancelled && data?.images) {
           setImagesConfigured(data.images.configured !== false);
+          setServerImagesNeedModel(data.images.needsModel === true);
         }
       })
       .catch(() => undefined);
@@ -135,6 +144,7 @@ export function StoryAiPanel({
         setHasCustomKey(data.settings.hasCustomApiKey);
         setHasUtilityKey(data.settings.hasUtilityApiKey);
         setImagesReady(data.settings.imagesReady);
+        setImagesNeedModel(data.settings.imagesNeedModel === true);
       }
       if (data.harness) {
         setHarness(data.harness);
@@ -290,6 +300,7 @@ export function StoryAiPanel({
                     className={inputClass}
                   />
                 </div>
+                <ModelNote role="story" baseUrl="" model={settings.customModel} />
                 <p className="text-stone-500">{t("storyControl.aiLiteral.11")}</p>
               </>
             ) : settings.textProvider === "custom" ? (
@@ -319,6 +330,7 @@ export function StoryAiPanel({
                     className={inputClass}
                   />
                 </div>
+                <ModelNote role="story" baseUrl={settings.customBaseUrl} model={settings.customModel} />
                 <div className="flex flex-wrap items-center gap-2">
                   <span className={labelClass}>{t("storyControl.aiLiteral.14")}</span>
                   <input
@@ -364,6 +376,9 @@ export function StoryAiPanel({
                 className={inputClass}
               />
             </div>
+            {settings.utilityModel ? (
+              <ModelNote role="utility" baseUrl={settings.utilityProvider === "custom" ? settings.utilityBaseUrl : ""} model={settings.utilityModel} />
+            ) : null}
             {settings.utilityProvider === "custom" && settings.utilityModel && !serverManaged ? (
               <div className="reveal flex flex-wrap items-center gap-2">
                 <span className={labelClass}>{t("storyControl.aiLiteral.19")}</span>
@@ -464,7 +479,17 @@ export function StoryAiPanel({
             </>
           ) : null}
         </div>
-        {settings.imageGenerationEnabled && settings.imageBackend === "openai" && !imagesReady ? (
+        {settings.imageGenerationEnabled &&
+        imagesNeedModel &&
+        (settings.imageBackend === "openai" || (settings.imageBackend === "comfyui" && serverImagesNeedModel)) ? (
+          <p className="reveal text-amber-400/90">
+            {deviceManaged && settings.imageBackend === "openai"
+              ? syncT("upstreamUi.3c868309896f")
+              : serverManaged
+                ? syncT("upstreamUi.efb7dc26117e")
+                : syncT("upstreamUi.aa80bd7cf371")}
+          </p>
+        ) : settings.imageGenerationEnabled && settings.imageBackend === "openai" && !imagesReady ? (
           <p className="reveal text-amber-400/90">
             {deviceManaged
               ? t("storyControl.deviceKey")

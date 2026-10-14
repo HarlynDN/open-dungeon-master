@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-13T21:35:46.566Z",
+  "generatedAt": "2026-10-14T17:15:53.803Z",
   "fixtures": [
     {
       "file": "scripts/fixtures/bilingual-retrieval.mjs",
@@ -10,7 +10,7 @@
       "sha256": "908b678d0d08f5611c306a850dc5d4713573f2e5e98f946baead7c37491eaf61"
     }
   ],
-  "transformersVersion": "4.3.0",
+  "transformersVersion": "4.3.1",
   "reports": [
     {
       "key": "Xenova/all-MiniLM-L6-v2@fp32",
@@ -87,20 +87,20 @@
                   "fireball",
                   "invisibility",
                   "concentration",
-                  "initiative",
                   "torch",
                   "magic-missile",
                   "components",
-                  "shield"
+                  "shield",
+                  "misty-step"
                 ],
                 "scene": [
                   "fireball",
                   "invisibility",
                   "concentration",
-                  "initiative",
                   "torch",
                   "magic-missile",
                   "components",
+                  "shield",
                   "misty-step"
                 ]
               }
@@ -149,7 +149,11 @@
                   "healing-word",
                   "potion",
                   "long-rest",
-                  "concentration"
+                  "concentration",
+                  "death-save",
+                  "short-rest",
+                  "shield",
+                  "cathedral"
                 ],
                 "scene": [
                   "healing-word",
@@ -157,7 +161,9 @@
                   "long-rest",
                   "concentration",
                   "death-save",
-                  "short-rest"
+                  "short-rest",
+                  "shield",
+                  "cathedral"
                 ]
               }
             },
@@ -203,17 +209,23 @@
               "fused": {
                 "lore": [
                   "shield",
-                  "initiative",
                   "concentration",
                   "components",
-                  "invisibility"
+                  "healing-word",
+                  "invisibility",
+                  "cover",
+                  "fireball",
+                  "detect-magic"
                 ],
                 "scene": [
                   "shield",
                   "concentration",
-                  "initiative",
                   "components",
-                  "invisibility"
+                  "healing-word",
+                  "invisibility",
+                  "cover",
+                  "fireball",
+                  "detect-magic"
                 ]
               }
             },
@@ -259,17 +271,23 @@
               "fused": {
                 "lore": [
                   "feather-fall",
-                  "concentration",
                   "short-rest",
+                  "death-save",
+                  "fireball",
+                  "concentration",
                   "bridge",
-                  "death-save"
+                  "cover",
+                  "grapple"
                 ],
                 "scene": [
                   "feather-fall",
-                  "concentration",
                   "short-rest",
+                  "death-save",
+                  "fireball",
+                  "concentration",
                   "bridge",
-                  "death-save"
+                  "cover",
+                  "grapple"
                 ]
               }
             },
@@ -315,12 +333,23 @@
               "fused": {
                 "lore": [
                   "initiative",
-                  "disengage"
+                  "disengage",
+                  "magic-missile",
+                  "opportunity",
+                  "death-save",
+                  "advantage",
+                  "short-rest",
+                  "grapple"
                 ],
                 "scene": [
                   "initiative",
                   "disengage",
-                  "magic-missile"
+                  "magic-missile",
+                  "opportunity",
+                  "death-save",
+                  "advantage",
+                  "short-rest",
+                  "grapple"
                 ]
               }
             },
@@ -366,14 +395,23 @@
               "fused": {
                 "lore": [
                   "death-save",
-                  "cover",
-                  "short-rest"
+                  "advantage",
+                  "magic-missile",
+                  "merchant",
+                  "short-rest",
+                  "encumbrance",
+                  "long-rest",
+                  "cover"
                 ],
                 "scene": [
                   "death-save",
-                  "cover",
+                  "advantage",
+                  "magic-missile",
+                  "merchant",
                   "short-rest",
-                  "encumbrance"
+                  "encumbrance",
+                  "long-rest",
+                  "cover"
                 ]
               }
             },
@@ -418,23 +456,24 @@
               ],
               "fused": {
                 "lore": [
-                  "opportunity",
                   "disengage",
                   "cover",
-                  "magic-missile",
-                  "grapple",
+                  "opportunity",
                   "initiative",
-                  "shield"
+                  "magic-missile",
+                  "shield",
+                  "grapple",
+                  "feather-fall"
                 ],
                 "scene": [
-                  "opportunity",
                   "disengage",
                   "cover",
-                  "magic-missile",
-                  "grapple",
+                  "opportunity",
                   "initiative",
+                  "magic-missile",
                   "shield",
-                  "invisibility"
+                  "grapple",
+                  "feather-fall"
                 ]
               }
             },
@@ -479,17 +518,24 @@
               ],
               "fused": {
                 "lore": [
-                  "disengage",
                   "grapple",
-                  "encumbrance",
-                  "cover"
-                ],
-                "scene": [
                   "disengage",
-                  "grapple",
                   "encumbrance",
                   "cover",
-                  "magic-missile"
+                  "initiative",
+                  "feather-fall",
+                  "magic-missile",
+                  "concentration"
+                ],
+                "scene": [
+                  "grapple",
+                  "disengage",
+                  "encumbrance",
+                  "cover",
+                  "initiative",
+                  "feather-fall",
+                  "magic-missile",
+                  "concentration"
                 ]
               }
             },
@@ -536,20 +582,20 @@
                 "lore": [
                   "short-rest",
                   "potion",
-                  "advantage",
-                  "death-save",
-                  "long-rest",
                   "healing-word",
+                  "advantage",
+                  "long-rest",
+                  "concentration",
                   "magic-missile",
                   "cover"
                 ],
                 "scene": [
                   "short-rest",
                   "potion",
+                  "healing-word",
                   "advantage",
                   "long-rest",
-                  "healing-word",
-                  "death-save",
+                  "concentration",
                   "magic-missile",
                   "cover"
                 ]
@@ -597,12 +643,23 @@
               "fused": {
                 "lore": [
                   "potion",
-                  "healing-word"
+                  "healing-word",
+                  "components",
+                  "shield",
+                  "concentration",
+                  "torch",
+                  "invisibility",
+                  "merchant"
                 ],
                 "scene": [
                   "potion",
                   "healing-word",
-                  "components"
+                  "components",
+                  "shield",
+                  "concentration",
+                  "torch",
+                  "invisibility",
+                  "merchant"
                 ]
               }
             },
@@ -647,10 +704,24 @@
               ],
               "fused": {
                 "lore": [
-                  "components"
+                  "components",
+                  "coins",
+                  "potion",
+                  "encumbrance",
+                  "shield",
+                  "concentration",
+                  "vault",
+                  "long-rest"
                 ],
                 "scene": [
-                  "components"
+                  "components",
+                  "coins",
+                  "potion",
+                  "encumbrance",
+                  "shield",
+                  "concentration",
+                  "vault",
+                  "long-rest"
                 ]
               }
             },
@@ -697,12 +768,22 @@
                 "lore": [
                   "rope",
                   "encumbrance",
-                  "mine"
+                  "mine",
+                  "grapple",
+                  "cover",
+                  "feather-fall",
+                  "gate",
+                  "torch"
                 ],
                 "scene": [
                   "rope",
                   "encumbrance",
-                  "mine"
+                  "mine",
+                  "grapple",
+                  "cover",
+                  "feather-fall",
+                  "gate",
+                  "torch"
                 ]
               }
             },
@@ -748,11 +829,23 @@
               "fused": {
                 "lore": [
                   "vault",
-                  "gate"
+                  "gate",
+                  "oath",
+                  "cathedral",
+                  "merchant",
+                  "short-rest",
+                  "invisibility",
+                  "mine"
                 ],
                 "scene": [
                   "vault",
-                  "gate"
+                  "gate",
+                  "oath",
+                  "cathedral",
+                  "merchant",
+                  "short-rest",
+                  "invisibility",
+                  "mine"
                 ]
               }
             },
@@ -798,11 +891,23 @@
               "fused": {
                 "lore": [
                   "merchant",
-                  "advantage"
+                  "advantage",
+                  "coins",
+                  "oath",
+                  "components",
+                  "short-rest",
+                  "disengage",
+                  "long-rest"
                 ],
                 "scene": [
                   "merchant",
-                  "advantage"
+                  "advantage",
+                  "coins",
+                  "oath",
+                  "components",
+                  "short-rest",
+                  "disengage",
+                  "long-rest"
                 ]
               }
             },
@@ -848,11 +953,23 @@
               "fused": {
                 "lore": [
                   "gate",
-                  "disengage"
+                  "disengage",
+                  "torch",
+                  "mine",
+                  "inn",
+                  "misty-step",
+                  "vault",
+                  "bridge"
                 ],
                 "scene": [
                   "gate",
-                  "disengage"
+                  "disengage",
+                  "torch",
+                  "mine",
+                  "inn",
+                  "misty-step",
+                  "vault",
+                  "bridge"
                 ]
               }
             },
@@ -899,12 +1016,22 @@
                 "lore": [
                   "mine",
                   "bridge",
-                  "cathedral"
+                  "feather-fall",
+                  "cathedral",
+                  "cover",
+                  "gate",
+                  "rope",
+                  "torch"
                 ],
                 "scene": [
                   "mine",
                   "bridge",
-                  "cathedral"
+                  "feather-fall",
+                  "cathedral",
+                  "cover",
+                  "gate",
+                  "rope",
+                  "torch"
                 ]
               }
             }
@@ -916,8 +1043,8 @@
           "documentLocale": "en",
           "recall8": 0.375,
           "recall1": 0,
-          "fusedLoreRecall8": 0,
-          "fusedSceneRecall8": 0,
+          "fusedLoreRecall8": 0.375,
+          "fusedSceneRecall8": 0.375,
           "details": [
             {
               "id": "q-fireball",
@@ -959,8 +1086,26 @@
                 }
               ],
               "fused": {
-                "lore": [],
-                "scene": []
+                "lore": [
+                  "oath",
+                  "components",
+                  "inn",
+                  "rope",
+                  "initiative",
+                  "misty-step",
+                  "advantage",
+                  "detect-magic"
+                ],
+                "scene": [
+                  "oath",
+                  "components",
+                  "inn",
+                  "rope",
+                  "initiative",
+                  "misty-step",
+                  "advantage",
+                  "detect-magic"
+                ]
               }
             },
             {
@@ -1003,8 +1148,26 @@
                 }
               ],
               "fused": {
-                "lore": [],
-                "scene": []
+                "lore": [
+                  "concentration",
+                  "misty-step",
+                  "healing-word",
+                  "potion",
+                  "death-save",
+                  "initiative",
+                  "feather-fall",
+                  "long-rest"
+                ],
+                "scene": [
+                  "concentration",
+                  "misty-step",
+                  "healing-word",
+                  "potion",
+                  "death-save",
+                  "initiative",
+                  "feather-fall",
+                  "long-rest"
+                ]
               }
             },
             {
@@ -1047,8 +1210,26 @@
                 }
               ],
               "fused": {
-                "lore": [],
-                "scene": []
+                "lore": [
+                  "concentration",
+                  "shield",
+                  "advantage",
+                  "misty-step",
+                  "gate",
+                  "magic-missile",
+                  "initiative",
+                  "death-save"
+                ],
+                "scene": [
+                  "concentration",
+                  "shield",
+                  "advantage",
+                  "misty-step",
+                  "gate",
+                  "magic-missile",
+                  "initiative",
+                  "death-save"
+                ]
               }
             },
             {
@@ -1091,8 +1272,26 @@
                 }
               ],
               "fused": {
-                "lore": [],
-                "scene": []
+                "lore": [
+                  "misty-step",
+                  "concentration",
+                  "detect-magic",
+                  "oath",
+                  "advantage",
+                  "merchant",
+                  "coins",
+                  "initiative"
+                ],
+                "scene": [
+                  "misty-step",
+                  "concentration",
+                  "detect-magic",
+                  "oath",
+                  "advantage",
+                  "merchant",
+                  "coins",
+                  "initiative"
+                ]
               }
             },
             {
@@ -1135,8 +1334,26 @@
                 }
               ],
               "fused": {
-                "lore": [],
-                "scene": []
+                "lore": [
+                  "misty-step",
+                  "advantage",
+                  "initiative",
+                  "gate",
+                  "concentration",
+                  "mine",
+                  "merchant",
+                  "potion"
+                ],
+                "scene": [
+                  "misty-step",
+                  "advantage",
+                  "initiative",
+                  "gate",
+                  "concentration",
+                  "mine",
+                  "merchant",
+                  "potion"
+                ]
               }
             },
             {
@@ -1179,8 +1396,26 @@
                 }
               ],
               "fused": {
-                "lore": [],
-                "scene": []
+                "lore": [
+                  "misty-step",
+                  "initiative",
+                  "advantage",
+                  "potion",
+                  "feather-fall",
+                  "merchant",
+                  "rope",
+                  "short-rest"
+                ],
+                "scene": [
+                  "misty-step",
+                  "initiative",
+                  "advantage",
+                  "potion",
+                  "feather-fall",
+                  "merchant",
+                  "rope",
+                  "short-rest"
+                ]
               }
             },
             {
@@ -1223,8 +1458,26 @@
                 }
               ],
               "fused": {
-                "lore": [],
-                "scene": []
+                "lore": [
+                  "misty-step",
+                  "merchant",
+                  "rope",
+                  "fireball",
+                  "long-rest",
+                  "death-save",
+                  "encumbrance",
+                  "feather-fall"
+                ],
+                "scene": [
+                  "misty-step",
+                  "merchant",
+                  "rope",
+                  "fireball",
+                  "long-rest",
+                  "death-save",
+                  "encumbrance",
+                  "feather-fall"
+                ]
               }
             },
             {
@@ -1267,8 +1520,26 @@
                 }
               ],
               "fused": {
-                "lore": [],
-                "scene": []
+                "lore": [
+                  "misty-step",
+                  "concentration",
+                  "oath",
+                  "detect-magic",
+                  "merchant",
+                  "death-save",
+                  "encumbrance",
+                  "feather-fall"
+                ],
+                "scene": [
+                  "misty-step",
+                  "concentration",
+                  "oath",
+                  "detect-magic",
+                  "merchant",
+                  "death-save",
+                  "encumbrance",
+                  "feather-fall"
+                ]
               }
             },
             {
@@ -1311,8 +1582,26 @@
                 }
               ],
               "fused": {
-                "lore": [],
-                "scene": []
+                "lore": [
+                  "death-save",
+                  "potion",
+                  "healing-word",
+                  "advantage",
+                  "short-rest",
+                  "long-rest",
+                  "initiative",
+                  "concentration"
+                ],
+                "scene": [
+                  "death-save",
+                  "potion",
+                  "healing-word",
+                  "advantage",
+                  "short-rest",
+                  "long-rest",
+                  "initiative",
+                  "concentration"
+                ]
               }
             },
             {
@@ -1355,8 +1644,26 @@
                 }
               ],
               "fused": {
-                "lore": [],
-                "scene": []
+                "lore": [
+                  "misty-step",
+                  "potion",
+                  "cathedral",
+                  "bridge",
+                  "concentration",
+                  "healing-word",
+                  "torch",
+                  "mine"
+                ],
+                "scene": [
+                  "misty-step",
+                  "potion",
+                  "cathedral",
+                  "bridge",
+                  "concentration",
+                  "healing-word",
+                  "torch",
+                  "mine"
+                ]
               }
             },
             {
@@ -1399,8 +1706,26 @@
                 }
               ],
               "fused": {
-                "lore": [],
-                "scene": []
+                "lore": [
+                  "advantage",
+                  "death-save",
+                  "misty-step",
+                  "initiative",
+                  "concentration",
+                  "shield",
+                  "oath",
+                  "detect-magic"
+                ],
+                "scene": [
+                  "advantage",
+                  "death-save",
+                  "misty-step",
+                  "initiative",
+                  "concentration",
+                  "shield",
+                  "oath",
+                  "detect-magic"
+                ]
               }
             },
             {
@@ -1443,8 +1768,26 @@
                 }
               ],
               "fused": {
-                "lore": [],
-                "scene": []
+                "lore": [
+                  "initiative",
+                  "merchant",
+                  "misty-step",
+                  "grapple",
+                  "opportunity",
+                  "feather-fall",
+                  "torch",
+                  "death-save"
+                ],
+                "scene": [
+                  "initiative",
+                  "merchant",
+                  "misty-step",
+                  "grapple",
+                  "opportunity",
+                  "feather-fall",
+                  "torch",
+                  "death-save"
+                ]
               }
             },
             {
@@ -1488,10 +1831,24 @@
               ],
               "fused": {
                 "lore": [
-                  "coins"
+                  "coins",
+                  "merchant",
+                  "advantage",
+                  "components",
+                  "mine",
+                  "inn",
+                  "rope",
+                  "bridge"
                 ],
                 "scene": [
-                  "coins"
+                  "coins",
+                  "merchant",
+                  "advantage",
+                  "components",
+                  "mine",
+                  "inn",
+                  "rope",
+                  "bridge"
                 ]
               }
             },
@@ -1535,8 +1892,26 @@
                 }
               ],
               "fused": {
-                "lore": [],
-                "scene": []
+                "lore": [
+                  "misty-step",
+                  "death-save",
+                  "advantage",
+                  "coins",
+                  "initiative",
+                  "concentration",
+                  "merchant",
+                  "opportunity"
+                ],
+                "scene": [
+                  "misty-step",
+                  "death-save",
+                  "advantage",
+                  "coins",
+                  "initiative",
+                  "concentration",
+                  "merchant",
+                  "opportunity"
+                ]
               }
             },
             {
@@ -1579,8 +1954,26 @@
                 }
               ],
               "fused": {
-                "lore": [],
-                "scene": []
+                "lore": [
+                  "misty-step",
+                  "rope",
+                  "merchant",
+                  "fireball",
+                  "encumbrance",
+                  "death-save",
+                  "long-rest",
+                  "concentration"
+                ],
+                "scene": [
+                  "misty-step",
+                  "rope",
+                  "merchant",
+                  "fireball",
+                  "encumbrance",
+                  "death-save",
+                  "long-rest",
+                  "concentration"
+                ]
               }
             },
             {
@@ -1623,8 +2016,26 @@
                 }
               ],
               "fused": {
-                "lore": [],
-                "scene": []
+                "lore": [
+                  "advantage",
+                  "initiative",
+                  "death-save",
+                  "misty-step",
+                  "short-rest",
+                  "shield",
+                  "oath",
+                  "long-rest"
+                ],
+                "scene": [
+                  "advantage",
+                  "initiative",
+                  "death-save",
+                  "misty-step",
+                  "short-rest",
+                  "shield",
+                  "oath",
+                  "long-rest"
+                ]
               }
             }
           ]
@@ -1681,22 +2092,22 @@
                 "lore": [
                   "components",
                   "invisibility",
-                  "fireball",
                   "concentration",
                   "shield",
+                  "fireball",
+                  "detect-magic",
                   "torch",
-                  "potion",
-                  "detect-magic"
+                  "magic-missile"
                 ],
                 "scene": [
                   "components",
                   "invisibility",
-                  "fireball",
                   "concentration",
                   "shield",
+                  "fireball",
+                  "detect-magic",
                   "torch",
-                  "potion",
-                  "detect-magic"
+                  "magic-missile"
                 ]
               }
             },
@@ -1744,8 +2155,8 @@
                   "healing-word",
                   "potion",
                   "short-rest",
-                  "long-rest",
                   "disengage",
+                  "long-rest",
                   "magic-missile",
                   "grapple",
                   "opportunity"
@@ -1754,8 +2165,8 @@
                   "healing-word",
                   "potion",
                   "short-rest",
-                  "long-rest",
                   "disengage",
+                  "long-rest",
                   "magic-missile",
                   "grapple",
                   "opportunity"
@@ -1807,8 +2218,8 @@
                   "invisibility",
                   "components",
                   "concentration",
-                  "healing-word",
                   "advantage",
+                  "healing-word",
                   "misty-step",
                   "magic-missile"
                 ],
@@ -1817,8 +2228,8 @@
                   "invisibility",
                   "components",
                   "concentration",
-                  "healing-word",
                   "advantage",
+                  "healing-word",
                   "misty-step",
                   "magic-missile"
                 ]
@@ -1869,20 +2280,20 @@
                   "concentration",
                   "detect-magic",
                   "components",
-                  "shield",
                   "cathedral",
-                  "cover",
-                  "disengage"
+                  "magic-missile",
+                  "disengage",
+                  "misty-step"
                 ],
                 "scene": [
                   "invisibility",
                   "concentration",
                   "detect-magic",
                   "components",
-                  "shield",
                   "cathedral",
-                  "cover",
-                  "disengage"
+                  "magic-missile",
+                  "disengage",
+                  "misty-step"
                 ]
               }
             },
@@ -1994,9 +2405,9 @@
                   "advantage",
                   "long-rest",
                   "encumbrance",
-                  "death-save",
                   "fireball",
-                  "short-rest"
+                  "death-save",
+                  "misty-step"
                 ],
                 "scene": [
                   "concentration",
@@ -2004,9 +2415,9 @@
                   "advantage",
                   "long-rest",
                   "encumbrance",
-                  "death-save",
                   "fireball",
-                  "short-rest"
+                  "death-save",
+                  "misty-step"
                 ]
               }
             },
@@ -2055,20 +2466,20 @@
                   "cover",
                   "disengage",
                   "encumbrance",
-                  "concentration",
                   "opportunity",
-                  "magic-missile",
-                  "shield"
+                  "concentration",
+                  "long-rest",
+                  "mine"
                 ],
                 "scene": [
                   "initiative",
                   "cover",
                   "disengage",
                   "encumbrance",
-                  "concentration",
                   "opportunity",
-                  "magic-missile",
-                  "shield"
+                  "concentration",
+                  "long-rest",
+                  "mine"
                 ]
               }
             },
@@ -2116,20 +2527,20 @@
                   "initiative",
                   "invisibility",
                   "misty-step",
-                  "grapple",
                   "detect-magic",
+                  "grapple",
+                  "magic-missile",
                   "encumbrance",
-                  "cover",
                   "bridge"
                 ],
                 "scene": [
                   "initiative",
                   "invisibility",
                   "misty-step",
-                  "grapple",
                   "detect-magic",
+                  "grapple",
+                  "magic-missile",
                   "encumbrance",
-                  "cover",
                   "bridge"
                 ]
               }
@@ -2178,21 +2589,21 @@
                   "short-rest",
                   "healing-word",
                   "potion",
-                  "long-rest",
                   "cover",
-                  "cathedral",
-                  "concentration",
-                  "detect-magic"
+                  "opportunity",
+                  "disengage",
+                  "long-rest",
+                  "concentration"
                 ],
                 "scene": [
                   "short-rest",
                   "healing-word",
                   "potion",
-                  "long-rest",
                   "cover",
-                  "cathedral",
-                  "concentration",
-                  "detect-magic"
+                  "opportunity",
+                  "disengage",
+                  "long-rest",
+                  "concentration"
                 ]
               }
             },
@@ -2238,23 +2649,23 @@
               "fused": {
                 "lore": [
                   "potion",
-                  "vault",
                   "components",
-                  "torch",
-                  "long-rest",
-                  "short-rest",
                   "mine",
-                  "cathedral"
+                  "cathedral",
+                  "vault",
+                  "healing-word",
+                  "torch",
+                  "grapple"
                 ],
                 "scene": [
                   "potion",
-                  "vault",
                   "components",
-                  "torch",
-                  "long-rest",
-                  "short-rest",
                   "mine",
-                  "cathedral"
+                  "cathedral",
+                  "vault",
+                  "healing-word",
+                  "torch",
+                  "grapple"
                 ]
               }
             },
@@ -2302,8 +2713,8 @@
                   "components",
                   "shield",
                   "misty-step",
-                  "healing-word",
                   "detect-magic",
+                  "healing-word",
                   "magic-missile",
                   "invisibility",
                   "concentration"
@@ -2312,8 +2723,8 @@
                   "components",
                   "shield",
                   "misty-step",
-                  "healing-word",
                   "detect-magic",
+                  "healing-word",
                   "magic-missile",
                   "invisibility",
                   "concentration"
@@ -2362,21 +2773,21 @@
               "fused": {
                 "lore": [
                   "encumbrance",
-                  "shield",
-                  "healing-word",
                   "rope",
                   "long-rest",
+                  "shield",
                   "death-save",
+                  "healing-word",
                   "initiative",
                   "merchant"
                 ],
                 "scene": [
                   "encumbrance",
-                  "shield",
-                  "healing-word",
                   "rope",
                   "long-rest",
+                  "shield",
                   "death-save",
+                  "healing-word",
                   "initiative",
                   "merchant"
                 ]
@@ -2425,8 +2836,8 @@
                 "lore": [
                   "vault",
                   "rope",
-                  "grapple",
                   "coins",
+                  "grapple",
                   "shield",
                   "bridge",
                   "misty-step",
@@ -2435,8 +2846,8 @@
                 "scene": [
                   "vault",
                   "rope",
-                  "grapple",
                   "coins",
+                  "grapple",
                   "shield",
                   "bridge",
                   "misty-step",
@@ -2548,22 +2959,22 @@
               "fused": {
                 "lore": [
                   "gate",
-                  "fireball",
-                  "concentration",
-                  "bridge",
                   "initiative",
+                  "bridge",
                   "long-rest",
                   "cover",
+                  "fireball",
+                  "concentration",
                   "mine"
                 ],
                 "scene": [
                   "gate",
-                  "fireball",
-                  "concentration",
-                  "bridge",
                   "initiative",
+                  "bridge",
                   "long-rest",
                   "cover",
+                  "fireball",
+                  "concentration",
                   "mine"
                 ]
               }
@@ -2684,20 +3095,22 @@
                 "lore": [
                   "magic-missile",
                   "cover",
-                  "advantage",
                   "short-rest",
                   "disengage",
-                  "opportunity",
-                  "healing-word"
+                  "shield",
+                  "detect-magic",
+                  "fireball",
+                  "feather-fall"
                 ],
                 "scene": [
                   "magic-missile",
                   "cover",
-                  "advantage",
                   "short-rest",
                   "disengage",
-                  "opportunity",
-                  "healing-word"
+                  "shield",
+                  "detect-magic",
+                  "fireball",
+                  "feather-fall"
                 ]
               }
             },
@@ -2742,11 +3155,24 @@
               ],
               "fused": {
                 "lore": [
-                  "misty-step"
+                  "misty-step",
+                  "fireball",
+                  "cover",
+                  "mine",
+                  "torch",
+                  "magic-missile",
+                  "bridge",
+                  "invisibility"
                 ],
                 "scene": [
                   "misty-step",
-                  "fireball"
+                  "fireball",
+                  "cover",
+                  "mine",
+                  "torch",
+                  "magic-missile",
+                  "bridge",
+                  "invisibility"
                 ]
               }
             },
@@ -2792,15 +3218,23 @@
               "fused": {
                 "lore": [
                   "invisibility",
+                  "encumbrance",
+                  "detect-magic",
+                  "healing-word",
+                  "long-rest",
                   "short-rest",
-                  "death-save"
+                  "death-save",
+                  "torch"
                 ],
                 "scene": [
                   "invisibility",
+                  "encumbrance",
+                  "detect-magic",
+                  "healing-word",
+                  "long-rest",
                   "short-rest",
                   "death-save",
-                  "detect-magic",
-                  "healing-word"
+                  "torch"
                 ]
               }
             },
@@ -2846,6 +3280,7 @@
               "fused": {
                 "lore": [
                   "detect-magic",
+                  "magic-missile",
                   "invisibility",
                   "misty-step",
                   "healing-word",
@@ -2855,6 +3290,7 @@
                 ],
                 "scene": [
                   "detect-magic",
+                  "magic-missile",
                   "invisibility",
                   "misty-step",
                   "healing-word",
@@ -2906,14 +3342,23 @@
               "fused": {
                 "lore": [
                   "advantage",
+                  "short-rest",
+                  "death-save",
                   "magic-missile",
-                  "short-rest"
+                  "initiative",
+                  "feather-fall",
+                  "fireball",
+                  "opportunity"
                 ],
                 "scene": [
                   "advantage",
                   "short-rest",
                   "death-save",
-                  "magic-missile"
+                  "magic-missile",
+                  "initiative",
+                  "feather-fall",
+                  "fireball",
+                  "opportunity"
                 ]
               }
             },
@@ -2959,16 +3404,23 @@
               "fused": {
                 "lore": [
                   "concentration",
-                  "shield",
                   "invisibility",
-                  "components"
+                  "shield",
+                  "components",
+                  "healing-word",
+                  "bridge",
+                  "potion",
+                  "cover"
                 ],
                 "scene": [
                   "concentration",
-                  "shield",
                   "invisibility",
+                  "shield",
                   "components",
-                  "healing-word"
+                  "healing-word",
+                  "bridge",
+                  "potion",
+                  "cover"
                 ]
               }
             },
@@ -3014,21 +3466,23 @@
               "fused": {
                 "lore": [
                   "cover",
-                  "oath",
-                  "invisibility",
                   "shield",
+                  "opportunity",
                   "disengage",
-                  "gate"
+                  "invisibility",
+                  "oath",
+                  "gate",
+                  "grapple"
                 ],
                 "scene": [
-                  "shield",
                   "cover",
-                  "oath",
-                  "invisibility",
+                  "shield",
+                  "opportunity",
                   "disengage",
+                  "invisibility",
+                  "oath",
                   "gate",
-                  "grapple",
-                  "mine"
+                  "grapple"
                 ]
               }
             },
@@ -3076,13 +3530,21 @@
                   "disengage",
                   "opportunity",
                   "cover",
-                  "magic-missile"
+                  "magic-missile",
+                  "short-rest",
+                  "shield",
+                  "grapple",
+                  "feather-fall"
                 ],
                 "scene": [
                   "disengage",
                   "opportunity",
                   "cover",
-                  "magic-missile"
+                  "magic-missile",
+                  "short-rest",
+                  "shield",
+                  "grapple",
+                  "feather-fall"
                 ]
               }
             },
@@ -3128,11 +3590,23 @@
               "fused": {
                 "lore": [
                   "long-rest",
-                  "short-rest"
+                  "short-rest",
+                  "torch",
+                  "inn",
+                  "potion",
+                  "bridge",
+                  "concentration",
+                  "vault"
                 ],
                 "scene": [
                   "long-rest",
-                  "short-rest"
+                  "short-rest",
+                  "torch",
+                  "inn",
+                  "potion",
+                  "bridge",
+                  "concentration",
+                  "vault"
                 ]
               }
             },
@@ -3178,11 +3652,23 @@
               "fused": {
                 "lore": [
                   "encumbrance",
-                  "gate"
+                  "feather-fall",
+                  "long-rest",
+                  "components",
+                  "gate",
+                  "concentration",
+                  "cover",
+                  "short-rest"
                 ],
                 "scene": [
                   "encumbrance",
-                  "gate"
+                  "feather-fall",
+                  "long-rest",
+                  "components",
+                  "gate",
+                  "concentration",
+                  "cover",
+                  "short-rest"
                 ]
               }
             },
@@ -3228,11 +3714,23 @@
               "fused": {
                 "lore": [
                   "coins",
-                  "mine"
+                  "mine",
+                  "advantage",
+                  "merchant",
+                  "rope",
+                  "fireball",
+                  "torch",
+                  "components"
                 ],
                 "scene": [
                   "coins",
-                  "mine"
+                  "mine",
+                  "advantage",
+                  "merchant",
+                  "rope",
+                  "fireball",
+                  "torch",
+                  "components"
                 ]
               }
             },
@@ -3279,13 +3777,18 @@
                 "lore": [
                   "torch",
                   "detect-magic",
+                  "healing-word",
+                  "cover",
                   "magic-missile",
                   "misty-step",
-                  "disengage"
+                  "disengage",
+                  "invisibility"
                 ],
                 "scene": [
                   "torch",
                   "detect-magic",
+                  "healing-word",
+                  "cover",
                   "magic-missile",
                   "misty-step",
                   "disengage",
@@ -3336,12 +3839,22 @@
                 "lore": [
                   "bridge",
                   "mine",
-                  "cathedral"
+                  "cathedral",
+                  "torch",
+                  "healing-word",
+                  "rope",
+                  "oath",
+                  "merchant"
                 ],
                 "scene": [
                   "bridge",
                   "mine",
-                  "cathedral"
+                  "cathedral",
+                  "torch",
+                  "healing-word",
+                  "rope",
+                  "oath",
+                  "merchant"
                 ]
               }
             },
@@ -3389,15 +3902,21 @@
                   "cathedral",
                   "vault",
                   "rope",
+                  "feather-fall",
                   "bridge",
-                  "mine"
+                  "healing-word",
+                  "mine",
+                  "detect-magic"
                 ],
                 "scene": [
                   "cathedral",
                   "vault",
                   "rope",
+                  "feather-fall",
                   "bridge",
-                  "mine"
+                  "healing-word",
+                  "mine",
+                  "detect-magic"
                 ]
               }
             },
@@ -3442,10 +3961,24 @@
               ],
               "fused": {
                 "lore": [
-                  "inn"
+                  "inn",
+                  "short-rest",
+                  "torch",
+                  "detect-magic",
+                  "long-rest",
+                  "components",
+                  "encumbrance",
+                  "cover"
                 ],
                 "scene": [
-                  "inn"
+                  "inn",
+                  "short-rest",
+                  "torch",
+                  "detect-magic",
+                  "long-rest",
+                  "components",
+                  "encumbrance",
+                  "cover"
                 ]
               }
             },
@@ -3491,11 +4024,23 @@
               "fused": {
                 "lore": [
                   "oath",
-                  "merchant"
+                  "merchant",
+                  "vault",
+                  "gate",
+                  "misty-step",
+                  "short-rest",
+                  "long-rest",
+                  "opportunity"
                 ],
                 "scene": [
                   "oath",
-                  "merchant"
+                  "merchant",
+                  "vault",
+                  "gate",
+                  "misty-step",
+                  "short-rest",
+                  "long-rest",
+                  "opportunity"
                 ]
               }
             }
@@ -3507,8 +4052,8 @@
           "documentLocale": "en",
           "recall8": 0.375,
           "recall1": 0.125,
-          "fusedLoreRecall8": 0,
-          "fusedSceneRecall8": 0,
+          "fusedLoreRecall8": 0.375,
+          "fusedSceneRecall8": 0.375,
           "details": [
             {
               "id": "q-magic-missile",
@@ -3550,8 +4095,26 @@
                 }
               ],
               "fused": {
-                "lore": [],
-                "scene": []
+                "lore": [
+                  "misty-step",
+                  "advantage",
+                  "concentration",
+                  "merchant",
+                  "death-save",
+                  "gate",
+                  "initiative",
+                  "coins"
+                ],
+                "scene": [
+                  "misty-step",
+                  "advantage",
+                  "concentration",
+                  "merchant",
+                  "death-save",
+                  "gate",
+                  "initiative",
+                  "coins"
+                ]
               }
             },
             {
@@ -3594,8 +4157,26 @@
                 }
               ],
               "fused": {
-                "lore": [],
-                "scene": []
+                "lore": [
+                  "coins",
+                  "misty-step",
+                  "potion",
+                  "advantage",
+                  "feather-fall",
+                  "oath",
+                  "short-rest",
+                  "initiative"
+                ],
+                "scene": [
+                  "coins",
+                  "misty-step",
+                  "potion",
+                  "advantage",
+                  "feather-fall",
+                  "oath",
+                  "short-rest",
+                  "initiative"
+                ]
               }
             },
             {
@@ -3638,8 +4219,26 @@
                 }
               ],
               "fused": {
-                "lore": [],
-                "scene": []
+                "lore": [
+                  "advantage",
+                  "concentration",
+                  "misty-step",
+                  "shield",
+                  "death-save",
+                  "oath",
+                  "components",
+                  "magic-missile"
+                ],
+                "scene": [
+                  "advantage",
+                  "concentration",
+                  "misty-step",
+                  "shield",
+                  "death-save",
+                  "oath",
+                  "components",
+                  "magic-missile"
+                ]
               }
             },
             {
@@ -3682,8 +4281,26 @@
                 }
               ],
               "fused": {
-                "lore": [],
-                "scene": []
+                "lore": [
+                  "misty-step",
+                  "torch",
+                  "detect-magic",
+                  "invisibility",
+                  "concentration",
+                  "fireball",
+                  "magic-missile",
+                  "shield"
+                ],
+                "scene": [
+                  "misty-step",
+                  "torch",
+                  "detect-magic",
+                  "invisibility",
+                  "concentration",
+                  "fireball",
+                  "magic-missile",
+                  "shield"
+                ]
               }
             },
             {
@@ -3726,8 +4343,26 @@
                 }
               ],
               "fused": {
-                "lore": [],
-                "scene": []
+                "lore": [
+                  "coins",
+                  "potion",
+                  "gate",
+                  "concentration",
+                  "initiative",
+                  "components",
+                  "shield",
+                  "advantage"
+                ],
+                "scene": [
+                  "coins",
+                  "potion",
+                  "gate",
+                  "concentration",
+                  "initiative",
+                  "components",
+                  "shield",
+                  "advantage"
+                ]
               }
             },
             {
@@ -3770,8 +4405,26 @@
                 }
               ],
               "fused": {
-                "lore": [],
-                "scene": []
+                "lore": [
+                  "advantage",
+                  "death-save",
+                  "misty-step",
+                  "initiative",
+                  "concentration",
+                  "shield",
+                  "magic-missile",
+                  "opportunity"
+                ],
+                "scene": [
+                  "advantage",
+                  "death-save",
+                  "misty-step",
+                  "initiative",
+                  "concentration",
+                  "shield",
+                  "magic-missile",
+                  "opportunity"
+                ]
               }
             },
             {
@@ -3814,8 +4467,26 @@
                 }
               ],
               "fused": {
-                "lore": [],
-                "scene": []
+                "lore": [
+                  "coins",
+                  "misty-step",
+                  "initiative",
+                  "death-save",
+                  "merchant",
+                  "advantage",
+                  "feather-fall",
+                  "detect-magic"
+                ],
+                "scene": [
+                  "coins",
+                  "misty-step",
+                  "initiative",
+                  "death-save",
+                  "merchant",
+                  "advantage",
+                  "feather-fall",
+                  "detect-magic"
+                ]
               }
             },
             {
@@ -3858,8 +4529,26 @@
                 }
               ],
               "fused": {
-                "lore": [],
-                "scene": []
+                "lore": [
+                  "rope",
+                  "inn",
+                  "initiative",
+                  "merchant",
+                  "oath",
+                  "long-rest",
+                  "opportunity",
+                  "short-rest"
+                ],
+                "scene": [
+                  "rope",
+                  "inn",
+                  "initiative",
+                  "merchant",
+                  "oath",
+                  "long-rest",
+                  "opportunity",
+                  "short-rest"
+                ]
               }
             },
             {
@@ -3902,8 +4591,26 @@
                 }
               ],
               "fused": {
-                "lore": [],
-                "scene": []
+                "lore": [
+                  "initiative",
+                  "feather-fall",
+                  "coins",
+                  "misty-step",
+                  "potion",
+                  "fireball",
+                  "grapple",
+                  "detect-magic"
+                ],
+                "scene": [
+                  "initiative",
+                  "feather-fall",
+                  "coins",
+                  "misty-step",
+                  "potion",
+                  "fireball",
+                  "grapple",
+                  "detect-magic"
+                ]
               }
             },
             {
@@ -3946,8 +4653,26 @@
                 }
               ],
               "fused": {
-                "lore": [],
-                "scene": []
+                "lore": [
+                  "inn",
+                  "rope",
+                  "initiative",
+                  "coins",
+                  "detect-magic",
+                  "grapple",
+                  "oath",
+                  "opportunity"
+                ],
+                "scene": [
+                  "inn",
+                  "rope",
+                  "initiative",
+                  "coins",
+                  "detect-magic",
+                  "grapple",
+                  "oath",
+                  "opportunity"
+                ]
               }
             },
             {
@@ -3990,8 +4715,26 @@
                 }
               ],
               "fused": {
-                "lore": [],
-                "scene": []
+                "lore": [
+                  "coins",
+                  "merchant",
+                  "components",
+                  "advantage",
+                  "initiative",
+                  "fireball",
+                  "inn",
+                  "shield"
+                ],
+                "scene": [
+                  "coins",
+                  "merchant",
+                  "components",
+                  "advantage",
+                  "initiative",
+                  "fireball",
+                  "inn",
+                  "shield"
+                ]
               }
             },
             {
@@ -4034,8 +4777,26 @@
                 }
               ],
               "fused": {
-                "lore": [],
-                "scene": []
+                "lore": [
+                  "misty-step",
+                  "oath",
+                  "initiative",
+                  "merchant",
+                  "advantage",
+                  "potion",
+                  "gate",
+                  "concentration"
+                ],
+                "scene": [
+                  "misty-step",
+                  "oath",
+                  "initiative",
+                  "merchant",
+                  "advantage",
+                  "potion",
+                  "gate",
+                  "concentration"
+                ]
               }
             },
             {
@@ -4078,8 +4839,26 @@
                 }
               ],
               "fused": {
-                "lore": [],
-                "scene": []
+                "lore": [
+                  "misty-step",
+                  "death-save",
+                  "advantage",
+                  "short-rest",
+                  "feather-fall",
+                  "initiative",
+                  "potion",
+                  "grapple"
+                ],
+                "scene": [
+                  "misty-step",
+                  "death-save",
+                  "advantage",
+                  "short-rest",
+                  "feather-fall",
+                  "initiative",
+                  "potion",
+                  "grapple"
+                ]
               }
             },
             {
@@ -4122,8 +4901,26 @@
                 }
               ],
               "fused": {
-                "lore": [],
-                "scene": []
+                "lore": [
+                  "misty-step",
+                  "death-save",
+                  "advantage",
+                  "short-rest",
+                  "healing-word",
+                  "long-rest",
+                  "potion",
+                  "vault"
+                ],
+                "scene": [
+                  "misty-step",
+                  "death-save",
+                  "advantage",
+                  "short-rest",
+                  "healing-word",
+                  "long-rest",
+                  "potion",
+                  "vault"
+                ]
               }
             },
             {
@@ -4166,8 +4963,26 @@
                 }
               ],
               "fused": {
-                "lore": [],
-                "scene": []
+                "lore": [
+                  "inn",
+                  "potion",
+                  "coins",
+                  "merchant",
+                  "short-rest",
+                  "misty-step",
+                  "detect-magic",
+                  "long-rest"
+                ],
+                "scene": [
+                  "inn",
+                  "potion",
+                  "coins",
+                  "merchant",
+                  "short-rest",
+                  "misty-step",
+                  "detect-magic",
+                  "long-rest"
+                ]
               }
             },
             {
@@ -4210,8 +5025,26 @@
                 }
               ],
               "fused": {
-                "lore": [],
-                "scene": []
+                "lore": [
+                  "initiative",
+                  "advantage",
+                  "merchant",
+                  "long-rest",
+                  "grapple",
+                  "short-rest",
+                  "death-save",
+                  "concentration"
+                ],
+                "scene": [
+                  "initiative",
+                  "advantage",
+                  "merchant",
+                  "long-rest",
+                  "grapple",
+                  "short-rest",
+                  "death-save",
+                  "concentration"
+                ]
               }
             }
           ]
@@ -4269,21 +5102,21 @@
                   "magic-missile",
                   "detect-magic",
                   "advantage",
+                  "initiative",
+                  "death-save",
+                  "invisibility",
                   "shield",
-                  "concentration",
-                  "cover",
-                  "disengage",
-                  "healing-word"
+                  "cover"
                 ],
                 "scene": [
                   "magic-missile",
                   "detect-magic",
                   "advantage",
+                  "initiative",
+                  "death-save",
+                  "invisibility",
                   "shield",
-                  "concentration",
-                  "cover",
-                  "disengage",
-                  "healing-word"
+                  "cover"
                 ]
               }
             },
@@ -4329,9 +5162,9 @@
               "fused": {
                 "lore": [
                   "misty-step",
-                  "rope",
                   "cover",
                   "long-rest",
+                  "rope",
                   "initiative",
                   "encumbrance",
                   "magic-missile",
@@ -4339,9 +5172,9 @@
                 ],
                 "scene": [
                   "misty-step",
-                  "rope",
                   "cover",
                   "long-rest",
+                  "rope",
                   "initiative",
                   "encumbrance",
                   "magic-missile",
@@ -4392,22 +5225,22 @@
                 "lore": [
                   "invisibility",
                   "misty-step",
-                  "grapple",
-                  "healing-word",
                   "death-save",
-                  "cover",
-                  "bridge",
-                  "initiative"
+                  "detect-magic",
+                  "healing-word",
+                  "components",
+                  "grapple",
+                  "bridge"
                 ],
                 "scene": [
                   "invisibility",
                   "misty-step",
-                  "grapple",
-                  "healing-word",
                   "death-save",
-                  "cover",
-                  "bridge",
-                  "initiative"
+                  "detect-magic",
+                  "healing-word",
+                  "components",
+                  "grapple",
+                  "bridge"
                 ]
               }
             },
@@ -4518,20 +5351,20 @@
                   "long-rest",
                   "coins",
                   "misty-step",
+                  "shield",
+                  "cover",
                   "rope",
-                  "encumbrance",
-                  "detect-magic",
-                  "shield"
+                  "encumbrance"
                 ],
                 "scene": [
                   "advantage",
                   "long-rest",
                   "coins",
                   "misty-step",
+                  "shield",
+                  "cover",
                   "rope",
-                  "encumbrance",
-                  "detect-magic",
-                  "shield"
+                  "encumbrance"
                 ]
               }
             },
@@ -4580,20 +5413,20 @@
                   "concentration",
                   "components",
                   "misty-step",
-                  "feather-fall",
                   "shield",
-                  "encumbrance",
-                  "opportunity"
+                  "detect-magic",
+                  "feather-fall",
+                  "encumbrance"
                 ],
                 "scene": [
                   "invisibility",
                   "concentration",
                   "components",
                   "misty-step",
-                  "feather-fall",
                   "shield",
-                  "encumbrance",
-                  "opportunity"
+                  "detect-magic",
+                  "feather-fall",
+                  "encumbrance"
                 ]
               }
             },
@@ -4641,21 +5474,21 @@
                   "cover",
                   "magic-missile",
                   "misty-step",
-                  "mine",
-                  "shield",
+                  "initiative",
                   "invisibility",
-                  "healing-word",
-                  "initiative"
+                  "bridge",
+                  "merchant",
+                  "shield"
                 ],
                 "scene": [
                   "cover",
                   "magic-missile",
                   "misty-step",
-                  "mine",
-                  "shield",
+                  "initiative",
                   "invisibility",
-                  "healing-word",
-                  "initiative"
+                  "bridge",
+                  "merchant",
+                  "shield"
                 ]
               }
             },
@@ -4703,21 +5536,21 @@
                   "disengage",
                   "cover",
                   "encumbrance",
-                  "magic-missile",
-                  "grapple",
+                  "long-rest",
                   "opportunity",
-                  "shield",
-                  "long-rest"
+                  "grapple",
+                  "torch",
+                  "initiative"
                 ],
                 "scene": [
                   "disengage",
                   "cover",
                   "encumbrance",
-                  "magic-missile",
-                  "grapple",
+                  "long-rest",
                   "opportunity",
-                  "shield",
-                  "long-rest"
+                  "grapple",
+                  "torch",
+                  "initiative"
                 ]
               }
             },
@@ -4763,23 +5596,23 @@
               "fused": {
                 "lore": [
                   "long-rest",
-                  "short-rest",
-                  "merchant",
+                  "misty-step",
                   "potion",
                   "components",
-                  "healing-word",
-                  "misty-step",
-                  "encumbrance"
+                  "encumbrance",
+                  "opportunity",
+                  "short-rest",
+                  "coins"
                 ],
                 "scene": [
                   "long-rest",
-                  "short-rest",
-                  "merchant",
+                  "misty-step",
                   "potion",
                   "components",
-                  "healing-word",
-                  "misty-step",
-                  "encumbrance"
+                  "encumbrance",
+                  "opportunity",
+                  "short-rest",
+                  "coins"
                 ]
               }
             },
@@ -4828,20 +5661,20 @@
                   "misty-step",
                   "components",
                   "torch",
+                  "disengage",
                   "advantage",
-                  "invisibility",
-                  "potion",
-                  "disengage"
+                  "long-rest",
+                  "initiative"
                 ],
                 "scene": [
                   "encumbrance",
                   "misty-step",
                   "components",
                   "torch",
+                  "disengage",
                   "advantage",
-                  "invisibility",
-                  "potion",
-                  "disengage"
+                  "long-rest",
+                  "initiative"
                 ]
               }
             },
@@ -4888,8 +5721,8 @@
                 "lore": [
                   "coins",
                   "advantage",
-                  "mine",
                   "vault",
+                  "mine",
                   "misty-step",
                   "shield",
                   "bridge",
@@ -4898,8 +5731,8 @@
                 "scene": [
                   "coins",
                   "advantage",
-                  "mine",
                   "vault",
+                  "mine",
                   "misty-step",
                   "shield",
                   "bridge",
@@ -4950,22 +5783,22 @@
                 "lore": [
                   "magic-missile",
                   "detect-magic",
+                  "misty-step",
+                  "torch",
+                  "invisibility",
                   "cover",
                   "cathedral",
-                  "torch",
-                  "short-rest",
-                  "misty-step",
-                  "invisibility"
+                  "shield"
                 ],
                 "scene": [
                   "magic-missile",
                   "detect-magic",
+                  "misty-step",
+                  "torch",
+                  "invisibility",
                   "cover",
                   "cathedral",
-                  "torch",
-                  "short-rest",
-                  "misty-step",
-                  "invisibility"
+                  "shield"
                 ]
               }
             },
@@ -5074,21 +5907,21 @@
                 "lore": [
                   "cathedral",
                   "gate",
-                  "rope",
-                  "vault",
                   "merchant",
                   "cover",
+                  "rope",
                   "misty-step",
+                  "vault",
                   "bridge"
                 ],
                 "scene": [
                   "cathedral",
                   "gate",
-                  "rope",
-                  "vault",
                   "merchant",
                   "cover",
+                  "rope",
                   "misty-step",
+                  "vault",
                   "bridge"
                 ]
               }
@@ -5135,9 +5968,9 @@
               "fused": {
                 "lore": [
                   "inn",
+                  "rope",
                   "shield",
                   "healing-word",
-                  "rope",
                   "long-rest",
                   "disengage",
                   "misty-step",
@@ -5145,9 +5978,9 @@
                 ],
                 "scene": [
                   "inn",
+                  "rope",
                   "shield",
                   "healing-word",
-                  "rope",
                   "long-rest",
                   "disengage",
                   "misty-step",
@@ -5632,22 +6465,22 @@
                 "lore": [
                   "fireball",
                   "invisibility",
-                  "initiative",
                   "torch",
-                  "magic-missile",
                   "concentration",
-                  "misty-step",
-                  "shield"
+                  "magic-missile",
+                  "shield",
+                  "components",
+                  "misty-step"
                 ],
                 "scene": [
                   "fireball",
                   "invisibility",
-                  "initiative",
                   "torch",
-                  "magic-missile",
                   "concentration",
-                  "misty-step",
-                  "shield"
+                  "magic-missile",
+                  "shield",
+                  "components",
+                  "misty-step"
                 ]
               }
             },
@@ -5696,7 +6529,10 @@
                   "healing-word",
                   "death-save",
                   "long-rest",
-                  "short-rest"
+                  "short-rest",
+                  "concentration",
+                  "oath",
+                  "shield"
                 ],
                 "scene": [
                   "potion",
@@ -5704,7 +6540,9 @@
                   "death-save",
                   "long-rest",
                   "short-rest",
-                  "concentration"
+                  "concentration",
+                  "oath",
+                  "shield"
                 ]
               }
             },
@@ -5750,22 +6588,22 @@
               "fused": {
                 "lore": [
                   "shield",
-                  "initiative",
                   "components",
-                  "concentration",
-                  "invisibility",
                   "healing-word",
+                  "concentration",
                   "cover",
+                  "initiative",
+                  "invisibility",
                   "disengage"
                 ],
                 "scene": [
                   "shield",
-                  "initiative",
                   "components",
-                  "concentration",
-                  "invisibility",
                   "healing-word",
+                  "concentration",
                   "cover",
+                  "initiative",
+                  "invisibility",
                   "disengage"
                 ]
               }
@@ -5812,19 +6650,23 @@
               "fused": {
                 "lore": [
                   "feather-fall",
-                  "concentration",
-                  "death-save",
-                  "healing-word"
-                ],
-                "scene": [
-                  "feather-fall",
-                  "concentration",
                   "death-save",
                   "healing-word",
                   "short-rest",
+                  "concentration",
+                  "fireball",
                   "long-rest",
-                  "bridge",
-                  "grapple"
+                  "bridge"
+                ],
+                "scene": [
+                  "feather-fall",
+                  "death-save",
+                  "healing-word",
+                  "short-rest",
+                  "concentration",
+                  "fireball",
+                  "long-rest",
+                  "bridge"
                 ]
               }
             },
@@ -5874,7 +6716,9 @@
                   "cover",
                   "shield",
                   "magic-missile",
-                  "advantage"
+                  "advantage",
+                  "opportunity",
+                  "feather-fall"
                 ],
                 "scene": [
                   "initiative",
@@ -5930,22 +6774,23 @@
               "fused": {
                 "lore": [
                   "death-save",
-                  "cover",
+                  "advantage",
+                  "merchant",
                   "short-rest",
                   "long-rest",
+                  "cover",
                   "healing-word",
-                  "initiative",
-                  "advantage"
+                  "initiative"
                 ],
                 "scene": [
                   "death-save",
-                  "cover",
+                  "advantage",
+                  "merchant",
                   "short-rest",
                   "long-rest",
+                  "cover",
                   "healing-word",
-                  "initiative",
-                  "advantage",
-                  "potion"
+                  "initiative"
                 ]
               }
             },
@@ -5991,23 +6836,23 @@
               "fused": {
                 "lore": [
                   "cover",
-                  "opportunity",
                   "disengage",
-                  "magic-missile",
+                  "opportunity",
                   "initiative",
                   "shield",
-                  "grapple",
-                  "invisibility"
+                  "magic-missile",
+                  "feather-fall",
+                  "grapple"
                 ],
                 "scene": [
                   "cover",
-                  "opportunity",
                   "disengage",
-                  "magic-missile",
+                  "opportunity",
                   "initiative",
                   "shield",
-                  "grapple",
-                  "invisibility"
+                  "magic-missile",
+                  "feather-fall",
+                  "grapple"
                 ]
               }
             },
@@ -6052,24 +6897,24 @@
               ],
               "fused": {
                 "lore": [
-                  "disengage",
                   "grapple",
+                  "disengage",
                   "cover",
-                  "opportunity",
-                  "encumbrance",
                   "initiative",
-                  "magic-missile",
-                  "feather-fall"
+                  "encumbrance",
+                  "feather-fall",
+                  "opportunity",
+                  "concentration"
                 ],
                 "scene": [
-                  "disengage",
                   "grapple",
+                  "disengage",
                   "cover",
-                  "opportunity",
-                  "encumbrance",
                   "initiative",
-                  "magic-missile",
-                  "feather-fall"
+                  "encumbrance",
+                  "feather-fall",
+                  "opportunity",
+                  "concentration"
                 ]
               }
             },
@@ -6115,19 +6960,21 @@
               "fused": {
                 "lore": [
                   "short-rest",
+                  "healing-word",
                   "advantage",
                   "potion",
-                  "healing-word",
                   "long-rest",
+                  "concentration",
                   "magic-missile",
                   "cover"
                 ],
                 "scene": [
                   "short-rest",
+                  "healing-word",
                   "advantage",
                   "potion",
-                  "healing-word",
                   "long-rest",
+                  "concentration",
                   "magic-missile",
                   "cover"
                 ]
@@ -6179,7 +7026,9 @@
                   "components",
                   "short-rest",
                   "shield",
-                  "rope"
+                  "rope",
+                  "cover",
+                  "invisibility"
                 ],
                 "scene": [
                   "potion",
@@ -6235,13 +7084,23 @@
               "fused": {
                 "lore": [
                   "components",
-                  "potion"
+                  "potion",
+                  "encumbrance",
+                  "cover",
+                  "coins",
+                  "rope",
+                  "long-rest",
+                  "shield"
                 ],
                 "scene": [
                   "components",
                   "potion",
                   "encumbrance",
-                  "cover"
+                  "cover",
+                  "coins",
+                  "rope",
+                  "long-rest",
+                  "shield"
                 ]
               }
             },
@@ -6291,7 +7150,9 @@
                   "mine",
                   "cover",
                   "grapple",
-                  "components"
+                  "components",
+                  "long-rest",
+                  "potion"
                 ],
                 "scene": [
                   "rope",
@@ -6350,14 +7211,20 @@
                   "oath",
                   "detect-magic",
                   "gate",
-                  "mine"
+                  "mine",
+                  "invisibility",
+                  "inn",
+                  "cover"
                 ],
                 "scene": [
                   "vault",
                   "oath",
                   "detect-magic",
                   "gate",
-                  "mine"
+                  "mine",
+                  "invisibility",
+                  "inn",
+                  "cover"
                 ]
               }
             },
@@ -6402,10 +7269,24 @@
               ],
               "fused": {
                 "lore": [
-                  "merchant"
+                  "merchant",
+                  "advantage",
+                  "oath",
+                  "mine",
+                  "vault",
+                  "healing-word",
+                  "components",
+                  "opportunity"
                 ],
                 "scene": [
-                  "merchant"
+                  "merchant",
+                  "advantage",
+                  "oath",
+                  "mine",
+                  "vault",
+                  "healing-word",
+                  "components",
+                  "opportunity"
                 ]
               }
             },
@@ -6453,14 +7334,21 @@
                   "gate",
                   "disengage",
                   "mine",
-                  "bridge"
+                  "bridge",
+                  "misty-step",
+                  "inn",
+                  "vault",
+                  "advantage"
                 ],
                 "scene": [
                   "gate",
                   "disengage",
                   "mine",
                   "bridge",
-                  "misty-step"
+                  "misty-step",
+                  "inn",
+                  "vault",
+                  "advantage"
                 ]
               }
             },
@@ -6507,16 +7395,22 @@
                 "lore": [
                   "mine",
                   "bridge",
+                  "feather-fall",
                   "cathedral",
                   "torch",
-                  "misty-step"
+                  "misty-step",
+                  "cover",
+                  "vault"
                 ],
                 "scene": [
                   "mine",
                   "bridge",
+                  "feather-fall",
                   "cathedral",
                   "torch",
-                  "misty-step"
+                  "misty-step",
+                  "cover",
+                  "vault"
                 ]
               }
             }
@@ -6639,7 +7533,9 @@
                   "death-save",
                   "short-rest",
                   "long-rest",
-                  "oath"
+                  "oath",
+                  "concentration",
+                  "merchant"
                 ],
                 "scene": [
                   "potion",
@@ -6647,7 +7543,9 @@
                   "death-save",
                   "short-rest",
                   "long-rest",
-                  "oath"
+                  "oath",
+                  "concentration",
+                  "merchant"
                 ]
               }
             },
@@ -6760,7 +7658,8 @@
                   "bridge",
                   "rope",
                   "grapple",
-                  "death-save"
+                  "death-save",
+                  "potion"
                 ],
                 "scene": [
                   "feather-fall",
@@ -6820,7 +7719,9 @@
                   "opportunity",
                   "cover",
                   "magic-missile",
-                  "shield"
+                  "shield",
+                  "short-rest",
+                  "death-save"
                 ],
                 "scene": [
                   "initiative",
@@ -7065,7 +7966,10 @@
                   "short-rest",
                   "advantage",
                   "potion",
-                  "healing-word"
+                  "healing-word",
+                  "long-rest",
+                  "opportunity",
+                  "invisibility"
                 ],
                 "scene": [
                   "death-save",
@@ -7073,7 +7977,9 @@
                   "advantage",
                   "potion",
                   "healing-word",
-                  "long-rest"
+                  "long-rest",
+                  "opportunity",
+                  "invisibility"
                 ]
               }
             },
@@ -7120,12 +8026,22 @@
                 "lore": [
                   "potion",
                   "components",
-                  "long-rest"
+                  "long-rest",
+                  "encumbrance",
+                  "vault",
+                  "bridge",
+                  "short-rest",
+                  "merchant"
                 ],
                 "scene": [
                   "potion",
                   "components",
-                  "long-rest"
+                  "long-rest",
+                  "encumbrance",
+                  "vault",
+                  "bridge",
+                  "short-rest",
+                  "merchant"
                 ]
               }
             },
@@ -7173,14 +8089,21 @@
                   "components",
                   "potion",
                   "coins",
-                  "encumbrance"
+                  "encumbrance",
+                  "cover",
+                  "merchant",
+                  "long-rest",
+                  "advantage"
                 ],
                 "scene": [
                   "components",
                   "potion",
                   "coins",
                   "encumbrance",
-                  "cover"
+                  "cover",
+                  "merchant",
+                  "long-rest",
+                  "advantage"
                 ]
               }
             },
@@ -7229,7 +8152,10 @@
                   "mine",
                   "cover",
                   "encumbrance",
-                  "feather-fall"
+                  "feather-fall",
+                  "components",
+                  "long-rest",
+                  "vault"
                 ],
                 "scene": [
                   "rope",
@@ -7238,7 +8164,8 @@
                   "encumbrance",
                   "feather-fall",
                   "components",
-                  "long-rest"
+                  "long-rest",
+                  "vault"
                 ]
               }
             },
@@ -7285,14 +8212,22 @@
                 "lore": [
                   "vault",
                   "mine",
-                  "detect-magic"
+                  "detect-magic",
+                  "gate",
+                  "healing-word",
+                  "oath",
+                  "merchant",
+                  "misty-step"
                 ],
                 "scene": [
                   "vault",
                   "mine",
                   "detect-magic",
                   "gate",
-                  "healing-word"
+                  "healing-word",
+                  "oath",
+                  "merchant",
+                  "misty-step"
                 ]
               }
             },
@@ -7337,10 +8272,24 @@
               ],
               "fused": {
                 "lore": [
-                  "merchant"
+                  "merchant",
+                  "advantage",
+                  "vault",
+                  "oath",
+                  "mine",
+                  "rope",
+                  "coins",
+                  "healing-word"
                 ],
                 "scene": [
-                  "merchant"
+                  "merchant",
+                  "advantage",
+                  "vault",
+                  "oath",
+                  "mine",
+                  "rope",
+                  "coins",
+                  "healing-word"
                 ]
               }
             },
@@ -7387,7 +8336,12 @@
                 "lore": [
                   "gate",
                   "mine",
-                  "misty-step"
+                  "misty-step",
+                  "inn",
+                  "vault",
+                  "long-rest",
+                  "rope",
+                  "cover"
                 ],
                 "scene": [
                   "gate",
@@ -7395,7 +8349,9 @@
                   "misty-step",
                   "inn",
                   "vault",
-                  "long-rest"
+                  "long-rest",
+                  "rope",
+                  "cover"
                 ]
               }
             },
@@ -7445,7 +8401,9 @@
                   "cover",
                   "gate",
                   "misty-step",
-                  "torch"
+                  "torch",
+                  "rope",
+                  "vault"
                 ],
                 "scene": [
                   "mine",
@@ -7467,8 +8425,8 @@
           "documentLocale": "zh",
           "recall8": 1,
           "recall1": 0.875,
-          "fusedLoreRecall8": 0.9375,
-          "fusedSceneRecall8": 0.9375,
+          "fusedLoreRecall8": 1,
+          "fusedSceneRecall8": 1,
           "details": [
             {
               "id": "q-fireball",
@@ -7637,20 +8595,20 @@
                 "lore": [
                   "shield",
                   "concentration",
-                  "invisibility",
                   "healing-word",
                   "encumbrance",
                   "advantage",
+                  "invisibility",
                   "components",
                   "cover"
                 ],
                 "scene": [
                   "shield",
                   "concentration",
-                  "invisibility",
                   "healing-word",
                   "encumbrance",
                   "advantage",
+                  "invisibility",
                   "components",
                   "cover"
                 ]
@@ -7701,20 +8659,20 @@
                   "concentration",
                   "potion",
                   "cathedral",
-                  "short-rest",
-                  "cover",
-                  "shield",
-                  "invisibility"
+                  "grapple",
+                  "disengage",
+                  "feather-fall",
+                  "opportunity"
                 ],
                 "scene": [
                   "rope",
                   "concentration",
                   "potion",
                   "cathedral",
-                  "short-rest",
+                  "grapple",
                   "disengage",
-                  "cover",
-                  "shield"
+                  "feather-fall",
+                  "opportunity"
                 ]
               }
             },
@@ -7825,20 +8783,20 @@
                   "death-save",
                   "short-rest",
                   "fireball",
-                  "long-rest",
-                  "initiative",
-                  "encumbrance",
-                  "advantage"
+                  "advantage",
+                  "invisibility",
+                  "cover",
+                  "healing-word"
                 ],
                 "scene": [
                   "concentration",
                   "death-save",
                   "short-rest",
                   "fireball",
-                  "long-rest",
-                  "initiative",
-                  "encumbrance",
-                  "advantage"
+                  "advantage",
+                  "invisibility",
+                  "cover",
+                  "healing-word"
                 ]
               }
             },
@@ -7888,8 +8846,8 @@
                   "disengage",
                   "initiative",
                   "shield",
-                  "concentration",
                   "magic-missile",
+                  "concentration",
                   "encumbrance"
                 ],
                 "scene": [
@@ -7898,8 +8856,8 @@
                   "disengage",
                   "initiative",
                   "shield",
-                  "concentration",
                   "magic-missile",
+                  "concentration",
                   "encumbrance"
                 ]
               }
@@ -7948,21 +8906,21 @@
                   "grapple",
                   "disengage",
                   "initiative",
-                  "invisibility",
                   "encumbrance",
                   "cover",
-                  "misty-step",
-                  "short-rest"
+                  "invisibility",
+                  "opportunity",
+                  "misty-step"
                 ],
                 "scene": [
                   "grapple",
                   "disengage",
                   "initiative",
-                  "invisibility",
                   "encumbrance",
                   "cover",
-                  "misty-step",
-                  "short-rest"
+                  "invisibility",
+                  "opportunity",
+                  "misty-step"
                 ]
               }
             },
@@ -8072,9 +9030,11 @@
                   "potion",
                   "components",
                   "long-rest",
+                  "short-rest",
                   "vault",
+                  "concentration",
                   "torch",
-                  "short-rest"
+                  "mine"
                 ],
                 "scene": [
                   "potion",
@@ -8083,7 +9043,8 @@
                   "short-rest",
                   "vault",
                   "concentration",
-                  "torch"
+                  "torch",
+                  "mine"
                 ]
               }
             },
@@ -8133,7 +9094,9 @@
                   "potion",
                   "cover",
                   "shield",
-                  "misty-step"
+                  "encumbrance",
+                  "misty-step",
+                  "coins"
                 ],
                 "scene": [
                   "components",
@@ -8142,7 +9105,8 @@
                   "cover",
                   "shield",
                   "encumbrance",
-                  "misty-step"
+                  "misty-step",
+                  "coins"
                 ]
               }
             },
@@ -8253,7 +9217,10 @@
                   "merchant",
                   "rope",
                   "detect-magic",
-                  "grapple"
+                  "grapple",
+                  "gate",
+                  "mine",
+                  "invisibility"
                 ],
                 "scene": [
                   "vault",
@@ -8262,7 +9229,8 @@
                   "detect-magic",
                   "grapple",
                   "gate",
-                  "mine"
+                  "mine",
+                  "invisibility"
                 ]
               }
             },
@@ -8308,11 +9276,23 @@
               "fused": {
                 "lore": [
                   "merchant",
-                  "long-rest"
+                  "advantage",
+                  "long-rest",
+                  "vault",
+                  "healing-word",
+                  "coins",
+                  "oath",
+                  "rope"
                 ],
                 "scene": [
                   "merchant",
-                  "long-rest"
+                  "advantage",
+                  "long-rest",
+                  "vault",
+                  "healing-word",
+                  "coins",
+                  "oath",
+                  "rope"
                 ]
               }
             },
@@ -8433,10 +9413,10 @@
                   "bridge",
                   "cover",
                   "misty-step",
-                  "invisibility",
                   "feather-fall",
                   "rope",
-                  "cathedral"
+                  "cathedral",
+                  "invisibility"
                 ]
               }
             }
@@ -8496,9 +9476,9 @@
                   "cover",
                   "short-rest",
                   "disengage",
-                  "opportunity",
-                  "advantage",
                   "healing-word",
+                  "opportunity",
+                  "detect-magic",
                   "invisibility"
                 ],
                 "scene": [
@@ -8506,9 +9486,9 @@
                   "cover",
                   "short-rest",
                   "disengage",
-                  "opportunity",
-                  "advantage",
                   "healing-word",
+                  "opportunity",
+                  "detect-magic",
                   "invisibility"
                 ]
               }
@@ -8556,14 +9536,22 @@
                 "lore": [
                   "misty-step",
                   "magic-missile",
-                  "opportunity"
+                  "opportunity",
+                  "torch",
+                  "mine",
+                  "disengage",
+                  "grapple",
+                  "fireball"
                 ],
                 "scene": [
                   "misty-step",
                   "magic-missile",
                   "opportunity",
                   "torch",
-                  "mine"
+                  "mine",
+                  "disengage",
+                  "grapple",
+                  "fireball"
                 ]
               }
             },
@@ -8609,23 +9597,23 @@
               "fused": {
                 "lore": [
                   "invisibility",
-                  "short-rest",
-                  "death-save",
-                  "detect-magic",
-                  "grapple",
-                  "opportunity",
                   "encumbrance",
-                  "healing-word"
+                  "detect-magic",
+                  "healing-word",
+                  "short-rest",
+                  "grapple",
+                  "long-rest",
+                  "opportunity"
                 ],
                 "scene": [
                   "invisibility",
-                  "short-rest",
-                  "death-save",
-                  "detect-magic",
-                  "grapple",
-                  "opportunity",
                   "encumbrance",
-                  "healing-word"
+                  "detect-magic",
+                  "healing-word",
+                  "short-rest",
+                  "grapple",
+                  "long-rest",
+                  "opportunity"
                 ]
               }
             },
@@ -8672,20 +9660,21 @@
                 "lore": [
                   "detect-magic",
                   "invisibility",
+                  "magic-missile",
                   "healing-word",
                   "misty-step",
                   "shield",
                   "components",
-                  "concentration"
+                  "torch"
                 ],
                 "scene": [
                   "detect-magic",
                   "invisibility",
+                  "magic-missile",
                   "healing-word",
                   "misty-step",
                   "shield",
                   "components",
-                  "concentration",
                   "torch"
                 ]
               }
@@ -8734,13 +9723,21 @@
                   "advantage",
                   "short-rest",
                   "magic-missile",
-                  "initiative"
+                  "initiative",
+                  "opportunity",
+                  "rope",
+                  "feather-fall",
+                  "death-save"
                 ],
                 "scene": [
                   "advantage",
                   "short-rest",
                   "magic-missile",
-                  "initiative"
+                  "initiative",
+                  "opportunity",
+                  "rope",
+                  "feather-fall",
+                  "death-save"
                 ]
               }
             },
@@ -8847,24 +9844,24 @@
               ],
               "fused": {
                 "lore": [
-                  "shield",
-                  "disengage",
                   "cover",
+                  "shield",
+                  "opportunity",
+                  "disengage",
+                  "magic-missile",
                   "oath",
                   "invisibility",
-                  "mine",
-                  "opportunity",
-                  "grapple"
+                  "mine"
                 ],
                 "scene": [
-                  "shield",
-                  "disengage",
                   "cover",
+                  "shield",
+                  "opportunity",
+                  "disengage",
+                  "magic-missile",
                   "oath",
                   "invisibility",
-                  "mine",
-                  "opportunity",
-                  "grapple"
+                  "mine"
                 ]
               }
             },
@@ -8912,21 +9909,21 @@
                   "disengage",
                   "opportunity",
                   "cover",
+                  "feather-fall",
                   "magic-missile",
                   "grapple",
                   "invisibility",
-                  "feather-fall",
-                  "initiative"
+                  "shield"
                 ],
                 "scene": [
                   "disengage",
                   "opportunity",
                   "cover",
+                  "feather-fall",
                   "magic-missile",
                   "grapple",
                   "invisibility",
-                  "feather-fall",
-                  "initiative"
+                  "shield"
                 ]
               }
             },
@@ -8972,14 +9969,23 @@
               "fused": {
                 "lore": [
                   "long-rest",
+                  "short-rest",
                   "potion",
-                  "short-rest"
+                  "components",
+                  "death-save",
+                  "encumbrance",
+                  "torch",
+                  "healing-word"
                 ],
                 "scene": [
                   "long-rest",
                   "short-rest",
                   "potion",
-                  "components"
+                  "components",
+                  "death-save",
+                  "encumbrance",
+                  "torch",
+                  "healing-word"
                 ]
               }
             },
@@ -9025,13 +10031,23 @@
               "fused": {
                 "lore": [
                   "encumbrance",
-                  "gate"
+                  "feather-fall",
+                  "gate",
+                  "mine",
+                  "long-rest",
+                  "components",
+                  "grapple",
+                  "cover"
                 ],
                 "scene": [
                   "encumbrance",
                   "feather-fall",
                   "gate",
-                  "mine"
+                  "mine",
+                  "long-rest",
+                  "components",
+                  "grapple",
+                  "cover"
                 ]
               }
             },
@@ -9077,13 +10093,23 @@
               "fused": {
                 "lore": [
                   "coins",
-                  "mine"
+                  "mine",
+                  "short-rest",
+                  "advantage",
+                  "merchant",
+                  "potion",
+                  "inn",
+                  "vault"
                 ],
                 "scene": [
                   "coins",
                   "mine",
                   "short-rest",
-                  "advantage"
+                  "advantage",
+                  "merchant",
+                  "potion",
+                  "inn",
+                  "vault"
                 ]
               }
             },
@@ -9128,24 +10154,24 @@
               ],
               "fused": {
                 "lore": [
-                  "detect-magic",
                   "torch",
+                  "detect-magic",
                   "magic-missile",
-                  "disengage",
                   "mine",
+                  "disengage",
                   "misty-step",
-                  "invisibility",
-                  "vault"
+                  "cover",
+                  "invisibility"
                 ],
                 "scene": [
-                  "detect-magic",
                   "torch",
+                  "detect-magic",
                   "magic-missile",
-                  "disengage",
                   "mine",
+                  "disengage",
                   "misty-step",
-                  "invisibility",
-                  "vault"
+                  "cover",
+                  "invisibility"
                 ]
               }
             },
@@ -9191,13 +10217,23 @@
               "fused": {
                 "lore": [
                   "bridge",
-                  "mine"
+                  "mine",
+                  "torch",
+                  "cathedral",
+                  "misty-step",
+                  "gate",
+                  "healing-word",
+                  "cover"
                 ],
                 "scene": [
                   "bridge",
                   "mine",
                   "torch",
-                  "cathedral"
+                  "cathedral",
+                  "misty-step",
+                  "gate",
+                  "healing-word",
+                  "cover"
                 ]
               }
             },
@@ -9245,17 +10281,21 @@
                   "cathedral",
                   "rope",
                   "vault",
-                  "inn"
+                  "feather-fall",
+                  "inn",
+                  "detect-magic",
+                  "grapple",
+                  "cover"
                 ],
                 "scene": [
                   "cathedral",
                   "rope",
                   "vault",
-                  "inn",
-                  "grapple",
                   "feather-fall",
-                  "torch",
-                  "mine"
+                  "inn",
+                  "detect-magic",
+                  "grapple",
+                  "cover"
                 ]
               }
             },
@@ -9300,10 +10340,24 @@
               ],
               "fused": {
                 "lore": [
-                  "inn"
+                  "inn",
+                  "cathedral",
+                  "cover",
+                  "torch",
+                  "vault",
+                  "detect-magic",
+                  "long-rest",
+                  "short-rest"
                 ],
                 "scene": [
-                  "inn"
+                  "inn",
+                  "cathedral",
+                  "cover",
+                  "torch",
+                  "vault",
+                  "detect-magic",
+                  "long-rest",
+                  "short-rest"
                 ]
               }
             },
@@ -9350,12 +10404,22 @@
                 "lore": [
                   "oath",
                   "merchant",
-                  "healing-word"
+                  "healing-word",
+                  "vault",
+                  "potion",
+                  "misty-step",
+                  "rope",
+                  "torch"
                 ],
                 "scene": [
                   "oath",
                   "merchant",
-                  "healing-word"
+                  "healing-word",
+                  "vault",
+                  "potion",
+                  "misty-step",
+                  "rope",
+                  "torch"
                 ]
               }
             }
@@ -9475,7 +10539,12 @@
                 "lore": [
                   "misty-step",
                   "feather-fall",
-                  "mine"
+                  "mine",
+                  "disengage",
+                  "grapple",
+                  "torch",
+                  "opportunity",
+                  "cover"
                 ],
                 "scene": [
                   "misty-step",
@@ -9484,7 +10553,8 @@
                   "disengage",
                   "grapple",
                   "torch",
-                  "opportunity"
+                  "opportunity",
+                  "cover"
                 ]
               }
             },
@@ -9656,13 +10726,21 @@
                   "advantage",
                   "short-rest",
                   "opportunity",
-                  "initiative"
+                  "initiative",
+                  "disengage",
+                  "magic-missile",
+                  "death-save",
+                  "invisibility"
                 ],
                 "scene": [
                   "advantage",
                   "short-rest",
                   "opportunity",
-                  "initiative"
+                  "initiative",
+                  "disengage",
+                  "magic-missile",
+                  "death-save",
+                  "invisibility"
                 ]
               }
             },
@@ -9896,7 +10974,11 @@
                   "long-rest",
                   "potion",
                   "components",
-                  "short-rest"
+                  "short-rest",
+                  "torch",
+                  "death-save",
+                  "healing-word",
+                  "encumbrance"
                 ],
                 "scene": [
                   "long-rest",
@@ -9904,7 +10986,9 @@
                   "components",
                   "short-rest",
                   "torch",
-                  "death-save"
+                  "death-save",
+                  "healing-word",
+                  "encumbrance"
                 ]
               }
             },
@@ -9950,13 +11034,23 @@
               "fused": {
                 "lore": [
                   "encumbrance",
-                  "feather-fall"
+                  "feather-fall",
+                  "grapple",
+                  "mine",
+                  "cover",
+                  "misty-step",
+                  "long-rest",
+                  "disengage"
                 ],
                 "scene": [
                   "encumbrance",
                   "feather-fall",
                   "grapple",
-                  "mine"
+                  "mine",
+                  "cover",
+                  "misty-step",
+                  "long-rest",
+                  "disengage"
                 ]
               }
             },
@@ -10001,11 +11095,24 @@
               ],
               "fused": {
                 "lore": [
-                  "coins"
+                  "coins",
+                  "short-rest",
+                  "advantage",
+                  "mine",
+                  "merchant",
+                  "vault",
+                  "potion",
+                  "healing-word"
                 ],
                 "scene": [
                   "coins",
-                  "short-rest"
+                  "short-rest",
+                  "advantage",
+                  "mine",
+                  "merchant",
+                  "vault",
+                  "potion",
+                  "healing-word"
                 ]
               }
             },
@@ -10116,14 +11223,20 @@
                   "cathedral",
                   "mine",
                   "torch",
-                  "misty-step"
+                  "misty-step",
+                  "gate",
+                  "cover",
+                  "healing-word"
                 ],
                 "scene": [
                   "bridge",
                   "cathedral",
                   "mine",
                   "torch",
-                  "misty-step"
+                  "misty-step",
+                  "gate",
+                  "cover",
+                  "healing-word"
                 ]
               }
             },
@@ -10171,14 +11284,21 @@
                   "cathedral",
                   "mine",
                   "rope",
-                  "grapple"
+                  "grapple",
+                  "vault",
+                  "inn",
+                  "initiative",
+                  "opportunity"
                 ],
                 "scene": [
                   "cathedral",
                   "mine",
                   "rope",
                   "grapple",
-                  "vault"
+                  "vault",
+                  "inn",
+                  "initiative",
+                  "opportunity"
                 ]
               }
             },
@@ -10223,10 +11343,24 @@
               ],
               "fused": {
                 "lore": [
-                  "inn"
+                  "inn",
+                  "long-rest",
+                  "torch",
+                  "misty-step",
+                  "coins",
+                  "mine",
+                  "cathedral",
+                  "cover"
                 ],
                 "scene": [
-                  "inn"
+                  "inn",
+                  "long-rest",
+                  "torch",
+                  "misty-step",
+                  "coins",
+                  "mine",
+                  "cathedral",
+                  "cover"
                 ]
               }
             },
@@ -10273,12 +11407,22 @@
                 "lore": [
                   "merchant",
                   "oath",
-                  "healing-word"
+                  "healing-word",
+                  "potion",
+                  "mine",
+                  "rope",
+                  "initiative",
+                  "vault"
                 ],
                 "scene": [
                   "merchant",
                   "oath",
-                  "healing-word"
+                  "healing-word",
+                  "potion",
+                  "mine",
+                  "rope",
+                  "initiative",
+                  "vault"
                 ]
               }
             }
@@ -10338,20 +11482,20 @@
                   "fireball",
                   "detect-magic",
                   "cover",
-                  "opportunity",
+                  "advantage",
+                  "invisibility",
                   "shield",
-                  "disengage",
-                  "healing-word"
+                  "opportunity"
                 ],
                 "scene": [
                   "magic-missile",
                   "fireball",
                   "detect-magic",
                   "cover",
-                  "opportunity",
+                  "advantage",
+                  "invisibility",
                   "shield",
-                  "disengage",
-                  "advantage"
+                  "opportunity"
                 ]
               }
             },
@@ -10463,9 +11607,9 @@
                   "misty-step",
                   "cover",
                   "short-rest",
-                  "encumbrance",
                   "healing-word",
-                  "bridge"
+                  "bridge",
+                  "opportunity"
                 ],
                 "scene": [
                   "invisibility",
@@ -10473,9 +11617,9 @@
                   "misty-step",
                   "cover",
                   "short-rest",
-                  "encumbrance",
-                  "death-save",
-                  "long-rest"
+                  "healing-word",
+                  "bridge",
+                  "opportunity"
                 ]
               }
             },
@@ -10583,20 +11727,20 @@
               "fused": {
                 "lore": [
                   "advantage",
+                  "misty-step",
                   "coins",
                   "short-rest",
                   "initiative",
-                  "misty-step",
+                  "fireball",
                   "rope",
-                  "encumbrance",
-                  "detect-magic"
+                  "encumbrance"
                 ],
                 "scene": [
                   "advantage",
+                  "misty-step",
                   "coins",
                   "short-rest",
                   "initiative",
-                  "misty-step",
                   "fireball",
                   "rope",
                   "encumbrance"
@@ -10647,21 +11791,21 @@
                   "concentration",
                   "invisibility",
                   "opportunity",
-                  "misty-step",
-                  "shield",
                   "death-save",
                   "feather-fall",
-                  "cover"
+                  "cover",
+                  "misty-step",
+                  "grapple"
                 ],
                 "scene": [
                   "concentration",
                   "invisibility",
                   "opportunity",
+                  "death-save",
+                  "feather-fall",
+                  "cover",
                   "misty-step",
-                  "shield",
-                  "encumbrance",
-                  "components",
-                  "death-save"
+                  "grapple"
                 ]
               }
             },
@@ -10709,9 +11853,9 @@
                   "cover",
                   "invisibility",
                   "misty-step",
-                  "shield",
                   "mine",
                   "grapple",
+                  "shield",
                   "concentration",
                   "magic-missile"
                 ],
@@ -10719,9 +11863,9 @@
                   "cover",
                   "invisibility",
                   "misty-step",
-                  "shield",
                   "mine",
                   "grapple",
+                  "shield",
                   "concentration",
                   "magic-missile"
                 ]
@@ -10774,8 +11918,8 @@
                   "cover",
                   "shield",
                   "encumbrance",
-                  "magic-missile",
-                  "invisibility"
+                  "invisibility",
+                  "magic-missile"
                 ],
                 "scene": [
                   "disengage",
@@ -10784,8 +11928,8 @@
                   "cover",
                   "shield",
                   "encumbrance",
-                  "magic-missile",
-                  "invisibility"
+                  "invisibility",
+                  "magic-missile"
                 ]
               }
             },
@@ -10834,9 +11978,10 @@
                   "potion",
                   "components",
                   "short-rest",
+                  "healing-word",
                   "merchant",
                   "torch",
-                  "healing-word"
+                  "grapple"
                 ],
                 "scene": [
                   "long-rest",
@@ -10898,7 +12043,7 @@
                   "grapple",
                   "invisibility",
                   "components",
-                  "potion"
+                  "rope"
                 ],
                 "scene": [
                   "encumbrance",
@@ -10955,12 +12100,22 @@
                 "lore": [
                   "coins",
                   "mine",
-                  "advantage"
+                  "advantage",
+                  "merchant",
+                  "vault",
+                  "healing-word",
+                  "inn",
+                  "detect-magic"
                 ],
                 "scene": [
                   "coins",
                   "mine",
-                  "advantage"
+                  "advantage",
+                  "merchant",
+                  "vault",
+                  "healing-word",
+                  "inn",
+                  "detect-magic"
                 ]
               }
             },
@@ -11070,14 +12225,21 @@
                   "bridge",
                   "cathedral",
                   "mine",
-                  "rope"
+                  "rope",
+                  "misty-step",
+                  "cover",
+                  "vault",
+                  "torch"
                 ],
                 "scene": [
                   "bridge",
                   "cathedral",
                   "mine",
                   "rope",
-                  "misty-step"
+                  "misty-step",
+                  "cover",
+                  "vault",
+                  "torch"
                 ]
               }
             },
@@ -11127,7 +12289,9 @@
                   "gate",
                   "vault",
                   "mine",
-                  "misty-step"
+                  "misty-step",
+                  "bridge",
+                  "grapple"
                 ],
                 "scene": [
                   "cathedral",
@@ -11184,12 +12348,22 @@
                 "lore": [
                   "inn",
                   "healing-word",
-                  "shield"
+                  "long-rest",
+                  "shield",
+                  "torch",
+                  "components",
+                  "detect-magic",
+                  "cover"
                 ],
                 "scene": [
                   "inn",
                   "healing-word",
-                  "shield"
+                  "long-rest",
+                  "shield",
+                  "torch",
+                  "components",
+                  "detect-magic",
+                  "cover"
                 ]
               }
             },
@@ -11236,12 +12410,22 @@
                 "lore": [
                   "oath",
                   "merchant",
-                  "healing-word"
+                  "healing-word",
+                  "vault",
+                  "mine",
+                  "gate",
+                  "rope",
+                  "misty-step"
                 ],
                 "scene": [
                   "oath",
                   "merchant",
-                  "healing-word"
+                  "healing-word",
+                  "vault",
+                  "mine",
+                  "gate",
+                  "rope",
+                  "misty-step"
                 ]
               }
             }

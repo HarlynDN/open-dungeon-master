@@ -1,4 +1,5 @@
 "use client";
+import { useLocale as useSyncLocale } from "@/lib/i18n/LocaleProvider";
 
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { entryText, entryFrame, joinGenreLabel } from "@/lib/i18n/entry-ui-presentations";
@@ -37,6 +38,7 @@ type Preview = {
 // The preview sends the stored genre id ("high_fantasy"); a person reads words.
 
 export default function JoinPage({ params }: { params: Promise<{ code: string }> }) {
+  const { t: syncT } = useSyncLocale();
   const { locale } = useLocale();
   const { code } = use(params);
   const roomCode = code.toUpperCase();
@@ -158,6 +160,12 @@ export default function JoinPage({ params }: { params: Promise<{ code: string }>
             <>
               <SectionHead title={entryText("Sign in to take your seat", locale)} glyph="tab-admin" level="h2" />
               <AuthForm joinCode={roomCode} onAuthed={() => join()} />
+              {/* A way out that is not the browser's back button, which an
+                  installed app does not have. */}
+              <p className="mt-4 text-center">
+                <Link href="/" className="text-xs text-stone-500 hover:text-amber-200">
+                  {syncT("upstreamUi.c6dbb0b1238b")}</Link>
+              </p>
             </>
           )}
         </div>

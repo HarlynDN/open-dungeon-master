@@ -1,15 +1,18 @@
 "use client";
+import { compareNames } from "@/lib/language/text-logic";
+import { useLocale as useSyncLocale } from "@/lib/i18n/LocaleProvider";
 
 import { BookOpen, Check, Hourglass, Lock, Star } from "lucide-react";
 import { useMemo, useState, useSyncExternalStore, type ReactNode } from "react";
 import { GameIcon } from "@/components/ui/GameIcon";
 import { InfoButton } from "@/components/ui/InfoDialog";
 import { cn } from "@/lib/cn";
-import { contentSlug, describeContentEntry } from "@/lib/help";
+import { contentSlug, describeContentEntry, spellRowConcentrates } from "@/lib/help";
 import { replayAnimation } from "@/lib/motion/replay";
 import { spellSupportFor } from "@/lib/srd/spell-support";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { spellSummaryView, spellSupportNote, spellTileMatches, spellTileName } from "@/lib/i18n/spell-ui-presentations";
+import { bundledSpellFacts } from "@/lib/srd/spell-facts";
 
 // The spell book: one tab per spell level (cantrips first), every spell a
 // tile that says at a glance whether it is ready, waiting for a long rest,
@@ -51,7 +54,23 @@ export type SpellTile = {
   // reaches onTile, so the picker can explain at length, and the tile
   // shakes no.
   blocked?: string;
+  // Takes concentration: marked on the tile, so the choice is seen while
+  // picking rather than found in the info panel (issue 252). Read from the
+  // spell's row when the tile has none.
+  concentration?: boolean;
 };
+
+// Whether a tile's spell takes concentration: what the tile says, else its
+// row (a pack's or a homebrew spell's), else the bundled facts.
+export function tileConcentrates(tile: Pick<SpellTile, "name" | "data" | "concentration">): boolean {
+  if (typeof tile.concentration === "boolean") {
+    return tile.concentration;
+  }
+  if (tile.data && "concentration" in tile.data) {
+    return spellRowConcentrates(tile.data);
+  }
+  return bundledSpellFacts(tile.name)?.concentration === true;
+}
 
 export type SpellCounter = { label: string; value: number; max?: number | null; extra?: string };
 
@@ -91,6 +110,7 @@ export function SpellBook({
   notice?: ReactNode;
   emptyText?: string;
 }) {
+  const { t: syncT } = useSyncLocale();
   const { locale, t } = useLocale();
   const stateText = (state: SpellTileState) => t(`spellUi.${state}`);
   const levelLabel = (key: string) => key === "0" ? t("spellUi.cantrips") : key === "other" ? t("spellUi.otherSpells") : t("spellUi.levelSpells", { level: locale === "en" ? ROMAN[Number(key)] ?? key : key });
@@ -140,7 +160,7 @@ export function SpellBook({
   // that chose it. Re-sorting on every tap sent a chosen spell leaping to
   // the front and the list jumping, and the tap looked lost (issue 66).
   const byRank = (a: SpellTile, b: SpellTile) =>
-    RANK[a.state] - RANK[b.state] || spellTileName(a, locale).localeCompare(spellTileName(b, locale), locale);
+    RANK[a.state] - RANK[b.state] || compareNames(spellTileName(a, locale), spellTileName(b, locale));
   const pageKey = `${locale}|${needle ? `?${needle}` : active}|${shown
     .map((tile) => tile.name)
     .sort()
@@ -155,6 +175,7 @@ export function SpellBook({
       ? [...shown].sort((a, b) => (position.get(a.name) ?? 0) - (position.get(b.name) ?? 0))
       : [...shown].sort(byRank);
   const presentStates = new Set(tiles.map((tile) => tile.state));
+  const anyConcentration = tiles.some(tileConcentrates);
   const toggles = (tile: SpellTile) =>
     Boolean(onTile) && (canToggle ? canToggle(tile) : tile.state !== "granted");
 
@@ -292,6 +313,7 @@ export function SpellBook({
                   <span className="min-w-0">
                     <span className="line-clamp-2 text-xs leading-tight [overflow-wrap:anywhere]" title={spellTileName(tile, locale)}>
                       {spellTileName(tile, locale)}
+                      {tileConcentrates(tile) ? <ConcentrationMark /> : null}
                       {tile.suggested ? (
                         <Star className="ml-1 inline size-3 fill-amber-300 text-amber-300" aria-label={t("spellUi.suggestedAria")} />
                       ) : null}
@@ -333,6 +355,10 @@ export function SpellBook({
               {stateText(state)}
             </span>
           ))}
+        {anyConcentration ? (
+          <span className="flex items-center gap-1">
+            <ConcentrationMark /> {syncT("upstreamUi.c2cfec66629a")}</span>
+        ) : null}
         {tiles.some((tile) => tile.suggested) ? (
           <span className="flex items-center gap-1">
             <Star className="size-3 fill-amber-300 text-amber-300" aria-hidden="true" /> {t("spellUi.suggested")}
@@ -341,6 +367,21 @@ export function SpellBook({
       </div>
       {footer}
     </div>
+  );
+}
+
+// The concentration mark: a ringed C, named for a screen reader.
+function ConcentrationMark() {
+  const { t: syncT } = useSyncLocale();
+  return (
+    <span
+      role="img"
+      aria-label={syncT("upstreamUi.c2cfec66629a")}
+      title={syncT("upstreamUi.7f6157469a3a")}
+      data-concentration
+      className="ml-1 inline-flex size-3.5 translate-y-[-1px] items-center justify-center rounded-full border border-sky-300/70 align-middle text-[8px] font-bold leading-none text-sky-200"
+    >
+      {syncT("upstreamUi.6b23c0d5f35d")}</span>
   );
 }
 

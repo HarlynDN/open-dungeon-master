@@ -161,9 +161,6 @@ export function readModelsAnswer(status: number): ProbeVerdict {
   return "absent";
 }
 
-// ODM's documented default DM model.
-export const DEFAULT_LOCAL_MODEL = "qwen3.6-35b";
-
 // The hosted providers the wizard knows by name. Their base URL is fixed,
 // so all that is asked is the key.
 export type KeyProviderId = "openai" | "openrouter" | "other";
@@ -174,10 +171,6 @@ export type KeyProvider = {
   baseUrl: string;
   keyUrl: string;
   keyPlaceholder: string;
-  // The model preselected when the provider lists it. The client app's
-  // OpenAI setup preselects the same one (open-dungeon-master-client
-  // src/shared/ai-setup.ts DEFAULT_MODEL).
-  preferred: readonly string[];
   // One key also covers pictures, narration and dictation.
   coversMedia: boolean;
 };
@@ -189,7 +182,6 @@ export const KEY_PROVIDERS: readonly KeyProvider[] = [
     baseUrl: "https://api.openai.com/v1",
     keyUrl: "https://platform.openai.com/api-keys",
     keyPlaceholder: "sk-...",
-    preferred: ["gpt-5.1", "gpt-5.4-mini", "gpt-5-mini", "gpt-5"],
     coversMedia: true,
   },
   {
@@ -198,7 +190,6 @@ export const KEY_PROVIDERS: readonly KeyProvider[] = [
     baseUrl: "https://openrouter.ai/api/v1",
     keyUrl: "https://openrouter.ai/keys",
     keyPlaceholder: "sk-or-...",
-    preferred: ["google/gemini-3.5-flash"],
     coversMedia: false,
   },
   {
@@ -207,7 +198,6 @@ export const KEY_PROVIDERS: readonly KeyProvider[] = [
     baseUrl: "",
     keyUrl: "",
     keyPlaceholder: "Your provider's API key",
-    preferred: [],
     coversMedia: false,
   },
 ];
@@ -240,27 +230,32 @@ export function providerForKey(key: string): KeyProviderId | null {
   return null;
 }
 
-// The model to preselect: the documented default when the server has it,
-// then the provider's preferred ones, then the first chat model listed.
-export function recommendedModel(models: readonly ListedModel[], preferred: readonly string[] = [DEFAULT_LOCAL_MODEL]): string {
-  for (const want of preferred) {
-    const exact = models.find((model) => model.id === want);
-    if (exact) return exact.id;
-  }
-  for (const want of preferred) {
-    const close = models.find((model) => model.id.toLowerCase().includes(want.toLowerCase()));
-    if (close) return close.id;
-  }
+// The model to preselect before the catalog has had its say: the first chat
+// model listed, in the server's own order. No model is named in code; the
+// setup route ranks the list with the catalog (src/lib/model-registry).
+export function recommendedModel(models: readonly ListedModel[]): string {
   return models[0]?.id ?? "";
+}
+
+// A loader node's file list, from GET /object_info/<node>. ComfyUI declares
+// a file input as [names, options], and its newer nodes as
+// ["COMBO", { options: names }].
+export function readComfyFiles(json: unknown, node: string, input: string): string[] {
+  const field = (json as Record<string, { input?: { required?: Record<string, unknown> } }> | null)?.[node]?.input
+    ?.required?.[input];
+  const list = !Array.isArray(field)
+    ? null
+    : Array.isArray(field[0])
+      ? field[0]
+      : field[0] === "COMBO"
+        ? (field[1] as { options?: unknown } | undefined)?.options
+        : null;
+  return Array.isArray(list) ? list.filter((name): name is string => typeof name === "string" && name.trim() !== "") : [];
 }
 
 // ComfyUI's checkpoint list, from GET /object_info/CheckpointLoaderSimple.
 export function readComfyCheckpoints(json: unknown): string[] {
-  const node = (json as { CheckpointLoaderSimple?: { input?: { required?: { ckpt_name?: unknown } } } } | null)
-    ?.CheckpointLoaderSimple;
-  const field = node?.input?.required?.ckpt_name;
-  const list = Array.isArray(field) && Array.isArray(field[0]) ? field[0] : [];
-  return list.filter((name): name is string => typeof name === "string" && name.trim() !== "");
+  return readComfyFiles(json, "CheckpointLoaderSimple", "ckpt_name");
 }
 
 // Kokoro-FastAPI's voice list, from GET /v1/audio/voices.

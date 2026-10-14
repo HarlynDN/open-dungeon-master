@@ -1,3 +1,4 @@
+import type { SystemGlyph } from "@/lib/system-glyphs";
 import { z } from "zod";
 import { allocateSeq, type Campaign } from "@/lib/db/campaigns";
 import { getActiveEncounter } from "@/lib/db/encounters";
@@ -55,7 +56,7 @@ export const takeRestTool: ToolDef = {
   function: {
     name: "take_rest",
     description:
-      "The party rests. Call this BEFORE narrating any recovery; never narrate HP, spell slots, or hit dice returning without it. kind=short is a breather of an hour or more: characters spend hit dice to heal (the server rolls them; a player at the table chooses how many on their own sheet), and an item waiting to be attuned becomes attuned. kind=long is a full night's sleep: HP and spell slots restore fully and half the hit dice return. Not usable during combat.",
+      "Resolve the party's rest; a short rest also attunes an item waiting to be attuned. Not usable during combat.",
     parameters: {
       type: "object",
       additionalProperties: false,
@@ -157,13 +158,14 @@ function auditRest(
   }
 }
 
-function tableNote(campaign: Campaign, content: string, data: Omit<RestEventData, "kind" | "english">) {
+function tableNote(campaign: Campaign, content: string, data: Omit<RestEventData, "kind" | "english">, glyph: SystemGlyph) {
   const systemEvent = { ...data, kind: "rest" as const, english: content, locale: normalizeLocale(campaign.gameSettings.locale) };
   const seq = allocateSeq(campaign.id);
   const message = insertCampaignMessage({
     campaignId: campaign.id,
     seq,
     authorType: "system",
+    glyph,
     content: systemEventText(systemEvent),
     systemEvent,
   });
@@ -277,6 +279,7 @@ export function handleTakeRest(
         unaffected.length ? ` No benefit from it for ${unaffected.join("; ")}.` : ""
       }`,
       { rest: "long", minutes: restedMinutes, skipped, ...clock },
+      "rest-long",
     );
     // A night passing is a timeskip: the off-screen world moves too (world
     // arcs, NPC goals), with results landing as DM-only facts and sparks.
@@ -395,6 +398,7 @@ export function handleTakeRest(
     campaign,
     `The party takes a short rest (${restedFor})${nowReads ? `. It is now ${nowReads}` : ""}.`,
     { rest: "short", minutes: restedMinutes, skipped: [], ...clock },
+    "rest-short",
   );
   return {
     ok: true,

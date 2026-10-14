@@ -46,8 +46,8 @@ export const WORKSHOP_HELP_MESSAGES = /*#__PURE__*/ defineMessages({
     "zh-CN": "导入准备内容"
   },
   "workshopHelp.copy.m059": {
-    "en": "step: pick a workshop (or another campaign you can see) and choose what to copy in. A campaign lobby can import the same way after creation. Copies are copies: the workshop keeps its version, the campaign owns its own from then on, and name collisions get numbered instead of overwritten. The Share tool exports the whole workshop as a bundle file another server can import, and can compile a draft world pack from it.",
-    "zh-CN": "步骤中选择工坊，或你有权限查看的其他战役，再选择要复制的内容。战役创建后也可从大厅导入。复制后，工坊保留原版，战役拥有独立副本；重名内容会添加编号，不会覆盖。分享工具可将整个工坊导出为其他服务器可导入的文件，也可编译成世界内容包草稿。"
+    "en": "step: pick a workshop (or another campaign you can see) and choose what to copy in. A campaign lobby can import the same way after creation, and the table's Setup tab can do so during play. Copies are copies: the workshop keeps its version, the campaign owns its own from then on, and name collisions get numbered instead of overwritten. The Share tool exports the whole workshop as a bundle file another server can import, and can compile a draft world pack from it.",
+    "zh-CN": "步骤中选择工坊，或你有权限查看的其他战役，再选择要复制的内容。战役创建后也可从大厅导入，开始游玩后还可从桌面的「设置」页导入。复制后，工坊保留原版，战役拥有独立副本；重名内容会添加编号，不会覆盖。分享工具可将整个工坊导出为其他服务器可导入的文件，也可编译成世界内容包草稿。"
   },
   "workshopHelp.copy.m060": {
     "en": "Copying things",

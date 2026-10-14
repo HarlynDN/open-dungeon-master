@@ -52,11 +52,11 @@ await test('authored notes remain escaped and visible only to the sheet owner',(
   const hidden=renderer.render('CharacterSheetDialog',{...own,mine:false,sheet:dialogSheet({notes:'private secret',backstory:'public story'})},'zh-CN');
   assert.doesNotMatch(hidden,/private secret|仅自己可见/);assert.match(hidden,/public story/);
 });
-await test('casting/resource help localizes all 415 native explanations without changing engine guidance or unknown text',()=>{
+await test('casting/resource help localizes all 416 native explanations without changing engine guidance or unknown text',()=>{
   assert.match(html('dialog/spells'),/智力.*难度.*攻击加值.*1环.*2环.*戏法不消耗法术位/);
   assert.match(html('dialog/pact'),/邪术师.*契约法术位，2环.*短休后恢复/);
   const keys=Object.keys(MESSAGE_CATALOGS.en).filter(k=>k.startsWith('sheetDialog.resourceHelp.'));
-  assert.equal(keys.length,415);
+  assert.equal(keys.length,416);
   for(const key of keys){
     const id=key.split('.').at(-1),def=RESOURCE_DEFS.find(row=>row.id===id);
     assert.ok(def,id);assert.equal(MESSAGE_CATALOGS.en[key],def.guidance);
@@ -67,9 +67,9 @@ await test('casting/resource help localizes all 415 native explanations without 
   assert.equal(sheetResourceHelp('second_wind','Authored override <script>','zh-CN'),'Authored override <script>');
   assert.equal(sheetResourceHelp('homebrew','Fireball <script>','zh-CN'),'Fireball <script>');
 });
-await test('all 415 native resource rows render localized names/help with new source dice and shared terminology intact',async()=>{
-  assert.equal(authoredResources.length,140);
-  assert.equal(RESOURCE_DEFS.length,415);
+await test('all 416 native resource rows render localized names/help with new source dice and shared terminology intact',async()=>{
+  assert.equal(authoredResources.length,141);
+  assert.equal(RESOURCE_DEFS.length,416);
   const displayResources=RESOURCE_DEFS;
   const previouslyReviewed=new Set([...authoredResources.map(row=>row.id),...Object.keys((await import('../src/lib/i18n/sheet-resource-help-messages.ts')).SHEET_RESOURCE_HELP_MESSAGES.en).map(key=>key.split('.').at(-1))]);
   const resources=Object.fromEntries(displayResources.map(row=>[row.id,{max:2,used:1}]));
@@ -167,7 +167,7 @@ await test('full refusal and timing templates rerender, retain proper names, and
   assert.equal(sheetTimePassed(timing+' Authored suffix','zh-CN'),timing+' Authored suffix');
   assert.equal(sheetUsageMessage('Authored diagnostic <script>','zh-CN'),'Authored diagnostic <script>');
   const error={text:'The change did not reach the server.',at:'usage'};
-  const props={...own,sheet:dialogSheet({})},opts={queues:{[DIALOG_FILE]:[false,false,error,null]}};
+  const props={...own,sheet:dialogSheet({})},opts={queues:{[DIALOG_FILE]:[false,false,false,error,null]}};
   assert.match(renderer.render('CharacterSheetDialog',props,'zh-CN',opts),/未能将变动请求发送到服务器/);
   assert.match(renderer.render('CharacterSheetDialog',props,'en',opts),/The change did not reach the server\./);
 });
@@ -207,7 +207,7 @@ await test('actual dialog slot spend posts once, and the next cast uses the exis
   assert.ok(spend);assert.equal(spend.props.disabled,false);
   try{spend.props.onClick();await new Promise(resolve=>setImmediate(resolve));await new Promise(resolve=>setImmediate(resolve));}
   finally{globalThis.fetch=realFetch;}
-  assert.equal(calls.length,1);assert.deepEqual(JSON.parse(calls[0].body),{slots:{1:1}});
+  assert.equal(calls.length,1);assert.deepEqual(JSON.parse(calls[0].body),{characterId:hero.id,slots:{1:1}});
   assert.equal(world.sheet(hero.id).spellcasting.slots[1].used,1);
   const outcome=await world.invoke('use_spell_slot',{characterId:hero.id,spell:'Magic Missile',level:1});
   assert.equal(outcome.ok,true,JSON.stringify(outcome));
@@ -246,10 +246,10 @@ await test('actual dialog armor button charges ten minutes once and returns a re
   const {getUserById}=await import('../src/lib/db/users.ts');world.signIn(getUserById(hero.userId));
   try{wear.props.onClick();await new Promise(resolve=>setImmediate(resolve));await new Promise(resolve=>setImmediate(resolve));}
   finally{globalThis.fetch=realFetch;}
-  assert.equal(calls.length,1);assert.deepEqual(JSON.parse(calls[0].body),{gear:{Plate:{equipped:true}}});
+  assert.equal(calls.length,1);assert.deepEqual(JSON.parse(calls[0].body),{characterId:hero.id,gear:{Plate:{equipped:true}}});
   assert.equal(world.sheet(hero.id).equipment[0].equipped,true);
   const after=getClock(world.campaignId);assert.equal(after.instant-before.instant,10);
-  const time=renderer.updates().find(row=>row.file===DIALOG_FILE&&row.at===3&&typeof row.value==='string')?.value;
+  const time=renderer.updates().find(row=>row.file===DIALOG_FILE&&row.at===4&&typeof row.value==='string')?.value;
   assert.equal(time,'Putting on Plate takes 10 minutes.');assert.equal(sheetTimePassed(time,'zh-CN'),'穿上全身板甲需要 10 分钟。');
 });
 await test('new sheet dialog/material keys stay in route content resources and out of root UI resources',()=>{
@@ -273,7 +273,7 @@ await test('Chinese and English resource counter clicks post one canonical usage
       const row=renderer.elements().find(({props})=>props.id==='sub_superiority_dice'&&typeof props.onSpend==='function');assert.ok(row);
       assert.equal(row.props.name,locale==='zh-CN'?'卓越骰':'Superiority Dice');
       const before=calls.length;row.props.onSpend();await new Promise(resolve=>setImmediate(resolve));await new Promise(resolve=>setImmediate(resolve));
-      assert.equal(calls.length-before,1);assert.deepEqual(JSON.parse(calls.at(-1).body),{resources:{sub_superiority_dice:1}});
+      assert.equal(calls.length-before,1);assert.deepEqual(JSON.parse(calls.at(-1).body),{characterId:hero.id,resources:{sub_superiority_dice:1}});
       assert.equal(world.sheet(hero.id).resources.sub_superiority_dice.used,1);
     }
   }finally{globalThis.fetch=realFetch;}
@@ -296,7 +296,7 @@ await test('six theme counter updates retain canonical IDs and their original sh
       const counter=renderer.elements().find(({props})=>props.id===row.id&&typeof props.onSpend==='function');assert.ok(counter);
       assert.equal(counter.props.name,MESSAGE_CATALOGS['zh-CN']['sheetPlay.resourceName.'+row.id]);
       const before=calls.length;counter.props.onSpend();await new Promise(resolve=>setImmediate(resolve));await new Promise(resolve=>setImmediate(resolve));
-      assert.equal(calls.length-before,1);assert.deepEqual(calls.at(-1),{resources:{[row.id]:1}});assert.equal(world.sheet(hero.id).resources[row.id].used,1);
+      assert.equal(calls.length-before,1);assert.deepEqual(calls.at(-1),{characterId:hero.id,resources:{[row.id]:1}});assert.equal(world.sheet(hero.id).resources[row.id].used,1);
     }
   }finally{globalThis.fetch=realFetch;}
   const rested=await world.invoke('take_rest',{kind:'short'});assert.equal(rested.ok,true,JSON.stringify(rested));
@@ -328,7 +328,7 @@ await test('bilingual dynamic counter buttons keep canonical IDs; a real free ca
       renderer.render('CharacterSheetDialog',{...own,sheet:world.sheet(hero.id)},locale);
       const row=renderer.elements().find(e=>e.props.id===id&&typeof e.props.onSpend==='function');assert(row);
       const count=calls.length;row.props.onSpend();await new Promise(resolve=>setImmediate(resolve));await new Promise(resolve=>setImmediate(resolve));
-      assert.equal(calls.length-count,1);assert.deepEqual(calls.at(-1),{resources:{[id]:1}});
+      assert.equal(calls.length-count,1);assert.deepEqual(calls.at(-1),{characterId:hero.id,resources:{[id]:1}});
       assert.deepEqual(world.sheet(hero.id).resources[id],{max:1,used:1});
     }
   }finally{globalThis.fetch=realFetch;}

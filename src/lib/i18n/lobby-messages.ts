@@ -2,6 +2,7 @@ import { defineMessages } from "./catalog.ts";
 
 // UI copy and stable gate reasons; campaign and character text stay verbatim.
 export const LOBBY_MESSAGES = /*#__PURE__*/ defineMessages({
+  "lobby.selectCharacterError": { "en": "Could not select the character.", "zh-CN": "无法选择角色。" },
   "lobby.noDmCharacter": { en: "No character needed", "zh-CN": "无需创建角色" },
   "lobby.edit": {
     "en": "Edit",

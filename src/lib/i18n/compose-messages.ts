@@ -3,6 +3,8 @@ import { defineMessages } from "./catalog.ts";
 // Campaign-only composer/Ask copy. Authored questions, answers, commands,
 // names and quoted evidence remain original; protocol enums do not change.
 export const COMPOSE_MESSAGES = /*#__PURE__*/ defineMessages({
+  "composeUi.placeholder.ended": {"en": "This campaign has ended. The story stays here to read.", "zh-CN": "此战役已结束。你仍可在这里阅读故事。"},
+  "composeUi.ask.limit": {"en": "Up to {count} characters", "zh-CN": "最多 {count} 个字符"},
   "composeUi.mode.do": { en: "Do", "zh-CN": "行动" },
   "composeUi.mode.say": { en: "Say", "zh-CN": "说话" },
   "composeUi.mode.ooc": { en: "OOC", "zh-CN": "场外" },

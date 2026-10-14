@@ -5,7 +5,7 @@ import { useLocale } from "@/lib/i18n/LocaleProvider";
 import type { AppLocale } from "@/lib/i18n/locales";
 import { composeErrorText, composerPlaceholderText } from "@/lib/i18n/compose-presentations";
 import { isComposingInput } from "@/lib/input-composition";
-import { memo, type ReactNode } from "react";
+import { memo, useId, type ReactNode } from "react";
 import type { Dispatch, FormEvent, RefObject, SetStateAction } from "react";
 import { cn } from "@/lib/cn";
 import { ui } from "@/lib/ui";
@@ -34,6 +34,8 @@ import type { TargetEdge } from "@/lib/battlemap/view-tactics";
 import type { CampaignState } from "@/app/campaigns/[campaignId]/useCampaignStream";
 
 import type { InputKind } from "@/lib/campaign-types";
+import { LengthNote } from "@/components/ui/LengthNote";
+import { composerLimit, textLength } from "@/lib/text-limits";
 
 export type { InputKind };
 
@@ -50,8 +52,10 @@ function ComposerInner({
   campaignLocale = "en",
   sheets,
   meUserId,
+  activeSheetId,
   steersStory,
   isDm,
+
   kind,
   onKindChange,
   input,
@@ -90,7 +94,9 @@ function ComposerInner({
   campaignLocale?: AppLocale;
   sheets: CampaignState["sheets"];
   meUserId: string;
+  activeSheetId?: string;
   steersStory: boolean;
+
   // The DM seat: narrates instead of acting, and never runs a character.
   isDm: boolean;
   kind: InputKind;
@@ -143,6 +149,13 @@ function ComposerInner({
   const displayPlaceholder = composerPlaceholderText(placeholder, locale);
   // The Hand outlives the fight by one beat so its fold-away can play.
   const hand = useLingeringEncounter(encounter);
+  // Each mode's limit, counted as its route counts it. The count shows once
+  // a draft nears it, and a draft over it is held here, marked, rather than
+  // refused after the send or cut short on the server (issue 207).
+  const noteId = useId();
+  const maxChars = composerLimit(kind, leadPrivate);
+  const length = textLength(input);
+  const tooLong = length > maxChars;
   return (
     <form onSubmit={onSubmit} className="glass session-desk cine-desk border-t border-stone-700/40 px-3 pb-3 pt-2.5">
       <div className="mx-auto max-w-3xl sm:px-3">
@@ -202,6 +215,7 @@ function ComposerInner({
         ) : null}
         {!isDm && hand.encounter ? (
           <CombatHand
+            activeSheetId={activeSheetId}
             campaignId={campaignId}
             campaignLocale={campaignLocale}
             sheets={sheets}
@@ -287,6 +301,7 @@ function ComposerInner({
         ) : null}
         <div
           data-tour="composer-input"
+          data-over={tooLong ? "" : undefined}
           className={
             "session-well texture-noise flex items-end gap-2 p-2" +
             (highlight ? " composer-pulse" : "")
@@ -306,6 +321,8 @@ function ComposerInner({
             rows={2}
             disabled={inputBlocked}
             placeholder={displayPlaceholder}
+            aria-describedby={noteId}
+            aria-invalid={tooLong || undefined}
             className="flex-1 resize-none bg-transparent px-2 py-1.5 text-sm text-stone-200 outline-none disabled:opacity-50"
           />
           {onXCard ? (
@@ -322,19 +339,21 @@ function ComposerInner({
           ) : null}
           <PushToTalk
             disabled={inputBlocked}
+            composerRef={composerRef}
             onTranscript={(text) =>
               setInput((current) => (current ? `${current} ${text}` : text))
             }
           />
           <button
             type="submit"
-            disabled={sending || !input.trim() || inputBlocked}
+            disabled={sending || !input.trim() || inputBlocked || tooLong}
             aria-label={t("composeUi.send")}
             className={cn(ui.btnPrimary, "session-deskbtn cine-send")}
           >
             {sending ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
           </button>
         </div>
+        <LengthNote id={noteId} length={length} max={maxChars} from={0.8} className="mt-1" />
         {error ? <p className="motion-shake mt-1.5 text-sm text-red-400">{composeErrorText(error, locale, "composeUi.error.send", encounter?.enemies.map(enemy => enemy.name))}</p> : null}
       </div>
     </form>

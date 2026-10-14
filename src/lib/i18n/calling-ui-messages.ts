@@ -1,6 +1,7 @@
 import { defineMessages } from "./catalog.ts";
 
 export const CALLING_UI_MESSAGES = /*#__PURE__*/ defineMessages({
+  "callingUi.featChoice.subclassCoverage": {"en": "Your subclass grants this training; it goes on the sheet with the character.", "zh-CN": "子职授予这些训练；创建角色时会一并记录到角色卡。"},
   "callingUi.chooseClass": {
     "en": "Choose a class",
     "zh-CN": "选择职业"

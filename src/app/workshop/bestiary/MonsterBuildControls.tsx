@@ -134,6 +134,8 @@ export function MonsterBuildControls({
                 cr={entry.cr}
                 genre={genre}
                 seed={entry.slug}
+                slug={entry.slug}
+                name={entry.name}
                 size="size-7"
               />
               {rosterMonsterName(entry, locale)} <span className="text-stone-600">{monsterUiText("CR", locale)} {crLabel(entry.cr)}</span>

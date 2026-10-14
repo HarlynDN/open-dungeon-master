@@ -16,13 +16,13 @@ const stubs={
  '@/app/admin/HarnessPictureTest':url('export const HarnessPictureTest=()=>null;'),
  '@/lib/audio-devices':url('export const registerOutput=audio=>{globalThis.__setupMediaOutputs.push(audio);return audio;};export const releaseOutput=audio=>{globalThis.__setupMediaReleases.push(audio);};'),
 };
-const source=(path,old)=>{let text=old&&path===file?execFileSync('git',['show',`9a6d0613:${path}`],{encoding:'utf8'}):fs.readFileSync(path,'utf8');if(old&&path===file)text=text.replace("Any checkpoint works; the campaign&apos;s genre supplies the art style.","Use a checkpoint compatible with this workflow; the campaign&apos;s genre supplies the art style.");return path===file?text+'\nexport {NarrationTest};':text;};
+const source=(path,old)=>{let text=old&&path===file?execFileSync('git',['show',`2b0b6b6e:${path}`],{encoding:'utf8'}):fs.readFileSync(path,'utf8');if(old&&path===file)text=text.replace("Any checkpoint works; the campaign's genre supplies the art style.","Use a checkpoint compatible with this workflow; the campaign's genre supplies the art style.");return path===file?text+'\nexport {NarrationTest};':text;};
 const r=await openCombatRenderer({files:[file],stubs,sourceOf:path=>source(path,false)}),before=await openCombatRenderer({files:[file],stubs,sourceOf:path=>source(path,true)});
 const stable=html=>{const ids=new Map();return html.replace(/radix-_R_[A-Za-z0-9]+_/g,id=>{if(!ids.has(id))ids.set(id,'radix-generated-'+ids.size);return ids.get(id);});};
-const no=()=>{},draft={pictures:'none',comfy:{url:'',checkpoint:''},picturesKey:'',narration:'off',kokoro:{url:'',voice:''},narrationKey:''};
-const scan={comfyui:{url:'http://host.test:8188',checkpoints:['native.safetensors']},kokoro:{url:'http://host.test:8880',voices:['af_heart','zf_xiaobei']},whisper:{url:'http://host.test:9000'}};
-const pictureProps={draft,update:no,scan:null,scanning:false,storyIsOpenAi:false,agentPaints:false,agentVerified:false,agentLabel:'Authored Agent',onAgentVerified:no,openaiKeySaved:false};
-const voiceProps={draft,update:no,scan:null,scanning:false,storyIsOpenAi:false,ttsKeySaved:false};
+const no=()=>{},draft={answered:[],picturesModel:'',narrationModel:'',dictation:{whisperModel:'',openaiModel:''},pictures:'none',comfy:{url:'',checkpoint:'',preset:'checkpoint'},picturesKey:'',narration:'off',kokoro:{url:'',voice:''},narrationKey:''};
+const scan={comfyui:{url:'http://host.test:8188',checkpoints:['native.safetensors'],models:[],hardware:null},kokoro:{url:'http://host.test:8880',voices:['af_heart','zf_xiaobei']},whisper:{url:'http://host.test:9000'}};
+const pictureProps={env:{},onComfyOffers:no,draft,update:no,scan:null,scanning:false,storyIsOpenAi:false,agentPaints:false,agentVerified:false,agentLabel:'Authored Agent',onAgentVerified:no,openaiKeySaved:false};
+const voiceProps={env:{},draft,update:no,scan:null,scanning:false,storyIsOpenAi:false,ttsKeySaved:false};
 let renders=0;
 for(const [name,props,options]of [
  ['PicturesStep',pictureProps],['PicturesStep',{...pictureProps,draft:{...draft,pictures:'comfyui'}}],['PicturesStep',{...pictureProps,scan,draft:{...draft,pictures:'comfyui'}}],
@@ -35,8 +35,9 @@ for(const [name,props,options]of [
  ]){assert.equal(stable(r.render(name,props,'en',options)),stable(before.render(name,props,'en',options)),name);renders++;}
 let changed,verified=false;
 let html=r.render('PicturesStep',{...pictureProps,scan,agentPaints:true,draft:{...draft,pictures:'comfyui'},update:change=>changed=change(draft),onAgentVerified:()=>verified=true},'zh-CN');assert(html.includes('ComfyUI 地址')&&html.includes('兼容的模型'));
-r.elements().find(e=>e.props.title==='此电脑上的 ComfyUI').props.onPick();assert.deepEqual(changed.comfy,{url:scan.comfyui.url,checkpoint:'native.safetensors'});assert.equal(changed.pictures,'comfyui');
-const files=r.elements().find(e=>e.props.label==='模型文件（checkpoint）'&&e.props.options);assert.deepEqual(files.props.options,[{value:'native.safetensors',label:'native.safetensors'}]);files.props.onChange('other.safetensors');assert.equal(changed.comfy.checkpoint,'other.safetensors');
+r.elements().find(e=>e.props.title==='此电脑上的 ComfyUI').props.onPick();assert.deepEqual(changed.comfy,{url:scan.comfyui.url,checkpoint:'native.safetensors',preset:'checkpoint'});assert.equal(changed.pictures,'comfyui');
+r.render('PicturesStep',{...pictureProps,scan,draft:changed,update:change=>changed=change(changed)},'zh-CN');
+const files=r.elements().find(e=>e.props.label==='图像模型'&&e.props.options);assert(files,JSON.stringify(r.elements().filter(e=>e.props.options).map(e=>({label:e.props.label,options:e.props.options}))));assert(files.props.options.some(row=>row.value==='checkpoint:native.safetensors'));files.props.onChange('checkpoint:native.safetensors');assert.equal(changed.comfy.checkpoint,'native.safetensors');assert.equal(changed.comfy.preset,'checkpoint');const saved=changed;files.props.onChange('checkpoint:not-listed.safetensors');assert.equal(changed,saved);
 r.render('PicturesStep',{...pictureProps,agentPaints:true,draft:{...draft,pictures:'agent'},onAgentVerified:()=>verified=true},'zh-CN');r.elements().find(e=>e.props.offerAdopt===false).props.onVerified();assert(verified);
 html=r.render('VoiceStep',{...voiceProps,scan,draft:{...draft,narration:'kokoro'},update:change=>changed=change(draft)},'zh-CN');assert(html.includes('默认声音')&&html.includes('host.test:9000'));
 r.elements().find(e=>e.props.title==='此电脑上的 Kokoro').props.onPick();assert.deepEqual(changed.kokoro,{url:scan.kokoro.url,voice:'af_heart'});assert.equal(changed.narration,'kokoro');r.elements().find(e=>e.props.label==='默认声音'&&e.props.options).props.onChange('zf_xiaobei');assert.equal(changed.kokoro.voice,'zf_xiaobei');

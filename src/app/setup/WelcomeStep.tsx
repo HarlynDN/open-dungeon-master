@@ -9,8 +9,8 @@ import { Lamp, ScanMark, host, type ScanResult } from "@/app/setup/SetupParts";
 type Update = (change: (draft: Draft) => Draft) => void;
 
 const STOPS = [
-  { glyph: "system-lore", titleKey: "setupFlow.welcome.stop.0", lineKey: "setupFlow.welcome.line.0" },
-  { glyph: "sense-truesight", titleKey: "setupFlow.welcome.stop.1", lineKey: "setupFlow.welcome.line.1" },
+  { glyph: "ui-ai", titleKey: "setupFlow.welcome.stop.0", lineKey: "setupFlow.welcome.line.0" },
+  { glyph: "ui-paint", titleKey: "setupFlow.welcome.stop.1", lineKey: "setupFlow.welcome.line.1" },
   { glyph: "tab-ambience", titleKey: "setupFlow.welcome.stop.2", lineKey: "setupFlow.welcome.line.2" },
   { glyph: "tab-characters", titleKey: "setupFlow.welcome.stop.3", lineKey: "setupFlow.welcome.line.3" },
   { glyph: "system-share", titleKey: "setupFlow.welcome.stop.4", lineKey: "setupFlow.welcome.line.4" },

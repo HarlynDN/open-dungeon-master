@@ -26,6 +26,7 @@ import {
 import { AUDIO_PREF_FIELDS, writeAudioPref, type AudioPrefField } from "@/lib/audio-prefs";
 import { cn } from "@/lib/cn";
 import { DiceLookButton } from "@/components/DiceLookEditor";
+import { DictationShortcutField } from "@/components/DictationShortcutField";
 import {
   requestMotionAccess,
   supportsShake,
@@ -260,8 +261,14 @@ function useAudioLevel(field: AudioPrefField, fallback: number): number {
       };
     },
     () => {
-      const stored = Number(window.localStorage.getItem(key));
-      return Number.isFinite(stored) && stored > 0 ? Math.min(1, stored) : fallback;
+      // A saved zero is a level, not an absence (the same reading PR 219
+      // gave the narration hook); only nothing stored, or junk, falls back.
+      const stored = window.localStorage.getItem(key);
+      if (stored === null) {
+        return fallback;
+      }
+      const value = Number(stored);
+      return Number.isFinite(value) ? Math.max(0, Math.min(1, value)) : fallback;
     },
     () => fallback,
   );
@@ -340,7 +347,7 @@ function MicrophoneSection({ devices }: { devices: ReturnType<typeof useDevices>
   const meter = useMicMeter(micId, gain);
   return (
     <section>
-      <SectionHead title="Microphone" glyph="cue-horn" />
+      <SectionHead title="Microphone" glyph="ui-voice" />
       <div className="space-y-3">
         <div>
           <span className={cn(LABEL, "mb-1 block")}>Recording device</span>
@@ -387,6 +394,10 @@ function MicrophoneSection({ devices }: { devices: ReturnType<typeof useDevices>
             align="end"
           />
         </div>
+        <div>
+          <span className={cn(LABEL, "mb-1 block")}>Dictation key</span>
+          <DictationShortcutField />
+        </div>
       </div>
     </section>
   );
@@ -399,6 +410,8 @@ function PlaybackSection({ devices }: { devices: ReturnType<typeof useDevices> }
   const narrationVolume = useAudioLevel("narrationVolume", 0.8);
   const ambienceMuted = useAudioFlag("ambienceMuted", false);
   const ambienceVolume = useAudioLevel("ambienceVolume", 0.6);
+  const bedLevel = useAudioLevel("ambienceBedLevel", 1);
+  const musicLevel = useAudioLevel("ambienceMusicLevel", 1);
   const selectable = supportsOutputSelection();
   return (
     <section>
@@ -456,6 +469,20 @@ function PlaybackSection({ devices }: { devices: ReturnType<typeof useDevices> }
           label="Ambience"
           on={!ambienceMuted}
           onChange={(on) => writeAudioPref("ambienceMuted", !on)}
+        />
+        <Slider
+          label="Room (within ambience)"
+          value={bedLevel}
+          max={1}
+          min={0}
+          onChange={(value) => writeAudioPref("ambienceBedLevel", value)}
+        />
+        <Slider
+          label="Music (within ambience)"
+          value={musicLevel}
+          max={1}
+          min={0}
+          onChange={(value) => writeAudioPref("ambienceMusicLevel", value)}
         />
       </div>
     </section>

@@ -6,7 +6,7 @@
   "review": "Separate comparison by the implementation agent against tool/language source inventories, canonical name preservation, category alternatives and diagnostic numeric/choice semantics. Not external or human approval.",
   "sourceSha256": {
     "src/lib/srd/tool-choices.ts": "990b5abb3a93d82e3731f95b93a314375467226906f87519c18caae8d558c582",
-    "src/lib/srd/races.json": "a3661913715291b4ca72cc730f4d261b4da98cd6d9240490bbf5fa0550e6871e",
+    "src/lib/srd/races.json": "a33ca25b9fe53162cf072fd09e02a4cc60efbe7be4873a347c84c3033cef8607",
     "src/lib/srd/classes.json": "f0de0db010ca49668953488018d510917444f582fb58587a88a1b3bdf83e5371",
     "src/lib/srd/backgrounds.json": "d4a3ff20a0a5cc802fd28b409b40d338f867c61e9a49e5d71c012e14c7210c1d",
     "src/lib/content/mechanics.ts": "7f76eafcbb4de4630c176e57d5620bb5fc86411b8ba2a40b22b310d43318b7c2"
@@ -26,5 +26,6 @@
     "source": "Explicit user request: Goblin displays as 哥布林, not 地精.",
     "scope": "Only Goblin fictional-language label changes from 地精语 to 哥布林语. Gnomish, Bugbear, Hobgoblin, canonical names, mechanics and English templates remain unchanged.",
     "previousCatalogSha256": "d41b301018e59cf653c1f3df4d2f1581845980a399f1b48cf1b3d17c1fbdec45"
-  }
+  },
+  "upstream027Review": "Aasimar Healing Hands and Celestial Revelation prose updated and translated in lineage material; canonical tool/language inventories unchanged and asserted against actual sources."
 }

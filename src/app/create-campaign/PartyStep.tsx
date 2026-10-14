@@ -1,9 +1,18 @@
 "use client";
+import { rerollDescription } from "@/lib/i18n/reroll-presentations";
+import { useLocale as useSyncLocale } from "@/lib/i18n/LocaleProvider";
 
 import { InfoButton } from "@/components/ui/InfoDialog";
 import { NumberStepper } from "@/components/ui/NumberStepper";
 import { Select } from "@/components/ui/Select";
 import { cn } from "@/lib/cn";
+import {
+  REROLL_LOW_DEFAULT,
+  rerollBelowFor,
+  rerollChoiceOf,
+  type RerollChoice,
+} from "@/lib/srd/ability-rerolls";
+import { useServerRerollBelow } from "@/app/characters/builder/useTableRules";
 import {
   CAMPAIGN_DIFFICULTIES,
   type CampaignDifficulty,
@@ -24,10 +33,13 @@ import { useLocale } from "@/lib/i18n/LocaleProvider";
 // table has no player count (maxPlayers is pinned to 1 in the payload), and
 // only an AI narrator plans a story arc, so length hides with it.
 export function PartyStep({ draft, patch, gates }: StepProps) {
-  const { t } = useLocale();
+  const { t: syncT } = useSyncLocale();
+  const { t, locale } = useLocale();
   const difficultyInfo = [t("create.difficultyInfo"), ...CAMPAIGN_DIFFICULTIES.map(value =>
     `**${t(`campaign.difficulty.${value}`)}**: ${t(`setting.difficulty.${value}.hint`)}`), t("create.difficultyLater")].join("\n\n");
   const { solo, aiNarrates } = gates;
+  // Named in the "follow the server" choice, so it says what it means.
+  const serverRerollBelow = useServerRerollBelow();
   return (
     <div className="space-y-4 text-sm">
       <div className={cn("grid gap-3", solo ? "grid-cols-2" : "grid-cols-3")}>
@@ -90,6 +102,28 @@ export function PartyStep({ draft, patch, gates }: StepProps) {
           <p className="mt-1 text-xs text-stone-500">
             {t("create.wealthHint")}
           </p>
+        </label>
+        <label className="col-span-2 block">
+          <FieldLabel>{syncT("upstreamUi.98903bb2fd86")}</FieldLabel>
+          <Select<"server" | RerollChoice>
+            value={draft.abilityRerollBelow === null ? "server" : rerollChoiceOf(draft.abilityRerollBelow)}
+            onChange={(choice) =>
+              patch({
+                abilityRerollBelow:
+                  choice === "server" ? null : rerollBelowFor(choice, draft.abilityRerollBelow ?? REROLL_LOW_DEFAULT),
+              })
+            }
+            label={syncT("upstreamUi.98903bb2fd86")}
+            className="w-full"
+            options={[
+              { value: "server", label: t("upstreamUi.followReroll", { rule: serverRerollBelow === null ? "" : ` (${rerollDescription(serverRerollBelow, locale).toLowerCase()})` }) },
+              { value: "keep", label: syncT("upstreamUi.b8025ffc0181") },
+              { value: "low", label: t("upstreamUi.rerollLow", { value: REROLL_LOW_DEFAULT }) },
+              { value: "free", label: syncT("upstreamUi.5b64526eef07") },
+            ]}
+          />
+          <p className="mt-1 text-xs text-stone-500">
+            {syncT("upstreamUi.79acb842a996")}</p>
         </label>
       </div>
 

@@ -39,6 +39,7 @@ function announce(campaign: Campaign, note: string) {
     campaignId: campaign.id,
     seq,
     authorType: "system",
+    glyph: "cue-battle",
     content: note,
   });
   publishWithSeq(campaign.id, seq, "message_added", { message });
@@ -135,6 +136,10 @@ export function resetInitiative(campaign: Campaign): InitiativeResult {
   encounter.round = 1;
   encounter.turnBudget = null;
   encounter.surprisedIds = [];
+  // The enemies a pass left due were owed their turns in the old order, and
+  // their hold goes with the floor below; kept, they would stand before
+  // whoever the new order puts first (src/lib/dm/enemies-due.ts).
+  delete encounter.legendary.due;
   saveEncounter(encounter);
   // The initiative floor named an order that no longer exists, so the table
   // goes back to open until the new one locks.

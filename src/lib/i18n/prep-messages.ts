@@ -110,7 +110,7 @@ export const PREP_MESSAGES = /*#__PURE__*/ defineMessages({
   "calendar.daycount.month.1": { en: "Day", "zh-CN": "日" },
   "calendar.seasons.weekday.1": { en: "Firstday", "zh-CN": "首日" },
   "calendar.seasons.weekday.2": { en: "Seconday", "zh-CN": "次日" },
-  "calendar.seasons.weekday.3": { en: "Midday", "zh-CN": "中日" },
+  "calendar.seasons.weekday.3": { en: "Midweek", "zh-CN": "周中日" },
   "calendar.seasons.weekday.4": { en: "Fourthday", "zh-CN": "四日" },
   "calendar.seasons.weekday.5": { en: "Fifthday", "zh-CN": "五日" },
   "calendar.seasons.weekday.6": { en: "Restday", "zh-CN": "休日" },

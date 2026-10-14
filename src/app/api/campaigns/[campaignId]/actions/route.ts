@@ -1,4 +1,8 @@
 import { z } from "zod";
+import { ACTION_MAX_CHARS, textLength, tooLongMessage } from "@/lib/text-limits";
+import { resolveActionCharacter } from "@/lib/player-characters";
+import { currentPcId } from "@/lib/character-seat";
+import { getActiveEncounter } from "@/lib/db/encounters";
 import { isErrorResponse, requireVoice } from "@/lib/campaign-api";
 import {
   allocateSeq,
@@ -23,17 +27,34 @@ import { publishPersisted, publishWithSeq } from "@/lib/events";
 import { parseMessageIntent } from "@/lib/dm/intent-logic";
 import { spokenLine } from "@/lib/dm/speech";
 import { intentRefusal } from "@/lib/dm/intent-check";
+import { concentrationSwapFor } from "@/lib/dm/concentration-confirm";
+import { inCoordination } from "@/lib/dm/coordination";
+import { confirmsSwap, swapQuestion } from "@/lib/dm/concentration-confirm-logic";
+import { tableAuthors } from "@/lib/db/homebrew";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+// The length is checked after the shape, so a long move hears its limit
+// rather than "Invalid action." (issue 207).
 const actionSchema = z.object({
-  content: z.string().trim().min(1).max(2000),
+  content: z.string().trim().min(1),
+  characterId: z.string().trim().min(1).optional(),
   kind: z.enum(["do", "say", "ooc"]).default("do"),
   // The card the Hand played, beside the sentence it wrote. Optional: typed
   // actions and older clients send none, and a malformed one is dropped
   // rather than refusing the action (src/lib/dm/intent-logic.ts).
   intent: z.unknown().optional(),
+  // The player's yes to a cast that ends their running concentration spell
+  // (issue 252), naming exactly what they agreed to: it answers only while
+  // the character, the running spell and the new one are still those.
+  concentrationAck: z
+    .object({
+      characterId: z.string().trim().min(1).max(80),
+      current: z.string().trim().min(1).max(120),
+      next: z.string().trim().min(1).max(120),
+    })
+    .optional(),
 });
 
 export async function POST(
@@ -51,8 +72,8 @@ export async function POST(
     return Response.json({ error: "The adventure has not started yet." }, { status: 400 });
   }
 
-  const sheet = getSheetForUser(campaignId, user.id);
-  if (!sheet) {
+  const selected = getSheetForUser(campaignId, user.id);
+  if (!selected) {
     return Response.json({ error: "You need a character to act." }, { status: 400 });
   }
 
@@ -61,10 +82,16 @@ export async function POST(
   if (!parsed.success) {
     return Response.json({ error: "Invalid action." }, { status: 400 });
   }
+  if (textLength(parsed.data.content) > ACTION_MAX_CHARS) {
+    const what = parsed.data.kind === "say" ? "A line" : parsed.data.kind === "ooc" ? "Table talk" : "A move";
+    return Response.json(
+      { error: tooLongMessage(what, ACTION_MAX_CHARS, textLength(parsed.data.content)), maxChars: ACTION_MAX_CHARS },
+      { status: 400 },
+    );
+  }
 
   const { kind } = parsed.data;
   const intent = kind === "do" ? parseMessageIntent(parsed.data.intent) : null;
-
   // Floor control: during a spotlight only the named players may act (ooc is
   // always allowed); the floor releases once ALL of them have answered.
   // During a hold nobody may act until the lead releases. This read-modify-
@@ -118,6 +145,26 @@ export async function POST(
       { status: 409 },
     );
   }
+
+  // Which of the player's characters acts (src/lib/player-characters.ts):
+  // the one named, else the one whose turn it is, else the selected one.
+  // The floor has already said whether this player may act at all, so a
+  // refusal here is only ever about the wrong sibling. The initiative
+  // pointer binds only while the fight owns the floor: a table the DM opened
+  // mid-fight is free to act as whoever it has selected.
+  const actor = resolveActionCharacter({
+    sheets: listSheets(campaignId),
+    userId: user.id,
+    selectedId: selected.id,
+    characterId: parsed.data.characterId,
+    initiativeId: kind !== "ooc" && combatOwnsFloor(floor) ? currentPcId(getActiveEncounter(campaignId)) : undefined,
+    reaction: intent?.card === "reaction",
+    multiCharacter: campaign.gameSettings.multiCharacter,
+  });
+  if ("error" in actor) {
+    return Response.json({ error: actor.error, floor }, { status: actor.status });
+  }
+  const { sheet } = actor;
   // A card the engine would refuse is refused here, with the engine's own
   // reason and before anything is posted, so the Hand never marks spent a
   // card that was never going to resolve (src/lib/dm/intent-check.ts).
@@ -126,6 +173,26 @@ export async function POST(
     if (refusal) {
       return Response.json({ error: refusal }, { status: 409 });
     }
+  }
+  // A character in the plan the party is coordinating puts its move there,
+  // not straight to the DM (issue 254): the plan resolves as one beat, and a
+  // move posted beside it would wake the DM before it. Table talk is free.
+  if (kind !== "ooc" && inCoordination(campaignId, sheet.id)) {
+    return Response.json(
+      { error: `The party is coordinating its next move; put ${sheet.name}'s part in the plan above the box, or ask the lead to set the plan aside.`, coordinating: true },
+      { status: 409 },
+    );
+  }
+    // A cast that would end the character's running concentration spell is
+  // asked about first (issue 252): nothing is posted, no floor is spent and
+  // no DM turn wakes until the player says yes, and the yes is checked
+  // against the state now, so an old answer cannot authorise another cast.
+  const swap = concentrationSwapFor(sheet, { intent, content: parsed.data.content, kind }, tableAuthors(campaignId));
+  if (swap && !confirmsSwap(swap, parsed.data.concentrationAck)) {
+    return Response.json(
+      { error: swapQuestion(swap, sheet.name), confirmConcentration: { ...swap, characterName: sheet.name } },
+      { status: 409 },
+    );
   }
   let spotlightStillWaiting = false;
   if (kind !== "ooc" && floor.mode === "spotlight") {

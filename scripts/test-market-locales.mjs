@@ -1,11 +1,11 @@
 // Display/input adapters and fake transport only; no real trades/shop deletion.
-import assert from 'node:assert/strict';import fs from 'node:fs';import {createHash} from 'node:crypto';
+import assert from 'node:assert/strict';import fs from 'node:fs';import {execFileSync} from 'node:child_process';
 import {marketRenderer,marketCases,marketFile,editorFile,shop,sheet,place,keeper,marketQueue,editorQueue,editorDraft,marketDraft} from './lib/market-ui-fixtures.mjs';
 const {marketCoinText,parseMarketCoins,marketText}=await import('../src/lib/i18n/market-presentations.ts');
 const {formatCopper,parseCoins}=await import('../src/lib/srd/currency.ts');
-const r=await marketRenderer();const q=(f,v)=>({queues:{[f]:v}});const hash=s=>createHash('sha256').update(s).digest('hex');
-const golden=JSON.parse(fs.readFileSync(new URL('./fixtures/market-ui-en.json',import.meta.url),'utf8')).sha256;
-for(const row of marketCases())assert.equal(hash(r.render(row.component,row.props,'en',row.options)),golden[row.name],row.name+' English');
+const r=await marketRenderer();const q=(f,v)=>({queues:{[f]:v}});
+const upstream=await marketRenderer(file=>[marketFile,editorFile].includes(file)?execFileSync('git',['show',`2b0b6b6e:${file}`],{encoding:'utf8'}):fs.readFileSync(file,'utf8'));
+for(const row of marketCases())assert.equal(r.render(row.component,row.props,'en',row.options),upstream.render(row.component,row.props,'en',row.options),row.name+' upstream English');
 for(const cp of [0,1,9,10,25,99,100,165,999,1000,12345,100000000]){
  assert.equal(marketCoinText(cp,'en'),formatCopper(cp));assert.equal(parseMarketCoins(marketCoinText(cp,'zh-CN'),'zh-CN'),cp);
 }

@@ -5,12 +5,12 @@
   "scope": "46 bilingual engine roll-caption templates, stock modifier notes, common action labels, hazard frames and seven prismatic colors. Proper/authored names and unknown prose are retained. This is not an audit of every generated roll detail.",
   "provenance": "Original Chinese drafts compared to repository English names and engine caption/modifier generators. No proprietary Chinese rulebook translation used; original source licenses are retained. Not independent human approval.",
   "sourceSha256": {
-    "src/lib/dm/death.ts": "97628cd5ba7113de678c5d62415124542008bc3acd5eb5db8a9a3718a7653b8f",
+    "src/lib/dm/death.ts": "10931b7f886471f433b4305c1e99e8b84800060ffd9fb705cdd38427a2f97cb6",
     "src/lib/dm/aoe-damage.ts": "816d8ea3b229c763d25b8354a11ee58547a6712b24997e3de92485228887c4e0",
-    "src/lib/dm/rolls.ts": "65de00926f0c77a90958ca16686d5c850aea5f1e5e833139eee8375ca4a06770",
+    "src/lib/dm/rolls.ts": "221edc7e35e11446a610785fd01b70104a5c2c34fc741a73ff752dc8c5597fc3",
     "src/lib/dm/aura.ts": "0545c1578e8455eff52d6a8499fbe60a1d3d07e3b17624202a693a27ddec61ab",
-    "src/lib/srd/condition-effects.ts": "10ec0186225be52c36e64ead35454c160b3aca372955779c29487ecfac31a2ac",
-    "src/lib/dm/condition-logic.ts": "cd14ca107d7c4acdb34b0105c5eaf45556a0713158cdf7c602e5720997a16771",
+    "src/lib/srd/condition-effects.ts": "64878ba9515c1731a690dbca6567b450c317312895901adac6d4643431022e1c",
+    "src/lib/dm/condition-logic.ts": "78496fab21a5dca061a75130568f3d5f5bfec94baa74357c977dee0d95d4adc7",
     "src/lib/dm/authored-reaper.ts": "83a50a04f5d8383a884a138ab212c355302dca287bfeb3657562112768f79e67"
   },
   "catalogSha256": {

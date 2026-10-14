@@ -19,7 +19,8 @@ const { maskStorySettings, normalizeSettings, scrubStorySettings, withoutAdminOn
   "../src/lib/db/settings.ts"
 );
 const { saveGlobalConfig } = await import("../src/lib/db/app-settings.ts");
-const { storyContextTokens } = await import("../src/lib/model-client.ts");
+const { storyContextTokens, utilityContextTokens, localContextTokens } = await import("../src/lib/model-client.ts");
+const { DEFAULT_STORY_SETTINGS } = await import("../src/lib/defaults.ts");
 const { createUser } = await import("../src/lib/db/users.ts");
 const { createCampaign, getCampaignById, publicCampaign, updateStorySettings } = await import(
   "../src/lib/db/campaigns.ts"
@@ -162,6 +163,35 @@ test("a campaign on an OpenAI key packs against a real window, not the 16K stand
   delete process.env.OPENAI_COMPAT_CONTEXT;
 });
 
+// Ask and the lore check run on the utility model, routed as
+// requestUtilityMessage routes it. A local or custom utility model that fails
+// is retried on the story model, so those two budget against the smaller
+// window; the harness never falls back. No case here touches the network: an
+// OpenAI model resolves by name, and an OpenRouter endpoint is never probed.
+{
+  const story = { textProvider: "custom", localTextModel: "", customBaseUrl: "https://api.openai.com/v1", customModel: "gpt-5.1" };
+  const small = { ...story, customModel: "gpt-3.5-turbo" };
+  const none = { utilityProvider: "custom", utilityModel: "", utilityBaseUrl: "", utilityApiKey: "" };
+  const openaiUtility = { ...none, utilityBaseUrl: "https://api.openai.com/v1" };
+  assert.equal(await utilityContextTokens({ ...story, ...none }), 128_000, "no utility model: the story model's window");
+  assert.equal(await utilityContextTokens({ ...story, ...openaiUtility, utilityModel: "gpt-3.5-turbo" }), 16_385, "a custom utility model's own window");
+  assert.equal(await utilityContextTokens({ ...small, ...openaiUtility, utilityModel: "gpt-5.1" }), 16_385, "never past the story model it falls back to");
+  assert.equal(
+    await utilityContextTokens({ ...story, ...none, utilityBaseUrl: "https://openrouter.ai/api/v1", utilityModel: "m" }),
+    16_384,
+    "an endpoint that cannot be probed gets the conservative default",
+  );
+  const localModel = DEFAULT_STORY_SETTINGS.localTextModel;
+  assert.equal(
+    await utilityContextTokens({ ...small, ...none, utilityProvider: "local", utilityModel: localModel }),
+    Math.min(localContextTokens(localModel), 16_385),
+    "a local utility model, capped by the story model",
+  );
+  assert.equal(await utilityContextTokens({ ...small, ...none, utilityProvider: "harness" }), 128_000, "the harness never falls back: its own window");
+  passed += 1;
+  console.log("ok: the utility model's window follows its route and never exceeds the model it falls back to");
+}
+
 // A world an app hosts: the backend is the device's, chosen once in the app's
 // Story AI screen, and every campaign follows it. The campaign above was
 // created before the key existed, which is exactly the case that used to
@@ -187,7 +217,7 @@ test("on a device world every campaign follows the device's Story AI", () => {
       utilityModel: "gpt-5-mini",
       utilityApiKey: "sk-device",
     },
-    images: { defaultBackend: "openai", openaiApiKey: "sk-device" },
+    images: { defaultBackend: "openai", openaiApiKey: "sk-device", openaiModel: "" },
   });
 
   // A server somebody administers keeps the campaign's own backend.
@@ -211,9 +241,16 @@ test("on a device world every campaign follows the device's Story AI", () => {
     // What the campaign tunes for itself stays its own.
     assert.equal(settings.proseSize, "small");
     assert.equal(settings.autoImages, true);
-    const masked = maskStorySettings(settings);
+    let masked = maskStorySettings(settings);
     assert.equal(masked.deviceManaged, true);
+    // The key alone paints nothing: no picture model is named in code, so
+    // the panel says one is missing until the device saves one.
+    assert.equal(masked.imagesReady, false, "a key with no picture model was called ready");
+    assert.equal(masked.imagesNeedModel, true);
+    saveGlobalConfig({ images: { openaiModel: "device-painter" } });
+    masked = maskStorySettings(getCampaignById(campaign.id).settings);
     assert.equal(masked.imagesReady, true, "the device key covers pictures");
+    assert.equal(masked.imagesNeedModel, false);
 
     // A stale client cannot move a campaign off the device's backend.
     const patched = updateStorySettings(campaign.id, { customModel: "sneaky", proseSize: "large" });

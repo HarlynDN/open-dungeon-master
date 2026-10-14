@@ -17,9 +17,9 @@
 // does not offer it at any profile.
 //
 // Dependency-free so scripts/test-sampling.mjs can import it directly; the
-// one import is the tool-route table the backend probe shares.
+// one import is the tool-route reader the backend probe shares.
 
-import { openAiToolRoute, toolRouteFromError } from "../../../scripts/lib/openai-tool-route.mjs";
+import { toolRouteFromError } from "../../../scripts/lib/openai-tool-route.mjs";
 
 export type SamplingRole = "story" | "utility";
 
@@ -117,12 +117,11 @@ export function describeEndpoint(baseUrl: string): EndpointCaps {
 }
 
 // How OpenAI runs function tools for a model: on Chat Completions as ever,
-// on Chat Completions with reasoning_effort "none" (GPT-6 Sol and Luna), or
-// on the Responses API alone (GPT-6.1 Sol and GPT-6 Astra). The table lives
-// in scripts/lib/openai-tool-route.mjs so the backend probe reads the same
-// one; see issue #129.
+// on Chat Completions with reasoning_effort "none", or on the Responses API,
+// as the model's refusal says (issue #129). The reader lives in
+// scripts/lib/openai-tool-route.mjs so the backend probe shares it.
 export type OpenAiToolRoute = "chat" | "chat-no-reasoning" | "responses";
-export { openAiToolRoute, toolRouteFromError };
+export { toolRouteFromError };
 
 // Whether a 4xx with tools attached means "this server has no function
 // calling", the one case the retry without tools in model-client.ts is for.
@@ -143,6 +142,10 @@ export function toolsUnsupportedByServer(kind: EndpointKind, body: string): bool
 // handled by the retry-without-tools path, and dropping tool_choice alone
 // would leave a tool-less model still holding 60 tool definitions.
 const DROPPABLE_PARAMS = new Set([
+  // The Fast tier (issue 255): a model or account without it answers 400
+  // naming the field, and the call goes out again at standard speed, which
+  // the admin panel then shows (src/lib/speed-status.ts).
+  "service_tier",
   "temperature",
   "top_p",
   "top_k",

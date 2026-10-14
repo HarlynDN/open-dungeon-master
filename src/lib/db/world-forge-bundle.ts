@@ -3,6 +3,7 @@ import path from "node:path";
 import { getWorldDoc, hasWorldDoc, saveWorldDoc } from "@/lib/db/world-forge";
 import { decodeBundleImage } from "@/lib/workshop/bundle";
 import { parseRef, readDoc, refOf, remapDoc, type Shelf } from "@/lib/worldforge/model";
+import { recordMediaFile } from "@/lib/media-access";
 
 // A workshop's WorldForge inside a workshop bundle. A bundle carries its
 // rows as lists without ids, so a ref travels as the row's place in its
@@ -40,13 +41,14 @@ export function worldFromBundle(workshopId: string, world: BundleWorld, ids: Rec
     const id = parsed ? ids[parsed.shelf][index] : undefined;
     return parsed && id ? refOf(parsed.shelf, id) : null;
   });
-  const dir = path.join(process.cwd(), "public", "uploads");
+  const dir = path.join(/*turbopackIgnore: true*/ process.cwd(), "public", "uploads");
   doc.maps = doc.maps.map((atlas) => {
     const image = decodeBundleImage(world.images[atlas.id] ?? "");
     if (!image) return { ...atlas, image: "" };
     mkdirSync(dir, { recursive: true });
     const filename = `${crypto.randomUUID()}.${image.ext}`;
-    writeFileSync(path.join(dir, filename), image.bytes);
+    writeFileSync(path.join(/*turbopackIgnore: true*/ dir, filename), image.bytes);
+    recordMediaFile(`/uploads/${filename}`);
     return { ...atlas, image: `/uploads/${filename}` };
   });
   saveWorldDoc(workshopId, doc);

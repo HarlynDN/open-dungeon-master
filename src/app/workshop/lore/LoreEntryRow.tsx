@@ -97,10 +97,10 @@ export function LoreEntryRow({
     ...(onShow ? [{ id: "show", label: t("lore.show"), glyph: "tab-handout", onSelect: onShow }] : []),
     ...(steersStory
       ? [
-          { id: "edit", label: t("prep.edit"), glyph: "tab-notes", onSelect: onEdit },
-          { id: "pin", label: t(entry.pinned ? "prep.unpin" : "prep.pin"), glyph: "quest-active", onSelect: onPin },
-          { id: "duplicate", label: t("prep.duplicate"), glyph: "tab-journal", onSelect: onDuplicate },
-          { id: "delete", label: t("prep.delete"), glyph: "quest-failed", tone: "danger" as const, separated: true, onSelect: onDelete },
+          { id: "edit", label: t("prep.edit"), glyph: "ui-edit", onSelect: onEdit },
+          { id: "pin", label: t(entry.pinned ? "prep.unpin" : "prep.pin"), glyph: "ui-pin", onSelect: onPin },
+          { id: "duplicate", label: t("prep.duplicate"), glyph: "ui-duplicate", onSelect: onDuplicate },
+          { id: "delete", label: t("prep.delete"), glyph: "ui-delete", tone: "danger" as const, separated: true, onSelect: onDelete },
         ]
       : []),
   ];

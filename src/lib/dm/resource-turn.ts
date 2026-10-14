@@ -18,10 +18,13 @@ import { conditionExtraActions } from "@/lib/srd/condition-effects";
 import { matchResource, type ResourceAction } from "@/lib/srd/class-resources";
 import { spendAction } from "@/lib/dm/action-budget";
 import { canAct } from "@/lib/dm/can-act";
+import { readiedReleaseFor } from "@/lib/dm/readied-release";
+import { EMBODIMENT_MARK, LEVELLED_SPELL, SURGE_MARK } from "@/lib/dm/cast-rules";
 import {
   attacksAllowedFor,
   budgetFor,
   grantActionSurge,
+  prepareReaction,
   storeBudget,
 } from "@/lib/dm/turn-budget";
 
@@ -30,6 +33,9 @@ export type ResourceCharge =
   | {
       // Writes the charge and returns what the tool result should say of it.
       commit: () => Record<string, unknown>;
+      // A reaction taken as the hit that dropped the character lands, judged
+      // as they stood before it (src/lib/dm/reaction-gate.ts, issue 233).
+      beforeDrop?: boolean;
     };
 
 const FREE: ResourceCharge = { commit: () => ({}) };
@@ -61,7 +67,18 @@ export function prepareResourceCharge(
     sheet.features.some((feature) => feature.name.toLowerCase().includes("combat wild shape"))
       ? "bonus"
       : def.action;
+  if (action === "reaction") {
+    return prepareReaction(encounter, sheet, def.displayName);
+  }
   const kind = action === "none" ? "free" : action;
+  // Off their turn, a feature they readied: their reaction (readied-release.ts).
+  const readied = kind === "action" ? readiedReleaseFor(sheet, encounter, "feature") : null;
+  if (readied && "error" in readied) {
+    return { error: readied.error };
+  }
+  if (readied) {
+    return { commit: () => readied.release() };
+  }
   const able = canAct({ sheet, encounter, kind });
   if (!able.ok) {
     return { error: able.error };
@@ -104,3 +121,43 @@ export function prepareResourceCharge(
     },
   };
 }
+
+// A use that moves the turn's next spell to the bonus action (issue 233):
+// Embodiment of the Law's enchantment, the genre classes' cantrip after a
+// levelled spell. Checked before the use is spent; the mark is written once
+// it is, and the cast guard spends it (cast-rules.ts bonusCastOf).
+export function castMarkCharge(
+  campaign: Campaign,
+  sheet: CharacterSheet,
+  defId: string | undefined,
+): { error: string } | { apply: () => Record<string, unknown> } | null {
+  const surge = defId ? SURGE_COUNTERS.has(defId) : false;
+  const mark = defId === "sub_embodiment_of_the_law" ? EMBODIMENT_MARK : surge ? SURGE_MARK : null;
+  if (!mark) {
+    return null;
+  }
+  const encounter = getActiveEncounter(campaign.id);
+  const budget = encounter && (encounter.kind ?? "fight") === "fight" ? encounter.turnBudget : null;
+  if (!budget || budget.ownerId !== sheet.id) {
+    return { error: `${sheet.name} uses this on their own turn in a fight, as the spell it changes is cast. Nothing was spent.` };
+  }
+  if (surge && !budget.oncePerTurn.includes(LEVELLED_SPELL)) {
+    return { error: `This casts a cantrip as a bonus action after a levelled spell, and ${sheet.name} has cast none this turn. Nothing was spent.` };
+  }
+  return {
+    apply: () => {
+      const live = getActiveEncounter(campaign.id);
+      const now = live?.turnBudget;
+      if (live && now && now.ownerId === sheet.id && !now.oncePerTurn.includes(mark)) {
+        storeBudget(live, { ...now, oncePerTurn: [...now.oncePerTurn, mark] });
+      }
+      return {
+        next: mark === SURGE_MARK
+          ? "The next cantrip of one action they cast this turn takes the bonus action."
+          : "The next enchantment spell of 1st level or higher of one action they cast this turn takes the bonus action.",
+      };
+    },
+  };
+}
+
+const SURGE_COUNTERS = new Set(["steampunk_surge_casting", "cyberpunk_surge_momentum", "post_apocalyptic_surge_of_change", "horror_the_rite_remembers"]);

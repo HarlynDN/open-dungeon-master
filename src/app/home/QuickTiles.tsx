@@ -30,13 +30,13 @@ export function HomeMenu({
 }) {
   const { t } = useLocale();
   const items: Array<{ id: string; label: string; glyph: string; href?: string; onClick?: () => void; tour: string }> = [
-    ...(showNew && showSolo ? [{ id: "starter", label: t("home.quickStart"), glyph: "tab-story", onClick: onStarter, tour: "tile-quick-start" }] : []),
-    ...(showNew ? [{ id: "new", label: t("home.newCampaign"), glyph: "tab-campaigns", onClick: onNewCampaign, tour: "tile-new-campaign" }] : []),
-    ...(showSolo ? [{ id: "solo", label: t("home.soloAdventure"), glyph: "tab-story", onClick: onSolo, tour: "tile-solo" }] : []),
+    ...(showNew && showSolo ? [{ id: "starter", label: t("home.quickStart"), glyph: "ui-quickstart", onClick: onStarter, tour: "tile-quick-start" }] : []),
+    ...(showNew ? [{ id: "new", label: t("home.newCampaign"), glyph: "ui-new", onClick: onNewCampaign, tour: "tile-new-campaign" }] : []),
+    ...(showSolo ? [{ id: "solo", label: t("home.soloAdventure"), glyph: "ui-solo", onClick: onSolo, tour: "tile-solo" }] : []),
     { id: "characters", label: t("nav.characters"), glyph: "tab-characters", href: "/characters", tour: "tile-characters" },
     { id: "workshop", label: t("home.workshop"), glyph: "system-homebrew", href: "/workshop", tour: "tile-workshop" },
     { id: "rulebook", label: t("nav.rulebook"), glyph: "system-rules", href: "/rulebook", tour: "tile-rulebook" },
-    { id: "join", label: t("home.joinCode"), glyph: "tab-handout", onClick: onJoin, tour: "tile-join" },
+    { id: "join", label: t("home.joinCode"), glyph: "ui-join", onClick: onJoin, tour: "tile-join" },
   ];
   return (
     <nav className="ts-menu" aria-label={t("home.mainMenu")}>

@@ -2,7 +2,7 @@ import { randomInt } from "node:crypto";
 import { getDatabase, nowIso, parseJson } from "@/lib/db/core";
 import { normalizeSettings, scrubStorySettings } from "@/lib/db/settings";
 import { configuredDefaultStorySettings } from "@/lib/runtime-defaults";
-import { normalizeGameSettings, type GameSettings } from "@/lib/schemas/game-settings";
+import { normalizeGameSettings, type GameSettings, type TableLanguage } from "@/lib/schemas/game-settings";
 import { normalizeCampaignKind, type CampaignKind } from "@/lib/workshop/kind";
 import type {
   CampaignCover,
@@ -18,7 +18,10 @@ import { syncArcQuests } from "@/lib/db/quests";
 import { normalizeCover, type DmCover } from "@/lib/dm/delegation";
 import { MINUTES_PER_DAY, daysPerYear, defaultClock, normalizeCalendarDefinition, normalizeClock, type CampaignClock } from "@/lib/dm/calendar";
 import { packFor } from "@/lib/worlds/preset";
-import { normalizeParty, type PartyState } from "@/lib/dm/party-logic";
+import { closeStreamsForCampaign } from "@/lib/live-streams";
+import { dropDmQueue } from "@/lib/dm/queue";
+import type { PartyState } from "@/lib/dm/party-logic";
+import { partyFromJson } from "@/lib/db/party";
 import {
   partySlotCount,
   viewerCaps,
@@ -268,7 +271,7 @@ function mapCampaign(row: CampaignRow): Campaign {
     floor: normalizeFloor(parseJson(row.floor_json, null)),
     dmCover: normalizeCover(parseJson(row.dm_cover_json ?? "", null)),
     clock: normalizeClock(parseJson(row.clock_json ?? "", null)),
-    party: normalizeParty(parseJson(row.party_json ?? "", null)),
+    party: partyFromJson(row.party_json ?? ""),
   };
 }
 
@@ -424,6 +427,17 @@ export function deleteCampaign(campaignId: string) {
        AND id IN (SELECT user_id FROM character_sheets WHERE campaign_id = ?)`,
   ).run(campaignId);
   db.prepare(`DELETE FROM campaigns WHERE id = ?`).run(campaignId);
+  // The dice its players were owed while building (src/lib/db/creation-rolls.ts):
+  // the table's own ability six and its rolled starting wealth. Keyed by
+  // scope, not by a foreign key, so no cascade takes them.
+  db.prepare(`DELETE FROM creation_rolls WHERE scope = ? OR scope LIKE ?`).run(campaignId, `${campaignId}:%`);
+  // The last attack on each of its characters (src/lib/dm/last-hit.ts),
+  // keyed the same way.
+  db.prepare(`DELETE FROM last_hits WHERE campaign_id = ?`).run(campaignId);
+  // Anyone still at the table stops hearing it now (src/lib/live-streams.ts),
+  // and turns still waiting for it are not run against rows that are gone.
+  closeStreamsForCampaign(campaignId);
+  dropDmQueue(campaignId);
 }
 
 export function listCampaignsForUser(userId: string): CampaignSummary[] {
@@ -472,11 +486,27 @@ export function getCampaignById(campaignId: string): Campaign | null {
   return row ? mapCampaign(row) : null;
 }
 
+// The language a campaign plays in, for the readers that are handed only
+// its id (src/lib/language). A campaign that is gone is a caller's bug.
+export function campaignLanguage(campaignId: string): TableLanguage {
+  const campaign = getCampaignById(campaignId);
+  if (!campaign) {
+    throw new Error(`Campaign ${campaignId} not found.`);
+  }
+  return campaign.gameSettings.tableLanguage;
+}
+
+// The stored party order, or nothing when the column is empty or not a list.
+function storedPartyOrder(raw: string | null): string[] {
+  const parsed = parseJson<unknown>(raw || "[]", []);
+  return Array.isArray(parsed) ? parsed.filter((id): id is string => typeof id === "string" && id.length > 0) : [];
+}
+
 export function listMembers(campaignId: string): CampaignMember[] {
   const rows = getDatabase()
     .prepare(
       `
-        SELECT m.user_id, u.username, u.avatar_json, m.role, m.ready, m.use_real_dice, m.hold_rolls, m.muted, m.active_character_id, m.joined_at
+        SELECT m.user_id, u.username, u.avatar_json, m.role, m.ready, m.use_real_dice, m.hold_rolls, m.muted, m.active_character_id, m.party_order_json, m.joined_at
         FROM campaign_members m
         JOIN users u ON u.id = m.user_id
         WHERE m.campaign_id = ?
@@ -493,6 +523,7 @@ export function listMembers(campaignId: string): CampaignMember[] {
     hold_rolls: number;
     muted: number;
     active_character_id: string | null;
+    party_order_json: string | null;
     joined_at: string;
   }>;
 
@@ -506,6 +537,7 @@ export function listMembers(campaignId: string): CampaignMember[] {
     holdRolls: Boolean(row.hold_rolls),
     muted: Boolean(row.muted),
     activeCharacterId: String(row.active_character_id ?? ""),
+    partyOrder: storedPartyOrder(row.party_order_json),
     joinedAt: row.joined_at,
   }));
 }
@@ -620,7 +652,12 @@ export function updateGameSettings(
   if (!campaign) {
     return null;
   }
-  const merged = normalizeGameSettings({ ...campaign.gameSettings, ...patch });
+  const languagePatch = patch.tableLanguage !== undefined
+    ? { locale: patch.tableLanguage === "chinese" ? "zh-CN" as const : "en" as const }
+    : patch.locale !== undefined
+      ? { tableLanguage: patch.locale === "zh-CN" ? "chinese" as const : "english" as const }
+      : {};
+  const merged = normalizeGameSettings({ ...campaign.gameSettings, ...patch, ...languagePatch });
   getDatabase()
     .prepare(`UPDATE campaigns SET game_settings_json = ?, updated_at = ? WHERE id = ?`)
     .run(JSON.stringify(merged), nowIso(), campaignId);
@@ -891,10 +928,24 @@ export function setMemberRealDice(campaignId: string, userId: string, useRealDic
 
 // Which of their characters a player is running now
 // (docs/vtt-parity-implementation-plan.md 11.3).
-export function setMemberActiveCharacter(campaignId: string, userId: string, characterId: string) {
+// No character is the empty string: the column is NOT NULL DEFAULT ''. A
+// null here failed the write, which is how handing a player's only
+// character to the DM answered 500 after the sheet had already changed
+// hands, and the table never heard about it (companions/adopt).
+export function setMemberActiveCharacter(campaignId: string, userId: string, characterId: string | null) {
   getDatabase()
     .prepare(`UPDATE campaign_members SET active_character_id = ? WHERE campaign_id = ? AND user_id = ?`)
-    .run(characterId, campaignId, userId);
+    .run(characterId ?? "", campaignId, userId);
+}
+
+// This member's own order for the Party panel's cards (issue 240); an empty
+// list is the campaign's own order. Validated against the table's sheets by
+// the route (src/lib/party-order.ts normalizePartyOrder).
+export function setMemberPartyOrder(campaignId: string, userId: string, order: readonly string[]) {
+  getDatabase()
+    .prepare(`UPDATE campaign_members SET party_order_json = ? WHERE campaign_id = ? AND user_id = ?`)
+    .run(order.length ? JSON.stringify(order) : "", campaignId, userId);
+  touchCampaign(campaignId);
 }
 
 export function setMemberHoldRolls(campaignId: string, userId: string, holdRolls: boolean) {

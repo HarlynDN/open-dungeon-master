@@ -16,7 +16,9 @@ import {
 } from "@/lib/db/workshop-bundle-parts";
 import { normalizeAmbience } from "@/lib/battlemap/scene";
 import { MAP_THEMES } from "@/lib/battlemap/generate";
+import { sceneIds } from "@/lib/ambience/catalog";
 import { normalizeNpcVoice } from "@/lib/npcs/forge";
+import { foldName } from "@/lib/language/text-logic";
 import {
   EXTRAS_LIMITS,
   normalizeTemplateExtras,
@@ -31,6 +33,7 @@ import {
 import { removeUnreferencedFiles } from "@/lib/image-files";
 import { worldFromBundle } from "@/lib/db/world-forge-bundle";
 import { admitUpload, type UploadRefusal } from "@/lib/upload-budget";
+import { recordMediaFile } from "@/lib/media-access";
 
 export { exportWorkshopBundle, type ExportResult } from "@/lib/db/workshop-bundle-export";
 
@@ -73,8 +76,9 @@ function saveBundleImage(image: BundleImage | null, uploadDir: string, written: 
     return "";
   }
   const filename = `${crypto.randomUUID()}.${image.ext}`;
-  writeFileSync(path.join(uploadDir, filename), image.bytes);
+  writeFileSync(path.join(/*turbopackIgnore: true*/ uploadDir, filename), image.bytes);
   const url = `/uploads/${filename}`;
+  recordMediaFile(url);
   written.push(url);
   return url;
 }
@@ -132,7 +136,7 @@ export function importWorkshopBundle(
   // order would commit rows pointing at images that were never written. If
   // the rows then fail, the files none of them ended up naming are removed
   // again rather than left in public/uploads for good.
-  const uploadDir = path.join(process.cwd(), "public", "uploads");
+  const uploadDir = path.join(/*turbopackIgnore: true*/ process.cwd(), "public", "uploads");
   mkdirSync(uploadDir, { recursive: true });
   const written: string[] = [];
   try {
@@ -310,6 +314,9 @@ function writeBundleRows(
     }
 
     const usedNpcNames = new Set<string>();
+    // Faction members are matched to this cast by name, folded in JavaScript:
+    // SQLite folds case only for ASCII letters.
+    const npcIdByName = new Map<string, string>();
     for (const [index, npc] of bundle.npcs.entries()) {
       const linked = sharedRow("npcs", npc);
       if (linked) {
@@ -328,10 +335,10 @@ function writeBundleRows(
       const voice = npc.voice ? normalizeNpcVoice(npc.voice) : null;
       db.prepare(
         `INSERT INTO npcs
-           (id, campaign_id, name, attitude, trait, location, role, last_shift_turn,
+           (id, campaign_id, name, attitude, trait, location, role, gender, last_shift_turn,
             aliases_json, personality_json, goals_json, relations_json, bonds_json,
             pressure_json, arc_cast_id, portrait_url, voice_json, stat_block, archived, created_at, updated_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, '', ?, ?, ?, ?, '[]', '', '', ?, ?, ?, 0, ?, ?)`,
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, '', ?, ?, ?, ?, '[]', '', '', ?, ?, ?, 0, ?, ?)`,
       ).run(
         id,
         workshop.id,
@@ -340,6 +347,7 @@ function writeBundleRows(
         npc.trait,
         npc.location,
         npc.role,
+        npc.gender,
         JSON.stringify(npc.aliases),
         npc.personality,
         npc.goals,
@@ -356,6 +364,7 @@ function writeBundleRows(
       );
       keyed("npcs", id, npc.ref);
       ids.npcs.push(id);
+      npcIdByName.set(foldName(name), id);
       copied += 1;
     }
 
@@ -368,7 +377,10 @@ function writeBundleRows(
       ).run(factionId, workshop.id, faction.name, faction.blurb, faction.goal, faction.attitude, faction.power, JSON.stringify(faction.tags), factionPortraits[index], now, now);
       ids.factions.push(factionId);
       for (const member of faction.members) {
-        db.prepare(`UPDATE npcs SET faction_id = ? WHERE campaign_id = ? AND name = ? COLLATE NOCASE`).run(factionId, workshop.id, member);
+        const memberId = npcIdByName.get(foldName(member));
+        if (memberId) {
+          db.prepare(`UPDATE npcs SET faction_id = ? WHERE id = ?`).run(factionId, memberId);
+        }
       }
       copied += 1;
     }
@@ -391,7 +403,7 @@ function writeBundleRows(
       // they belong to.
       const map = normalizeTemplateMap(
         { ...encounter.map, mapId: idAt(ids.maps, encounter.map.map) },
-        { themes: MAP_THEMES, ambients: AMBIENTS },
+        { themes: MAP_THEMES, ambients: AMBIENTS, scenes: sceneIds() },
       );
       const slots = (encounter.enemies as Array<{ monster?: unknown; count?: unknown }>)
         .filter((row) => typeof row?.monster === "string" && row.monster)

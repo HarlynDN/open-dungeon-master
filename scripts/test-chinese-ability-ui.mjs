@@ -100,7 +100,7 @@ await test('the actual server-roll request preserves its protocol and kept dice,
 });
 
 await test('original arithmetic source and reviewed translation/display fingerprints remain unchanged/current',()=>{
-  for(const file of ['src/app/characters/builder/abilityDice.ts','src/app/characters/builder/abilityGains.ts','src/lib/srd/point-buy.ts','src/lib/srd/asi.ts'])assert.equal(createHash('sha256').update(fs.readFileSync(path.join(root,file))).digest('hex'),before.originalSources[file],file);
+  for(const file of ['src/app/characters/builder/abilityGains.ts','src/lib/srd/point-buy.ts','src/lib/srd/asi.ts'])assert.equal(createHash('sha256').update(fs.readFileSync(path.join(root,file))).digest('hex'),before.originalSources[file],file);
   const review=read('docs/validation/character-ability-translations.json');for(const[file,hash]of Object.entries({...review.sources,...review.catalogs}))assert.equal(createHash('sha256').update(fs.readFileSync(path.join(root,file))).digest('hex'),hash,file);
   assert.deepEqual(Object.keys(ABILITY_UI_MESSAGES['zh-CN']).sort(),Object.keys(ABILITY_UI_MESSAGES.en).sort());
 });

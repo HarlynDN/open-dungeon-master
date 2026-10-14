@@ -20,6 +20,7 @@ register("./lib/register-alias.mjs", import.meta.url);
 const { buildGameStateBlock, buildDmMessages, REAL_DICE_RULE } = await import(
   "../src/lib/dm/prompt.ts"
 );
+const { THIS_MOMENT_HEADING } = await import("../src/lib/prompt-boundary.ts");
 
 let passed = 0;
 function test(name, fn) {
@@ -78,6 +79,7 @@ function makeState({ dicePolicy = "digital_only", useRealDice = false } = {}) {
       gameSettings: {
         genre: "high_fantasy",
         customGenreText: "",
+        tableLanguage: "english",
         aiStorySetup: true,
         dicePolicy,
         ttsEnabled: false,
@@ -134,4 +136,20 @@ test("rule attaches only when a present sheet belongs to a real-dice player", ()
   assert.equal(buildDmMessages(state, [])[0].content.includes(REAL_DICE_RULE), false);
 });
 
+test("human ownership and selection distinguish siblings from AI companions", () => {
+  const state = makeState();
+  state.members[0].username = "Player A";
+  state.members[0].activeCharacterId = "a2";
+  state.sheets = [makeSheet({ id: "a1", name: "A1" }), makeSheet({ id: "a2", name: "A2" }), makeSheet({ id: "bot", userId: "bot-user", name: "Guide", isCompanion: true })];
+  const block = buildGameStateBlock(state);
+  assert.ok(block.includes("- Player A: controls A1 [a1], A2 [a2]; selected A2 [a2]."));
+  assert.ok(block.includes("never an AI companion of yours"));
+  assert.ok(block.includes("in a fight the one whose turn it is"));
+  assert.ok(block.includes("AI companion under your control"));
+  // A player can switch the selected character on any input: the section goes in the turn-to-turn part.
+  assert.ok(block.indexOf("Players running several characters") > block.indexOf(THIS_MOMENT_HEADING));
+  // A one-each table carries none of it: the window stays as it was.
+  state.sheets = [makeSheet({ id: "a1", name: "A1" }), makeSheet({ id: "bot", userId: "bot-user", name: "Guide", isCompanion: true })];
+  assert.equal(buildGameStateBlock(state).includes("Players running several characters"), false);
+});
 console.log(`test-real-dice-prompt: ${passed} tests passed.`);

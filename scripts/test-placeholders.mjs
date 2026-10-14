@@ -5,7 +5,7 @@
 // The resolver is a table of constants rather than a manifest lookup, which is
 // the right call for a render path but means the table can drift from what
 // scripts/generate-placeholders.mjs actually rendered. This walks the whole
-// input space - every race, class, gender, genre, role, map cue and creature
+// input space - every race, class, gender, genre, role, scene kind and creature
 // type the app can hold, plus all 576 bestiary entries at their real cr - and
 // asserts the answer resolves. A missing plate is a broken image in front of
 // a player, so it fails the build rather than warning. The reverse check
@@ -27,14 +27,19 @@ const PUBLIC = path.join(ROOT, "public");
 const SET_DIR = path.join(PUBLIC, "assets", "placeholders");
 
 // The whole set rides inside the desktop app and the Android APK. These are
-// ceilings, not targets: generate-placeholders.mjs encodes at 256px squares
-// and 704px landscapes at quality 70, which lands well under both.
-// Raised from 3.5 MB for the painted race and class portraits, which replace
-// the flat silhouettes at the same 256px / q70 encode and add a neutral plate
-// for each of the 36 genre classes and the two pack classes (about 2 MB for
-// those 219 plates; 4.2 MB shipped in total).
-const BUDGET_TOTAL_BYTES = 4.5 * 1024 * 1024;
+// ceilings, not targets. Every plate ships at the size the UI draws
+// (scripts/generate-placeholders.mjs: 256 px squares, scenes no wider than
+// 704 px, quality 70): the 512 px creature plates and 1000 px scenes that
+// arrived with the majority-vote batches were downsized on 2026-10-12, which
+// took the set from 27.8 MiB to 9.8 MiB and the apps down with it. The
+// painted creature plates now sit under the same 48 KiB ceiling as the
+// race/class portraits (the largest is 26 KiB); scenes top out at 102 KiB.
+// The total leaves room for another batch at these sizes, not for a return
+// to the painted ones.
+const BUDGET_TOTAL_BYTES = 12 * 1024 * 1024;
 const BUDGET_FILE_BYTES = 48 * 1024;
+const BUDGET_SCENE_FILE_BYTES = 128 * 1024;
+const BUDGET_PAINTED_SQUARE_BYTES = 48 * 1024;
 
 const failures = [];
 const reached = new Set();
@@ -49,7 +54,8 @@ function check(url, label) {
   }
 }
 
-const GENDER_INPUTS = ["", "male", "female", "nonbinary", "she/her", "he/him", "Agender", "?"];
+// The sheet's choices (src/lib/gender.ts), plus free text an old sheet may hold.
+const GENDER_INPUTS = ["", "Female", "Male", "Nonbinary", "she/her", "?"];
 const GENRES = [
   "high_fantasy", "dark_fantasy", "mystery", "horror",
   "cyberpunk", "steampunk", "post_apocalyptic", "custom", "",
@@ -110,11 +116,238 @@ for (const file of ["high-fantasy", "dark-fantasy", "cyberpunk", "horror", "myst
   const entries = JSON.parse(readFileSync(path.join(ROOT, `src/lib/bestiary/${file}.json`), "utf8")).entries;
   for (const entry of entries) {
     check(
-      R.monsterPlaceholder(entry.type, { cr: entry.cr, genre: file, seed: entry.slug }),
+      R.monsterPlaceholder(entry.type, { cr: entry.cr, genre: file, seed: entry.slug, slug: entry.slug, name: entry.name }),
       `${file}/${entry.slug}`,
     );
+    // The bare type answer (a caller with no slug) still resolves too.
+    check(R.monsterPlaceholder(entry.type, { cr: entry.cr, genre: file, seed: entry.slug }), `${file}/${entry.slug} by type`);
   }
 }
+
+// Creature families: every family key and alias, by slug and by its own SRD
+// name, in every genre, at a mook's cr and a boss's. This is what makes each
+// painted family plate reachable for the reverse check below; three of them
+// (animated-armor, brown-bear, rust-monster) are in no fantasy bestiary and
+// are only met through the content pack or a homebrew name.
+const titleCase = (key) => key.split("-").map((word) => word[0].toUpperCase() + word.slice(1)).join(" ");
+for (const [key, plate] of Object.entries(R.MONSTER_FAMILIES)) {
+  if (!existsSync(path.join(SET_DIR, "monster", `${plate}.webp`))) {
+    failures.push(`MONSTER_FAMILIES ${key} -> ${plate} has no plate on disk`);
+  }
+  for (const genre of GENRES) {
+    for (const cr of [1, 20]) {
+      check(R.monsterPlaceholder("monstrosity", { cr, genre, slug: key, name: titleCase(key) }), `family ${key}/${genre}/${cr}`);
+      check(R.monsterPlaceholder("monstrosity", { cr, genre, name: titleCase(key) }), `family by name ${key}/${genre}/${cr}`);
+    }
+  }
+}
+
+// The lookup order, case by case.
+const expectPlate = (label, url, plate) => {
+  checked += 1;
+  if (!url.endsWith(`/monster/${plate}.webp`)) {
+    failures.push(`${label} drew ${url}, expected monster/${plate}`);
+  }
+};
+// Family hit: an owlbear is an owlbear, not a monstrosity.
+expectPlate("family hit", R.monsterPlaceholder("monstrosity", { cr: 3, genre: "high_fantasy", slug: "owlbear", name: "Owlbear" }), "owlbear");
+// Family hit from the name alone (a homebrew monster with no slug), numbered
+// the way an encounter numbers a run.
+expectPlate("family by name", R.monsterPlaceholder("undead", { cr: 1, genre: "high_fantasy", name: "Ghoul 2" }), "ghoul");
+// Alias hit: a ghast shares the ghoul's plate, a polar bear the brown bear's.
+expectPlate("alias ghast", R.monsterPlaceholder("undead", { cr: 2, genre: "high_fantasy", slug: "ghast", name: "Ghast" }), "ghoul");
+expectPlate("alias polar bear", R.monsterPlaceholder("beast", { cr: 2, genre: "", slug: "polar-bear", name: "Polar Bear" }), "brown-bear");
+// The lich (CR 21) beats the boss override, in fantasy and dark fantasy.
+expectPlate("lich over boss", R.monsterPlaceholder("undead", { cr: 21, genre: "high_fantasy", slug: "lich", name: "Lich" }), "lich");
+expectPlate("dark-fantasy lich", R.monsterPlaceholder("undead", { cr: 21, genre: "dark_fantasy", slug: "lich", name: "The Hollow Saint" }), "lich");
+// ...but a CR 21 with no family is still the boss.
+expectPlate("boss without family", R.monsterPlaceholder("undead", { cr: 21, genre: "high_fantasy", slug: "dracolich", name: "Dracolich" }), "high-fantasy-boss");
+// Reskin guard: a cyberpunk Sump Rat fights as a giant-rat but is not a
+// fantasy rat; it keeps the type plate. Likewise the reskinned lich keeps the
+// cyberpunk boss, and a horror werewolf called The Good Doctor gives nothing
+// away.
+expectPlate("cyberpunk sump rat", R.monsterPlaceholder("beast", { cr: 0.125, genre: "cyberpunk", seed: "giant-rat", slug: "giant-rat", name: "Sump Rat" }), "beast");
+// (The wasteland's Rad-Rat is no longer a type plate: it is a four-legged
+// predator now, below with the genre tokens.)
+expectPlate("wasteland rad-rat", R.monsterPlaceholder("beast", { cr: 0.125, genre: "post_apocalyptic", seed: "giant-rat", slug: "giant-rat", name: "Rad-Rat" }), "post-apocalyptic-predator");
+expectPlate("cyberpunk reskinned lich", R.monsterPlaceholder("undead", { cr: 21, genre: "cyberpunk", slug: "lich", name: "The Uploaded Founder" }), "cyberpunk-boss");
+const goodDoctor = R.monsterPlaceholder("humanoid", { cr: 3, genre: "horror", slug: "werewolf", name: "The Good Doctor" });
+if (goodDoctor.includes("/werewolf.")) {
+  failures.push(`horror's The Good Doctor drew ${goodDoctor}, giving the werewolf away`);
+}
+// ...while the SRD creature under its own name still draws its plate there.
+expectPlate("cyberpunk plain troll", R.monsterPlaceholder("giant", { cr: 5, genre: "cyberpunk", slug: "troll", name: "Troll 1" }), "troll");
+// Unknown creature: falls back to its type.
+expectPlate("unknown creature", R.monsterPlaceholder("beast", { cr: 1, genre: "high_fantasy", slug: "axe-beak", name: "Axe Beak" }), "beast");
+expectPlate("custom enemy", R.monsterPlaceholder("humanoid", { cr: 1, genre: "high_fantasy", slug: "custom", name: "Bandit Captain's Second" }), "humanoid");
+// A family word inside a longer name is not the family.
+expectPlate("name containing a family", R.monsterPlaceholder("humanoid", { cr: 1, genre: "high_fantasy", name: "Troll Hunter" }), "humanoid");
+
+// The second batch. A dragon of any age shares its colour's young plate,
+// and an ancient one (CR 23) beats the boss override like the lich does.
+expectPlate("ancient black dragon", R.monsterPlaceholder("dragon", { cr: 21, genre: "high_fantasy", slug: "ancient-black-dragon", name: "Ancient Black Dragon" }), "young-black-dragon");
+expectPlate("silver wyrmling", R.monsterPlaceholder("dragon", { cr: 2, genre: "high_fantasy", slug: "silver-dragon-wyrmling", name: "Silver Dragon Wyrmling" }), "young-silver-dragon");
+// Green and red keep the plates they already had.
+expectPlate("young green dragon", R.monsterPlaceholder("dragon", { cr: 8, genre: "high_fantasy", slug: "young-green-dragon", name: "Young Green Dragon" }), "dragon");
+expectPlate("swarm of wasps", R.monsterPlaceholder("beast", { cr: 0.5, genre: "high_fantasy", slug: "swarm-of-wasps", name: "Swarm of Wasps" }), "swarm-of-insects");
+expectPlate("reef shark", R.monsterPlaceholder("beast", { cr: 0.5, genre: "", slug: "reef-shark", name: "Reef Shark" }), "giant-shark");
+expectPlate("will-o'-wisp by name", R.monsterPlaceholder("undead", { cr: 2, genre: "high_fantasy", name: "Will-o'-Wisp 2" }), "will-o-wisp");
+expectPlate("hydra", R.monsterPlaceholder("monstrosity", { cr: 8, genre: "dark_fantasy", slug: "hydra", name: "The Marsh Mother" }), "hydra");
+// Enemy NPC roles, from the stat block and from the name.
+for (const [slug, plate] of [
+  ["bandit", "bandit"], ["bandit-captain", "bandit"], ["thug", "executioner"],
+  ["cultist", "cultist"], ["cult-fanatic", "cultist"], ["assassin", "assassin"], ["spy", "assassin"],
+  ["knight", "dark-knight"], ["scout", "archer"], ["gladiator", "gladiator"], ["druid", "battle-shaman"],
+  ["archmage", "tyrant"],
+]) {
+  expectPlate(`npc stat block ${slug}`, R.monsterPlaceholder("humanoid", { cr: 2, genre: "high_fantasy", slug, name: titleCase(slug) }), plate);
+}
+expectPlate("archmage over boss", R.monsterPlaceholder("humanoid", { cr: 12, genre: "high_fantasy", slug: "archmage", name: "Archmage" }), "tyrant");
+for (const [name, plate] of [
+  ["Necromancer", "necromancer"], ["Pirate Captain", "pirate"], ["Corsair 3", "pirate"], ["Houndmaster", "houndmaster"],
+  ["Alchemist", "alchemical-saboteur"], ["Torturer", "executioner"], ["Death Knight", "dark-knight"],
+]) {
+  expectPlate(`npc name ${name}`, R.monsterPlaceholder("humanoid", { cr: 3, genre: "high_fantasy", slug: "custom", name }), plate);
+}
+// A mage or a veteran is not one of the roles; it keeps the humanoid plate.
+expectPlate("mage stays humanoid", R.monsterPlaceholder("humanoid", { cr: 6, genre: "high_fantasy", slug: "mage", name: "Mage" }), "humanoid");
+expectPlate("veteran stays humanoid", R.monsterPlaceholder("humanoid", { cr: 3, genre: "high_fantasy", slug: "veteran", name: "Veteran" }), "humanoid");
+// The reskin guard covers the new entries: a cyberpunk bandit called a
+// ganger and a cyberpunk archmage called something else keep the genre's
+// plates, while a plain "Bandit" there is still a bandit.
+for (const genre of ["cyberpunk", "steampunk", "post_apocalyptic", "horror", "mystery"]) {
+  const ganger = R.monsterPlaceholder("humanoid", { cr: 0.125, genre, slug: "bandit", name: "Chrome Ganger" });
+  const boss = R.monsterPlaceholder("humanoid", { cr: 12, genre, slug: "archmage", name: "The Chairman" });
+  const hydra = R.monsterPlaceholder("monstrosity", { cr: 8, genre, slug: "hydra", name: "The Many-Mouthed" });
+  for (const [label, url] of [["bandit", ganger], ["archmage", boss], ["hydra", hydra]]) {
+    if (/\/monster\/(bandit|tyrant|hydra)\.webp$/.test(url)) {
+      failures.push(`${genre} reskinned ${label} drew the fantasy plate ${url}`);
+    }
+  }
+}
+// Cyberpunk's Arena Champion fights as a gladiator; the fantasy arena plate
+// is not its picture.
+if (R.monsterPlaceholder("humanoid", { cr: 5, genre: "cyberpunk", slug: "gladiator", name: "Arena Champion" }).endsWith("/gladiator.webp")) {
+  failures.push("cyberpunk Arena Champion drew the fantasy gladiator");
+}
+// A plain "Bandit" in cyberpunk is the genre's ganger (below), not the
+// fantasy roadside bandit; a plain "Troll" there has no genre token and is
+// still the troll.
+expectPlate("cyberpunk plain bandit", R.monsterPlaceholder("humanoid", { cr: 0.125, genre: "cyberpunk", slug: "bandit", name: "Bandit 2" }), "cyberpunk-gang");
+
+// Codex's additions are deliberately name-only: do not turn every imp into
+// a microdrone, every spider into a clockwork machine, or every undead into
+// a galvanic corpse merely because its underlying stats match.
+expectPlate("cyberpunk Spy Microdrone", R.monsterPlaceholder("fiend", { genre: "cyberpunk", slug: "imp", name: "Spy Microdrone 2" }), "cyberpunk-microdrone");
+expectPlate("steampunk Galvanic Revenant", R.monsterPlaceholder("undead", { genre: "steampunk", slug: "zombie", name: "Galvanic Revenant" }), "steampunk-galvanic-corpse");
+for (const [genre, slug, name, unwanted] of [
+  ["cyberpunk", "imp", "Imp", "cyberpunk-microdrone"],
+  ["steampunk", "giant-spider", "Cable Spinner", "steampunk-clockwork-spider"],
+  ["steampunk", "zombie", "Zombie", "steampunk-galvanic-corpse"],
+  ["steampunk", "ghost", "The Lady of the Gallery", "steampunk-galvanic-corpse"],
+  ["cyberpunk", "hydra", "Self-Repair Swarm Core", "steampunk-repair-swarm"],
+  ["cyberpunk", "custom", "Walking Turret Operator", "cyberpunk-walking-turret"],
+]) {
+  if (R.monsterPlaceholder("construct", { genre, slug, name }).endsWith(`/${unwanted}.webp`)) {
+    failures.push(`unrelated ${genre}/${name} drew ${unwanted}`);
+  }
+}
+
+// Genre enemy tokens. Every name in a genre's table draws its token there,
+// numbered like an encounter numbers a run and with or without "The"; the
+// same name in every other genre never draws it; and every stat block the
+// table maps draws it in its genre under a name the table does not know.
+const genreOfSlug = (genre) => genre.replace(/-/g, "_");
+for (const [genre, table] of Object.entries(R.GENRE_ENEMY_TOKENS)) {
+  for (const [plate, names] of Object.entries(table.names)) {
+    if (!plate.startsWith(`${genre}-`)) {
+      failures.push(`genre token ${plate} is filed under ${genre}`);
+    }
+    if (!existsSync(path.join(SET_DIR, "monster", `${plate}.webp`))) {
+      failures.push(`genre token ${plate} has no plate on disk`);
+    }
+    for (const name of names) {
+      for (const variant of [name, `${name} 2`, name.startsWith("The ") ? name.slice(4) : `The ${name}`]) {
+        for (const cr of [1, 20]) {
+          const url = R.monsterPlaceholder("humanoid", { cr, genre: genreOfSlug(genre), slug: "custom", name: variant });
+          check(url, `genre token ${genre}/${variant}`);
+          expectPlate(`genre token ${genre}/${variant}/${cr}`, url, plate);
+        }
+      }
+      for (const other of GENRES.filter((entry) => entry.replace(/_/g, "-") !== genre)) {
+        const url = R.monsterPlaceholder("humanoid", { cr: 1, genre: other, slug: "custom", name });
+        if (url.endsWith(`/${plate}.webp`)) {
+          failures.push(`${genre} token ${plate} leaked into ${other || "no genre"} for ${name}`);
+        }
+      }
+    }
+  }
+  for (const [slug, plate] of Object.entries(table.slugs)) {
+    expectPlate(`genre slug ${genre}/${slug}`, R.monsterPlaceholder("beast", { cr: 1, genre: genreOfSlug(genre), slug, name: "Something Renamed" }), plate);
+    for (const other of GENRES.filter((entry) => entry.replace(/_/g, "-") !== genre)) {
+      const url = R.monsterPlaceholder("beast", { cr: 1, genre: other, slug, name: "Something Renamed" });
+      if (url.endsWith(`/${plate}.webp`)) {
+        failures.push(`${genre} token ${plate} leaked into ${other || "no genre"} by stat block ${slug}`);
+      }
+    }
+  }
+}
+// Every bestiary entry, run in every genre: a genre token only ever shows in
+// the genre whose bestiary it was painted for.
+const tokenGenre = new Map();
+for (const [genre, table] of Object.entries(R.GENRE_ENEMY_TOKENS)) {
+  for (const plate of Object.keys(table.names)) {
+    tokenGenre.set(plate, genre);
+  }
+}
+for (const file of ["high-fantasy", "dark-fantasy", "cyberpunk", "horror", "mystery", "steampunk", "post-apocalyptic"]) {
+  const entries = JSON.parse(readFileSync(path.join(ROOT, `src/lib/bestiary/${file}.json`), "utf8")).entries;
+  for (const entry of entries) {
+    for (const genre of GENRES) {
+      const url = R.monsterPlaceholder(entry.type, { cr: entry.cr, genre, seed: entry.slug, slug: entry.slug, name: entry.name });
+      const plate = url.split("/").pop().replace(/\.webp$/, "");
+      const home = tokenGenre.get(plate);
+      if (home && home !== genre.replace(/_/g, "-")) {
+        failures.push(`${file}/${entry.slug} (${entry.name}) drew ${home}'s ${plate} in ${genre || "no genre"}`);
+      }
+    }
+  }
+}
+// The cases the backlog called out, by their bestiary names.
+for (const [genre, type, cr, slug, name, plate] of [
+  ["post_apocalyptic", "beast", 0.25, "wolf", "Waste Hound", "post-apocalyptic-predator"],
+  ["post_apocalyptic", "monstrosity", 1, "death-dog", "Two-Headed Coyote", "post-apocalyptic-predator"],
+  ["post_apocalyptic", "beast", 1, "panther", "Glow Cat", "post-apocalyptic-predator"],
+  ["post_apocalyptic", "monstrosity", 2, "ankheg", "Acid Burrower", "post-apocalyptic-burrower"],
+  ["post_apocalyptic", "monstrosity", 5, "bulette", "Road Shark", "post-apocalyptic-burrower"],
+  ["post_apocalyptic", "humanoid", 0.125, "bandit", "Road Raider", "post-apocalyptic-raider"],
+  ["post_apocalyptic", "undead", 0.25, "zombie", "Rad-Feral", "post-apocalyptic-stalker"],
+  ["post_apocalyptic", "plant", 5, "shambling-mound", "Compost Colossus", "post-apocalyptic-ambush-plant"],
+  // A plain Giant Rat in the wasteland is the predator, not the fantasy rat.
+  ["post_apocalyptic", "beast", 0.125, "giant-rat", "Giant Rat", "post-apocalyptic-predator"],
+  ["steampunk", "fiend", 13, "rakshasa", "The Colonial Magnate", "steampunk-magnate"],
+  ["steampunk", "undead", 21, "lich", "The Perpetual Chairman", "steampunk-magnate"],
+  ["steampunk", "humanoid", 2, "bandit-captain", "Sky Pirate Captain", "steampunk-sky-pirate"],
+  ["cyberpunk", "humanoid", 0.125, "guard", "Corpo Rent-a-Cop", "cyberpunk-corp-squad"],
+  ["cyberpunk", "monstrosity", 3, "doppelganger", "Face-Dancer", "cyberpunk-synth"],
+  ["mystery", "humanoid", 8, "assassin", "The Poisoner", "mystery-poisoner"],
+  ["mystery", "humanoid", 0.125, "cultist", "Secret Society Member", "mystery-occult-enforcer"],
+  ["mystery", "elemental", 6, "invisible-stalker", "The Unseen Burglar", "mystery-burglar"],
+  ["horror", "humanoid", 0.125, "cultist", "Smiling Neighbor", "horror-possessed"],
+  ["horror", "humanoid", 0, "commoner", "Possessed Villager", "horror-possessed"],
+  ["dark_fantasy", "humanoid", 2, "berserker", "Flagellant Champion", "dark-fantasy-penitent"],
+]) {
+  expectPlate(`${genre} ${name}`, R.monsterPlaceholder(type, { cr, genre, slug, name }), plate);
+}
+// ...and the ones that stay put. A horror commoner is only possessed when the
+// card says so; a horror cultist under another name is not; a magnate boss
+// in steampunk does not reach the giants; a dark-fantasy cultist is still the
+// fantasy cultist; the fantasy poisoner alias is the assassin outside mystery.
+expectPlate("horror commoner", R.monsterPlaceholder("humanoid", { cr: 0, genre: "horror", slug: "commoner", name: "Farmhand" }), "humanoid");
+expectPlate("horror cultist renamed", R.monsterPlaceholder("humanoid", { cr: 0.125, genre: "horror", slug: "cultist", name: "Hooded Figure" }), "humanoid");
+expectPlate("steampunk ironmaster", R.monsterPlaceholder("giant", { cr: 9, genre: "steampunk", slug: "fire-giant", name: "The Ironmaster" }), "giant");
+expectPlate("dark-fantasy cultist", R.monsterPlaceholder("humanoid", { cr: 0.125, genre: "dark_fantasy", slug: "cultist", name: "Cultist" }), "cultist");
+expectPlate("fantasy poisoner", R.monsterPlaceholder("humanoid", { cr: 8, genre: "high_fantasy", slug: "assassin", name: "The Poisoner" }), "assassin");
 
 for (const genre of GENRES) {
   for (const seed of ["", "abc", "a-campaign-id", "zzzz"]) {
@@ -122,8 +355,11 @@ for (const genre of GENRES) {
   }
 }
 
-for (const room of ["workshop", "maps", "cast", "bestiary", "encounters", "lore", "storyboard", "tables", "rulesets", "", "nope"]) {
+for (const room of ["workshop", "maps", "cast", "bestiary", "encounters", "lore", "storyboard", "tables", "rulesets", "region", "party", "factions", "homebrew", "plugin", "share", "", "nope"]) {
   check(R.workshopPlaceholder(room), `workshop ${room}`);
+  if (room && room !== "nope" && R.workshopPlaceholder(room) !== `/assets/placeholders/workshop/${room}.webp`) {
+    failures.push(`workshop ${room} did not resolve to its dedicated plate`);
+  }
 }
 
 for (const tile of ["party", "quest", "faction", "treasure", "chapter", "session", "journey", "empty", "nope"]) {
@@ -158,37 +394,32 @@ for (const seed of ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", 
 // and free text that matches nothing still lands on a real file. Each map
 // id is spelled as a person would name the place, which is what the cue
 // table has to recognise for the plate to ever be drawn.
-const MAP_NAMES = {
-  "": [
-    "dungeon", "cavern", "crypt", "sewer", "castle hall", "throne room", "temple",
-    "library", "tavern", "market", "village", "city gate", "forest", "deep forest",
-    "swamp", "desert", "tundra", "mountain pass", "coast", "ship deck", "ruins",
-    "arena", "laboratory", "wasteland",
-  ],
-  cyberpunk: ["neon alley", "arcology", "server farm", "undercity"],
-  steampunk: ["factory", "airship dock", "clockwork vault", "gaslit street"],
-  post_apocalyptic: ["overpass", "scrap market", "shelter", "dead highway"],
-  horror: ["manor", "asylum", "crypt chapel", "graveyard"],
-  mystery: ["precinct", "parlour", "back alley", "morgue"],
-};
-for (const [genre, names] of Object.entries(MAP_NAMES)) {
-  for (const name of names) {
-    const url = R.mapPlaceholder({ name, genre });
-    check(url, `map ${genre || "fantasy"}/${name}`);
-    const expected = `${genre ? `${genre.replace(/_/g, "-")}-` : ""}${name.replace(/\s+/g, "-")}`;
-    if (!url.endsWith(`/${expected}.webp`)) {
-      failures.push(`map ${genre || "fantasy"}/${name} drew ${url}, expected ${expected}`);
+// A kind of scene draws its plate whatever language the place is named in;
+// a genre's own plate comes first, and a kind with several plates draws each
+// for some place. No kind falls back to the genre's plates, or the journey.
+const { cueIds } = await import("../src/lib/ambience/catalog.ts");
+const SEEDS = Array.from({ length: 24 }, (_, index) => `loc-${index}`);
+for (const genre of GENRES) {
+  for (const scene of [...cueIds("bed"), null]) {
+    for (const seed of SEEDS) {
+      check(R.mapPlaceholder({ scene, genre }, seed), `map ${genre || "fantasy"}/${scene ?? "no kind"}`);
     }
   }
 }
-for (const genre of GENRES) {
-  for (const name of ["The Gilded Nothing", "", "Xyzzy"]) {
-    check(R.mapPlaceholder({ name, genre }, "loc-1"), `map fallback ${genre}/${name}`);
+for (const [look, plate] of [
+  [{ scene: "crypt", genre: "high_fantasy" }, "map/crypt"],
+  [{ scene: "crypt", genre: "horror" }, "map/horror-crypt-chapel"],
+  [{ scene: "town", genre: "mystery" }, "map/mystery-back-alley"],
+  [{ scene: "plains", genre: "high_fantasy" }, "misc/journey"],
+  [{ scene: null, genre: "" }, "misc/journey"],
+]) {
+  const url = R.mapPlaceholder(look, "loc-1");
+  if (!url.endsWith(`/${plate}.webp`)) {
+    failures.push(`map ${JSON.stringify(look)} drew ${url}, expected ${plate}`);
   }
-  check(
-    R.mapPlaceholder({ name: "A room", description: "A vaulted crypt of old kings", genre }),
-    `map by description ${genre}`,
-  );
+}
+if (!R.mapPlaceholder({ scene: null, genre: "cyberpunk" }, "loc-1").includes("/map/cyberpunk-")) {
+  failures.push("a cyberpunk place with no kind should draw a cyberpunk plate");
 }
 
 // The reverse check: every plate on disk is one of the answers above.
@@ -214,8 +445,14 @@ let totalBytes = 0;
 for (const url of shipped) {
   const size = statSync(path.join(PUBLIC, url.replace(/^\//, ""))).size;
   totalBytes += size;
-  if (size > BUDGET_FILE_BYTES) {
-    failures.push(`${url} is ${(size / 1024).toFixed(0)} KB, over the ${BUDGET_FILE_BYTES / 1024} KB ceiling`);
+  const group = url.split("/")[3];
+  const ceiling = ["campaign", "map", "misc", "workshop"].includes(group)
+    ? BUDGET_SCENE_FILE_BYTES
+    : ["npc", "monster", "avatar", "character", "character-genre"].includes(group)
+      ? BUDGET_PAINTED_SQUARE_BYTES
+      : BUDGET_FILE_BYTES;
+  if (size > ceiling) {
+    failures.push(`${url} is ${(size / 1024).toFixed(0)} KB, over the ${ceiling / 1024} KB ceiling`);
   }
 }
 // The effect assets a feature ships under public/fx (stings, glyph sprites;

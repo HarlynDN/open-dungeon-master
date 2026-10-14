@@ -1,4 +1,5 @@
 "use client";
+import { useLocale as useSyncLocale } from "@/lib/i18n/LocaleProvider";
 
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { skillLabel } from "@/lib/i18n/character-presentations";
@@ -18,8 +19,8 @@ import type { BackgroundOption } from "../useBuilderOptions";
 import type { BuilderState } from "../useBuilderState";
 import { splitToolGrants } from "@/lib/srd/tool-choices";
 import { Field, StepPanel, inputClass } from "./shared";
+import { GENDERS, type Gender } from "@/lib/gender";
 
-const GENDERS = ["Female", "Male", "Nonbinary"] as const;
 const CONTENT_IMPORT_COMMAND = "node scripts/import-open5e.mjs";
 
 export type BuilderRole = "pc" | "companion";
@@ -50,6 +51,7 @@ export function IdentityStep({
   backgroundGroups: PickerGroup[];
   background: BackgroundOption | undefined;
 }) {
+  const { t: syncT } = useSyncLocale();
   const { locale, t } = useLocale();
   return (
     <div className="space-y-4">
@@ -124,7 +126,7 @@ export function IdentityStep({
       <StepPanel title={t("builderIdentity.details")}>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <Field label={t("builderIdentity.gender")}>
-            <Select<string>
+            <Select<Gender>
               value={state.gender}
               onChange={state.setGender}
               label={t("builderIdentity.gender")}
@@ -137,14 +139,31 @@ export function IdentityStep({
               <span className="block rounded-lg border border-stone-700/70 bg-stone-950/60 px-3 py-2 text-sm text-stone-400">
                 {t("builderIdentity.campaignLevel", { level: fixedLevel })}
               </span>
+            ) : state.levelLocked ? (
+              <>
+                <span className="block rounded-lg border border-stone-700/70 bg-stone-950/60 px-3 py-2 text-sm text-stone-400">
+                  {state.level} {syncT("upstreamUi.3a8ca059fe92")}</span>
+                <span className="mt-1 block text-xs text-stone-500">
+                  {syncT("upstreamUi.c35778982268")}</span>
+              </>
             ) : (
-              <Select<string>
-                value={String(state.level)}
-                onChange={(next) => state.changeLevel(Number(next))}
-                label={t("builderIdentity.level")}
-                className="w-full"
-                options={Array.from({ length: 20 }, (_, index) => ({ value: String(index + 1), label: String(index + 1) }))}
-              />
+              <>
+                <Select<string>
+                  value={String(state.level)}
+                  onChange={(next) => state.changeLevel(Number(next))}
+                  label={t("builderIdentity.level")}
+                  className="w-full"
+                  options={Array.from({ length: 21 - state.levelFloor }, (_, index) => ({
+                    value: String(index + state.levelFloor),
+                    label: String(index + state.levelFloor),
+                  }))}
+                />
+                {state.levelFloor > 1 ? (
+                  <span className="mt-1 block text-xs text-stone-500">
+                    {t("builderIdentity.levelFloor", { level: state.levelFloor })}
+                  </span>
+                ) : null}
+              </>
             )}
           </Field>
           <Field label={t("builderIdentity.background")}>

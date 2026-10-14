@@ -52,5 +52,5 @@ const renderer=await openCombatRenderer({files:['src/app/campaigns/[campaignId]/
 let picked;const props={card:{...first,disabled:wait.note},index:0,offset:0,step:0,picked:false,attached:false,played:false,aim,conditions:[],waiting:false,turnContext:view,onPick:card=>picked=card};
 const html=renderer.render('HandCardFace',props,'zh-CN');assert(html.includes('啮咬'));assert(html.includes('食人魔'));
 renderer.elements().find(e=>e.type==='button'&&e.props['aria-label']?.startsWith('啮咬')).props.onClick();assert.equal(picked,props.card);assert.equal(picked.intent.weapon,'Bite');
-const more=renderer.render('HandMoreSheet',{open:true,onOpenChange:()=>{},cards:[props.card],onPick:()=>{},waitingNote:wait.note,isWaiting:()=>true,aim,conditions:[],turnContext:view},'zh-CN');assert(more.includes('食人魔'));assert(more.includes('啮咬'));
+const more=renderer.render('HandMoreSheet',{fresh:[],urgent:[],displaced:[],arranging:false,onArrange:()=>{},arrange:null,open:true,onOpenChange:()=>{},cards:[props.card],onPick:()=>{},waitingNote:wait.note,isWaiting:()=>true,aim,conditions:[],turnContext:view},'zh-CN');assert(more.includes('食人魔'));assert(more.includes('啮咬'));
 console.log('PASS: '+attacks+' built-in form attacks, canonical attack payloads/English sentences, custom and stale fallback, actual filtered/hidden encounter projection, turn refusal and JSX callback.');

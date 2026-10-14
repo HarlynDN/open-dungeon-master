@@ -73,12 +73,12 @@ function FactCard({
   const pinTitle = t(fact.pinned ? "memoryUi.fact.unpin" : "memoryUi.fact.pinTip");
   const items: ContextMenuItem[] = steersStory
     ? [
-        { id: "pin", label: pinTitle, glyph: "tab-facts", disabled: busy, onSelect: () => void patch({ pinned: !fact.pinned }) },
-        { id: "edit", label: t("memoryUi.fact.edit"), glyph: "tab-notes", onSelect: () => setEditing(true) },
+        { id: "pin", label: pinTitle, glyph: "ui-pin", disabled: busy, onSelect: () => void patch({ pinned: !fact.pinned }) },
+        { id: "edit", label: t("memoryUi.fact.edit"), glyph: "ui-edit", onSelect: () => setEditing(true) },
         {
           id: "retire",
           label: t("memoryUi.fact.retire"),
-          glyph: "quest-failed",
+          glyph: "ui-delete",
           tone: "danger",
           separated: true,
           disabled: busy,

@@ -15,8 +15,11 @@ import { getDatabase } from "@/lib/db/core";
 import { createDmTurn, getDmTurn, saveDmTurn, type DmTurn } from "@/lib/db/dm-turns";
 import { listSheets } from "@/lib/db/sheets";
 import type { Campaign } from "@/lib/db/campaigns";
-import { announcesEncounterStart, buildCorrectionPrompt, checkNarration, fakeEncounterPrompt } from "@/lib/dm/engine-boundary";
-import { leveledSpellNames, liveStateFor } from "@/lib/dm/narration-guard";
+import { guardOutcomes, ruleClaims, checkNarration, announcesEncounterStart, fakeEncounterPrompt, buildCorrectionPrompt } from "@/lib/dm/engine-boundary";
+import { liveStateFor, readClaims } from "@/lib/dm/claims";
+import { guardKinds } from "@/lib/dm/narration-guard";
+import { hasQuotedLine, type SpokenLine } from "@/lib/dm/speech";
+import { modelTextLines } from "@/lib/dm/speech-lines";
 
 // Every request an agent program sends carries this header
 // (src/lib/agents/workbench.ts workbenchCall).
@@ -29,6 +32,10 @@ export function isAgentRequest(request: Request): boolean {
 // system prompt).
 const AGENT_MARK = "[agent program in the DM seat]";
 
+export function isAgentTurn(turn: Pick<DmTurn, "conversation">): boolean {
+  return turn.conversation[0]?.content === AGENT_MARK;
+}
+
 function findAgentTurn(campaignId: string): DmTurn | null {
   const rows = getDatabase()
     .prepare(
@@ -37,7 +44,7 @@ function findAgentTurn(campaignId: string): DmTurn | null {
     .all(campaignId) as Array<{ id: string }>;
   for (const row of rows) {
     const turn = getDmTurn(row.id);
-    if (turn && turn.conversation[0]?.content === AGENT_MARK) {
+    if (turn && isAgentTurn(turn)) {
       return turn;
     }
   }
@@ -73,31 +80,51 @@ export function recordAgentCall(
 }
 
 // What in the agent's narration contradicts the engine, as one sentence for
-// the refusal, or null. With the guard switched off at the table, nothing.
-export function agentNarrationProblem(campaign: Campaign, narration: string): string | null {
-  if (!campaign.gameSettings.narrationGuard) {
-    return null;
-  }
+// the refusal, or null (nothing, with the guard switched off at the table),
+// and who speaks its quoted lines. The narration is read by the same claims
+// reader as the storyteller's (src/lib/dm/claims.ts), in the table's
+// language.
+export async function readAgentNarration(
+  campaign: Campaign,
+  narration: string,
+): Promise<{ problem: string | null; lines: SpokenLine[] }> {
+  const turn = findAgentTurn(campaign.id);
+  const sheets = listSheets(campaign.id);
   const live = liveStateFor(campaign.id);
-  if (!live && announcesEncounterStart(narration, campaign.gameSettings.locale)) {
-    return fakeEncounterPrompt(campaign.gameSettings.locale);
-  }
-  const found = checkNarration({
-    locale: campaign.gameSettings.locale,
-    conversation: findAgentTurn(campaign.id)?.conversation ?? [],
-    narration,
-    partyNames: listSheets(campaign.id).map((sheet) => sheet.name),
-    live,
-    leveledSpells: leveledSpellNames(),
+  const outcomes = guardOutcomes(turn?.conversation ?? [], live);
+  const guarded = guardKinds(campaign, outcomes, sheets);
+  const claims = await readClaims(campaign, {
+    label: `agent turn ${turn?.id ?? "(none yet)"}`,
+    text: narration,
+    kinds: hasQuotedLine(narration) ? [...guarded, "speaker"] : guarded,
+    outcomes,
+    sheets,
   });
-  if (!found.length) {
-    return null;
+  const lines = modelTextLines(
+    campaign,
+    narration,
+    claims.flatMap((claim) => (claim.kind === "speaker" ? [{ line: claim.line, speaker: claim.speaker }] : [])),
+  );
+  // Keep the Chinese deterministic checks alongside the upstream claims reader.
+  // This also covers a reader outage without making a second model request.
+  const chineseGuard = campaign.gameSettings.narrationGuard && campaign.gameSettings.locale === "zh-CN";
+  if (chineseGuard && !live && announcesEncounterStart(narration, "zh-CN")) {
+    return { problem: fakeEncounterPrompt("zh-CN"), lines };
   }
-  if (campaign.gameSettings.locale !== "en") return buildCorrectionPrompt(found, campaign.gameSettings.locale);
-  return `The narration contradicts what the engine resolved: ${found
-    .slice(0, 4)
-    .map((entry) => `${entry.detail} ("${entry.clause}")`)
-    .join("; ")}. Rewrite it to match the results, or resolve the action with its tool first.`;
+  const found = [
+    ...(chineseGuard ? checkNarration({ conversation: turn?.conversation ?? [], narration, locale: "zh-CN", partyNames: sheets.map(sheet => sheet.name), live }) : []),
+    ...ruleClaims(claims.filter(claim => guarded.includes(claim.kind)), outcomes),
+  ];
+  if (!found.length) {
+    return { problem: null, lines };
+  }
+  return {
+    problem: chineseGuard ? buildCorrectionPrompt(found, "zh-CN") : `The narration contradicts what the engine resolved: ${found
+      .slice(0, 4)
+      .map((entry) => `${entry.detail} ("${entry.clause}")`)
+      .join("; ")}. Rewrite it to match the results, or resolve the action with its tool first.`,
+    lines,
+  };
 }
 
 // Narration posted: the agent's stretch of play is over.

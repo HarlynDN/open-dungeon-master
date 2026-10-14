@@ -64,8 +64,8 @@ export function MonsterRows({
         // or long-press menu. Opening stays the row itself.
         const items: ContextMenuItem[] = [
           { id: "open", label: monsterUiText("Open", locale), glyph: "system-bestiary", onSelect: () => onOpen(monster) },
-          { id: "duplicate", label: monsterUiText("Duplicate", locale), glyph: "tab-notes", disabled: busy, onSelect: () => onDuplicate(monster) },
-          { id: "delete", label: monsterUiText("Delete", locale), glyph: "quest-failed", tone: "danger", separated: true, onSelect: () => onDelete(monster) },
+          { id: "duplicate", label: monsterUiText("Duplicate", locale), glyph: "ui-duplicate", disabled: busy, onSelect: () => onDuplicate(monster) },
+          { id: "delete", label: monsterUiText("Delete", locale), glyph: "ui-delete", tone: "danger", separated: true, onSelect: () => onDelete(monster) },
         ];
         return (
           <ContextMenu
@@ -80,6 +80,7 @@ export function MonsterRows({
               cr={stats.cr}
               genre={genre}
               seed={monster.draft.name}
+              name={monster.draft.name}
               size="size-12"
             />
             <button

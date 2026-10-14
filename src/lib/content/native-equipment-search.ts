@@ -1,3 +1,4 @@
+import { compareNames } from "../language/text-logic";
 import type { AppLocale } from '@/lib/i18n/locales';
 import { equipmentSearchNames } from '@/lib/i18n/equipment-presentations';
 import { bundledGearRows } from '@/lib/workshop/bundled-gear-rows';
@@ -25,7 +26,7 @@ export function nativeEquipmentSearch<T extends { name: string; slug: string; so
   for (const q of queries) for (const row of bundledGearRows(q, input.kind)) {
     if (!filedNames.has(row.name.trim().toLowerCase()) && !rows.has(row.slug)) rows.set(row.slug, row);
   }
-  const sorted = [...rows.values()].sort((a, b) => a.name.localeCompare(b.name, 'en'));
+  const sorted = [...rows.values()].sort((a, b) => compareNames(a.name, b.name));
   // Reference pages count only pack/native rows in their offset. Other
   // existing catalog callers keep the original combined offset contract.
   if (input.separateHomebrew) {

@@ -1,6 +1,7 @@
 import { defineMessages } from "./catalog.ts";
 
 export const BUILDER_IDENTITY_MESSAGES = /*#__PURE__*/ defineMessages({
+  "builderIdentity.levelFloor": {"en": "Improvements taken in play are already in the scores, so the character stays level {level} or higher.", "zh-CN": "游玩中获得的提升已计入属性，因此角色等级不能低于 {level} 级。"},
   "builderIdentity.packNotice": {
     "en": "Content pack not installed; showing SRD 5.1 basics only. Run {command} on the server for the full Open5e catalog.",
     "zh-CN": "资料包未安装，目前仅提供 SRD 5.1 基础选项。可在服务器运行 {command} 导入完整 Open5e 资料库。"

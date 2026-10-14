@@ -792,8 +792,8 @@ export const ACCOUNT_MESSAGES = /*#__PURE__*/ defineMessages({
     "zh-CN": "添加到 ~/.codex/config.toml（文件不存在则新建），然后重新启动 Codex。"
   },
   "agents.setup.opencode": {
-    "en": "Add it inside opencode.json (in the project, or ~/.config/opencode/opencode.json), then start opencode again.",
-    "zh-CN": "添加到项目中的 opencode.json 或 ~/.config/opencode/opencode.json，然后重新启动 opencode。"
+    "en": "For opencode 2, add it inside opencode.json (in the project, or ~/.config/opencode/opencode.json), then start opencode again.",
+    "zh-CN": "opencode 2：添加到项目中的 opencode.json 或 ~/.config/opencode/opencode.json，然后重新启动 opencode。"
   },
   "agents.setup.other": {
     "en": "Any MCP client that speaks streamable HTTP: give it this address and this header.",

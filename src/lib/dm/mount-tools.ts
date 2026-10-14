@@ -72,7 +72,7 @@ export const mountTools: ToolDef[] = [
           cause: {
             type: "string",
             enum: ["voluntary", "forced-move", "mount-prone", "rider-prone"],
-            description: "Why they came off. Defaults to voluntary.",
+            description: "Why they came off. Default 'voluntary'.",
           },
         },
         required: ["characterId"],
@@ -101,6 +101,7 @@ function tableNote(campaign: Campaign, content: string) {
     campaignId: campaign.id,
     seq,
     authorType: "system",
+    glyph: "cue-travel",
     content,
   });
   publishWithSeq(campaign.id, seq, "message_added", { message });

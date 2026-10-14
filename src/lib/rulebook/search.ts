@@ -10,20 +10,13 @@
 import { blockText, parseBook, preserveBookAnchors, stripInline, type BookBlock } from "./markdown";
 import type { RulebookKind, RulebookPage, SearchHit } from "./types";
 
-const STOP = new Set(["a", "an", "and", "the", "of", "to", "in", "on", "or", "for", "is", "it", "at", "by", "be", "as", "with", "do", "does", "how", "what", "when", "can", "i", "you", "my"]);
 const CJK_STOP = new Set(["的", "了", "在", "是", "和", "与", "及", "如何", "什么", "怎么"]);
 const segmenter = typeof Intl.Segmenter === "function" ? new Intl.Segmenter(undefined, { granularity: "word" }) : null;
+import { stemWord, stopWordsFor } from "../language/language";
+import { compareNames } from "../language/text-logic";
 
 export function stem(word: string): string {
-  let w = word.toLowerCase().replace(/['’]s$/, "").replace(/['’]/g, "");
-  if (w.length > 4 && w.endsWith("ies")) w = `${w.slice(0, -3)}y`;
-  else if (w.length > 5 && w.endsWith("ing")) w = w.slice(0, -3);
-  else if (w.length > 4 && w.endsWith("ed")) w = w.slice(0, -2);
-  else if (w.length > 4 && /(ss|x|ch|sh)es$/.test(w)) w = w.slice(0, -2);
-  else if (w.length > 3 && w.endsWith("s") && !w.endsWith("ss") && !w.endsWith("us")) w = w.slice(0, -1);
-  if (w.length > 4 && w.endsWith("e")) w = w.slice(0, -1);
-  // "grappl" from grapple and grappling, "attack" from attacks and attacked.
-  return w;
+  return stemWord(word.toLowerCase(), "english");
 }
 
 export function words(text: string, mode: "index" | "query" = "index"): string[] {
@@ -44,7 +37,7 @@ export function words(text: string, mode: "index" | "query" = "index"): string[]
 // they are all there is.
 export function queryTerms(query: string): string[] {
   const all = words(query, "query");
-  const kept = all.filter((word) => !STOP.has(word) && !CJK_STOP.has(word));
+  const kept = all.filter((word) => !stopWordsFor("english").has(word) && !CJK_STOP.has(word));
   return [...new Set((kept.length ? kept : all).map(stem))];
 }
 
@@ -60,6 +53,9 @@ type Passage = {
 
 type PageEntry = {
   page: RulebookPage;
+  // Every word on the page, as written (lower case), with its stem: what a
+  // hit hands the reader to mark.
+  wordStems: Map<string, string>;
   titleStems: Set<string>;
   titleLower: string;
   passages: Passage[];
@@ -120,21 +116,52 @@ function passagesOf(page: RulebookPage, blocks: BookBlock[]): Passage[] {
   return out;
 }
 
+function indexPage(page: RulebookPage, anchors?: readonly string[]) {
+  const blocks = parseBook(page.md);
+  const passages = passagesOf(page, anchors ? preserveBookAnchors(blocks, anchors) ?? blocks : blocks);
+  const wordStems = new Map<string, string>();
+  for (const text of [page.title, ...passages.flatMap((item) => [item.heading ?? "", item.text])]) {
+    for (const word of words(text)) {
+      if (!wordStems.has(word)) wordStems.set(word, stem(word));
+    }
+  }
+  return {
+    page,
+    wordStems,
+    titleStems: new Set(words(page.title).map(stem)),
+    titleLower: page.title.toLowerCase(),
+    passages,
+  };
+}
+
+function chapterMap(chapters: Array<{ id: string; numeral: string; title: string }>) {
+  return new Map(chapters.map((chapter) => [chapter.id, { numeral: chapter.numeral, title: chapter.title }]));
+}
+
 export function buildIndex(
   pages: RulebookPage[],
   chapters: Array<{ id: string; numeral: string; title: string }>,
   anchors?: ReadonlyMap<string, readonly string[]>,
 ): RulebookIndex {
-  return {
-    pages: pages.map((page) => ({
-      page,
-      titleStems: new Set(words(page.title).map(stem)),
-      titleLower: page.title.toLowerCase(),
-      passages: passagesOf(page, anchors?.has(page.id)
-        ? preserveBookAnchors(parseBook(page.md), anchors.get(page.id)!) ?? parseBook(page.md) : parseBook(page.md)),
-    })),
-    chapters: new Map(chapters.map((chapter) => [chapter.id, { numeral: chapter.numeral, title: chapter.title }])),
-  };
+  return { pages: pages.map(page => indexPage(page, anchors?.get(page.id))), chapters: chapterMap(chapters) };
+}
+
+// The same index, built a slice of pages at a time with the event loop
+// handed back between slices. Parsing every page of the book takes about a
+// third of a second; done in one go, the first search after a start held
+// every other request and live stream on the server for all of it.
+export async function buildIndexInSlices(
+  pages: RulebookPage[],
+  chapters: Array<{ id: string; numeral: string; title: string }>,
+  slice = 24,
+  anchors?: ReadonlyMap<string, readonly string[]>,
+): Promise<RulebookIndex> {
+  const indexed: RulebookIndex["pages"] = [];
+  for (let start = 0; start < pages.length; start += slice) {
+    for (const page of pages.slice(start, start + slice)) indexed.push(indexPage(page, anchors?.get(page.id)));
+    await new Promise<void>((resolve) => setImmediate(resolve));
+  }
+  return { pages: indexed, chapters: chapterMap(chapters) };
 }
 
 // Rules text outranks an entry that merely mentions a word, all else equal.
@@ -194,37 +221,11 @@ export function localizedSearchHit(index: RulebookIndex, hit: SearchHit, terms: 
   if (!entry) return hit;
   const passage = entry.passages.find(passage => passage.at === hit.at);
   return { ...hit, title: entry.page.title, chapter: index.chapters.get(entry.page.chapter)?.title ?? hit.chapter,
+    words: [...new Set([...hit.words, ...terms.filter(term => /\p{Script=Han}/u.test(term))])],
     heading: passage?.heading ?? hit.heading, snippet: passage ? snippetFor(passage.text, terms) : hit.snippet };
 }
 
-// Literal CJK terms may overlap (生命, 命值). Merge intervals so the visible
-// phrase is highlighted once; React still escapes every returned text segment.
-export function cjkHighlightRuns(text: string, terms: string[]): Array<{ text: string; marked: boolean }> {
-  const ranges: Array<[number, number]> = [];
-  for (const match of text.matchAll(/[a-z0-9]+(?:['’][a-z]+)?/gi)) {
-    const key = stem(match[0]);
-    if (terms.some(term => key === term || key.startsWith(term))) ranges.push([match.index, match.index + match[0].length]);
-  }
-  for (const term of terms.filter(term => /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u.test(term))) {
-    let at = text.indexOf(term);
-    while (at >= 0) { ranges.push([at, at + term.length]); at = text.indexOf(term, at + 1); }
-  }
-  ranges.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
-  const merged: Array<[number, number]> = [];
-  for (const range of ranges) {
-    const previous = merged.at(-1);
-    if (previous && range[0] <= previous[1]) previous[1] = Math.max(previous[1], range[1]);
-    else merged.push([...range]);
-  }
-  const runs: Array<{ text: string; marked: boolean }> = [];
-  let at = 0;
-  for (const [start, end] of merged) {
-    if (start > at) runs.push({ text: text.slice(at, start), marked: false });
-    runs.push({ text: text.slice(start, end), marked: true }); at = end;
-  }
-  if (at < text.length) runs.push({ text: text.slice(at), marked: false });
-  return runs;
-}
+export { cjkHighlightRuns } from "./highlight";
 
 export function searchRulebook(index: RulebookIndex, query: string, limit = 40): SearchHit[] {
   const terms = queryTerms(query);
@@ -233,12 +234,16 @@ export function searchRulebook(index: RulebookIndex, query: string, limit = 40):
   // The last word may still be being typed.
   const typed = /[a-z0-9\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]$/iu.test(query.trim());
   const isPrefix = (position: number) => typed && position === terms.length - 1;
+  const matching = (key: string) =>
+    terms.some((term, position) => key === term || (isPrefix(position) && term.length >= 2 && key.startsWith(term)));
   const hits: SearchHit[] = [];
 
   for (const entry of index.pages) {
     const { page } = entry;
     const chapter = index.chapters.get(page.chapter);
     const pageHits: SearchHit[] = [];
+    let marked: string[] | null = null;
+    const pageWords = () => (marked ??= [...entry.wordStems].filter(([, key]) => matching(key)).map(([word]) => word));
     const titleAll = terms.every((term, position) => hasTerm(entry.titleStems, term, isPrefix(position)));
     entry.passages.forEach((item, passageIndex) => {
       const matches = terms.every(
@@ -270,12 +275,13 @@ export function searchRulebook(index: RulebookIndex, query: string, limit = 40):
         heading: item.heading,
         at: item.at,
         snippet: snippetFor(item.text, terms),
+        words: pageWords(),
         score,
       });
     });
     pageHits.sort((a, b) => b.score - a.score);
     hits.push(...pageHits.slice(0, 3));
   }
-  hits.sort((a, b) => b.score - a.score || a.title.localeCompare(b.title));
+  hits.sort((a, b) => b.score - a.score || compareNames(a.title, b.title));
   return hits.slice(0, limit);
 }

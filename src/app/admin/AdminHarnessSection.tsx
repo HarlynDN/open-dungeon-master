@@ -8,8 +8,13 @@ import { PageSection } from "@/components/PageShell";
 import { NumberStepper } from "@/components/ui/NumberStepper";
 import { Switch } from "@/components/ui/Switch";
 import { CopyLine } from "@/components/CopyLine";
-import { Field, SelectField, type MaskedConfig } from "@/app/admin/AdminSettingsFields";
+import { Field, SelectField } from "@/app/admin/AdminSettingsFields";
+import { BLANK } from "@/app/admin/model-blanks";
+import type { AdminConfigDraftPatch } from "@/app/admin/merge-config-draft";
 import { HarnessTestPanel } from "@/app/admin/HarnessTestPanel";
+import { SpeedField } from "@/app/admin/SpeedField";
+import { agentSpeedEligibility } from "@/lib/speed-tier";
+import type { SpeedChannel, SpeedNote } from "@/lib/speed-status";
 import type { HarnessConfig, HarnessId, HarnessStatus } from "@/lib/harness/types";
 
 type Payload = {
@@ -31,7 +36,7 @@ function statusTone(status: HarnessStatus): { tone: "ready" | "warn" | "off" | "
   return { tone: "ready", text: "Ready" };
 }
 
-// The admin's agent program (docs/harness-mcp-plan.md 6): a card per program
+// The admin's agent program (docs/archive/harness-mcp-plan.md 6): a card per program
 // this server knows how to run, each saying whether it is installed, signed
 // in and locked down, then the models and limits for the chosen one. Saved on
 // its own, so choosing a program never rides along with an unrelated edit.
@@ -39,12 +44,15 @@ export function AdminHarnessSection({
   textProvider,
   imagesBackend = "",
   onConfig,
+  speedNotes = {},
 }: {
   textProvider: string;
   // The server's default picture backend, to say whether the tables already
   // paint with the agent.
   imagesBackend?: string;
-  onConfig: (config: MaskedConfig) => void;
+  onConfig: (patch: AdminConfigDraftPatch) => void;
+  // What the last Fast calls ran at (issue 255).
+  speedNotes?: Partial<Record<SpeedChannel, SpeedNote>>;
 }) {
   const [data, setData] = useState<Payload | null>(null);
   const [draft, setDraft] = useState<HarnessConfig | null>(null);
@@ -89,7 +97,7 @@ export function AdminHarnessSection({
 
   if (!data || !draft) {
     return (
-      <PageSection id="admin-harness" heading="Agent program" glyph="system-lore">
+      <PageSection id="admin-harness" heading="Agent program" glyph="ui-agent">
         <div className="skeleton-block h-28 rounded-xl" aria-label="Looking for agent programs" />
       </PageSection>
     );
@@ -141,7 +149,10 @@ export function AdminHarnessSection({
         setError(body?.error ?? "Could not save.");
         return;
       }
-      onConfig(body.config);
+      // Only what this save changed goes into the panel's draft (PR 221):
+      // the harness block and the storyteller choice, as the server now holds
+      // them. Unsaved edits in the other sections stay as typed.
+      onConfig({ harness: body.config.harness, text: { provider: body.config.text.provider } });
       setData((current) => (current ? { ...current, config: body.config.harness } : current));
       setDraft(body.config.harness);
       setDefaultOverride(null);
@@ -161,7 +172,10 @@ export function AdminHarnessSection({
       .then((response) => (response.ok ? response.json() : null))
       .catch(() => null);
     if (settings?.config) {
-      onConfig(settings.config as MaskedConfig);
+      onConfig({
+        harness: { images: settings.config.harness.images },
+        images: { defaultBackend: settings.config.images.defaultBackend },
+      });
       setDraft(settings.config.harness as HarnessConfig);
       setData((current) => (current ? { ...current, config: settings.config.harness } : current));
     }
@@ -172,7 +186,7 @@ export function AdminHarnessSection({
   const usage = data.usage;
 
   return (
-    <PageSection id="admin-harness" heading="Agent program" glyph="system-lore">
+    <PageSection id="admin-harness" heading="Agent program" glyph="ui-agent">
       <p className="mb-3 text-xs text-stone-500">
         Let an agent you already have, Claude Code, Codex, opencode or Grok Build, narrate the
         tables on its own sign-in. It is started with none of its own tools: the only thing it can
@@ -262,8 +276,8 @@ export function AdminHarnessSection({
                 value={draft.model}
                 onChange={(model) => setDraft({ ...draft, model })}
                 options={[
-                  { value: "", label: "The program's own default" },
-                  ...models.map((model) => ({ value: model.id, label: model.label })),
+                  { value: "", label: BLANK.programDefault },
+                  ...models.map((model) => ({ value: model.id, label: model.deprecated ? `${model.label} (deprecated)` : model.label })),
                   ...(draft.model && !models.some((model) => model.id === draft.model)
                     ? [{ value: draft.model, label: draft.model }]
                     : []),
@@ -275,16 +289,47 @@ export function AdminHarnessSection({
                 value={draft.utilityModel}
                 onChange={(utilityModel) => setDraft({ ...draft, utilityModel })}
                 options={[
-                  { value: "", label: "Same as the story model" },
+                  { value: "", label: BLANK.utility },
                   ...[...models].sort((a, b) => Number(Boolean(b.cheap)) - Number(Boolean(a.cheap))).map((model) => ({
                     value: model.id,
-                    label: model.cheap ? `${model.label} (light)` : model.label,
+                    label: `${model.cheap ? `${model.label} (light)` : model.label}${model.deprecated ? " (deprecated)" : ""}`,
                   })),
+                  ...(draft.utilityModel && !models.some((model) => model.id === draft.utilityModel)
+                    ? [{ value: draft.utilityModel, label: draft.utilityModel }]
+                    : []),
                 ]}
               />
               {chosen.id === "claude" || chosen.id === "codex" ? (
+                <>
+                  <SpeedField
+                    label="Story speed"
+                    value={draft.speed}
+                    onChange={(speed) => setDraft({ ...draft, speed })}
+                    eligibility={agentSpeedEligibility({ harnessId: chosen.id, model: draft.model, models })}
+                    note={speedNotes["agent-story"]}
+                  />
+                  <SpeedField
+                    label="Bookkeeping speed"
+                    value={draft.utilitySpeed}
+                    onChange={(utilitySpeed) => setDraft({ ...draft, utilitySpeed })}
+                    eligibility={agentSpeedEligibility({ harnessId: chosen.id, model: draft.utilityModel || draft.model, models })}
+                    note={speedNotes["agent-utility"]}
+                  />
+                </>
+              ) : null}
+              {chosen.id === "claude" || chosen.id === "codex" || chosen.id === "opencode" ? (
                 <SelectField
                   label="Effort"
+                  hint={
+                    [...new Set([draft.model, draft.utilityModel || draft.model])]
+                      .flatMap((id) => {
+                        const model = models.find((entry) => entry.id === id);
+                        return draft.effort && model?.efforts && !model.efforts.includes(draft.effort)
+                          ? [`${model.label} has no ${draft.effort} setting and runs at its own default.`]
+                          : [];
+                      })
+                      .join(" ") || undefined
+                  }
                   value={draft.effort}
                   onChange={(effort) => setDraft({ ...draft, effort })}
                   options={EFFORTS.map((effort) => ({ value: effort, label: effort ? effort[0].toUpperCase() + effort.slice(1) : "The program's own default" }))}

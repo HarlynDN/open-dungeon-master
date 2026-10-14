@@ -1,9 +1,11 @@
-import { createCampaign, setDmOutline, type Campaign } from "@/lib/db/campaigns";
+import { createCampaign, getCampaignForUser, setDmOutline, type Campaign } from "@/lib/db/campaigns";
 import { getUserSettings } from "@/lib/db/users";
 import { normalizeLocale } from "@/lib/i18n/locales";
 import type { AppLocale } from "@/lib/i18n/locales";
 import "@/lib/i18n/messages";
 import { starterMaterial } from "@/lib/i18n/starter-material-presentations";
+import { getClock, setClockInstant } from "@/lib/db/clock";
+import { MINUTES_PER_DAY, MINUTES_PER_HOUR } from "@/lib/dm/calendar";
 
 // The starter one-shot: a table that opens in ten minutes for people who
 // have never played. One evening, level 1, a village, a crypt, a twist.
@@ -11,6 +13,9 @@ import { starterMaterial } from "@/lib/i18n/starter-material-presentations";
 // secret spine, written into the campaign's DM outline so the story-arc
 // planner keeps to it (src/lib/dm/arc.ts reads dmOutline). The heroes are
 // src/lib/starter/pregens.ts, picked from the lobby.
+
+// Six in the evening, the hour the premise opens on.
+export const STARTER_HOUR = 18;
 
 export const STARTER_ONE_SHOT = {
   id: "silent-bell",
@@ -32,7 +37,7 @@ export const STARTER_ONE_SHOT = {
   ].join("\n\n"),
 };
 
-export function createStarterCampaign(userId: string, options: { solo: boolean; locale?: AppLocale }): Campaign {
+export function createStarterCampaign(userId: string, options: { solo: boolean; locale?: AppLocale; narration?: boolean }): Campaign {
   const locale = options.locale ?? normalizeLocale(getUserSettings(userId).uiLocale);
   const material = starterMaterial(STARTER_ONE_SHOT, locale);
   const campaign = createCampaign(userId, {
@@ -47,11 +52,23 @@ export function createStarterCampaign(userId: string, options: { solo: boolean; 
       dmMode: "ai",
       genre: "high_fantasy",
       campaignLength: "short",
-      // The premise is written; the setup pass still fills the world's
-      // small print (places, faces) from it.
+      ttsEnabled: options.narration ?? true,
+      // The outline is written below, before anyone presses Begin, so the
+      // setup pass stands aside (src/lib/dm/setup.ts runs only for a table
+      // with no outline yet) and the arc planner builds from the outline.
+      // The setting stays at its default; it has nothing to do here.
       aiStorySetup: true,
     },
   });
   setDmOutline(campaign.id, STARTER_ONE_SHOT.outline);
-  return campaign;
+  // "You arrive at dusk": the clock says so too. A new campaign's clock opens
+  // at eight in the morning, and the DM narrates the hour the clock shows, so
+  // the premise and the opening scene disagreed until a model thought to
+  // pass the day itself. Only the hour moves: the day and the calendar stay
+  // the ones the campaign opened with.
+  const opened = getClock(campaign.id).instant;
+  setClockInstant(campaign.id, opened - (opened % MINUTES_PER_DAY) + STARTER_HOUR * MINUTES_PER_HOUR);
+  // Read back as the owner sees it, so the starter route reports the same
+  // role POST /api/campaigns does.
+  return getCampaignForUser(campaign.id, userId) ?? campaign;
 }

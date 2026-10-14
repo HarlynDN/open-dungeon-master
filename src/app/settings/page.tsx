@@ -14,6 +14,7 @@ import { AvatarCropDialog } from "@/app/settings/AvatarCropDialog";
 import { AppearanceSection } from "@/app/settings/AppearanceSection";
 import { InterfaceLocalePicker } from "@/components/LocalePicker";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
+import { DictationShortcutSection } from "@/app/settings/DictationShortcutSection";
 import { BlockedPlayersSection } from "@/app/settings/BlockedPlayersSection";
 import { ConnectedAgentsSection } from "@/app/settings/ConnectedAgentsSection";
 import { ChangePasswordForm } from "@/app/ChangePasswordForm";
@@ -283,6 +284,7 @@ export default function SettingsPage() {
 
       {policyError ? <PageSection><LoadFailed error={requestErrorText(locale, policyError)} onRetry={() => setPolicyAttempt((attempt) => attempt + 1)} /></PageSection> : !about ? <PageSection><PanelLoading label={t("account.loadingPolicy")} rows={1} /></PageSection> : null}
       <AppearanceSection />
+      <DictationShortcutSection />
       <BlockedPlayersSection />
       <ConnectedAgentsSection />
 

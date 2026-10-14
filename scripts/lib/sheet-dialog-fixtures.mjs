@@ -7,7 +7,7 @@ export const GEAR_FILE = 'src/components/sheet/SheetGearRow.tsx';
 export const CHOICE_FILE = 'src/components/sheet/SheetChoices.tsx';
 export function openSheetDialogRenderer(options = {}) {
   const shell = url(`import {createElement as h,Fragment} from ${JSON.stringify(import.meta.resolve('react'))};
-    export const Root=({children})=>h(Fragment,null,children); export const Portal=Root;
+    export const Root=({children,open=true})=>open?h(Fragment,null,children):null; export const Portal=Root;
     export const Overlay=()=>null; export const Content=({children,className})=>h('div',{className},children);
     export const Title=({children,className})=>h('h2',{className},children); export const Close=({children})=>h('button',null,children);
     export const Tooltip=({children,content})=>h('span',{'data-tooltip':content},children);
@@ -39,7 +39,7 @@ export function sheetDialogFixtures(renderer, locale = 'en') {
   ]) add('dialog/'+name,'CharacterSheetDialog',{...own,sheet:dialogSheet(patch),...props});
   const sheet=dialogSheet({equipment:[{name:'Plate',qty:1,equipped:true}]});
   for (const [name,refusal,timeNote] of [['refusal',{text:'Goblin does not carry one of those items.',at:'gear'},null],['time',null,'Putting on Plate takes 10 minutes.']])
-    add('dialog/'+name,'CharacterSheetDialog',{...own,sheet},{queues:{[DIALOG_FILE]:[false,false,refusal,timeNote]}});
+    add('dialog/'+name,'CharacterSheetDialog',{...own,sheet},{queues:{[DIALOG_FILE]:[false,false,false,refusal,timeNote]}});
   for (const [name,item,props] of [
     ['plate',{name:'Plate',qty:1},{worn:false}],['shield-offturn',{name:'Shield',qty:1},{inCombat:true,myTurn:false}],
     ['shield-ownturn',{name:'Shield',qty:1},{inCombat:true,myTurn:true}],['attuning',{name:'Ring of Protection',qty:1,attuning:true},{}],

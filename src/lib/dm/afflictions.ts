@@ -140,7 +140,7 @@ function manifest(campaign: Campaign, turnId: string, sheetId: string, record: A
     addExhaustion(campaign.id, sheetId, 1);
   }
   const sheet = getSheetById(sheetId);
-  tableNote(campaign, `${sheet?.name ?? "A character"} shows the symptoms of ${disease.name}.`);
+  tableNote(campaign, `${sheet?.name ?? "A character"} shows the symptoms of ${disease.name}.`, "cue-bell");
   const { onsetAt: _onset, ...rest } = record;
   void _onset;
   return {
@@ -160,7 +160,7 @@ function manifestWorkshop(campaign: Campaign, turnId: string, sheetId: string, r
     addExhaustion(campaign.id, sheetId, held.spec.exhaustion);
   }
   const sheet = getSheetById(sheetId);
-  tableNote(campaign, `${sheet?.name ?? "A character"} shows the symptoms of ${held.name}.`);
+  tableNote(campaign, `${sheet?.name ?? "A character"} shows the symptoms of ${held.name}.`, "cue-bell");
   const { onsetAt: _onset, ...rest } = record;
   void _onset;
   return { ...rest, conditions: kept.length ? kept : [held.spec.condition], successes: 0 };
@@ -371,7 +371,7 @@ export function afflictionClockTick(campaignId: string, to: number) {
         changed = true;
       } else if (entry.kind === "madness" && entry.id === "long" && entry.endsAt !== undefined && entry.endsAt <= to) {
         dropConditions(campaignId, sheet.id, entry.conditions);
-        tableNote(campaign, `${sheet.name}'s long-term madness passes.`);
+        tableNote(campaign, `${sheet.name}'s long-term madness passes.`, "cue-heal");
         changed = true;
       } else {
         next.push(entry);
@@ -554,7 +554,7 @@ export function afflictionStress(campaign: Campaign, turnId: string, sheetId: st
     }
   }
   if (lines.length) {
-    tableNote(campaign, lines.join(" "));
+    tableNote(campaign, lines.join(" "), "cue-bell");
   }
   return lines;
 }

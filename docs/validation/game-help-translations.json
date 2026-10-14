@@ -7,18 +7,18 @@
   "sources": {
     "src/lib/help/glossary.json": "b212308b557edb04f27d3f137c34179bffdd48ea3f3473ce929e319fbe20c1c7",
     "src/lib/help/terms.ts": "ebdc3142237d2c70376111b0d9fee867777bd54b2b640d4210ade61c7fbb0af9",
-    "src/lib/help/index.ts": "7ff4f4cd962f23f301d09902fcd8fba024f1f5956ddca7c5a99d9105ab4c7dbd",
+    "src/lib/help/index.ts": "d713cd97b4210766e44d39675eba03a2c9a409bea389520e87223b7ee8d3f149",
     "src/lib/srd/skills.json": "e78ba58d83aeed41533161c3bd3b559411b042a4f019fc4ee45183843ceba7fd",
     "src/components/ui/GameTerm.tsx": "667de8c1b5ebb1e01932f99b0892e7166f9779b4ffd88ecd02261b0063c1f1bc",
     "src/components/ui/OptionGlossary.tsx": "25d1d31cb0a9ad0880ca8ea30d7d0dddcaa360a11b53dd8522b6ae606445d9ab",
     "src/lib/i18n/game-help-presentations.ts": "8870d1ba521286fe2b1bc1a9f1121b5f068377aa620c426a70631aa161281d33",
     "src/lib/i18n/closed-game-help-presentations.ts": "609afbeb2bc293a488a69b61357859f2897430fd0dde38d36f31e72e79c27d66",
-    "src/app/characters/builder/steps/IdentityStep.tsx": "9e63ff51dbb733e50dae011bddec3009aaee81d955a3d3a88a91871c521a0ae5",
+    "src/app/characters/builder/steps/IdentityStep.tsx": "58a0b66d926db01f0b357c5b963af762ada9beb0c04aefe53e47c225de292151",
     "src/app/characters/builder/RacialChoicesSection.tsx": "bf2db286b025eed1b7b05758fd1c6f3f1c6aaa9edf08853e579286ac797a68a6",
-    "src/app/characters/builder/steps/CallingStep.tsx": "9f5b4431d56ecb3a9503afc5d0e87dcb1c1cf4be40245e97ead7bc5d0cea4476",
+    "src/app/characters/builder/steps/CallingStep.tsx": "2d85614f558ffddf552f9d6ca1b2776d4e902fecef5b558439349228a845bd94",
     "src/app/characters/builder/steps/ClassChoices.tsx": "cc5e92bcc75058b68c113e0a425de94fa753633aeaedef94b5609bceb3114e41",
-    "src/app/characters/builder/FeatChoicesFields.tsx": "1533004ac6b9209849c42a1b2d95a9945cc8a86c998999642aa2b9be43847516",
-    "src/app/campaigns/[campaignId]/LevelUpDialog.tsx": "943360ce5d65e9a6cfdc7bca0786cc2462da3a42848d6ab93d1ec4ae5f8bf73f"
+    "src/app/characters/builder/FeatChoicesFields.tsx": "c783433800793c1fcdd1a05382c24c74fbab22283f692bf24566bfe23083dd10",
+    "src/app/campaigns/[campaignId]/LevelUpDialog.tsx": "e28621cb64999c14ebb74c09b58669ba91535444a26208d358ea58621fa67c6e"
   },
   "catalogs": {
     "src/lib/i18n/game-help-messages.ts": "5eb6bd7f94a82396d3433a887e72d3bff7def4169f3ba0483c2c52b7db68a37e",
@@ -67,5 +67,10 @@
       }
     },
     "review": "Compared feat-choice and level-up historical diffs: localized labels, native source-bound descriptions, class/skill/tool/spell names, failure/notice display and stable feature chip IDs; original option values and submission callbacks remain canonical. Glossary baseline has 257 entries and current has 557, none removed; only prior-entry changes are Combat Wild Shape -> 战斗荒野形态 and Hawk -> 隼 with 鹰 retained as alias. The 300 later additions belong to completed material batches and are not newly certified as external-source translations here. Frozen English baselines remain untouched. Focused grouped rerun pending."
+  },
+  "upstream027Review": {
+    "upstreamCommit": "2b0b6b6ebf5e12f3e43a21ee38f80b41e5b1cd81",
+    "reviewer": "implementation agent",
+    "scope": "Reviewed source deltas: campaign-scoped ability rolls; subclass training and mandatory choices; native gender and level-floor UI; Aasimar and subclass rule text; resource action annotations; concentration flag reader; stable Unicode name ordering. Existing Chinese bindings updated where source changed. Runtime acceptance is tracked separately."
   }
 }

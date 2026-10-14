@@ -39,6 +39,7 @@ import { MINUTES_PER_DAY } from "@/lib/dm/calendar";
 import { publishEphemeral, publishPersisted, publishWithSeq } from "@/lib/events";
 import type { CharacterSheet } from "@/lib/schemas/sheet";
 import { addCopper, formatCopper } from "@/lib/srd/currency";
+import { waypointProperty } from "@/lib/dm/waypoint-logic";
 
 // The shop tools (docs/vtt-parity-implementation-plan.md 11.1). The server
 // prices everything: the model names the item, the shelf says what it
@@ -58,11 +59,11 @@ export const shopTools: ToolDef[] = [
     function: {
       name: "open_shop",
       description:
-        "Open a shop at the party's current place. Give it a name, a kind (general, smith, apothecary, outfitter, curiosities) and the settlement size; the server stocks its shelves from the content pack at the size's markup. Call once when the party first walks in; the shop and its prices then appear in GAME STATE. A shop already standing here (one in SHOPS HERE) is reopened as it is: its shelf, prices and haggles stay, and it restocks only when its restock day has come.",
+        "Open a shop at the party's current place; the server stocks its shelves from the content pack at the settlement size's markup. Call it once when the party first walks in; the shop and its prices then appear in GAME STATE. A shop already standing here (one in SHOPS HERE) is reopened as it is: its shelf, prices and haggles stay, and it restocks only when its restock day has come.",
       parameters: {
         type: "object",
         properties: {
-          name: { type: "string", description: "The shop's name, e.g. 'Marla's Sundries'." },
+          name: { type: "string", description: "The shop's name ('Marla's Sundries')." },
           kind: { type: "string", enum: ["general", "smith", "apothecary", "outfitter", "curiosities"] },
           size: { type: "string", enum: ["hamlet", "village", "town", "city"] },
           keeper: { type: "string", description: "The keeper's name, an NPC from GAME STATE when one fits." },
@@ -75,10 +76,11 @@ export const shopTools: ToolDef[] = [
     type: "function",
     function: {
       name: "buy_item",
-      description: "A character buys from a shop in GAME STATE. The server takes the asking price from the shelf and refuses what the purse cannot cover or the shelf does not hold. Do not quote a price yourself.",
+      description: "Resolve a character buying from a shop in GAME STATE. The server takes the asking price from the shelf and refuses what the purse cannot cover or the shelf does not hold.",
       parameters: {
         type: "object",
         properties: {
+          ...waypointProperty,
           characterId: { type: "string" },
           shop: { type: "string", description: "The shop's name." },
           item: { type: "string" },
@@ -92,7 +94,7 @@ export const shopTools: ToolDef[] = [
     type: "function",
     function: {
       name: "sell_item",
-      description: "A character sells something they carry to a shop that buys. The keeper pays half list price, from the content pack when the item is known there; name a price in copper only for something the pack does not know.",
+      description: "Resolve a character selling something they carry to a shop that buys. The keeper pays half list price, from the content pack when the item is known there; name a price in copper only for something the pack does not know.",
       parameters: {
         type: "object",
         properties: {
@@ -110,7 +112,7 @@ export const shopTools: ToolDef[] = [
     type: "function",
     function: {
       name: "haggle",
-      description: "A character haggles with a shop's keeper: a Persuasion check against the settlement's DC. Success drops every price in that shop one step, failure raises them one step. One try per character per shop.",
+      description: "Resolve a character haggling with a shop's keeper: a Persuasion check against the settlement's DC. Success drops every price in that shop one step, failure raises them one step. One try per character per shop.",
       parameters: {
         type: "object",
         properties: { characterId: { type: "string" }, shop: { type: "string" } },

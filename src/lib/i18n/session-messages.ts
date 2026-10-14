@@ -2,6 +2,8 @@ import { defineMessages } from "./catalog.ts";
 
 // Player-facing session copy only; authored prose and English machine payloads stay original.
 export const SESSION_MESSAGES = /*#__PURE__*/ defineMessages({
+  "sessionUi.dictation.waitToSend": {"en": "The words wait in the box until you send them.", "zh-CN": "转写文字会留在输入框中，等待你发送。"},
+  "sessionUi.dictation.shortcut": {"en": "Hold to talk, or hold {key}", "zh-CN": "按住说话，或按住 {key}"},
   "sessionUi.phrase.thinking.0": { en: "The DM weighs the outcome…", "zh-CN": "地下城主正在权衡结果…" },
   "sessionUi.phrase.thinking.1": { en: "The DM consults the whims of fate…", "zh-CN": "地下城主正在揣摩命运的心意…" },
   "sessionUi.phrase.thinking.2": { en: "Somewhere, a d20 holds its breath…", "zh-CN": "某处的一颗 d20 屏住了呼吸…" },

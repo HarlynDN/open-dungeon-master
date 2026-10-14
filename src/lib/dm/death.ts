@@ -1,4 +1,5 @@
 import { deathSaveFeat } from "@/lib/srd/feat-combat";
+import type { SystemGlyph } from "@/lib/system-glyphs";
 import { allocateSeq, type Campaign } from "@/lib/db/campaigns";
 import { getSheetById, patchSheet } from "@/lib/db/sheets";
 import { insertSheetAudit } from "@/lib/db/sheet-audit";
@@ -82,13 +83,14 @@ function recordDeath(campaign: Campaign, sheet: CharacterSheet, cause: string) {
   });
 }
 
-function tableNote(campaign: Campaign, content: string, data: Omit<DeathEventData, "kind" | "english">) {
+function tableNote(campaign: Campaign, content: string, data: Omit<DeathEventData, "kind" | "english">, glyph: SystemGlyph) {
   const systemEvent = { ...data, kind: "death" as const, english: content, locale: normalizeLocale(campaign.gameSettings.locale) };
   const seq = allocateSeq(campaign.id);
   const message = insertCampaignMessage({
     campaignId: campaign.id,
     seq,
     authorType: "system",
+    glyph,
     content: systemEventText(systemEvent),
     systemEvent,
   });
@@ -135,7 +137,7 @@ export function applyDamageDeathHook(
       const track = { ...freshDeathTrack(), failures: 3, dead: true };
       writeDeathState(campaign, turnId, fresh, track, "death_state", "massive damage at 0 HP");
       recordDeath(campaign, fresh, "killed outright by massive damage");
-      tableNote(campaign, `${fresh.name} is killed outright by massive damage.`, { outcome: "massive", actor: fresh.name });
+      tableNote(campaign, `${fresh.name} is killed outright by massive damage.`, { outcome: "massive", actor: fresh.name }, "cue-death");
       return { dead: true, note: `${fresh.name} is killed INSTANTLY (massive damage while at 0 HP). This death is real; narrate it.` };
     }
     const next = onDamageAtZero(fresh.deathSaves, crit);
@@ -150,7 +152,7 @@ export function applyDamageDeathHook(
     );
     if (next.dead) {
       recordDeath(campaign, fresh, "wounds suffered while dying");
-      tableNote(campaign, `${fresh.name} has died of their wounds.`, { outcome: "wounds", actor: fresh.name });
+      tableNote(campaign, `${fresh.name} has died of their wounds.`, { outcome: "wounds", actor: fresh.name }, "cue-death");
       return { dead: true, note: `${fresh.name} is DEAD (their death-save failures reached 3).` };
     }
     return {
@@ -164,7 +166,7 @@ export function applyDamageDeathHook(
       const track = { ...freshDeathTrack(), failures: 3, dead: true };
       writeDeathState(campaign, turnId, fresh, track, "death_state", "massive damage");
       recordDeath(campaign, fresh, "killed outright by massive damage");
-      tableNote(campaign, `${fresh.name} is killed outright by massive damage.`, { outcome: "massive", actor: fresh.name });
+      tableNote(campaign, `${fresh.name} is killed outright by massive damage.`, { outcome: "massive", actor: fresh.name }, "cue-death");
       return { dead: true, note: `${fresh.name} is killed INSTANTLY (massive damage). This death is real; narrate it.` };
     }
     writeDeathState(
@@ -256,7 +258,7 @@ export function wakeStable(campaign: Campaign, characterId: string): string | nu
     ...wakeConditions(sheet),
   });
   const note = `${sheet.name} comes round with 1 hit point.`;
-  tableNote(campaign, note, { outcome: "wake", actor: sheet.name });
+  tableNote(campaign, note, { outcome: "wake", actor: sheet.name }, "cue-heal");
   return note;
 }
 
@@ -315,7 +317,7 @@ export function rollDeathSave(campaign: Campaign, characterId: string): void {
       currentHp: 1,
       ...wakeConditions(sheet),
     });
-    tableNote(campaign, `${sheet.name} rolls a natural 20 on their death save and regains 1 HP!`, { outcome: "revive", actor: sheet.name });
+    tableNote(campaign, `${sheet.name} rolls a natural 20 on their death save and regains 1 HP!`, { outcome: "revive", actor: sheet.name }, "cue-heal");
     return;
   }
   if (applied.outcome === "stable") {
@@ -328,13 +330,14 @@ export function rollDeathSave(campaign: Campaign, characterId: string): void {
       campaign,
       `${sheet.name} succeeds their third death save and is stable (unconscious at 0 HP). They regain 1 hit point in ${wait.hours} hour${wait.hours === 1 ? "" : "s"}.`,
       { outcome: "stable", actor: sheet.name, hours: wait.hours },
+      "cue-heal",
     );
     return;
   }
   writeDeathState(campaign, null, sheet, applied.track, "death_state", "automatic death save");
   if (applied.outcome === "dead") {
     recordDeath(campaign, sheet, "failed death saving throws");
-    tableNote(campaign, `${sheet.name} fails their final death save and dies.`, { outcome: "dead", actor: sheet.name });
+    tableNote(campaign, `${sheet.name} fails their final death save and dies.`, { outcome: "dead", actor: sheet.name }, "cue-death");
     return;
   }
   tableNote(
@@ -343,5 +346,6 @@ export function rollDeathSave(campaign: Campaign, characterId: string): void {
       applied.outcome === "success" ? "success" : "failure"
     } (${applied.track.successes} successes, ${applied.track.failures} failures).`,
     { outcome: "save", actor: sheet.name, total: outcome.total, success: applied.outcome === "success", successes: applied.track.successes, failures: applied.track.failures },
+    "die-d20",
   );
 }

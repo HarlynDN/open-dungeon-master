@@ -1,5 +1,6 @@
 "use client";
 
+import { extraTurnTag } from "@/lib/battlemap/initiative-rows";
 import { ChevronDown, ChevronUp, Clock, ListRestart, Plus, SkipBack, SkipForward, Trash2 } from "lucide-react";
 import { appConfirm } from "@/components/ui/ConfirmDialog";
 import { useState } from "react";
@@ -230,8 +231,8 @@ export function DmInitiativePanel({
                 {t(`combatUi.order.${entry.kind}`)}
                 {entry.hidden ? t("combatUi.order.hidden") : ""}
                 {entry.reflex ? (
-                  <span className="motion-pop ml-1 text-amber-300" title={t("combatUi.order.reflexHint")}>
-                    {t("combatUi.order.reflex")}
+                  <span className="motion-pop ml-1 text-amber-300" title={entry.extra ? t("combatUi.order.extraHint", { feature: entry.extra }) : t("combatUi.order.reflexHint")}>
+                    {t(entry.extra ? "combatUi.order.extra" : "combatUi.order.reflex")}
                   </span>
                 ) : null}
               </span>

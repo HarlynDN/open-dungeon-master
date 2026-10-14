@@ -22,16 +22,19 @@ const byName=(rows,name)=>{const row=rows.find(r=>r.name===name);assert.ok(row,n
 
 try {
  await test('322 frozen original English condition renders remain exact, including all 274 native effect summaries',()=>{
-  assert.equal(en.length,322);
-  assert.deepEqual(en,readValidationJson(path.join(root,'docs/validation/condition-ui-goldens.json')));
+  const frozen = readValidationJson(path.join(root,'docs/validation/condition-ui-goldens.json'));
+  assert.equal(frozen.length,322);
+  const frozenNames = new Set(frozen.map(row => row.name));
+  assert.deepEqual(en.filter(row => frozenNames.has(row.name)), frozen);
+  assert.equal(en.length,334);
   for(const row of zh)if(row.name!=='label/Authored condition <script>')assert.match(row.html,/\p{Script=Han}/u,row.name);
   for(const name of ['label/Authored condition <script>','label/blessed by Authored','source/trigger','source/authored-spell'])assert.match(byName(zh,name),/Authored/);
   assert.match(byName(zh,'label/Authored condition <script>'),/&lt;script&gt;/);
  });
  await test('each source alias and summary is accounted for; dice and numeric mechanics survive translation',()=>{
-  assert.equal(CONDITION_EFFECTS.length,274);
+  assert.equal(CONDITION_EFFECTS.length,286);
   assert.deepEqual(CONDITION_MATERIAL_INDEX,CONDITION_EFFECTS.map(({id,match})=>({id,match})));
-  assert.equal(Object.keys(CONDITION_MATERIAL_MESSAGES.en).length,548);
+  assert.equal(Object.keys(CONDITION_MATERIAL_MESSAGES.en).length,572);
   for(const type of ['acid','bludgeoning','cold','fire','force','lightning','necrotic','piercing','poison','psychic','radiant','slashing','thunder'])assert.equal(MESSAGE_CATALOGS['zh-CN']['combatDetail.damage.'+type],MESSAGE_CATALOGS['zh-CN']['rule.damage.'+type],type);
   const dice=text=>(text.match(/\b(?:\d+)?d\d+\b/g)??[]).sort();
   const numbers=text=>(text.replace(/\b(?:\d+)?d\d+\b/g,'').match(/[-+]?\d+(?:-\d+)?/g)??[]).sort();

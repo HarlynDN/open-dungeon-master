@@ -311,7 +311,7 @@ export function DmBestiaryPanel({
           open={editorOpen && editor !== null}
           onOpenChange={setEditorOpen}
           title={draft?.name || monsterUiText("Monster", locale)}
-          className="top-0 h-dvh max-h-none rounded-none lg:top-1/2 lg:h-auto lg:max-h-[92vh] lg:w-[min(96vw,64rem)] lg:rounded-xl"
+          className="top-0 h-dvh max-h-none rounded-none pt-[max(0.5rem,env(safe-area-inset-top))] lg:top-1/2 lg:h-auto lg:max-h-[92vh] lg:w-[min(96vw,64rem)] lg:rounded-xl"
         >
           {editor}
         </Sheet>
@@ -349,8 +349,8 @@ export function DmBestiaryPanel({
           // The labels are the names the two icon buttons always announced.
           const items: ContextMenuItem[] = [
             { id: "open", label: monsterUiText(isOpen ? "Close the stat block" : "Open the stat block", locale), glyph: "system-bestiary", onSelect: toggle },
-            { id: "duplicate", label: monsterUiFrame("duplicateAction", { name: monster.draft.name }, locale), glyph: "system-homebrew", disabled: busy, onSelect: () => void duplicate(monster) },
-            { id: "delete", label: monsterUiFrame("deleteAction", { name: monster.draft.name }, locale), glyph: "quest-failed", tone: "danger", separated: true, onSelect: () => void remove(monster) },
+            { id: "duplicate", label: monsterUiFrame("duplicateAction", { name: monster.draft.name }, locale), glyph: "ui-duplicate", disabled: busy, onSelect: () => void duplicate(monster) },
+            { id: "delete", label: monsterUiFrame("deleteAction", { name: monster.draft.name }, locale), glyph: "ui-delete", tone: "danger", separated: true, onSelect: () => void remove(monster) },
           ];
           return (
             <ContextMenu key={monster.id} items={items} label={monster.draft.name} className={cn(ui.card, "rounded-lg")}>
@@ -360,6 +360,7 @@ export function DmBestiaryPanel({
                   cr={monster.draft.stats.cr}
                   genre={genre}
                   seed={monster.draft.name}
+                  name={monster.draft.name}
                   size="size-9"
                 />
                 <button type="button" onClick={toggle} aria-expanded={isOpen} className={cn(ui.btnSmall, quietRow, "flex-1 flex-wrap gap-x-2 gap-y-0")}>

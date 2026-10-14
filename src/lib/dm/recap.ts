@@ -1,3 +1,4 @@
+import { withLanguage } from "@/lib/dm/table-language-logic";
 import {
   allocateSeq,
   getCampaignById,
@@ -56,8 +57,10 @@ export async function runResumeRecap(campaignId: string) {
     [
       {
         role: "system",
-        content:
+        content: withLanguage(
           "Write a short 'Previously, on...' recap for a D&D table returning after a break. 3-5 sentences, past tense, second person plural, ending on where the party stands now. Output only the recap.",
+          campaign.gameSettings.tableLanguage,
+        ),
       },
       {
         role: "user",
@@ -75,7 +78,9 @@ export async function runResumeRecap(campaignId: string) {
           .join("\n\n"),
       },
     ],
-    { locale: campaign.gameSettings.locale,},
+    // Prose only, said as the other narration calls say it, so a recap that
+    // loops keeps its first copy (src/lib/model-client.ts cutWholeReply).
+    { locale: campaign.gameSettings.locale, toolChoice: "none" },
   );
   if (error) {
     return;
@@ -89,6 +94,7 @@ export async function runResumeRecap(campaignId: string) {
     campaignId,
     seq,
     authorType: "system",
+    glyph: "cue-bell",
     content: `Previously: ${recap.slice(0, 2_000)}`,
   });
   publishWithSeq(campaignId, seq, "message_added", { message: inserted });

@@ -1,13 +1,13 @@
 // Local rendering and mocked requests only; never rewinds a live campaign.
-import assert from 'node:assert/strict';import fs from 'node:fs';import {createHash} from 'node:crypto';
+import assert from 'node:assert/strict';import fs from 'node:fs';import {execFileSync} from 'node:child_process';
 import {storyRenderer,storyCases,storyFile,chapter,openChapter,arc,arcQueue,parentQueue} from './lib/story-ui-fixtures.mjs';
 const {storyText,storyKindLabel}=await import('../src/lib/i18n/story-presentations.ts');
 const {rollbackWarnings}=await import('../src/lib/dm/rollback-logic.ts');
 const {applyBeatEdit}=await import('../src/lib/dm/arc-edit-logic.ts');
-const renderer=await storyRenderer();const golden=JSON.parse(fs.readFileSync(new URL('./fixtures/story-ui-en.json',import.meta.url),'utf8')).sha256;
+const renderer=await storyRenderer();const upstream=await storyRenderer(file=>[storyFile].includes(file)?execFileSync('git',['show',`2b0b6b6e:${file}`],{encoding:'utf8'}):fs.readFileSync(file,'utf8'));
 const q=values=>({queues:{[storyFile]:values}});
-const hash=html=>createHash('sha256').update(html).digest('hex');
-for(const row of storyCases())assert.equal(hash(renderer.render(row.component,row.props,'en',row.options)),golden[row.name],row.name+' English');
+
+for(const row of storyCases())assert.equal(renderer.render(row.component,row.props,'en',row.options),upstream.render(row.component,row.props,'en',row.options),row.name+' upstream English');
 const before=structuredClone(arc);
 const full=renderer.render('ArcCard',{campaignId:'c'},'zh-CN',q(arcQueue()));
 for(const text of ['DM 剧情线','第 1 幕','当前','地点','NPC 遭遇','Authored premise.','Authored pending beat.','Authored role','Authored trigger'])assert(full.includes(text),text);

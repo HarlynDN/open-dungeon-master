@@ -1,4 +1,5 @@
 import { getDatabase, nowIso, parseJson } from "@/lib/db/core";
+import { publishPersisted } from "@/lib/events";
 
 // Story chapters: closed spans of the campaign transcript, each with an AI
 // title, summary, and highlights. Exactly one chapter per campaign is open
@@ -23,6 +24,10 @@ export type Chapter = {
   saga: number | null;
   createdAt: string;
   updatedAt: string;
+  // Set on a closed chapter the table snapshot sent without its summary and
+  // highlights (listChaptersForSnapshot); the story panel reads the whole
+  // list from /api/campaigns/[id]/chapters when it opens.
+  abridged?: boolean;
 };
 
 type ChapterRow = {
@@ -73,6 +78,24 @@ export function listChapters(campaignId: string): Chapter[] {
   return rows.map(mapChapter);
 }
 
+// What the table snapshot carries: every chapter, but only the newest
+// closed ones (and the open one) with their summary and highlights. A long
+// campaign's every summary rode in each snapshot and each reconnect, though
+// the table shows them only in the story panel, which fetches the full list
+// itself when it opens.
+export const SNAPSHOT_FULL_CHAPTERS = 12;
+
+export function listChaptersForSnapshot(campaignId: string, keepFull = SNAPSHOT_FULL_CHAPTERS): Chapter[] {
+  const chapters = listChapters(campaignId);
+  const closed = chapters.filter((chapter) => chapter.status === "closed");
+  const abridgeBelow = closed.length > keepFull ? closed[closed.length - keepFull].index : -Infinity;
+  return chapters.map((chapter) =>
+    chapter.status === "closed" && chapter.index < abridgeBelow
+      ? { ...chapter, summary: "", highlights: [], abridged: true }
+      : chapter,
+  );
+}
+
 export function getChapter(chapterId: string): Chapter | null {
   const row = getDatabase()
     .prepare(`SELECT ${CHAPTER_COLUMNS} FROM chapters WHERE id = ?`)
@@ -110,7 +133,12 @@ export function ensureOpenChapter(campaignId: string): Chapter {
       VALUES (?, ?, ?, ?, 'open', ?, ?)
     `,
   ).run(id, campaignId, (last?.chapter_index ?? 0) + 1, (last?.seq_end ?? -1) + 1, now, now);
-  return getChapter(id)!;
+  const chapter = getChapter(id)!;
+  // A table whose snapshot was taken before this chapter existed (a campaign
+  // just started, where the setup jobs run first) learns of it the way it
+  // learns of every other chapter change, instead of at its next reload.
+  publishPersisted(campaignId, "chapter_updated", { chapter });
+  return chapter;
 }
 
 // Closes the open chapter with its generated title/summary/highlights and

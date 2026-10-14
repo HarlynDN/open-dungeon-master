@@ -13,73 +13,53 @@
 // Reciprocal rank fusion dissolves that by construction: it reads ORDER, not
 // magnitude, so no two scorers ever have to agree on what 0.3 means.
 
-// Common words carry no retrieval signal and would otherwise dominate the
-// term overlap in a prose-heavy transcript.
-const STOP_WORDS = new Set([
-  "the", "and", "for", "are", "but", "not", "you", "your", "his", "her", "its",
-  "our", "their", "they", "them", "this", "that", "these", "those", "with",
-  "from", "into", "onto", "was", "were", "been", "have", "has", "had", "does",
-  "did", "will", "would", "could", "should", "can", "may", "might", "must",
-  "what", "when", "where", "who", "whom", "why", "how", "all", "any", "some",
-  "each", "than", "then", "there", "here", "out", "off", "over", "under",
-  "again", "once", "about", "after", "before", "between", "through", "during",
-]);
+import { CJK, segmentCjk } from "../language/cjk.ts";
+import type { TableLanguage } from "../schemas/game-settings-options.ts";
+import { stems } from "../language/language.ts";
 
-const CJK = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u;
-const CJK_STOP_WORDS = new Set(["的", "了", "在", "是", "和", "与", "有", "为", "我们", "你们", "他们", "这个", "那个"]);
-const wordSegmenter = typeof Intl.Segmenter === "function"
-  ? new Intl.Segmenter("zh-CN", { granularity: "word" })
-  : null;
+// The terms a text is scored by: Snowball stems in the table's language,
+// its function words dropped (src/lib/language), so "dell'Oracolo" and
+// "oracolo" are one term and "della" is none at an Italian table, as
+// "spiders" and "spider" are one at an English one. Two-letter stems carry
+// no signal.
+//
+// search_lore scores every lore entry, fact and note against each query and
+// tokenized each one twice per query (once for the IDF, once to score it):
+// a few hundred entries cost tens of milliseconds of blocked server per
+// call. The terms of a text are remembered by the text itself, so an
+// unchanged entry is read once, and an edited one is simply a new text.
+// Bounded by the characters held; past it the memo starts over.
+const TOKEN_MEMO_CHARS = 8_000_000;
+const tokenMemo = new Map<string, readonly string[]>();
+let tokenMemoChars = 0;
 
-function segmentCjk(token: string): string[] {
-  if (wordSegmenter) {
-    const words = [...wordSegmenter.segment(token)]
-      .filter((part) => part.isWordLike)
-      .map((part) => part.segment)
-      .filter((part) => CJK.test(part)
-        ? !CJK_STOP_WORDS.has(part)
-        : part.length > 2 && !STOP_WORDS.has(part));
-    // ICU can split a domain term across boundaries (e.g. 掷骰子 becomes
-    // 掷骰 + 子). Add overlapping CJK bigrams that were not already emitted
-    // so a two-character query and a short proper name still find the run.
-    const existing = new Set(words);
-    const bigrams = [...token.matchAll(/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]+/gu)]
-      .flatMap(([run]) => {
-        const chars = [...run];
-        return chars.slice(0, -1).map((char, i) => char + chars[i + 1]);
-      })
-      .filter((word) => !existing.has(word) && !CJK_STOP_WORDS.has(word));
-    return [...words, ...bigrams];
+export function tokenize(text: string, language: TableLanguage = "english"): string[] {
+  const key = `${language}\u0000${text}`;
+  const known = tokenMemo.get(key);
+  if (known) {
+    return [...known];
   }
-  // Engines without ICU word segmentation: preserve two-character terms
-  // and overlapping bigrams, rather than treating a paragraph as one word.
-  return token.split(/([\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]+)/u)
-    .flatMap((run) => {
-      if (!CJK.test(run)) return run.length > 2 && !STOP_WORDS.has(run) ? [run] : [];
-      const chars = [...run];
-      const words = chars.length === 1 ? chars : chars.slice(0, -1).map((char, i) => char + chars[i + 1]);
-      return words.filter((word) => !CJK_STOP_WORDS.has(word));
-    });
-}
-
-export function tokenize(text: string): string[] {
-  return text
-    .toLowerCase()
-    .split(/[^\p{L}\p{N}']+/u)
-    .flatMap((token) => CJK.test(token)
-      ? segmentCjk(token)
-      : token.length > 2 && !STOP_WORDS.has(token) ? [token] : []);
+  const terms = CJK.test(text)
+    ? text.toLowerCase().split(/[^\p{L}\p{N}']+/u).flatMap(token => CJK.test(token) ? segmentCjk(token) : stems(token, language).filter(term => term.length > 2))
+    : stems(text, language).filter((term) => term.length > 2);
+  if (tokenMemoChars + key.length > TOKEN_MEMO_CHARS) {
+    tokenMemo.clear();
+    tokenMemoChars = 0;
+  }
+  tokenMemo.set(key, terms);
+  tokenMemoChars += key.length;
+  return [...terms];
 }
 
 // Inverse document frequency with BM25's smoothing, so a term in every
 // document scores near zero and a term in one document scores high. Never
 // negative: the +1 inside the log keeps a term present everywhere at 0
 // rather than dragging a score below a term that is simply absent.
-export function computeIdf(documents: string[]): Map<string, number> {
+export function computeIdf(documents: string[], language: TableLanguage = "english"): Map<string, number> {
   const total = documents.length;
   const documentFrequency = new Map<string, number>();
   for (const document of documents) {
-    for (const term of new Set(tokenize(document))) {
+    for (const term of new Set(tokenize(document, language))) {
       documentFrequency.set(term, (documentFrequency.get(term) ?? 0) + 1);
     }
   }
@@ -105,12 +85,13 @@ export function lexicalScore(
   query: string,
   document: string,
   idf: Map<string, number>,
+  language: TableLanguage = "english",
 ): number {
-  const queryTerms = new Set(tokenize(query));
+  const queryTerms = new Set(tokenize(query, language));
   if (!queryTerms.size) {
     return 0;
   }
-  const documentTerms = tokenize(document);
+  const documentTerms = tokenize(document, language);
   if (!documentTerms.length) {
     return 0;
   }
@@ -176,33 +157,30 @@ export type RankableCandidate = {
 // The shared retrieval shape: score every candidate both ways, rank each
 // signal independently, fuse the ranks, and return the best ids.
 //
-// Eligibility is still enforced per signal, because fusion only orders and
-// would otherwise happily return the least-bad match when nothing matches at
-// all. A candidate qualifies on ANY lexical overlap or on clearing the cosine
-// floor, so neither signal can veto the other. That is the point: cosine
-// alone misses a rare name, and lexical alone misses a paraphrase.
+// There is no cosine floor. What a cosine means depends on the embedding
+// model and the language (one model scores unrelated text at 0.3, another at
+// 0.8), so no fixed value can tell relevant from unrelated. Every caller hands
+// the result to a reader that judges relevance itself (the DM, the Ask and
+// lore-check calls, a person at the console), and every caller caps how many
+// it hands over. A candidate qualifies on any lexical overlap or any vector.
+//
+// Each ranking is cut to the limit before fusing. RRF scores a candidate in
+// both lists above one in a single list, so without the cut a weak word
+// overlap with a weak cosine would outrank the strongest cosine-only match:
+// a paraphrase sharing no word with the query would lose to noise.
 export function fuseRanked(
   candidates: RankableCandidate[],
-  options: { similarityFloor: number; limit: number; k?: number },
+  options: { limit: number; k?: number },
 ): string[] {
-  const eligible = candidates.filter(
-    (candidate) =>
-      candidate.lexical > 0 ||
-      (candidate.similarity !== null && candidate.similarity >= options.similarityFloor),
-  );
-  if (!eligible.length) {
-    return [];
-  }
-  const lexicalRanking = eligible
+  const lexicalRanking = candidates
     .filter((candidate) => candidate.lexical > 0)
     .sort((a, b) => b.lexical - a.lexical)
+    .slice(0, options.limit)
     .map((candidate) => candidate.id);
-  const semanticRanking = eligible
-    .filter(
-      (candidate) =>
-        candidate.similarity !== null && candidate.similarity >= options.similarityFloor,
-    )
+  const semanticRanking = candidates
+    .filter((candidate) => candidate.similarity !== null)
     .sort((a, b) => (b.similarity ?? 0) - (a.similarity ?? 0))
+    .slice(0, options.limit)
     .map((candidate) => candidate.id);
   return rankByFusion(fuseRRF([lexicalRanking, semanticRanking], options.k)).slice(
     0,
@@ -231,10 +209,11 @@ function jaccard(a: Set<string>, b: Set<string>): number {
 export function applyMmr<T extends { id: string; text: string }>(
   candidates: T[],
   limit: number,
+  language: TableLanguage = "english",
   lambda = 0.7,
 ): T[] {
   const remaining = [...candidates];
-  const tokens = new Map(remaining.map((entry) => [entry.id, new Set(tokenize(entry.text))]));
+  const tokens = new Map(remaining.map((entry) => [entry.id, new Set(tokenize(entry.text, language))]));
   const picked: T[] = [];
   // Relevance is the incoming order as a reciprocal rank, which keeps it in
   // (0, 1] and comparable with the Jaccard redundancy term. Decaying linearly

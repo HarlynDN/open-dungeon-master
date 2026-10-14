@@ -1,14 +1,18 @@
 "use client";
+import { useLocale as useSyncLocale } from "@/lib/i18n/LocaleProvider";
 
 import { Check, Download, Loader2, RefreshCw } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
+import type { SttStatus } from "@/lib/stt-backend";
 import { ui } from "@/lib/ui";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { setupFlowMessage } from "@/lib/i18n/setup-flow-presentations";
 import type { MessageKey } from "@/lib/i18n/messages";
 
-type Status = {
+// whisper and openai arrive from servers newer than 0.26.4; the apps draw
+// this card for older hosts too, which send neither.
+type Status = Omit<SttStatus, "whisper" | "openai"> & Partial<Pick<SttStatus, "whisper" | "openai">> & {
   builtin: {
     model: string;
     downloadMb: number;
@@ -17,7 +21,6 @@ type Status = {
     progress: number;
     error: string;
   };
-  active: "whisper" | "builtin" | "openai" | "none";
 };
 
 const ACTIVE_LABEL: Record<Status["active"], MessageKey> = {
@@ -26,6 +29,12 @@ const ACTIVE_LABEL: Record<Status["active"], MessageKey> = {
   openai: "setupFlow.speech.active.openai",
   none: "setupFlow.speech.active.none",
 };
+
+// Which "no model is picked" lines the card shows. A host older than these
+// fields sends neither, and the card says nothing of them rather than fail.
+export function modelNotes(status: Partial<Pick<Status, "whisper" | "openai">> | null): { whisper: boolean; openai: boolean } {
+  return { whisper: Boolean(status?.whisper?.needsModel), openai: Boolean(status?.openai?.needsModel) };
+}
 
 // The engine's state, or a sentence saying why it could not be read.
 async function request(method: "GET" | "POST"): Promise<Status | string> {
@@ -42,6 +51,7 @@ async function request(method: "GET" | "POST"): Promise<Status | string> {
 // Whisper into this server (src/lib/stt-builtin.ts), a bar while it comes
 // down, and a line saying which engine dictation uses right now.
 export function BuiltinSpeechCard() {
+  const { t: syncT } = useSyncLocale();
   const { t, locale } = useLocale();
   const [status, setStatus] = useState<Status | null>(null);
   const [error, setError] = useState("");
@@ -70,6 +80,7 @@ export function BuiltinSpeechCard() {
 
   const builtin = status?.builtin;
   const percent = Math.round((builtin?.progress ?? 0) * 100);
+  const notes = modelNotes(status);
 
   return (
     <div className="panel rounded-xl p-3 sm:col-span-2">
@@ -129,6 +140,14 @@ export function BuiltinSpeechCard() {
         <p className="mt-2 border-t border-stone-800 pt-2 text-[11px] text-stone-400">
           {t("setupFlow.speech.using")}<span className="text-stone-200">{t(ACTIVE_LABEL[status.active])}</span>{t("setupFlow.probe.period")}
         </p>
+      ) : null}
+      {notes.whisper ? (
+        <p role="status" className="mt-1 text-[11px] text-amber-300">
+          {syncT("upstreamUi.c75f9c7542b5")}</p>
+      ) : null}
+      {notes.openai ? (
+        <p role="status" className="mt-1 text-[11px] text-amber-300">
+          {syncT("upstreamUi.5cfd65ce18db")}</p>
       ) : null}
     </div>
   );

@@ -1,3 +1,4 @@
+import { normalizeHandLayout, type HandLayout } from "@/lib/battlemap/hand-layout";
 import { getDatabase, nowIso, parseJson } from "@/lib/db/core";
 import { touchCampaign } from "@/lib/db/campaigns";
 import { effectiveMaxHp, maxHpRiders, type ConditionMetaMap } from "@/lib/dm/condition-logic";
@@ -7,9 +8,10 @@ import { XP_THRESHOLDS, deriveAc } from "@/lib/srd";
 import { settleLevelChange, withoutDuplicateClasses } from "@/lib/srd/level-change";
 import { normalizeSpellcasting } from "@/lib/srd/spell-lists";
 import { settleAttunement, type Wearer } from "@/lib/srd/magic-items";
-import { itemWeightByName } from "@/lib/content";
-import { hydrateHomebrewGear } from "@/lib/db/homebrew";
+import { itemWeightByName, repairedWeight } from "@/lib/content";
+import { homebrewRaceLabel, hydrateHomebrewGear } from "@/lib/db/homebrew";
 import { subclassExtrasForTable } from "@/lib/db/subclass-extras";
+import { storedGender } from "@/lib/gender";
 import { backgroundFeatureFor } from "@/lib/backgrounds";
 import { registerSpeciesReader } from "@/lib/srd/race-id";
 import { featsAsRun } from "@/lib/srd/feat-effects";
@@ -72,6 +74,7 @@ type SheetRow = {
   is_companion: number | null;
   companion_kind: string | null;
   personality: string | null;
+  hand_layout_json?: string | null;
   created_at: string;
   updated_at: string;
 };
@@ -94,6 +97,7 @@ function mapSheet(row: SheetRow): CharacterSheet {
   }
   // Sheets from before the cantrip list kept cantrips in prepared/known.
   const spellcasting = normalizeSpellcasting(parsedCasting);
+  const raceLabel = homebrewRaceLabel(row.user_id, row.race, row.campaign_id);
   return {
     id: row.id,
     campaignId: row.campaign_id,
@@ -101,11 +105,12 @@ function mapSheet(row: SheetRow): CharacterSheet {
     libraryCharacterId: row.library_character_id,
     name: row.name,
     race: row.race,
+    ...(raceLabel ? { raceLabel } : {}),
     class: row.class,
     subclass: row.subclass ?? "",
     background: row.background,
     alignment: row.alignment,
-    gender: row.gender ?? "",
+    gender: storedGender(row.gender),
     level: row.level,
     xp: row.xp,
     abilities: parseJson(row.abilities_json, { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 }),
@@ -155,9 +160,27 @@ function mapSheet(row: SheetRow): CharacterSheet {
         ? row.companion_kind
         : null,
     personality: row.personality ?? "",
+    ...handLayoutOf(row.hand_layout_json),
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
+}
+
+// Present only once its player has arranged the Hand, so a sheet that never
+// was carries nothing extra.
+function handLayoutOf(json: string | null | undefined): { handLayout?: HandLayout } {
+  const layout = json ? normalizeHandLayout(parseJson(json, null)) : null;
+  return layout ? { handLayout: layout } : {};
+}
+
+// The player's arrangement of this character's Hand (issue 231), or null to
+// go back to the automatic split. Only the layout column is written: it is a
+// preference, so nothing else on the sheet moves and updated_at stays.
+export function setHandLayout(sheetId: string, layout: HandLayout | null): CharacterSheet | null {
+  getDatabase()
+    .prepare(`UPDATE character_sheets SET hand_layout_json = ? WHERE id = ?`)
+    .run(layout ? JSON.stringify(layout) : null, sheetId);
+  return getSheetById(sheetId);
 }
 
 const SHEET_COLUMNS = `
@@ -167,7 +190,7 @@ const SHEET_COLUMNS = `
   classes_json, hit_dice_pools_json,
   proficiencies_json, equipment_json, gold, copper, feats_json, features_json,
   spellcasting_json, conditions_json, condition_meta_json, resources_json, wild_shape_json, pets_json, summon_json, exhaustion, death_saves_json, concentrating_on, concentration_rounds,
-  portrait_json, notes, backstory, is_companion, companion_kind, personality, created_at, updated_at
+  portrait_json, notes, backstory, is_companion, companion_kind, personality, hand_layout_json, created_at, updated_at
 `;
 
 // Flags a freshly created sheet as an AI companion. Kept out of the main
@@ -182,6 +205,24 @@ export function markSheetAsCompanion(
       `UPDATE character_sheets SET is_companion = 1, companion_kind = ?, personality = ? WHERE id = ?`,
     )
     .run(kind, personality, sheetId);
+  return getSheetById(sheetId);
+}
+
+// A sheet seated as a player character that its library row files as an
+// ally the DM plays (issue 192) becomes the party companion it was meant to
+// be: the bot takes ownership and the mark is set. Everything else on the
+// row, hit points, experience, gear, conditions, stays as play left it, and
+// the id stays, so an initiative slot or a token keeps pointing at it.
+export function adoptSheetAsCompanion(
+  sheetId: string,
+  botUserId: string,
+  personality: string,
+): CharacterSheet | null {
+  getDatabase()
+    .prepare(
+      `UPDATE character_sheets SET user_id = ?, is_companion = 1, companion_kind = 'party', personality = ?, updated_at = ? WHERE id = ?`,
+    )
+    .run(botUserId, personality, nowIso(), sheetId);
   return getSheetById(sheetId);
 }
 
@@ -223,13 +264,19 @@ function withBackgroundFeature(
 // player typed by hand survives. The lookup is an in-memory map; the
 // optional encumbrance rule (src/lib/srd/encumbrance.ts) is the only
 // consumer and falls back to the SRD armor table for what is still missing.
+// A filled weight is saved with the next write, so a weight an old pack got
+// wrong (a dart at 14 lb, issue #205) is put right here first; any other
+// number is left as it is.
 function withItemWeights(equipment: CharacterSheet["equipment"]): CharacterSheet["equipment"] {
   return equipment.map((item) => {
-    if (typeof item.weight === "number") {
-      return item;
+    const stored = repairedWeight(item.name, item.weight);
+    if (typeof stored === "number") {
+      return stored === item.weight ? item : { ...item, weight: stored };
     }
+    const line = { ...item };
+    delete line.weight;
     const weight = itemWeightByName(item.name);
-    return weight === null ? item : { ...item, weight };
+    return weight === null ? (item.weight === undefined ? item : line) : { ...line, weight };
   });
 }
 
@@ -428,6 +475,19 @@ export function listSheetsForUser(campaignId: string, userId: string): Character
 export function deleteSheetForUser(campaignId: string, userId: string): CharacterSheet | null {
   const existing = getSheetForUser(campaignId, userId);
   if (!existing) {
+    return null;
+  }
+  getDatabase().prepare(`DELETE FROM character_sheets WHERE id = ?`).run(existing.id);
+  touchCampaign(campaignId);
+  return existing;
+}
+
+// One named sheet of the player's, for a lobby edit that replaces the copy
+// of the character it edited rather than whichever sheet the seat is on: at
+// a table where a player fields several, those differ.
+export function deleteSheetById(campaignId: string, userId: string, sheetId: string): CharacterSheet | null {
+  const existing = getSheetById(sheetId);
+  if (!existing || existing.campaignId !== campaignId || existing.userId !== userId) {
     return null;
   }
   getDatabase().prepare(`DELETE FROM character_sheets WHERE id = ?`).run(existing.id);

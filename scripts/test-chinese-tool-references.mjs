@@ -114,8 +114,8 @@ await test("malformed calls preserve the engine's rejection and English campaign
   }
 });
 
-await test("all 415 reviewed resource labels resolve by held ID without a deployment-wide name guess", () => {
-  assert.equal(RESOURCE_DEFS.length, 415);
+await test("all 416 reviewed resource labels resolve by held ID without a deployment-wide name guess", () => {
+  assert.equal(RESOURCE_DEFS.length, 416);
   for (const def of RESOURCE_DEFS) {
     for (const locale of ["en", "zh-CN"]) {
       const row = resourceReference(def, locale);
@@ -228,7 +228,10 @@ await test("the built-in DM loop executes Chinese references and retains the ori
   const turn = createDmTurn(kit.campaignId, [{ role: "system", content: "Answer the player's request." }, { role: "user", content: "施放魔法飞弹。" }]);
   const originalFetch = globalThis.fetch;
   let calls = 0;
-  globalThis.fetch = async () => {
+  globalThis.fetch = async (_url, options) => {
+    const body = JSON.parse(options?.body ?? "{}");
+    if (!body.messages) return Response.json({ models: [] });
+    if (body.messages[0]?.content?.startsWith("You read one passage of a tabletop RPG")) return Response.json({ choices: [{ message: { content: '{"claims":[]}' }, finish_reason: "stop" }] });
     calls++;
     const delta = calls === 1 ? { content: "", tool_calls: [{ index: 0, id: "cast-zh", type: "function", function: { name: "use_spell_slot", arguments: sent } }] } : { content: "阿明施放了魔法飞弹，三道光芒划过寂静的夜空。" };
     return new Response(`data: ${JSON.stringify({ choices: [{ delta, finish_reason: "stop" }] })}\n\ndata: [DONE]\n\n`, { headers: { "content-type": "text/event-stream" } });
@@ -264,6 +267,9 @@ await test("the actual DM loop retries an ambiguous Chinese resource and spends 
   const originalFetch = globalThis.fetch;
   let calls = 0;
   globalThis.fetch = async (_url, options) => {
+    const body = JSON.parse(options?.body ?? "{}");
+    if (!body.messages) return Response.json({ models: [] });
+    if (body.messages[0]?.content?.startsWith("You read one passage of a tabletop RPG")) return Response.json({ choices: [{ message: { content: '{"claims":[]}' }, finish_reason: "stop" }] });
     calls++;
     if (calls === 2) {
       const messages = JSON.parse(options.body).messages;

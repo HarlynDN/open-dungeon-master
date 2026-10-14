@@ -1,5 +1,15 @@
 import { defineMessages } from "./catalog.ts";
 export const SYSTEM_LOG_MESSAGES = /*#__PURE__*/ defineMessages({
+  "playerLog.turn.owed": {"en": " {actors} act before {actor}.", "zh-CN": " {actors}先于{actor}行动。"},
+  "playerLog.turn.lair": {"en": " Initiative 20: the lair stirs (lair_action).", "zh-CN": " 先攻计数 20：巢穴行动触发（lair_action）。"},
+  "playerLog.turn.held": {"en": "{actor} does not close in while {target} holds a readied action.", "zh-CN": "{target}仍在准备行动，{actor}没有靠近。"},
+  "playerLog.turn.idle": {"en": "Nobody has been able to act for {rounds} rounds: the fight waits for the table. End Turn or the lead's skip moves it on.", "zh-CN": "已连续 {rounds} 轮无人能够行动：战斗暂停等待玩家操作。结束回合或由队长跳过回合可继续。"},
+  "playerLog.turn.current": {"en": "It is now {actor}'s turn (round {round}).", "zh-CN": "现在轮到{actor}行动（第 {round} 轮）。"},
+  "playerLog.turn.lost": {"en": "Every character has fallen: the fight is lost.", "zh-CN": "所有角色都已倒下：战斗失败。"},
+  "playerLog.turn.down": {"en": "Every character is down and none can rise on their own.", "zh-CN": "所有角色都已倒下，且无人能自行站起。"},
+  "playerLog.turn.end": {"en": "{actor} ends their turn. It is now {next}'s turn.", "zh-CN": "{actor}结束了回合。现在轮到{next}行动。"},
+  "playerLog.turn.skip": {"en": "The party lead skipped {actor}'s turn. It is now {next}'s turn.", "zh-CN": "队长跳过了{actor}的回合。现在轮到{next}行动。"},
+
   "playerLog.kickoff": { en: "The party is assembled and the adventure begins.", "zh-CN": "队伍已集结，冒险开始。" },
   "playerLog.death.massive": { en: "{actor} is killed outright by massive damage.", "zh-CN": "{actor}受到过量伤害，当场死亡。" },
   "playerLog.death.wounds": { en: "{actor} has died of their wounds.", "zh-CN": "{actor}因伤势恶化而死亡。" },

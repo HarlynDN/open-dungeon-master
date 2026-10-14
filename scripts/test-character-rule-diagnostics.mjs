@@ -46,7 +46,7 @@ const featRuns = await characterFeatRuns();
 const spellRuns = await characterSpellRuns();
 const gearRuns = await characterGearRuns();
 
-await test("27 pre-migration English refusals and derived sheets remain identical", () => {
+await test("27 English refusals and reviewed upstream derived sheets remain identical", () => {
   assert.equal(runs.length, 27); assert.equal(goldens.fixtures.length, runs.length);
   for (const run of runs) {
     const before = goldens.fixtures.find(row => row.name === run.name); assert.ok(before, run.name);
@@ -58,7 +58,7 @@ await test("27 pre-migration English refusals and derived sheets remain identica
   }
 });
 
-await test("every core code is exercised by an actual validator outcome and renders without a missing argument", () => {
+await test("every core code is exercised by an actual validator outcome and renders without a missing argument", async () => {
   const seen = new Set();
   for (const run of [...runs, ...trainingRuns, ...featRuns, ...spellRuns, ...gearRuns]) for (const detail of run.reported) {
     assert.ok((run.problems ?? run.result.problems).includes(detail.english), `${run.name}: phantom diagnosis`);
@@ -67,6 +67,12 @@ await test("every core code is exercised by an actual validator outcome and rend
     assert.ok(text && !text.includes("规则说明（中文翻译待补）"), `${run.name}: unusable metadata ${detail.code}`);
     for (const match of CHARACTER_RULE_MESSAGES.en[detail.code].matchAll(/\{(\w+)\}/g)) assert.ok(Object.hasOwn(detail.args, match[1]), detail.code);
   }
+  const {applyFeatGrants,featGrantSpec} = await import('../src/lib/srd/feat-grants.ts');
+  const details = [];
+  const verdict = applyFeatGrants({proficiencies:{skills:[],expertise:[],tools:[],weapons:[],armor:[],languages:[]},feats:[{name:'Authored training',desc:'',spec:{...featGrantSpec(''),skills:1,skillsFrom:['arcana']}}],choices:{'Authored training':{skills:['stealth']}},strict:true,onProblem:detail=>details.push(detail)});
+  assert.equal(details.length,1);
+  assert.match(characterRuleProblems({problems:verdict.problems,problemDetails:details},'zh-CN'), /隐匿.*奥秘/);
+  details.forEach(detail=>seen.add(detail.code));
   assert.deepEqual([...seen].sort(), [...CHARACTER_RULE_CODES].sort());
 });
 

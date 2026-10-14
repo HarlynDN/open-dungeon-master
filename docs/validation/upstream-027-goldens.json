@@ -1,0 +1,84 @@
+{
+  "upstreamCommit": "2b0b6b6ebf5e12f3e43a21ee38f80b41e5b1cd81",
+  "reviewer": "implementation agent; not an independent human review",
+  "snapshots": {
+    "combat-ui-goldens.json": {
+      "originalSha256": "60b09271195c776a7b291647294e44d85692d41774a1f0a69b675a4446fdcd7a",
+      "file": "upstream-027/combat-ui-goldens.json.gz",
+      "sha256": "0e1414d1523bf240de51061f00d260d91600d002c32e74969a6a26d4032bc4b0",
+      "review": "Lucide 1.52 SVG geometry; upstream larger centered token tooltip with viewport clamping. Text, conditions and combat values unchanged."
+    },
+    "turn-control-ui-goldens.json": {
+      "originalSha256": "4448c4d4e6ea5cca62e68247f96cffe3d57263acc7a96a11800ee79bfbf456dc",
+      "file": "upstream-027/turn-control-ui-goldens.json.gz",
+      "sha256": "8f9e5e4139683d7bc8a637d06c7b370df82ca35f22a37d5cba24b94dd1f4f79c",
+      "review": "Lucide 1.52 SVG geometry only; non-SVG DOM, text, controls and values identical."
+    },
+    "character-spell-ui-goldens.json": {
+      "originalSha256": "10d983a7bd47f8b86521abef2c86bd84baedc960b74645294451879c24f7f02c",
+      "file": "upstream-027/character-spell-ui-goldens.json.gz",
+      "sha256": "d3cc0cddf425ac3bce1efad0689ac3e8e4c299fb1a8c10290e45caf289b6a0e1",
+      "review": "Lucide 1.52 SVG geometry only; non-SVG DOM, text, controls and values identical."
+    },
+    "sheet-party-goldens.json": {
+      "originalSha256": "b3c97e9a064712cea471e5cea6533785dbdd5fe0691e81287b9f63eb391038d4",
+      "file": "upstream-027/sheet-party-goldens.json.gz",
+      "sha256": "363810a58bcac6002629511af32751ee65e34215c61702da3fc9176ffe97267e",
+      "review": "Lucide 1.52 SVG geometry and upstream party-card class/data-party-card identity for seat navigation. Text and quantities unchanged."
+    },
+    "sheet-dialog-goldens.json": {
+      "originalSha256": "9de23524c5fc5b67d0011e6ccb663881766413a6b062c8d203059069883ea4d5",
+      "file": "upstream-027/sheet-dialog-goldens.json.gz",
+      "sha256": "665f74f2890a6d3578446a5d96048ca9db33e14aa5a68ca69ea7806274ae401a",
+      "review": "Lucide 1.52 SVG geometry; upstream carried-load tile is now an accessible button opening LoadBreakdown. Closed dialogs excluded by corrected open-aware test stub. Existing text/values unchanged."
+    },
+    "character-picker-ui-goldens.json": {
+      "originalSha256": "3fea17733878761e91f602d578fef4eeddc30976444a81e79e5751fa00bd878e",
+      "file": "upstream-027/character-picker-ui-goldens.json.gz",
+      "sha256": "0afc02c98302d32647955a1470b09ef3809cdfd21ad517389126bbe0be2d1e7a",
+      "review": "Aasimar source now describes proficiency d4 Healing Hands and three Celestial Revelation variants. Canonical IDs and choices unchanged; Chinese source-bound material reviewed separately."
+    },
+    "character-lineage-ui-goldens.json": {
+      "originalSha256": "8d1551e3e2bf6cf3ad097b93720efd8ee50cfe7cdfecc41d1d57ed811e5aa2dd",
+      "file": "upstream-027/character-lineage-ui-goldens.json.gz",
+      "sha256": "57321bc36ea16404621e8e22efc1573e3f64104f98c32ae182c8d2e5f6faa03c",
+      "review": "Same two reviewed Aasimar trait changes: Healing Hands action/proficiency d4 and Celestial Revelation bonus action/variants/damage. Other 30 species unchanged."
+    },
+    "character-rule-goldens.json": {
+      "originalSha256": "9780174acefe6d4b6e0e4cd3a23e6d5412e3f22bd8747605e39e63f98868ee46",
+      "file": "upstream-027/character-rule-goldens.json.gz",
+      "sha256": "1d63139fb61520be5e2beb7bacaf598dcf731d6b2917d6dd6f306d26424a5389",
+      "review": "Only unearned-second-class derived proficiencies.tools loses the literal placeholder one gaming set. Restoring it at index 0 reproduces the original sheet SHA exactly. English refusals, rolled values and all other 26 fixtures are unchanged."
+    },
+    "character-training-goldens.json": {
+      "originalSha256": "398b65e73f5b3b1d774c3f39ce93e9c1a1698bbd5a9d9402dec395a4d65c5ddf",
+      "file": "upstream-027/character-training-goldens.json.gz",
+      "sha256": "45e78d254598d8d83435778db736eb7de488ed4197e3db3eb7cbe1e3125fbae5",
+      "review": "Only tools-held-answer loses the literal placeholder three musical instruments of your choice: upstream counts held flute/lute/drum as answers to the open grant. All refusals and remaining proficiencies/fixtures unchanged."
+    },
+    "check-cinematic-goldens.json": {
+      "originalSha256": "363d0d729fc1b3da63ca875e4a2b62d06c1e94f80253ec16ec7d7df13f283da5",
+      "file": "upstream-027/check-cinematic-goldens.json.gz",
+      "sha256": "c7debc4be68c0ce23f3085a00ae877b08271494d6f5fa8124f2b67f3f8e988b3",
+      "review": "Reviewed Lucide SVG changes and upstream cinematic scroll/flow wrappers, latest-entry button, and accessible input length description. Existing narration, roll values and authored text remain unchanged."
+    },
+    "initiative-social-goldens.json": {
+      "originalSha256": "ebd6bbac0932810068aafb6fd2826dbe936347a91e40da153e140810105b4fa4",
+      "file": "upstream-027/initiative-social-goldens.json.gz",
+      "sha256": "ca3ff640b7e93bca8ecb087a92f7a318d22312f4ac0db491ef8b74c898d0ceed",
+      "review": "Reviewed Lucide SVG changes and upstream cinematic scroll/flow wrappers, latest-entry button, and accessible input length description. Existing narration, roll values and authored text remain unchanged."
+    },
+    "character-gear-ui-goldens.json": {
+      "originalSha256": "f17283180b1683255a84e31b9de27dadd4023d0a2e04b3094f4f20db3f4b7bc3",
+      "file": "upstream-027/character-gear-ui-goldens.json.gz",
+      "sha256": "614b84f11a0c416e1f4bb861d06caa527498b989997157e13e4c4e31c41689d4",
+      "review": "Lucide 1.52 SVG geometry only. All non-SVG DOM identical; gear UI retains separately asserted loading and reference-name deltas."
+    },
+    "character-gear-help-goldens.json": {
+      "originalSha256": "5def972bc89f872566313256564e3bb3b005d073d6a4e8cbaf24a2d836f6a605",
+      "file": "upstream-027/character-gear-help-goldens.json.gz",
+      "sha256": "9d42235429fdb058bfcefc8df85f9a5a32327feda3270a1321c47071319185f0",
+      "review": "Lucide 1.52 SVG geometry only. All non-SVG DOM identical; gear UI retains separately asserted loading and reference-name deltas."
+    }
+  }
+}

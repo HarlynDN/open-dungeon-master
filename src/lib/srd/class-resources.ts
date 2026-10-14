@@ -109,6 +109,9 @@ export function resolveDiceFormula(
   abilityMods: Record<string, number>,
 ): string {
   return formula
+    // A number of dice equal to the proficiency bonus ("profd4": Healing
+    // Hands, MotM).
+    .replace(/\bprofd(\d+)\b/g, (_, die) => `${proficiencyBonus(level)}d${die}`)
     .replace(/\b(level|prof|str|dex|con|int|wis|cha)\b/g, (token) => {
       if (token === "level") {
         return String(Math.max(1, level));
@@ -181,11 +184,12 @@ export function effectFromFx(fx: ResourceFx | undefined): ResourceEffect {
 }
 
 // What spending the feature costs of a turn in a fight. "none" is a feature
-// used on the character's own turn for nothing (Action Surge). Absent means
-// the feature's many uses cost different things (Ki, Channel Divinity
-// options, the genre counters) and the turn budget is left to the tool that
+// used on the character's own turn for nothing (Action Surge). "reaction"
+// spends the reaction, on the character's turn or off it. Absent means the
+// feature's many uses cost different things (Ki, Channel Divinity options)
+// or its text names no cost, and the turn budget is left to the tool that
 // resolves the effect.
-export type ResourceAction = "action" | "bonus" | "none";
+export type ResourceAction = "action" | "bonus" | "reaction" | "none";
 
 export type ResourceDef = {
   id: string;
@@ -226,6 +230,12 @@ export type ResourceDef = {
   rechargeFor?: (level: number) => Recharge;
   // Never refilled by a rest: the DM gives it back (Inspiration).
   noRefill?: boolean;
+  // With no use left, this pool pays for one instead (Breath of the
+  // Dragon: 2 ki).
+  fallbackPool?: { id: string; amount: number };
+  // Only while the holder has fewer than half their hit points (Unearthly
+  // Recovery).
+  requires?: "below_half";
   // One line of SRD truth handed back to the model in the tool result, so a
   // spend never leaves it guessing what the feature does.
   guidance: string;
@@ -313,7 +323,7 @@ const SRD_RESOURCE_DEFS: ResourceDef[] = [
     recharge: "long",
     effect: { kind: "narrative" },
     guidance:
-      "Sorcery points buy Metamagic on a spell being cast (spend with amount), or convert to and from spell slots: call use_resource with variant like 'create a 2nd-level slot' (costs 2/3/5/6/7 points for levels 1-5) or 'convert my 3rd-level slot into points' and the server moves the points and slots. Created slots vanish on a long rest. Quickened Spell: call use_resource with variant 'Quickened Spell' before the cast; the server spends 2 points and the next spell of one action this turn takes the bonus action. The spell itself still goes through use_spell_slot or cast_at_enemy as normal.",
+      "Sorcery points buy Metamagic on a spell being cast (spend with amount), or convert to and from spell slots: call use_resource with variant like 'create a 2nd-level slot' (costs 2/3/5/6/7 points for levels 1-5) or 'convert my 3rd-level slot into points' and the server moves the points and slots. Either conversion is a bonus action on their turn in a fight. Created slots vanish on a long rest. Quickened Spell: call use_resource with variant 'Quickened Spell' before the cast; the server spends 2 points and the next spell of one action this turn takes the bonus action. The spell itself still goes through use_spell_slot or cast_at_enemy as normal.",
   },
   // ---- the feats' counters (src/lib/srd/feat-combat.ts) ----
   {
@@ -405,7 +415,7 @@ const SRD_RESOURCE_DEFS: ResourceDef[] = [
     recharge: "short",
     effect: { kind: "narrative" },
     guidance:
-      "Divine power channelled into a subclass effect. Pass variant to have the server resolve it: 'turn undead' (every undead within 30 feet makes a WIS save against the spell DC; a failure is turned for a minute, and from cleric 5 an undead at or under the Destroy Undead CR is destroyed instead), 'sacred weapon' (Oath of Devotion: +CHA to weapon attack rolls for a minute), 'preserve life' (Life Domain: heals up to 5 x cleric level split among targetCharacterIds, none past half their maximum). Never apply turned or frightened by hand: the save decides it.",
+      "Divine power channelled into a subclass effect. In a fight, name the option in variant: each costs what its own text says (most an action; Vow of Enmity, Champion Challenge, Turn the Tide, Emissary of Peace, Peerless Athlete and Inspiring Smite a bonus action; War God's Blessing and Rebuke the Violent a reaction; Guided Strike, Destructive Wrath and Touch of Death nothing more than the roll they ride; Artisan's Blessing is an hour's ritual). The server resolves these itself: 'turn undead' (every undead within 30 feet makes a WIS save against the spell DC; a failure is turned for a minute, and from cleric 5 an undead at or under the Destroy Undead CR is destroyed instead), 'sacred weapon' (Oath of Devotion: +CHA to weapon attack rolls for a minute), 'preserve life' (Life Domain: heals up to 5 x cleric level split among targetCharacterIds, none past half their maximum). Never apply turned or frightened by hand: the save decides it.",
   },
   {
     id: "bardic_inspiration",
@@ -454,6 +464,7 @@ const SRD_RESOURCE_DEFS: ResourceDef[] = [
     displayName: "Divine Sense",
     maxFor: (_level, mods) => Math.max(1, 1 + (mods.cha ?? 0)),
     recharge: "long",
+    action: "action",
     effect: { kind: "narrative" },
     guidance:
       "Until the end of their next turn the paladin knows the location of any celestial, fiend, or undead within 60 feet that is not behind total cover, and of consecrated or desecrated ground.",
@@ -579,6 +590,8 @@ type CustomResourceRow = {
   guidance: string;
   // Optional typed effect the spend executes server-side.
   fx?: ResourceFx;
+  // What a use costs of the turn, when the catalog line names it.
+  action?: ResourceAction;
 };
 
 const CUSTOM_RESOURCE_DEFS: ResourceDef[] = (
@@ -601,6 +614,7 @@ const CUSTOM_RESOURCE_DEFS: ResourceDef[] = (
   effect: effectFromFx(row.fx),
   guidance: row.guidance,
   upgrades: row.upgrades,
+  ...(row.action ? { action: row.action } : {}),
 }));
 
 // The limited-use features of the authored subclass layer. Same row shape as
@@ -632,6 +646,10 @@ type SubclassResourceRow = {
   // Never spent by choice (reaction-triggered features the server or model
   // invokes at the trigger, not on the holder's turn).
   passive?: boolean;
+  // What a use costs of the turn, when the guidance names it.
+  action?: ResourceAction;
+  fallbackPool?: { id: string; amount: number };
+  requires?: "below_half";
 };
 
 function proficiencyBonus(level: number): number {
@@ -666,6 +684,9 @@ const SUBCLASS_RESOURCE_DEFS: ResourceDef[] = (
   effect: effectFromFx(row.fx),
   guidance: row.guidance,
   ...(row.passive ? { passive: true } : {}),
+  ...(row.action ? { action: row.action } : {}),
+  ...(row.fallbackPool ? { fallbackPool: row.fallbackPool } : {}),
+  ...(row.requires ? { requires: row.requires } : {}),
 }));
 
 // The spells a race casts once a day by nature (a tiefling's hellish rebuke

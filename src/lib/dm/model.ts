@@ -51,6 +51,7 @@ export function requestDmMessage(
   messages: ChatMessage[],
   options: CampaignChatRequestOptions,
 ): Promise<UpstreamResult> {
+  const conversation = messages;
   const { locale, ...requestOptions } = options;
   // JS callers from older integrations can omit locale; typed application
   // callers must supply it. Leave those legacy conversations untouched.
@@ -61,6 +62,7 @@ export function requestDmMessage(
     return metered("story", () =>
       requestHarnessMessage(messages, requestOptions, {
         role: "story",
+        conversation,
         campaignId: requestOptions.harness?.campaignId,
         catalogue: requestOptions.harness?.catalogue,
         turn: requestOptions.harness?.turn,
@@ -79,7 +81,7 @@ export function requestDmMessage(
       settings.customModel,
       settings.customApiKey,
       messages,
-      requestOptions,
+      { ...requestOptions, role: "story" },
     ),
   );
 }
@@ -98,6 +100,7 @@ export async function requestUtilityMessage(
   messages: ChatMessage[],
   options: CampaignChatRequestOptions,
 ): Promise<UpstreamResult> {
+  const conversation = messages;
   const { locale, ...requestOptions } = options;
   if (locale !== undefined) messages = withGenerationLocale(messages, locale);
   const model = (settings.utilityModel ?? "").trim();
@@ -108,10 +111,10 @@ export async function requestUtilityMessage(
     settings.utilityProvider === "harness" ||
     (settings.textProvider === "harness" && !model)
   ) {
-    return metered("utility", () => requestHarnessMessage(messages, requestOptions, { role: "utility" }));
+    return metered("utility", () => requestHarnessMessage(messages, requestOptions, { role: "utility", conversation }));
   }
   if (!model) {
-    return requestDmMessage(settings, messages, options);
+    return requestDmMessage(settings, conversation, options);
   }
 
   const result =
@@ -125,12 +128,12 @@ export async function requestUtilityMessage(
               model,
               settings.utilityApiKey,
               messages,
-              requestOptions,
+              { ...requestOptions, role: "utility" },
             ),
           );
   if (!result.error) {
     return result;
   }
   console.error(`[model] utility model "${model}" failed; retrying on the story model`, result.error);
-  return requestDmMessage(settings, messages, options);
+  return requestDmMessage(settings, conversation, options);
 }

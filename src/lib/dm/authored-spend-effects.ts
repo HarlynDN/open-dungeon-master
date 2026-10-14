@@ -198,15 +198,24 @@ export function resolveSpendEffect(ctx: SpendContext, does: SpendDoes): Resoluti
           return { result: { applied: lines } };
         }
       }
+      // A mark on one creature: the holder's condition names it (quarry).
+      const quarry = does.quarry ? targetEnemy(ctx) : null;
+      if (quarry && "error" in quarry) {
+        return quarry;
+      }
       let patch: FullPatchSheetInput | undefined;
       if (!does.target || does.target === "self" || (does.target === "ally" && !ctx.args.targetCharacterId)) {
         const kept = sheet.conditions.filter((entry) => lower(entry) !== lower(condition));
         patch = {
           conditions: [...kept, condition],
-          conditionMeta: { ...sheet.conditionMeta, [condition]: { rounds: does.rounds } },
+          conditionMeta: { ...sheet.conditionMeta, [condition]: { rounds: does.rounds, ...(quarry ? { quarry: quarry.id } : {}) } },
           ...(tempHp > sheet.tempHp ? { tempHp } : {}),
         };
-        lines.push(`${sheet.name} is ${condition} for ${does.rounds} rounds${tempHp ? `, with ${Math.max(tempHp, sheet.tempHp)} temporary hit points` : ""}.`);
+        lines.push(
+          quarry
+            ? `${sheet.name}'s ${condition} is on ${quarry.displayName}: their attacks against it carry it.`
+            : `${sheet.name} is ${condition} for ${does.rounds} rounds${tempHp ? `, with ${Math.max(tempHp, sheet.tempHp)} temporary hit points` : ""}.`,
+        );
       }
       if (does.mark) {
         // The creature named (or last attacked) carries the holder's mark.
@@ -281,6 +290,8 @@ export function resolveSpendEffect(ctx: SpendContext, does: SpendDoes): Resoluti
       }
       return { result: { tempHp: given.length ? given : "nobody in reach gains more than they hold" } };
     }
+    case "note":
+      return { result: { applied: does.text } };
     case "aoe_report": {
       const extra = Math.max(0, ctx.units - (does.baseUnits ?? 0));
       const dice = addUnits(formula(ctx, does.dice), does.perUnit, extra);
@@ -299,7 +310,9 @@ export function resolveSpendEffect(ctx: SpendContext, does: SpendDoes): Resoluti
     case "teleport":
       return {
         result: {
-          teleport: `${sheet.name} moves up to ${does.feet} feet${does.note ? `, ${does.note}` : ""}: move their token with move_token (forced: true) if a battle map is live.`,
+          teleport: does.touched
+            ? `A willing creature ${sheet.name} touches moves up to ${does.feet} feet${does.note ? `, ${does.note}` : ""}: move its token with move_token (forced: true) if a battle map is live.`
+            : `${sheet.name} moves up to ${does.feet} feet${does.note ? `, ${does.note}` : ""}: move their token with move_token (forced: true) if a battle map is live.`,
         },
       };
     case "die_damage": {

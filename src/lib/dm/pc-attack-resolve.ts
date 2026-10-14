@@ -32,6 +32,8 @@ import type { AttackPlan, ManeuverPick } from "@/lib/dm/pc-attack-plan";
 import {
   applyRiderCondition,
   clearHitSpent,
+  gainTempHp,
+  openCurvingShot,
   riderBarred,
   spendOnHit,
   stunningStrikeSave,
@@ -192,6 +194,10 @@ export function rollPcAttack(plan: AttackPlan, strike: Strike): Record<string, u
   if (!hit) {
     // Acid Arrow: a miss still deals half the damage.
     const grazed = spellRider?.halfOnMiss && hitOutcome.crit !== "nat1" ? missDamage(plan) : null;
+    const curving = plan.weaponAttack && profile.ranged ? openCurvingShot(campaign.id, sheet, enemy.id, profile.weapon) : null;
+    if (curving) {
+      context.notes.push(curving);
+    }
     emitAttackFx(campaign.id, stage, {
       hit: false,
       crit: false,
@@ -410,6 +416,9 @@ function claimFoeSlayer(plan: AttackPlan) {
 export function hitExtras(plan: AttackPlan, dead: boolean, over: boolean): Record<string, unknown> {
   const out: Record<string, unknown> = {};
   const { campaign, sheet, enemy, extras } = plan;
+  if (extras.tempHp) {
+    out.tempHp = gainTempHp(campaign, sheet.id, extras.tempHp.amount, extras.tempHp.feature);
+  }
   if (extras.poison) {
     const line = over ? null : poisonOnHit(campaign, sheet.id, enemy.id);
     if (line) {

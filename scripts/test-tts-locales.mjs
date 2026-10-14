@@ -43,7 +43,7 @@ try{
  assert.notEqual(voicePreviewName('af_heart',backend,'zh-CN'),voicePreviewName('af_heart',{...backend,defaultVoice:'zm_010'},'zh-CN'));
  before=calls.length;await renderVoicePreview('af_heart','zh-CN');assert.match(calls.at(-1).input,/七点生命值/);await renderVoicePreview('af_heart','zh-CN');assert.equal(calls.length,before+1);await renderVoicePreview('af_heart');assert.match(calls.at(-1).input,/The tavern door/);assert.equal(calls.length,before+2);
  const route=await w.route('tts/voices');const response=await route.GET(new Request('http://test/api/tts/voices?locale=zh-CN'));assert.equal(response.status,200);const list=await response.json();assert.deepEqual(list.voices.map(v=>v.id),['zf_001','zm_010']);assert.equal(list.defaultVoice,'zf_001');
- const message=w.say('dm',text);before=calls.length;await enqueueNarrationAudio(w.campaignId,message.id,text,{locale:'zh-CN',ttsVoice:'af_heart',ttsAutoCast:true},{kind:'npc',id:'n',name:'她'});
+ const message=w.say('dm',text);before=calls.length;await enqueueNarrationAudio(w.campaignId,message.id,text,[],{locale:'zh-CN',ttsVoice:'af_heart',ttsAutoCast:true},{kind:'npc',id:'n',name:'她'});
  assert.ok(calls.length>before);assert.ok(calls.slice(before).every(c=>c.voice==='zf_001'&&c.lang_code==='z'));assert.ok(fs.existsSync(narrationAudioPath(w.campaignId,message.id)));
  const files=['src/components/VoicePicker.tsx','src/app/create-campaign/NarratorFields.tsx','src/app/campaigns/[campaignId]/CharacterVoices.tsx'];
  const renderer=await openCombatRenderer({files});

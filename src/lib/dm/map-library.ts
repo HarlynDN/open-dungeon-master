@@ -1,4 +1,6 @@
 import { isOnePageDungeon, parseOnePageDungeon } from "@/lib/battlemap/watabou";
+import { getParty } from "@/lib/db/party";
+import { placeByFormation } from "@/lib/dm/formation-logic";
 import type { Campaign } from "@/lib/db/campaigns";
 import { createEncounter, getActiveBoard, getActiveScene } from "@/lib/db/encounters";
 import {
@@ -85,7 +87,8 @@ export function createLibraryMap(
     height?: number;
     theme?: MapTheme;
     ambient?: AmbientLight;
-    hint?: string;
+    // The kind of place (an ambience bed id) the generator rolls.
+    scene?: string;
     seed?: number;
     // Absent means roll one with the generator.
     blank?: BlankFill;
@@ -129,8 +132,7 @@ export function createLibraryMap(
     seed,
     width,
     height,
-    genre: campaign.gameSettings.genre,
-    hint: input.hint,
+    scene: input.scene ?? null,
     theme: input.theme,
     ambient: input.ambient,
     pcCount: 4,
@@ -527,14 +529,16 @@ export function openSceneOnPreparedMap(
   });
   const spawns = partySpawnTiles(prepared.terrain, prepared.width, prepared.height, sheets.length);
   const fallback: XY = spawns[0] ?? { x: 1, y: 1 };
+  // In the order of the party's travel formation (issue 230).
+  const { spots } = placeByFormation(sheets, spawns, [], getParty(campaign.id).marchingOrder);
   placeTokens(
     map.id,
     campaign.id,
-    sheets.map((sheet, index) => ({
+    sheets.map((sheet) => ({
       kind: "pc" as const,
       refId: sheet.id,
       name: sheet.name,
-      spot: spawns[index] ?? fallback,
+      spot: spots.get(sheet.id) ?? fallback,
       ...carriedLightFields(campaign.id, sheet),
     })),
   );

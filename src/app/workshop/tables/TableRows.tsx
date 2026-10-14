@@ -137,8 +137,8 @@ export function TableRows({
           const items: ContextMenuItem[] = [
             { id: "open", label: consoleUiText("Open", locale), glyph: "system-tables", onSelect: () => onOpen(table) },
             { id: "roll", label: consoleUiText("Roll", locale), glyph: dieGlyph(coverage.die), disabled: busy === table.id, onSelect: () => onRoll(table) },
-            { id: "duplicate", label: consoleUiText("Duplicate", locale), glyph: "tab-notes", disabled: busy === `copy-${table.id}`, onSelect: () => onDuplicate(table) },
-            { id: "delete", label: consoleUiText("Delete", locale), glyph: "quest-failed", tone: "danger", separated: true, onSelect: () => onDelete(table) },
+            { id: "duplicate", label: consoleUiText("Duplicate", locale), glyph: "ui-duplicate", disabled: busy === `copy-${table.id}`, onSelect: () => onDuplicate(table) },
+            { id: "delete", label: consoleUiText("Delete", locale), glyph: "ui-delete", tone: "danger", separated: true, onSelect: () => onDelete(table) },
           ];
           return (
             <ContextMenu as="li" key={table.id} label={table.name} items={items} className={cn(ui.cardHover, "min-w-0 p-3")}>

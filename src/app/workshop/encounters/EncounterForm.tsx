@@ -1,4 +1,5 @@
 "use client";
+import { useLocale as useSyncLocale } from "@/lib/i18n/LocaleProvider";
 
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 
@@ -8,6 +9,7 @@ import { ui } from "@/lib/ui";
 import { SectionHead } from "@/components/ui/SectionHead";
 import { Select } from "@/components/ui/Select";
 import { Field } from "@/app/workshop/kit";
+import { sceneOptions } from "@/lib/ambience/catalog";
 import { TEMPLATE_NAME_MAX } from "@/lib/dm/encounter-template-logic";
 import { MonsterRosterPicker } from "@/app/campaigns/[campaignId]/MonsterRosterPicker";
 import { EncounterExtras } from "@/app/workshop/encounters/EncounterExtras";
@@ -43,6 +45,7 @@ export function EncounterForm({
   onSubmit: () => void;
   variant?: "card" | "sheet";
 }) {
+  const { t: syncT } = useSyncLocale();
   const { t } = useLocale();
   const set = (patch: Partial<EncounterDraft>) => onChange({ ...value, ...patch });
   return (
@@ -89,6 +92,14 @@ export function EncounterForm({
         aria-label={t("encounterPrep.battlefield")}
         className={field}
       />
+      <Field label={syncT("upstreamUi.8b743ebe1a90")}>
+        <Select
+          label={syncT("upstreamUi.8b743ebe1a90")}
+          value={value.scene}
+          onChange={(scene) => set({ scene })}
+          options={[{ value: "", label: syncT("upstreamUi.6f2a177b5b91") }, ...sceneOptions()]}
+        />
+      </Field>
       <div data-tour="encounters-map">
         <Field label={t("encounterPrep.map")}>
           <Select

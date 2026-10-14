@@ -203,7 +203,7 @@ export function FactionsPanel({ campaignId, steersStory, refreshKey = 0 }: { cam
         {factions.map((faction) => {
           const items: ContextMenuItem[] = steersStory
             ? [
-                { id: "edit", label: t("recordUi.edit"), glyph: "tab-notes", onSelect: () => startEdit(faction) },
+                { id: "edit", label: t("recordUi.edit"), glyph: "ui-edit", onSelect: () => startEdit(faction) },
                 ...Array.from({ length: REPUTATION_MAX - REPUTATION_MIN + 1 }, (_, index) => REPUTATION_MIN + index).map((step, index) => ({
                   id: `standing-${step}`,
                   label: t("recordUi.faction.standingOption", { value: `${step > 0 ? "+" : ""}${step}`, label: factionStandingLabel(reputationLabel(step), locale) }),
@@ -212,7 +212,7 @@ export function FactionsPanel({ campaignId, steersStory, refreshKey = 0 }: { cam
                   disabled: step === faction.standing,
                   onSelect: () => void setStanding(faction, step),
                 })),
-                { id: "remove", label: t("recordUi.faction.remove", { name: faction.name }), glyph: "quest-failed", tone: "danger" as const, separated: true, onSelect: () => void remove(faction) },
+                { id: "remove", label: t("recordUi.faction.remove", { name: faction.name }), glyph: "ui-delete", tone: "danger" as const, separated: true, onSelect: () => void remove(faction) },
               ]
             : [];
           return (

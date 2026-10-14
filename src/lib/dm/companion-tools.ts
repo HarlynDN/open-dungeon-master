@@ -37,9 +37,15 @@ import { startingKitFor } from "@/lib/srd/starting-kit";
 import { legalCompanionSheet } from "@/lib/dm/companion-level";
 import { queueCompanionPortrait } from "@/lib/portrait";
 import { settingClassIds } from "@/lib/classes";
+import { TOLD_GENDER_HELP, TOLD_GENDERS, toldGender } from "@/lib/gender";
 import { presetFor, packFor } from "@/lib/worlds/preset";
 import { packIds } from "@/lib/worlds/reskin-logic";
-import { resolveCompanionMode, type CompanionMode } from "@/lib/schemas/game-settings";
+import {
+  lastingCompanionBlock,
+  resolveCompanionMode,
+  type CompanionMode,
+  type LastingCompanionBlock,
+} from "@/lib/schemas/game-settings";
 import { hasHumanDm } from "@/lib/dm/viewer";
 import {
   createSheetSchema,
@@ -81,6 +87,21 @@ export function listCompanions(sheets: CharacterSheet[]): CharacterSheet[] {
   return sheets.filter((sheet) => sheet.isCompanion);
 }
 
+// Why a lasting party companion cannot join this table now, with the way
+// to allow one (game-settings.ts lastingCompanionBlock, issue 209); null
+// when one can. The mode and the cap, read the way companionMode reads them.
+export function lastingCompanionProblem(campaign: Campaign): LastingCompanionBlock | null {
+  const partyCompanions = listCompanions(listSheets(campaign.id)).filter(
+    (sheet) => sheet.companionKind !== "guest",
+  ).length;
+  return lastingCompanionBlock(
+    campaign.gameSettings,
+    countPartySlots(campaign.id),
+    partyCompanions,
+    hasHumanDm(campaignSeats(campaign)),
+  );
+}
+
 type ToolDef = {
   type: "function";
   function: { name: string; description: string; parameters: Record<string, unknown> };
@@ -110,10 +131,10 @@ export function companionTools(campaign: Campaign): ToolDef[] {
   );
   const classDescription = classIds.length
     ? `Class id from this world's catalog. Only these belong in this setting: ${classIds.join(", ")}. Anything else is refused.`
-    : "Class id from this world's catalog, e.g. 'fighter', 'cleric'.";
+    : "Class id from this world's catalog ('fighter', 'cleric').";
   const raceDescription = preset.companionRaces.length
     ? `SRD race id. ${preset.raceHint} Allowed here: ${preset.companionRaces.join(", ")} (anything else becomes human).`
-    : `SRD race id, e.g. 'human', 'hill_dwarf', 'high_elf'. ${preset.raceHint}`;
+    : `SRD race id ('human', 'hill_dwarf', 'high_elf'). ${preset.raceHint}`;
   const kindDescription =
     mode === "full"
       ? "'party' for a lasting party member who travels with the party until dismissed; 'guest' for a scene-scoped ally (a soldier helping defend the town) who leaves when the scene ends."
@@ -123,7 +144,7 @@ export function companionTools(campaign: Campaign): ToolDef[] {
       type: "function",
       function: {
         name: "add_companion",
-        description: `Write a new AI-controlled ally into the story with a REAL character sheet: they get stats, HP, equipment, an initiative slot, and a map token, and you control them fully (dialogue and combat). Call this BEFORE narrating them joining. An ally that never went through add_companion does not exist and cannot act or fight. They must belong in this world (${preset.name.toLowerCase()}): name, race, and class all fit the setting.`,
+        description: `Write a new AI-controlled ally into the story with a REAL character sheet: they get stats, HP, equipment, an initiative slot, and a map token, and you control them fully (dialogue and combat). Call it BEFORE narrating them joining. An ally that never went through add_companion does not exist and cannot act or fight. They must belong in this world (${preset.name.toLowerCase()}): name, race, and class all fit the setting.`,
         parameters: {
           type: "object",
           additionalProperties: false,
@@ -136,11 +157,12 @@ export function companionTools(campaign: Campaign): ToolDef[] {
               description: "A dragonborn's draconic ancestry, when the story names one. Omit it and the server rolls one.",
             },
             class: { type: "string", description: classDescription },
+            gender: { type: "string", enum: [...TOLD_GENDERS], description: TOLD_GENDER_HELP },
             level: {
               type: "integer",
               minimum: 1,
               maximum: 20,
-              description: "Optional; defaults to the party's average level.",
+              description: "Default: the party's average level.",
             },
             personality: {
               type: "string",
@@ -151,10 +173,10 @@ export function companionTools(campaign: Campaign): ToolDef[] {
             spells: {
               type: "array",
               items: { type: "string" },
-              description: "For casters: the spells they know (level-appropriate).",
+              description: "Casters only: the spells they know (level-appropriate).",
             },
           },
-          required: ["name", "class", "personality", "kind"],
+          required: ["name", "class", "gender", "personality", "kind"],
         },
       },
     },
@@ -163,12 +185,12 @@ export function companionTools(campaign: Campaign): ToolDef[] {
       function: {
         name: "dismiss_companion",
         description:
-          "Write a companion out of the story: they part ways, their scene ends, or they died and the story moves on. Call this BEFORE narrating the departure; their sheet, initiative slot, and token are removed.",
+          "Write a companion out of the story: they part ways, their scene ends, or they died and the story moves on. Call it BEFORE narrating the departure; their sheet, initiative slot, and token are removed.",
         parameters: {
           type: "object",
           additionalProperties: false,
           properties: {
-            characterId: { type: "string", description: "The companion's characterId from GAME STATE." },
+            characterId: { type: "string", description: "The companion: exact characterId from GAME STATE." },
             reason: { type: "string", description: "Short in-fiction reason for the departure." },
           },
           required: ["characterId"],
@@ -183,6 +205,7 @@ const addArgsSchema = z.object({
   race: z.string().trim().max(60).optional(),
   ancestry: z.string().trim().max(40).optional(),
   class: z.string().trim().min(1).max(60),
+  gender: z.enum(TOLD_GENDERS),
   level: z.number().int().min(1).max(20).optional(),
   personality: z.string().trim().min(1).max(500),
   kind: z.enum(["party", "guest"]).default("guest"),
@@ -222,7 +245,7 @@ export function handleAddCompanion(
   } catch {
     return {
       error:
-        "Invalid arguments: add_companion needs name, class, personality, and kind ('party' or 'guest').",
+        "Invalid arguments: add_companion needs name, class, gender (Female, Male, Nonbinary or Unknown), personality, and kind ('party' or 'guest').",
     };
   }
 
@@ -330,6 +353,7 @@ export function handleAddCompanion(
     class: klass.id,
     background: "",
     alignment: "",
+    gender: toldGender(args.gender) ?? "",
     abilities,
     // A figure to start from; the legality check derives the real one by
     // the table's hit point method, and the armor engine the armor class.
@@ -409,16 +433,13 @@ export function finalizeNewCompanion(
   // model, so only lasting party members are worth a portrait; a sheet built
   // with its own portrait already (manual build) keeps it.
   if (kind === "party" && !sheet.portrait) {
-    queueCompanionPortrait({
+    queueCompanionPortrait(campaign, {
       id: sheet.id,
-      campaignId: campaign.id,
       name: sheet.name,
       race: sheet.race,
       class: sheet.class,
       background: sheet.background,
       personality,
-      genre: campaign.gameSettings.genre,
-      worldPack: campaign.gameSettings.worldPack,
     });
   }
 
@@ -573,6 +594,7 @@ export function dismissGuestCompanions(campaign: Campaign, reason: string): stri
     campaignId: campaign.id,
     seq,
     authorType: "system",
+    glyph: "system-party",
     content: `${names.join(" and ")} ${names.length === 1 ? "was" : "were"} a temporary ally and leaves the party now that the fight is over. Narrate the goodbye.`,
   });
   publishWithSeq(campaign.id, seq, "message_added", { message });

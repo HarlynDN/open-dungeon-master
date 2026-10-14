@@ -6,6 +6,10 @@
 // handlers.
 
 import { getActiveEncounter, orderEntryId, saveEncounter, type Encounter } from "@/lib/db/encounters";
+import { activePublicEncounter } from "@/lib/db/encounter-view";
+import { publishPersisted } from "@/lib/events";
+import { reactingSheet, reactionRefusal } from "@/lib/dm/reaction-gate";
+import { reactionTimingOf, type ReactionTiming } from "@/lib/dm/reaction-kinds";
 import {
   budgetApplies,
   freshBudget,
@@ -59,6 +63,58 @@ export function budgetFor(
 export function storeBudget(encounter: Encounter, budget: TurnBudget) {
   encounter.turnBudget = budget;
   saveEncounter(encounter);
+  publishTurnCount(encounter.campaignId);
+}
+
+// The pips on the board and in the Hand read the count from the encounter
+// projection, which a client pulls again on a roll or on this event: a spend
+// that rolls nothing (a bonus-action buff, a feature, a Dash) is pushed here,
+// or the table sees it only at the next roll. enemy-damage.ts's
+// publishEncounter sends the same, but importing it would close a cycle
+// (it imports mutations.ts, which imports this module).
+function publishTurnCount(campaignId: string) {
+  publishPersisted(campaignId, "encounter_updated", { encounter: activePublicEncounter(campaignId) });
+}
+
+// A character's reaction is spent until the start of their next turn. It
+// lives in reactionsUsed, not in the turn budget, because it is mostly spent
+// on somebody else's turn.
+export function markReactionUsed(encounter: Encounter, characterId: string) {
+  encounter.reactionsUsed = [...encounter.reactionsUsed, characterId];
+  saveEncounter(encounter);
+  publishTurnCount(encounter.campaignId);
+}
+
+// A reaction as the cost of a feature, checked first and written last so a
+// refusal costs nothing (the resource-turn.ts pattern). Who may react is
+// asked as use_reaction asks it (src/lib/dm/reaction-gate.ts), with the
+// feature's own timing (src/lib/dm/reaction-kinds.ts). `beforeDrop` says the
+// character was judged as they stood before the hit that dropped them, which
+// is what lets a use at 0 hit points through (issue 233).
+export function prepareReaction(
+  encounter: Encounter,
+  sheet: CharacterSheet,
+  label: string,
+  timing: ReactionTiming = reactionTimingOf(label),
+): { error: string } | { commit: () => Record<string, unknown>; beforeDrop: boolean } {
+  const refused = reactionRefusal(encounter.campaignId, sheet, encounter, label, timing);
+  if (refused) {
+    return { error: refused };
+  }
+  const { beforeDrop } = reactingSheet(encounter.campaignId, sheet, timing);
+  if (encounter.reactionsUsed.includes(sheet.id)) {
+    return { error: `${sheet.name} has already used their reaction; it comes back at the start of their next turn. ${label} does not happen.` };
+  }
+  return {
+    beforeDrop,
+    commit: () => {
+      const live = getActiveEncounter(encounter.campaignId);
+      if (live && !live.reactionsUsed.includes(sheet.id)) {
+        markReactionUsed(live, sheet.id);
+      }
+      return { cost: "their reaction" };
+    },
+  };
 }
 
 // Attacks the Attack action grants this character: 1 plus Extra Attack.

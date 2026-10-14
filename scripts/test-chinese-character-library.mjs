@@ -104,7 +104,9 @@ await test("the actual seat route adapts the campaign copy and keeps canonical l
   const data = await response.json(); assert.equal(response.status, 201, data.error);
   assert.equal(data.sheet.level, 1); assert.equal(data.sheet.name, "林河"); assert.equal(data.sheet.class, "fighter");
   assert.deepEqual(getCharacterForUser(world.owner.id, original.id), before);
-  assert.equal((await sheetRoute.POST(req("POST", { libraryCharacterId: original.id }), campaignParams)).status, 409);
+  const again = await sheetRoute.POST(req("POST", { libraryCharacterId: original.id }), campaignParams);
+  assert.equal(again.status, 201);
+  assert.equal((await again.json()).sheet.id, data.sheet.id, "re-seating the same library character is idempotent");
 });
 
 await test("display translation stays out of request identifiers, and failed creation reads cannot guess level one", () => {

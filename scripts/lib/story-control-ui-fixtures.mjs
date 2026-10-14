@@ -16,7 +16,7 @@ export const npcQueue=(patch={})=>[patch.npcs??npcs,patch.suggestions??suggestio
 export const settings={textProvider:'custom',customBaseUrl:'http://127.0.0.1:8080/v1',customModel:'Authored model',customApiKey:'',utilityProvider:'custom',utilityModel:'Authored utility',utilityBaseUrl:'http://127.0.0.1:8081/v1',utilityApiKey:'',imageGenerationEnabled:true,imageBackend:'comfyui',imageMode:'fast',aspect:'square',autoImages:true,proseSize:'medium'};
 export const kept='\u0000keep';
 export const drafts={customBaseUrl:settings.customBaseUrl,customModel:settings.customModel,customApiKey:kept,utilityBaseUrl:settings.utilityBaseUrl,utilityModel:settings.utilityModel,utilityApiKey:kept};
-export const aiQueue=(patch={})=>[patch.busy??false,patch.error??'',patch.hasCustomKey??false,patch.hasUtilityKey??false,patch.imagesConfigured??true,patch.imagesReady??true,'deviceManaged' in patch?patch.deviceManaged:false,patch.serverManaged??false,patch.harness??null,patch.drafts??drafts];
+export const aiQueue=(patch={})=>[patch.busy??false,patch.error??'',patch.hasCustomKey??false,patch.hasUtilityKey??false,patch.imagesConfigured??true,patch.imagesReady??true,patch.imagesNeedModel??false,patch.serverImagesNeedModel??false,'deviceManaged' in patch?patch.deviceManaged:false,patch.serverManaged??false,patch.harness??null,patch.drafts??drafts];
 export function controlCases(){
  const nq=values=>({queues:{[npcFile]:values}}),aq=values=>({queues:{[aiFile]:values}});
  return [

@@ -330,10 +330,7 @@ export const APP_HELP_MESSAGES = /*#__PURE__*/ defineMessages({
     "en": "Setup:",
     "zh-CN": "设置："
   },
-  "appHelp.fragment.82": {
-    "en": " campaign settings, invites and game toggles.",
-    "zh-CN": "战役设置、邀请和各项游戏开关。"
-  },
+  "appHelp.fragment.82": {"en": " campaign settings, invites and game toggles. Whoever steers the story can bring in more prep from a workshop here at any point, and the owner or the DM can end the campaign, which saves each library character's progress back to the player's library.", "zh-CN": "战役设置、邀请与游戏开关。主持故事的人可以随时从工坊导入更多备团资料；房主或 DM 可以结束战役，将角色库中各角色的进度保存回玩家的角色库。"},
   "appHelp.fragment.83": {
     "en": "Dice",
     "zh-CN": "骰子"
@@ -426,14 +423,8 @@ export const APP_HELP_MESSAGES = /*#__PURE__*/ defineMessages({
     "en": "Ambience and music",
     "zh-CN": "环境音与音乐"
   },
-  "appHelp.fragment.106": {
-    "en": "With ambience enabled in the game settings, the table shares a soundtrack: a background bed for where the party is (a tavern, a forest, a crypt), a music layer for what the scene is doing, and one-shot stings for dramatic moments. The DM changes it as the story moves, and combat brings its own sound. Whoever runs the story can also hold a layer on a chosen cue so the auto-picker leaves it alone. Your speaker button and volume slider in the header control it for you alone, and it ducks automatically while narration speaks.",
-    "zh-CN": "在游戏设置中启用环境音后，全桌共用音轨：按所在地点播放背景环境声（如酒馆、森林、墓穴），按场景氛围播放音乐，并在戏剧性时刻加入短音效。DM 会随故事变化切换声音，战斗也有专属音轨。负责故事的人可固定某一层使用的曲目，避免自动选择器替换它。标题栏的扬声器和音量滑块只影响你自己的播放；旁白响起时，其他音轨会自动降低音量。"
-  },
-  "appHelp.fragment.107": {
-    "en": "The sounds themselves are public-domain and Creative Commons recordings the server admin installs; see the licenses page for who made what. If ambience is on but silent, the server simply has no audio installed yet.",
-    "zh-CN": "声音素材由服务器管理员安装，来源包括公有领域和知识共享许可的录音；具体作者见许可页面。如果环境音已开启却没有声音，通常是服务器尚未安装音频素材。"
-  },
+  "appHelp.fragment.106": {"en": "With ambience enabled in the game settings, the table shares a soundtrack: a room for where the party is (a tavern, a forest, a crypt), music for what the scene is doing, and one-shot sounds for dramatic moments. The DM changes it as the story moves, and combat brings its own music. A cue may have several takes; the player moves between them so a long fight is not one loop forever, and Next skips ahead.", "zh-CN": "在游戏设置中开启环境音后，桌面会共享音景：队伍所在场所的环境音（如酒馆、森林或墓穴）、配合场景的音乐，以及戏剧性时刻的一次性音效。DM 随故事发展调整音景，战斗有专用音乐。同一音效可能有多个版本，播放器会切换版本，避免长时间战斗只重复同一段；“下一首”可跳到下一个版本。"},
+  "appHelp.fragment.107": {"en": "The speaker in the table header opens the sound panel: what is playing, a level for the room and one for the music (for you alone), and, if you steer the story, the pickers for the room, the music and the sounds, with a hold that keeps the scene from changing a layer you chose. Sound ducks automatically while narration speaks.", "zh-CN": "桌面顶部的扬声器按钮打开声音面板：查看正在播放的内容，并分别调整仅影响自己的环境音和音乐音量。主持故事的人还可以选择环境音、音乐和音效，并锁定所选音轨，防止场景变化自动替换它。旁白播放时，背景声音会自动降低。"},
   "appHelp.fragment.108": {
     "en": "Playing with a human DM",
     "zh-CN": "真人 DM 主持"
@@ -605,5 +596,7 @@ export const APP_HELP_MESSAGES = /*#__PURE__*/ defineMessages({
   "appHelp.tour.dm.detail": {
     "en": "The floor, story beats, hand-over switches, the queue and the tools.",
     "zh-CN": "发言顺序、故事节点、交接开关、队列和主持工具。"
-  }
+  },
+  "appHelp.dictationKey": {"en": "A key can hold the microphone too: choose one under {key} in your account settings (the apps also have it under Audio and dice), and its name appears on the mic. Hold it in the message box, or anywhere at the table outside another field, and let go when you are done. The words wait in the box like the button's; only Send sends them.", "zh-CN": "键盘也能控制麦克风：在账号设置中选择{key}（应用内位于“音频与骰子”），按键名称会显示在麦克风按钮上。在消息框内，或桌面上其他输入框之外按住该键，结束后松开。识别的文字会留在输入框中；只有发送按钮才会发出。"},
+  "appHelp.soundLibrary": {"en": "The library itself ships with the game: public-domain and Creative Commons recordings, and the licenses page says who made what. If ambience is on but silent, the panel says why.", "zh-CN": "游戏内置声音资料库，包含公有领域和知识共享许可的录音；授权页面列出各项内容的创作者。如果环境音已开启却没有声音，面板会说明原因。"},
 });

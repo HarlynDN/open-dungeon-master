@@ -28,9 +28,11 @@ import { insertSheetAudit } from "@/lib/db/sheet-audit";
 import { getSheetById, listSheets, patchSheet } from "@/lib/db/sheets";
 import { rollExpression } from "@/lib/dice";
 import { publishPersisted, publishWithSeq } from "@/lib/events";
-import { chebyshev } from "@/lib/battlemap/types";
+import { tilesApart } from "@/lib/dm/board-reach";
+
 import { spendAction } from "@/lib/dm/action-budget";
 import { canAct } from "@/lib/dm/can-act";
+import { readiedReleaseFor } from "@/lib/dm/readied-release";
 import type { ConditionMetaMap } from "@/lib/dm/condition-logic";
 import { applyEnemyDamage, publishEncounter, resolveEnemyRef } from "@/lib/dm/enemy-damage";
 import { rollEnemySave } from "@/lib/dm/forced-save";
@@ -49,7 +51,8 @@ export function feetBetween(encounterId: string, a: string, b: string): number |
   const map = getBattleMapForEncounter(encounterId);
   const from = map ? getTokenByRef(map.id, a) : null;
   const to = map ? getTokenByRef(map.id, b) : null;
-  return from && to ? chebyshev(from.x, from.y, to.x, to.y) * 5 : null;
+  return from && to ? tilesApart(from, to) * 5 : null;
+
 }
 
 // The action a feature costs, checked and priced; `commit` stores it once
@@ -59,6 +62,18 @@ export function priceTheAction(
   encounter: Encounter | null,
   what: string,
 ): { commit: () => void } | { error: string } {
+  // Off their turn, a feature they readied: their reaction (readied-release.ts).
+  const readied = readiedReleaseFor(sheet, encounter, "feature");
+  if (readied && "error" in readied) {
+    return { error: readied.error };
+  }
+  if (readied) {
+    return {
+      commit: () => {
+        readied.release();
+      },
+    };
+  }
   const able = canAct({ sheet, encounter, kind: "action" });
   if (!able.ok) {
     return { error: able.error };

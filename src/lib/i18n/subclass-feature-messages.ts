@@ -168,16 +168,16 @@ export const SUBCLASS_FEATURE_MESSAGES = /*#__PURE__*/ defineMessages({
     "zh-CN": "狂怒传染"
   },
   "callingMaterial.subclassFeature.barbarian.path-of-the-beast.infectious-fury.description": {
-    "en": "Twice per long rest, a natural-weapon hit forces a Wisdom save: the target either attacks a creature of your choice or takes 2d12 psychic damage.",
-    "zh-CN": "每次长休后可使用两次。天生武器命中时，迫使目标进行感知豁免；目标会攻击你选择的生物，或受到 2d12 心灵伤害。"
+    "en": "A proficiency-bonus number of times per long rest, a natural-weapon hit forces a Wisdom save: the target either attacks a creature of your choice or takes 2d12 psychic damage.",
+    "zh-CN": "每次长休之间可使用的次数等于熟练加值。天生武器命中时，迫使目标进行感知豁免：目标须攻击你选择的一个生物，或受到 2d12 点心灵伤害。"
   },
   "callingMaterial.subclassFeature.barbarian.path-of-the-beast.call-the-hunt.name": {
     "en": "Call the Hunt",
     "zh-CN": "狩猎号召"
   },
   "callingMaterial.subclassFeature.barbarian.path-of-the-beast.call-the-hunt.description": {
-    "en": "A number of times per long rest equal to your Constitution modifier, grant up to five allies an extra weapon damage die on one hit per turn while you gain temporary hit points.",
-    "zh-CN": "每次长休后的使用次数等于体质调整值。至多五名盟友每回合一次命中时可增加一个武器伤害骰，同时你获得临时生命值。"
+    "en": "A proficiency-bonus number of times per long rest, when you enter your rage, grant up to five allies an extra d6 of damage on one hit per turn, and gain 5 temporary hit points for each ally who accepts.",
+    "zh-CN": "每次长休之间可使用的次数等于熟练加值。进入狂暴时，可让至多五名盟友每回合一次命中额外造成 1d6 点伤害；每有一名盟友接受，你就获得 5 点临时生命值。"
   },
   "callingMaterial.subclassFeature.barbarian.path-of-wild-magic.magic-awareness.name": {
     "en": "Magic Awareness",
@@ -392,8 +392,8 @@ export const SUBCLASS_FEATURE_MESSAGES = /*#__PURE__*/ defineMessages({
     "zh-CN": "额外熟练项（骑士）"
   },
   "callingMaterial.subclassFeature.fighter.cavalier.bonus-proficiency-cavalier.description": {
-    "en": "One skill from a knightly list or proficiency with land vehicles.",
-    "zh-CN": "获得骑士技能列表中的一项技能熟练，或陆上载具熟练。"
+    "en": "Proficiency in Animal Handling, History, Insight, Performance or Persuasion, or one language of your choice.",
+    "zh-CN": "获得驯兽、历史、洞悉、表演或游说其中一项的熟练，或掌握一种自选语言。"
   },
   "callingMaterial.subclassFeature.fighter.cavalier.born-to-the-saddle.name": {
     "en": "Born to the Saddle",
@@ -416,8 +416,8 @@ export const SUBCLASS_FEATURE_MESSAGES = /*#__PURE__*/ defineMessages({
     "zh-CN": "防护战技"
   },
   "callingMaterial.subclassFeature.fighter.cavalier.warding-maneuver.description": {
-    "en": "A reaction adds 1d8 to an ally's AC against one attack and halves the damage on a hit, a Constitution-modifier number of times per long rest.",
-    "zh-CN": "用反应使盟友对抗一次攻击时的护甲等级增加 1d8；若仍被命中，伤害减半。每次长休后的使用次数等于体质调整值。"
+    "en": "When you or a creature you can see within 5 feet is hit, a reaction adds 1d8 to the target's AC against that attack while you wield a melee weapon or a shield, and the target resists its damage if it still hits; a Constitution-modifier number of times per long rest.",
+    "zh-CN": "你或你能看见的 5 尺内生物被命中时，若你正持用近战武器或盾牌，可用反应使目标对该次攻击的护甲等级增加 1d8；若攻击仍命中，目标对其伤害具有抗性。每次长休之间可使用的次数等于体质调整值。"
   },
   "callingMaterial.subclassFeature.fighter.cavalier.hold-the-line.name": {
     "en": "Hold the Line",
@@ -448,8 +448,8 @@ export const SUBCLASS_FEATURE_MESSAGES = /*#__PURE__*/ defineMessages({
     "zh-CN": "额外熟练项（武士）"
   },
   "callingMaterial.subclassFeature.fighter.samurai.bonus-proficiency-samurai.description": {
-    "en": "Proficiency in one social skill or a language.",
-    "zh-CN": "获得一项社交技能的熟练，或学会一种语言。"
+    "en": "Proficiency in History, Insight, Performance or Persuasion, or one language of your choice.",
+    "zh-CN": "获得历史、洞悉、表演或游说其中一项的熟练，或掌握一种自选语言。"
   },
   "callingMaterial.subclassFeature.fighter.samurai.fighting-spirit.name": {
     "en": "Fighting Spirit",
@@ -464,8 +464,8 @@ export const SUBCLASS_FEATURE_MESSAGES = /*#__PURE__*/ defineMessages({
     "zh-CN": "优雅廷臣"
   },
   "callingMaterial.subclassFeature.fighter.samurai.elegant-courtier.description": {
-    "en": "Wisdom saving throws use your Charisma modifier if it is better, and you gain proficiency in Persuasion or expertise if already proficient.",
-    "zh-CN": "若魅力调整值更高，可将其用于感知豁免；同时获得游说熟练，若已有熟练则获得专精。"
+    "en": "Add your Wisdom modifier to Persuasion checks, and gain proficiency in Wisdom saving throws (Intelligence or Charisma if you already have it).",
+    "zh-CN": "游说检定加上感知调整值，并获得感知豁免熟练；若已熟练，则改为获得智力或魅力豁免熟练。"
   },
   "callingMaterial.subclassFeature.fighter.samurai.tireless-spirit.name": {
     "en": "Tireless Spirit",
@@ -1112,8 +1112,8 @@ export const SUBCLASS_FEATURE_MESSAGES = /*#__PURE__*/ defineMessages({
     "zh-CN": "超凡复原"
   },
   "callingMaterial.subclassFeature.sorcerer.divine-soul.unearthly-recovery.description": {
-    "en": "Once per long rest, a bonus action at half hit points or less restores hit points equal to half your maximum.",
-    "zh-CN": "每次长休后可用一次。生命值不超过最大值的一半时，可用附赠动作恢复等于最大生命值一半的生命值。"
+    "en": "Once per long rest, a bonus action when you have fewer than half your hit points left restores hit points equal to half your maximum.",
+    "zh-CN": "每次长休一次，当剩余生命值低于上限的一半时，可用附赠动作恢复等于生命值上限一半的生命值。"
   },
   "callingMaterial.subclassFeature.sorcerer.shadow-magic.eyes-of-the-dark.name": {
     "en": "Eyes of the Dark",
@@ -1200,8 +1200,8 @@ export const SUBCLASS_FEATURE_MESSAGES = /*#__PURE__*/ defineMessages({
     "zh-CN": "风之魂"
   },
   "callingMaterial.subclassFeature.sorcerer.storm-sorcery.wind-soul.description": {
-    "en": "Immunity to lightning and thunder damage, a 60-foot flying speed, and the ability to grant allies 30 feet of flight for an hour once per long rest.",
-    "zh-CN": "免疫闪电和雷鸣伤害，具有 60 尺飞行速度；每次长休后，还可让盟友获得 30 尺飞行速度，持续一小时。"
+    "en": "Immunity to lightning and thunder damage, a 60-foot flying speed, and the ability to grant allies 30 feet of flight for an hour, once per short or long rest.",
+    "zh-CN": "免疫闪电和雷鸣伤害，获得 60 尺飞行速度；每次短休或长休一次，可让盟友获得 30 尺飞行速度，持续一小时。"
   },
   "callingMaterial.subclassFeature.sorcerer.aberrant-mind.psionic-spells.name": {
     "en": "Psionic Spells",
@@ -2096,8 +2096,8 @@ export const SUBCLASS_FEATURE_MESSAGES = /*#__PURE__*/ defineMessages({
     "zh-CN": "知识祝福"
   },
   "callingMaterial.subclassFeature.cleric.knowledge-domain.blessings-of-knowledge.description": {
-    "en": "Two extra languages and proficiency plus expertise in two knowledge skills.",
-    "zh-CN": "额外学会两种语言，并获得两项知识类技能的熟练和专精。"
+    "en": "Two extra languages, and proficiency plus expertise in two of Arcana, History, Nature and Religion.",
+    "zh-CN": "额外掌握两种语言，并在奥秘、历史、自然和宗教中选择两项，获得熟练和专精。"
   },
   "callingMaterial.subclassFeature.cleric.knowledge-domain.channel-divinity-knowledge-of-the-ages.name": {
     "en": "Channel Divinity: Knowledge of the Ages",
@@ -2184,8 +2184,8 @@ export const SUBCLASS_FEATURE_MESSAGES = /*#__PURE__*/ defineMessages({
     "zh-CN": "自然侍者"
   },
   "callingMaterial.subclassFeature.cleric.nature-domain.acolyte-of-nature.description": {
-    "en": "One druid cantrip and proficiency in one nature-facing skill.",
-    "zh-CN": "学会一个德鲁伊戏法，并获得一项自然相关技能的熟练。"
+    "en": "One druid cantrip and proficiency in Animal Handling, Nature or Survival.",
+    "zh-CN": "掌握一个德鲁伊戏法，并获得驯兽、自然或求生其中一项的熟练。"
   },
   "callingMaterial.subclassFeature.cleric.nature-domain.bonus-proficiency-heavy-armor.name": {
     "en": "Bonus Proficiency (heavy armor)",
@@ -3784,8 +3784,8 @@ export const SUBCLASS_FEATURE_MESSAGES = /*#__PURE__*/ defineMessages({
     "zh-CN": "龙之吐息"
   },
   "callingMaterial.subclassFeature.monk.way-of-the-ascendant-dragon.breath-of-the-dragon.description": {
-    "en": "Replace one Attack-action attack with a 20-foot cone or 30-foot line dealing your martial arts die in damage, twice per long rest or by spending 1 ki.",
-    "zh-CN": "将攻击动作中的一次攻击替换为 20 尺锥形或 30 尺线形吐息，造成武艺骰的伤害。每次长休后可用两次，也可消耗 1 点气使用。"
+    "en": "Replace one Attack-action attack with a 20-foot cone or 30-foot line dealing two rolls of your martial arts die in damage, a proficiency-bonus number of times per long rest, or for 2 ki when none are left.",
+    "zh-CN": "将攻击动作中的一次攻击替换为 20 尺锥形或 30 尺线形吐息，伤害为两次武艺骰之和。每次长休之间可使用的次数等于熟练加值；次数耗尽后可花费 2 点气使用。"
   },
   "callingMaterial.subclassFeature.monk.way-of-the-ascendant-dragon.wings-unfurled.name": {
     "en": "Wings Unfurled",
@@ -3976,8 +3976,8 @@ export const SUBCLASS_FEATURE_MESSAGES = /*#__PURE__*/ defineMessages({
     "zh-CN": "异界魅力"
   },
   "callingMaterial.subclassFeature.ranger.fey-wanderer.otherworldly-glamour.description": {
-    "en": "Add your Wisdom modifier to Charisma checks, and gain proficiency in one Charisma skill.",
-    "zh-CN": "魅力检定加上感知调整值，并获得一项魅力技能的熟练。"
+    "en": "Add your Wisdom modifier to Charisma checks, and gain proficiency in Deception, Performance or Persuasion.",
+    "zh-CN": "魅力检定加上感知调整值，并获得欺瞒、表演或游说其中一项的熟练。"
   },
   "callingMaterial.subclassFeature.ranger.fey-wanderer.fey-wanderer-magic.name": {
     "en": "Fey Wanderer Magic",
@@ -4136,8 +4136,8 @@ export const SUBCLASS_FEATURE_MESSAGES = /*#__PURE__*/ defineMessages({
     "zh-CN": "工具熟练（装甲师）"
   },
   "callingMaterial.subclassFeature.artificer.armorer.tool-proficiency-armorer.description": {
-    "en": "Proficiency with smith's tools.",
-    "zh-CN": "获得铁匠工具熟练。"
+    "en": "Proficiency with heavy armor and smith's tools.",
+    "zh-CN": "获得重甲和铁匠工具熟练。"
   },
   "callingMaterial.subclassFeature.artificer.armorer.arcane-armor.name": {
     "en": "Arcane Armor",
@@ -4192,8 +4192,8 @@ export const SUBCLASS_FEATURE_MESSAGES = /*#__PURE__*/ defineMessages({
     "zh-CN": "魔能炮"
   },
   "callingMaterial.subclassFeature.artificer.artillerist.eldritch-cannon.description": {
-    "en": "A bonus action creates a Tiny or Small cannon that acts on your command: a flamethrower cone, a force ballista that pushes, or a protector that hands out temporary hit points. Once per long rest, or by spending a spell slot.",
-    "zh-CN": "用附赠动作创造听从指挥的微型或小型炮台，可选择锥形喷火器、能推动目标的力场弩炮，或提供临时生命值的保护者。每次长休后可用一次，也可消耗法术位使用。"
+    "en": "An action creates a Tiny or Small cannon, and a bonus action activates it: a flamethrower cone, a force ballista that pushes, or a protector that hands out temporary hit points. Once per long rest, or by spending a spell slot.",
+    "zh-CN": "用一个动作创造一座微型或小型魔能炮，再用附赠动作激活：可选择锥形喷火器、能推开目标的力场弩炮，或给予临时生命值的防护炮。每次长休一次，也可消耗一个法术位再次创造。"
   },
   "callingMaterial.subclassFeature.artificer.artillerist.arcane-firearm.name": {
     "en": "Arcane Firearm",

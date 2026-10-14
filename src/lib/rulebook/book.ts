@@ -1,3 +1,4 @@
+import { compareNames } from "../language/text-logic";
 // The rulebook on the server: the SRD 5.1 pages (srd-5.1.json, built by
 // scripts/import-srd-rulebook.mjs), the contents, one page with its
 // neighbours, and search. The book is read once per process and never
@@ -7,7 +8,7 @@ import { rulebookSearchQueries } from "./search-locales.ts";
 import { rulebookPageDisplay } from "./localized-pages.ts";
 import { bookHeader } from "../i18n/book-ui-presentations.ts";
 import data from "./srd-5.1.json";
-import { buildIndex, localizedSearchHit, queryTerms, searchRulebook, type RulebookIndex } from "./search";
+import { buildIndex, buildIndexInSlices, localizedSearchHit, queryTerms, searchRulebook, type RulebookIndex } from "./search";
 import type {
   ContentsChapter,
   QuickLink,
@@ -134,9 +135,36 @@ export function rulebookSearch(query: string, limit?: number, locale: AppLocale 
   // Scores from aliases with different word counts are not directly comparable.
   // A literal native/canonical title takes priority over related expanded names.
   return { hits: [...byPassage.values()].sort((a, b) => Number(exactTitle(b)) - Number(exactTitle(a))
-    || b.score - a.score || a.title.localeCompare(b.title)).slice(0, limit ?? 40), terms };
+    || b.score - a.score || compareNames(a.title, b.title)).slice(0, limit ?? 40), terms };
 }
 
 export function rulebookPages(): RulebookPage[] {
   return book.pages;
+}
+
+// Coalesce concurrent cold searches, yielding between index slices for both languages.
+let building: Promise<RulebookIndex> | null = null;
+const localizedBuilding = new Map<AppLocale, Promise<RulebookIndex>>();
+export async function rulebookSearchAsync(query: string, limit?: number, locale: AppLocale = "en"): Promise<SearchResponse> {
+  if (!index) {
+    building ??= buildIndexInSlices(book.pages, book.chapters).finally(() => { building = null; });
+    index = await building;
+  }
+  if (locale !== "en" && !localizedIndexes.has(locale)) {
+    let pending = localizedBuilding.get(locale);
+    if (!pending) {
+      const anchors = new Map<string, string[]>();
+      const pages = book.pages.map(page => {
+        const display = rulebookPageDisplay(page, locale);
+        if (display.anchors) anchors.set(page.id, display.anchors);
+        return display.translated ? { ...page, title: display.title, meta: display.meta, md: display.md } : page;
+      });
+      pending = buildIndexInSlices(pages, book.chapters.map(chapter => ({ ...chapter,
+        title: bookHeader("chapter", chapter.id, "title", chapter.title, locale) })), 24, anchors)
+        .finally(() => { localizedBuilding.delete(locale); });
+      localizedBuilding.set(locale, pending);
+    }
+    localizedIndexes.set(locale, await pending);
+  }
+  return rulebookSearch(query, limit, locale);
 }

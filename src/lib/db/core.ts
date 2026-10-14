@@ -1,10 +1,13 @@
 import { openDatabase, type SqliteDatabase } from "./driver.ts";
-import { mkdirSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { mkdirSync, statSync } from "node:fs";
 import path from "node:path";
 import { serverEnv } from "../server-env.ts";
+import { maintenanceState } from "../maintenance.ts";
 import { populateFeatures, populateFeaturesForClasses } from "@/lib/srd/features";
 import { packSubclassExtras } from "@/lib/content/archetype-tables";
 import { extraSubclassOf, mergeExtras, type SubclassExtras } from "@/lib/srd/subclass-tables";
+import { repairedTraining } from "@/lib/srd/subclass-training";
 import { populateResources } from "@/lib/srd/class-resources";
 import { featsAsRun, registerTableFeatReader } from "@/lib/srd/feat-effects";
 import { tableFeatsFrom } from "@/lib/db/table-feats";
@@ -12,7 +15,7 @@ import { registerTableHazardReader } from "@/lib/srd/table-hazards";
 import { tableHazardsFrom } from "@/lib/db/table-hazards";
 
 const dbPath =
-  process.env.SQLITE_DB_PATH || path.join(process.cwd(), "data", "local-roleplay.sqlite");
+  process.env.SQLITE_DB_PATH || path.join(/*turbopackIgnore: true*/ process.cwd(), "data", "local-roleplay.sqlite");
 
 // A table's workshop feats, for the rules that read a feat wherever a sheet
 // is (src/lib/srd/feat-effects.ts tableFeat). The boot resync reads them off
@@ -92,6 +95,10 @@ function ensureSchema(db: SqliteDatabase) {
       created_at TEXT NOT NULL,
       expires_at TEXT NOT NULL
     );
+    -- The expiry sweep (pruneExpiredSessions) and signing a user out
+    -- everywhere (deleteSessionsForUser, and the cascade from users).
+    CREATE INDEX IF NOT EXISTS idx_sessions_expires ON sessions(expires_at);
+    CREATE INDEX IF NOT EXISTS idx_sessions_user ON sessions(user_id);
 
     CREATE TABLE IF NOT EXISTS account_invites (
       code TEXT PRIMARY KEY,
@@ -650,6 +657,34 @@ function ensureSchema(db: SqliteDatabase) {
     CREATE INDEX IF NOT EXISTS idx_workshop_beats_campaign
       ON workshop_beats(campaign_id, created_at);
 
+    -- The prep cards a campaign keeps from every storyboard imported into it
+    -- (issue #301, #302; src/lib/db/prep-cards.ts): each card whole, under
+    -- the id it had on the board, with what it became. The arc's beats and
+    -- planned events carry only a line each and point back here by card_id,
+    -- so the storyteller can open the full text (read_card) and nothing an
+    -- author wrote is lost to a prompt cap. A second import of the same
+    -- board updates the card in place.
+    CREATE TABLE IF NOT EXISTS campaign_prep_cards (
+      id TEXT PRIMARY KEY,
+      campaign_id TEXT NOT NULL REFERENCES campaigns(id) ON DELETE CASCADE,
+      card_id TEXT NOT NULL,
+      source_id TEXT NOT NULL DEFAULT '',
+      source_title TEXT NOT NULL DEFAULT '',
+      kind TEXT NOT NULL,
+      title TEXT NOT NULL,
+      body TEXT NOT NULL DEFAULT '',
+      -- Who and where the card picked, as the names they resolved to.
+      cues TEXT NOT NULL DEFAULT '',
+      -- The condition on the route into it, for a moment.
+      trigger TEXT NOT NULL DEFAULT '',
+      -- beat, moment, lore, quest, fight, secret, or unplaced (a scene the
+      -- arc had no room for; still searchable, still openable).
+      role TEXT NOT NULL DEFAULT 'unplaced',
+      created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL,
+      UNIQUE (campaign_id, card_id)
+    );
+
     -- WorldForge's half of a world (src/lib/worldforge/model.ts): types and
     -- their fields, links, calendars, events, secrets, folders, the atlas,
     -- and what each Cast member, place, faction and lore entry carries that
@@ -900,6 +935,25 @@ function ensureSchema(db: SqliteDatabase) {
     CREATE INDEX IF NOT EXISTS idx_rule_chunks
       ON rule_chunks(campaign_id, chunk_index);
 
+    -- Coordinated actions (issue 254): a party's plan staged together
+    -- outside a fight and resolved as one DM beat
+    -- (src/lib/dm/coordination.ts). entries_json holds every character's
+    -- draft and state; resolved_seq is the first line the plan posted.
+    CREATE TABLE IF NOT EXISTS coordination_phases (
+      id TEXT PRIMARY KEY,
+      campaign_id TEXT NOT NULL REFERENCES campaigns(id) ON DELETE CASCADE,
+      status TEXT NOT NULL DEFAULT 'drafting'
+        CHECK (status IN ('drafting','resolved','cancelled')),
+      opened_by TEXT NOT NULL,
+      prompt TEXT NOT NULL DEFAULT '',
+      entries_json TEXT NOT NULL DEFAULT '[]',
+      created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL,
+      resolved_seq INTEGER,
+      outcome TEXT NOT NULL DEFAULT ''
+    );
+    CREATE INDEX IF NOT EXISTS idx_coordination_campaign ON coordination_phases(campaign_id, created_at);
+
     -- DM-proposed inventory/gold changes awaiting the owning player's answer
     -- (game setting inventoryApprovals). The original tool args are stored so
     -- approval replays the exact mutation through applyDmMutation.
@@ -1128,9 +1182,10 @@ function ensureSchema(db: SqliteDatabase) {
       name TEXT NOT NULL,
       -- [{monster, count}], the parsed form of the DM's shorthand.
       enemies_json TEXT NOT NULL DEFAULT '[]',
-      -- The battlefield hint start_encounter takes, plus the map studio's
-      -- saved seed/theme/ambient/size, or nulls to let the generator read
-      -- the scene as it always has.
+      -- A note on where the fight happens, for whoever runs it. The board
+      -- comes from map_json: the kind of ground the fight is on, and the
+      -- map studio's saved map, seed, theme, ambient and size, or nulls to
+      -- let the generator draw the place the party is in.
       battlefield TEXT NOT NULL DEFAULT '',
       map_json TEXT NOT NULL DEFAULT '{}',
       notes TEXT NOT NULL DEFAULT '',
@@ -1283,6 +1338,17 @@ function ensureSchema(db: SqliteDatabase) {
     // A trade between two players (11.2): who the offer is made to. Empty
     // for the DM's own offers.
     ["to_character_id", `TEXT NOT NULL DEFAULT ''`],
+    // How settling it went, for the DM's next turn (issue 239): what
+    // applying it left on the sheet, or "failed: <why>" when approval could
+    // not apply and the row was closed as declined.
+    ["outcome", `TEXT NOT NULL DEFAULT ''`],
+  ]);
+
+  addColumns("campaign_members", [
+    // This member's own order for the Party panel's cards (issue 240): a
+    // JSON list of sheet ids, first card first. Empty means the campaign's
+    // own order. Display only; initiative and formation never read it.
+    ["party_order_json", `TEXT NOT NULL DEFAULT ''`],
   ]);
 
   addColumns("campaigns", [
@@ -1498,6 +1564,10 @@ function ensureSchema(db: SqliteDatabase) {
     ["companion_kind", `TEXT`],
     // Short personality/voice brief the DM roleplays from.
     ["personality", `TEXT NOT NULL DEFAULT ''`],
+    // Which battle cards its player keeps in the visible Hand, and in what
+    // order (src/lib/battlemap/hand-layout.ts, issue 231); NULL = the
+    // automatic split. A preference of the player's, never a rule.
+    ["hand_layout_json", `TEXT`],
     // 1 = the `ac` column is a hand-set number the AC engine must not
     // recompute (src/lib/srd/armor.ts). Sheets created before the engine are
     // backfilled to 1 so no existing character's armor class changes under
@@ -1589,6 +1659,15 @@ function ensureSchema(db: SqliteDatabase) {
     // the prompt shows it to the model and the turn can check it was
     // resolved. Null on typed actions and on messages written before it.
     ["intent_json", `TEXT`],
+    // A system line's icon, stored by the code that writes the line
+    // (src/lib/system-glyphs.ts) rather than read from its words, which only
+    // worked in English. Null on other messages and on lines written before
+    // it, which draw the neutral bell.
+    ["glyph", `TEXT`],
+    // Who speaks each quoted line of a DM message ([{ line, speaker }],
+    // src/lib/dm/speech.ts SpokenLine), decided when the message is written.
+    // Null on messages written before it, whose lines stay the narrator's.
+    ["speech_json", `TEXT`],
   ]);
 
   addColumns("dm_turns", [
@@ -2063,6 +2142,9 @@ function ensureSchema(db: SqliteDatabase) {
     // portrait exists (src/lib/placeholders.ts) and is shown on the cast
     // list; no rule reads it.
     ["role", `TEXT NOT NULL DEFAULT ''`],
+    // One of the builder's genders or '' (src/lib/gender.ts): what the voice
+    // cast and the speech reader's pronouns read, never their prose.
+    ["gender", `TEXT NOT NULL DEFAULT ''`],
   ]);
 
   addColumns("library_characters", [
@@ -2174,7 +2256,7 @@ function ensureSchema(db: SqliteDatabase) {
   // such owner as the DM. Idempotent: a repaired row no longer matches.
   repairWorkshopDmSeats(db);
 
-  // Connected agents (docs/harness-mcp-plan.md 7): a player's own agent
+  // Connected agents (docs/archive/harness-mcp-plan.md 7): a player's own agent
   // session (Claude Code, Codex, any MCP client) acting as that player over
   // /api/mcp. Only the token's hash is kept, the same rule as sessions.
   // scopes_json is the list of tool groups the player ticked.
@@ -2266,6 +2348,21 @@ function ensureSchema(db: SqliteDatabase) {
     CREATE INDEX IF NOT EXISTS idx_usage_events_campaign ON usage_events(campaign_id, at);
     CREATE INDEX IF NOT EXISTS idx_usage_events_user ON usage_events(user_id, at);
 
+    -- Who a stored picture or document was made for (src/lib/media-access.ts):
+    -- the account that uploaded or asked for it and the campaign or workshop
+    -- it was made in, so it can be shown before any row names it (a portrait
+    -- previewed before the sheet is saved). Plain columns: the file can
+    -- outlive both.
+    CREATE TABLE IF NOT EXISTS media_files (
+      path TEXT PRIMARY KEY,
+      user_id TEXT,
+      campaign_id TEXT,
+      created_at TEXT NOT NULL
+    );
+
+    -- The campaigns one account belongs to, asked on every picture it opens.
+    CREATE INDEX IF NOT EXISTS idx_campaign_members_user ON campaign_members(user_id);
+
     -- Where a row of prep came from (src/lib/db/content-origins.ts): the
     -- campaign or workshop it was copied out of and the row it was copied
     -- from, or 'bundle' and the portable key it arrived under. It is what
@@ -2284,10 +2381,42 @@ function ensureSchema(db: SqliteDatabase) {
     );
     CREATE INDEX IF NOT EXISTS idx_content_origins_origin
       ON content_origins(campaign_id, origin_id, origin_row_id);
+
+    -- Dice a player is owed while building a character, thrown and kept by
+    -- the server (src/lib/db/creation-rolls.ts). scope is '' for the
+    -- library's ability six, a campaign id for a table with its own reroll
+    -- rule, and "<campaign id>:<class>" for a table's rolled starting
+    -- wealth. No foreign keys: deleteCampaign and purgeAccount clear the
+    -- rows by hand. That module used to make the table on first use, with
+    -- this same definition, so a database that has it already is unchanged.
+    CREATE TABLE IF NOT EXISTS creation_rolls (
+      user_id TEXT NOT NULL,
+      kind TEXT NOT NULL,
+      scope TEXT NOT NULL DEFAULT '',
+      payload_json TEXT NOT NULL,
+      created_at TEXT NOT NULL,
+      PRIMARY KEY (user_id, kind, scope)
+    );
+
+    -- The last attack against each character, for the reactions that answer
+    -- it (src/lib/dm/last-hit.ts). No foreign keys: deleteCampaign clears a
+    -- table's rows by hand. That module used to make the table on first use,
+    -- with this same definition, so a database that has it already is
+    -- unchanged.
+    CREATE TABLE IF NOT EXISTS last_hits (
+      campaign_id TEXT NOT NULL,
+      character_id TEXT NOT NULL,
+      payload_json TEXT NOT NULL,
+      created_at TEXT NOT NULL,
+      PRIMARY KEY (campaign_id, character_id)
+    );
   `);
   // Databases that created player_webhooks before receivers could carry
   // their own Authorization value or extra headers (docs/player-webhooks.md).
   addColumns("player_webhooks", [["authorization_header", `TEXT`], ["extra_headers", `TEXT`]]);
+  // How many calls a row stands for: one, until the retention pass merges
+  // old rows into one per month (src/lib/ops/retention.ts).
+  addColumns("usage_events", [["calls", `INTEGER NOT NULL DEFAULT 1`]]);
 }
 
 // Widens battle_tokens.kind to accept the DM's own board furniture.
@@ -2649,6 +2778,13 @@ function bootSubclassExtras(db: SqliteDatabase, campaignId: string, cache: Map<s
   } catch {
     authors = [];
   }
+  const extras = bootExtrasFor(db, authors);
+  cache.set(campaignId, extras);
+  return extras;
+}
+
+// The workshop subclasses of these authors, then the pack's.
+function bootExtrasFor(db: SqliteDatabase, authors: string[]): SubclassExtras {
   const own: SubclassExtras = {};
   for (const author of [...new Set(authors)]) {
     const entries = db
@@ -2663,25 +2799,110 @@ function bootSubclassExtras(db: SqliteDatabase, campaignId: string, cache: Map<s
       }
     }
   }
-  const extras = mergeExtras(own, packSubclassExtras());
-  cache.set(campaignId, extras);
-  return extras;
+  return mergeExtras(own, packSubclassExtras());
+}
+
+// The boot resync below re-derives every sheet, and its answer depends only
+// on the rules this build carries, the content pack, the workshop subclasses
+// and feats on this server, and who sits in each campaign's DM seats. A
+// restart of the same build over the same data would rewrite nothing, yet it
+// read and re-derived every sheet before the first request. So a production
+// boot records what it resynced against and the next boot skips the pass
+// when nothing it depends on has changed. Development and test runs (no
+// build stamp) resync every time, as before, since their code changes
+// without a new build.
+const SHEET_RESYNC_KEY = "sheet_resync_fingerprint";
+
+export function sheetResyncFingerprint(
+  db: SqliteDatabase,
+  // Read member by member: next.config.ts inlines the build stamps into the
+  // bundle only where the code names them, so process.env as a whole would
+  // never carry them.
+  env: { NODE_ENV?: string; ODM_BUILD_TIME?: string; ODM_BUILD_COMMIT?: string; CONTENT_DB_PATH?: string } = {
+    NODE_ENV: process.env.NODE_ENV,
+    ODM_BUILD_TIME: process.env.ODM_BUILD_TIME,
+    ODM_BUILD_COMMIT: process.env.ODM_BUILD_COMMIT,
+    CONTENT_DB_PATH: process.env.CONTENT_DB_PATH,
+  },
+): string | null {
+  if (env.NODE_ENV !== "production" || !env.ODM_BUILD_TIME) {
+    return null;
+  }
+  const hash = createHash("sha256");
+  hash.update(`build ${env.ODM_BUILD_COMMIT ?? ""} ${env.ODM_BUILD_TIME}\n`);
+  try {
+    const pack = statSync(
+      env.CONTENT_DB_PATH || path.join(/*turbopackIgnore: true*/ process.cwd(), "data", "content", "open5e.sqlite"),
+    );
+    hash.update(`pack ${pack.size} ${pack.mtimeMs}\n`);
+  } catch {
+    hash.update("pack none\n");
+  }
+  const homebrew = db
+    .prepare(
+      `SELECT COUNT(*) AS n, MAX(updated_at) AS at FROM homebrew_entries WHERE kind IN ('archetype', 'feat')`,
+    )
+    .get() as { n: number; at: string | null };
+  hash.update(`homebrew ${homebrew.n} ${homebrew.at ?? ""}\n`);
+  const seats = db
+    .prepare(
+      `SELECT id, owner_user_id, human_dm_user_id, assistant_dm_user_id FROM campaigns ORDER BY id`,
+    )
+    .all() as Array<Record<string, string | null>>;
+  for (const seat of seats) {
+    hash.update(`${seat.id} ${seat.owner_user_id} ${seat.human_dm_user_id ?? ""} ${seat.assistant_dm_user_id ?? ""}\n`);
+  }
+  return hash.digest("hex");
 }
 
 function backfillSheetResources(db: SqliteDatabase) {
+  const fingerprint = sheetResyncFingerprint(db);
+  if (fingerprint) {
+    const done = db.prepare(`SELECT value_json FROM app_settings WHERE key = ?`).get(SHEET_RESYNC_KEY) as
+      | { value_json: string }
+      | undefined;
+    if (done && parseJson<{ fingerprint?: string }>(done.value_json, {}).fingerprint === fingerprint) {
+      return;
+    }
+  }
+  resyncSheets(db);
+  if (fingerprint) {
+    db.prepare(
+      `INSERT INTO app_settings (key, value_json, updated_at) VALUES (?, ?, ?)
+       ON CONFLICT(key) DO UPDATE SET value_json = excluded.value_json, updated_at = excluded.updated_at`,
+    ).run(SHEET_RESYNC_KEY, JSON.stringify({ fingerprint }), nowIso());
+  }
+}
+
+// Every sheet and library character re-derived against this build's rules.
+// Exported so scripts/test-subclass-training.mjs can drive it against a row
+// it has broken on purpose, as the boot does.
+export function resyncSheets(db: SqliteDatabase) {
   resyncingDb = db;
   try {
-    resyncSheetResources(db);
+    const started = Date.now();
+    const { checked, changed } = resyncSheetResources(db);
+    if (checked > 0) {
+      console.log(`[db] resynced ${checked} character sheets against this build's rules (${changed} changed) in ${Date.now() - started} ms`);
+    }
+    const library = resyncLibraryTraining(db);
+    if (library > 0) {
+      console.log(`[db] added subclass training to ${library} library characters`);
+    }
   } finally {
     resyncingDb = null;
   }
 }
 
-function resyncSheetResources(db: SqliteDatabase) {
+// Rows written per transaction: one commit per sheet made a large world's
+// boot pay a journal write for every character.
+const RESYNC_BATCH = 200;
+
+function resyncSheetResources(db: SqliteDatabase): { checked: number; changed: number } {
   const sheets = db
     .prepare(
       `SELECT id, campaign_id, class, subclass, race, level, abilities_json, features_json, resources_json,
-              classes_json, feats_json
+              classes_json, feats_json, proficiencies_json
          FROM character_sheets`,
     )
     .all() as Array<{
@@ -2696,14 +2917,22 @@ function resyncSheetResources(db: SqliteDatabase) {
     resources_json: string | null;
     classes_json: string | null;
     feats_json: string | null;
+    proficiencies_json: string;
   }>;
   if (!sheets.length) {
-    return;
+    return { checked: 0, changed: 0 };
   }
   const update = db.prepare(
-    `UPDATE character_sheets SET features_json = ?, resources_json = ? WHERE id = ?`,
+    `UPDATE character_sheets SET features_json = ?, resources_json = ?, proficiencies_json = ? WHERE id = ?`,
   );
   const extrasByCampaign = new Map<string, SubclassExtras>();
+  const pending: Array<[string, string, string, string]> = [];
+  let changed = 0;
+  const flush = db.transaction((rows: Array<[string, string, string, string]>) => {
+    for (const [features, resources, proficiencies, id] of rows) {
+      update.run(features, resources, proficiencies, id);
+    }
+  });
   for (const row of sheets) {
     try {
       const existingFeatures = JSON.parse(row.features_json ?? "[]") as Parameters<
@@ -2742,16 +2971,93 @@ function resyncSheetResources(db: SqliteDatabase) {
       );
       const nextFeatures = JSON.stringify(features);
       const nextResources = JSON.stringify(resources);
-      if (nextFeatures !== row.features_json || nextResources !== row.resources_json) {
-        update.run(nextFeatures, nextResources, row.id);
+      // The training its subclass grants, added where the sheet was written
+      // without it (issue 251). Only ever adds.
+      const training = repairedTraining(
+        { proficiencies: JSON.parse(row.proficiencies_json), abilities },
+        multiclass ? classes : [{ id: row.class, level: row.level, subclass: row.subclass ?? "" }],
+        extras,
+      );
+      const nextProficiencies = training ? JSON.stringify(training) : row.proficiencies_json;
+      if (nextFeatures !== row.features_json || nextResources !== row.resources_json || nextProficiencies !== row.proficiencies_json) {
+        pending.push([nextFeatures, nextResources, nextProficiencies, row.id]);
+        changed += 1;
+        if (pending.length >= RESYNC_BATCH) {
+          flush(pending.splice(0));
+        }
       }
     } catch {
       // Unparseable rows stay untouched; the sheet UI can still fix them.
     }
   }
+  if (pending.length) {
+    flush(pending.splice(0));
+  }
+  return { checked: sheets.length, changed };
+}
+
+// The library's characters, the same repair: a stored Life Domain cleric
+// gains the heavy armor its feature names before it next comes to a table.
+// Returns how many rows changed.
+export function resyncLibraryTraining(db: SqliteDatabase): number {
+  const rows = db
+    .prepare(`SELECT id, user_id, class, subclass, level, sheet_json FROM library_characters WHERE subclass != '' OR sheet_json LIKE '%"classes"%'`)
+    .all() as Array<{ id: string; user_id: string; class: string; subclass: string; level: number; sheet_json: string }>;
+  const update = db.prepare(`UPDATE library_characters SET sheet_json = ? WHERE id = ?`);
+  const extrasByUser = new Map<string, SubclassExtras>();
+  let changed = 0;
+  for (const row of rows) {
+    try {
+      const sheet = JSON.parse(row.sheet_json) as {
+        proficiencies?: Parameters<typeof repairedTraining>[0]["proficiencies"];
+        abilities?: Record<string, number>;
+        featChoices?: Parameters<typeof repairedTraining>[0]["featChoices"];
+        classes?: Array<{ id: string; level: number; subclass?: string }>;
+      };
+      if (!sheet.proficiencies) {
+        continue;
+      }
+      let extras = extrasByUser.get(row.user_id);
+      if (!extras) {
+        extras = bootExtrasFor(db, [row.user_id]);
+        extrasByUser.set(row.user_id, extras);
+      }
+      const classes =
+        Array.isArray(sheet.classes) && sheet.classes.length > 1
+          ? sheet.classes
+          : [{ id: row.class, level: row.level, subclass: row.subclass }];
+      const training = repairedTraining(
+        { proficiencies: sheet.proficiencies, abilities: sheet.abilities, featChoices: sheet.featChoices },
+        classes,
+        extras,
+      );
+      if (training) {
+        update.run(JSON.stringify({ ...sheet, proficiencies: training }), row.id);
+        changed += 1;
+      }
+    } catch {
+      // An unreadable row stays as it is.
+    }
+  }
+  return changed;
 }
 
 let plaintextWarned = false;
+
+// The database's schema revision, kept in SQLite's user_version header field.
+// Bump it with a schema change older code would misread or damage: a table
+// rebuilt or dropped, rows moved elsewhere, a column whose meaning changed.
+// A table or column older code simply ignores needs no bump. A database
+// stamped past this number was written by a newer server, and this one
+// refuses to open it rather than run its schema sync over tables it does not
+// understand; going back across a bump takes the backup made before it.
+// Servers before revision 1 never read the field.
+export const SCHEMA_REVISION = 1;
+
+function schemaRevisionOf(db: SqliteDatabase): number {
+  const rows = db.pragma("user_version") as Array<{ user_version?: unknown }>;
+  return Number(rows?.[0]?.user_version) || 0;
+}
 
 function requireDbKey() {
   const key = serverEnv("DB_ENCRYPTION_KEY");
@@ -2771,7 +3077,30 @@ function requireDbKey() {
 // includes a full character_sheets backfill and table_info sweeps.
 let schemaEnsured = false;
 
+// Closes the world's database for good in this process: a live restore is
+// about to replace the file (src/lib/ops/backup.ts), and the next open must
+// be a fresh process that reads the restored one.
+export function closeDatabaseForRestore(): void {
+  const db = globalThis.__localRoleplayDb;
+  globalThis.__localRoleplayDb = undefined;
+  schemaEnsured = false;
+  try {
+    db?.close();
+  } catch (error) {
+    console.error("[db] closing the database for a restore failed", error);
+  }
+}
+
+// The database file, for the storage panel's sizes and free-space check.
+export function databaseFilePath(): string {
+  return dbPath;
+}
+
 export function getDatabase() {
+  const maintenance = maintenanceState();
+  if (maintenance) {
+    throw new Error(`The server is in maintenance (${maintenance.reason}); restart it to continue.`);
+  }
   if (globalThis.__localRoleplayDb) {
     if (!schemaEnsured) {
       ensureSchema(globalThis.__localRoleplayDb);
@@ -2794,8 +3123,9 @@ export function getDatabase() {
       `[db] ${db.engine} SQLite engine cannot encrypt; ${dbPath} is stored unencrypted.`,
     );
   }
+  let tables = 0;
   try {
-    db.prepare("SELECT count(*) FROM sqlite_master").get();
+    tables = Number(Object.values(db.prepare("SELECT count(*) FROM sqlite_master").get() as object)[0]) || 0;
   } catch {
     db.close();
     throw new Error(
@@ -2806,6 +3136,21 @@ export function getDatabase() {
             "Set ODM_SQLITE_DRIVER=native on a host with the native module.",
     );
   }
+  // Checked before anything below writes to the file.
+  const revision = schemaRevisionOf(db);
+  if (revision > SCHEMA_REVISION) {
+    db.close();
+    throw new Error(
+      `${dbPath} was saved by a newer version of Open Dungeon Master (database revision ${revision}; ` +
+        `this version reads up to ${SCHEMA_REVISION}). Update the app or server to open it; nothing in it was changed.`,
+    );
+  }
+  // A new database hands the pages its deletes free back to the disk a
+  // little at a time (src/lib/ops/retention.ts). Only possible before the
+  // first table; an older file switches when the admin compacts it.
+  if (tables === 0) {
+    db.pragma("auto_vacuum = INCREMENTAL");
+  }
   db.pragma("journal_mode = WAL");
   // Under WAL, NORMAL only fsyncs at checkpoints, so a persisted event no
   // longer waits on the disk. The file cannot corrupt; a power cut can lose
@@ -2814,6 +3159,9 @@ export function getDatabase() {
   db.pragma("foreign_keys = ON");
   ensureSchema(db);
   schemaEnsured = true;
+  if (revision < SCHEMA_REVISION) {
+    db.pragma(`user_version = ${SCHEMA_REVISION}`);
+  }
 
   globalThis.__localRoleplayDb = db;
   return db;

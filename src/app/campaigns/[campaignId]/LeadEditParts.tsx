@@ -13,6 +13,7 @@ import { casterViewsOf, withCasterViews } from "@/lib/srd/spell-prep";
 import type { CharacterSheet, EquipmentItem } from "@/lib/schemas/sheet";
 
 export {
+  editedSpellSlots,
   equipmentFrom,
   highestStoredSlot,
   itemRowsOf,
