@@ -9,6 +9,7 @@ import { normalizeGm, normalizeSafety } from "@/lib/dm/safety-logic";
 export function SafetyFields({ draft, patch }: StepProps) {
   return (
     <SafetyToneFields
+      speechLocale={draft.locale}
       safety={normalizeSafety(draft.safety)}
       gm={normalizeGm(draft.gm)}
       ttsVoice={draft.ttsVoice}

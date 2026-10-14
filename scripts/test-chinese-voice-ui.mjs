@@ -24,6 +24,22 @@ const channelsRoute = await world.route("campaigns/[campaignId]/voice/channels")
 const req = (body) => new Request("http://test/", body ? { method: "POST", body: JSON.stringify(body) } : {});
 const fakePeer = (user) => ({ userId: user.id, username: user.username, joinedAt: new Date().toISOString(), channelId: TABLE_CHANNEL_ID, muted: false, forceMuted: false, handRaisedAt: null, sayRange: "normal", sendTransport: null, recvTransport: null, producer: { closed: false }, consumers: new Map() });
 
+await test("personality preview receives campaign language at every entry point", () => {
+  for (const [file, expression] of [["src/app/create-campaign/SafetyFields.tsx", "draft.locale"], ["src/app/campaigns/[campaignId]/GameSettingsPanel.tsx", "settings.locale"]]) {
+    const ast = ts.createSourceFile(file, fs.readFileSync(path.join(root, file), "utf8"), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+    let found = false;
+    function visit(node) {
+      if (ts.isJsxSelfClosingElement(node) && node.tagName.getText(ast) === "SafetyToneFields") {
+        found = true;
+        const prop = node.attributes.properties.find(p => ts.isJsxAttribute(p) && p.name.getText(ast) === "speechLocale");
+        assert.equal(prop?.initializer?.expression?.getText(ast), expression);
+      }
+      ts.forEachChild(node, visit);
+    }
+    visit(ast); assert.ok(found);
+  }
+});
+
 await test("stock table translation requires both engine ID and original name", () => {
   const stock = { id: TABLE_CHANNEL_ID, name: TABLE_CHANNEL_NAME };
   assert.equal(voiceChannelLabel(stock, "en"), TABLE_CHANNEL_NAME);

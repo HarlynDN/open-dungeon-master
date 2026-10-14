@@ -13,7 +13,7 @@ const player = world.addUser("reader");
 const other = world.addUser("another-reader");
 for (const user of [player, other]) assert.ok(!("error" in joinByInviteCode(user.id, world.campaign().inviteCode)));
 const { CALENDAR_PRESETS, formatDate, describeInstant, toInstant } = await import("../src/lib/dm/calendar.ts");
-const { calendarDate, calendarDescription, calendarPresetLabel, calendarMonthLabel } = await import("../src/lib/i18n/calendar-presentations.ts");
+const { calendarDate, calendarDescription, calendarPresetLabel, calendarMonthLabel, calendarWeekdayLabel, calendarEditedWeekdays } = await import("../src/lib/i18n/calendar-presentations.ts");
 const { copyLoreTitle, parseCommaList, sessionWhenLabel, loreCategoryLabel } = await import("../src/lib/i18n/prep-presentations.ts");
 const { readUiResponse, uiRequestError, requestErrorText, loadErrorText } = await import("../src/lib/i18n/api-errors.ts");
 const context = { params: Promise.resolve({ campaignId: world.campaignId }) };
@@ -23,6 +23,33 @@ const eventRoute = await world.route("campaigns/[campaignId]/calendar/events");
 const loreRoute = await world.route("campaigns/[campaignId]/lore");
 const rulesRoute = await world.route("campaigns/[campaignId]/rules");
 const scheduleRoute = await world.route("campaigns/[campaignId]/schedule");
+
+await test("localized calendar editor preserves canonical values through save and reload", async () => {
+  world.signIn(world.owner);
+  const original = structuredClone(CALENDAR_PRESETS[0]);
+  const display = original.weekdays.map((_, index) => calendarWeekdayLabel(original, index, "zh-CN"));
+  assert.ok(display.every(name => /\p{Script=Han}/u.test(name)));
+  assert.deepEqual(calendarEditedWeekdays(original, display, "zh-CN"), original.weekdays);
+  const draft = structuredClone(original);
+  draft.months[0].name = "我的冬月";
+  draft.weekdays = calendarEditedWeekdays(original, display.map((name, i) => i === 1 ? "集市日" : name), "zh-CN");
+  const saved = await clockRoute.POST(request("POST", { do: "calendar", definition: draft }), context);
+  assert.equal(saved.status, 200);
+  const reload = (await (await clockRoute.GET(request("GET"), context)).json()).clock.calendar;
+  assert.equal(reload.id, original.id);
+  assert.equal(reload.months[0].name, "我的冬月");
+  assert.equal(calendarMonthLabel(reload, 0, "en"), "我的冬月");
+  assert.equal(calendarMonthLabel(reload, 1, "en"), original.months[1].name);
+  assert.equal(calendarMonthLabel(reload, 1, "zh-CN"), "霜月");
+  assert.equal(calendarWeekdayLabel(reload, 1, "en"), "集市日");
+  assert.equal(calendarWeekdayLabel(reload, 0, "en"), original.weekdays[0]);
+  assert.equal(calendarWeekdayLabel(reload, 0, "zh-CN"), display[0]);
+  await clockRoute.POST(request("POST", { do: "calendar", definition: original }), context);
+  const unchanged = (await (await clockRoute.GET(request("GET"), context)).json()).clock.calendar;
+  assert.deepEqual(unchanged.months, original.months);
+  assert.deepEqual(unchanged.weekdays, original.weekdays);
+  assert.equal(unchanged.name, original.name);
+});
 
 await test("calendar display preserves engine dates, English tool prose and edited names", () => {
   const before = structuredClone(CALENDAR_PRESETS);

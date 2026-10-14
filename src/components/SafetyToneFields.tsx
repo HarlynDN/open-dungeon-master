@@ -1,6 +1,8 @@
 "use client";
 
 import { parseSafetyList, personalityPresentation } from "@/lib/i18n/settings-presentations";
+import { DEFAULT_LOCALE, type AppLocale } from "@/lib/i18n/locales";
+import { localeNarratorVoice } from "@/lib/tts-locale";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
@@ -55,6 +57,7 @@ export function SafetyToneFields({
   onGm,
   onVoice,
   showPresets = true,
+  speechLocale = DEFAULT_LOCALE,
 }: {
   safety: SafetySettings;
   gm: GmSettings;
@@ -63,6 +66,7 @@ export function SafetyToneFields({
   onGm: (next: GmSettings) => void;
   onVoice?: (voice: string) => void;
   showPresets?: boolean;
+  speechLocale?: AppLocale;
 }) {
   const [presets, setPresets] = useState<Personality[]>([]);
   const { locale, t } = useLocale();
@@ -132,7 +136,7 @@ export function SafetyToneFields({
           <p className="mb-1 text-xs uppercase tracking-wide text-stone-500">{t("safety.personality")}</p>
           <div className="stagger-pop flex flex-wrap items-center gap-1.5">
             {presets.map((preset) => {
-              const active = preset.gm.strictness === gm.strictness && preset.gm.tone.join() === gm.tone.join() && (!ttsVoice || preset.ttsVoice === ttsVoice);
+              const active = preset.gm.strictness === gm.strictness && preset.gm.tone.join() === gm.tone.join() && (speechLocale !== "en" || !ttsVoice || preset.ttsVoice === ttsVoice);
               return (
                 <button
                   key={preset.id}
@@ -141,7 +145,7 @@ export function SafetyToneFields({
                   aria-pressed={active}
                   onClick={() => {
                     onGm({ strictness: preset.gm.strictness, tone: [...preset.gm.tone] });
-                    onVoice?.(preset.ttsVoice);
+                    onVoice?.(speechLocale === "en" ? preset.ttsVoice : localeNarratorVoice(ttsVoice ?? "", speechLocale));
                   }}
                   className={cn(chip, active ? on : off)}
                 >
@@ -149,7 +153,7 @@ export function SafetyToneFields({
                 </button>
               );
             })}
-            {ttsVoice ? <VoicePreviewButton voice={ttsVoice} /> : null}
+            {ttsVoice ? <VoicePreviewButton voice={speechLocale === "en" ? ttsVoice : localeNarratorVoice(ttsVoice, speechLocale)} speechLocale={speechLocale} /> : null}
           </div>
         </div>
       ) : null}

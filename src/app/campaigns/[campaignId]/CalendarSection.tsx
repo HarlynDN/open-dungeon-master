@@ -2,7 +2,7 @@
 
 import { createTranslator } from "@/lib/i18n/translator";
 import { DEFAULT_LOCALE, type AppLocale } from "@/lib/i18n/locales";
-import { calendarDate, calendarDescription, calendarMonthLabel, calendarPresetLabel } from "@/lib/i18n/calendar-presentations";
+import { calendarDate, calendarWeekdayLabel, calendarEditedWeekdays, calendarDescription, calendarMonthLabel, calendarPresetLabel } from "@/lib/i18n/calendar-presentations";
 import { parseCommaList } from "@/lib/i18n/prep-presentations";
 import { loadErrorText, readUiResponse, requestErrorText, uiRequestError, type UiRequestError } from "@/lib/i18n/api-errors";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
@@ -99,7 +99,7 @@ export function CalendarSection({ campaignId, campaignLocale = DEFAULT_LOCALE }:
   async function applyPreset(preset: string) { await changeCalendar({ do: "calendar", preset }); }
   async function saveDefinition() {
     if (!draft || !draft.months.length) return;
-    await changeCalendar({ do: "calendar", definition: { ...draft, id: "custom", name: draft.name || contentT("calendar.customName") } });
+    await changeCalendar({ do: "calendar", definition: { ...draft, name: draft.name || contentT("calendar.customName") } });
   }
   async function addEvent() {
     if (!eventDraft.title.trim()) return;
@@ -146,7 +146,7 @@ export function CalendarSection({ campaignId, campaignLocale = DEFAULT_LOCALE }:
       </div>
       <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 text-xs text-stone-400">
         <label className="flex min-w-[9rem] flex-1 items-center gap-1.5">
-           {t("calendar.name")} <input value={draft.name} onChange={(event) => update({ name: event.target.value })} maxLength={60} className={cn(field, "min-w-0 flex-1")} />
+           {t("calendar.name")} <input value={calendarPresetLabel(draft, locale)} onChange={(event) => update({ name: event.target.value })} maxLength={60} className={cn(field, "min-w-0 flex-1")} />
         </label>
         <label className="flex items-center gap-1.5">
           <span className="text-stone-500">{t("calendar.yearSuffix")}</span>
@@ -157,7 +157,7 @@ export function CalendarSection({ campaignId, campaignLocale = DEFAULT_LOCALE }:
         <SectionHead title={t("calendar.months")} glyph="daypart-morning" level="h4" aside={draft.months.length} />
         {draft.months.map((month, index) => (
           <div key={index} className="group flex items-center gap-1.5">
-            <input value={month.name} aria-label={t("calendar.monthName", { index: index + 1 })} onChange={(event) => update({ months: draft.months.map((entry, at) => (at === index ? { ...entry, name: event.target.value } : entry)) })} maxLength={40} className={cn(field, "min-w-0 flex-1")} />
+            <input value={calendarMonthLabel(draft, index, locale)} aria-label={t("calendar.monthName", { index: index + 1 })} onChange={(event) => update({ months: draft.months.map((entry, at) => (at === index ? { ...entry, name: event.target.value } : entry)) })} maxLength={40} className={cn(field, "min-w-0 flex-1")} />
             <NumberStepper size="sm" min={1} max={400} value={month.days} label={t("calendar.daysIn", { name: calendarMonthLabel(draft, index, locale) || t("calendar.monthFallback", { index: index + 1 }) })} onChange={(days) => update({ months: draft.months.map((entry, at) => (at === index ? { ...entry, days: days || 1 } : entry)) })} />
             <KitButton tone="iconDanger" always aria-label={t("calendar.removeMonth")} disabled={draft.months.length <= 1} onClick={() => update({ months: draft.months.filter((_, at) => at !== index) })} className="disabled:opacity-30">
               <Trash2 className="size-3.5" />
@@ -170,7 +170,7 @@ export function CalendarSection({ campaignId, campaignLocale = DEFAULT_LOCALE }:
         ) : null}
       </div>
       <label className="block text-xs text-stone-400">
-         {t("calendar.weekdays")} <input value={draft.weekdays.join(", ")} onChange={(event) => update({ weekdays: parseCommaList(event.target.value, 12) })} className={cn(panelField, "mt-1")} />
+         {t("calendar.weekdays")} <input value={draft.weekdays.map((_, index) => calendarWeekdayLabel(draft, index, locale)).join(", ")} onChange={(event) => update({ weekdays: calendarEditedWeekdays(draft, parseCommaList(event.target.value, 12), locale) })} className={cn(panelField, "mt-1")} />
       </label>
       <div className="space-y-1.5">
         <SectionHead title={t("calendar.moons")} glyph="daypart-night" level="h4" aside={moons.length || null} />

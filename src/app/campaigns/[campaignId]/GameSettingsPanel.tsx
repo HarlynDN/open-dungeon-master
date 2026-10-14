@@ -548,6 +548,7 @@ export function GameSettingsPanel({
         </div>
         <div className="rounded-lg border border-amber-500/15 bg-stone-950/40 p-2.5">
           <SafetyToneFields
+            speechLocale={settings.locale}
             safety={settings.safety}
             gm={settings.gm}
             ttsVoice={settings.ttsVoice}

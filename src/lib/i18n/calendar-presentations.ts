@@ -16,6 +16,16 @@ export function calendarMonthLabel(calendar: CalendarDefinition, index: number, 
   return stock(calendar)?.months[index]?.name === name
     ? createTranslator(locale)(`calendar.${calendar.id}.month.${index + 1}` as MessageKey) : name;
 }
+export function calendarWeekdayLabel(calendar: CalendarDefinition, index: number, locale: AppLocale = DEFAULT_LOCALE): string {
+  const name = calendar.weekdays[index] ?? "";
+  return name && stock(calendar)?.weekdays[index] === name
+    ? createTranslator(locale)(`calendar.${calendar.id}.weekday.${index + 1}` as MessageKey) : name;
+}
+// Keep untouched displayed translations as canonical values when editing the list.
+export function calendarEditedWeekdays(calendar: CalendarDefinition, names: string[], locale: AppLocale): string[] {
+  return names.map((name, index) => name === calendarWeekdayLabel(calendar, index, locale)
+    ? calendar.weekdays[index] : name);
+}
 export function calendarDate(calendar: CalendarDefinition, instant: number, locale: AppLocale = DEFAULT_LOCALE): string {
   if (locale === "en") return formatDate(calendar, instant);
   const t = createTranslator(locale);
