@@ -218,6 +218,39 @@
     {
       "localLog": "/tmp/odm-sync-tts-smoke.log",
       "sha256": "4e4108fe57564152337f7a5f7984fc3d0e68fc9a45d418c39c726a9db563fa4b"
+    },
+    {
+      "localLog": "/tmp/odm-sync-primary-install-isolated.log",
+      "sha256": "1a208c1642abd7dc9cfe9e57c8ef2092febcf2ad58057d8ad29c3cda6cfd6fa3"
+    },
+    {
+      "localLog": "/tmp/odm-sync-primary-build.log",
+      "sha256": "a7ba4610ee7e0512bdcbdc0b0ff45050df695ba50426db00519b5efcae3b674b"
+    },
+    {
+      "localLog": "/tmp/odm-sync-primary-audit.json",
+      "sha256": "12777af89e748983f5a92ac7afeba0d00fe5ec7b0e3295df4e061339802b48d4"
+    },
+    {
+      "localLog": "/tmp/odm-sync-report-check.log",
+      "sha256": "6328e8935c4a9c3cbd8e61358df65208234034a56fd80f9cd5b59aa33c9800cc"
     }
-  ]
+  ],
+  "mergeCommit": "50862b53c0c97701eb3ada9377989647cf06b3ef",
+  "primaryWorkspace": {
+    "verifiedAt": "2026-10-14T17:34:59.618721+00:00",
+    "node": "24.21.0",
+    "npm": "11.19.0",
+    "dependencyInstall": "npm ci --cache /tmp/odm-sync-npm-cache --prefer-offline; successful with isolated cache after existing root-owned user-cache directory denied writes",
+    "nativeDatabase": "In-memory query and close passed on Node 24",
+    "productionBuild": "passed on Node 24; full 700-file test suite remains the Node 22 run above",
+    "productionDependencyAudit": {
+      "high": 0,
+      "critical": 0,
+      "total": 0
+    },
+    "developmentDependencyAudit": "Install audit reports 5 high findings; no breaking automatic dependency upgrade performed",
+    "userCampaignDataAndModelConfig": "unchanged",
+    "temporaryBrowserFixture": "closed after acceptance"
+  }
 }
